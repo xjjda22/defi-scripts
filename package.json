@@ -1,0 +1,24 @@
+{
+  "name": "uniswap-scripts",
+  "version": "1.0.0",
+  "description": "Uniswap analytics scripts for DeFi/MEV builders and cross-chain analysis",
+  "main": "src/index.js",
+  "scripts": {
+    "crosschain:uniswap:tvl": "node src/crosschain/uniswapTVLAggregator.js"
+  },
+  "keywords": [
+    "uniswap",
+    "defi",
+    "mev",
+    "cross-chain",
+    "analytics"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^16.6.1",
+    "ethers": "^6.15.0"
+  }
+}

@@ -1,0 +1,13 @@
+node_modules/
+.env
+output/*
+*.log
+.DS_Store
+
+package-lock.json
+.cursorrules
+src/crosschain/liquidityFlow.js
+src/crosschain/volumeComparison.js
+src/mev/arbitrageFinder.js
+src/mev/flashLoanAnalyzer.js
+src/mev/sandwichDetector.js
