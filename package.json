@@ -4,7 +4,7 @@
   "description": "Uniswap analytics scripts for DeFi/MEV builders and cross-chain analysis",
   "main": "src/index.js",
   "scripts": {
-    "crosschain:uniswap:tvl": "node src/crosschain/uniswapTVLAggregator.js"
+    "crosschain:uniswap:tvl": "node src/crosschain/uniswap/tvlAggregator.js"
   },
   "keywords": [
     "uniswap",
