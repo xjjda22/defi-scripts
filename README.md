@@ -3,7 +3,7 @@
 Ethereum DeFi analytics scripts focusing on cross-chain DEX analytics and MEV analysis. Supports Ethereum, Arbitrum, Optimism, Base, Polygon, and BSC.
 
 <p align="center">
-  <img src="no-money-meme.jpg" alt="No Money Meme" width="400"/>
+  <img src="no-money-meme.jpg" alt="No Money Meme" width="500"/>
 </p>
 
 ## Setup
