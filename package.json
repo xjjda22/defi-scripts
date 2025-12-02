@@ -1,5 +1,5 @@
 {
-  "name": "uniswap-scripts",
+  "name": "defi-scripts",
   "version": "1.0.0",
   "description": "Uniswap analytics scripts for DeFi/MEV builders and cross-chain analysis",
   "main": "src/index.js",
