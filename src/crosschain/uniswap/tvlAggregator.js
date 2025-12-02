@@ -2,10 +2,10 @@
 
 require("dotenv").config();
 const axios = require("axios");
-const { CHAINS } = require("../config/chains");
-const { formatUSD } = require("../utils/prices");
-const { writeCSV } = require("../utils/csv");
-const { printUniswapLogo } = require("../utils/ascii");
+const { CHAINS } = require("../../config/chains");
+const { formatUSD } = require("../../utils/prices");
+const { writeCSV } = require("../../utils/csv");
+const { printUniswapLogo } = require("../../utils/ascii");
 
 // DefiLlama API endpoints
 const DEFILLAMA_API = "https://api.llama.fi";
