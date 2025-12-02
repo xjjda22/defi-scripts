@@ -18,6 +18,10 @@ const CHAINS = {
         router: "0xE592427A0AEce92De3Edee1F18E0157C05861564",
         nftPositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
       },
+      v4: {
+        // V4 launched January 31, 2025 - uses singleton PoolManager architecture
+        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
+      },
     },
   },
   arbitrum: {
@@ -35,6 +39,10 @@ const CHAINS = {
         quoter: "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6",
         router: "0xE592427A0AEce92De3Edee1F18E0157C05861564",
         nftPositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+      },
+      v4: {
+        // V4 - uses same singleton PoolManager address across chains
+        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
       },
     },
   },
@@ -54,6 +62,10 @@ const CHAINS = {
         router: "0xE592427A0AEce92De3Edee1F18E0157C05861564",
         nftPositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
       },
+      v4: {
+        // V4 - uses same singleton PoolManager address across chains
+        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
+      },
     },
   },
   base: {
@@ -71,6 +83,10 @@ const CHAINS = {
         quoter: "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a",
         router: "0x2626664c2603336E57B271c5C0b26F421741e481",
         nftPositionManager: "0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1",
+      },
+      v4: {
+        // V4 - uses same singleton PoolManager address across chains
+        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
       },
     },
   },
@@ -90,6 +106,10 @@ const CHAINS = {
         router: "0xE592427A0AEce92De3Edee1F18E0157C05861564",
         nftPositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
       },
+      v4: {
+        // V4 - uses same singleton PoolManager address across chains
+        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
+      },
     },
   },
   bsc: {
@@ -107,6 +127,10 @@ const CHAINS = {
         quoter: "0x78D78E420Da98ad378D7799bE8f4AF69033EB077",
         router: "0x83c346Ba3d4b36E6Bf6F401e9954B7e8C5e1F18c",
         nftPositionManager: "0x7b8A07B6356C1ad843c34d0C5baD61160aC36FE3",
+      },
+      v4: {
+        // V4 - uses same singleton PoolManager address across chains
+        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
       },
     },
   },

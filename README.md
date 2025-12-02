@@ -31,6 +31,20 @@ npm run crosschain:uniswap:tvl
 
 Aggregates Uniswap V1-V4 TVL across all chains using DefiLlama API. Outputs console reports with version breakdowns, market share analysis, and CSV exports to `output/`.
 
+### Volume Comparison
+```bash
+npm run crosschain:uniswap:volume
+```
+
+Compares 24h trading volume across V1-V4 Uniswap versions on all chains. Includes version breakdowns, market share analysis, and CSV exports.
+
+### Liquidity Flow Tracker
+```bash
+npm run crosschain:uniswap:liquidity
+```
+
+Tracks token flows between Ethereum L1 and L2 bridges (Arbitrum, Optimism, Base) for major tokens (WETH, USDC, USDT).
+
 ## Planned Protocols
 
 - [ ] Curve Finance
