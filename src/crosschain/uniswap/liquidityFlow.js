@@ -1,5 +1,5 @@
-// Ethereum L1 Bridge Liquidity Flow Tracker
-// Tracks token flows from Ethereum Mainnet to L2s (Arbitrum, Optimism, Base)
+// Unified Uniswap Liquidity Flow Tracker
+// Tracks liquidity flows across Uniswap V2, V3, and V4 in one place
 
 require("dotenv").config();
 const { ethers } = require("ethers");
@@ -10,202 +10,572 @@ const { formatUSD } = require("../../utils/prices");
 const { writeCSV } = require("../../utils/csv");
 const { printUniswapLogo } = require("../../utils/ascii");
 
-// ERC20 Transfer ABI
-const ERC20_ABI = [
-  "event Transfer(address indexed from, address indexed to, uint256 value)",
-  "function decimals() view returns (uint8)",
-  "function symbol() view returns (string)",
+// ============================================================================
+// ABIs
+// ============================================================================
+
+// Uniswap V2 Pair ABI
+const PAIR_ABI = [
+  "event Mint(address indexed sender, uint256 amount0, uint256 amount1)",
+  "event Burn(address indexed sender, uint256 amount0, uint256 amount1, address indexed to)",
+  "function token0() view returns (address)",
+  "function token1() view returns (address)",
+  "function getReserves() view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast)",
 ];
 
-// Canonical L2 Bridge addresses on Ethereum L1
-// These are the official bridges where tokens are locked when bridging FROM Ethereum TO L2s
-const BRIDGE_ADDRESSES = {
-  ethereum: {
-    // Arbitrum One: L1 Gateway Router (handles ERC20 bridging)
-    arbitrum: "0x72Ce9c846789fdB6fC1f34aC4AD25Dd9ef7031ef",
-    // Optimism: L1StandardBridge (handles ERC20 bridging)
-    optimism: "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1", 
-    // Base: L1StandardBridge (handles ERC20 bridging)
-    base: "0x3154Cf16ccdb4C6C9224f07Fd54f0F0E659b1653",
-  },
-};
+// Uniswap V2 Factory ABI
+const V2_FACTORY_ABI = [
+  "function getPair(address tokenA, address tokenB) view returns (address pair)",
+  "event PairCreated(address indexed token0, address indexed token1, address pair, uint256)",
+];
 
-const BLOCKS_TO_ANALYZE = process.env.BLOCKS_TO_ANALYZE ? parseInt(process.env.BLOCKS_TO_ANALYZE) : 1000; // Last N blocks
-const CHUNK_SIZE = 10; // Alchemy free tier limit: max 10 blocks per eth_getLogs request
-const TEST_MODE = process.env.TEST_MODE === "true"; // Set TEST_MODE=true to see all transfers
-const START_BLOCK = process.env.START_BLOCK ? parseInt(process.env.START_BLOCK) : null; // Set specific start block
+// Uniswap V3 NFT Position Manager ABI
+const POSITION_MANAGER_ABI = [
+  "event IncreaseLiquidity(uint256 indexed tokenId, uint128 liquidity, uint256 amount0, uint256 amount1)",
+  "event DecreaseLiquidity(uint256 indexed tokenId, uint128 liquidity, uint256 amount0, uint256 amount1)",
+  "event Collect(uint256 indexed tokenId, address recipient, uint256 amount0, uint256 amount1)",
+  "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
+  "function positions(uint256 tokenId) view returns (uint96 nonce, address operator, address token0, address token1, uint24 fee, int24 tickLower, int24 tickUpper, uint128 liquidity, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128, uint128 tokensOwed0, uint128 tokensOwed1)",
+];
 
-// Note: This script tracks ERC20 token transfers (WETH, USDC, USDT), NOT native ETH transfers.
-// Bridge transfers are relatively rare. With free tier, we can only check small ranges.
-// For comprehensive analysis, upgrade to Alchemy PAYG which allows larger block ranges.
+// Uniswap V3 Factory ABI
+const V3_FACTORY_ABI = [
+  "function getPool(address tokenA, address tokenB, uint24 fee) view returns (address pool)",
+];
 
-async function trackLiquidityFlow(chainKey, tokenAddress) {
-  const chain = CHAINS[chainKey];
-  if (!chain) {
-    console.warn(`   ⚠️  Unknown chain: ${chainKey}`);
-    return [];
+// Uniswap V4 PoolManager ABI
+const POOL_MANAGER_ABI = [
+  "event ModifyLiquidity(bytes32 indexed poolId, address indexed sender, int24 tickLower, int24 tickUpper, int256 liquidityDelta)",
+  "event Initialize(bytes32 indexed poolId, address indexed currency0, address indexed currency1, uint24 fee, int24 tickSpacing, address hooks)",
+  "event Swap(bytes32 indexed poolId, address indexed sender, int128 amount0, int128 amount1, uint160 sqrtPriceX96, uint128 liquidity, int24 tick)",
+  "function getPoolId(address currency0, address currency1, uint24 fee, int24 tickSpacing, address hooks) pure returns (bytes32)",
+];
+
+// ERC20 ABI
+const ERC20_ABI = [
+  "function decimals() view returns (uint8)",
+  "function symbol() view returns (string)",
+  "function name() view returns (string)",
+];
+
+// ============================================================================
+// Configuration
+// ============================================================================
+
+const BLOCKS_TO_ANALYZE = process.env.BLOCKS_TO_ANALYZE ? parseInt(process.env.BLOCKS_TO_ANALYZE) : 1000;
+const CHUNK_SIZE = 10;
+const START_BLOCK = process.env.START_BLOCK ? parseInt(process.env.START_BLOCK) : null;
+
+// V3 Fee tiers (in basis points)
+const V3_FEE_TIERS = [500, 3000, 10000]; // 0.05%, 0.3%, 1%
+
+// V4 Fee tiers and tick spacings
+const V4_FEE_TIERS = [
+  { fee: 500, tickSpacing: 10 },
+  { fee: 3000, tickSpacing: 60 },
+  { fee: 10000, tickSpacing: 200 },
+];
+
+// ============================================================================
+// Utility Functions
+// ============================================================================
+
+async function getTokenInfo(tokenAddress, provider) {
+  try {
+    const token = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
+    const [symbol, decimals] = await Promise.all([
+      token.symbol(),
+      token.decimals(),
+    ]);
+    return { symbol, decimals };
+  } catch (error) {
+    return { symbol: "UNKNOWN", decimals: 18 };
   }
-  
-  if (!chain.rpcUrl) {
-    console.warn(`   ⚠️  No RPC URL configured for ${chain.name}. Set ${chainKey.toUpperCase()}_RPC_URL in .env`);
+}
+
+// ============================================================================
+// Uniswap V2 Tracking
+// ============================================================================
+
+async function trackV2Liquidity(chainKey, token0Address, token1Address) {
+  const chain = CHAINS[chainKey];
+  if (!chain || !chain.rpcUrl || !chain.uniswap?.v2?.factory) {
     return [];
   }
 
   const provider = getProvider(chainKey);
+  const factory = new ethers.Contract(chain.uniswap.v2.factory, V2_FACTORY_ABI, provider);
+
+  // Get the pair address
+  const pairAddress = await factory.getPair(token0Address, token1Address);
+  if (pairAddress === ethers.ZeroAddress) {
+    console.log(`   ℹ️  No V2 pair exists on ${chain.name}`);
+    return [];
+  }
+
+  console.log(`   📍 V2 Pair: ${pairAddress}`);
+
+  const pair = new ethers.Contract(pairAddress, PAIR_ABI, provider);
   const currentBlock = await getBlockNumber(chainKey);
   const startBlock = START_BLOCK || Math.max(0, currentBlock - BLOCKS_TO_ANALYZE);
   const endBlock = START_BLOCK ? Math.min(START_BLOCK + BLOCKS_TO_ANALYZE, currentBlock) : currentBlock;
 
-  console.log(`   📍 Analyzing blocks ${startBlock} to ${endBlock} (${endBlock - startBlock} blocks)`);
-  console.log(`   ℹ️  Current block: ${currentBlock}`);
-
-  const token = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
-  const bridges = BRIDGE_ADDRESSES[chainKey] || {};
-
-  if (Object.keys(bridges).length === 0) {
-    console.warn(`   ⚠️  No bridge addresses configured for ${chain.name}`);
-  }
+  // Get token info
+  const [token0Info, token1Info] = await Promise.all([
+    getTokenInfo(token0Address, provider),
+    getTokenInfo(token1Address, provider),
+  ]);
 
   const flows = [];
+  const allMints = [];
+  const allBurns = [];
+  let chunkCount = 0;
+  const totalChunks = Math.ceil((endBlock - startBlock) / CHUNK_SIZE);
 
-  // TEST MODE: Check if we can detect ANY transfers at all
-  if (TEST_MODE) {
-    console.log(`   🧪 TEST MODE: Checking for any transfers (not just bridges)...`);
+  for (let fromBlock = startBlock; fromBlock < endBlock; fromBlock += CHUNK_SIZE) {
+    const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
+    chunkCount++;
+
     try {
-      const testFilter = token.filters.Transfer();
-      const testTransfers = await token.queryFilter(testFilter, startBlock, Math.min(startBlock + 10, currentBlock));
-      console.log(`   ✅ Found ${testTransfers.length} total transfers in first 10 blocks`);
-      if (testTransfers.length > 0) {
-        const sample = testTransfers[0];
-        console.log(`   📋 Sample transfer: from ${sample.args.from} to ${sample.args.to}`);
-      }
-    } catch (testError) {
-      console.error(`   ❌ Test mode error:`, testError.message);
+      const [mints, burns] = await Promise.all([
+        pair.queryFilter(pair.filters.Mint(), fromBlock, toBlock),
+        pair.queryFilter(pair.filters.Burn(), fromBlock, toBlock),
+      ]);
+
+      allMints.push(...mints);
+      allBurns.push(...burns);
+
+      await new Promise((resolve) => setTimeout(resolve, 200));
+    } catch (chunkError) {
+      console.warn(`      ⚠️  Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
     }
   }
 
-  // Track transfers to/from bridge addresses
-  for (const [targetChain, bridgeAddress] of Object.entries(bridges)) {
-    try {
-      // Ensure proper address checksum
-      const checksummedAddress = ethers.getAddress(bridgeAddress.toLowerCase());
-      
-      console.log(`   🔍 Querying bridge: ${chain.name} <-> ${targetChain} (${checksummedAddress})`);
-      
-      // Query in chunks to avoid rate limits
-      const allOutboundTransfers = [];
-      const allInboundTransfers = [];
-      
-      const totalChunks = Math.ceil((currentBlock - startBlock) / CHUNK_SIZE);
-      let chunkCount = 0;
-      
-      for (let fromBlock = startBlock; fromBlock < endBlock; fromBlock += CHUNK_SIZE) {
-        const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
-        chunkCount++;
-        
-        try {
-          // Query transfers FROM bridge (outbound)
-          const outboundFilter = token.filters.Transfer(checksummedAddress, null);
-          const outboundTransfers = await token.queryFilter(outboundFilter, fromBlock, toBlock);
-          allOutboundTransfers.push(...outboundTransfers);
+  // Process Mint events
+  for (const mint of allMints) {
+    const amount0 = parseFloat(ethers.formatUnits(mint.args.amount0, token0Info.decimals));
+    const amount1 = parseFloat(ethers.formatUnits(mint.args.amount1, token1Info.decimals));
+    const block = await provider.getBlock(mint.blockNumber);
+    
+    flows.push({
+      chain: chain.name,
+      chainId: chain.chainId,
+      version: "V2",
+      type: "mint",
+      direction: "add",
+      pairAddress,
+      token0: token0Info.symbol,
+      token1: token1Info.symbol,
+      amount0,
+      amount1,
+      txHash: mint.transactionHash,
+      block: mint.blockNumber,
+      timestamp: block.timestamp,
+      explorer: chain.explorer,
+    });
+  }
 
-          // Query transfers TO bridge (inbound)
-          const inboundFilter = token.filters.Transfer(null, checksummedAddress);
-          const inboundTransfers = await token.queryFilter(inboundFilter, fromBlock, toBlock);
-          allInboundTransfers.push(...inboundTransfers);
-          
-          // Progress indicator
-          if (chunkCount % 5 === 0 || chunkCount === totalChunks) {
-            console.log(`      📊 Progress: ${chunkCount}/${totalChunks} chunks (${allOutboundTransfers.length + allInboundTransfers.length} transfers found)`);
-          }
-          
-          // Delay to avoid rate limiting (200ms between requests)
-          await new Promise((resolve) => setTimeout(resolve, 200));
-        } catch (chunkError) {
-          console.warn(`      ⚠️  Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
-        }
-      }
-
-      console.log(`      Outbound: ${allOutboundTransfers.length} transfers`);
-      console.log(`      Inbound: ${allInboundTransfers.length} transfers`);
-
-      // Process outbound transfers
-      for (const transfer of allOutboundTransfers) {
-        const amount = parseFloat(ethers.formatUnits(transfer.args.value, await token.decimals()));
-        flows.push({
-          chain: chain.name,
-          targetChain: targetChain,
-          sourceChain: chain.name,
-          direction: "outbound",
-          amount,
-          txHash: transfer.transactionHash,
-          block: transfer.blockNumber,
-          timestamp: (await provider.getBlock(transfer.blockNumber)).timestamp,
-          explorer: chain.explorer,
-        });
-      }
-
-      // Process inbound transfers
-      for (const transfer of allInboundTransfers) {
-        const amount = parseFloat(ethers.formatUnits(transfer.args.value, await token.decimals()));
-        flows.push({
-          chain: chain.name,
-          targetChain: chain.name,
-          sourceChain: targetChain,
-          direction: "inbound",
-          amount,
-          txHash: transfer.transactionHash,
-          block: transfer.blockNumber,
-          timestamp: (await provider.getBlock(transfer.blockNumber)).timestamp,
-          explorer: chain.explorer,
-        });
-      }
-    } catch (error) {
-      console.warn(`      ❌ Error tracking flows for ${chain.name} -> ${targetChain}:`, error.message);
-    }
+  // Process Burn events
+  for (const burn of allBurns) {
+    const amount0 = parseFloat(ethers.formatUnits(burn.args.amount0, token0Info.decimals));
+    const amount1 = parseFloat(ethers.formatUnits(burn.args.amount1, token1Info.decimals));
+    const block = await provider.getBlock(burn.blockNumber);
+    
+    flows.push({
+      chain: chain.name,
+      chainId: chain.chainId,
+      version: "V2",
+      type: "burn",
+      direction: "remove",
+      pairAddress,
+      token0: token0Info.symbol,
+      token1: token1Info.symbol,
+      amount0,
+      amount1,
+      txHash: burn.transactionHash,
+      block: burn.blockNumber,
+      timestamp: block.timestamp,
+      explorer: chain.explorer,
+    });
   }
 
   return flows;
 }
 
-async function generateReport() {
-  printUniswapLogo("full");
-  console.log(`\n🌊 Ethereum L1 Bridge Liquidity Flow Tracker`);
-  console.log(`============================================\n`);
+// ============================================================================
+// Uniswap V3 Tracking
+// ============================================================================
 
-  // Check Ethereum configuration
-  if (!CHAINS.ethereum?.rpcUrl) {
-    console.error(`❌ Ethereum RPC URL not configured. Please set ETHEREUM_RPC_URL in .env file.`);
-    return;
+async function trackV3Liquidity(chainKey, token0Address, token1Address, feeTier) {
+  const chain = CHAINS[chainKey];
+  if (!chain || !chain.rpcUrl || !chain.uniswap?.v3?.factory || !chain.uniswap?.v3?.nftPositionManager) {
+    return [];
   }
 
-  console.log(`📡 Tracking: Ethereum Mainnet → L2 Bridges`);
-  console.log(`ℹ️  Free tier limit: Analyzing last ${BLOCKS_TO_ANALYZE} blocks in ${CHUNK_SIZE}-block chunks`);
-  console.log(`   (Upgrade to Alchemy PAYG for larger block ranges)\n`);
+  const provider = getProvider(chainKey);
+  const factory = new ethers.Contract(chain.uniswap.v3.factory, V3_FACTORY_ABI, provider);
 
-  if (TEST_MODE) {
-    console.log(`🧪 TEST MODE ENABLED - Will show sample transfers\n`);
+  // Get the pool address for this fee tier
+  const poolAddress = await factory.getPool(token0Address, token1Address, feeTier);
+  if (poolAddress === ethers.ZeroAddress) {
+    return [];
   }
+
+  console.log(`   📍 V3 Pool: ${poolAddress} (Fee: ${feeTier / 10000}%)`);
+
+  const positionManager = new ethers.Contract(
+    chain.uniswap.v3.nftPositionManager,
+    POSITION_MANAGER_ABI,
+    provider
+  );
+
+  const currentBlock = await getBlockNumber(chainKey);
+  const startBlock = START_BLOCK || Math.max(0, currentBlock - BLOCKS_TO_ANALYZE);
+  const endBlock = START_BLOCK ? Math.min(START_BLOCK + BLOCKS_TO_ANALYZE, currentBlock) : currentBlock;
+
+  // Get token info
+  const [token0Info, token1Info] = await Promise.all([
+    getTokenInfo(token0Address, provider),
+    getTokenInfo(token1Address, provider),
+  ]);
+
+  const flows = [];
+  const allIncreases = [];
+  const allDecreases = [];
+  let chunkCount = 0;
+  const totalChunks = Math.ceil((endBlock - startBlock) / CHUNK_SIZE);
+
+  for (let fromBlock = startBlock; fromBlock < endBlock; fromBlock += CHUNK_SIZE) {
+    const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
+    chunkCount++;
+
+    try {
+      const [increases, decreases] = await Promise.all([
+        positionManager.queryFilter(
+          positionManager.filters.IncreaseLiquidity(),
+          fromBlock,
+          toBlock
+        ),
+        positionManager.queryFilter(
+          positionManager.filters.DecreaseLiquidity(),
+          fromBlock,
+          toBlock
+        ),
+      ]);
+
+      allIncreases.push(...increases);
+      allDecreases.push(...decreases);
+
+      await new Promise((resolve) => setTimeout(resolve, 200));
+    } catch (chunkError) {
+      console.warn(`      ⚠️  Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
+    }
+  }
+
+  // Process IncreaseLiquidity events
+  for (const increase of allIncreases) {
+    const amount0 = parseFloat(ethers.formatUnits(increase.args.amount0, token0Info.decimals));
+    const amount1 = parseFloat(ethers.formatUnits(increase.args.amount1, token1Info.decimals));
+    const liquidity = increase.args.liquidity.toString();
+    const block = await provider.getBlock(increase.blockNumber);
+
+    flows.push({
+      chain: chain.name,
+      chainId: chain.chainId,
+      version: "V3",
+      type: "increase",
+      direction: "add",
+      poolAddress,
+      feeTier: feeTier / 10000,
+      tokenId: increase.args.tokenId.toString(),
+      token0: token0Info.symbol,
+      token1: token1Info.symbol,
+      amount0,
+      amount1,
+      liquidity,
+      txHash: increase.transactionHash,
+      block: increase.blockNumber,
+      timestamp: block.timestamp,
+      explorer: chain.explorer,
+    });
+  }
+
+  // Process DecreaseLiquidity events
+  for (const decrease of allDecreases) {
+    const amount0 = parseFloat(ethers.formatUnits(decrease.args.amount0, token0Info.decimals));
+    const amount1 = parseFloat(ethers.formatUnits(decrease.args.amount1, token1Info.decimals));
+    const liquidity = decrease.args.liquidity.toString();
+    const block = await provider.getBlock(decrease.blockNumber);
+
+    flows.push({
+      chain: chain.name,
+      chainId: chain.chainId,
+      version: "V3",
+      type: "decrease",
+      direction: "remove",
+      poolAddress,
+      feeTier: feeTier / 10000,
+      tokenId: decrease.args.tokenId.toString(),
+      token0: token0Info.symbol,
+      token1: token1Info.symbol,
+      amount0,
+      amount1,
+      liquidity,
+      txHash: decrease.transactionHash,
+      block: decrease.blockNumber,
+      timestamp: block.timestamp,
+      explorer: chain.explorer,
+    });
+  }
+
+  return flows;
+}
+
+async function trackV3AllFeeTiers(chainKey, token0Address, token1Address) {
+  const allFlows = [];
+  
+  for (const feeTier of V3_FEE_TIERS) {
+    try {
+      const flows = await trackV3Liquidity(chainKey, token0Address, token1Address, feeTier);
+      allFlows.push(...flows);
+    } catch (error) {
+      console.warn(`   ⚠️  Error tracking V3 fee tier ${feeTier}:`, error.message);
+    }
+  }
+  
+  return allFlows;
+}
+
+// ============================================================================
+// Uniswap V4 Tracking
+// ============================================================================
+
+async function trackV4Liquidity(chainKey, token0Address, token1Address) {
+  const chain = CHAINS[chainKey];
+  if (!chain || !chain.rpcUrl || !chain.uniswap?.v4?.poolManager) {
+    return [];
+  }
+
+  const provider = getProvider(chainKey);
+  const poolManager = new ethers.Contract(
+    chain.uniswap.v4.poolManager,
+    POOL_MANAGER_ABI,
+    provider
+  );
+
+  const currentBlock = await getBlockNumber(chainKey);
+  const startBlock = START_BLOCK || Math.max(0, currentBlock - BLOCKS_TO_ANALYZE);
+  const endBlock = START_BLOCK ? Math.min(START_BLOCK + BLOCKS_TO_ANALYZE, currentBlock) : currentBlock;
+
+  console.log(`   📍 V4 PoolManager: ${chain.uniswap.v4.poolManager}`);
+
+  // Get token info
+  const [token0Info, token1Info] = await Promise.all([
+    getTokenInfo(token0Address, provider),
+    getTokenInfo(token1Address, provider),
+  ]);
+
+  const flows = [];
+  const allModifyLiquidity = [];
+  let chunkCount = 0;
+  const totalChunks = Math.ceil((endBlock - startBlock) / CHUNK_SIZE);
+
+  for (let fromBlock = startBlock; fromBlock < endBlock; fromBlock += CHUNK_SIZE) {
+    const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
+    chunkCount++;
+
+    try {
+      const modifyEvents = await poolManager.queryFilter(
+        poolManager.filters.ModifyLiquidity(),
+        fromBlock,
+        toBlock
+      );
+
+      allModifyLiquidity.push(...modifyEvents);
+
+      await new Promise((resolve) => setTimeout(resolve, 200));
+    } catch (chunkError) {
+      console.warn(`      ⚠️  Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
+    }
+  }
+
+  // Process ModifyLiquidity events
+  for (const event of allModifyLiquidity) {
+    const liquidityDelta = event.args.liquidityDelta;
+    const isIncrease = liquidityDelta > 0n;
+    const block = await provider.getBlock(event.blockNumber);
+
+    flows.push({
+      chain: chain.name,
+      chainId: chain.chainId,
+      version: "V4",
+      type: isIncrease ? "increase" : "decrease",
+      direction: isIncrease ? "add" : "remove",
+      poolId: event.args.poolId,
+      sender: event.args.sender,
+      tickLower: event.args.tickLower,
+      tickUpper: event.args.tickUpper,
+      liquidityDelta: liquidityDelta.toString(),
+      token0: token0Info.symbol,
+      token1: token1Info.symbol,
+      txHash: event.transactionHash,
+      block: event.blockNumber,
+      timestamp: block.timestamp,
+      explorer: chain.explorer,
+    });
+  }
+
+  return flows;
+}
+
+async function trackV4Initialize(chainKey) {
+  const chain = CHAINS[chainKey];
+  if (!chain?.uniswap?.v4?.poolManager) {
+    return [];
+  }
+
+  const provider = getProvider(chainKey);
+  const poolManager = new ethers.Contract(
+    chain.uniswap.v4.poolManager,
+    POOL_MANAGER_ABI,
+    provider
+  );
+
+  const currentBlock = await getBlockNumber(chainKey);
+  const startBlock = START_BLOCK || Math.max(0, currentBlock - BLOCKS_TO_ANALYZE);
+  const endBlock = START_BLOCK ? Math.min(START_BLOCK + BLOCKS_TO_ANALYZE, currentBlock) : currentBlock;
+
+  const allInitializations = [];
+  let chunkCount = 0;
+  const totalChunks = Math.ceil((endBlock - startBlock) / CHUNK_SIZE);
+
+  for (let fromBlock = startBlock; fromBlock < endBlock; fromBlock += CHUNK_SIZE) {
+    const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
+    chunkCount++;
+
+    try {
+      const initEvents = await poolManager.queryFilter(
+        poolManager.filters.Initialize(),
+        fromBlock,
+        toBlock
+      );
+
+      allInitializations.push(...initEvents);
+      await new Promise((resolve) => setTimeout(resolve, 200));
+    } catch (chunkError) {
+      console.warn(`      ⚠️  Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
+    }
+  }
+
+  const pools = [];
+  for (const event of allInitializations) {
+    const block = await provider.getBlock(event.blockNumber);
+    const token0Info = await getTokenInfo(event.args.currency0, provider);
+    const token1Info = await getTokenInfo(event.args.currency1, provider);
+
+    pools.push({
+      chain: chain.name,
+      poolId: event.args.poolId,
+      token0: token0Info.symbol,
+      token1: token1Info.symbol,
+      token0Address: event.args.currency0,
+      token1Address: event.args.currency1,
+      fee: event.args.fee,
+      feeTier: event.args.fee / 10000,
+      tickSpacing: event.args.tickSpacing,
+      hooks: event.args.hooks,
+      txHash: event.transactionHash,
+      block: event.blockNumber,
+      timestamp: block.timestamp,
+    });
+  }
+
+  return pools;
+}
+
+// ============================================================================
+// Unified Tracking
+// ============================================================================
+
+async function trackAllVersions(chainKey, token0Address, token1Address) {
+  console.log(`\n   🔄 Processing ${CHAINS[chainKey]?.name || chainKey}...`);
 
   const allFlows = [];
-  const tokensToTrack = ["WETH", "USDC", "USDT"];
 
-  for (const tokenSymbol of tokensToTrack) {
-    console.log(`\n📊 Tracking ${tokenSymbol} flows on Ethereum L1...`);
+  // Track V2
+  try {
+    console.log(`      📦 V2...`);
+    const v2Flows = await trackV2Liquidity(chainKey, token0Address, token1Address);
+    allFlows.push(...v2Flows);
+    console.log(`      ✅ V2: ${v2Flows.length} events`);
+  } catch (error) {
+    console.warn(`      ⚠️  V2 Error: ${error.message}`);
+  }
 
-    const tokenAddress = COMMON_TOKENS[tokenSymbol]?.ethereum;
-    if (!tokenAddress) {
-      console.log(`   ⏭️  Skipping ${tokenSymbol} (no address configured)`);
+  // Track V3 (all fee tiers)
+  try {
+    console.log(`      📦 V3...`);
+    const v3Flows = await trackV3AllFeeTiers(chainKey, token0Address, token1Address);
+    allFlows.push(...v3Flows);
+    console.log(`      ✅ V3: ${v3Flows.length} events`);
+  } catch (error) {
+    console.warn(`      ⚠️  V3 Error: ${error.message}`);
+  }
+
+  // Track V4
+  try {
+    console.log(`      📦 V4...`);
+    const v4Flows = await trackV4Liquidity(chainKey, token0Address, token1Address);
+    allFlows.push(...v4Flows);
+    console.log(`      ✅ V4: ${v4Flows.length} events`);
+  } catch (error) {
+    console.warn(`      ⚠️  V4 Error: ${error.message}`);
+  }
+
+  return allFlows;
+}
+
+// ============================================================================
+// Report Generation
+// ============================================================================
+
+async function generateReport() {
+  printUniswapLogo("full");
+  console.log(`\n🦄 Uniswap Cross-Chain Liquidity Flow Tracker`);
+  console.log(`=============================================\n`);
+
+  console.log(`📊 Tracking: Uniswap V2, V3, V4 across all supported chains`);
+  console.log(`ℹ️  Analyzing last ${BLOCKS_TO_ANALYZE} blocks per chain\n`);
+
+  const allFlows = [];
+  const chainsToTrack = ["ethereum", "arbitrum", "optimism", "base", "polygon", "bsc"];
+
+  // Track WETH/USDC pair as primary example
+  const tokenPair = { symbol: "WETH/USDC", token0: "WETH", token1: "USDC" };
+  
+  console.log(`\n💎 Tracking ${tokenPair.symbol} Liquidity Flows...\n`);
+
+  for (const chainKey of chainsToTrack) {
+    const chain = CHAINS[chainKey];
+    if (!chain?.rpcUrl) {
+      console.log(`⏭️  Skipping ${chainKey} (no RPC configured)`);
+      continue;
+    }
+
+    const token0Address = COMMON_TOKENS[tokenPair.token0]?.[chainKey];
+    const token1Address = COMMON_TOKENS[tokenPair.token1]?.[chainKey];
+
+    if (!token0Address || !token1Address) {
+      console.log(`⏭️  Skipping ${chain.name} (tokens not configured)`);
       continue;
     }
 
     try {
-      console.log(`\n   🔄 Processing Ethereum Mainnet...`);
-      const flows = await trackLiquidityFlow("ethereum", tokenAddress);
-      allFlows.push(...flows.map((f) => ({ ...f, token: tokenSymbol })));
-      console.log(`   ✅ Ethereum: ${flows.length} bridge transfers found`);
+      const flows = await trackAllVersions(chainKey, token0Address, token1Address);
+      allFlows.push(...flows.map((f) => ({ ...f, pair: tokenPair.symbol })));
+      console.log(`   ✅ ${chain.name}: ${flows.length} total liquidity events\n`);
     } catch (error) {
-      console.error(`   ❌ Error on Ethereum:`, error.message);
+      console.error(`   ❌ Error on ${chain.name}:`, error.message);
       if (process.env.DEBUG) {
         console.error(error.stack);
       }
@@ -213,76 +583,226 @@ async function generateReport() {
   }
 
   if (allFlows.length === 0) {
-    console.log(`\n✅ No significant liquidity flows detected in analyzed blocks.\n`);
+    console.log(`\n✅ No liquidity flows detected in analyzed blocks.\n`);
+    console.log(`💡 Try increasing BLOCKS_TO_ANALYZE or using START_BLOCK to analyze different periods.\n`);
     return;
   }
 
-  // Get token prices
+  // Get token prices for USD valuation
   const prices = await axios
     .get("https://api.coingecko.com/api/v3/simple/price", {
       params: {
-        ids: "ethereum,usd-coin,tether",
+        ids: "ethereum,usd-coin",
         vs_currencies: "usd",
       },
     })
     .then((res) => ({
       WETH: res.data.ethereum.usd,
       USDC: res.data["usd-coin"].usd,
-      USDT: res.data.tether.usd,
     }))
-    .catch(() => ({ WETH: 3000, USDC: 1, USDT: 1 }));
+    .catch(() => ({ WETH: 3000, USDC: 1 }));
 
-  // Calculate flow statistics
-  const flowStats = {};
+  console.log(`\n💰 Current Prices: WETH $${prices.WETH.toLocaleString()}, USDC $${prices.USDC}\n`);
+
+  // Calculate comprehensive statistics
+  const stats = {
+    total: allFlows.length,
+    byVersion: {},
+    byChain: {},
+    byDirection: { add: 0, remove: 0 },
+    totalValueUSD: 0,
+  };
+
+  // Group by version
   for (const flow of allFlows) {
-    const key = `${flow.sourceChain} -> ${flow.targetChain}`;
-    if (!flowStats[key]) {
-      flowStats[key] = {
-        route: key,
-        count: 0,
-        totalVolume: 0,
-        token: flow.token,
-      };
+    const version = flow.version || "Unknown";
+    if (!stats.byVersion[version]) {
+      stats.byVersion[version] = { add: 0, remove: 0, count: 0 };
     }
-    flowStats[key].count++;
-    flowStats[key].totalVolume += flow.amount * (prices[flow.token] || 1);
+    stats.byVersion[version][flow.direction]++;
+    stats.byVersion[version].count++;
+
+    // Group by chain
+    if (!stats.byChain[flow.chain]) {
+      stats.byChain[flow.chain] = { add: 0, remove: 0, count: 0 };
+    }
+    stats.byChain[flow.chain][flow.direction]++;
+    stats.byChain[flow.chain].count++;
+
+    // Overall direction
+    stats.byDirection[flow.direction]++;
+
+    // Calculate USD value (simplified)
+    if (flow.amount0 && flow.amount1) {
+      const value0 = flow.amount0 * prices[flow.token0] || 0;
+      const value1 = flow.amount1 * prices[flow.token1] || 0;
+      stats.totalValueUSD += (value0 + value1) / 2; // Average to avoid double counting
+    }
   }
 
+  // Print Summary
   console.log(`\n📈 Liquidity Flow Summary:\n`);
+  console.log(`   Total Events: ${stats.total}`);
+  console.log(`   Add Liquidity: ${stats.byDirection.add}`);
+  console.log(`   Remove Liquidity: ${stats.byDirection.remove}`);
+  console.log(`   Net Flow: ${stats.byDirection.add - stats.byDirection.remove > 0 ? "+" : ""}${stats.byDirection.add - stats.byDirection.remove}`);
+  console.log(`   Total Volume: ${formatUSD(stats.totalValueUSD)}\n`);
 
-  const sortedFlows = Object.values(flowStats).sort((a, b) => b.totalVolume - a.totalVolume);
+  // Print by Version
+  console.log(`📊 By Uniswap Version:\n`);
+  const versionOrder = ["V2", "V3", "V4"];
+  for (const version of versionOrder) {
+    const data = stats.byVersion[version];
+    if (data) {
+      const netFlow = data.add - data.remove;
+      console.log(`   ${version}:`);
+      console.log(`      Events: ${data.count}`);
+      console.log(`      Add: ${data.add}, Remove: ${data.remove}`);
+      console.log(`      Net: ${netFlow > 0 ? "+" : ""}${netFlow}\n`);
+    }
+  }
 
-  sortedFlows.slice(0, 10).forEach((flow) => {
-    console.log(`🔹 ${flow.route}`);
-    console.log(`   Volume: ${formatUSD(flow.totalVolume)}`);
-    console.log(`   Transfers: ${flow.count}\n`);
-  });
+  // Print by Chain
+  console.log(`🌐 By Chain:\n`);
+  const sortedChains = Object.entries(stats.byChain)
+    .sort((a, b) => b[1].count - a[1].count);
+
+  for (const [chain, data] of sortedChains) {
+    const netFlow = data.add - data.remove;
+    console.log(`   ${chain}:`);
+    console.log(`      Events: ${data.count}`);
+    console.log(`      Add: ${data.add}, Remove: ${data.remove}`);
+    console.log(`      Net: ${netFlow > 0 ? "+" : ""}${netFlow}\n`);
+  }
+
+  // Print Version-Chain Matrix
+  console.log(`📋 Version × Chain Matrix:\n`);
+  const matrix = {};
+  for (const flow of allFlows) {
+    const key = `${flow.chain}-${flow.version}`;
+    matrix[key] = (matrix[key] || 0) + 1;
+  }
+
+  const matrixTable = {};
+  for (const chain of Object.keys(stats.byChain)) {
+    matrixTable[chain] = {};
+    for (const version of versionOrder) {
+      matrixTable[chain][version] = matrix[`${chain}-${version}`] || 0;
+    }
+  }
+
+  for (const [chain, versions] of Object.entries(matrixTable)) {
+    console.log(`   ${chain}: V2=${versions.V2}, V3=${versions.V3}, V4=${versions.V4}`);
+  }
 
   // Export to CSV
-  const csvData = sortedFlows.map((flow) => ({
-    route: flow.route,
-    token: flow.token,
-    volumeUSD: flow.totalVolume,
-    transferCount: flow.count,
+  const csvData = allFlows.map((flow) => ({
+    chain: flow.chain,
+    chainId: flow.chainId,
+    version: flow.version,
+    pair: flow.pair || `${flow.token0}/${flow.token1}`,
+    type: flow.type,
+    direction: flow.direction,
+    token0: flow.token0,
+    token1: flow.token1,
+    amount0: flow.amount0 || "",
+    amount1: flow.amount1 || "",
+    liquidity: flow.liquidity || flow.liquidityDelta || "",
+    feeTier: flow.feeTier || "",
+    tokenId: flow.tokenId || "",
+    poolId: flow.poolId || "",
+    pairAddress: flow.pairAddress || flow.poolAddress || "",
+    txHash: flow.txHash,
+    block: flow.block,
+    timestamp: new Date(flow.timestamp * 1000).toISOString(),
+    explorerLink: `${flow.explorer}/tx/${flow.txHash}`,
   }));
 
   await writeCSV(
-    "output/ethereum-l1-bridge-flows.csv",
+    "output/uniswap-liquidity-flows-all.csv",
     [
-      { id: "route", title: "Route" },
-      { id: "token", title: "Token" },
-      { id: "volumeUSD", title: "Volume (USD)" },
-      { id: "transferCount", title: "Transfer Count" },
+      { id: "chain", title: "Chain" },
+      { id: "chainId", title: "Chain ID" },
+      { id: "version", title: "Version" },
+      { id: "pair", title: "Pair" },
+      { id: "type", title: "Type" },
+      { id: "direction", title: "Direction" },
+      { id: "token0", title: "Token0" },
+      { id: "token1", title: "Token1" },
+      { id: "amount0", title: "Amount0" },
+      { id: "amount1", title: "Amount1" },
+      { id: "liquidity", title: "Liquidity" },
+      { id: "feeTier", title: "Fee Tier" },
+      { id: "tokenId", title: "Token ID" },
+      { id: "poolId", title: "Pool ID" },
+      { id: "pairAddress", title: "Pair/Pool Address" },
+      { id: "txHash", title: "Tx Hash" },
+      { id: "block", title: "Block" },
+      { id: "timestamp", title: "Timestamp" },
+      { id: "explorerLink", title: "Explorer Link" },
     ],
-    csvData,
+    csvData
   );
 
-  console.log(`\n✅ Report generated!\n`);
+  console.log(`\n✅ Unified report generated: output/uniswap-liquidity-flows-all.csv\n`);
+
+  // Generate summary CSV
+  const summaryData = [
+    ...Object.entries(stats.byChain).map(([chain, data]) => ({
+      category: "Chain",
+      name: chain,
+      add: data.add,
+      remove: data.remove,
+      net: data.add - data.remove,
+      total: data.count,
+    })),
+    ...Object.entries(stats.byVersion).map(([version, data]) => ({
+      category: "Version",
+      name: version,
+      add: data.add,
+      remove: data.remove,
+      net: data.add - data.remove,
+      total: data.count,
+    })),
+  ];
+
+  await writeCSV(
+    "output/uniswap-liquidity-summary.csv",
+    [
+      { id: "category", title: "Category" },
+      { id: "name", title: "Name" },
+      { id: "add", title: "Add Liquidity" },
+      { id: "remove", title: "Remove Liquidity" },
+      { id: "net", title: "Net Flow" },
+      { id: "total", title: "Total Events" },
+    ],
+    summaryData
+  );
+
+  console.log(`✅ Summary report: output/uniswap-liquidity-summary.csv\n`);
 }
+
+// ============================================================================
+// Main
+// ============================================================================
 
 if (require.main === module) {
   generateReport().catch(console.error);
 }
 
-module.exports = { trackLiquidityFlow, generateReport };
-
+module.exports = {
+  // V2 exports
+  trackV2Liquidity,
+  
+  // V3 exports
+  trackV3Liquidity,
+  trackV3AllFeeTiers,
+  
+  // V4 exports
+  trackV4Liquidity,
+  trackV4Initialize,
+  
+  // Unified exports
+  trackAllVersions,
+  generateReport,
+};
