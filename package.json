@@ -4,9 +4,18 @@
   "description": "Uniswap analytics scripts for DeFi/MEV builders and cross-chain analysis",
   "main": "src/index.js",
   "scripts": {
+    "crosschain:bridge:flow": "node src/crosschain/bridgeLiquidityFlow.js",
     "crosschain:uniswap:tvl": "node src/crosschain/uniswap/tvlAggregator.js",
     "crosschain:uniswap:volume": "node src/crosschain/uniswap/volumeComparison.js",
-    "crosschain:uniswap:liquidity": "node src/crosschain/uniswap/liquidityFlow.js"
+    "crosschain:uniswap:liquidity": "node src/crosschain/uniswap/liquidityFlow.js",
+    "analytics:efficiency": "node src/analytics/uniswap/efficiencyComparison.js",
+    "analytics:milestones": "node src/analytics/uniswap/milestoneTracker.js",
+    "analytics:liquidity": "node src/analytics/uniswap/liquidityDepthAnalysis.js",
+    "analytics:arbitrage": "node src/analytics/uniswap/crossChainArbitrage.js",
+    "analytics:v4efficiency": "node src/analytics/uniswap/v4CapitalEfficiency.js",
+    "analytics:gas": "node src/analytics/uniswap/gasCostComparison.js",
+    "analytics:feedensity": "node src/analytics/uniswap/feeDensity.js",
+    "analytics:pricediscrepancy": "node src/analytics/uniswap/crossChainPriceDiscrepancy.js"
   },
   "keywords": [
     "uniswap",
