@@ -11,3 +11,4 @@ src/crosschain/volumeComparison.js
 src/mev/arbitrageFinder.js
 src/mev/flashLoanAnalyzer.js
 src/mev/sandwichDetector.js
+*ideas.md

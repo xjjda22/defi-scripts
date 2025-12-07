@@ -105,13 +105,35 @@ Identifies price discrepancies for tokens across different chains to find cross-
 
 ## Planned Protocols
 
-- [ ] Curve Finance
-- [ ] Balancer
-- [ ] PancakeSwap
-- [ ] SushiSwap
-- [ ] 1inch
-- [ ] dYdX
-- [ ] GMX
+### Established Protocols (Pre-2025)
+- [ ] **Lido Finance** - Liquid Staking (~$26.4B TVL)
+- [ ] **Aave** - Lending & Borrowing (~$33.4B TVL)
+- [ ] **Curve Finance** - DEX Stablecoin-Focused (~$2.6B TVL)
+- [ ] **Balancer** - DEX & Liquidity Management (~$260M TVL)
+- [ ] **Morpho** - Lending Optimizer (~$5.93B TVL)
+- [ ] **SushiSwap** - AMM DEX (~$108M TVL)
+
+### 2025 Launched Protocols
+- [ ] **Reya Network** - High-Speed AMM DEX L2 (~$500M+ TVL)
+- [ ] **Aster DEX** - Multi-Chain AMM Perp/Spot (~$300M TVL)
+- [ ] **Ammalgam** - Hybrid AMM + Lending (~$80M TVL)
+- [ ] **Kinto** - KYC-Modular AMM DEX (~$200M TVL)
+- [ ] **Curvy v2** - ZK Stealth AMM Aggregator (~$50M TVL)
+- [ ] **Milk Road Swap** - Gasless Multi-Chain AMM (~$150M TVL)
+- [ ] **HumidiFi** - Prop AMM DEX (~$100M TVL)
+- [ ] **Lighter** - ZK Perp AMM Starknet L2 (~$120M TVL)
+- [ ] **Drake Exchange** - CLOB-AMM Perp DEX (~$40M TVL)
+- [ ] **Kintsu** - Liquid Staking AMM (~$60M TVL)
+- [ ] **Curvance** - Multi-Chain Isolated AMM (~$70M TVL)
+- [ ] **Resolv Labs** - Trustless Stablecoin AMM (~$272M TVL)
+- [ ] **StakeStone** - LST AMM DEX (~$51M TVL)
+- [ ] **Zama FHEVM DEX** - Privacy AMM FHE (~$30M TVL)
+- [ ] **Aztec Ignition DEX** - Decentralized Privacy AMM L2 (~$80M TVL)
+- [ ] **Monad AMM (Native)** - EVM-Compatible AMM L1 (~$187M TVL)
+- [ ] **Base Liquidity AMM (AERO Fork)** - Base Ecosystem AMM (~$250M TVL)
+- [ ] **Morpho Base AMM** - Lending-Optimized AMM (~$2.04B TVL)
+- [ ] **Soneium DEX** - Enterprise AMM L2 (~$45M TVL)
+- [ ] **MegaETH AMM** - High-Perf AMM L2 (~$90M TVL)
 
 ## Contributing
 
