@@ -24,140 +24,57 @@ BSC_RPC_URL=https://bsc-dataseed.binance.org/
 
 ## Scripts
 
-### Bridge Liquidity Flow
+### Cross-Chain
+
+#### Bridge Liquidity Flow
 ```bash
 npm run crosschain:bridge:flow
 ```
+Tracks token flows from Ethereum to L2s (Arbitrum, Optimism, Base) for WETH, USDC, USDT.
 
-Tracks token flows from Ethereum Mainnet to L2s (Arbitrum, Optimism, Base) by monitoring bridge transfers for major tokens (WETH, USDC, USDT).
+---
 
-### TVL Tracker
-```bash
-npm run crosschain:uniswap:tvl
-```
+### Uniswap
 
-Tracks Uniswap V1-V4 TVL across all chains using DefiLlama API. Outputs console reports with version breakdowns, market share analysis, and CSV exports to `output/`.
+#### Trackers
+| Script | Command | Description |
+|--------|---------|-------------|
+| TVL | `npm run crosschain:uniswap:tvl` | Tracks V1-V4 TVL across all chains with version breakdowns |
+| Volume | `npm run crosschain:uniswap:volume` | Tracks 24h trading volume across V1-V4 versions |
+| Liquidity | `npm run crosschain:uniswap:liquidity` | Tracks liquidity flows via mint/burn events |
 
-### Volume Tracker
-```bash
-npm run crosschain:uniswap:volume
-```
+#### Weekly Trackers
+| Script | Command | Description |
+|--------|---------|-------------|
+| TVL | `npm run crosschain:uniswap:weekly:tvl` | Daily TVL stats for current week |
+| Volume | `npm run crosschain:uniswap:weekly:volume` | Daily volume stats for current week |
+| Liquidity | `npm run crosschain:uniswap:weekly:liquidity` | Daily liquidity changes for current week |
 
-Tracks 24h trading volume across V1-V4 Uniswap versions on all chains. Includes version breakdowns, market share analysis, and CSV exports.
+#### Analytics
+| Script | Command | Description |
+|--------|---------|-------------|
+| Efficiency | `npm run analytics:efficiency` | Compares volume/TVL ratios across versions |
+| Milestones | `npm run analytics:milestones` | Tracks key milestones and metrics |
+| Liquidity Depth | `npm run analytics:liquidity` | Analyzes liquidity depth and price impact |
+| Arbitrage | `npm run analytics:arbitrage` | Identifies cross-chain arbitrage opportunities |
+| V4 Efficiency | `npm run analytics:v4efficiency` | Analyzes V4 capital efficiency improvements |
+| Gas Cost | `npm run analytics:gas` | Compares gas costs across versions and chains |
+| Fee Density | `npm run analytics:feedensity` | Analyzes fee generation density |
+| Price Discrepancy | `npm run analytics:pricediscrepancy` | Identifies price discrepancies across chains |
 
-### Liquidity Tracker
-```bash
-npm run crosschain:uniswap:liquidity
-```
+#### Weekly Analytics
+| Script | Command | Description |
+|--------|---------|-------------|
+| Fee Density | `npm run analytics:weekly:feedensity` | Daily fee density for current week |
+| Milestones | `npm run analytics:weekly:milestones` | Daily growth rates and milestone progress |
+| Efficiency | `npm run analytics:weekly:efficiency` | Daily efficiency ratios for current week |
+| V4 Efficiency | `npm run analytics:weekly:v4efficiency` | Daily V4 capital efficiency for current week |
 
-Tracks liquidity flows across Uniswap V2, V3, and V4 by monitoring mint/burn events and liquidity changes across all supported chains.
+---
 
-### Weekly TVL Tracker
-```bash
-npm run crosschain:uniswap:weekly:tvl
-```
+### [Future Protocols]
 
-Tracks daily TVL stats for each day of the current week (Monday-Sunday). Provides daily breakdowns, weekly trends, chain-by-chain analysis, and CSV exports with day-over-day changes.
-
-### Weekly Volume Tracker
-```bash
-npm run crosschain:uniswap:weekly:volume
-```
-
-Tracks daily trading volume for each day of the current week. Includes daily volume breakdowns, weekly trends, highest/lowest volume days, and chain-by-chain daily comparisons.
-
-### Weekly Liquidity Tracker
-```bash
-npm run crosschain:uniswap:weekly:liquidity
-```
-
-Tracks daily liquidity/TVL changes for each day of the current week. Monitors liquidity flows (inflows/outflows), calculates net weekly flow, and provides daily change percentages with visualizations.
-
-## Analytics Scripts
-
-### Efficiency Comparison
-```bash
-npm run analytics:efficiency
-```
-
-Compares volume/TVL ratios across Uniswap versions (V1-V4) to demonstrate capital efficiency improvements, particularly V3's concentrated liquidity superiority over V2.
-
-### Milestone Tracker
-```bash
-npm run analytics:milestones
-```
-
-Tracks key milestones and metrics for Uniswap protocols across different versions and chains.
-
-### Liquidity Depth Analysis
-```bash
-npm run analytics:liquidity
-```
-
-Analyzes liquidity depth and price impact for popular trading pairs (ETH/USDC, WBTC/ETH, etc.) to show real-world V3 benefits for LPs and traders.
-
-### Cross-Chain Arbitrage
-```bash
-npm run analytics:arbitrage
-```
-
-Identifies arbitrage opportunities across different chains by analyzing price discrepancies for the same token pairs.
-
-### V4 Capital Efficiency
-```bash
-npm run analytics:v4efficiency
-```
-
-Analyzes Uniswap V4 capital efficiency improvements and features compared to previous versions.
-
-### Gas Cost Comparison
-```bash
-npm run analytics:gas
-```
-
-Compares gas costs across different Uniswap versions and chains to understand transaction cost differences.
-
-### Fee Density
-```bash
-npm run analytics:feedensity
-```
-
-Analyzes fee generation density across Uniswap pools and versions to identify the most profitable liquidity positions.
-
-### Price Discrepancy
-```bash
-npm run analytics:pricediscrepancy
-```
-
-Identifies price discrepancies for tokens across different chains to find cross-chain arbitrage opportunities.
-
-### Weekly Fee Density Tracker
-```bash
-npm run analytics:weekly:feedensity
-```
-
-Tracks daily fee density (fees per dollar of TVL) for each day of the current week. Monitors fee generation trends across protocols, identifies when protocols become more/less profitable, and provides daily rankings.
-
-### Weekly Milestone Tracker
-```bash
-npm run analytics:weekly:milestones
-```
-
-Tracks daily growth rates and milestone progress for each day of the current week. Monitors progress toward ATH, daily TVL changes per version, and weekly growth trends.
-
-### Weekly Efficiency Tracker
-```bash
-npm run analytics:weekly:efficiency
-```
-
-Tracks daily efficiency ratios (volume/TVL) for each day of the current week. Shows which versions are improving/declining in capital efficiency and tracks efficiency trends over time.
-
-### Weekly V4 Efficiency Tracker
-```bash
-npm run analytics:weekly:v4efficiency
-```
-
-Tracks daily V4 capital efficiency for each day of the current week. Monitors V4 performance trends, efficiency changes, and chain-by-chain V4 performance.
+_Additional protocols will follow the same structure: Trackers → Weekly Trackers → Analytics → Weekly Analytics_
 
 ## Planned Protocols
 
