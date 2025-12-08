@@ -6,6 +6,7 @@
   "scripts": {
     "crosschain:bridge:flow": "node src/crosschain/bridgeLiquidityFlow.js",
     "crosschain:uniswap:tvl": "node src/crosschain/uniswap/tvlAggregator.js",
+    "crosschain:uniswap:weekly": "node src/crosschain/uniswap/weeklyStatsTracker.js",
     "crosschain:uniswap:volume": "node src/crosschain/uniswap/volumeComparison.js",
     "crosschain:uniswap:liquidity": "node src/crosschain/uniswap/liquidityFlow.js",
     "analytics:efficiency": "node src/analytics/uniswap/efficiencyComparison.js",
