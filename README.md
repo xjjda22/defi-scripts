@@ -24,26 +24,47 @@ BSC_RPC_URL=https://bsc-dataseed.binance.org/
 
 ## Scripts
 
-### Pool TVL Aggregator
+### TVL Tracker
 ```bash
 npm run crosschain:uniswap:tvl
 ```
 
-Aggregates Uniswap V1-V4 TVL across all chains using DefiLlama API. Outputs console reports with version breakdowns, market share analysis, and CSV exports to `output/`.
+Tracks Uniswap V1-V4 TVL across all chains using DefiLlama API. Outputs console reports with version breakdowns, market share analysis, and CSV exports to `output/`.
 
-### Volume Comparison
+### Volume Tracker
 ```bash
 npm run crosschain:uniswap:volume
 ```
 
-Compares 24h trading volume across V1-V4 Uniswap versions on all chains. Includes version breakdowns, market share analysis, and CSV exports.
+Tracks 24h trading volume across V1-V4 Uniswap versions on all chains. Includes version breakdowns, market share analysis, and CSV exports.
 
-### Liquidity Flow Tracker
+### Liquidity Tracker
 ```bash
 npm run crosschain:uniswap:liquidity
 ```
 
-Tracks token flows between Ethereum L1 and L2 bridges (Arbitrum, Optimism, Base) for major tokens (WETH, USDC, USDT).
+Tracks liquidity flows across Uniswap V2, V3, and V4 by monitoring mint/burn events and liquidity changes across all supported chains.
+
+### Weekly TVL Tracker
+```bash
+npm run crosschain:uniswap:weekly:tvl
+```
+
+Tracks daily TVL stats for each day of the current week (Monday-Sunday). Provides daily breakdowns, weekly trends, chain-by-chain analysis, and CSV exports with day-over-day changes.
+
+### Weekly Volume Tracker
+```bash
+npm run crosschain:uniswap:weekly:volume
+```
+
+Tracks daily trading volume for each day of the current week. Includes daily volume breakdowns, weekly trends, highest/lowest volume days, and chain-by-chain daily comparisons.
+
+### Weekly Liquidity Tracker
+```bash
+npm run crosschain:uniswap:weekly:liquidity
+```
+
+Tracks daily liquidity/TVL changes for each day of the current week. Monitors liquidity flows (inflows/outflows), calculates net weekly flow, and provides daily change percentages with visualizations.
 
 ## Analytics Scripts
 
