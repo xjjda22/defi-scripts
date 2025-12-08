@@ -39,30 +39,22 @@ Tracks token flows from Ethereum to L2s (Arbitrum, Optimism, Base) for WETH, USD
 #### Trackers
 | Script | Command | Description |
 |--------|---------|-------------|
-| TVL | `npm run crosschain:uniswap:tvl` | Tracks V1-V4 TVL across all chains with version breakdowns |
-| Volume | `npm run crosschain:uniswap:volume` | Tracks 24h trading volume across V1-V4 versions |
-| Liquidity | `npm run crosschain:uniswap:liquidity` | Tracks liquidity flows via mint/burn events |
-| | | |
-| Weekly TVL | `npm run crosschain:uniswap:weekly:tvl` | Daily TVL stats for current week |
-| Weekly Volume | `npm run crosschain:uniswap:weekly:volume` | Daily volume stats for current week |
-| Weekly Liquidity | `npm run crosschain:uniswap:weekly:liquidity` | Daily liquidity changes for current week |
+| TVL | `npm run crosschain:uniswap:tvl` <br> `npm run crosschain:uniswap:weekly:tvl` | Tracks V1-V4 TVL across all chains with version breakdowns |
+| Volume | `npm run crosschain:uniswap:volume` <br> `npm run crosschain:uniswap:weekly:volume` | Tracks 24h trading volume across V1-V4 versions |
+| Liquidity | `npm run crosschain:uniswap:liquidity` <br> `npm run crosschain:uniswap:weekly:liquidity` | Tracks liquidity flows via mint/burn events |
+
 
 #### Analytics
 | Script | Command | Description |
 |--------|---------|-------------|
-| Efficiency | `npm run analytics:efficiency` | Compares volume/TVL ratios across versions |
-| Milestones | `npm run analytics:milestones` | Tracks key milestones and metrics |
+| Efficiency | `npm run analytics:efficiency` <br> `npm run analytics:weekly:efficiency` | Compares volume/TVL ratios across versions |
+| Milestones | `npm run analytics:milestones` <br> `npm run analytics:weekly:milestones` | Tracks key milestones and metrics |
 | Liquidity Depth | `npm run analytics:liquidity` | Analyzes liquidity depth and price impact |
 | Arbitrage | `npm run analytics:arbitrage` | Identifies cross-chain arbitrage opportunities |
-| V4 Efficiency | `npm run analytics:v4efficiency` | Analyzes V4 capital efficiency improvements |
+| V4 Efficiency | `npm run analytics:v4efficiency` <br> `npm run analytics:weekly:v4efficiency` | Analyzes V4 capital efficiency improvements |
 | Gas Cost | `npm run analytics:gas` | Compares gas costs across versions and chains |
-| Fee Density | `npm run analytics:feedensity` | Analyzes fee generation density |
+| Fee Density | `npm run analytics:feedensity` <br> `npm run analytics:weekly:feedensity` | Analyzes fee generation density |
 | Price Discrepancy | `npm run analytics:pricediscrepancy` | Identifies price discrepancies across chains |
-| | | |
-| Weekly Fee Density | `npm run analytics:weekly:feedensity` | Daily fee density for current week |
-| Weekly Milestones | `npm run analytics:weekly:milestones` | Daily growth rates and milestone progress |
-| Weekly Efficiency | `npm run analytics:weekly:efficiency` | Daily efficiency ratios for current week |
-| Weekly V4 Efficiency | `npm run analytics:weekly:v4efficiency` | Daily V4 capital efficiency for current week |
 
 ---
 
