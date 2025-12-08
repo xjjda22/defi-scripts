@@ -42,13 +42,10 @@ Tracks token flows from Ethereum to L2s (Arbitrum, Optimism, Base) for WETH, USD
 | TVL | `npm run crosschain:uniswap:tvl` | Tracks V1-V4 TVL across all chains with version breakdowns |
 | Volume | `npm run crosschain:uniswap:volume` | Tracks 24h trading volume across V1-V4 versions |
 | Liquidity | `npm run crosschain:uniswap:liquidity` | Tracks liquidity flows via mint/burn events |
-
-#### Weekly Trackers
-| Script | Command | Description |
-|--------|---------|-------------|
-| TVL | `npm run crosschain:uniswap:weekly:tvl` | Daily TVL stats for current week |
-| Volume | `npm run crosschain:uniswap:weekly:volume` | Daily volume stats for current week |
-| Liquidity | `npm run crosschain:uniswap:weekly:liquidity` | Daily liquidity changes for current week |
+| | | |
+| Weekly TVL | `npm run crosschain:uniswap:weekly:tvl` | Daily TVL stats for current week |
+| Weekly Volume | `npm run crosschain:uniswap:weekly:volume` | Daily volume stats for current week |
+| Weekly Liquidity | `npm run crosschain:uniswap:weekly:liquidity` | Daily liquidity changes for current week |
 
 #### Analytics
 | Script | Command | Description |
@@ -61,20 +58,14 @@ Tracks token flows from Ethereum to L2s (Arbitrum, Optimism, Base) for WETH, USD
 | Gas Cost | `npm run analytics:gas` | Compares gas costs across versions and chains |
 | Fee Density | `npm run analytics:feedensity` | Analyzes fee generation density |
 | Price Discrepancy | `npm run analytics:pricediscrepancy` | Identifies price discrepancies across chains |
-
-#### Weekly Analytics
-| Script | Command | Description |
-|--------|---------|-------------|
-| Fee Density | `npm run analytics:weekly:feedensity` | Daily fee density for current week |
-| Milestones | `npm run analytics:weekly:milestones` | Daily growth rates and milestone progress |
-| Efficiency | `npm run analytics:weekly:efficiency` | Daily efficiency ratios for current week |
-| V4 Efficiency | `npm run analytics:weekly:v4efficiency` | Daily V4 capital efficiency for current week |
+| | | |
+| Weekly Fee Density | `npm run analytics:weekly:feedensity` | Daily fee density for current week |
+| Weekly Milestones | `npm run analytics:weekly:milestones` | Daily growth rates and milestone progress |
+| Weekly Efficiency | `npm run analytics:weekly:efficiency` | Daily efficiency ratios for current week |
+| Weekly V4 Efficiency | `npm run analytics:weekly:v4efficiency` | Daily V4 capital efficiency for current week |
 
 ---
 
-### [Future Protocols]
-
-_Additional protocols will follow the same structure: Trackers → Weekly Trackers → Analytics → Weekly Analytics_
 
 ## Planned Protocols
 
