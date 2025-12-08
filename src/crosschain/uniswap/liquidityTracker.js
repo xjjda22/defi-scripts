@@ -1,4 +1,4 @@
-// Unified Uniswap Liquidity Flow Tracker
+// Uniswap Liquidity Tracker
 // Tracks liquidity flows across Uniswap V2, V3, and V4 in one place
 
 require("dotenv").config();
@@ -541,8 +541,8 @@ async function trackAllVersions(chainKey, token0Address, token1Address) {
 
 async function generateReport() {
   printUniswapLogo("full");
-  console.log(`\n🦄 Uniswap Cross-Chain Liquidity Flow Tracker`);
-  console.log(`=============================================\n`);
+  console.log(`\n🦄 Uniswap Liquidity Tracker`);
+  console.log(`============================\n`);
 
   console.log(`📊 Tracking: Uniswap V2, V3, V4 across all supported chains`);
   console.log(`ℹ️  Analyzing last ${BLOCKS_TO_ANALYZE} blocks per chain\n`);

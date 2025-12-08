@@ -1,4 +1,4 @@
-// Cross-Chain Volume Comparison - Compares Uniswap trading volume across multiple chains
+// Uniswap Volume Tracker - Tracks Uniswap trading volume across multiple chains
 
 require("dotenv").config();
 const axios = require("axios");
@@ -114,8 +114,8 @@ async function getChainVolumeFromDefiLlama() {
 
 async function generateReport() {
   printUniswapLogo("full");
-  console.log(`\n📈 Cross-Chain Uniswap Volume Comparison`);
-  console.log(`==========================================\n`);
+  console.log(`\n📈 Uniswap Volume Tracker`);
+  console.log(`=========================\n`);
 
   const volumes = await getChainVolumeFromDefiLlama();
 

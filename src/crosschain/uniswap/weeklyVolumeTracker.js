@@ -1,4 +1,4 @@
-// Uniswap Weekly Stats Tracker - Tracks daily TVL stats for each day of this week
+// Uniswap Weekly Volume Tracker - Tracks daily volume stats for each day of this week
 
 require("dotenv").config();
 const axios = require("axios");
@@ -37,23 +37,22 @@ function getThisWeekDates() {
   return weekDates;
 }
 
-// Find the closest TVL data point for a given timestamp
-function findClosestTVLPoint(tvlData, targetTimestamp) {
-  if (!tvlData || tvlData.length === 0) return null;
+// Find the closest data point for a given timestamp
+function findClosestDataPoint(dataArray, targetTimestamp) {
+  if (!dataArray || dataArray.length === 0) return null;
   
-  // Find the closest point (data point with timestamp <= target, or closest overall)
   let closest = null;
   let minDiff = Infinity;
   
-  for (const point of tvlData) {
+  for (const point of dataArray) {
     // Handle different data structures: { date: timestamp, ... } or [timestamp, value]
     const pointTimestamp = point.date || point[0];
     if (!pointTimestamp) continue;
     
     const diff = Math.abs(pointTimestamp - targetTimestamp);
     
-    // Prefer points on or before the target date, but accept closest if none found
-    if (pointTimestamp <= targetTimestamp + 86400) { // Allow 1 day tolerance
+    // Prefer points on or before the target date, but allow 1 day tolerance
+    if (pointTimestamp <= targetTimestamp + 86400) {
       if (diff < minDiff) {
         minDiff = diff;
         closest = point;
@@ -63,7 +62,7 @@ function findClosestTVLPoint(tvlData, targetTimestamp) {
   
   // If no point found within tolerance, use the absolute closest
   if (!closest) {
-    for (const point of tvlData) {
+    for (const point of dataArray) {
       const pointTimestamp = point.date || point[0];
       if (!pointTimestamp) continue;
       const diff = Math.abs(pointTimestamp - targetTimestamp);
@@ -77,121 +76,110 @@ function findClosestTVLPoint(tvlData, targetTimestamp) {
   return closest;
 }
 
-// Get chain-specific TVL from historical data point
-function extractChainTVLFromPoint(point, chainName) {
-  if (!point) return 0;
-  
-  // Try different possible structures
-  // Structure 1: { date: timestamp, data: { chainName: value } }
-  if (point.data && point.data[chainName]) {
-    return point.data[chainName];
-  }
-  
-  // Structure 2: { date: timestamp, chainTvls: { chainName: value } }
-  if (point.chainTvls && point.chainTvls[chainName]) {
-    return point.chainTvls[chainName];
-  }
-  
-  // Structure 3: For Ethereum, might be in totalLiquidityUSD
-  if (chainName === "Ethereum" && point.totalLiquidityUSD) {
-    return point.totalLiquidityUSD;
-  }
-  
-  // Structure 4: Array format [timestamp, value] - this is total, not chain-specific
-  if (Array.isArray(point) && point.length >= 2) {
-    // This is total TVL, not chain-specific, so return 0
-    return 0;
-  }
-  
-  return 0;
-}
-
-// Get TVL data for a specific day
-async function getUniswapTVLForDay(chainName, targetTimestamp) {
+// Get volume data for a specific day
+async function getUniswapVolumeForDay(chainName, targetTimestamp) {
   try {
-    const protocols = ["uniswap-v1", "uniswap-v2", "uniswap-v3", "uniswap-v4"];
-    const tvlData = {};
+    const versions = ["v1", "v2", "v3", "v4"];
+    const volumeData = { v1: 0, v2: 0, v3: 0, v4: 0 };
+    const tvlData = { v1: 0, v2: 0, v3: 0, v4: 0 };
 
-    for (const protocol of protocols) {
+    for (const version of versions) {
       try {
-        const response = await axios.get(`${DEFILLAMA_API}/protocol/${protocol}`, {
-          timeout: 10000,
-        });
+        // Get fees/volume data
+        const feesResponse = await axios.get(
+          `${DEFILLAMA_API}/summary/fees/uniswap-${version}`,
+          { timeout: 10000 },
+        );
 
-        // Try to get chain-specific historical data from chainTvls
-        const chainTvls = response.data.chainTvls || {};
+        // Try to get historical volume data
+        const totalDataChart = feesResponse.data.totalDataChart || [];
+        const totalDataChartBreakdown = feesResponse.data.totalDataChartBreakdown || [];
+        
+        let chainVolume = 0;
+        
+        // Try to find historical data point
+        const closestPoint = findClosestDataPoint(totalDataChartBreakdown, targetTimestamp);
+        
+        if (closestPoint && Array.isArray(closestPoint) && closestPoint.length >= 2) {
+          const chainData = closestPoint[1]?.[chainName] || {};
+          const versionNum = version.charAt(1);
+          const versionName = `Uniswap V${versionNum}`;
+          chainVolume = chainData[versionName] || 0;
+        } else {
+          // Fallback to latest data
+          const latestData = totalDataChartBreakdown?.slice(-1)?.[0];
+          if (latestData && Array.isArray(latestData) && latestData.length >= 2) {
+            const chainData = latestData[1]?.[chainName] || {};
+            const versionNum = version.charAt(1);
+            const versionName = `Uniswap V${versionNum}`;
+            chainVolume = chainData[versionName] || 0;
+          }
+        }
+        
+        volumeData[version] = chainVolume;
+
+        // Get TVL data for context
+        const tvlResponse = await axios.get(
+          `${DEFILLAMA_API}/protocol/uniswap-${version}`,
+          { timeout: 10000 },
+        );
+        
+        // Try to get historical TVL
+        const historicalTVL = tvlResponse.data.tvl || [];
+        const chainTvls = tvlResponse.data.chainTvls || {};
+        
         let chainTVL = 0;
         
         if (chainTvls[chainName] && Array.isArray(chainTvls[chainName])) {
-          // Chain-specific historical data available
-          const closestPoint = findClosestTVLPoint(chainTvls[chainName], targetTimestamp);
-          if (closestPoint) {
-            chainTVL = extractChainTVLFromPoint(closestPoint, chainName);
-            // If array format [timestamp, value], extract value
-            if (Array.isArray(closestPoint) && closestPoint.length >= 2) {
-              chainTVL = closestPoint[1] || 0;
-            }
+          const closestTvlPoint = findClosestDataPoint(chainTvls[chainName], targetTimestamp);
+          if (closestTvlPoint && Array.isArray(closestTvlPoint) && closestTvlPoint.length >= 2) {
+            chainTVL = closestTvlPoint[1] || 0;
           }
         }
         
-        // Fallback: try overall TVL array and use current chain proportion
+        // Fallback to current TVL
         if (chainTVL === 0) {
-          const historicalTVL = response.data.tvl || [];
-          const closestPoint = findClosestTVLPoint(historicalTVL, targetTimestamp);
-          
-          if (closestPoint) {
-            const totalTVL = closestPoint.totalLiquidityUSD || 
-                           (Array.isArray(closestPoint) ? closestPoint[1] : 0) ||
-                           closestPoint.value || 0;
-            
-            // Estimate chain proportion based on current chain TVL ratio
-            const currentChainTVL = response.data.currentChainTvls?.[chainName] || 0;
-            const currentTotalTVL = Object.values(response.data.currentChainTvls || {}).reduce(
-              (sum, val) => sum + (typeof val === 'number' ? val : 0), 0
-            );
-            
-            if (currentTotalTVL > 0 && totalTVL > 0) {
-              const chainProportion = currentChainTVL / currentTotalTVL;
-              chainTVL = totalTVL * chainProportion;
-            } else {
-              // Last fallback: use current chain TVL
-              chainTVL = currentChainTVL;
-            }
-          } else {
-            // No historical data found, use current chain TVL
-            chainTVL = response.data.currentChainTvls?.[chainName] || 0;
-          }
+          chainTVL = tvlResponse.data.currentChainTvls?.[chainName] || 0;
         }
         
-        tvlData[protocol] = chainTVL;
-      } catch (error) {
-        // Silently skip if protocol doesn't exist or has no data
-        tvlData[protocol] = 0;
+        tvlData[version] = chainTVL;
+      } catch (err) {
+        // Silently skip if version doesn't exist or has no data
+        volumeData[version] = 0;
+        tvlData[version] = 0;
       }
     }
 
-    const v1 = tvlData["uniswap-v1"] || 0;
-    const v2 = tvlData["uniswap-v2"] || 0;
-    const v3 = tvlData["uniswap-v3"] || 0;
-    const v4 = tvlData["uniswap-v4"] || 0;
+    const totalVolume = volumeData.v1 + volumeData.v2 + volumeData.v3 + volumeData.v4;
+    const totalTVL = tvlData.v1 + tvlData.v2 + tvlData.v3 + tvlData.v4;
 
     return {
       chain: chainName,
-      v1: v1,
-      v2: v2,
-      v3: v3,
-      v4: v4,
-      total: v1 + v2 + v3 + v4,
+      v1Volume: volumeData.v1,
+      v2Volume: volumeData.v2,
+      v3Volume: volumeData.v3,
+      v4Volume: volumeData.v4,
+      volume24h: totalVolume,
+      v1TVL: tvlData.v1,
+      v2TVL: tvlData.v2,
+      v3TVL: tvlData.v3,
+      v4TVL: tvlData.v4,
+      tvl: totalTVL,
     };
   } catch (error) {
-    console.warn(`⚠️  Could not fetch TVL for ${chainName} on timestamp ${targetTimestamp}:`, error.message);
+    console.warn(`⚠️  Could not fetch volume for ${chainName} on timestamp ${targetTimestamp}:`, error.message);
     return {
       chain: chainName,
-      v1: 0,
-      v2: 0,
-      v3: 0,
-      v4: 0,
-      total: 0,
+      v1Volume: 0,
+      v2Volume: 0,
+      v3Volume: 0,
+      v4Volume: 0,
+      volume24h: 0,
+      v1TVL: 0,
+      v2TVL: 0,
+      v3TVL: 0,
+      v4TVL: 0,
+      tvl: 0,
     };
   }
 }
@@ -202,16 +190,16 @@ async function getWeeklyStats() {
   const chainMapping = {
     ethereum: "Ethereum",
     arbitrum: "Arbitrum",
-    optimism: "Optimism",
+    optimism: "OP Mainnet",
     base: "Base",
     polygon: "Polygon",
-    bsc: "Binance",
+    bsc: "BSC",
   };
 
   const weeklyData = [];
 
   for (const dayInfo of weekDates) {
-    console.log(`📅 Fetching data for ${dayInfo.dayName} (${dayInfo.dateStr})...`);
+    console.log(`📅 Fetching volume data for ${dayInfo.dayName} (${dayInfo.dateStr})...`);
     const dayData = {
       date: dayInfo.dateStr,
       dayName: dayInfo.dayName,
@@ -223,7 +211,7 @@ async function getWeeklyStats() {
       const chain = CHAINS[chainKey];
       if (!chain) continue;
 
-      const data = await getUniswapTVLForDay(chainName, dayInfo.timestamp);
+      const data = await getUniswapVolumeForDay(chainName, dayInfo.timestamp);
       dayData.chains.push({
         chain: chain.name,
         chainKey,
@@ -242,8 +230,8 @@ async function getWeeklyStats() {
 
 async function generateReport() {
   printUniswapLogo("full");
-  console.log(`\n📊 Uniswap Weekly Stats Tracker`);
-  console.log(`================================\n`);
+  console.log(`\n📈 Uniswap Weekly Volume Tracker`);
+  console.log(`=================================\n`);
 
   const weeklyData = await getWeeklyStats();
 
@@ -257,19 +245,21 @@ async function generateReport() {
     const totals = {
       date: dayData.date,
       dayName: dayData.dayName,
+      totalVolume: 0,
       totalTVL: 0,
-      v1: 0,
-      v2: 0,
-      v3: 0,
-      v4: 0,
+      v1Volume: 0,
+      v2Volume: 0,
+      v3Volume: 0,
+      v4Volume: 0,
     };
 
     dayData.chains.forEach((chain) => {
-      totals.totalTVL += chain.total;
-      totals.v1 += chain.v1;
-      totals.v2 += chain.v2;
-      totals.v3 += chain.v3;
-      totals.v4 += chain.v4;
+      totals.totalVolume += chain.volume24h;
+      totals.totalTVL += chain.tvl;
+      totals.v1Volume += chain.v1Volume;
+      totals.v2Volume += chain.v2Volume;
+      totals.v3Volume += chain.v3Volume;
+      totals.v4Volume += chain.v4Volume;
     });
 
     return totals;
@@ -284,32 +274,36 @@ async function generateReport() {
   const weekEnd = weeklyData[weeklyData.length - 1].date;
   console.log(`   Week: ${weekStart} to ${weekEnd}\n`);
 
-  // Find min and max TVL
+  // Find min and max volume
   const maxDay = dailyTotals.reduce((max, day) => 
-    day.totalTVL > max.totalTVL ? day : max, dailyTotals[0]);
+    day.totalVolume > max.totalVolume ? day : max, dailyTotals[0]);
   const minDay = dailyTotals.reduce((min, day) => 
-    day.totalTVL < min.totalTVL ? day : min, dailyTotals[0]);
+    day.totalVolume < min.totalVolume ? day : min, dailyTotals[0]);
 
-  console.log(`   Highest TVL: ${formatUSD(maxDay.totalTVL)} (${maxDay.dayName}, ${maxDay.date})`);
-  console.log(`   Lowest TVL:  ${formatUSD(minDay.totalTVL)} (${minDay.dayName}, ${minDay.date})`);
+  console.log(`   Highest Volume: ${formatUSD(maxDay.totalVolume)} (${maxDay.dayName}, ${maxDay.date})`);
+  console.log(`   Lowest Volume:  ${formatUSD(minDay.totalVolume)} (${minDay.dayName}, ${minDay.date})`);
   
-  const change = maxDay.totalTVL - minDay.totalTVL;
-  const changePercent = minDay.totalTVL > 0 
-    ? ((change / minDay.totalTVL) * 100).toFixed(2) 
+  const change = maxDay.totalVolume - minDay.totalVolume;
+  const changePercent = minDay.totalVolume > 0 
+    ? ((change / minDay.totalVolume) * 100).toFixed(2) 
     : "0.00";
   console.log(`   Weekly Range: ${formatUSD(change)} (${changePercent}%)\n`);
 
+  // Calculate average daily volume
+  const avgVolume = dailyTotals.reduce((sum, day) => sum + day.totalVolume, 0) / dailyTotals.length;
+  console.log(`   Average Daily Volume: ${formatUSD(avgVolume)}\n`);
+
   // Daily Breakdown Table
   console.log(`╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗`);
-  console.log(`║                          📅 DAILY TVL BREAKDOWN                                                                    ║`);
+  console.log(`║                          📅 DAILY VOLUME BREAKDOWN                                                                    ║`);
   console.log(`╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣`);
-  console.log(`║ Day       │ Date       │ Total TVL      │ V1 TVL        │ V2 TVL        │ V3 TVL        │ V4 TVL        │ Change    ║`);
+  console.log(`║ Day       │ Date       │ Total Volume   │ V1 Volume     │ V2 Volume     │ V3 Volume     │ V4 Volume     │ Change    ║`);
   console.log(`╠═══════════╪════════════╪════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════╣`);
 
   let previousTotal = null;
   dailyTotals.forEach((day) => {
     const change = previousTotal !== null 
-      ? day.totalTVL - previousTotal 
+      ? day.totalVolume - previousTotal 
       : 0;
     const changePercent = previousTotal !== null && previousTotal > 0
       ? ((change / previousTotal) * 100).toFixed(2)
@@ -320,23 +314,23 @@ async function generateReport() {
 
     const dayNameStr = day.dayName.substring(0, 9).padEnd(9);
     const dateStr = day.date.padEnd(10);
-    const totalStr = formatUSD(day.totalTVL).padEnd(14);
-    const v1Str = formatUSD(day.v1).padEnd(13);
-    const v2Str = formatUSD(day.v2).padEnd(13);
-    const v3Str = formatUSD(day.v3).padEnd(13);
-    const v4Str = formatUSD(day.v4).padEnd(13);
+    const totalStr = formatUSD(day.totalVolume).padEnd(14);
+    const v1Str = formatUSD(day.v1Volume).padEnd(13);
+    const v2Str = formatUSD(day.v2Volume).padEnd(13);
+    const v3Str = formatUSD(day.v3Volume).padEnd(13);
+    const v4Str = formatUSD(day.v4Volume).padEnd(13);
     const changeStrFormatted = changeStr.padEnd(9);
 
     console.log(`║ ${dayNameStr} │ ${dateStr} │ ${totalStr} │ ${v1Str} │ ${v2Str} │ ${v3Str} │ ${v4Str} │ ${changeStrFormatted} ║`);
 
-    previousTotal = day.totalTVL;
+    previousTotal = day.totalVolume;
   });
 
   console.log(`╚═══════════╪════════════╪════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════╝\n`);
 
   // Chain Breakdown by Day
   console.log(`╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗`);
-  console.log(`║                          💰 TVL BY CHAIN - DAILY BREAKDOWN                                                         ║`);
+  console.log(`║                          💰 VOLUME BY CHAIN - DAILY BREAKDOWN                                                      ║`);
   console.log(`╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n`);
 
   // Get all unique chains
@@ -347,12 +341,12 @@ async function generateReport() {
     weeklyData.forEach((dayData) => {
       const chainData = dayData.chains.find(c => c.chain === chain);
       if (chainData) {
-        const change = dayData.chains.length > 0 ? 
-          (chainData.total - (weeklyData[0].chains.find(c => c.chain === chain)?.total || 0)) : 0;
-        const changePercent = weeklyData[0].chains.find(c => c.chain === chain)?.total > 0
-          ? ((change / weeklyData[0].chains.find(c => c.chain === chain).total) * 100).toFixed(2)
+        const mondayVolume = weeklyData[0].chains.find(c => c.chain === chain)?.volume24h || 0;
+        const change = chainData.volume24h - mondayVolume;
+        const changePercent = mondayVolume > 0
+          ? ((change / mondayVolume) * 100).toFixed(2)
           : "0.00";
-        console.log(`      ${dayData.dayName.padEnd(9)} (${dayData.date}): ${formatUSD(chainData.total).padEnd(15)} (${change >= 0 ? "+" : ""}${changePercent}% vs Monday)`);
+        console.log(`      ${dayData.dayName.padEnd(9)} (${dayData.date}): ${formatUSD(chainData.volume24h).padEnd(15)} (${change >= 0 ? "+" : ""}${changePercent}% vs Monday)`);
       }
     });
     console.log(``);
@@ -360,18 +354,18 @@ async function generateReport() {
 
   // Weekly Trend Visualization
   console.log(`╔════════════════════════════════════════════════════════════════╗`);
-  console.log(`║              📈 WEEKLY TVL TREND                               ║`);
+  console.log(`║              📈 WEEKLY VOLUME TREND                            ║`);
   console.log(`╚════════════════════════════════════════════════════════════════╝\n`);
 
-  const maxTVL = Math.max(...dailyTotals.map(d => d.totalTVL));
+  const maxVolume = Math.max(...dailyTotals.map(d => d.totalVolume));
   const maxBarLength = 50;
 
   dailyTotals.forEach((day) => {
-    const share = maxTVL > 0 ? (day.totalTVL / maxTVL) * 100 : 0;
+    const share = maxVolume > 0 ? (day.totalVolume / maxVolume) * 100 : 0;
     const barLength = Math.floor((share / 100) * maxBarLength);
     const bar = "█".repeat(barLength);
     const emptyBar = "░".repeat(maxBarLength - barLength);
-    console.log(`   ${day.dayName.padEnd(9)} ${formatUSD(day.totalTVL).padEnd(15)} │${bar}${emptyBar}│ ${share.toFixed(1)}%`);
+    console.log(`   ${day.dayName.padEnd(9)} ${formatUSD(day.totalVolume).padEnd(15)} │${bar}${emptyBar}│ ${share.toFixed(1)}%`);
   });
 
   console.log(`\n`);
@@ -384,31 +378,41 @@ async function generateReport() {
         date: dayData.date,
         dayName: dayData.dayName,
         chain: chain.chain,
-        v1TVL: chain.v1,
-        v2TVL: chain.v2,
-        v3TVL: chain.v3,
-        v4TVL: chain.v4,
-        totalTVL: chain.total,
+        v1Volume: chain.v1Volume,
+        v2Volume: chain.v2Volume,
+        v3Volume: chain.v3Volume,
+        v4Volume: chain.v4Volume,
+        volume24h: chain.volume24h,
+        v1TVL: chain.v1TVL,
+        v2TVL: chain.v2TVL,
+        v3TVL: chain.v3TVL,
+        v4TVL: chain.v4TVL,
+        tvl: chain.tvl,
       });
     });
   });
 
   await writeCSV(
-    "output/uniswap-weekly-stats.csv",
+    "output/uniswap-weekly-volume.csv",
     [
       { id: "date", title: "Date" },
       { id: "dayName", title: "Day" },
       { id: "chain", title: "Chain" },
+      { id: "v1Volume", title: "V1 24h Volume (USD)" },
+      { id: "v2Volume", title: "V2 24h Volume (USD)" },
+      { id: "v3Volume", title: "V3 24h Volume (USD)" },
+      { id: "v4Volume", title: "V4 24h Volume (USD)" },
+      { id: "volume24h", title: "Total 24h Volume (USD)" },
       { id: "v1TVL", title: "V1 TVL (USD)" },
       { id: "v2TVL", title: "V2 TVL (USD)" },
       { id: "v3TVL", title: "V3 TVL (USD)" },
       { id: "v4TVL", title: "V4 TVL (USD)" },
-      { id: "totalTVL", title: "Total TVL (USD)" },
+      { id: "tvl", title: "Total TVL (USD)" },
     ],
     csvData,
   );
 
-  console.log(`\n✅ Weekly stats report generated!\n`);
+  console.log(`\n✅ Weekly volume report generated!\n`);
 }
 
 if (require.main === module) {

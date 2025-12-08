@@ -1,4 +1,4 @@
-// Uniswap TVL Aggregator - Aggregates Uniswap pool TVL across multiple chains
+// Uniswap TVL Tracker - Tracks Uniswap pool TVL across multiple chains
 
 require("dotenv").config();
 const axios = require("axios");
@@ -91,8 +91,8 @@ async function getPoolTVLBreakdown() {
 
 async function generateReport() {
   printUniswapLogo("full");
-  console.log(`\n💧 Uniswap Pool TVL Aggregator`);
-  console.log(`==============================\n`);
+  console.log(`\n💧 Uniswap TVL Tracker`);
+  console.log(`======================\n`);
 
   const tvlData = await getPoolTVLBreakdown();
 
