@@ -18,7 +18,9 @@
     "analytics:v4efficiency": "node src/analytics/uniswap/v4CapitalEfficiency.js",
     "analytics:gas": "node src/analytics/uniswap/gasCostComparison.js",
     "analytics:feedensity": "node src/analytics/uniswap/feeDensity.js",
-    "analytics:pricediscrepancy": "node src/analytics/uniswap/crossChainPriceDiscrepancy.js"
+    "analytics:pricediscrepancy": "node src/analytics/uniswap/crossChainPriceDiscrepancy.js",
+    "prettier": "prettier --write './**/*.{js,json,yaml,yml,sol}'",
+    "lint:fix": "eslint . --ignore-path .eslintignore --ext .js,.sol --fix --quiet"
   },
   "keywords": [
     "uniswap",
@@ -34,5 +36,10 @@
     "csv-writer": "^1.6.0",
     "dotenv": "^16.6.1",
     "ethers": "^6.15.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-solidity": "^1.3.2"
   }
 }
