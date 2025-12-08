@@ -24,6 +24,13 @@ BSC_RPC_URL=https://bsc-dataseed.binance.org/
 
 ## Scripts
 
+### Bridge Liquidity Flow
+```bash
+npm run crosschain:bridge:flow
+```
+
+Tracks token flows from Ethereum Mainnet to L2s (Arbitrum, Optimism, Base) by monitoring bridge transfers for major tokens (WETH, USDC, USDT).
+
 ### TVL Tracker
 ```bash
 npm run crosschain:uniswap:tvl
@@ -123,6 +130,34 @@ npm run analytics:pricediscrepancy
 ```
 
 Identifies price discrepancies for tokens across different chains to find cross-chain arbitrage opportunities.
+
+### Weekly Fee Density Tracker
+```bash
+npm run analytics:weekly:feedensity
+```
+
+Tracks daily fee density (fees per dollar of TVL) for each day of the current week. Monitors fee generation trends across protocols, identifies when protocols become more/less profitable, and provides daily rankings.
+
+### Weekly Milestone Tracker
+```bash
+npm run analytics:weekly:milestones
+```
+
+Tracks daily growth rates and milestone progress for each day of the current week. Monitors progress toward ATH, daily TVL changes per version, and weekly growth trends.
+
+### Weekly Efficiency Tracker
+```bash
+npm run analytics:weekly:efficiency
+```
+
+Tracks daily efficiency ratios (volume/TVL) for each day of the current week. Shows which versions are improving/declining in capital efficiency and tracks efficiency trends over time.
+
+### Weekly V4 Efficiency Tracker
+```bash
+npm run analytics:weekly:v4efficiency
+```
+
+Tracks daily V4 capital efficiency for each day of the current week. Monitors V4 performance trends, efficiency changes, and chain-by-chain V4 performance.
 
 ## Planned Protocols
 
