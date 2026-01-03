@@ -11,7 +11,6 @@
     "crosschain:uniswap:weekly:volume": "node src/crosschain/uniswap/weeklyVolumeTracker.js",
     "crosschain:uniswap:weekly:liquidity": "node src/crosschain/uniswap/weeklyLiquidityTracker.js",
     "analytics:weekly:blocks": "node src/analytics/weeklyBlockAnalysis.js",
-    "mev:cascades": "node src/mev/crossProtocolLiquidationCascade.js",
     "prettier": "prettier --write './**/*.{js,json,yaml,yml,sol}'",
     "lint:fix": "eslint . --ignore-path .eslintignore --ext .js,.sol --fix --quiet"
   },
