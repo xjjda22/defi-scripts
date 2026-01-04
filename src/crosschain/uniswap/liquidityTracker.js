@@ -1,5 +1,23 @@
-// Uniswap Liquidity Tracker
-// Tracks liquidity flows across Uniswap V2, V3, and V4 in one place
+/**
+ * Uniswap Liquidity Tracker - On-Chain Analysis
+ *
+ * PURPOSE: Tracks real-time liquidity flows across Uniswap V2, V3, and V4
+ *          by analyzing on-chain events and contract states
+ *
+ * DATA SOURCES:
+ * - Primary: Direct blockchain RPC calls (ethers.js)
+ * - Events: Mint/Burn (V2), Increase/DecreaseLiquidity (V3), ModifyLiquidity (V4)
+ * - Chains: Ethereum, Arbitrum, Optimism, Base, Polygon, BSC
+ * - Protocols: Uniswap V2, V3, and V4
+ *
+ * ANALYSIS: Real-time liquidity provision and removal tracking
+ *
+ * OUTPUT:
+ * - Console: Live liquidity flow monitoring
+ * - CSV: Historical liquidity event data
+ *
+ * USAGE: node liquidityTracker.js
+ */
 
 require("dotenv").config();
 const { ethers } = require("ethers");
@@ -9,6 +27,37 @@ const { getProvider, getBlockNumber } = require("../../utils/web3");
 const { formatUSD } = require("../../utils/prices");
 const { writeCSV } = require("../../utils/csv");
 const { printUniswapLogo } = require("../../utils/ascii");
+
+// ================================================================================================
+// CONFIGURATION CONSTANTS
+// ================================================================================================
+
+/** @type {number} Number of blocks to look back for event analysis */
+const BLOCKS_TO_ANALYZE = 1000;
+
+/** @type {number} Maximum number of events to process per run */
+const MAX_EVENTS_PER_RUN = 10000;
+
+/** @type {number} Rate limiting delay between contract calls (ms) */
+const CONTRACT_CALL_DELAY_MS = 100;
+
+/** @type {Object.<string, Object>} Contract addresses by chain and protocol */
+const CONTRACT_ADDRESSES = {
+  ethereum: {
+    v2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+    v3Factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+    v3PositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+    v4PoolManager: "0x0000000000041264aecF49f4585974C1c1f1C3a3",
+  },
+  // Add other chains as needed
+};
+
+/** @type {Object.<string, number>} Default gas limits for different operations */
+const GAS_LIMITS = {
+  getReserves: 30000,
+  getPool: 50000,
+  positions: 100000,
+};
 
 // ============================================================================
 // ABIs
@@ -58,21 +107,35 @@ const ERC20_ABI = [
   "function name() view returns (string)",
 ];
 
-// ============================================================================
-// Configuration
-// ============================================================================
+// ================================================================================================
+// ANALYSIS CONFIGURATION
+// ================================================================================================
 
+/** @type {number} Number of recent blocks to analyze for events */
 const BLOCKS_TO_ANALYZE = process.env.BLOCKS_TO_ANALYZE ? parseInt(process.env.BLOCKS_TO_ANALYZE) : 1000;
-const CHUNK_SIZE = 10;
+
+/** @type {number} Chunk size for processing events in batches */
+const CHUNK_SIZE = process.env.CHUNK_SIZE ? parseInt(process.env.CHUNK_SIZE) : 10;
+
+/** @type {number|null} Specific starting block for analysis (optional) */
 const START_BLOCK = process.env.START_BLOCK ? parseInt(process.env.START_BLOCK) : null;
 
-// V3 Fee tiers (in basis points)
+/** @type {Array<number>} V3 fee tiers in basis points */
 const V3_FEE_TIERS = [500, 3000, 10000]; // 0.05%, 0.3%, 1%
 
-// ============================================================================
-// Utility Functions
-// ============================================================================
+/** @type {Array<number>} V4 fee tiers in basis points */
+const V4_FEE_TIERS = [100, 500, 3000, 10000]; // 0.01%, 0.05%, 0.3%, 1%
 
+// ================================================================================================
+// UTILITY FUNCTIONS
+// ================================================================================================
+
+/**
+ * Retrieves token information (symbol, decimals, name) from contract
+ * @param {string} tokenAddress - ERC20 token contract address
+ * @param {ethers.Provider} provider - Ethers provider instance
+ * @returns {Promise<Object>} Token information object
+ */
 async function getTokenInfo(tokenAddress, provider) {
   try {
     const token = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
@@ -90,28 +153,41 @@ async function getTokenInfo(tokenAddress, provider) {
 // Uniswap V2 Tracking
 // ============================================================================
 
+/**
+ * Tracks Uniswap V2 liquidity events for a token pair on a specific chain
+ * @param {string} chainKey - Chain configuration key
+ * @param {string} token0Address - First token contract address
+ * @param {string} token1Address - Second token contract address
+ * @returns {Promise<Array>} Array of liquidity events
+ */
 async function trackV2Liquidity(chainKey, token0Address, token1Address) {
+  console.log(`[INFO] Analyzing V2 liquidity for ${token0Address}/${token1Address} on ${chainKey}`);
+
   const chain = CHAINS[chainKey];
   if (!chain || !chain.rpcUrl || !chain.uniswap?.v2?.factory) {
+    console.log(`[WARN] V2 not configured for chain: ${chainKey}`);
     return [];
   }
 
-  const provider = getProvider(chainKey);
-  const factory = new ethers.Contract(chain.uniswap.v2.factory, V2_FACTORY_ABI, provider);
+  try {
+    const provider = getProvider(chainKey);
+    const factory = new ethers.Contract(chain.uniswap.v2.factory, V2_FACTORY_ABI, provider);
 
-  // Get the pair address
-  const pairAddress = await factory.getPair(token0Address, token1Address);
-  if (pairAddress === ethers.ZeroAddress) {
-    console.log(`   ℹ️  No V2 pair exists on ${chain.name}`);
-    return [];
-  }
+    // Get the pair address
+    const pairAddress = await factory.getPair(token0Address, token1Address);
+    if (pairAddress === ethers.ZeroAddress) {
+      console.log(`[INFO] No V2 pair exists for ${token0Address}/${token1Address} on ${chain.name}`);
+      return [];
+    }
 
-  console.log(`   📍 V2 Pair: ${pairAddress}`);
+    console.log(`[DEBUG] V2 Pair found: ${pairAddress}`);
 
-  const pair = new ethers.Contract(pairAddress, PAIR_ABI, provider);
-  const currentBlock = await getBlockNumber(chainKey);
-  const startBlock = START_BLOCK || Math.max(0, currentBlock - BLOCKS_TO_ANALYZE);
-  const endBlock = START_BLOCK ? Math.min(START_BLOCK + BLOCKS_TO_ANALYZE, currentBlock) : currentBlock;
+    const pair = new ethers.Contract(pairAddress, PAIR_ABI, provider);
+    const currentBlock = await getBlockNumber(chainKey);
+    const startBlock = START_BLOCK || Math.max(0, currentBlock - BLOCKS_TO_ANALYZE);
+    const endBlock = START_BLOCK ? Math.min(START_BLOCK + BLOCKS_TO_ANALYZE, currentBlock) : currentBlock;
+
+    console.log(`[DEBUG] Analyzing blocks ${startBlock} to ${endBlock}`);
 
   // Get token info
   const [token0Info, token1Info] = await Promise.all([
@@ -520,12 +596,22 @@ async function trackAllVersions(chainKey, token0Address, token1Address) {
 // Report Generation
 // ============================================================================
 
+/**
+ * Generates comprehensive liquidity tracking report
+ * @returns {Promise<void>}
+ */
 async function generateReport() {
+  // Display header
   printUniswapLogo("full");
-  console.log(`\n🦄 Uniswap Liquidity Tracker`);
-  console.log(`============================\n`);
+  console.log(`\n🦄 UNISWAP LIQUIDITY TRACKER - ON-CHAIN ANALYSIS`);
+  console.log(`═══════════════════════════════════════════════════════`);
+  console.log(`Purpose: Real-time liquidity flow tracking via blockchain events`);
+  console.log(`Protocols: Uniswap V2, V3, V4`);
+  console.log(`Data Source: Direct blockchain RPC calls`);
+  console.log(`Analysis: ${BLOCKS_TO_ANALYZE} blocks back from latest`);
+  console.log(``);
 
-  console.log(`📊 Tracking: Uniswap V2, V3, V4 across all supported chains`);
+  console.log(`[INFO] Starting comprehensive liquidity analysis across all chains`);
   console.log(`ℹ️  Analyzing last ${BLOCKS_TO_ANALYZE} blocks per chain\n`);
 
   const allFlows = [];

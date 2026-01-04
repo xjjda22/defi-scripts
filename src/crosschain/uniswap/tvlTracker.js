@@ -1,4 +1,22 @@
-// Uniswap TVL Tracker - Tracks Uniswap pool TVL across multiple chains
+/**
+ * Uniswap TVL Tracker - Current State Analysis
+ *
+ * PURPOSE: Tracks current Total Value Locked (TVL) across Uniswap V1-V4
+ *          protocols for multiple chains
+ *
+ * DATA SOURCES:
+ * - Primary: DefiLlama Protocol API (https://api.llama.fi)
+ * - Chains: Ethereum, Arbitrum, Optimism, Base, Polygon, BSC
+ * - Protocols: uniswap-v1, uniswap-v2, uniswap-v3, uniswap-v4
+ *
+ * ANALYSIS: Current TVL snapshot across all supported protocols
+ *
+ * OUTPUT:
+ * - Console: Formatted TVL breakdown tables
+ * - CSV: Current TVL data by chain and version
+ *
+ * USAGE: node tvlTracker.js
+ */
 
 require("dotenv").config();
 const axios = require("axios");
@@ -7,137 +25,303 @@ const { formatUSD } = require("../../utils/prices");
 const { writeCSV } = require("../../utils/csv");
 const { printUniswapLogo } = require("../../utils/ascii");
 
-// DefiLlama API endpoints
+// ================================================================================================
+// CONFIGURATION CONSTANTS
+// ================================================================================================
+
+/** @type {string} Base URL for DefiLlama API */
 const DEFILLAMA_API = "https://api.llama.fi";
 
+/** @type {string[]} Supported Uniswap protocol versions */
+const UNISWAP_VERSIONS = ["uniswap-v1", "uniswap-v2", "uniswap-v3", "uniswap-v4"];
+
+/** @type {Object.<string, string>} Maps internal chain keys to DefiLlama chain names */
+const CHAIN_MAPPING = {
+  ethereum: "Ethereum",
+  arbitrum: "Arbitrum",
+  optimism: "Optimism",
+  base: "Base",
+  polygon: "Polygon",
+  bsc: "Binance",
+};
+
+/** @type {number} API request timeout (ms) */
+const API_TIMEOUT_MS = 10000;
+
+// ================================================================================================
+// DATA FETCHING FUNCTIONS
+// ================================================================================================
+
+/**
+ * Fetches current TVL data for a specific chain across all Uniswap versions
+ * @param {string} chainName - Name of the blockchain (DefiLlama format)
+ * @returns {Promise<Object>} TVL data by version and totals
+ */
 async function getUniswapTVL(chainName) {
-  try {
-    // Get all Uniswap versions TVL from DefiLlama
-    const protocols = ["uniswap-v1", "uniswap-v2", "uniswap-v3", "uniswap-v4"];
-    const tvlData = {};
+  const tvlData = {};
 
-    for (const protocol of protocols) {
-      try {
-        const response = await axios.get(`${DEFILLAMA_API}/protocol/${protocol}`, {
-          timeout: 10000,
-        });
+  for (const protocol of UNISWAP_VERSIONS) {
+    try {
+      const response = await axios.get(`${DEFILLAMA_API}/protocol/${protocol}`, {
+        timeout: API_TIMEOUT_MS,
+      });
 
-        // DefiLlama uses chain names (capitalized) in currentChainTvls
-        const chainTVL = response.data.currentChainTvls?.[chainName] || 0;
-        tvlData[protocol] = chainTVL;
-      } catch (error) {
-        // Silently skip if protocol doesn't exist or has no data
-        tvlData[protocol] = 0;
-      }
+      // DefiLlama uses chain names (capitalized) in currentChainTvls
+      const chainTVL = response.data.currentChainTvls?.[chainName] || 0;
+      tvlData[protocol] = chainTVL;
+    } catch (error) {
+      console.warn(`[WARN] Failed to fetch ${protocol} TVL for ${chainName}: ${error.message}`);
+      tvlData[protocol] = 0;
     }
-
-    const v1 = tvlData["uniswap-v1"] || 0;
-    const v2 = tvlData["uniswap-v2"] || 0;
-    const v3 = tvlData["uniswap-v3"] || 0;
-    const v4 = tvlData["uniswap-v4"] || 0;
-
-    return {
-      chain: chainName,
-      v1: v1,
-      v2: v2,
-      v3: v3,
-      v4: v4,
-      total: v1 + v2 + v3 + v4,
-    };
-  } catch (error) {
-    console.warn(`⚠️  Could not fetch TVL for ${chainName}:`, error.message);
-    return {
-      chain: chainName,
-      v1: 0,
-      v2: 0,
-      v3: 0,
-      v4: 0,
-      total: 0,
-    };
   }
+
+  // Extract individual versions for cleaner return structure
+  const v1 = tvlData["uniswap-v1"] || 0;
+  const v2 = tvlData["uniswap-v2"] || 0;
+  const v3 = tvlData["uniswap-v3"] || 0;
+  const v4 = tvlData["uniswap-v4"] || 0;
+
+  return {
+    chain: chainName,
+    v1,
+    v2,
+    v3,
+    v4,
+    total: v1 + v2 + v3 + v4,
+    metadata: {
+      timestamp: Math.floor(Date.now() / 1000),
+      date: new Date().toISOString().split('T')[0],
+      protocolsFetched: Object.keys(tvlData),
+    }
+  };
 }
 
+// ================================================================================================
+// MAIN DATA COLLECTION
+// ================================================================================================
+
+/**
+ * Collects current TVL data for all supported chains
+ * @returns {Promise<Array>} TVL data organized by chain
+ */
 async function getPoolTVLBreakdown() {
-  // DefiLlama uses capitalized chain names
-  const chainMapping = {
-    ethereum: "Ethereum",
-    arbitrum: "Arbitrum",
-    optimism: "Optimism",
-    base: "Base",
-    polygon: "Polygon",
-    bsc: "Binance", // BSC is called "Binance" in DefiLlama
-  };
+  console.log(`[INFO] Starting current TVL data collection across all chains`);
 
   const tvlData = [];
 
-  for (const [chainKey, chainName] of Object.entries(chainMapping)) {
-    const chain = CHAINS[chainKey];
-    if (!chain) continue;
+  for (const [chainKey, defiLlamaChainName] of Object.entries(CHAIN_MAPPING)) {
+    const chainConfig = CHAINS[chainKey];
+    if (!chainConfig) {
+      console.log(`[WARN] Chain config not found for key: ${chainKey}`);
+      continue;
+    }
 
-    console.log(`📊 Fetching TVL data for ${chain.name}...`);
-    const data = await getUniswapTVL(chainName);
-    tvlData.push({
-      chain: chain.name,
-      chainKey,
-      ...data,
-    });
+    try {
+      console.log(`[INFO] Fetching TVL data for ${chainConfig.name}`);
+      const chainData = await getUniswapTVL(defiLlamaChainName);
+      tvlData.push({
+        chain: chainConfig.name,
+        chainKey,
+        ...chainData,
+      });
+      console.log(`[DEBUG] Collected ${chainConfig.name}: ${formatUSD(chainData.total)} TVL`);
+    } catch (error) {
+      console.error(`[ERROR] Failed to fetch TVL for ${chainConfig.name}: ${error.message}`);
+      // Add empty data structure to maintain consistency
+      tvlData.push({
+        chain: chainConfig.name,
+        chainKey,
+        v1: 0, v2: 0, v3: 0, v4: 0, total: 0,
+        metadata: { error: error.message }
+      });
+    }
 
-    // Rate limiting
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // Rate limiting between requests
+    await new Promise(resolve => setTimeout(resolve, 500));
   }
 
+  console.log(`[INFO] TVL data collection completed: ${tvlData.length} chains processed`);
   return tvlData;
 }
 
+/**
+ * Generates comprehensive TVL analysis report
+ * @returns {Promise<void>}
+ */
 async function generateReport() {
+  // Display header
   printUniswapLogo("full");
-  console.log(`\n💧 Uniswap TVL Tracker`);
-  console.log(`======================\n`);
+  console.log(`\n💧 UNISWAP TVL TRACKER - CURRENT STATE`);
+  console.log(`══════════════════════════════════════════════`);
+  console.log(`Purpose: Current TVL snapshot across Uniswap V1-V4 protocols`);
+  console.log(`Chains: ${Object.keys(CHAIN_MAPPING).join(', ')}`);
+  console.log(`Data Source: DefiLlama Protocol API`);
+  console.log(``);
 
+  // Fetch data
   const tvlData = await getPoolTVLBreakdown();
 
-  if (tvlData.length === 0) {
-    console.log(`❌ No TVL data available.\n`);
+  if (!tvlData || tvlData.length === 0) {
+    console.log(`❌ ERROR: No TVL data available`);
     return;
   }
 
-  // Sort by total TVL
+  // Sort by total TVL (descending)
   tvlData.sort((a, b) => b.total - a.total);
 
-  let totalTVL = 0;
-  let totalV1 = 0;
-  let totalV2 = 0;
-  let totalV3 = 0;
-  let totalV4 = 0;
+  // Calculate aggregate statistics
+  const aggregates = calculateTVLAggregates(tvlData);
 
-  tvlData.forEach((data) => {
-    totalTVL += data.total;
-    totalV1 += data.v1;
-    totalV2 += data.v2;
-    totalV3 += data.v3;
-    totalV4 += data.v4;
+  // Generate report sections
+  generateTVLSummary(aggregates, tvlData.length);
+  generateVersionBreakdown(aggregates);
+  generateChainBreakdown(tvlData);
+
+  // Export data
+  await exportToCSV(tvlData);
+
+  console.log(`✅ REPORT COMPLETE: Current TVL analysis generated successfully`);
+}
+
+/**
+ * Calculates aggregate TVL statistics across all chains
+ * @param {Array} tvlData - TVL data for all chains
+ * @returns {Object} Aggregate statistics
+ */
+function calculateTVLAggregates(tvlData) {
+  const totals = tvlData.reduce((acc, data) => ({
+    totalTVL: acc.totalTVL + data.total,
+    v1: acc.v1 + data.v1,
+    v2: acc.v2 + data.v2,
+    v3: acc.v3 + data.v3,
+    v4: acc.v4 + data.v4,
+  }), { totalTVL: 0, v1: 0, v2: 0, v3: 0, v4: 0 });
+
+  // Calculate percentage shares
+  const { totalTVL, v1, v2, v3, v4 } = totals;
+  const shares = {
+    v1: totalTVL > 0 ? ((v1 / totalTVL) * 100) : 0,
+    v2: totalTVL > 0 ? ((v2 / totalTVL) * 100) : 0,
+    v3: totalTVL > 0 ? ((v3 / totalTVL) * 100) : 0,
+    v4: totalTVL > 0 ? ((v4 / totalTVL) * 100) : 0,
+  };
+
+  return { ...totals, shares };
+}
+
+/**
+ * Generates the executive summary section
+ * @param {Object} aggregates - Aggregate TVL statistics
+ * @param {number} chainCount - Number of chains analyzed
+ */
+function generateTVLSummary(aggregates, chainCount) {
+  console.log(`╔════════════════════════════════════════════════════════════════╗`);
+  console.log(`║                    📊 EXECUTIVE SUMMARY                        ║`);
+  console.log(`╚════════════════════════════════════════════════════════════════╝`);
+
+  console.log(`Total TVL Across All Chains: ${formatUSD(aggregates.totalTVL)}`);
+  console.log(`Total Chains Analyzed: ${chainCount}`);
+  console.log(`Data Timestamp: ${new Date().toISOString()}`);
+  console.log(``);
+}
+
+/**
+ * Generates version breakdown with visual bars
+ * @param {Object} aggregates - Aggregate statistics with shares
+ */
+function generateVersionBreakdown(aggregates) {
+  console.log(`Version Distribution:`);
+  const maxVersionBar = 40;
+
+  const versions = [
+    { name: 'V1', share: aggregates.shares.v1, value: aggregates.v1 },
+    { name: 'V2', share: aggregates.shares.v2, value: aggregates.v2 },
+    { name: 'V3', share: aggregates.shares.v3, value: aggregates.v3 },
+    { name: 'V4', share: aggregates.shares.v4, value: aggregates.v4 },
+  ];
+
+  versions.forEach(({ name, share, value }) => {
+    const barLength = Math.floor((share / 100) * maxVersionBar);
+    const bar = "█".repeat(barLength);
+    const emptyBar = "░".repeat(maxVersionBar - barLength);
+    console.log(`  ${name}: ${formatUSD(value).padEnd(15)} │${bar}${emptyBar}│ ${share.toFixed(1)}%`);
+  });
+  console.log(``);
+}
+
+/**
+ * Generates chain-by-chain TVL breakdown table
+ * @param {Array} tvlData - Sorted TVL data by chain
+ */
+function generateChainBreakdown(tvlData) {
+  console.log(`╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗`);
+  console.log(`║                          💰 CHAIN-BY-CHAIN TVL BREAKDOWN                                                        ║`);
+  console.log(`╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣`);
+  console.log(`║ Chain          │ Total TVL      │ V1 TVL        │ V2 TVL        │ V3 TVL        │ V4 TVL        │ Share    ║`);
+  console.log(`╠════════════════╪════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪══════════╣`);
+
+  const totalTVL = tvlData.reduce((sum, chain) => sum + chain.total, 0);
+
+  tvlData.forEach((chain) => {
+    const share = totalTVL > 0 ? ((chain.total / totalTVL) * 100).toFixed(1) : "0.0";
+    const row = [
+      chain.chain.padEnd(15),
+      formatUSD(chain.total).padEnd(14),
+      formatUSD(chain.v1).padEnd(13),
+      formatUSD(chain.v2).padEnd(13),
+      formatUSD(chain.v3).padEnd(13),
+      formatUSD(chain.v4).padEnd(13),
+      `${share}%`.padEnd(8)
+    ];
+    console.log(`║ ${row.join(' │ ')} ║`);
   });
 
-  // Calculate shares
-  const v1Share = totalTVL > 0 ? ((totalV1 / totalTVL) * 100).toFixed(2) : "0.00";
-  const v2Share = totalTVL > 0 ? ((totalV2 / totalTVL) * 100).toFixed(2) : "0.00";
-  const v3Share = totalTVL > 0 ? ((totalV3 / totalTVL) * 100).toFixed(2) : "0.00";
-  const v4Share = totalTVL > 0 ? ((totalV4 / totalTVL) * 100).toFixed(2) : "0.00";
+  console.log(`╚════════════════╪════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪══════════╝`);
+  console.log(``);
+}
 
-  // Summary Section
-  console.log(`\n╔════════════════════════════════════════════════════════════════╗`);
-  console.log(`║                    📊 EXECUTIVE SUMMARY                        ║`);
-  console.log(`╚════════════════════════════════════════════════════════════════╝\n`);
-  console.log(`   Total TVL Across All Chains: ${formatUSD(totalTVL)}`);
-  console.log(`   Total Chains Tracked: ${tvlData.length}\n`);
+/**
+ * Exports TVL data to CSV file
+ * @param {Array} tvlData - TVL data for all chains
+ * @returns {Promise<void>}
+ */
+async function exportToCSV(tvlData) {
+  console.log(`[INFO] Exporting TVL data to CSV...`);
 
-  // Version Overview
-  console.log(`   Version Breakdown:`);
-  const maxVersionBar = 40;
-  const v1BarLen = Math.floor((parseFloat(v1Share) / 100) * maxVersionBar);
-  const v2BarLen = Math.floor((parseFloat(v2Share) / 100) * maxVersionBar);
-  const v3BarLen = Math.floor((parseFloat(v3Share) / 100) * maxVersionBar);
-  const v4BarLen = Math.floor((parseFloat(v4Share) / 100) * maxVersionBar);
+  const csvData = tvlData.map(chain => ({
+    timestamp: Math.floor(Date.now() / 1000),
+    date: new Date().toISOString().split('T')[0],
+    chain: chain.chain,
+    chainKey: chain.chainKey,
+    v1TVL: chain.v1 || 0,
+    v2TVL: chain.v2 || 0,
+    v3TVL: chain.v3 || 0,
+    v4TVL: chain.v4 || 0,
+    totalTVL: chain.total || 0,
+    tvlSharePercent: tvlData.reduce((sum, c) => sum + c.total, 0) > 0
+      ? ((chain.total / tvlData.reduce((sum, c) => sum + c.total, 0)) * 100).toFixed(2)
+      : "0.00",
+    // Include metadata if available
+    ...(chain.metadata && { metadata: JSON.stringify(chain.metadata) })
+  }));
+
+  const csvHeaders = [
+    { id: "timestamp", title: "Unix Timestamp" },
+    { id: "date", title: "Date" },
+    { id: "chain", title: "Chain" },
+    { id: "chainKey", title: "Chain Key" },
+    { id: "v1TVL", title: "V1 TVL (USD)" },
+    { id: "v2TVL", title: "V2 TVL (USD)" },
+    { id: "v3TVL", title: "V3 TVL (USD)" },
+    { id: "v4TVL", title: "V4 TVL (USD)" },
+    { id: "totalTVL", title: "Total TVL (USD)" },
+    { id: "tvlSharePercent", title: "TVL Share (%)" },
+    { id: "metadata", title: "Metadata" },
+  ];
+
+  await writeCSV("output/uniswap-tvl-current.csv", csvHeaders, csvData);
+  console.log(`[SUCCESS] CSV exported: output/uniswap-tvl-current.csv (${csvData.length} rows)`);
+}
   
   console.log(`   V1: ${v1Share.padStart(6)}% │${"█".repeat(v1BarLen)}${" ".repeat(maxVersionBar - v1BarLen)}│ ${formatUSD(totalV1)}`);
   console.log(`   V2: ${v2Share.padStart(6)}% │${"█".repeat(v2BarLen)}${" ".repeat(maxVersionBar - v2BarLen)}│ ${formatUSD(totalV2)}`);
