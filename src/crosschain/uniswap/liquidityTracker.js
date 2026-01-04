@@ -69,13 +69,6 @@ const START_BLOCK = process.env.START_BLOCK ? parseInt(process.env.START_BLOCK) 
 // V3 Fee tiers (in basis points)
 const V3_FEE_TIERS = [500, 3000, 10000]; // 0.05%, 0.3%, 1%
 
-// V4 Fee tiers and tick spacings
-const V4_FEE_TIERS = [
-  { fee: 500, tickSpacing: 10 },
-  { fee: 3000, tickSpacing: 60 },
-  { fee: 10000, tickSpacing: 200 },
-];
-
 // ============================================================================
 // Utility Functions
 // ============================================================================
@@ -129,12 +122,9 @@ async function trackV2Liquidity(chainKey, token0Address, token1Address) {
   const flows = [];
   const allMints = [];
   const allBurns = [];
-  let chunkCount = 0;
-  const totalChunks = Math.ceil((endBlock - startBlock) / CHUNK_SIZE);
 
   for (let fromBlock = startBlock; fromBlock < endBlock; fromBlock += CHUNK_SIZE) {
     const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
-    chunkCount++;
 
     try {
       const [mints, burns] = await Promise.all([
@@ -242,12 +232,9 @@ async function trackV3Liquidity(chainKey, token0Address, token1Address, feeTier)
   const flows = [];
   const allIncreases = [];
   const allDecreases = [];
-  let chunkCount = 0;
-  const totalChunks = Math.ceil((endBlock - startBlock) / CHUNK_SIZE);
 
   for (let fromBlock = startBlock; fromBlock < endBlock; fromBlock += CHUNK_SIZE) {
     const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
-    chunkCount++;
 
     try {
       const [increases, decreases] = await Promise.all([
@@ -377,12 +364,9 @@ async function trackV4Liquidity(chainKey, token0Address, token1Address) {
 
   const flows = [];
   const allModifyLiquidity = [];
-  let chunkCount = 0;
-  const totalChunks = Math.ceil((endBlock - startBlock) / CHUNK_SIZE);
 
   for (let fromBlock = startBlock; fromBlock < endBlock; fromBlock += CHUNK_SIZE) {
     const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
-    chunkCount++;
 
     try {
       const modifyEvents = await poolManager.queryFilter(
@@ -446,12 +430,9 @@ async function trackV4Initialize(chainKey) {
   const endBlock = START_BLOCK ? Math.min(START_BLOCK + BLOCKS_TO_ANALYZE, currentBlock) : currentBlock;
 
   const allInitializations = [];
-  let chunkCount = 0;
-  const totalChunks = Math.ceil((endBlock - startBlock) / CHUNK_SIZE);
 
   for (let fromBlock = startBlock; fromBlock < endBlock; fromBlock += CHUNK_SIZE) {
     const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
-    chunkCount++;
 
     try {
       const initEvents = await poolManager.queryFilter(

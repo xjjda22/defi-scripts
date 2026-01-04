@@ -92,7 +92,6 @@ async function getUniswapVolumeForDay(chainName, targetTimestamp) {
         );
 
         // Try to get historical volume data
-        const totalDataChart = feesResponse.data.totalDataChart || [];
         const totalDataChartBreakdown = feesResponse.data.totalDataChartBreakdown || [];
         
         let chainVolume = 0;
@@ -125,7 +124,6 @@ async function getUniswapVolumeForDay(chainName, targetTimestamp) {
         );
         
         // Try to get historical TVL
-        const historicalTVL = tvlResponse.data.tvl || [];
         const chainTvls = tvlResponse.data.chainTvls || {};
         
         let chainTVL = 0;
