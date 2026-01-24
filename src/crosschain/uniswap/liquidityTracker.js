@@ -32,9 +32,6 @@ const { printUniswapLogo } = require("../../utils/ascii");
 // CONFIGURATION CONSTANTS
 // ================================================================================================
 
-/** @type {number} Number of blocks to look back for event analysis */
-const BLOCKS_TO_ANALYZE = 1000;
-
 /** @type {number} Maximum number of events to process per run */
 const MAX_EVENTS_PER_RUN = 10000;
 
@@ -47,7 +44,7 @@ const CONTRACT_ADDRESSES = {
     v2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
     v3Factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
     v3PositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
-    v4PoolManager: "0x0000000000041264aecF49f4585974C1c1f1C3a3",
+    v4PoolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90", // Fixed: Match chains.js config
   },
   // Add other chains as needed
 };
@@ -189,36 +186,36 @@ async function trackV2Liquidity(chainKey, token0Address, token1Address) {
 
     console.log(`[DEBUG] Analyzing blocks ${startBlock} to ${endBlock}`);
 
-  // Get token info
-  const [token0Info, token1Info] = await Promise.all([
-    getTokenInfo(token0Address, provider),
-    getTokenInfo(token1Address, provider),
-  ]);
+    // Get token info
+    const [token0Info, token1Info] = await Promise.all([
+      getTokenInfo(token0Address, provider),
+      getTokenInfo(token1Address, provider),
+    ]);
 
-  const flows = [];
-  const allMints = [];
-  const allBurns = [];
+    const flows = [];
+    const allMints = [];
+    const allBurns = [];
 
-  for (let fromBlock = startBlock; fromBlock < endBlock; fromBlock += CHUNK_SIZE) {
-    const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
+    for (let fromBlock = startBlock; fromBlock < endBlock; fromBlock += CHUNK_SIZE) {
+      const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
 
-    try {
-      const [mints, burns] = await Promise.all([
-        pair.queryFilter(pair.filters.Mint(), fromBlock, toBlock),
-        pair.queryFilter(pair.filters.Burn(), fromBlock, toBlock),
-      ]);
+      try {
+        const [mints, burns] = await Promise.all([
+          pair.queryFilter(pair.filters.Mint(), fromBlock, toBlock),
+          pair.queryFilter(pair.filters.Burn(), fromBlock, toBlock),
+        ]);
 
-      allMints.push(...mints);
-      allBurns.push(...burns);
+        allMints.push(...mints);
+        allBurns.push(...burns);
 
-      await new Promise((resolve) => setTimeout(resolve, 200));
-    } catch (chunkError) {
-      console.warn(`      ⚠️  Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
+        await new Promise((resolve) => setTimeout(resolve, 200));
+      } catch (chunkError) {
+        console.warn(`      ⚠️  Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
+      }
     }
-  }
 
-  // Process Mint events
-  for (const mint of allMints) {
+    // Process Mint events
+    for (const mint of allMints) {
     const amount0 = parseFloat(ethers.formatUnits(mint.args.amount0, token0Info.decimals));
     const amount1 = parseFloat(ethers.formatUnits(mint.args.amount1, token1Info.decimals));
     const block = await provider.getBlock(mint.blockNumber);
@@ -266,6 +263,10 @@ async function trackV2Liquidity(chainKey, token0Address, token1Address) {
   }
 
   return flows;
+  } catch (error) {
+    console.error(`[ERROR] Failed to track V2 liquidity: ${error.message}`);
+    return [];
+  }
 }
 
 // ============================================================================

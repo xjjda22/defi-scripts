@@ -1,7 +1,7 @@
 {
   "name": "defi-scripts",
   "version": "1.0.0",
-  "description": "Uniswap analytics scripts for DeFi/MEV builders and cross-chain analysis",
+  "description": "Uniswap analytics and swap scripts for DeFi/MEV builders and cross-chain analysis",
   "main": "src/index.js",
   "scripts": {
     "crosschain:uniswap:tvl": "node src/crosschain/uniswap/tvlTracker.js",
@@ -11,6 +11,12 @@
     "crosschain:uniswap:weekly:volume": "node src/crosschain/uniswap/weeklyVolumeTracker.js",
     "crosschain:uniswap:weekly:liquidity": "node src/crosschain/uniswap/weeklyLiquidityTracker.js",
     "analytics:weekly:blocks": "node src/analytics/weeklyBlockAnalysis.js",
+    "swap:example": "node src/examples/swapExample.js",
+    "swap:v2": "node src/examples/v2SwapExample.js",
+    "swap:v3": "node src/examples/v3SwapExample.js",
+    "swap:v4": "node src/examples/v4SwapExample.js",
+    "swap:crosschain": "node src/examples/crossChainSwapComparison.js",
+    "swap:check": "node src/examples/checkWalletExample.js",
     "prettier": "prettier --write './**/*.{js,json,yaml,yml,sol}'",
     "lint:fix": "eslint . --ignore-path .eslintignore --ext .js,.sol --fix --quiet"
   },
@@ -19,10 +25,22 @@
     "defi",
     "mev",
     "cross-chain",
-    "analytics"
+    "analytics",
+    "swap",
+    "uniswap-v2",
+    "uniswap-v3",
+    "uniswap-v4"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xjjda22/defi-scripts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xjjda22/defi-scripts/issues"
+  },
+  "homepage": "https://github.com/xjjda22/defi-scripts#readme",
   "dependencies": {
     "axios": "^1.13.2",
     "csv-writer": "^1.6.0",
