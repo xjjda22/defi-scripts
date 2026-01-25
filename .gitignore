@@ -7,10 +7,6 @@ output/*
 
 package-lock.json
 
-src/mev/arbitrageFinder.js
-src/mev/flashLoanAnalyzer.js
-src/mev/sandwichDetector.js
-
 *idea*.md
 *script*.md
 *week*.md
