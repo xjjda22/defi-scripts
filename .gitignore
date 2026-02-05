@@ -6,7 +6,3 @@ output/*
 .cursorrules
 
 package-lock.json
-
-*idea*.md
-*script*.md
-*week*.md
