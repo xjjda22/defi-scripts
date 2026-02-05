@@ -36,16 +36,29 @@ CHAIN=ethereum     # Target chain
 
 ## Scripts
 
-### Uniswap Token Swaps
+### Token Swaps
 
-Execute token swaps on Uniswap V2, V3, and V4 across all supported chains.
+Execute token swaps across multiple DEX protocols on all supported chains.
 
+#### Multi-Protocol DEX Aggregator
 | Script | Command | Description |
 |--------|---------|-------------|
-| **Auto-Route Swap** | `npm run swap:example` | Auto-detects best swap route across V2/V3/V4 |
-| **V2 Swap** | `npm run swap:uniswap:v2` | Uniswap V2 swaps with multi-hop routing |
-| **V3 Swap** | `npm run swap:uniswap:v3` | V3 swaps with fee tier optimization |
-| **V4 Swap** | `npm run swap:uniswap:v4` | V4 singleton PoolManager swaps |
+| **All DEX Auto-Route** | `npm run swap:autoroute` | Compares Uniswap, SushiSwap, Curve, Balancer - picks best |
+
+#### Per-Protocol Auto-Route Swaps
+| Protocol | Command | Auto-Routes Between | Description |
+|----------|---------|---------------------|-------------|
+| **Uniswap** | `npm run swap:example` | V2 / V3 / V4 | Auto-detects best Uniswap version |
+| **SushiSwap** | `npm run swap:sushiswap` | V2 / V3 | Auto-detects best SushiSwap version |
+| **Balancer** | `npm run swap:balancer` | V2 / V3 | Auto-detects best Balancer vault |
+| **Curve** | `npm run swap:curve` | Multiple pools | Can compare multiple Curve pools |
+
+#### Individual Protocol Versions
+| Protocol | Command | Description |
+|----------|---------|-------------|
+| **Uniswap V2** | `npm run swap:uniswap:v2` | Force Uniswap V2 with multi-hop routing |
+| **Uniswap V3** | `npm run swap:uniswap:v3` | Force Uniswap V3 with fee tier optimization |
+| **Uniswap V4** | `npm run swap:uniswap:v4` | Force Uniswap V4 singleton PoolManager |
 
 **Features:**
 - 🔄 Auto-routing to find best prices across versions
