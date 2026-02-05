@@ -43,9 +43,9 @@ Execute token swaps on Uniswap V2, V3, and V4 across all supported chains.
 | Script | Command | Description |
 |--------|---------|-------------|
 | **Auto-Route Swap** | `npm run swap:example` | Auto-detects best swap route across V2/V3/V4 |
-| **V2 Swap** | `npm run swap:v2` | Uniswap V2 swaps with multi-hop routing |
-| **V3 Swap** | `npm run swap:v3` | V3 swaps with fee tier optimization |
-| **V4 Swap** | `npm run swap:v4` | V4 singleton PoolManager swaps |
+| **V2 Swap** | `npm run swap:uniswap:v2` | Uniswap V2 swaps with multi-hop routing |
+| **V3 Swap** | `npm run swap:uniswap:v3` | V3 swaps with fee tier optimization |
+| **V4 Swap** | `npm run swap:uniswap:v4` | V4 singleton PoolManager swaps |
 
 **Features:**
 - 🔄 Auto-routing to find best prices across versions
@@ -70,19 +70,25 @@ const result = await swapTokens(
 );
 ```
 
-### Cross-Chain Uniswap
+### Cross-Chain Analytics
 
-#### Trackers
-| Script | Command | Description |
-|--------|---------|-------------|
-| TVL | `npm run crosschain:uniswap:tvl` <br> `npm run crosschain:uniswap:weekly:tvl` | Tracks V1-V4 TVL across all chains with version breakdowns |
-| Volume | `npm run crosschain:uniswap:volume` <br> `npm run crosschain:uniswap:weekly:volume` | Tracks 24h trading volume across V1-V4 versions |
-| Liquidity | `npm run crosschain:uniswap:liquidity` <br> `npm run crosschain:uniswap:weekly:liquidity` | Tracks liquidity flows via mint/burn events |
+Track TVL and volume across **all major DEXs** on 6 chains (Ethereum, Arbitrum, Optimism, Base, Polygon, BSC):
 
-#### Analytics
-| Script | Command | Description |
-|--------|---------|-------------|
-| Weekly Block Analysis | `npm run analytics:weekly:blocks` | Comprehensive block-level transaction and gas analysis |
+| Protocol | TVL | Volume |
+|----------|-----|--------|
+| **Uniswap** | `npm run crosschain:uniswap:tvl` | `npm run crosschain:uniswap:volume` |
+| **Curve** | `npm run crosschain:curve:tvl` | `npm run crosschain:curve:volume` |
+| **Balancer** | `npm run crosschain:balancer:tvl` | `npm run crosschain:balancer:volume` |
+| **SushiSwap** | `npm run crosschain:sushiswap:tvl` | `npm run crosschain:sushiswap:volume` |
+
+**Additional Uniswap Trackers:**
+- `npm run crosschain:uniswap:liquidity` - Liquidity flows via mint/burn events
+- `npm run crosschain:uniswap:weekly:tvl` - Weekly TVL history
+- `npm run crosschain:uniswap:weekly:volume` - Weekly volume history
+- `npm run crosschain:uniswap:weekly:liquidity` - Weekly liquidity history
+
+**Other Analytics:**
+- `npm run analytics:weekly:blocks` - Comprehensive block-level transaction and gas analysis
 
 
 ## Planned Protocols
