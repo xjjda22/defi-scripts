@@ -81,11 +81,14 @@ Track TVL and volume across **all major DEXs** on 6 chains (Ethereum, Arbitrum, 
 | **Balancer** | `npm run crosschain:balancer:tvl` | `npm run crosschain:balancer:volume` |
 | **SushiSwap** | `npm run crosschain:sushiswap:tvl` | `npm run crosschain:sushiswap:volume` |
 
+**Weekly Trackers (Historical Data):**
+- Uniswap: `npm run crosschain:uniswap:weekly:tvl`, `npm run crosschain:uniswap:weekly:volume`, `npm run crosschain:uniswap:weekly:liquidity`
+- Curve: `npm run crosschain:curve:weekly:tvl`, `npm run crosschain:curve:weekly:volume`
+- Balancer: `npm run crosschain:balancer:weekly:tvl`, `npm run crosschain:balancer:weekly:volume`
+- SushiSwap: `npm run crosschain:sushiswap:weekly:tvl`, `npm run crosschain:sushiswap:weekly:volume`
+
 **Additional Uniswap Trackers:**
 - `npm run crosschain:uniswap:liquidity` - Liquidity flows via mint/burn events
-- `npm run crosschain:uniswap:weekly:tvl` - Weekly TVL history
-- `npm run crosschain:uniswap:weekly:volume` - Weekly volume history
-- `npm run crosschain:uniswap:weekly:liquidity` - Weekly liquidity history
 
 **Other Analytics:**
 - `npm run analytics:weekly:blocks` - Comprehensive block-level transaction and gas analysis
