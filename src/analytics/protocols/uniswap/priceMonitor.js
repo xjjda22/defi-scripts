@@ -5,6 +5,7 @@
 require("dotenv").config();
 const { ethers } = require("ethers");
 const { CHAINS, COMMON_TOKENS } = require("../../../config/chains");
+const { getPairGroup, hasPair, getPair } = require("../../../config/pairs");
 const v2Swap = require("../../../swaps/v2Swap");
 const v3Swap = require("../../../swaps/v3Swap");
 const v4Swap = require("../../../swaps/v4Swap");
@@ -336,38 +337,29 @@ async function main() {
 Uniswap Price Monitor - Compare prices across V2, V3, V4
 
 Usage:
-  npm run analytics:uniswap:price [chain] [tokenIn] [tokenOut] [amount]
+  npm run analytics:uniswap:prices
 
-Parameters:
-  chain     - Chain name (default: ethereum)
-  tokenIn   - Input token symbol (default: WETH)
-  tokenOut  - Output token symbol (default: USDC)
-  amount    - Amount to swap (default: 1)
+Monitors default pairs:
+  - WETH/USDC (1 ETH)
+  - USDC/USDT (1000)
+  - WETH/DAI (1 ETH)
 
-Available Chains:
-  ${Object.keys(CHAINS).join(", ")}
+Configuration:
+  - Chain: Ethereum (hardcoded)
+  - Pairs: src/config/pairs.js (default group)
+  - To change pairs: Edit src/config/pairs.js
+  - Set ETHEREUM_RPC_URL in .env file
 
-Available Tokens:
-  ${Object.keys(COMMON_TOKENS).join(", ")}
-
-Examples:
-  npm run analytics:uniswap:price
-  npm run analytics:uniswap:price ethereum WETH USDC 1
-  npm run analytics:uniswap:price arbitrum WETH DAI 0.5
-  npm run analytics:uniswap:price optimism USDC DAI 1000
-
-Setup:
-  1. Get free RPC URL from https://www.alchemy.com
-  2. Add to .env: ETHEREUM_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY
+Available Pairs in Config:
+  Volatile: WETH/USDC, WETH/USDT, WETH/DAI, WBTC/USDC, WBTC/WETH
+  Stable: USDC/USDT, USDC/DAI, USDT/DAI
 `);
       process.exit(0);
     }
 
-    // Get parameters from command line or use defaults
-    const chainKey = process.argv[2] || DEFAULT_CHAIN;
-    const tokenInSymbol = process.argv[3] || "WETH";
-    const tokenOutSymbol = process.argv[4] || "USDC";
-    const amountIn = process.argv[5] || DEFAULT_AMOUNT_IN;
+    // Use default configuration (no CLI parameters)
+    const chainKey = DEFAULT_CHAIN;
+    const pairOrGroup = "default";
 
     // Get token addresses
     const chain = CHAINS[chainKey];
@@ -388,21 +380,46 @@ Setup:
       process.exit(1);
     }
 
-    const tokenInAddress = COMMON_TOKENS[tokenInSymbol]?.[chainKey];
-    const tokenOutAddress = COMMON_TOKENS[tokenOutSymbol]?.[chainKey];
-
-    if (!tokenInAddress || !tokenOutAddress) {
-      console.error(`❌ Tokens not available on ${chainKey}`);
-      console.log(`\nRequested: ${tokenInSymbol}/${tokenOutSymbol}`);
-      console.log(`Available tokens: ${Object.keys(COMMON_TOKENS).join(", ")}`);
-      console.log(`\nExample: npm run analytics:uniswap:price ethereum WETH USDC 1`);
-      process.exit(1);
+    // Determine which pairs to monitor
+    let pairs;
+    if (hasPair(pairOrGroup)) {
+      // Single pair
+      pairs = [getPair(pairOrGroup)];
+    } else {
+      // Pair group (default, volatile, stable, all)
+      try {
+        pairs = getPairGroup(pairOrGroup);
+      } catch (error) {
+        console.error(`❌ Error: ${error.message}`);
+        console.log(`\nUse --help to see available pairs and groups`);
+        process.exit(1);
+      }
     }
 
-    console.log(`Using: ${tokenInSymbol} (${tokenInAddress})`);
-    console.log(`      ${tokenOutSymbol} (${tokenOutAddress})\n`);
+    console.log(`Monitoring ${pairs.length} pair(s) on ${chain.name}...\n`);
 
-    await monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, amountIn);
+    // Monitor each pair
+    for (let i = 0; i < pairs.length; i++) {
+      const pair = pairs[i];
+      
+      const tokenInAddress = COMMON_TOKENS[pair.tokenIn]?.[chainKey];
+      const tokenOutAddress = COMMON_TOKENS[pair.tokenOut]?.[chainKey];
+
+      if (!tokenInAddress || !tokenOutAddress) {
+        console.error(`⚠️  Skipping ${pair.name}: tokens not available on ${chainKey}\n`);
+        continue;
+      }
+
+      console.log(`Using: ${pair.tokenIn} (${tokenInAddress})`);
+      console.log(`      ${pair.tokenOut} (${tokenOutAddress})\n`);
+
+      await monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, pair.amount);
+      
+      // Add separator between pairs if monitoring multiple
+      if (i < pairs.length - 1) {
+        console.log("\n" + "═".repeat(60) + "\n");
+      }
+    }
   } catch (error) {
     console.error("\n❌ Error:", error.message);
     if (process.env.DEBUG || process.env.VERBOSE) {
