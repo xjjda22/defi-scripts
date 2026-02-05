@@ -120,8 +120,14 @@ async function main() {
     percentage: totalTVL > 0 ? ((data.tvl / totalTVL) * 100).toFixed(2) : "0.00",
   }));
 
-  await writeCSV("curve_tvl_crosschain.csv", csvData);
-  console.log(chalk.green("Data exported to curve_tvl_crosschain.csv\n"));
+  if (csvData.length > 0) {
+    await writeCSV("output/curve_tvl_crosschain.csv", [
+      { id: "chain", title: "Chain" },
+      { id: "tvl", title: "TVL (USD)" },
+      { id: "percentage", title: "Percentage (%)" },
+    ], csvData);
+    console.log(chalk.green("Data exported to output/curve_tvl_crosschain.csv\n"));
+  }
 }
 
 if (require.main === module) {

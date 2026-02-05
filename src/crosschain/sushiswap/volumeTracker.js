@@ -106,11 +106,15 @@ async function main() {
   }));
 
   if (csvData.length > 0) {
-    await writeCSV("sushiswap_volume_crosschain.csv", csvData);
+    await writeCSV("output/sushiswap_volume_crosschain.csv", [
+      { id: "chain", title: "Chain" },
+      { id: "volume24h", title: "24h Volume (USD)" },
+      { id: "percentage", title: "Percentage (%)" },
+    ], csvData);
+    console.log(chalk.green("Data exported to output/sushiswap_volume_crosschain.csv\n"));
   } else {
-    console.log(chalk.yellow("No chain-specific volume data available"));
+    console.log(chalk.yellow("No chain-specific volume data available\n"));
   }
-  console.log(chalk.green("Data exported to sushiswap_volume_crosschain.csv\n"));
 }
 
 if (require.main === module) {

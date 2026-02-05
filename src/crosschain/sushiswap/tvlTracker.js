@@ -124,8 +124,14 @@ async function main() {
     percentage: totalTVL > 0 ? ((data.tvl / totalTVL) * 100).toFixed(2) : "0.00",
   }));
 
-  await writeCSV("sushiswap_tvl_crosschain.csv", csvData);
-  console.log(chalk.green("Data exported to sushiswap_tvl_crosschain.csv\n"));
+  if (csvData.length > 0) {
+    await writeCSV("output/sushiswap_tvl_crosschain.csv", [
+      { id: "chain", title: "Chain" },
+      { id: "tvl", title: "TVL (USD)" },
+      { id: "percentage", title: "Percentage (%)" },
+    ], csvData);
+    console.log(chalk.green("Data exported to output/sushiswap_tvl_crosschain.csv\n"));
+  }
 }
 
 // Run if called directly
