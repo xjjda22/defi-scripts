@@ -36,17 +36,29 @@ async function fetchBalancerVolume() {
 }
 
 function processVolumeData(data) {
-  if (!data || !data.chains) {
+  if (!data || !data.totalDataChartBreakdown || data.totalDataChartBreakdown.length === 0) {
     return {};
   }
 
   const volumeByChain = {};
+  const latestEntry = data.totalDataChartBreakdown[data.totalDataChartBreakdown.length - 1];
+  const chainData = latestEntry[1];
 
   for (const [chainKey, chainName] of Object.entries(CHAIN_MAPPING)) {
-    if (data.chains[chainName]) {
+    if (chainData[chainName]) {
+      const protocolData = chainData[chainName];
+      let totalVolume = 0;
+      
+      // Sum up all Balancer versions (V1, V2, V3)
+      for (const [key, value] of Object.entries(protocolData)) {
+        if (key.startsWith("Balancer")) {
+          totalVolume += value || 0;
+        }
+      }
+      
       volumeByChain[chainKey] = {
         name: chainName,
-        volume24h: data.chains[chainName] || 0,
+        volume24h: totalVolume,
       };
     }
   }

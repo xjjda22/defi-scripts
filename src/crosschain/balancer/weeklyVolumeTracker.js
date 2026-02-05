@@ -70,9 +70,11 @@ function processWeeklyVolumeData(dexData, weekDates) {
   const weeklyData = {};
   const chainVolumeData = {};
 
-  for (const dayData of dexData.totalDataChartBreakdown) {
-    if (!dayData.date) continue;
-    const timestamp = typeof dayData.date === "string" ? Date.parse(dayData.date) / 1000 : dayData.date;
+  for (const entry of dexData.totalDataChartBreakdown) {
+    if (!Array.isArray(entry) || entry.length < 2) continue;
+    
+    const timestamp = entry[0];
+    const chainData = entry[1];
     const date = new Date(timestamp * 1000).toISOString().split("T")[0];
 
     for (const [chainKey, chainName] of Object.entries(CHAIN_MAPPING)) {
@@ -80,7 +82,17 @@ function processWeeklyVolumeData(dexData, weekDates) {
         chainVolumeData[chainKey] = [];
       }
 
-      const volume = dayData[chainName] || 0;
+      let volume = 0;
+      if (chainData[chainName]) {
+        const protocolData = chainData[chainName];
+        // Sum up all Balancer versions (V1, V2, V3)
+        for (const [key, value] of Object.entries(protocolData)) {
+          if (key.startsWith("Balancer")) {
+            volume += value || 0;
+          }
+        }
+      }
+      
       chainVolumeData[chainKey].push({ date, volume });
     }
   }

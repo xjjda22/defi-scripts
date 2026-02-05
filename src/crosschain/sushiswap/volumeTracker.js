@@ -36,17 +36,22 @@ async function fetchSushiSwapVolume() {
 }
 
 function processVolumeData(data) {
-  if (!data || !data.chains) {
+  if (!data || !data.totalDataChartBreakdown || data.totalDataChartBreakdown.length === 0) {
     return {};
   }
 
   const volumeByChain = {};
+  const latestEntry = data.totalDataChartBreakdown[data.totalDataChartBreakdown.length - 1];
+  const chainData = latestEntry[1];
 
   for (const [chainKey, chainName] of Object.entries(CHAIN_MAPPING)) {
-    if (data.chains[chainName]) {
+    if (chainData[chainName]) {
+      const protocolData = chainData[chainName];
+      const volume = protocolData["SushiSwap"] || 0;
+      
       volumeByChain[chainKey] = {
         name: chainName,
-        volume24h: data.chains[chainName] || 0,
+        volume24h: volume,
       };
     }
   }
