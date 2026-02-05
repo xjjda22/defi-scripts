@@ -77,7 +77,7 @@ async function main() {
   // Check allowances for Uniswap routers
   console.log("\n\n🔐 Allowances (Uniswap Routers):");
 
-  const tokensWithBalance = balances.filter((b) => BigInt(b.balance) > 0);
+  const tokensWithBalance = balances.filter(b => BigInt(b.balance) > 0);
 
   if (tokensWithBalance.length === 0) {
     console.log("  No tokens found to check allowances");
@@ -88,12 +88,7 @@ async function main() {
       for (const token of tokensWithBalance) {
         try {
           const tokenAddr = getCommonToken(token.symbol, CHAIN);
-          const allowance = await getTokenAllowance(
-            CHAIN,
-            tokenAddr,
-            walletAddr,
-            chain.uniswap.v2.router,
-          );
+          const allowance = await getTokenAllowance(CHAIN, tokenAddr, walletAddr, chain.uniswap.v2.router);
 
           if (allowance.isUnlimited) {
             console.log(`    ✅ ${token.symbol}: Unlimited`);
@@ -114,12 +109,7 @@ async function main() {
       for (const token of tokensWithBalance) {
         try {
           const tokenAddr = getCommonToken(token.symbol, CHAIN);
-          const allowance = await getTokenAllowance(
-            CHAIN,
-            tokenAddr,
-            walletAddr,
-            chain.uniswap.v3.router,
-          );
+          const allowance = await getTokenAllowance(CHAIN, tokenAddr, walletAddr, chain.uniswap.v3.router);
 
           if (allowance.isUnlimited) {
             console.log(`    ✅ ${token.symbol}: Unlimited`);
@@ -140,12 +130,7 @@ async function main() {
       for (const token of tokensWithBalance) {
         try {
           const tokenAddr = getCommonToken(token.symbol, CHAIN);
-          const allowance = await getTokenAllowance(
-            CHAIN,
-            tokenAddr,
-            walletAddr,
-            chain.uniswap.v4.poolManager,
-          );
+          const allowance = await getTokenAllowance(CHAIN, tokenAddr, walletAddr, chain.uniswap.v4.poolManager);
 
           if (allowance.isUnlimited) {
             console.log(`    ✅ ${token.symbol}: Unlimited`);
@@ -169,11 +154,10 @@ async function main() {
     const token2 = tokensWithBalance[1];
 
     // Try to swap 10% of first token for second token
-    const swapAmount =
-      (BigInt(token1.balance) * BigInt(10)) / BigInt(100);
+    const swapAmount = (BigInt(token1.balance) * BigInt(10)) / BigInt(100);
 
     console.log(
-      `  Checking swap: ${ethers.formatUnits(swapAmount, token1.decimals)} ${token1.symbol} → ${token2.symbol}`,
+      `  Checking swap: ${ethers.formatUnits(swapAmount, token1.decimals)} ${token1.symbol} → ${token2.symbol}`
     );
 
     try {
@@ -183,13 +167,7 @@ async function main() {
       if (!spender) {
         console.log("  ❌ No Uniswap router available on this chain");
       } else {
-        const check = await preFlightCheck(
-          CHAIN,
-          token1Addr,
-          walletAddr,
-          spender,
-          swapAmount.toString(),
-        );
+        const check = await preFlightCheck(CHAIN, token1Addr, walletAddr, spender, swapAmount.toString());
 
         console.log(`\n  Balance: ${check.checks.balance.passed ? "✅" : "❌"}`);
         console.log(`  Allowance: ${check.checks.allowance.passed ? "✅" : "❌"}`);
@@ -219,10 +197,7 @@ async function main() {
   // Summary
   console.log("\n\n📋 Summary:");
   const hasTokens = tokensWithBalance.length > 0;
-  const hasGas =
-    (await getNativeBalance(CHAIN, walletAddr).then((b) =>
-      BigInt(b.balance),
-    )) >= ethers.parseEther("0.001");
+  const hasGas = (await getNativeBalance(CHAIN, walletAddr).then(b => BigInt(b.balance))) >= ethers.parseEther("0.001");
 
   if (hasTokens && hasGas) {
     console.log("  ✅ Wallet is ready for swaps");

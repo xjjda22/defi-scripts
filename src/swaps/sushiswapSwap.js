@@ -5,7 +5,13 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const { getProvider, getContract } = require("../utils/web3");
-const { validateChainKey, validateWallet, validateAddress, validateAmount, validateSlippage } = require("../utils/validation");
+const {
+  validateChainKey,
+  validateWallet,
+  validateAddress,
+  validateAmount,
+  validateSlippage,
+} = require("../utils/validation");
 const V2_ROUTER_ABI = require("../abis/IUniswapV2Router02.json");
 const V3_ROUTER_ABI = require("../abis/ISwapRouter.json");
 const QUOTER_ABI = require("../abis/IQuoter.json");
@@ -16,9 +22,9 @@ const ERC20_ABI = require("../abis/IERC20.json");
  */
 async function getV2Quote(chainKey, tokenIn, tokenOut, amountIn) {
   validateChainKey(chainKey);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
 
   const chain = CHAINS[chainKey];
   if (!chain?.sushiswap?.v2?.router) {
@@ -26,11 +32,7 @@ async function getV2Quote(chainKey, tokenIn, tokenOut, amountIn) {
   }
 
   const provider = getProvider(chainKey);
-  const router = new ethers.Contract(
-    chain.sushiswap.v2.router,
-    V2_ROUTER_ABI,
-    provider,
-  );
+  const router = new ethers.Contract(chain.sushiswap.v2.router, V2_ROUTER_ABI, provider);
 
   try {
     const path = [tokenIn, tokenOut];
@@ -49,9 +51,9 @@ async function getV2Quote(chainKey, tokenIn, tokenOut, amountIn) {
  */
 async function getV3Quote(chainKey, tokenIn, tokenOut, amountIn, fee = 3000) {
   validateChainKey(chainKey);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
 
   const chain = CHAINS[chainKey];
   if (!chain?.sushiswap?.v3?.quoter) {
@@ -59,11 +61,7 @@ async function getV3Quote(chainKey, tokenIn, tokenOut, amountIn, fee = 3000) {
   }
 
   const provider = getProvider(chainKey);
-  const quoter = new ethers.Contract(
-    chain.sushiswap.v3.quoter,
-    QUOTER_ABI,
-    provider,
-  );
+  const quoter = new ethers.Contract(chain.sushiswap.v3.quoter, QUOTER_ABI, provider);
 
   try {
     const params = {
@@ -90,9 +88,9 @@ async function getV3Quote(chainKey, tokenIn, tokenOut, amountIn, fee = 3000) {
 async function swapV2(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps = 50, recipient = null) {
   validateChainKey(chainKey);
   validateWallet(wallet);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
   validateSlippage(slippageBps);
 
   const chain = CHAINS[chainKey];
@@ -102,15 +100,11 @@ async function swapV2(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps
 
   const provider = wallet.provider || getProvider(chainKey);
   const walletWithProvider = wallet.connect(provider);
-  
-  const router = new ethers.Contract(
-    chain.sushiswap.v2.router,
-    V2_ROUTER_ABI,
-    walletWithProvider,
-  );
+
+  const router = new ethers.Contract(chain.sushiswap.v2.router, V2_ROUTER_ABI, walletWithProvider);
 
   const tokenInContract = new ethers.Contract(tokenIn, ERC20_ABI, walletWithProvider);
-  
+
   const allowance = await tokenInContract.allowance(wallet.address, chain.sushiswap.v2.router);
   if (BigInt(allowance) < BigInt(amountIn)) {
     console.log("Approving SushiSwap V2 Router...");
@@ -120,17 +114,11 @@ async function swapV2(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps
 
   const quote = await getV2Quote(chainKey, tokenIn, tokenOut, amountIn);
   const minAmountOut = (BigInt(quote.amountOut) * BigInt(10000 - slippageBps)) / BigInt(10000);
-  
+
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
   const to = recipient || wallet.address;
 
-  const tx = await router.swapExactTokensForTokens(
-    amountIn,
-    minAmountOut,
-    quote.path,
-    to,
-    deadline,
-  );
+  const tx = await router.swapExactTokensForTokens(amountIn, minAmountOut, quote.path, to, deadline);
 
   const receipt = await tx.wait();
   return {
@@ -146,9 +134,9 @@ async function swapV2(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps
 async function swapV3(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps = 50, fee = 3000, recipient = null) {
   validateChainKey(chainKey);
   validateWallet(wallet);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
   validateSlippage(slippageBps);
 
   const chain = CHAINS[chainKey];
@@ -158,15 +146,11 @@ async function swapV3(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps
 
   const provider = wallet.provider || getProvider(chainKey);
   const walletWithProvider = wallet.connect(provider);
-  
-  const router = new ethers.Contract(
-    chain.sushiswap.v3.router,
-    V3_ROUTER_ABI,
-    walletWithProvider,
-  );
+
+  const router = new ethers.Contract(chain.sushiswap.v3.router, V3_ROUTER_ABI, walletWithProvider);
 
   const tokenInContract = new ethers.Contract(tokenIn, ERC20_ABI, walletWithProvider);
-  
+
   const allowance = await tokenInContract.allowance(wallet.address, chain.sushiswap.v3.router);
   if (BigInt(allowance) < BigInt(amountIn)) {
     console.log("Approving SushiSwap V3 Router...");
@@ -176,7 +160,7 @@ async function swapV3(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps
 
   const quote = await getV3Quote(chainKey, tokenIn, tokenOut, amountIn, fee);
   const minAmountOut = (BigInt(quote.amountOut) * BigInt(10000 - slippageBps)) / BigInt(10000);
-  
+
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
   const to = recipient || wallet.address;
 
@@ -193,7 +177,7 @@ async function swapV3(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps
 
   const tx = await router.exactInputSingle(params);
   const receipt = await tx.wait();
-  
+
   return {
     version: "v3",
     hash: receipt.hash,
@@ -207,24 +191,19 @@ async function swapV3(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps
 async function swapTokens(chainKey, wallet, tokenIn, tokenOut, amountIn, options = {}) {
   validateChainKey(chainKey);
   validateWallet(wallet);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
 
-  const {
-    slippageBps = 50,
-    recipient = null,
-    version = null,
-    fee = 3000,
-  } = options;
+  const { slippageBps = 50, recipient = null, version = null, fee = 3000 } = options;
 
   validateSlippage(slippageBps);
 
-  if (version === 'v2') {
+  if (version === "v2") {
     return await swapV2(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps, recipient);
   }
-  
-  if (version === 'v3') {
+
+  if (version === "v3") {
     return await swapV3(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps, fee, recipient);
   }
 
@@ -254,7 +233,7 @@ async function swapTokens(chainKey, wallet, tokenIn, tokenOut, amountIn, options
   console.log(`Best route: SushiSwap ${bestVersion.toUpperCase()}`);
   console.log(`Expected output: ${bestAmountOut.toString()}`);
 
-  if (bestVersion === 'v2') {
+  if (bestVersion === "v2") {
     return await swapV2(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps, recipient);
   } else {
     return await swapV3(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps, fee, recipient);

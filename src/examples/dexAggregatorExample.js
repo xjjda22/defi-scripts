@@ -44,7 +44,7 @@ async function main() {
   // Example 2: Include Curve pool (if you have a WETH/USDC Curve pool)
   // const curvePoolAddress = "0x..."; // Your Curve pool address
   // const curveIndices = { i: 0, j: 1 }; // Token indices in the pool
-  // 
+  //
   // const bestQuoteWithCurve = await getBestQuote(chainKey, WETH, USDC, amountIn, {
   //   curvePoolAddress,
   //   curveTokenIndices: curveIndices,
@@ -52,7 +52,7 @@ async function main() {
 
   // Example 3: Include Balancer pool (if you have a WETH/USDC Balancer pool)
   // const balancerPoolId = "0x..."; // Your Balancer pool ID
-  // 
+  //
   // const bestQuoteWithBalancer = await getBestQuote(chainKey, WETH, USDC, amountIn, {
   //   balancerPoolId,
   // });

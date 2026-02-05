@@ -5,7 +5,14 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const { getProvider } = require("../utils/web3");
-const { validateChainKey, validateWallet, validateAddress, validateAmount, validateSlippage, validateFeeTier } = require("../utils/validation");
+const {
+  validateChainKey,
+  validateWallet,
+  validateAddress,
+  validateAmount,
+  validateSlippage,
+  validateFeeTier,
+} = require("../utils/validation");
 const POOL_MANAGER_ABI = require("../abis/IPoolManager.json");
 const ERC20_ABI = require("../abis/IERC20.json");
 
@@ -39,10 +46,7 @@ const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
  */
 function createPoolKey(token0, token1, fee, tickSpacing, hooks = ADDRESS_ZERO) {
   // Ensure tokens are in correct order (token0 < token1)
-  const [currency0, currency1] =
-    token0.toLowerCase() < token1.toLowerCase()
-      ? [token0, token1]
-      : [token1, token0];
+  const [currency0, currency1] = token0.toLowerCase() < token1.toLowerCase() ? [token0, token1] : [token1, token0];
 
   return {
     currency0,
@@ -62,8 +66,8 @@ function createPoolKey(token0, token1, fee, tickSpacing, hooks = ADDRESS_ZERO) {
 async function getPoolState(chainKey, poolKey) {
   // Validate inputs
   validateChainKey(chainKey);
-  validateAddress(poolKey.currency0, 'poolKey.currency0');
-  validateAddress(poolKey.currency1, 'poolKey.currency1');
+  validateAddress(poolKey.currency0, "poolKey.currency0");
+  validateAddress(poolKey.currency1, "poolKey.currency1");
   validateFeeTier(poolKey.fee);
 
   const chain = CHAINS[chainKey];
@@ -72,11 +76,7 @@ async function getPoolState(chainKey, poolKey) {
   }
 
   const provider = getProvider(chainKey);
-  const poolManager = new ethers.Contract(
-    chain.uniswap.v4.poolManager,
-    POOL_MANAGER_ABI,
-    provider,
-  );
+  const poolManager = new ethers.Contract(chain.uniswap.v4.poolManager, POOL_MANAGER_ABI, provider);
 
   try {
     const slot0 = await poolManager.getSlot0(poolKey);
@@ -105,10 +105,10 @@ async function getPoolState(chainKey, poolKey) {
 async function estimateSwapOutput(chainKey, tokenIn, tokenOut, fee, amountIn) {
   // Validate inputs
   validateChainKey(chainKey);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
   validateFeeTier(fee);
-  validateAmount(amountIn, 'amountIn');
+  validateAmount(amountIn, "amountIn");
 
   const tickSpacing = TICK_SPACING[fee] || 60;
   const poolKey = createPoolKey(tokenIn, tokenOut, fee, tickSpacing);
@@ -143,23 +143,14 @@ async function estimateSwapOutput(chainKey, tokenIn, tokenOut, fee, amountIn) {
  * @param {string} recipient - Recipient address
  * @returns {Promise<{hash: string, delta: string}>}
  */
-async function swapV4(
-  chainKey,
-  wallet,
-  tokenIn,
-  tokenOut,
-  fee,
-  amountIn,
-  slippageBps = 50,
-  recipient = null,
-) {
+async function swapV4(chainKey, wallet, tokenIn, tokenOut, fee, amountIn, slippageBps = 50, recipient = null) {
   // Validate inputs
   validateChainKey(chainKey);
   validateWallet(wallet);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
   validateFeeTier(fee);
-  validateAmount(amountIn, 'amountIn');
+  validateAmount(amountIn, "amountIn");
   validateSlippage(slippageBps);
 
   const chain = CHAINS[chainKey];
@@ -180,29 +171,17 @@ async function swapV4(
 
   // Check and approve token if needed
   const tokenContract = new ethers.Contract(tokenIn, ERC20_ABI, signer);
-  const allowance = await tokenContract.allowance(
-    wallet.address,
-    chain.uniswap.v4.poolManager,
-  );
+  const allowance = await tokenContract.allowance(wallet.address, chain.uniswap.v4.poolManager);
 
   if (BigInt(allowance.toString()) < BigInt(amountIn)) {
     console.log(`Approving ${tokenIn} for V4 PoolManager...`);
-    const approveTx = await tokenContract.approve(
-      chain.uniswap.v4.poolManager,
-      ethers.MaxUint256,
-    );
+    const approveTx = await tokenContract.approve(chain.uniswap.v4.poolManager, ethers.MaxUint256);
     await approveTx.wait();
     console.log(`Approval confirmed: ${approveTx.hash}`);
   }
 
   // Estimate output for slippage protection
-  const estimatedOut = await estimateSwapOutput(
-    chainKey,
-    tokenIn,
-    tokenOut,
-    fee,
-    amountIn,
-  );
+  const estimatedOut = await estimateSwapOutput(chainKey, tokenIn, tokenOut, fee, amountIn);
 
   // Prepare swap params
   const swapParams = {
@@ -211,20 +190,14 @@ async function swapV4(
     sqrtPriceLimitX96: 0, // No price limit (in production, calculate based on slippage)
   };
 
-  const poolManager = new ethers.Contract(
-    chain.uniswap.v4.poolManager,
-    POOL_MANAGER_ABI,
-    signer,
-  );
+  const poolManager = new ethers.Contract(chain.uniswap.v4.poolManager, POOL_MANAGER_ABI, signer);
 
   console.log(`\nExecuting V4 swap on ${chain.name}:`);
   console.log(`  Input: ${amountIn} ${tokenIn}`);
   console.log(`  Estimated Output: ${estimatedOut} ${tokenOut}`);
   console.log(`  Fee Tier: ${fee / 10000}%`);
   console.log(`  Direction: ${zeroForOne ? "0->1" : "1->0"}`);
-  console.log(
-    `\n⚠️  NOTE: V4 requires router contract for production use. This is direct PoolManager interaction.`,
-  );
+  console.log(`\n⚠️  NOTE: V4 requires router contract for production use. This is direct PoolManager interaction.`);
 
   try {
     // V4 swaps require additional steps (settle/take) that are typically handled by routers
@@ -232,7 +205,7 @@ async function swapV4(
     const tx = await poolManager.swap(
       poolKey,
       swapParams,
-      "0x", // Hook data (empty for no hooks)
+      "0x" // Hook data (empty for no hooks)
     );
 
     console.log(`Transaction submitted: ${tx.hash}`);

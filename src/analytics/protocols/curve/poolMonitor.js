@@ -2,13 +2,13 @@
 
 /**
  * Curve Pool Monitor
- * 
+ *
  * Monitors Curve pool states including:
  * - Virtual price (LP token value)
  * - Pool balances & composition
  * - APY (base fees + CRV rewards)
  * - Balance health & arbitrage opportunities
- * 
+ *
  * Usage:
  *   npm run analytics:curve:pools [chain] [poolName]
  *   npm run analytics:curve:pools ethereum 3pool
@@ -49,9 +49,7 @@ async function getPoolState(chainKey, poolAddress, numCoins) {
       pool.get_virtual_price(),
       pool.fee().catch(() => null),
       pool.admin_fee().catch(() => null),
-      ...Array.from({ length: numCoins }, (_, i) => 
-        pool.balances(i).catch(() => BigInt(0))
-      ),
+      ...Array.from({ length: numCoins }, (_, i) => pool.balances(i).catch(() => BigInt(0))),
     ]);
 
     return {
@@ -74,17 +72,15 @@ async function getCoinDecimals(chainKey, poolAddress, numCoins) {
   const pool = new ethers.Contract(poolAddress, CURVE_POOL_ABI, provider);
 
   try {
-    const coins = await Promise.all(
-      Array.from({ length: numCoins }, (_, i) => pool.coins(i))
-    );
+    const coins = await Promise.all(Array.from({ length: numCoins }, (_, i) => pool.coins(i)));
 
     const decimals = await Promise.all(
-      coins.map(async (coinAddress) => {
+      coins.map(async coinAddress => {
         // Handle ETH (native) - Curve uses 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE
         if (coinAddress.toLowerCase() === "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
           return 18;
         }
-        
+
         try {
           const token = new ethers.Contract(coinAddress, ERC20_ABI, provider);
           return await token.decimals();
@@ -111,9 +107,7 @@ async function getPoolAPY(chainKey, poolAddress) {
       timeout: 10000,
     });
 
-    const poolData = response.data?.data?.poolData?.find(
-      (p) => p.address?.toLowerCase() === poolAddress.toLowerCase()
-    );
+    const poolData = response.data?.data?.poolData?.find(p => p.address?.toLowerCase() === poolAddress.toLowerCase());
 
     if (!poolData) {
       return { baseApy: null, crvApy: null, totalApy: null };
@@ -134,15 +128,11 @@ async function getPoolAPY(chainKey, poolAddress) {
  * Calculate balance percentages and detect imbalances
  */
 function analyzeBalances(balances, decimals, coinNames) {
-  const formattedBalances = balances.map((balance, i) => 
-    parseFloat(ethers.formatUnits(balance, decimals[i]))
-  );
+  const formattedBalances = balances.map((balance, i) => parseFloat(ethers.formatUnits(balance, decimals[i])));
 
   const totalValue = formattedBalances.reduce((sum, b) => sum + b, 0);
-  
-  const percentages = formattedBalances.map((balance) => 
-    totalValue > 0 ? (balance / totalValue) * 100 : 0
-  );
+
+  const percentages = formattedBalances.map(balance => (totalValue > 0 ? (balance / totalValue) * 100 : 0));
 
   // Ideal percentage for equal-weight pools
   const idealPercentage = 100 / balances.length;
@@ -183,10 +173,10 @@ function analyzeBalances(balances, decimals, coinNames) {
  */
 async function monitorPool(chainKey, poolInfo) {
   const { name, address, coins } = poolInfo;
-  
+
   const version = poolInfo.version || "V1";
   const poolType = poolInfo.type || "Unknown";
-  
+
   console.log(`\n${name} [${version} - ${poolType}]`);
   console.log("─".repeat(50));
 
@@ -220,9 +210,11 @@ async function monitorPool(chainKey, poolInfo) {
   }
 
   // Display balance composition
-  console.log(`  Balance: ${coins.map((coin, i) => 
-    `${formatPercent(balanceAnalysis.percentages[i], 1)}`
-  ).join(" / ")} ${balanceAnalysis.balanceEmoji} ${balanceAnalysis.balanceStatus}`);
+  console.log(
+    `  Balance: ${coins
+      .map((coin, i) => `${formatPercent(balanceAnalysis.percentages[i], 1)}`)
+      .join(" / ")} ${balanceAnalysis.balanceEmoji} ${balanceAnalysis.balanceStatus}`
+  );
 
   // Display insights
   if (balanceAnalysis.maxDeviation > 5) {
@@ -320,7 +312,7 @@ Configuration:
 
 // Run the script
 if (require.main === module) {
-  main().catch((error) => {
+  main().catch(error => {
     console.error("Fatal error:", error);
     process.exit(1);
   });

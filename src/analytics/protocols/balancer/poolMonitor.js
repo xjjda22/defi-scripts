@@ -2,13 +2,13 @@
 
 /**
  * Balancer Pool Monitor
- * 
+ *
  * Monitors Balancer weighted pools including:
  * - Pool token balances & weights
  * - Weight deviation (rebalancing needs)
  * - TVL estimation
  * - IL risk assessment
- * 
+ *
  * Usage:
  *   npm run analytics:balancer:pools [chain] [poolName]
  *   npm run analytics:balancer:pools ethereum wethUsdc5050
@@ -18,12 +18,7 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../../../config/chains");
 const { getProvider } = require("../../../utils/web3");
-const {
-  printHeader,
-  formatCurrency,
-  formatPercent,
-  formatNumber,
-} = require("../../utils/displayHelpers");
+const { printHeader, formatCurrency, formatPercent, formatNumber } = require("../../utils/displayHelpers");
 const { getTokenInfo, formatTokenAmount } = require("../../utils/priceFeeds");
 
 // ABIs
@@ -36,17 +31,17 @@ async function getPoolData(chainKey, poolId, version = "v2") {
   const chain = CHAINS[chainKey];
   const provider = getProvider(chainKey);
   const vaultAddress = chain.balancer[version]?.vault;
-  
+
   if (!vaultAddress) {
     console.error(`Balancer ${version.toUpperCase()} vault not configured`);
     return null;
   }
-  
+
   const vault = new ethers.Contract(vaultAddress, BALANCER_VAULT_ABI, provider);
 
   try {
     const [tokens, balances, lastChangeBlock] = await vault.getPoolTokens(poolId);
-    
+
     return {
       tokens: tokens.map(t => t.toLowerCase()),
       balances: balances.map(b => b.toString()),
@@ -86,9 +81,7 @@ function analyzeWeights(actualWeights, targetWeights, tokenNames) {
   }
 
   // Find most overweight token
-  const maxDeviationIndex = deviations.findIndex(
-    d => Math.abs(d.deviationPct) === maxDeviation
-  );
+  const maxDeviationIndex = deviations.findIndex(d => Math.abs(d.deviationPct) === maxDeviation);
   const rebalanceToken = maxDeviationIndex >= 0 ? tokenNames[maxDeviationIndex] : null;
   const rebalanceDirection = deviations[maxDeviationIndex]?.deviation > 0 ? "remove" : "add";
 
@@ -133,7 +126,7 @@ function calculateILRisk(weights) {
  */
 async function monitorPool(chainKey, poolInfo) {
   const { name, poolId, tokens: tokenNames, weights: targetWeights, version = "V2" } = poolInfo;
-  
+
   console.log(`\n${name} [${version}]`);
   console.log("─".repeat(50));
 
@@ -146,9 +139,7 @@ async function monitorPool(chainKey, poolInfo) {
   }
 
   // Fetch token info for all tokens
-  const tokenInfos = await Promise.all(
-    poolData.tokens.map(tokenAddress => getTokenInfo(tokenAddress, chainKey))
-  );
+  const tokenInfos = await Promise.all(poolData.tokens.map(tokenAddress => getTokenInfo(tokenAddress, chainKey)));
 
   // Format balances
   const formattedBalances = poolData.balances.map((balance, i) => {
@@ -158,9 +149,7 @@ async function monitorPool(chainKey, poolInfo) {
 
   // Calculate actual weights
   const totalValue = formattedBalances.reduce((sum, b) => sum + b, 0);
-  const actualWeights = formattedBalances.map(b => 
-    totalValue > 0 ? (b / totalValue) * 100 : 0
-  );
+  const actualWeights = formattedBalances.map(b => (totalValue > 0 ? (b / totalValue) * 100 : 0));
 
   // Analyze weights
   const weightAnalysis = analyzeWeights(actualWeights, targetWeights, tokenNames);
@@ -170,7 +159,7 @@ async function monitorPool(chainKey, poolInfo) {
 
   // Display pool info
   console.log(`  Pool ID: ${poolId.slice(0, 10)}...${poolId.slice(-8)}`);
-  
+
   // Display balances
   console.log(`  Balances:`);
   tokenNames.forEach((token, i) => {
@@ -179,14 +168,16 @@ async function monitorPool(chainKey, poolInfo) {
   });
 
   // Display weights
-  console.log(`  Weights: ${actualWeights.map((w, i) => 
-    `${formatPercent(w, 1)} (target: ${targetWeights[i]}%)`
-  ).join(" / ")}`);
+  console.log(
+    `  Weights: ${actualWeights.map((w, i) => `${formatPercent(w, 1)} (target: ${targetWeights[i]}%)`).join(" / ")}`
+  );
   console.log(`  Status: ${weightAnalysis.rebalanceEmoji} ${weightAnalysis.rebalanceStatus}`);
 
   // Display rebalancing suggestion
   if (weightAnalysis.maxDeviation > 5) {
-    console.log(`  💡 ${weightAnalysis.rebalanceToken} is ${weightAnalysis.rebalanceDirection === "remove" ? "overweight" : "underweight"} (${weightAnalysis.maxDeviation.toFixed(1)}% deviation)`);
+    console.log(
+      `  💡 ${weightAnalysis.rebalanceToken} is ${weightAnalysis.rebalanceDirection === "remove" ? "overweight" : "underweight"} (${weightAnalysis.maxDeviation.toFixed(1)}% deviation)`
+    );
     if (weightAnalysis.rebalanceDirection === "remove") {
       console.log(`  💡 Consider: Remove ${weightAnalysis.rebalanceToken} to rebalance`);
     } else {
@@ -196,7 +187,7 @@ async function monitorPool(chainKey, poolInfo) {
 
   // Display IL risk
   console.log(`  IL Risk: ${ilAnalysis.ilEmoji} ${ilAnalysis.ilRisk}`);
-  
+
   if (ilAnalysis.weightSpread < 20) {
     console.log(`  💡 High IL exposure - suitable for low volatility pairs`);
   } else if (ilAnalysis.weightSpread > 40) {
@@ -271,12 +262,10 @@ Configuration:
         break;
       }
     }
-    
+
     if (!pool) {
       console.error(`❌ Error: Unknown pool "${poolName}"`);
-      const allPools = Object.keys(chain.balancer).flatMap(v => 
-        Object.keys(chain.balancer[v]?.pools || {})
-      );
+      const allPools = Object.keys(chain.balancer).flatMap(v => Object.keys(chain.balancer[v]?.pools || {}));
       console.error(`Available pools: ${allPools.join(", ")}`);
       process.exit(1);
     }
@@ -298,7 +287,7 @@ Configuration:
 
 // Run the script
 if (require.main === module) {
-  main().catch((error) => {
+  main().catch(error => {
     console.error("Fatal error:", error);
     process.exit(1);
   });

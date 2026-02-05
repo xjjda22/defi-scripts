@@ -5,7 +5,13 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const { getProvider } = require("../utils/web3");
-const { validateChainKey, validateWallet, validateAddress, validateAmount, validateSlippage } = require("../utils/validation");
+const {
+  validateChainKey,
+  validateWallet,
+  validateAddress,
+  validateAmount,
+  validateSlippage,
+} = require("../utils/validation");
 const VAULT_ABI = require("../abis/BalancerVault.json");
 const ERC20_ABI = require("../abis/IERC20.json");
 
@@ -24,9 +30,9 @@ const ERC20_ABI = require("../abis/IERC20.json");
 async function swapV2(chainKey, wallet, poolId, tokenIn, tokenOut, amountIn, slippageBps = 50, recipient = null) {
   validateChainKey(chainKey);
   validateWallet(wallet);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
   validateSlippage(slippageBps);
 
   const chain = CHAINS[chainKey];
@@ -36,15 +42,11 @@ async function swapV2(chainKey, wallet, poolId, tokenIn, tokenOut, amountIn, sli
 
   const provider = wallet.provider || getProvider(chainKey);
   const walletWithProvider = wallet.connect(provider);
-  
-  const vault = new ethers.Contract(
-    chain.balancer.v2.vault,
-    VAULT_ABI,
-    walletWithProvider,
-  );
+
+  const vault = new ethers.Contract(chain.balancer.v2.vault, VAULT_ABI, walletWithProvider);
 
   const tokenInContract = new ethers.Contract(tokenIn, ERC20_ABI, walletWithProvider);
-  
+
   const allowance = await tokenInContract.allowance(wallet.address, chain.balancer.v2.vault);
   if (BigInt(allowance) < BigInt(amountIn)) {
     console.log("Approving Balancer Vault...");
@@ -72,15 +74,10 @@ async function swapV2(chainKey, wallet, poolId, tokenIn, tokenOut, amountIn, sli
     toInternalBalance: false,
   };
 
-  const tx = await vault.swap(
-    singleSwap,
-    funds,
-    minAmountOut,
-    deadline,
-  );
+  const tx = await vault.swap(singleSwap, funds, minAmountOut, deadline);
 
   const receipt = await tx.wait();
-  
+
   return {
     version: "v2",
     hash: receipt.hash,
@@ -100,11 +97,7 @@ async function getPoolInfo(chainKey, poolId) {
   }
 
   const provider = getProvider(chainKey);
-  const vault = new ethers.Contract(
-    chain.balancer.v2.vault,
-    VAULT_ABI,
-    provider,
-  );
+  const vault = new ethers.Contract(chain.balancer.v2.vault, VAULT_ABI, provider);
 
   try {
     const [tokens, balances, lastChangeBlock] = await vault.getPoolTokens(poolId);
@@ -125,27 +118,23 @@ async function getPoolInfo(chainKey, poolId) {
 async function swapTokens(chainKey, wallet, poolId, tokenIn, tokenOut, amountIn, options = {}) {
   validateChainKey(chainKey);
   validateWallet(wallet);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
 
-  const {
-    slippageBps = 50,
-    recipient = null,
-    version = null,
-  } = options;
+  const { slippageBps = 50, recipient = null, version = null } = options;
 
   validateSlippage(slippageBps);
 
   const chain = CHAINS[chainKey];
-  
+
   // Force specific version if requested
-  if (version === 'v2' || !chain?.balancer?.v3?.vault) {
+  if (version === "v2" || !chain?.balancer?.v3?.vault) {
     console.log(`Using Balancer V2 on ${chain.name}...`);
     return await swapV2(chainKey, wallet, poolId, tokenIn, tokenOut, amountIn, slippageBps, recipient);
   }
-  
-  if (version === 'v3') {
+
+  if (version === "v3") {
     console.log(`Using Balancer V3 on ${chain.name}...`);
     // V3 implementation would go here when available
     throw new Error("Balancer V3 swaps not yet implemented");

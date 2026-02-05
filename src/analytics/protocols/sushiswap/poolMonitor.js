@@ -2,12 +2,12 @@
 
 /**
  * SushiSwap Pool Monitor
- * 
+ *
  * Monitors SushiSwap pools and compares to Uniswap:
  * - V2 pool prices vs Uniswap V2
  * - V3 pool prices vs Uniswap V3
  * - Shows when to use SushiSwap (LP incentives) vs Uniswap (better prices)
- * 
+ *
  * Usage:
  *   npm run analytics:sushiswap:pools [chain] [tokenIn] [tokenOut] [amount]
  *   npm run analytics:sushiswap:pools ethereum WETH USDC 1
@@ -18,13 +18,7 @@ const { ethers } = require("ethers");
 const { CHAINS, COMMON_TOKENS } = require("../../../config/chains");
 const { getPairGroup } = require("../../../config/pairs");
 const { getProvider } = require("../../../utils/web3");
-const {
-  printHeader,
-  createTable,
-  formatCurrency,
-  formatPercent,
-  printInsight,
-} = require("../../utils/displayHelpers");
+const { printHeader, createTable, formatCurrency, formatPercent, printInsight } = require("../../utils/displayHelpers");
 const { getTokenInfo, formatTokenAmount } = require("../../utils/priceFeeds");
 
 // Reuse Uniswap ABIs since SushiSwap is a fork
@@ -41,11 +35,7 @@ async function getSushiV2Quote(chainKey, tokenIn, tokenOut, amountIn) {
   }
 
   const provider = getProvider(chainKey);
-  const router = new ethers.Contract(
-    chain.sushiswap.v2.router,
-    UNISWAP_V2_ROUTER_ABI,
-    provider
-  );
+  const router = new ethers.Contract(chain.sushiswap.v2.router, UNISWAP_V2_ROUTER_ABI, provider);
 
   try {
     const amounts = await router.getAmountsOut(amountIn, [tokenIn, tokenOut]);
@@ -65,20 +55,10 @@ async function getSushiV3Quote(chainKey, tokenIn, tokenOut, amountIn, fee = 3000
   }
 
   const provider = getProvider(chainKey);
-  const quoter = new ethers.Contract(
-    chain.sushiswap.v3.quoter,
-    UNISWAP_V3_QUOTER_ABI,
-    provider
-  );
+  const quoter = new ethers.Contract(chain.sushiswap.v3.quoter, UNISWAP_V3_QUOTER_ABI, provider);
 
   try {
-    const amountOut = await quoter.quoteExactInputSingle.staticCall(
-      tokenIn,
-      tokenOut,
-      fee,
-      amountIn,
-      0
-    );
+    const amountOut = await quoter.quoteExactInputSingle.staticCall(tokenIn, tokenOut, fee, amountIn, 0);
     return amountOut.toString();
   } catch (error) {
     return null;
@@ -95,11 +75,7 @@ async function getUniV2Quote(chainKey, tokenIn, tokenOut, amountIn) {
   }
 
   const provider = getProvider(chainKey);
-  const router = new ethers.Contract(
-    chain.uniswap.v2.router,
-    UNISWAP_V2_ROUTER_ABI,
-    provider
-  );
+  const router = new ethers.Contract(chain.uniswap.v2.router, UNISWAP_V2_ROUTER_ABI, provider);
 
   try {
     const amounts = await router.getAmountsOut(amountIn, [tokenIn, tokenOut]);
@@ -119,20 +95,10 @@ async function getUniV3Quote(chainKey, tokenIn, tokenOut, amountIn, fee = 3000) 
   }
 
   const provider = getProvider(chainKey);
-  const quoter = new ethers.Contract(
-    chain.uniswap.v3.quoter,
-    UNISWAP_V3_QUOTER_ABI,
-    provider
-  );
+  const quoter = new ethers.Contract(chain.uniswap.v3.quoter, UNISWAP_V3_QUOTER_ABI, provider);
 
   try {
-    const amountOut = await quoter.quoteExactInputSingle.staticCall(
-      tokenIn,
-      tokenOut,
-      fee,
-      amountIn,
-      0
-    );
+    const amountOut = await quoter.quoteExactInputSingle.staticCall(tokenIn, tokenOut, fee, amountIn, 0);
     return amountOut.toString();
   } catch (error) {
     return null;
@@ -185,14 +151,8 @@ async function comparePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) {
     const diff = ((sushiPrice - uniPrice) / uniPrice) * 100;
     const diffStr = diff >= 0 ? `+${formatPercent(diff, 2)}` : formatPercent(diff, 2);
     const recommendation = diff >= 0 ? "✅ Better" : "⚠️ Worse";
-    
-    table.push([
-      "SushiSwap",
-      "V2 (fork)",
-      formatCurrency(sushiPrice),
-      diffStr,
-      recommendation,
-    ]);
+
+    table.push(["SushiSwap", "V2 (fork)", formatCurrency(sushiPrice), diffStr, recommendation]);
 
     results.push({
       dex: "SushiSwap V2",
@@ -208,14 +168,8 @@ async function comparePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) {
     const diff = ((sushiPrice - uniPrice) / uniPrice) * 100;
     const diffStr = diff >= 0 ? `+${formatPercent(diff, 2)}` : formatPercent(diff, 2);
     const recommendation = diff >= 0 ? "✅ Better" : "⚠️ Worse";
-    
-    table.push([
-      "SushiSwap",
-      "V3 (fork, 0.3%)",
-      formatCurrency(sushiPrice),
-      diffStr,
-      recommendation,
-    ]);
+
+    table.push(["SushiSwap", "V3 (fork, 0.3%)", formatCurrency(sushiPrice), diffStr, recommendation]);
 
     results.push({
       dex: "SushiSwap V3",
@@ -227,24 +181,12 @@ async function comparePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) {
   // Add Uniswap baseline
   if (uniV2Quote) {
     const uniPrice = parseFloat(formatTokenAmount(uniV2Quote, tokenOut.decimals));
-    table.push([
-      "Uniswap",
-      "V2",
-      formatCurrency(uniPrice),
-      "baseline",
-      "📊 Compare",
-    ]);
+    table.push(["Uniswap", "V2", formatCurrency(uniPrice), "baseline", "📊 Compare"]);
   }
 
   if (uniV3Quote) {
     const uniPrice = parseFloat(formatTokenAmount(uniV3Quote, tokenOut.decimals));
-    table.push([
-      "Uniswap",
-      "V3 (0.3%)",
-      formatCurrency(uniPrice),
-      "baseline",
-      "📊 Compare",
-    ]);
+    table.push(["Uniswap", "V3 (0.3%)", formatCurrency(uniPrice), "baseline", "📊 Compare"]);
   }
 
   console.log(table.toString());
@@ -273,9 +215,9 @@ async function comparePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) {
   // Strategic recommendation
   console.log("\nRecommendation");
   console.log("─".repeat(50));
-  
+
   const avgDiff = results.reduce((sum, r) => sum + r.diffPct, 0) / results.length;
-  
+
   if (avgDiff < -1) {
     console.log("⚠️  Use Uniswap for swaps (better prices)");
     console.log("💡 Consider SushiSwap for LP (SUSHI incentives may compensate)");
@@ -349,7 +291,7 @@ Configuration:
   for (let i = 0; i < pairs.length; i++) {
     const pair = pairs[i];
     await comparePrices(chainKey, pair.tokenIn, pair.tokenOut, pair.amount);
-    
+
     // Add separator between pairs if monitoring multiple
     if (i < pairs.length - 1) {
       console.log("\n" + "═".repeat(60) + "\n");
@@ -361,7 +303,7 @@ Configuration:
 
 // Run the script
 if (require.main === module) {
-  main().catch((error) => {
+  main().catch(error => {
     console.error("Fatal error:", error);
     process.exit(1);
   });

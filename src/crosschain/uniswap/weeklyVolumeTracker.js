@@ -30,13 +30,13 @@ const MAX_BAR_LENGTH = 50;
 function getThisWeekDates() {
   const today = new Date();
   const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
-  
+
   // Calculate Monday of this week
   const monday = new Date(today);
   const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // If Sunday, go back 6 days
   monday.setDate(today.getDate() - daysToMonday);
   monday.setHours(0, 0, 0, 0);
-  
+
   // Generate all 7 days of the week
   const weekDates = [];
   for (let i = 0; i < 7; i++) {
@@ -44,12 +44,12 @@ function getThisWeekDates() {
     date.setDate(monday.getDate() + i);
     weekDates.push({
       date: date,
-      dateStr: date.toISOString().split('T')[0],
-      dayName: date.toLocaleDateString('en-US', { weekday: 'long' }),
+      dateStr: date.toISOString().split("T")[0],
+      dayName: date.toLocaleDateString("en-US", { weekday: "long" }),
       timestamp: Math.floor(date.getTime() / 1000),
     });
   }
-  
+
   return weekDates;
 }
 
@@ -273,20 +273,32 @@ async function getUniswapVolumeForDay(chainName, targetTimestamp) {
   }
 
   // Extract individual versions for cleaner return structure
-  const v1 = volumeData.v1 || 0, v2 = volumeData.v2 || 0, v3 = volumeData.v3 || 0, v4 = volumeData.v4 || 0;
-  const t1 = tvlData.v1 || 0, t2 = tvlData.v2 || 0, t3 = tvlData.v3 || 0, t4 = tvlData.v4 || 0;
+  const v1 = volumeData.v1 || 0,
+    v2 = volumeData.v2 || 0,
+    v3 = volumeData.v3 || 0,
+    v4 = volumeData.v4 || 0;
+  const t1 = tvlData.v1 || 0,
+    t2 = tvlData.v2 || 0,
+    t3 = tvlData.v3 || 0,
+    t4 = tvlData.v4 || 0;
 
   return {
     chain: chainName,
-    v1Volume: v1, v2Volume: v2, v3Volume: v3, v4Volume: v4,
+    v1Volume: v1,
+    v2Volume: v2,
+    v3Volume: v3,
+    v4Volume: v4,
     volume24h: v1 + v2 + v3 + v4,
-    v1TVL: t1, v2TVL: t2, v3TVL: t3, v4TVL: t4,
+    v1TVL: t1,
+    v2TVL: t2,
+    v3TVL: t3,
+    v4TVL: t4,
     tvl: t1 + t2 + t3 + t4,
     metadata: {
       timestamp: targetTimestamp,
-      date: new Date(targetTimestamp * 1000).toISOString().split('T')[0],
+      date: new Date(targetTimestamp * 1000).toISOString().split("T")[0],
       protocolsFetched: Object.keys(volumeData),
-    }
+    },
   };
 }
 
@@ -334,9 +346,17 @@ async function getWeeklyStats() {
         dayData.chains.push({
           chain: chainConfig.name,
           chainKey,
-          v1Volume: 0, v2Volume: 0, v3Volume: 0, v4Volume: 0, volume24h: 0,
-          v1TVL: 0, v2TVL: 0, v3TVL: 0, v4TVL: 0, tvl: 0,
-          metadata: { error: error.message }
+          v1Volume: 0,
+          v2Volume: 0,
+          v3Volume: 0,
+          v4Volume: 0,
+          volume24h: 0,
+          v1TVL: 0,
+          v2TVL: 0,
+          v3TVL: 0,
+          v4TVL: 0,
+          tvl: 0,
+          metadata: { error: error.message },
         });
       }
 
@@ -366,7 +386,7 @@ async function generateReport() {
   console.log(`\n📈 UNISWAP WEEKLY VOLUME TRACKER`);
   console.log(`═══════════════════════════════════════`);
   console.log(`Purpose: Track daily trading volume across Uniswap V1-V4 protocols`);
-  console.log(`Chains: ${Object.keys(CHAIN_MAPPING).join(', ')}`);
+  console.log(`Chains: ${Object.keys(CHAIN_MAPPING).join(", ")}`);
   console.log(`Period: Current week (Monday - Sunday)\n`);
 
   // Fetch data
@@ -437,8 +457,8 @@ function generateSummarySection(dailyTotals) {
   console.log(`Week Period: ${weekStart} to ${weekEnd}`);
 
   // Calculate key metrics
-  const maxDay = dailyTotals.reduce((max, day) => day.totalVolume > max.totalVolume ? day : max, dailyTotals[0]);
-  const minDay = dailyTotals.reduce((min, day) => day.totalVolume < min.totalVolume ? day : min, dailyTotals[0]);
+  const maxDay = dailyTotals.reduce((max, day) => (day.totalVolume > max.totalVolume ? day : max), dailyTotals[0]);
+  const minDay = dailyTotals.reduce((min, day) => (day.totalVolume < min.totalVolume ? day : min), dailyTotals[0]);
 
   const weeklyRange = maxDay.totalVolume - minDay.totalVolume;
   const weeklyRangePercent = minDay.totalVolume > 0 ? ((weeklyRange / minDay.totalVolume) * 100).toFixed(2) : "0.00";
@@ -456,7 +476,7 @@ function generateSummarySection(dailyTotals) {
   const netChange = sundayVolume - mondayVolume;
   const netChangePercent = mondayVolume > 0 ? ((netChange / mondayVolume) * 100).toFixed(2) : "0.00";
 
-  console.log(`Net Weekly Change: ${netChange >= 0 ? '+' : ''}${formatUSD(netChange)} (${netChangePercent}%)`);
+  console.log(`Net Weekly Change: ${netChange >= 0 ? "+" : ""}${formatUSD(netChange)} (${netChangePercent}%)`);
   console.log(``);
 }
 
@@ -465,21 +485,29 @@ function generateSummarySection(dailyTotals) {
  * @param {Array} dailyTotals - Daily aggregated totals
  */
 function generateDailyBreakdownTable(dailyTotals) {
-  console.log(`╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗`);
-  console.log(`║                          📅 DAILY VOLUME BREAKDOWN                                                                   ║`);
-  console.log(`╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣`);
-  console.log(`║ Day       │ Date       │ Total Volume   │ V1 Volume     │ V2 Volume     │ V3 Volume     │ V4 Volume     │ Day Change║`);
-  console.log(`╠═══════════╪════════════╪════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════╣`);
+  console.log(
+    `╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗`
+  );
+  console.log(
+    `║                          📅 DAILY VOLUME BREAKDOWN                                                                   ║`
+  );
+  console.log(
+    `╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣`
+  );
+  console.log(
+    `║ Day       │ Date       │ Total Volume   │ V1 Volume     │ V2 Volume     │ V3 Volume     │ V4 Volume     │ Day Change║`
+  );
+  console.log(
+    `╠═══════════╪════════════╪════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════╣`
+  );
 
   let previousTotal = null;
-  dailyTotals.forEach((day) => {
+  dailyTotals.forEach(day => {
     const dayChange = previousTotal !== null ? day.totalVolume - previousTotal : 0;
-    const dayChangePercent = previousTotal !== null && previousTotal > 0
-      ? ((dayChange / previousTotal) * 100).toFixed(2)
-      : "0.00";
-    const dayChangeStr = previousTotal !== null
-      ? `${dayChange >= 0 ? "+" : ""}${formatUSD(dayChange)} (${dayChangePercent}%)`
-      : "—";
+    const dayChangePercent =
+      previousTotal !== null && previousTotal > 0 ? ((dayChange / previousTotal) * 100).toFixed(2) : "0.00";
+    const dayChangeStr =
+      previousTotal !== null ? `${dayChange >= 0 ? "+" : ""}${formatUSD(dayChange)} (${dayChangePercent}%)` : "—";
 
     const row = [
       day.dayName.substring(0, 9).padEnd(9),
@@ -489,14 +517,16 @@ function generateDailyBreakdownTable(dailyTotals) {
       formatUSD(day.v2Volume).padEnd(13),
       formatUSD(day.v3Volume).padEnd(13),
       formatUSD(day.v4Volume).padEnd(13),
-      dayChangeStr.padEnd(9)
+      dayChangeStr.padEnd(9),
     ];
 
-    console.log(`║ ${row.join(' │ ')} ║`);
+    console.log(`║ ${row.join(" │ ")} ║`);
     previousTotal = day.totalVolume;
   });
 
-  console.log(`╚═══════════╪════════════╪════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════╝`);
+  console.log(
+    `╚═══════════╪════════════╪════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════╝`
+  );
   console.log(``);
 }
 
@@ -505,9 +535,15 @@ function generateDailyBreakdownTable(dailyTotals) {
  * @param {Array} weeklyData - Raw weekly data by day and chain
  */
 function generateChainBreakdownSection(weeklyData) {
-  console.log(`╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗`);
-  console.log(`║                          💰 VOLUME BY CHAIN - DAILY BREAKDOWN                                                      ║`);
-  console.log(`╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝`);
+  console.log(
+    `╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗`
+  );
+  console.log(
+    `║                          💰 VOLUME BY CHAIN - DAILY BREAKDOWN                                                      ║`
+  );
+  console.log(
+    `╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝`
+  );
   console.log(``);
 
   // Get all unique chains
@@ -515,18 +551,18 @@ function generateChainBreakdownSection(weeklyData) {
 
   for (const chain of allChains) {
     console.log(`${chain}:`);
-    weeklyData.forEach((dayData) => {
+    weeklyData.forEach(dayData => {
       const chainData = dayData.chains.find(c => c.chain === chain);
       if (chainData) {
         const mondayData = weeklyData[0].chains.find(c => c.chain === chain);
         const mondayVolume = mondayData?.volume24h || 0;
         const change = chainData.volume24h - mondayVolume;
-        const changePercent = mondayVolume > 0
-          ? ((change / mondayVolume) * 100).toFixed(2)
-          : "0.00";
+        const changePercent = mondayVolume > 0 ? ((change / mondayVolume) * 100).toFixed(2) : "0.00";
 
         const changeIndicator = change >= 0 ? "+" : "";
-        console.log(`  ${dayData.dayName.padEnd(9)} (${dayData.date}): ${formatUSD(chainData.volume24h).padEnd(15)} (${changeIndicator}${changePercent}% vs Monday)`);
+        console.log(
+          `  ${dayData.dayName.padEnd(9)} (${dayData.date}): ${formatUSD(chainData.volume24h).padEnd(15)} (${changeIndicator}${changePercent}% vs Monday)`
+        );
       }
     });
     console.log(``);
@@ -546,15 +582,16 @@ function generateTrendVisualization(dailyTotals) {
   const maxVolume = Math.max(...dailyTotals.map(d => d.totalVolume));
   const minVolume = Math.min(...dailyTotals.map(d => d.totalVolume));
 
-  dailyTotals.forEach((day) => {
-    const normalizedValue = maxVolume - minVolume > 0
-      ? ((day.totalVolume - minVolume) / (maxVolume - minVolume)) * 100
-      : 0;
+  dailyTotals.forEach(day => {
+    const normalizedValue =
+      maxVolume - minVolume > 0 ? ((day.totalVolume - minVolume) / (maxVolume - minVolume)) * 100 : 0;
     const barLength = Math.floor((normalizedValue / 100) * MAX_BAR_LENGTH);
     const bar = "█".repeat(barLength);
     const emptyBar = "░".repeat(MAX_BAR_LENGTH - barLength);
 
-    console.log(`   ${day.dayName.padEnd(9)} ${formatUSD(day.totalVolume).padEnd(15)} │${bar}${emptyBar}│ ${normalizedValue.toFixed(1)}%`);
+    console.log(
+      `   ${day.dayName.padEnd(9)} ${formatUSD(day.totalVolume).padEnd(15)} │${bar}${emptyBar}│ ${normalizedValue.toFixed(1)}%`
+    );
   });
 
   console.log(``);
@@ -569,8 +606,8 @@ async function exportToCSV(weeklyData) {
   console.log(`[INFO] Exporting data to CSV...`);
 
   const csvData = [];
-  weeklyData.forEach((dayData) => {
-    dayData.chains.forEach((chain) => {
+  weeklyData.forEach(dayData => {
+    dayData.chains.forEach(chain => {
       csvData.push({
         date: dayData.date,
         dayName: dayData.dayName,
@@ -588,7 +625,7 @@ async function exportToCSV(weeklyData) {
         v4TVL: chain.v4TVL || 0,
         tvl: chain.tvl || 0,
         // Include metadata if available
-        ...(chain.metadata && { metadata: JSON.stringify(chain.metadata) })
+        ...(chain.metadata && { metadata: JSON.stringify(chain.metadata) }),
       });
     });
   });

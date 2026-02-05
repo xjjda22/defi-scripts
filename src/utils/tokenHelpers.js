@@ -42,20 +42,12 @@ async function getTokenBalance(chainKey, tokenAddress, walletAddress) {
  * @param {string} spenderAddress - Spender address (usually router)
  * @returns {Promise<{allowance: string, decimals: number}>}
  */
-async function getTokenAllowance(
-  chainKey,
-  tokenAddress,
-  ownerAddress,
-  spenderAddress,
-) {
+async function getTokenAllowance(chainKey, tokenAddress, ownerAddress, spenderAddress) {
   const provider = getProvider(chainKey);
   const token = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
 
   try {
-    const [allowance, decimals] = await Promise.all([
-      token.allowance(ownerAddress, spenderAddress),
-      token.decimals(),
-    ]);
+    const [allowance, decimals] = await Promise.all([token.allowance(ownerAddress, spenderAddress), token.decimals()]);
 
     return {
       allowance: allowance.toString(),
@@ -76,12 +68,7 @@ async function getTokenAllowance(
  * @param {string} requiredAmount - Required amount in wei
  * @returns {Promise<{sufficient: boolean, balance: string, required: string}>}
  */
-async function checkSufficientBalance(
-  chainKey,
-  tokenAddress,
-  walletAddress,
-  requiredAmount,
-) {
+async function checkSufficientBalance(chainKey, tokenAddress, walletAddress, requiredAmount) {
   const balanceInfo = await getTokenBalance(chainKey, tokenAddress, walletAddress);
 
   return {
@@ -102,19 +89,8 @@ async function checkSufficientBalance(
  * @param {string} requiredAmount - Required amount in wei
  * @returns {Promise<{needsApproval: boolean, currentAllowance: string, required: string}>}
  */
-async function checkNeedsApproval(
-  chainKey,
-  tokenAddress,
-  ownerAddress,
-  spenderAddress,
-  requiredAmount,
-) {
-  const allowanceInfo = await getTokenAllowance(
-    chainKey,
-    tokenAddress,
-    ownerAddress,
-    spenderAddress,
-  );
+async function checkNeedsApproval(chainKey, tokenAddress, ownerAddress, spenderAddress, requiredAmount) {
+  const allowanceInfo = await getTokenAllowance(chainKey, tokenAddress, ownerAddress, spenderAddress);
 
   return {
     needsApproval: BigInt(allowanceInfo.allowance) < BigInt(requiredAmount),
@@ -135,10 +111,7 @@ async function getTokenInfo(chainKey, tokenAddress) {
   const token = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
 
   try {
-    const [symbol, decimals] = await Promise.all([
-      token.symbol(),
-      token.decimals(),
-    ]);
+    const [symbol, decimals] = await Promise.all([token.symbol(), token.decimals()]);
 
     return {
       symbol,
@@ -183,13 +156,7 @@ async function getNativeBalance(chainKey, walletAddress) {
  * @param {string} amountIn - Amount to swap
  * @returns {Promise<{ready: boolean, checks: object}>}
  */
-async function preFlightCheck(
-  chainKey,
-  tokenIn,
-  walletAddress,
-  spenderAddress,
-  amountIn,
-) {
+async function preFlightCheck(chainKey, tokenIn, walletAddress, spenderAddress, amountIn) {
   const checks = {
     balance: { passed: false },
     allowance: { passed: false },
@@ -198,25 +165,14 @@ async function preFlightCheck(
 
   try {
     // Check balance
-    const balanceCheck = await checkSufficientBalance(
-      chainKey,
-      tokenIn,
-      walletAddress,
-      amountIn,
-    );
+    const balanceCheck = await checkSufficientBalance(chainKey, tokenIn, walletAddress, amountIn);
     checks.balance = {
       passed: balanceCheck.sufficient,
       ...balanceCheck,
     };
 
     // Check allowance
-    const approvalCheck = await checkNeedsApproval(
-      chainKey,
-      tokenIn,
-      walletAddress,
-      spenderAddress,
-      amountIn,
-    );
+    const approvalCheck = await checkNeedsApproval(chainKey, tokenIn, walletAddress, spenderAddress, amountIn);
     checks.allowance = {
       passed: !approvalCheck.needsApproval || approvalCheck.isUnlimited,
       ...approvalCheck,
@@ -231,8 +187,7 @@ async function preFlightCheck(
       formatted: gasBalance.formatted,
     };
 
-    const ready =
-      checks.balance.passed && checks.allowance.passed && checks.gas.passed;
+    const ready = checks.balance.passed && checks.allowance.passed && checks.gas.passed;
 
     return { ready, checks };
   } catch (error) {

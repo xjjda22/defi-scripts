@@ -26,32 +26,35 @@ const MAX_BAR_LENGTH = 50;
 function getThisWeekDates() {
   const today = new Date();
   const dayOfWeek = today.getDay();
-  
+
   const monday = new Date(today);
   const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
   monday.setDate(today.getDate() - daysToMonday);
   monday.setHours(0, 0, 0, 0);
-  
+
   const weekDates = [];
   for (let i = 0; i < 7; i++) {
     const date = new Date(monday);
     date.setDate(monday.getDate() + i);
     weekDates.push({
       date: date,
-      dateStr: date.toISOString().split('T')[0],
-      dayName: date.toLocaleDateString('en-US', { weekday: 'long' }),
+      dateStr: date.toISOString().split("T")[0],
+      dayName: date.toLocaleDateString("en-US", { weekday: "long" }),
       timestamp: Math.floor(date.getTime() / 1000),
     });
   }
-  
+
   return weekDates;
 }
 
 async function fetchBalancerVolumeHistory() {
   try {
-    const response = await axios.get(`${DEFILLAMA_API}/summary/dexs/${BALANCER_SLUG}?excludeTotalDataChart=false&excludeTotalDataChartBreakdown=false`, {
-      timeout: API_TIMEOUT_MS,
-    });
+    const response = await axios.get(
+      `${DEFILLAMA_API}/summary/dexs/${BALANCER_SLUG}?excludeTotalDataChart=false&excludeTotalDataChartBreakdown=false`,
+      {
+        timeout: API_TIMEOUT_MS,
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(chalk.red("Error fetching Balancer volume history:"), error.message);
@@ -69,14 +72,14 @@ function processWeeklyVolumeData(dexData, weekDates) {
 
   for (const dayData of dexData.totalDataChartBreakdown) {
     if (!dayData.date) continue;
-    const timestamp = typeof dayData.date === 'string' ? Date.parse(dayData.date) / 1000 : dayData.date;
-    const date = new Date(timestamp * 1000).toISOString().split('T')[0];
-    
+    const timestamp = typeof dayData.date === "string" ? Date.parse(dayData.date) / 1000 : dayData.date;
+    const date = new Date(timestamp * 1000).toISOString().split("T")[0];
+
     for (const [chainKey, chainName] of Object.entries(CHAIN_MAPPING)) {
       if (!chainVolumeData[chainKey]) {
         chainVolumeData[chainKey] = [];
       }
-      
+
       const volume = dayData[chainName] || 0;
       chainVolumeData[chainKey].push({ date, volume });
     }
@@ -88,7 +91,7 @@ function processWeeklyVolumeData(dexData, weekDates) {
 
     weeklyData[chainKey] = {
       name: chainName,
-      daily: []
+      daily: [],
     };
 
     for (const dayInfo of weekDates) {
@@ -130,11 +133,11 @@ function displayWeeklyVolume(weeklyData, weekDates) {
       weekTotal += day.volume;
       const barLength = maxVolume > 0 ? Math.floor((day.volume / maxVolume) * MAX_BAR_LENGTH) : 0;
       const bar = "█".repeat(barLength);
-      
+
       const dayLabel = day.dayName.padEnd(10);
       const dateLabel = day.date.padEnd(12);
       const volumeLabel = formatUSD(day.volume).padStart(18);
-      
+
       console.log(`${dayLabel} ${dateLabel} ${volumeLabel} ${chalk.green(bar)}`);
     }
 

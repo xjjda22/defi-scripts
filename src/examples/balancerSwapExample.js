@@ -34,7 +34,7 @@ async function main() {
   console.log("Find pool IDs at https://app.balancer.fi/");
   console.log("\nBalancer auto-routes between V2 and V3 vaults (V2 is default)");
   console.log(`Example pool ID: ${examplePoolId}\n`);
-  
+
   try {
     const poolInfo = await getPoolInfo(chainKey, examplePoolId);
     console.log("Pool tokens:");

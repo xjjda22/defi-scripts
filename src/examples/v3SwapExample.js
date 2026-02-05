@@ -37,7 +37,7 @@ async function main() {
       weth,
       usdc,
       v3.FEE_TIERS.MEDIUM, // 0.3%
-      amountIn.toString(),
+      amountIn.toString()
     );
     console.log(`Quote: ${ethers.formatUnits(quote, 6)} USDC`);
 
@@ -93,13 +93,7 @@ async function main() {
 
   for (const tier of tiers) {
     try {
-      const quote = await v3.getQuote(
-        CHAIN,
-        weth,
-        usdc,
-        tier.value,
-        amountIn.toString(),
-      );
+      const quote = await v3.getQuote(CHAIN, weth, usdc, tier.value, amountIn.toString());
       console.log(`  ${tier.name}: ${ethers.formatUnits(quote, 6)} USDC`);
     } catch (error) {
       console.log(`  ${tier.name}: Pool not available`);
@@ -114,12 +108,7 @@ async function main() {
     const tokens = [usdt, weth, usdc];
     const fees = [v3.FEE_TIERS.MEDIUM, v3.FEE_TIERS.MEDIUM]; // 0.3% for both hops
 
-    const quote = await v3.getQuoteMultiHop(
-      CHAIN,
-      tokens,
-      fees,
-      amountIn2.toString(),
-    );
+    const quote = await v3.getQuoteMultiHop(CHAIN, tokens, fees, amountIn2.toString());
     console.log(`Quote: ${ethers.formatUnits(quote, 6)} USDC`);
     console.log(`Path: ${tokens.join(" -> ")}`);
 

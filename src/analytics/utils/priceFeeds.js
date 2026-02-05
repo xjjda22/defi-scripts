@@ -47,20 +47,27 @@ async function getTokenInfo(tokenAddress, chainKey) {
   try {
     const provider = getProvider(chainKey);
     const token = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
-    
+
     // Add timeout to prevent hanging
-    const timeout = (ms) => new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Timeout')), ms)
-    );
-    
+    const timeout = ms => new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), ms));
+
     const [symbol, decimals, name] = await Promise.race([
       Promise.all([
-        token.symbol().catch((e) => { console.error(`Symbol error: ${e.message}`); return "UNKNOWN"; }),
-        token.decimals().catch((e) => { console.error(`Decimals error: ${e.message}`); return 18; }),
-        token.name().catch((e) => { console.error(`Name error: ${e.message}`); return "Unknown Token"; }),
+        token.symbol().catch(e => {
+          console.error(`Symbol error: ${e.message}`);
+          return "UNKNOWN";
+        }),
+        token.decimals().catch(e => {
+          console.error(`Decimals error: ${e.message}`);
+          return 18;
+        }),
+        token.name().catch(e => {
+          console.error(`Name error: ${e.message}`);
+          return "Unknown Token";
+        }),
       ]),
-      timeout(10000) // 10 second timeout
-    ]).catch((e) => {
+      timeout(10000), // 10 second timeout
+    ]).catch(e => {
       console.error(`getTokenInfo error for ${tokenAddress}: ${e.message}`);
       return ["UNKNOWN", 18, "Unknown Token"];
     });
@@ -193,13 +200,7 @@ function formatLiquidity(liquidity) {
  * @returns {boolean} True if valid
  */
 function isValidPrice(price) {
-  return (
-    price !== null &&
-    price !== undefined &&
-    !isNaN(price) &&
-    price > 0 &&
-    isFinite(price)
-  );
+  return price !== null && price !== undefined && !isNaN(price) && price > 0 && isFinite(price);
 }
 
 /**

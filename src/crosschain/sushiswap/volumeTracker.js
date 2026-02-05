@@ -77,10 +77,7 @@ function displayVolume(volumeByChain, totalVolume) {
   }
 
   console.log("─".repeat(80));
-  console.log(
-    chalk.bold("Total 24h Volume:".padEnd(19)),
-    chalk.yellow.bold(formatUSD(totalVolume).padStart(15))
-  );
+  console.log(chalk.bold("Total 24h Volume:".padEnd(19)), chalk.yellow.bold(formatUSD(totalVolume).padStart(15)));
   console.log("=".repeat(80) + "\n");
 }
 
@@ -106,11 +103,15 @@ async function main() {
   }));
 
   if (csvData.length > 0) {
-    await writeCSV("output/sushiswap_volume_crosschain.csv", [
-      { id: "chain", title: "Chain" },
-      { id: "volume24h", title: "24h Volume (USD)" },
-      { id: "percentage", title: "Percentage (%)" },
-    ], csvData);
+    await writeCSV(
+      "output/sushiswap_volume_crosschain.csv",
+      [
+        { id: "chain", title: "Chain" },
+        { id: "volume24h", title: "24h Volume (USD)" },
+        { id: "percentage", title: "Percentage (%)" },
+      ],
+      csvData
+    );
     console.log(chalk.green("Data exported to output/sushiswap_volume_crosschain.csv\n"));
   } else {
     console.log(chalk.yellow("No chain-specific volume data available\n"));

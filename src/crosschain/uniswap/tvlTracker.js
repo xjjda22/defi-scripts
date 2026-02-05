@@ -51,9 +51,9 @@ async function getUniswapTVL(chainName) {
     total: v1 + v2 + v3 + v4,
     metadata: {
       timestamp: Math.floor(Date.now() / 1000),
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       protocolsFetched: Object.keys(tvlData),
-    }
+    },
   };
 }
 
@@ -92,8 +92,12 @@ async function getPoolTVLBreakdown() {
       tvlData.push({
         chain: chainConfig.name,
         chainKey,
-        v1: 0, v2: 0, v3: 0, v4: 0, total: 0,
-        metadata: { error: error.message }
+        v1: 0,
+        v2: 0,
+        v3: 0,
+        v4: 0,
+        total: 0,
+        metadata: { error: error.message },
       });
     }
 
@@ -115,7 +119,7 @@ async function generateReport() {
   console.log(`\n💧 UNISWAP TVL TRACKER - CURRENT STATE`);
   console.log(`══════════════════════════════════════════════`);
   console.log(`Purpose: Current TVL snapshot across Uniswap V1-V4 protocols`);
-  console.log(`Chains: ${Object.keys(CHAIN_MAPPING).join(', ')}`);
+  console.log(`Chains: ${Object.keys(CHAIN_MAPPING).join(", ")}`);
   console.log(`Data Source: DefiLlama Protocol API`);
   console.log(``);
 
@@ -150,21 +154,24 @@ async function generateReport() {
  * @returns {Object} Aggregate statistics
  */
 function calculateTVLAggregates(tvlData) {
-  const totals = tvlData.reduce((acc, data) => ({
-    totalTVL: acc.totalTVL + data.total,
-    v1: acc.v1 + data.v1,
-    v2: acc.v2 + data.v2,
-    v3: acc.v3 + data.v3,
-    v4: acc.v4 + data.v4,
-  }), { totalTVL: 0, v1: 0, v2: 0, v3: 0, v4: 0 });
+  const totals = tvlData.reduce(
+    (acc, data) => ({
+      totalTVL: acc.totalTVL + data.total,
+      v1: acc.v1 + data.v1,
+      v2: acc.v2 + data.v2,
+      v3: acc.v3 + data.v3,
+      v4: acc.v4 + data.v4,
+    }),
+    { totalTVL: 0, v1: 0, v2: 0, v3: 0, v4: 0 }
+  );
 
   // Calculate percentage shares
   const { totalTVL, v1, v2, v3, v4 } = totals;
   const shares = {
-    v1: totalTVL > 0 ? ((v1 / totalTVL) * 100) : 0,
-    v2: totalTVL > 0 ? ((v2 / totalTVL) * 100) : 0,
-    v3: totalTVL > 0 ? ((v3 / totalTVL) * 100) : 0,
-    v4: totalTVL > 0 ? ((v4 / totalTVL) * 100) : 0,
+    v1: totalTVL > 0 ? (v1 / totalTVL) * 100 : 0,
+    v2: totalTVL > 0 ? (v2 / totalTVL) * 100 : 0,
+    v3: totalTVL > 0 ? (v3 / totalTVL) * 100 : 0,
+    v4: totalTVL > 0 ? (v4 / totalTVL) * 100 : 0,
   };
 
   return { ...totals, shares };
@@ -195,10 +202,10 @@ function generateVersionBreakdown(aggregates) {
   const maxVersionBar = 40;
 
   const versions = [
-    { name: 'V1', share: aggregates.shares.v1, value: aggregates.v1 },
-    { name: 'V2', share: aggregates.shares.v2, value: aggregates.v2 },
-    { name: 'V3', share: aggregates.shares.v3, value: aggregates.v3 },
-    { name: 'V4', share: aggregates.shares.v4, value: aggregates.v4 },
+    { name: "V1", share: aggregates.shares.v1, value: aggregates.v1 },
+    { name: "V2", share: aggregates.shares.v2, value: aggregates.v2 },
+    { name: "V3", share: aggregates.shares.v3, value: aggregates.v3 },
+    { name: "V4", share: aggregates.shares.v4, value: aggregates.v4 },
   ];
 
   versions.forEach(({ name, share, value }) => {
@@ -215,15 +222,25 @@ function generateVersionBreakdown(aggregates) {
  * @param {Array} tvlData - Sorted TVL data by chain
  */
 function generateChainBreakdown(tvlData) {
-  console.log(`╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗`);
-  console.log(`║                          💰 CHAIN-BY-CHAIN TVL BREAKDOWN                                                        ║`);
-  console.log(`╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣`);
-  console.log(`║ Chain          │ Total TVL      │ V1 TVL        │ V2 TVL        │ V3 TVL        │ V4 TVL        │ Share    ║`);
-  console.log(`╠════════════════╪════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪══════════╣`);
+  console.log(
+    `╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗`
+  );
+  console.log(
+    `║                          💰 CHAIN-BY-CHAIN TVL BREAKDOWN                                                        ║`
+  );
+  console.log(
+    `╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣`
+  );
+  console.log(
+    `║ Chain          │ Total TVL      │ V1 TVL        │ V2 TVL        │ V3 TVL        │ V4 TVL        │ Share    ║`
+  );
+  console.log(
+    `╠════════════════╪════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪══════════╣`
+  );
 
   const totalTVL = tvlData.reduce((sum, chain) => sum + chain.total, 0);
 
-  tvlData.forEach((chain) => {
+  tvlData.forEach(chain => {
     const share = totalTVL > 0 ? ((chain.total / totalTVL) * 100).toFixed(1) : "0.0";
     const row = [
       chain.chain.padEnd(15),
@@ -232,12 +249,14 @@ function generateChainBreakdown(tvlData) {
       formatUSD(chain.v2).padEnd(13),
       formatUSD(chain.v3).padEnd(13),
       formatUSD(chain.v4).padEnd(13),
-      `${share}%`.padEnd(8)
+      `${share}%`.padEnd(8),
     ];
-    console.log(`║ ${row.join(' │ ')} ║`);
+    console.log(`║ ${row.join(" │ ")} ║`);
   });
 
-  console.log(`╚════════════════╪════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪══════════╝`);
+  console.log(
+    `╚════════════════╪════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪══════════╝`
+  );
   console.log(``);
 }
 
@@ -251,7 +270,7 @@ async function exportToCSV(tvlData) {
 
   const csvData = tvlData.map(chain => ({
     timestamp: Math.floor(Date.now() / 1000),
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split("T")[0],
     chain: chain.chain,
     chainKey: chain.chainKey,
     v1TVL: chain.v1 || 0,
@@ -259,11 +278,12 @@ async function exportToCSV(tvlData) {
     v3TVL: chain.v3 || 0,
     v4TVL: chain.v4 || 0,
     totalTVL: chain.total || 0,
-    tvlSharePercent: tvlData.reduce((sum, c) => sum + c.total, 0) > 0
-      ? ((chain.total / tvlData.reduce((sum, c) => sum + c.total, 0)) * 100).toFixed(2)
-      : "0.00",
+    tvlSharePercent:
+      tvlData.reduce((sum, c) => sum + c.total, 0) > 0
+        ? ((chain.total / tvlData.reduce((sum, c) => sum + c.total, 0)) * 100).toFixed(2)
+        : "0.00",
     // Include metadata if available
-    ...(chain.metadata && { metadata: JSON.stringify(chain.metadata) })
+    ...(chain.metadata && { metadata: JSON.stringify(chain.metadata) }),
   }));
 
   const csvHeaders = [
@@ -289,4 +309,3 @@ if (require.main === module) {
 }
 
 module.exports = { getUniswapTVL, generateReport };
-

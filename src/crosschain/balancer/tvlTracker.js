@@ -45,15 +45,15 @@ function processTVLData(protocolData) {
     if (chainTvls[chainName]) {
       const chainData = chainTvls[chainName];
       let tvlValue = 0;
-      
+
       if (Array.isArray(chainData.tvl) && chainData.tvl.length > 0) {
         tvlValue = chainData.tvl[chainData.tvl.length - 1].totalLiquidityUSD || 0;
-      } else if (typeof chainData.tvl === 'number') {
+      } else if (typeof chainData.tvl === "number") {
         tvlValue = chainData.tvl;
-      } else if (typeof chainData === 'number') {
+      } else if (typeof chainData === "number") {
         tvlValue = chainData;
       }
-      
+
       tvlByChain[chainKey] = {
         name: chainName,
         tvl: tvlValue,
@@ -88,10 +88,7 @@ function displayTVL(tvlByChain, totalTVL) {
   }
 
   console.log("─".repeat(80));
-  console.log(
-    chalk.bold("Total TVL:".padEnd(15)),
-    chalk.yellow.bold(formatUSD(totalTVL).padStart(15))
-  );
+  console.log(chalk.bold("Total TVL:".padEnd(15)), chalk.yellow.bold(formatUSD(totalTVL).padStart(15)));
   console.log("=".repeat(80) + "\n");
 }
 
@@ -107,11 +104,11 @@ async function main() {
   }
 
   const tvlByChain = processTVLData(protocolData);
-  
+
   let totalTVL = 0;
   if (Array.isArray(protocolData.tvl) && protocolData.tvl.length > 0) {
     totalTVL = protocolData.tvl[protocolData.tvl.length - 1].totalLiquidityUSD || 0;
-  } else if (typeof protocolData.tvl === 'number') {
+  } else if (typeof protocolData.tvl === "number") {
     totalTVL = protocolData.tvl;
   }
 
@@ -125,11 +122,15 @@ async function main() {
   }));
 
   if (csvData.length > 0) {
-    await writeCSV("output/balancer_tvl_crosschain.csv", [
-      { id: "chain", title: "Chain" },
-      { id: "tvl", title: "TVL (USD)" },
-      { id: "percentage", title: "Percentage (%)" },
-    ], csvData);
+    await writeCSV(
+      "output/balancer_tvl_crosschain.csv",
+      [
+        { id: "chain", title: "Chain" },
+        { id: "tvl", title: "TVL (USD)" },
+        { id: "percentage", title: "Percentage (%)" },
+      ],
+      csvData
+    );
     console.log(chalk.green("Data exported to output/balancer_tvl_crosschain.csv\n"));
   }
 }

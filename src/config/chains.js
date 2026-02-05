@@ -477,4 +477,3 @@ module.exports = {
   CHAINS,
   COMMON_TOKENS,
 };
-

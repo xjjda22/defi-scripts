@@ -3,7 +3,13 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const { getProvider } = require("../utils/web3");
-const { validateChainKey, validateWallet, validateAddress, validateAmount, validateSlippage } = require("../utils/validation");
+const {
+  validateChainKey,
+  validateWallet,
+  validateAddress,
+  validateAmount,
+  validateSlippage,
+} = require("../utils/validation");
 const V2_ROUTER_ABI = require("../abis/IUniswapV2Router02.json");
 const ERC20_ABI = require("../abis/IERC20.json");
 
@@ -19,9 +25,9 @@ const ERC20_ABI = require("../abis/IERC20.json");
 async function getQuote(chainKey, tokenIn, tokenOut, amountIn, path = null) {
   // Validate inputs
   validateChainKey(chainKey);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
 
   const chain = CHAINS[chainKey];
   if (!chain?.uniswap?.v2?.router) {
@@ -29,11 +35,7 @@ async function getQuote(chainKey, tokenIn, tokenOut, amountIn, path = null) {
   }
 
   const provider = getProvider(chainKey);
-  const router = new ethers.Contract(
-    chain.uniswap.v2.router,
-    V2_ROUTER_ABI,
-    provider,
-  );
+  const router = new ethers.Contract(chain.uniswap.v2.router, V2_ROUTER_ABI, provider);
 
   // Use provided path or default to direct swap
   const swapPath = path || [tokenIn, tokenOut];
@@ -58,24 +60,14 @@ async function getQuote(chainKey, tokenIn, tokenOut, amountIn, path = null) {
  * @param {string[]} path - Optional custom path for multi-hop swaps
  * @returns {Promise<{amountIn: string, path: string[]}>}
  */
-async function getQuoteForExactOutput(
-  chainKey,
-  tokenIn,
-  tokenOut,
-  amountOut,
-  path = null,
-) {
+async function getQuoteForExactOutput(chainKey, tokenIn, tokenOut, amountOut, path = null) {
   const chain = CHAINS[chainKey];
   if (!chain?.uniswap?.v2?.router) {
     throw new Error(`Uniswap V2 not available on ${chainKey}`);
   }
 
   const provider = getProvider(chainKey);
-  const router = new ethers.Contract(
-    chain.uniswap.v2.router,
-    V2_ROUTER_ABI,
-    provider,
-  );
+  const router = new ethers.Contract(chain.uniswap.v2.router, V2_ROUTER_ABI, provider);
 
   const swapPath = path || [tokenIn, tokenOut];
 
@@ -110,14 +102,14 @@ async function swapExactTokensForTokens(
   amountIn,
   slippageBps = 50,
   recipient = null,
-  path = null,
+  path = null
 ) {
   // Validate inputs
   validateChainKey(chainKey);
   validateWallet(wallet);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
   validateSlippage(slippageBps);
 
   const chain = CHAINS[chainKey];
@@ -131,34 +123,21 @@ async function swapExactTokensForTokens(
 
   // Get quote to calculate minimum output with slippage
   const quote = await getQuote(chainKey, tokenIn, tokenOut, amountIn, path);
-  const amountOutMin = (
-    (BigInt(quote.amountOut) * BigInt(10000 - slippageBps)) /
-    BigInt(10000)
-  ).toString();
+  const amountOutMin = ((BigInt(quote.amountOut) * BigInt(10000 - slippageBps)) / BigInt(10000)).toString();
 
   // Check and approve token if needed
   const tokenContract = new ethers.Contract(tokenIn, ERC20_ABI, signer);
-  const allowance = await tokenContract.allowance(
-    wallet.address,
-    chain.uniswap.v2.router,
-  );
+  const allowance = await tokenContract.allowance(wallet.address, chain.uniswap.v2.router);
 
   if (BigInt(allowance.toString()) < BigInt(amountIn)) {
     console.log(`Approving ${tokenIn} for V2 Router...`);
-    const approveTx = await tokenContract.approve(
-      chain.uniswap.v2.router,
-      ethers.MaxUint256,
-    );
+    const approveTx = await tokenContract.approve(chain.uniswap.v2.router, ethers.MaxUint256);
     await approveTx.wait();
     console.log(`Approval confirmed: ${approveTx.hash}`);
   }
 
   // Execute swap
-  const router = new ethers.Contract(
-    chain.uniswap.v2.router,
-    V2_ROUTER_ABI,
-    signer,
-  );
+  const router = new ethers.Contract(chain.uniswap.v2.router, V2_ROUTER_ABI, signer);
 
   // Deadline: 20 minutes from now
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
@@ -168,13 +147,7 @@ async function swapExactTokensForTokens(
   console.log(`  Min Output: ${amountOutMin} ${tokenOut}`);
   console.log(`  Path: ${quote.path.join(" -> ")}`);
 
-  const tx = await router.swapExactTokensForTokens(
-    amountIn,
-    amountOutMin,
-    quote.path,
-    recipientAddr,
-    deadline,
-  );
+  const tx = await router.swapExactTokensForTokens(amountIn, amountOutMin, quote.path, recipientAddr, deadline);
 
   console.log(`Transaction submitted: ${tx.hash}`);
   const receipt = await tx.wait();
@@ -206,14 +179,14 @@ async function swapTokensForExactTokens(
   amountOut,
   slippageBps = 50,
   recipient = null,
-  path = null,
+  path = null
 ) {
   // Validate inputs
   validateChainKey(chainKey);
   validateWallet(wallet);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountOut, 'amountOut');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountOut, "amountOut");
   validateSlippage(slippageBps);
 
   const chain = CHAINS[chainKey];
@@ -226,41 +199,22 @@ async function swapTokensForExactTokens(
   const recipientAddr = recipient || wallet.address;
 
   // Get quote to calculate maximum input with slippage
-  const quote = await getQuoteForExactOutput(
-    chainKey,
-    tokenIn,
-    tokenOut,
-    amountOut,
-    path,
-  );
-  const amountInMax = (
-    (BigInt(quote.amountIn) * BigInt(10000 + slippageBps)) /
-    BigInt(10000)
-  ).toString();
+  const quote = await getQuoteForExactOutput(chainKey, tokenIn, tokenOut, amountOut, path);
+  const amountInMax = ((BigInt(quote.amountIn) * BigInt(10000 + slippageBps)) / BigInt(10000)).toString();
 
   // Check and approve token if needed
   const tokenContract = new ethers.Contract(tokenIn, ERC20_ABI, signer);
-  const allowance = await tokenContract.allowance(
-    wallet.address,
-    chain.uniswap.v2.router,
-  );
+  const allowance = await tokenContract.allowance(wallet.address, chain.uniswap.v2.router);
 
   if (BigInt(allowance.toString()) < BigInt(amountInMax)) {
     console.log(`Approving ${tokenIn} for V2 Router...`);
-    const approveTx = await tokenContract.approve(
-      chain.uniswap.v2.router,
-      ethers.MaxUint256,
-    );
+    const approveTx = await tokenContract.approve(chain.uniswap.v2.router, ethers.MaxUint256);
     await approveTx.wait();
     console.log(`Approval confirmed: ${approveTx.hash}`);
   }
 
   // Execute swap
-  const router = new ethers.Contract(
-    chain.uniswap.v2.router,
-    V2_ROUTER_ABI,
-    signer,
-  );
+  const router = new ethers.Contract(chain.uniswap.v2.router, V2_ROUTER_ABI, signer);
 
   // Deadline: 20 minutes from now
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
@@ -270,13 +224,7 @@ async function swapTokensForExactTokens(
   console.log(`  Output: ${amountOut} ${tokenOut}`);
   console.log(`  Path: ${quote.path.join(" -> ")}`);
 
-  const tx = await router.swapTokensForExactTokens(
-    amountOut,
-    amountInMax,
-    quote.path,
-    recipientAddr,
-    deadline,
-  );
+  const tx = await router.swapTokensForExactTokens(amountOut, amountInMax, quote.path, recipientAddr, deadline);
 
   console.log(`Transaction submitted: ${tx.hash}`);
   const receipt = await tx.wait();

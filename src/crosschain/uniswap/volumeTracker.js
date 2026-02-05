@@ -40,10 +40,9 @@ async function getUniswapVolume(chainName) {
       const protocolName = `uniswap-${version}`;
 
       // Get volume data from fees endpoint
-      const feesResponse = await axios.get(
-        `${DEFILLAMA_API}/summary/fees/${protocolName}`,
-        { timeout: API_TIMEOUT_MS }
-      );
+      const feesResponse = await axios.get(`${DEFILLAMA_API}/summary/fees/${protocolName}`, {
+        timeout: API_TIMEOUT_MS,
+      });
 
       // Extract latest volume data point
       const latestData = feesResponse.data.totalDataChartBreakdown?.slice(-1)?.[0];
@@ -57,12 +56,8 @@ async function getUniswapVolume(chainName) {
       }
 
       // Get TVL data from protocol endpoint
-      const tvlResponse = await axios.get(
-        `${DEFILLAMA_API}/protocol/${protocolName}`,
-        { timeout: API_TIMEOUT_MS }
-      );
+      const tvlResponse = await axios.get(`${DEFILLAMA_API}/protocol/${protocolName}`, { timeout: API_TIMEOUT_MS });
       tvlData[version] = tvlResponse.data.currentChainTvls?.[chainName] || 0;
-
     } catch (error) {
       console.warn(`[WARN] Failed to fetch ${version} data for ${chainName}: ${error.message}`);
       volumeData[version] = 0;
@@ -71,21 +66,33 @@ async function getUniswapVolume(chainName) {
   }
 
   // Extract individual versions for cleaner return structure
-  const v1 = volumeData.v1 || 0, v2 = volumeData.v2 || 0, v3 = volumeData.v3 || 0, v4 = volumeData.v4 || 0;
-  const t1 = tvlData.v1 || 0, t2 = tvlData.v2 || 0, t3 = tvlData.v3 || 0, t4 = tvlData.v4 || 0;
+  const v1 = volumeData.v1 || 0,
+    v2 = volumeData.v2 || 0,
+    v3 = volumeData.v3 || 0,
+    v4 = volumeData.v4 || 0;
+  const t1 = tvlData.v1 || 0,
+    t2 = tvlData.v2 || 0,
+    t3 = tvlData.v3 || 0,
+    t4 = tvlData.v4 || 0;
 
   return {
     chain: chainName,
-    v1Volume: v1, v2Volume: v2, v3Volume: v3, v4Volume: v4,
+    v1Volume: v1,
+    v2Volume: v2,
+    v3Volume: v3,
+    v4Volume: v4,
     volume24h: v1 + v2 + v3 + v4,
-    v1TVL: t1, v2TVL: t2, v3TVL: t3, v4TVL: t4,
+    v1TVL: t1,
+    v2TVL: t2,
+    v3TVL: t3,
+    v4TVL: t4,
     tvl: t1 + t2 + t3 + t4,
     metadata: {
       timestamp: Math.floor(Date.now() / 1000),
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       protocolsFetched: Object.keys(volumeData),
-      dataType: "24h_volume_with_tvl"
-    }
+      dataType: "24h_volume_with_tvl",
+    },
   };
 }
 
@@ -124,9 +131,17 @@ async function getChainVolumeFromDefiLlama() {
       volumes.push({
         chain: chainConfig.name,
         chainKey,
-        v1Volume: 0, v2Volume: 0, v3Volume: 0, v4Volume: 0, volume24h: 0,
-        v1TVL: 0, v2TVL: 0, v3TVL: 0, v4TVL: 0, tvl: 0,
-        metadata: { error: error.message }
+        v1Volume: 0,
+        v2Volume: 0,
+        v3Volume: 0,
+        v4Volume: 0,
+        volume24h: 0,
+        v1TVL: 0,
+        v2TVL: 0,
+        v3TVL: 0,
+        v4TVL: 0,
+        tvl: 0,
+        metadata: { error: error.message },
       });
     }
 
@@ -148,7 +163,7 @@ async function generateReport() {
   console.log(`\n📈 UNISWAP VOLUME TRACKER - 24H TRADING VOLUME`);
   console.log(`═══════════════════════════════════════════════════════`);
   console.log(`Purpose: Current 24h trading volume across Uniswap V1-V4 protocols`);
-  console.log(`Chains: ${Object.keys(CHAIN_MAPPING).join(', ')}`);
+  console.log(`Chains: ${Object.keys(CHAIN_MAPPING).join(", ")}`);
   console.log(`Data Source: DefiLlama Fees API`);
   console.log(``);
 
@@ -183,22 +198,25 @@ async function generateReport() {
  * @returns {Object} Aggregate statistics
  */
 function calculateVolumeAggregates(volumes) {
-  const totals = volumes.reduce((acc, data) => ({
-    totalVolume: acc.totalVolume + data.volume24h,
-    totalTVL: acc.totalTVL + data.tvl,
-    v1Volume: acc.v1Volume + data.v1Volume,
-    v2Volume: acc.v2Volume + data.v2Volume,
-    v3Volume: acc.v3Volume + data.v3Volume,
-    v4Volume: acc.v4Volume + data.v4Volume,
-  }), { totalVolume: 0, totalTVL: 0, v1Volume: 0, v2Volume: 0, v3Volume: 0, v4Volume: 0 });
+  const totals = volumes.reduce(
+    (acc, data) => ({
+      totalVolume: acc.totalVolume + data.volume24h,
+      totalTVL: acc.totalTVL + data.tvl,
+      v1Volume: acc.v1Volume + data.v1Volume,
+      v2Volume: acc.v2Volume + data.v2Volume,
+      v3Volume: acc.v3Volume + data.v3Volume,
+      v4Volume: acc.v4Volume + data.v4Volume,
+    }),
+    { totalVolume: 0, totalTVL: 0, v1Volume: 0, v2Volume: 0, v3Volume: 0, v4Volume: 0 }
+  );
 
   // Calculate percentage shares for volume
   const { totalVolume, v1Volume, v2Volume, v3Volume, v4Volume } = totals;
   const volumeShares = {
-    v1: totalVolume > 0 ? ((v1Volume / totalVolume) * 100) : 0,
-    v2: totalVolume > 0 ? ((v2Volume / totalVolume) * 100) : 0,
-    v3: totalVolume > 0 ? ((v3Volume / totalVolume) * 100) : 0,
-    v4: totalVolume > 0 ? ((v4Volume / totalVolume) * 100) : 0,
+    v1: totalVolume > 0 ? (v1Volume / totalVolume) * 100 : 0,
+    v2: totalVolume > 0 ? (v2Volume / totalVolume) * 100 : 0,
+    v3: totalVolume > 0 ? (v3Volume / totalVolume) * 100 : 0,
+    v4: totalVolume > 0 ? (v4Volume / totalVolume) * 100 : 0,
   };
 
   return { ...totals, volumeShares };
@@ -220,9 +238,8 @@ function generateVolumeSummary(aggregates, chainCount) {
   console.log(`Data Timestamp: ${new Date().toISOString()}`);
 
   // Calculate volume to TVL ratio
-  const volumeToTVLRatio = aggregates.totalTVL > 0
-    ? ((aggregates.totalVolume / aggregates.totalTVL) * 100).toFixed(2)
-    : "0.00";
+  const volumeToTVLRatio =
+    aggregates.totalTVL > 0 ? ((aggregates.totalVolume / aggregates.totalTVL) * 100).toFixed(2) : "0.00";
   console.log(`Volume/TVL Ratio: ${volumeToTVLRatio}% (24h volume as % of TVL)`);
   console.log(``);
 }
@@ -236,10 +253,10 @@ function generateVersionVolumeBreakdown(aggregates) {
   const maxVersionBar = 40;
 
   const versions = [
-    { name: 'V1', share: aggregates.volumeShares.v1, value: aggregates.v1Volume },
-    { name: 'V2', share: aggregates.volumeShares.v2, value: aggregates.v2Volume },
-    { name: 'V3', share: aggregates.volumeShares.v3, value: aggregates.v3Volume },
-    { name: 'V4', share: aggregates.volumeShares.v4, value: aggregates.v4Volume },
+    { name: "V1", share: aggregates.volumeShares.v1, value: aggregates.v1Volume },
+    { name: "V2", share: aggregates.volumeShares.v2, value: aggregates.v2Volume },
+    { name: "V3", share: aggregates.volumeShares.v3, value: aggregates.v3Volume },
+    { name: "V4", share: aggregates.volumeShares.v4, value: aggregates.v4Volume },
   ];
 
   versions.forEach(({ name, share, value }) => {
@@ -256,15 +273,25 @@ function generateVersionVolumeBreakdown(aggregates) {
  * @param {Array} volumes - Sorted volume data by chain
  */
 function generateChainVolumeBreakdown(volumes) {
-  console.log(`╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗`);
-  console.log(`║                          💰 CHAIN-BY-CHAIN VOLUME BREAKDOWN                                                     ║`);
-  console.log(`╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣`);
-  console.log(`║ Chain          │ 24h Volume    │ V1 Volume     │ V2 Volume     │ V3 Volume     │ V4 Volume     │ Share    ║`);
-  console.log(`╠════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪══════════╣`);
+  console.log(
+    `╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗`
+  );
+  console.log(
+    `║                          💰 CHAIN-BY-CHAIN VOLUME BREAKDOWN                                                     ║`
+  );
+  console.log(
+    `╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣`
+  );
+  console.log(
+    `║ Chain          │ 24h Volume    │ V1 Volume     │ V2 Volume     │ V3 Volume     │ V4 Volume     │ Share    ║`
+  );
+  console.log(
+    `╠════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪══════════╣`
+  );
 
   const totalVolume = volumes.reduce((sum, chain) => sum + chain.volume24h, 0);
 
-  volumes.forEach((chain) => {
+  volumes.forEach(chain => {
     const share = totalVolume > 0 ? ((chain.volume24h / totalVolume) * 100).toFixed(1) : "0.0";
     const row = [
       chain.chain.padEnd(15),
@@ -273,12 +300,14 @@ function generateChainVolumeBreakdown(volumes) {
       formatUSD(chain.v2Volume).padEnd(13),
       formatUSD(chain.v3Volume).padEnd(13),
       formatUSD(chain.v4Volume).padEnd(13),
-      `${share}%`.padEnd(8)
+      `${share}%`.padEnd(8),
     ];
-    console.log(`║ ${row.join(' │ ')} ║`);
+    console.log(`║ ${row.join(" │ ")} ║`);
   });
 
-  console.log(`╚════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪══════════╝`);
+  console.log(
+    `╚════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╪══════════╝`
+  );
   console.log(``);
 }
 
@@ -292,7 +321,7 @@ async function exportVolumeToCSV(volumes) {
 
   const csvData = volumes.map(chain => ({
     timestamp: Math.floor(Date.now() / 1000),
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split("T")[0],
     chain: chain.chain,
     chainKey: chain.chainKey,
     v1Volume24h: chain.v1Volume || 0,
@@ -300,9 +329,10 @@ async function exportVolumeToCSV(volumes) {
     v3Volume24h: chain.v3Volume || 0,
     v4Volume24h: chain.v4Volume || 0,
     totalVolume24h: chain.volume24h || 0,
-    volumeSharePercent: volumes.reduce((sum, c) => sum + c.volume24h, 0) > 0
-      ? ((chain.volume24h / volumes.reduce((sum, c) => sum + c.volume24h, 0)) * 100).toFixed(2)
-      : "0.00",
+    volumeSharePercent:
+      volumes.reduce((sum, c) => sum + c.volume24h, 0) > 0
+        ? ((chain.volume24h / volumes.reduce((sum, c) => sum + c.volume24h, 0)) * 100).toFixed(2)
+        : "0.00",
     // Current TVL data
     v1TVL: chain.v1TVL || 0,
     v2TVL: chain.v2TVL || 0,
@@ -310,7 +340,7 @@ async function exportVolumeToCSV(volumes) {
     v4TVL: chain.v4TVL || 0,
     totalTVL: chain.tvl || 0,
     // Include metadata if available
-    ...(chain.metadata && { metadata: JSON.stringify(chain.metadata) })
+    ...(chain.metadata && { metadata: JSON.stringify(chain.metadata) }),
   }));
 
   const csvHeaders = [
@@ -341,4 +371,3 @@ if (require.main === module) {
 }
 
 module.exports = { getUniswapVolume, generateReport };
-

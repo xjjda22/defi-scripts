@@ -2,7 +2,13 @@
 // Provides a simple API for token swaps regardless of protocol version
 const { ethers } = require("ethers");
 const { CHAINS, COMMON_TOKENS } = require("../config/chains");
-const { validateChainKey, validateWallet, validateAddress, validateAmount, validateSlippage } = require("../utils/validation");
+const {
+  validateChainKey,
+  validateWallet,
+  validateAddress,
+  validateAmount,
+  validateSlippage,
+} = require("../utils/validation");
 const v2Swap = require("./v2Swap");
 const v3Swap = require("./v3Swap");
 const v4Swap = require("./v4Swap");
@@ -25,16 +31,11 @@ async function swapTokens(chainKey, wallet, tokenIn, tokenOut, amountIn, options
   // Validate inputs
   validateChainKey(chainKey);
   validateWallet(wallet);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
 
-  const {
-    slippageBps = 50,
-    recipient = null,
-    version = null,
-    v3Fee = null,
-  } = options;
+  const { slippageBps = 50, recipient = null, version = null, v3Fee = null } = options;
 
   // Validate slippage if provided
   validateSlippage(slippageBps);
@@ -46,17 +47,7 @@ async function swapTokens(chainKey, wallet, tokenIn, tokenOut, amountIn, options
 
   // If version is specified, use that version
   if (version) {
-    return await swapWithVersion(
-      version,
-      chainKey,
-      wallet,
-      tokenIn,
-      tokenOut,
-      amountIn,
-      slippageBps,
-      recipient,
-      v3Fee,
-    );
+    return await swapWithVersion(version, chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps, recipient, v3Fee);
   }
 
   // Auto-detect best version by comparing quotes
@@ -102,24 +93,14 @@ async function swapTokens(chainKey, wallet, tokenIn, tokenOut, amountIn, options
     amountIn,
     slippageBps,
     recipient,
-    bestQuote.fee,
+    bestQuote.fee
   );
 }
 
 /**
  * Execute swap with specific version
  */
-async function swapWithVersion(
-  version,
-  chainKey,
-  wallet,
-  tokenIn,
-  tokenOut,
-  amountIn,
-  slippageBps,
-  recipient,
-  fee,
-) {
+async function swapWithVersion(version, chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps, recipient, fee) {
   switch (version.toLowerCase()) {
     case "v2":
       const v2Result = await v2Swap.swapExactTokensForTokens(
@@ -129,7 +110,7 @@ async function swapWithVersion(
         tokenOut,
         amountIn,
         slippageBps,
-        recipient,
+        recipient
       );
       return { version: "v2", ...v2Result };
 
@@ -143,7 +124,7 @@ async function swapWithVersion(
         v3Fee,
         amountIn,
         slippageBps,
-        recipient,
+        recipient
       );
       return { version: "v3", ...v3Result };
 
@@ -157,7 +138,7 @@ async function swapWithVersion(
         v4Fee,
         amountIn,
         slippageBps,
-        recipient,
+        recipient
       );
       return { version: "v4", ...v4Result };
 
@@ -184,21 +165,10 @@ async function getV2Quote(chainKey, tokenIn, tokenOut, amountIn) {
 async function getV3Quote(chainKey, tokenIn, tokenOut, amountIn, fee = null) {
   try {
     if (fee) {
-      const amountOut = await v3Swap.getQuote(
-        chainKey,
-        tokenIn,
-        tokenOut,
-        fee,
-        amountIn,
-      );
+      const amountOut = await v3Swap.getQuote(chainKey, tokenIn, tokenOut, fee, amountIn);
       return { amountOut, fee };
     } else {
-      const bestFee = await v3Swap.findBestFee(
-        chainKey,
-        tokenIn,
-        tokenOut,
-        amountIn,
-      );
+      const bestFee = await v3Swap.findBestFee(chainKey, tokenIn, tokenOut, amountIn);
       return { amountOut: bestFee.amountOut, fee: bestFee.fee };
     }
   } catch (error) {
@@ -211,13 +181,7 @@ async function getV3Quote(chainKey, tokenIn, tokenOut, amountIn, fee = null) {
  */
 async function getV4Quote(chainKey, tokenIn, tokenOut, amountIn, fee) {
   try {
-    const amountOut = await v4Swap.estimateSwapOutput(
-      chainKey,
-      tokenIn,
-      tokenOut,
-      fee,
-      amountIn,
-    );
+    const amountOut = await v4Swap.estimateSwapOutput(chainKey, tokenIn, tokenOut, fee, amountIn);
     return { amountOut, fee };
   } catch (error) {
     throw new Error(`V4 quote failed: ${error.message}`);
@@ -235,9 +199,9 @@ async function getV4Quote(chainKey, tokenIn, tokenOut, amountIn, fee) {
 async function compareQuotes(chainKey, tokenIn, tokenOut, amountIn) {
   // Validate inputs
   validateChainKey(chainKey);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
 
   const chain = CHAINS[chainKey];
   console.log(`\nComparing quotes on ${chain.name}:`);

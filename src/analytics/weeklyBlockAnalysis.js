@@ -45,7 +45,7 @@ const CHAIN_CONFIG = {
 
 // Utility: Sleep function
 function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 // Get block range for the last N days
@@ -59,7 +59,7 @@ async function getBlockRange(provider, days, estimatedBlocksPerDay) {
 
   // Estimate start block (faster for L2 chains with many blocks)
   let estimatedStartBlock = Math.max(0, latestBlock - estimatedBlocksPerDay * days);
-  
+
   // Binary search with better starting point
   let low = estimatedStartBlock;
   let high = latestBlock;
@@ -108,9 +108,7 @@ async function analyzeBlock(provider, blockNumber) {
       transactionCount: block.transactions.length,
       gasUsed: block.gasUsed.toString(),
       gasLimit: block.gasLimit.toString(),
-      baseFeePerGas: block.baseFeePerGas
-        ? block.baseFeePerGas.toString()
-        : null,
+      baseFeePerGas: block.baseFeePerGas ? block.baseFeePerGas.toString() : null,
       totalValue: 0n,
       contractCreations: 0,
       uniqueContracts: new Set(),
@@ -145,9 +143,7 @@ async function analyzeBlock(provider, blockNumber) {
         } else {
           // Contract creation
           if (receipt.contractAddress) {
-            analysis.uniqueAddresses.add(
-              receipt.contractAddress.toLowerCase(),
-            );
+            analysis.uniqueAddresses.add(receipt.contractAddress.toLowerCase());
           }
         }
 
@@ -184,9 +180,7 @@ async function analyzeBlocks(provider, startBlock, endBlock, chainName) {
   const batches = Math.ceil(totalBlocks / BATCH_SIZE);
   const results = [];
 
-  console.log(
-    `\n📊 Analyzing ${totalBlocks.toLocaleString()} blocks for ${chainName}...`,
-  );
+  console.log(`\n📊 Analyzing ${totalBlocks.toLocaleString()} blocks for ${chainName}...`);
   console.log(`   Blocks ${startBlock} to ${endBlock}`);
   console.log(`   Processing in ${batches} batches of ${BATCH_SIZE} blocks\n`);
 
@@ -194,9 +188,7 @@ async function analyzeBlocks(provider, startBlock, endBlock, chainName) {
     const batchStart = startBlock + i * BATCH_SIZE;
     const batchEnd = Math.min(batchStart + BATCH_SIZE - 1, endBlock);
 
-    console.log(
-      `   Processing batch ${i + 1}/${batches}: blocks ${batchStart}-${batchEnd}`,
-    );
+    console.log(`   Processing batch ${i + 1}/${batches}: blocks ${batchStart}-${batchEnd}`);
 
     const batchPromises = [];
     for (let blockNum = batchStart; blockNum <= batchEnd; blockNum++) {
@@ -204,15 +196,13 @@ async function analyzeBlocks(provider, startBlock, endBlock, chainName) {
     }
 
     const batchResults = await Promise.all(batchPromises);
-    const validResults = batchResults.filter((r) => r !== null);
+    const validResults = batchResults.filter(r => r !== null);
     results.push(...validResults);
 
     // Progress update
     const processed = results.length;
     const progress = ((processed / totalBlocks) * 100).toFixed(1);
-    console.log(
-      `   ✓ Processed ${processed.toLocaleString()}/${totalBlocks.toLocaleString()} blocks (${progress}%)`,
-    );
+    console.log(`   ✓ Processed ${processed.toLocaleString()}/${totalBlocks.toLocaleString()} blocks (${progress}%)`);
 
     // Delay between batches to avoid rate limits
     if (i < batches - 1) {
@@ -233,13 +223,8 @@ function aggregateResults(blockResults) {
     totalBlocks: blockResults.length,
     timeRange: {
       start: new Date(blockResults[0].timestamp * 1000).toISOString(),
-      end: new Date(
-        blockResults[blockResults.length - 1].timestamp * 1000,
-      ).toISOString(),
-      durationDays:
-        (blockResults[blockResults.length - 1].timestamp -
-          blockResults[0].timestamp) /
-        (24 * 60 * 60),
+      end: new Date(blockResults[blockResults.length - 1].timestamp * 1000).toISOString(),
+      durationDays: (blockResults[blockResults.length - 1].timestamp - blockResults[0].timestamp) / (24 * 60 * 60),
     },
     transactions: {
       total: 0,
@@ -281,10 +266,7 @@ function aggregateResults(blockResults) {
     // Transactions
     aggregated.transactions.total += block.transactionCount;
     aggregated.transactions.failed += block.failedTransactions;
-    aggregated.transactions.maxInBlock = Math.max(
-      aggregated.transactions.maxInBlock,
-      block.transactionCount,
-    );
+    aggregated.transactions.maxInBlock = Math.max(aggregated.transactions.maxInBlock, block.transactionCount);
 
     // Gas
     aggregated.gas.totalUsed = aggregated.gas.totalUsed + BigInt(block.gasUsed);
@@ -303,22 +285,20 @@ function aggregateResults(blockResults) {
     if (block.baseFeePerGas) {
       const baseFee = BigInt(block.baseFeePerGas);
       const gasUsed = BigInt(block.gasUsed);
-      aggregated.fees.totalBaseFee = aggregated.fees.totalBaseFee + (baseFee * gasUsed);
+      aggregated.fees.totalBaseFee = aggregated.fees.totalBaseFee + baseFee * gasUsed;
       aggregated.fees.blocksWithBaseFee++;
     }
   }
 
   // Calculate averages
-  aggregated.transactions.successful =
-    aggregated.transactions.total - aggregated.transactions.failed;
-  aggregated.transactions.averagePerBlock =
-    aggregated.transactions.total / aggregated.totalBlocks;
+  aggregated.transactions.successful = aggregated.transactions.total - aggregated.transactions.failed;
+  aggregated.transactions.averagePerBlock = aggregated.transactions.total / aggregated.totalBlocks;
 
   aggregated.gas.averageUsed = aggregated.gas.totalUsed / BigInt(aggregated.totalBlocks);
   aggregated.gas.averageLimit = aggregated.gas.totalLimit / BigInt(aggregated.totalBlocks);
-  
+
   // Calculate utilization rate
-  const utilization = Number(aggregated.gas.totalUsed * 10000n / aggregated.gas.totalLimit);
+  const utilization = Number((aggregated.gas.totalUsed * 10000n) / aggregated.gas.totalLimit);
   aggregated.gas.utilizationRate = utilization / 100;
 
   aggregated.value.averagePerBlock = aggregated.value.total / BigInt(aggregated.totalBlocks);
@@ -371,13 +351,9 @@ async function analyzeChain(chainKey, chainConfig) {
 
     // Get block range
     console.log(`\n📍 Determining block range for last ${DAYS_TO_ANALYZE} days...`);
-    const blockRange = await getBlockRange(
-      provider,
-      DAYS_TO_ANALYZE,
-      chainConfig.estimatedBlocksPerDay,
-    );
+    const blockRange = await getBlockRange(provider, DAYS_TO_ANALYZE, chainConfig.estimatedBlocksPerDay);
     let totalBlocks = blockRange.endBlock - blockRange.startBlock + 1;
-    
+
     // Limit to MAX_BLOCKS (analyze most recent blocks)
     if (totalBlocks > MAX_BLOCKS) {
       const originalStartBlock = blockRange.startBlock;
@@ -385,28 +361,19 @@ async function analyzeChain(chainKey, chainConfig) {
       blockRange.startTimestamp = (await provider.getBlock(blockRange.startBlock)).timestamp;
       totalBlocks = MAX_BLOCKS;
       console.log(`\n   ⚠️  Limiting analysis to most recent ${MAX_BLOCKS.toLocaleString()} blocks`);
-      console.log(`   Original range would have been ${(blockRange.endBlock - originalStartBlock + 1).toLocaleString()} blocks\n`);
+      console.log(
+        `   Original range would have been ${(blockRange.endBlock - originalStartBlock + 1).toLocaleString()} blocks\n`
+      );
     }
-    
-    console.log(
-      `   Start Block: ${blockRange.startBlock.toLocaleString()}`,
-    );
+
+    console.log(`   Start Block: ${blockRange.startBlock.toLocaleString()}`);
     console.log(`   End Block: ${blockRange.endBlock.toLocaleString()}`);
     console.log(`   Total Blocks: ${totalBlocks.toLocaleString()}`);
-    console.log(
-      `   Start Time: ${new Date(blockRange.startTimestamp * 1000).toISOString()}`,
-    );
-    console.log(
-      `   End Time: ${new Date(blockRange.endTimestamp * 1000).toISOString()}`,
-    );
+    console.log(`   Start Time: ${new Date(blockRange.startTimestamp * 1000).toISOString()}`);
+    console.log(`   End Time: ${new Date(blockRange.endTimestamp * 1000).toISOString()}`);
 
     // Analyze blocks
-    const blockResults = await analyzeBlocks(
-      provider,
-      blockRange.startBlock,
-      blockRange.endBlock,
-      chainConfig.name,
-    );
+    const blockResults = await analyzeBlocks(provider, blockRange.startBlock, blockRange.endBlock, chainConfig.name);
 
     if (blockResults.length === 0) {
       console.log(`\n⚠️  No blocks analyzed for ${chainConfig.name}`);
@@ -438,13 +405,10 @@ function exportResults(allResults, outputDir = "./output") {
 
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const summaryFile = path.join(outputDir, `weekly-analysis-summary-${timestamp}.json`);
-  const detailedFile = path.join(
-    outputDir,
-    `weekly-analysis-detailed-${timestamp}.json`,
-  );
+  const detailedFile = path.join(outputDir, `weekly-analysis-detailed-${timestamp}.json`);
 
   // Summary (aggregated data only)
-  const summary = allResults.map((result) => ({
+  const summary = allResults.map(result => ({
     chain: result.chain,
     chainId: result.chainId,
     blockRange: result.blockRange,
@@ -477,60 +441,32 @@ function printSummary(allResults) {
     console.log(`   Blocks Analyzed: ${agg.totalBlocks.toLocaleString()}`);
 
     console.log(`\n   📝 Transactions:`);
-    console.log(
-      `      Total: ${agg.transactions.total.toLocaleString()}`,
-    );
-    console.log(
-      `      Successful: ${agg.transactions.successful.toLocaleString()}`,
-    );
-    console.log(
-      `      Failed: ${agg.transactions.failed.toLocaleString()}`,
-    );
-    console.log(
-      `      Avg per Block: ${agg.transactions.averagePerBlock.toFixed(2)}`,
-    );
-    console.log(
-      `      Max in Block: ${agg.transactions.maxInBlock.toLocaleString()}`,
-    );
+    console.log(`      Total: ${agg.transactions.total.toLocaleString()}`);
+    console.log(`      Successful: ${agg.transactions.successful.toLocaleString()}`);
+    console.log(`      Failed: ${agg.transactions.failed.toLocaleString()}`);
+    console.log(`      Avg per Block: ${agg.transactions.averagePerBlock.toFixed(2)}`);
+    console.log(`      Max in Block: ${agg.transactions.maxInBlock.toLocaleString()}`);
 
     console.log(`\n   ⛽ Gas:`);
-    console.log(
-      `      Total Used: ${parseInt(agg.gas.totalUsed).toLocaleString()}`,
-    );
-    console.log(
-      `      Avg Used: ${parseInt(agg.gas.averageUsed).toLocaleString()}`,
-    );
-    console.log(
-      `      Utilization Rate: ${agg.gas.utilizationRate.toFixed(2)}%`,
-    );
+    console.log(`      Total Used: ${parseInt(agg.gas.totalUsed).toLocaleString()}`);
+    console.log(`      Avg Used: ${parseInt(agg.gas.averageUsed).toLocaleString()}`);
+    console.log(`      Utilization Rate: ${agg.gas.utilizationRate.toFixed(2)}%`);
 
     console.log(`\n   💰 Value:`);
     console.log(`      Total: ${agg.value.totalETH} ETH`);
-    console.log(
-      `      Avg per Block: ${agg.value.averagePerBlockETH} ETH`,
-    );
+    console.log(`      Avg per Block: ${agg.value.averagePerBlockETH} ETH`);
 
     console.log(`\n   📦 Contracts:`);
-    console.log(
-      `      Total Creations: ${agg.contracts.totalCreations.toLocaleString()}`,
-    );
+    console.log(`      Total Creations: ${agg.contracts.totalCreations.toLocaleString()}`);
 
     console.log(`\n   📊 Data:`);
-    console.log(
-      `      Total: ${(agg.data.totalBytes / 1024 / 1024).toFixed(2)} MB`,
-    );
-    console.log(
-      `      Avg per Block: ${(agg.data.averagePerBlock / 1024).toFixed(2)} KB`,
-    );
+    console.log(`      Total: ${(agg.data.totalBytes / 1024 / 1024).toFixed(2)} MB`);
+    console.log(`      Avg per Block: ${(agg.data.averagePerBlock / 1024).toFixed(2)} KB`);
 
     if (agg.fees.blocksWithBaseFee > 0) {
       console.log(`\n   💵 Fees:`);
-      console.log(
-        `      Total Base Fee: ${agg.fees.totalBaseFeeETH} ETH`,
-      );
-      console.log(
-        `      Avg Base Fee: ${agg.fees.averageBaseFeeETH} ETH`,
-      );
+      console.log(`      Total Base Fee: ${agg.fees.totalBaseFeeETH} ETH`);
+      console.log(`      Avg Base Fee: ${agg.fees.averageBaseFeeETH} ETH`);
     }
   }
 
@@ -571,7 +507,7 @@ async function main() {
 
 // Run if executed directly
 if (require.main === module) {
-  main().catch((err) => {
+  main().catch(err => {
     console.error("Fatal error:", err);
     process.exit(1);
   });

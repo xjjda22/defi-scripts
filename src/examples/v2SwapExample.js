@@ -87,12 +87,7 @@ async function main() {
   const desiredOutput = ethers.parseUnits("1000", 6); // Want exactly 1000 USDC
 
   try {
-    const quote = await v2.getQuoteForExactOutput(
-      CHAIN,
-      weth,
-      usdc,
-      desiredOutput.toString(),
-    );
+    const quote = await v2.getQuoteForExactOutput(CHAIN, weth, usdc, desiredOutput.toString());
     console.log(`Required input: ${ethers.formatEther(quote.amountIn)} WETH`);
 
     // Execute swap (commented out for safety)

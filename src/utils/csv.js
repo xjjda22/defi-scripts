@@ -12,7 +12,7 @@ async function writeCSV(filePath, headers, records) {
 
   const csvWriter = createCsvWriter({
     path: filePath,
-    header: headers.map((h) => ({ id: h.id, title: h.title })),
+    header: headers.map(h => ({ id: h.id, title: h.title })),
   });
 
   await csvWriter.writeRecords(records);
@@ -22,4 +22,3 @@ async function writeCSV(filePath, headers, records) {
 module.exports = {
   writeCSV,
 };
-

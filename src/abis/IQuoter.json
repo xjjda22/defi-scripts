@@ -12,9 +12,7 @@
       }
     ],
     "name": "quoteExactInputSingle",
-    "outputs": [
-      { "internalType": "uint256", "name": "amountOut", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "amountOut", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -24,9 +22,7 @@
       { "internalType": "uint256", "name": "amountIn", "type": "uint256" }
     ],
     "name": "quoteExactInput",
-    "outputs": [
-      { "internalType": "uint256", "name": "amountOut", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "amountOut", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -43,9 +39,7 @@
       }
     ],
     "name": "quoteExactOutputSingle",
-    "outputs": [
-      { "internalType": "uint256", "name": "amountIn", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "amountIn", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   }

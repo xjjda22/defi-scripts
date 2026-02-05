@@ -28,10 +28,10 @@ async function main() {
 
   // Example: 3pool (USDC/USDT/DAI) on Ethereum
   const poolAddress = "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7";
-  
+
   console.log("Curve auto-routes between multiple pools if provided as array");
   console.log(`Example pool address: ${poolAddress}\n`);
-  
+
   try {
     const poolInfo = await getPoolInfo(chainKey, poolAddress, 3);
     console.log("\nPool information:");
@@ -52,7 +52,6 @@ async function main() {
     const quote = await getQuote(chainKey, poolAddress, indices.i, indices.j, amountIn);
     console.log(`\nQuote for swapping 100 USDC to USDT:`);
     console.log(`Expected output: ${ethers.formatUnits(quote, 6)} USDT`);
-
   } catch (error) {
     console.log(`Error: ${error.message}`);
   }
@@ -61,7 +60,7 @@ async function main() {
   console.log("Uncomment the code below to execute a real swap:\n");
 
   // const indices = await findTokenIndices(chainKey, poolAddress, USDC, USDT, 3);
-  // 
+  //
   // const result = await swapTokens(
   //   chainKey,
   //   wallet,

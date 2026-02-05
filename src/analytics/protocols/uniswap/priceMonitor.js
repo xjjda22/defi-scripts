@@ -19,12 +19,7 @@ const {
   formatChain,
   printInsights,
 } = require("../../utils/displayHelpers");
-const {
-  getTokenInfo,
-  formatTokenAmount,
-  calculatePercentageDiff,
-  isValidPrice,
-} = require("../../utils/priceFeeds");
+const { getTokenInfo, formatTokenAmount, calculatePercentageDiff, isValidPrice } = require("../../utils/priceFeeds");
 
 // Configuration
 const DEFAULT_CHAIN = process.env.CHAIN || "ethereum";
@@ -43,7 +38,7 @@ async function getV2Price(chainKey, tokenIn, tokenOut, amountIn, decimalsIn, dec
   try {
     const amountInWei = ethers.parseUnits(amountIn, decimalsIn);
     const quote = await v2Swap.getQuote(chainKey, tokenIn, tokenOut, amountInWei.toString());
-    
+
     if (!quote || !quote.amountOut) {
       return null;
     }
@@ -77,7 +72,7 @@ async function getV3Price(chainKey, tokenIn, tokenOut, fee, amountIn, decimalsIn
   try {
     const amountInWei = ethers.parseUnits(amountIn, decimalsIn);
     const quote = await v3Swap.getQuote(chainKey, tokenIn, tokenOut, fee, amountInWei.toString());
-    
+
     // V3 getQuote returns just a string (the amountOut)
     if (!quote) {
       return null;
@@ -116,14 +111,8 @@ async function getV4Price(chainKey, tokenIn, tokenOut, fee, amountIn, decimalsIn
     }
 
     const amountInWei = ethers.parseUnits(amountIn, decimalsIn);
-    const estimate = await v4Swap.estimateSwapOutput(
-      chainKey,
-      tokenIn,
-      tokenOut,
-      fee,
-      amountInWei.toString()
-    );
-    
+    const estimate = await v4Swap.estimateSwapOutput(chainKey, tokenIn, tokenOut, fee, amountInWei.toString());
+
     if (!estimate || !estimate.amountOut) {
       return null;
     }
@@ -185,18 +174,18 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
   const pricePromises = [
     // V2
     getV2Price(chainKey, tokenInAddress, tokenOutAddress, amountIn, tokenIn.decimals, tokenOut.decimals),
-    
+
     // V3 - all fee tiers
-    ...V3_FEE_TIERS.map((fee) =>
+    ...V3_FEE_TIERS.map(fee =>
       getV3Price(chainKey, tokenInAddress, tokenOutAddress, fee, amountIn, tokenIn.decimals, tokenOut.decimals)
     ),
-    
+
     // V4
     getV4Price(chainKey, tokenInAddress, tokenOutAddress, V4_FEE_TIER, amountIn, tokenIn.decimals, tokenOut.decimals),
   ];
 
   const results = await Promise.all(pricePromises);
-  
+
   // Debug output
   if (process.env.DEBUG || process.env.VERBOSE) {
     console.log("\n🔍 Debug: Raw Results:");
@@ -204,12 +193,12 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
       if (r === null) {
         console.log(`  ${i}: null`);
       } else {
-        console.log(`  ${i}: ${r.version} - ${r.price || 'no price'}`);
+        console.log(`  ${i}: ${r.version} - ${r.price || "no price"}`);
       }
     });
   }
-  
-  const prices = results.filter((p) => p !== null && isValidPrice(p.price));
+
+  const prices = results.filter(p => p !== null && isValidPrice(p.price));
 
   if (prices.length === 0) {
     console.error("\n❌ No prices available for this pair on this chain");
@@ -217,7 +206,7 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
     console.log("  1. No liquidity pools exist for this pair");
     console.log("  2. The pair exists but quotes are failing");
     console.log("  3. Try a different token pair\n");
-    
+
     if (!process.env.DEBUG) {
       console.log("💡 Run with DEBUG=1 for more details");
     }
@@ -232,7 +221,7 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
 
   const bestPrice = prices[0].price;
 
-  prices.forEach((price) => {
+  prices.forEach(price => {
     const diffPercent = calculatePercentageDiff(price.price, bestPrice);
     const diffFormatted = diffPercent === 0 ? "BEST" : formatPercent(diffPercent, 2, true);
     const status = diffPercent === 0 ? "⭐ Best" : diffPercent > -2 ? "✅ Good" : "⚠️ Low";
@@ -256,7 +245,7 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
 
   // Print insights
   printSection("Analysis");
-  
+
   const insights = [];
 
   // Best venue
@@ -279,7 +268,7 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
   }
 
   // V3 fee tier recommendation
-  const v3Prices = prices.filter((p) => p.version.startsWith("V3"));
+  const v3Prices = prices.filter(p => p.version.startsWith("V3"));
   if (v3Prices.length > 0) {
     const bestV3 = v3Prices[0];
     insights.push({
@@ -289,7 +278,7 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
   }
 
   // V4 availability
-  const v4Price = prices.find((p) => p.version === "V4");
+  const v4Price = prices.find(p => p.version === "V4");
   if (v4Price) {
     const v4VsBest = calculatePercentageDiff(v4Price.price, bestPrice);
     if (Math.abs(v4VsBest) < 0.5) {
@@ -401,7 +390,7 @@ Available Pairs in Config:
     // Monitor each pair
     for (let i = 0; i < pairs.length; i++) {
       const pair = pairs[i];
-      
+
       const tokenInAddress = COMMON_TOKENS[pair.tokenIn]?.[chainKey];
       const tokenOutAddress = COMMON_TOKENS[pair.tokenOut]?.[chainKey];
 
@@ -414,7 +403,7 @@ Available Pairs in Config:
       console.log(`      ${pair.tokenOut} (${tokenOutAddress})\n`);
 
       await monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, pair.amount);
-      
+
       // Add separator between pairs if monitoring multiple
       if (i < pairs.length - 1) {
         console.log("\n" + "═".repeat(60) + "\n");

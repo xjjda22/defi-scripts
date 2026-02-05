@@ -31,7 +31,7 @@ const MAJOR_PAIRS = {
     category: "eth",
     description: "ETH/DAI pair",
   },
-  
+
   // === Stablecoin Pairs ===
   "USDC/USDT": {
     name: "USDC/USDT",
@@ -57,7 +57,7 @@ const MAJOR_PAIRS = {
     category: "stable",
     description: "USDT/DAI stablecoin pair",
   },
-  
+
   // === BTC Pairs ===
   "WBTC/USDC": {
     name: "WBTC/USDC",
@@ -83,7 +83,7 @@ const MAJOR_PAIRS = {
     category: "btc",
     description: "Bitcoin/USDT pair",
   },
-  
+
   // === DeFi Blue Chips vs USD ===
   "UNI/USDC": {
     name: "UNI/USDC",
@@ -173,7 +173,7 @@ const MAJOR_PAIRS = {
     category: "defi",
     description: "Lido/ETH pair",
   },
-  
+
   // === Liquid Staking Derivatives ===
   "wstETH/WETH": {
     name: "wstETH/WETH",
@@ -215,25 +215,37 @@ const MAJOR_PAIRS = {
 const PAIR_GROUPS = {
   // Most important pairs for daily monitoring (8 pairs: major liquidity)
   default: ["WETH/USDC", "WETH/USDT", "WETH/DAI", "WBTC/USDC", "WBTC/WETH", "USDC/USDT", "USDC/DAI", "wstETH/WETH"],
-  
+
   // ETH pairs (3 pairs)
   eth: ["WETH/USDC", "WETH/USDT", "WETH/DAI"],
-  
+
   // Stablecoin pairs (3 pairs)
   stable: ["USDC/USDT", "USDC/DAI", "USDT/DAI"],
-  
+
   // BTC pairs (3 pairs)
   btc: ["WBTC/USDC", "WBTC/WETH", "WBTC/USDT"],
-  
+
   // DeFi blue chips (10 pairs)
-  defi: ["UNI/USDC", "UNI/WETH", "LINK/USDC", "LINK/WETH", "AAVE/USDC", "AAVE/WETH", "MKR/USDC", "CRV/USDC", "CRV/WETH", "LDO/USDC", "LDO/WETH"],
-  
+  defi: [
+    "UNI/USDC",
+    "UNI/WETH",
+    "LINK/USDC",
+    "LINK/WETH",
+    "AAVE/USDC",
+    "AAVE/WETH",
+    "MKR/USDC",
+    "CRV/USDC",
+    "CRV/WETH",
+    "LDO/USDC",
+    "LDO/WETH",
+  ],
+
   // Liquid staking tokens (4 pairs)
   lst: ["wstETH/WETH", "wstETH/USDC", "rETH/WETH", "rETH/USDC"],
-  
+
   // Major pairs (ETH + BTC + top 2 stables = 8 pairs)
   major: ["WETH/USDC", "WETH/USDT", "WETH/DAI", "WBTC/USDC", "WBTC/WETH", "USDC/USDT", "USDC/DAI", "USDT/DAI"],
-  
+
   // All pairs (25 total)
   all: Object.keys(MAJOR_PAIRS),
 };

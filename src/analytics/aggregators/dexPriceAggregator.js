@@ -2,17 +2,17 @@
 
 /**
  * Multi-DEX Price Aggregator
- * 
+ *
  * Aggregates prices from all major DEXs:
  * - Uniswap V2, V3 (all fee tiers), V4
  * - SushiSwap V2, V3
  * - Curve (major pools)
- * 
+ *
  * Shows:
  * - Global best price across all DEXs
  * - Cross-DEX arbitrage opportunities
  * - Optimal routing recommendation
- * 
+ *
  * Usage:
  *   npm run analytics:dex:prices [chain] [tokenIn] [tokenOut] [amount]
  *   npm run analytics:dex:prices ethereum WETH USDC 1
@@ -70,15 +70,9 @@ async function getUniV3Quotes(chainKey, tokenIn, tokenOut, amountIn) {
   const quoter = new ethers.Contract(chain.uniswap.v3.quoter, UNISWAP_V3_QUOTER_ABI, provider);
 
   const quotes = await Promise.all(
-    V3_FEE_TIERS.map(async (fee) => {
+    V3_FEE_TIERS.map(async fee => {
       try {
-        const amountOut = await quoter.quoteExactInputSingle.staticCall(
-          tokenIn,
-          tokenOut,
-          fee,
-          amountIn,
-          0
-        );
+        const amountOut = await quoter.quoteExactInputSingle.staticCall(tokenIn, tokenOut, fee, amountIn, 0);
         return {
           amountOut: amountOut.toString(),
           dex: `Uniswap V3 (${(fee / 10000).toFixed(2)}%)`,
@@ -205,13 +199,7 @@ async function aggregatePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) 
   ]);
 
   // Collect all results
-  const allQuotes = [
-    uniV2,
-    ...uniV3Quotes,
-    sushiV2,
-    sushiV3,
-    curve,
-  ].filter(q => q !== null);
+  const allQuotes = [uniV2, ...uniV3Quotes, sushiV2, sushiV3, curve].filter(q => q !== null);
 
   if (allQuotes.length === 0) {
     console.log("❌ No prices available for this pair");
@@ -237,13 +225,7 @@ async function aggregatePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) 
     const diffStr = index === 0 ? "BEST" : formatPercent(diff, 2);
     const status = index === 0 ? "⭐ Best" : diff >= -0.5 ? "✅ Good" : "⚠️ Low";
 
-    table.push([
-      `#${index + 1}`,
-      quote.dex,
-      `${formatNumber(quote.amountOut)} ${tokenOut.symbol}`,
-      diffStr,
-      status,
-    ]);
+    table.push([`#${index + 1}`, quote.dex, `${formatNumber(quote.amountOut)} ${tokenOut.symbol}`, diffStr, status]);
   });
 
   console.log(table.toString());
@@ -282,11 +264,11 @@ async function aggregatePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) 
   console.log("─".repeat(60));
   console.log(`✅ Use ${bestDex.dex} for this swap`);
   console.log(`💰 Expected output: ${formatNumber(bestDex.amountOut)} ${tokenOut.symbol}`);
-  
+
   if (parsedQuotes.length > 1) {
     const secondBest = parsedQuotes[1];
     const diffToSecond = ((bestDex.amountOut - secondBest.amountOut) / secondBest.amountOut) * 100;
-    
+
     if (diffToSecond < 0.1) {
       console.log(`💡 ${secondBest.dex} is nearly as good (${formatPercent(diffToSecond, 2)} worse)`);
       console.log(`💡 Consider gas costs when choosing between them`);
@@ -354,7 +336,7 @@ Configuration:
   for (let i = 0; i < pairs.length; i++) {
     const pair = pairs[i];
     await aggregatePrices(chainKey, pair.tokenIn, pair.tokenOut, pair.amount);
-    
+
     // Add separator between pairs if monitoring multiple
     if (i < pairs.length - 1) {
       console.log("\n" + "═".repeat(60) + "\n");
@@ -366,7 +348,7 @@ Configuration:
 
 // Run the script
 if (require.main === module) {
-  main().catch((error) => {
+  main().catch(error => {
     console.error("Fatal error:", error);
     process.exit(1);
   });

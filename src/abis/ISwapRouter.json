@@ -30,9 +30,7 @@
       }
     ],
     "name": "exactInputSingle",
-    "outputs": [
-      { "internalType": "uint256", "name": "amountOut", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "amountOut", "type": "uint256" }],
     "stateMutability": "payable",
     "type": "function"
   },
@@ -56,9 +54,7 @@
       }
     ],
     "name": "exactInput",
-    "outputs": [
-      { "internalType": "uint256", "name": "amountOut", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "amountOut", "type": "uint256" }],
     "stateMutability": "payable",
     "type": "function"
   },
@@ -97,9 +93,7 @@
       }
     ],
     "name": "exactOutputSingle",
-    "outputs": [
-      { "internalType": "uint256", "name": "amountIn", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "amountIn", "type": "uint256" }],
     "stateMutability": "payable",
     "type": "function"
   }

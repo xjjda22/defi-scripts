@@ -56,9 +56,7 @@ const POSITION_MANAGER_ABI = [
 ];
 
 // Uniswap V3 Factory ABI
-const V3_FACTORY_ABI = [
-  "function getPool(address tokenA, address tokenB, uint24 fee) view returns (address pool)",
-];
+const V3_FACTORY_ABI = ["function getPool(address tokenA, address tokenB, uint24 fee) view returns (address pool)"];
 
 // Uniswap V4 PoolManager ABI
 const POOL_MANAGER_ABI = [
@@ -107,10 +105,7 @@ const V4_FEE_TIERS = [100, 500, 3000, 10000]; // 0.01%, 0.05%, 0.3%, 1%
 async function getTokenInfo(tokenAddress, provider) {
   try {
     const token = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
-    const [symbol, decimals] = await Promise.all([
-      token.symbol(),
-      token.decimals(),
-    ]);
+    const [symbol, decimals] = await Promise.all([token.symbol(), token.decimals()]);
     return { symbol, decimals };
   } catch (error) {
     return { symbol: "UNKNOWN", decimals: 18 };
@@ -179,7 +174,7 @@ async function trackV2Liquidity(chainKey, token0Address, token1Address) {
         allMints.push(...mints);
         allBurns.push(...burns);
 
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 200));
       } catch (chunkError) {
         console.warn(`        Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
       }
@@ -187,53 +182,53 @@ async function trackV2Liquidity(chainKey, token0Address, token1Address) {
 
     // Process Mint events
     for (const mint of allMints) {
-    const amount0 = parseFloat(ethers.formatUnits(mint.args.amount0, token0Info.decimals));
-    const amount1 = parseFloat(ethers.formatUnits(mint.args.amount1, token1Info.decimals));
-    const block = await provider.getBlock(mint.blockNumber);
-    
-    flows.push({
-      chain: chain.name,
-      chainId: chain.chainId,
-      version: "V2",
-      type: "mint",
-      direction: "add",
-      pairAddress,
-      token0: token0Info.symbol,
-      token1: token1Info.symbol,
-      amount0,
-      amount1,
-      txHash: mint.transactionHash,
-      block: mint.blockNumber,
-      timestamp: block.timestamp,
-      explorer: chain.explorer,
-    });
-  }
+      const amount0 = parseFloat(ethers.formatUnits(mint.args.amount0, token0Info.decimals));
+      const amount1 = parseFloat(ethers.formatUnits(mint.args.amount1, token1Info.decimals));
+      const block = await provider.getBlock(mint.blockNumber);
 
-  // Process Burn events
-  for (const burn of allBurns) {
-    const amount0 = parseFloat(ethers.formatUnits(burn.args.amount0, token0Info.decimals));
-    const amount1 = parseFloat(ethers.formatUnits(burn.args.amount1, token1Info.decimals));
-    const block = await provider.getBlock(burn.blockNumber);
-    
-    flows.push({
-      chain: chain.name,
-      chainId: chain.chainId,
-      version: "V2",
-      type: "burn",
-      direction: "remove",
-      pairAddress,
-      token0: token0Info.symbol,
-      token1: token1Info.symbol,
-      amount0,
-      amount1,
-      txHash: burn.transactionHash,
-      block: burn.blockNumber,
-      timestamp: block.timestamp,
-      explorer: chain.explorer,
-    });
-  }
+      flows.push({
+        chain: chain.name,
+        chainId: chain.chainId,
+        version: "V2",
+        type: "mint",
+        direction: "add",
+        pairAddress,
+        token0: token0Info.symbol,
+        token1: token1Info.symbol,
+        amount0,
+        amount1,
+        txHash: mint.transactionHash,
+        block: mint.blockNumber,
+        timestamp: block.timestamp,
+        explorer: chain.explorer,
+      });
+    }
 
-  return flows;
+    // Process Burn events
+    for (const burn of allBurns) {
+      const amount0 = parseFloat(ethers.formatUnits(burn.args.amount0, token0Info.decimals));
+      const amount1 = parseFloat(ethers.formatUnits(burn.args.amount1, token1Info.decimals));
+      const block = await provider.getBlock(burn.blockNumber);
+
+      flows.push({
+        chain: chain.name,
+        chainId: chain.chainId,
+        version: "V2",
+        type: "burn",
+        direction: "remove",
+        pairAddress,
+        token0: token0Info.symbol,
+        token1: token1Info.symbol,
+        amount0,
+        amount1,
+        txHash: burn.transactionHash,
+        block: burn.blockNumber,
+        timestamp: block.timestamp,
+        explorer: chain.explorer,
+      });
+    }
+
+    return flows;
   } catch (error) {
     console.error(`[ERROR] Failed to track V2 liquidity: ${error.message}`);
     return [];
@@ -261,11 +256,7 @@ async function trackV3Liquidity(chainKey, token0Address, token1Address, feeTier)
 
   console.log(`   📍 V3 Pool: ${poolAddress} (Fee: ${feeTier / 10000}%)`);
 
-  const positionManager = new ethers.Contract(
-    chain.uniswap.v3.nftPositionManager,
-    POSITION_MANAGER_ABI,
-    provider
-  );
+  const positionManager = new ethers.Contract(chain.uniswap.v3.nftPositionManager, POSITION_MANAGER_ABI, provider);
 
   const currentBlock = await getBlockNumber(chainKey);
   const startBlock = START_BLOCK || Math.max(0, currentBlock - BLOCKS_TO_ANALYZE);
@@ -286,22 +277,14 @@ async function trackV3Liquidity(chainKey, token0Address, token1Address, feeTier)
 
     try {
       const [increases, decreases] = await Promise.all([
-        positionManager.queryFilter(
-          positionManager.filters.IncreaseLiquidity(),
-          fromBlock,
-          toBlock
-        ),
-        positionManager.queryFilter(
-          positionManager.filters.DecreaseLiquidity(),
-          fromBlock,
-          toBlock
-        ),
+        positionManager.queryFilter(positionManager.filters.IncreaseLiquidity(), fromBlock, toBlock),
+        positionManager.queryFilter(positionManager.filters.DecreaseLiquidity(), fromBlock, toBlock),
       ]);
 
       allIncreases.push(...increases);
       allDecreases.push(...decreases);
 
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 200));
     } catch (chunkError) {
       console.warn(`        Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
     }
@@ -368,7 +351,7 @@ async function trackV3Liquidity(chainKey, token0Address, token1Address, feeTier)
 
 async function trackV3AllFeeTiers(chainKey, token0Address, token1Address) {
   const allFlows = [];
-  
+
   for (const feeTier of V3_FEE_TIERS) {
     try {
       const flows = await trackV3Liquidity(chainKey, token0Address, token1Address, feeTier);
@@ -377,7 +360,7 @@ async function trackV3AllFeeTiers(chainKey, token0Address, token1Address) {
       console.warn(`     Error tracking V3 fee tier ${feeTier}:`, error.message);
     }
   }
-  
+
   return allFlows;
 }
 
@@ -392,11 +375,7 @@ async function trackV4Liquidity(chainKey, token0Address, token1Address) {
   }
 
   const provider = getProvider(chainKey);
-  const poolManager = new ethers.Contract(
-    chain.uniswap.v4.poolManager,
-    POOL_MANAGER_ABI,
-    provider
-  );
+  const poolManager = new ethers.Contract(chain.uniswap.v4.poolManager, POOL_MANAGER_ABI, provider);
 
   const currentBlock = await getBlockNumber(chainKey);
   const startBlock = START_BLOCK || Math.max(0, currentBlock - BLOCKS_TO_ANALYZE);
@@ -417,15 +396,11 @@ async function trackV4Liquidity(chainKey, token0Address, token1Address) {
     const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
 
     try {
-      const modifyEvents = await poolManager.queryFilter(
-        poolManager.filters.ModifyLiquidity(),
-        fromBlock,
-        toBlock
-      );
+      const modifyEvents = await poolManager.queryFilter(poolManager.filters.ModifyLiquidity(), fromBlock, toBlock);
 
       allModifyLiquidity.push(...modifyEvents);
 
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 200));
     } catch (chunkError) {
       console.warn(`        Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
     }
@@ -467,11 +442,7 @@ async function trackV4Initialize(chainKey) {
   }
 
   const provider = getProvider(chainKey);
-  const poolManager = new ethers.Contract(
-    chain.uniswap.v4.poolManager,
-    POOL_MANAGER_ABI,
-    provider
-  );
+  const poolManager = new ethers.Contract(chain.uniswap.v4.poolManager, POOL_MANAGER_ABI, provider);
 
   const currentBlock = await getBlockNumber(chainKey);
   const startBlock = START_BLOCK || Math.max(0, currentBlock - BLOCKS_TO_ANALYZE);
@@ -483,14 +454,10 @@ async function trackV4Initialize(chainKey) {
     const toBlock = Math.min(fromBlock + CHUNK_SIZE - 1, endBlock);
 
     try {
-      const initEvents = await poolManager.queryFilter(
-        poolManager.filters.Initialize(),
-        fromBlock,
-        toBlock
-      );
+      const initEvents = await poolManager.queryFilter(poolManager.filters.Initialize(), fromBlock, toBlock);
 
       allInitializations.push(...initEvents);
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 200));
     } catch (chunkError) {
       console.warn(`        Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
     }
@@ -591,7 +558,7 @@ async function generateReport() {
 
   // Track WETH/USDC pair as primary example
   const tokenPair = { symbol: "WETH/USDC", token0: "WETH", token1: "USDC" };
-  
+
   console.log(`\n💎 Tracking ${tokenPair.symbol} Liquidity Flows...\n`);
 
   for (const chainKey of chainsToTrack) {
@@ -611,7 +578,7 @@ async function generateReport() {
 
     try {
       const flows = await trackAllVersions(chainKey, token0Address, token1Address);
-      allFlows.push(...flows.map((f) => ({ ...f, pair: tokenPair.symbol })));
+      allFlows.push(...flows.map(f => ({ ...f, pair: tokenPair.symbol })));
       console.log(`    ${chain.name}: ${flows.length} total liquidity events\n`);
     } catch (error) {
       console.error(`    Error on ${chain.name}:`, error.message);
@@ -635,7 +602,7 @@ async function generateReport() {
         vs_currencies: "usd",
       },
     })
-    .then((res) => ({
+    .then(res => ({
       WETH: res.data.ethereum.usd,
       USDC: res.data["usd-coin"].usd,
     }))
@@ -684,7 +651,9 @@ async function generateReport() {
   console.log(`   Total Events: ${stats.total}`);
   console.log(`   Add Liquidity: ${stats.byDirection.add}`);
   console.log(`   Remove Liquidity: ${stats.byDirection.remove}`);
-  console.log(`   Net Flow: ${stats.byDirection.add - stats.byDirection.remove > 0 ? "+" : ""}${stats.byDirection.add - stats.byDirection.remove}`);
+  console.log(
+    `   Net Flow: ${stats.byDirection.add - stats.byDirection.remove > 0 ? "+" : ""}${stats.byDirection.add - stats.byDirection.remove}`
+  );
   console.log(`   Total Volume: ${formatUSD(stats.totalValueUSD)}\n`);
 
   // Print by Version
@@ -703,8 +672,7 @@ async function generateReport() {
 
   // Print by Chain
   console.log(`🌐 By Chain:\n`);
-  const sortedChains = Object.entries(stats.byChain)
-    .sort((a, b) => b[1].count - a[1].count);
+  const sortedChains = Object.entries(stats.byChain).sort((a, b) => b[1].count - a[1].count);
 
   for (const [chain, data] of sortedChains) {
     const netFlow = data.add - data.remove;
@@ -735,7 +703,7 @@ async function generateReport() {
   }
 
   // Export to CSV
-  const csvData = allFlows.map((flow) => ({
+  const csvData = allFlows.map(flow => ({
     chain: flow.chain,
     chainId: flow.chainId,
     version: flow.version,
@@ -832,15 +800,15 @@ if (require.main === module) {
 module.exports = {
   // V2 exports
   trackV2Liquidity,
-  
+
   // V3 exports
   trackV3Liquidity,
   trackV3AllFeeTiers,
-  
+
   // V4 exports
   trackV4Liquidity,
   trackV4Initialize,
-  
+
   // Unified exports
   trackAllVersions,
   generateReport,

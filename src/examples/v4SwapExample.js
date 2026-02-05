@@ -29,7 +29,7 @@ async function main() {
   console.log("V4 Architecture:", v4Info.architecture);
   console.log("Launched:", v4Info.launched);
   console.log("\nKey Differences from V3:");
-  v4Info.differences.forEach((diff) => console.log(`  - ${diff}`));
+  v4Info.differences.forEach(diff => console.log(`  - ${diff}`));
   console.log("\n⚠️  Important:", v4Info.notes);
 
   // Example 1: Create pool key
@@ -42,7 +42,7 @@ async function main() {
     usdc,
     v4.FEE_TIERS.MEDIUM,
     v4.TICK_SPACING[v4.FEE_TIERS.MEDIUM],
-    v4.ADDRESS_ZERO, // No hooks
+    v4.ADDRESS_ZERO // No hooks
   );
 
   console.log("PoolKey created:");
@@ -71,13 +71,7 @@ async function main() {
   const amountIn = ethers.parseEther("0.1");
 
   try {
-    const estimate = await v4.estimateSwapOutput(
-      CHAIN,
-      weth,
-      usdc,
-      v4.FEE_TIERS.MEDIUM,
-      amountIn.toString(),
-    );
+    const estimate = await v4.estimateSwapOutput(CHAIN, weth, usdc, v4.FEE_TIERS.MEDIUM, amountIn.toString());
     console.log(`Estimated output: ${ethers.formatUnits(estimate, 6)} USDC`);
     console.log("Note: This is a simplified estimate");
   } catch (error) {

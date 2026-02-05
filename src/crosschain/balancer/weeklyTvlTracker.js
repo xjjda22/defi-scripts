@@ -26,24 +26,24 @@ const MAX_BAR_LENGTH = 50;
 function getThisWeekDates() {
   const today = new Date();
   const dayOfWeek = today.getDay();
-  
+
   const monday = new Date(today);
   const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
   monday.setDate(today.getDate() - daysToMonday);
   monday.setHours(0, 0, 0, 0);
-  
+
   const weekDates = [];
   for (let i = 0; i < 7; i++) {
     const date = new Date(monday);
     date.setDate(monday.getDate() + i);
     weekDates.push({
       date: date,
-      dateStr: date.toISOString().split('T')[0],
-      dayName: date.toLocaleDateString('en-US', { weekday: 'long' }),
+      dateStr: date.toISOString().split("T")[0],
+      dayName: date.toLocaleDateString("en-US", { weekday: "long" }),
       timestamp: Math.floor(date.getTime() / 1000),
     });
   }
-  
+
   return weekDates;
 }
 
@@ -105,7 +105,7 @@ function processWeeklyTVLData(protocolData, weekDates) {
 
     weeklyData[chainKey] = {
       name: chainName,
-      daily: []
+      daily: [],
     };
 
     for (const dayInfo of weekDates) {
@@ -145,11 +145,11 @@ function displayWeeklyTVL(weeklyData, weekDates) {
     for (const day of chainInfo.daily) {
       const barLength = maxTVL > 0 ? Math.floor((day.tvl / maxTVL) * MAX_BAR_LENGTH) : 0;
       const bar = "█".repeat(barLength);
-      
+
       const dayLabel = day.dayName.padEnd(10);
       const dateLabel = day.date.padEnd(12);
       const tvlLabel = formatUSD(day.tvl).padStart(18);
-      
+
       console.log(`${dayLabel} ${dateLabel} ${tvlLabel} ${chalk.green(bar)}`);
     }
 
@@ -162,7 +162,7 @@ function displayWeeklyTVL(weeklyData, weekDates) {
     console.log("─".repeat(80));
     console.log(
       `Week Change: ${changeColor(`${changeSymbol}${weekChange.toFixed(2)}%`)} ` +
-      `(${formatUSD(weekStart)} → ${formatUSD(weekEnd)})`
+        `(${formatUSD(weekStart)} → ${formatUSD(weekEnd)})`
     );
   }
 

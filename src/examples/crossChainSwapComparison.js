@@ -14,12 +14,7 @@ const { compareQuotes, getCommonToken } = require("../swaps/swap");
  * @param {string} amountIn - Amount to swap (in human-readable units)
  * @returns {Promise<Array>} Comparison results
  */
-async function compareCrossChain(
-  chains,
-  tokenSymbolIn,
-  tokenSymbolOut,
-  amountIn,
-) {
+async function compareCrossChain(chains, tokenSymbolIn, tokenSymbolOut, amountIn) {
   console.log(`\n=== Cross-Chain Swap Comparison ===`);
   console.log(`Swapping ${amountIn} ${tokenSymbolIn} for ${tokenSymbolOut}\n`);
 
@@ -44,15 +39,10 @@ async function compareCrossChain(
       const amountInWei = ethers.parseUnits(amountIn, decimals);
 
       // Get quotes from all versions on this chain
-      const quotes = await compareQuotes(
-        chain,
-        tokenIn,
-        tokenOut,
-        amountInWei.toString(),
-      );
+      const quotes = await compareQuotes(chain, tokenIn, tokenOut, amountInWei.toString());
 
       // Find best quote on this chain
-      const availableQuotes = quotes.filter((q) => q.available);
+      const availableQuotes = quotes.filter(q => q.available);
       if (availableQuotes.length === 0) {
         console.log(`  No available quotes`);
         results.push({
@@ -65,9 +55,7 @@ async function compareCrossChain(
       }
 
       const bestQuote = availableQuotes.reduce((best, current) => {
-        return BigInt(current.amountOut) > BigInt(best.amountOut)
-          ? current
-          : best;
+        return BigInt(current.amountOut) > BigInt(best.amountOut) ? current : best;
       });
 
       // Format output amount (assume 6 decimals for stablecoins)
@@ -104,7 +92,7 @@ async function compareCrossChain(
  * Find best execution chain
  */
 function findBestChain(results) {
-  const available = results.filter((r) => r.available);
+  const available = results.filter(r => r.available);
 
   if (available.length === 0) {
     return null;
@@ -119,24 +107,20 @@ function findBestChain(results) {
  * Calculate price impact between chains
  */
 function calculatePriceImpact(results) {
-  const available = results.filter((r) => r.available);
+  const available = results.filter(r => r.available);
 
   if (available.length < 2) {
     return [];
   }
 
   const impacts = [];
-  const sorted = [...available].sort((a, b) =>
-    BigInt(b.amountOut) > BigInt(a.amountOut) ? 1 : -1,
-  );
+  const sorted = [...available].sort((a, b) => (BigInt(b.amountOut) > BigInt(a.amountOut) ? 1 : -1));
 
   const best = sorted[0];
 
   for (let i = 1; i < sorted.length; i++) {
     const current = sorted[i];
-    const impactBps =
-      ((BigInt(best.amountOut) - BigInt(current.amountOut)) * BigInt(10000)) /
-      BigInt(best.amountOut);
+    const impactBps = ((BigInt(best.amountOut) - BigInt(current.amountOut)) * BigInt(10000)) / BigInt(best.amountOut);
 
     impacts.push({
       chain: current.chainName,
@@ -151,25 +135,14 @@ function calculatePriceImpact(results) {
 
 async function main() {
   // Configuration
-  const CHAINS_TO_COMPARE = [
-    "ethereum",
-    "arbitrum",
-    "optimism",
-    "base",
-    "polygon",
-  ];
+  const CHAINS_TO_COMPARE = ["ethereum", "arbitrum", "optimism", "base", "polygon"];
   const TOKEN_IN = "WETH";
   const TOKEN_OUT = "USDC";
   const AMOUNT = "0.1"; // 0.1 WETH
 
   try {
     // Compare quotes across chains
-    const results = await compareCrossChain(
-      CHAINS_TO_COMPARE,
-      TOKEN_IN,
-      TOKEN_OUT,
-      AMOUNT,
-    );
+    const results = await compareCrossChain(CHAINS_TO_COMPARE, TOKEN_IN, TOKEN_OUT, AMOUNT);
 
     // Find best execution venue
     const bestChain = findBestChain(results);
@@ -190,10 +163,8 @@ async function main() {
     const impacts = calculatePriceImpact(results);
     if (impacts.length > 0) {
       console.log(`\n\n💸 Price Impact Comparison (vs best):`);
-      impacts.forEach((impact) => {
-        console.log(
-          `  ${impact.chain} (${impact.version}): -${impact.impactPercent}% worse`,
-        );
+      impacts.forEach(impact => {
+        console.log(`  ${impact.chain} (${impact.version}): -${impact.impactPercent}% worse`);
       });
     }
 
@@ -202,12 +173,12 @@ async function main() {
     console.log(`${"Chain".padEnd(15)} ${"Version".padEnd(8)} ${"Output".padEnd(20)}`);
     console.log("-".repeat(45));
 
-    results.forEach((result) => {
+    results.forEach(result => {
       if (result.available) {
         const isBest = bestChain && result.chain === bestChain.chain;
         const marker = isBest ? "🏆" : "  ";
         console.log(
-          `${marker} ${result.chainName.padEnd(15)} ${result.bestVersion.toUpperCase().padEnd(8)} ${result.formattedOut.padEnd(20)}`,
+          `${marker} ${result.chainName.padEnd(15)} ${result.bestVersion.toUpperCase().padEnd(8)} ${result.formattedOut.padEnd(20)}`
         );
       } else {
         console.log(`  ${result.chainName.padEnd(15)} N/A      ${result.error}`);
@@ -217,9 +188,7 @@ async function main() {
     // Arbitrage opportunity detection
     if (impacts.length > 0 && impacts[impacts.length - 1].impactBps > 50) {
       console.log(`\n\n💡 Potential Arbitrage Opportunity Detected!`);
-      console.log(
-        `  Price difference > 0.5% between ${bestChain.chainName} and ${impacts[impacts.length - 1].chain}`,
-      );
+      console.log(`  Price difference > 0.5% between ${bestChain.chainName} and ${impacts[impacts.length - 1].chain}`);
       console.log(`  Consider cross-chain arbitrage (account for bridge costs)`);
     }
   } catch (error) {

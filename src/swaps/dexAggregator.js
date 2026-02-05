@@ -5,7 +5,13 @@
  */
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
-const { validateChainKey, validateWallet, validateAddress, validateAmount, validateSlippage } = require("../utils/validation");
+const {
+  validateChainKey,
+  validateWallet,
+  validateAddress,
+  validateAmount,
+  validateSlippage,
+} = require("../utils/validation");
 const uniswapSwap = require("./swap");
 const sushiswapSwap = require("./sushiswapSwap");
 const curveSwap = require("./curveSwap");
@@ -22,15 +28,11 @@ const balancerSwap = require("./balancerSwap");
  */
 async function getBestQuote(chainKey, tokenIn, tokenOut, amountIn, options = {}) {
   validateChainKey(chainKey);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
 
-  const {
-    curvePoolAddress = null,
-    curveTokenIndices = null,
-    balancerPoolId = null,
-  } = options;
+  const { curvePoolAddress = null, curveTokenIndices = null, balancerPoolId = null } = options;
 
   console.log(`\nComparing quotes across all DEX protocols on ${CHAINS[chainKey].name}...`);
 
@@ -40,8 +42,8 @@ async function getBestQuote(chainKey, tokenIn, tokenOut, amountIn, options = {})
   try {
     const uniV2 = await uniswapSwap.getV2Quote(chainKey, tokenIn, tokenOut, amountIn);
     quotes.push({
-      protocol: 'uniswap',
-      version: 'v2',
+      protocol: "uniswap",
+      version: "v2",
       amountOut: uniV2.amountOut,
       details: { path: uniV2.path },
     });
@@ -52,8 +54,8 @@ async function getBestQuote(chainKey, tokenIn, tokenOut, amountIn, options = {})
   try {
     const uniV3 = await uniswapSwap.getV3Quote(chainKey, tokenIn, tokenOut, amountIn);
     quotes.push({
-      protocol: 'uniswap',
-      version: 'v3',
+      protocol: "uniswap",
+      version: "v3",
       amountOut: uniV3.amountOut,
       details: { fee: uniV3.fee },
     });
@@ -64,8 +66,8 @@ async function getBestQuote(chainKey, tokenIn, tokenOut, amountIn, options = {})
   try {
     const uniV4 = await uniswapSwap.getV4Quote(chainKey, tokenIn, tokenOut, amountIn, 3000);
     quotes.push({
-      protocol: 'uniswap',
-      version: 'v4',
+      protocol: "uniswap",
+      version: "v4",
       amountOut: uniV4.amountOut,
       details: { fee: uniV4.fee },
     });
@@ -77,8 +79,8 @@ async function getBestQuote(chainKey, tokenIn, tokenOut, amountIn, options = {})
   try {
     const sushiV2 = await sushiswapSwap.getV2Quote(chainKey, tokenIn, tokenOut, amountIn);
     quotes.push({
-      protocol: 'sushiswap',
-      version: 'v2',
+      protocol: "sushiswap",
+      version: "v2",
       amountOut: sushiV2.amountOut,
       details: { path: sushiV2.path },
     });
@@ -89,8 +91,8 @@ async function getBestQuote(chainKey, tokenIn, tokenOut, amountIn, options = {})
   try {
     const sushiV3 = await sushiswapSwap.getV3Quote(chainKey, tokenIn, tokenOut, amountIn, 3000);
     quotes.push({
-      protocol: 'sushiswap',
-      version: 'v3',
+      protocol: "sushiswap",
+      version: "v3",
       amountOut: sushiV3.amountOut,
       details: { fee: sushiV3.fee },
     });
@@ -109,10 +111,10 @@ async function getBestQuote(chainKey, tokenIn, tokenOut, amountIn, options = {})
         amountIn
       );
       quotes.push({
-        protocol: 'curve',
-        version: 'pool',
+        protocol: "curve",
+        version: "pool",
         amountOut: curveQuote,
-        details: { 
+        details: {
           poolAddress: curvePoolAddress,
           indices: curveTokenIndices,
         },
@@ -148,7 +150,7 @@ function displayQuotes(quotes, bestQuote) {
   console.log("QUOTE COMPARISON");
   console.log("=".repeat(80));
 
-  quotes.forEach((quote) => {
+  quotes.forEach(quote => {
     const isBest = quote.protocol === bestQuote.protocol && quote.version === bestQuote.version;
     const marker = isBest ? " ← BEST" : "";
     const protocolName = `${quote.protocol.toUpperCase()} ${quote.version.toUpperCase()}`;
@@ -172,9 +174,9 @@ function displayQuotes(quotes, bestQuote) {
 async function swapTokens(chainKey, wallet, tokenIn, tokenOut, amountIn, options = {}) {
   validateChainKey(chainKey);
   validateWallet(wallet);
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
 
   const {
     slippageBps = 50,
@@ -223,7 +225,7 @@ async function swapTokens(chainKey, wallet, tokenIn, tokenOut, amountIn, options
     amountIn,
     slippageBps,
     recipient,
-    { 
+    {
       version: bestQuote.version,
       curvePoolAddress: bestQuote.details?.poolAddress,
       curveTokenIndices: bestQuote.details?.indices,
@@ -236,9 +238,19 @@ async function swapTokens(chainKey, wallet, tokenIn, tokenOut, amountIn, options
 /**
  * Execute swap on specific protocol
  */
-async function executeSwapOnProtocol(protocol, chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps, recipient, details = {}) {
+async function executeSwapOnProtocol(
+  protocol,
+  chainKey,
+  wallet,
+  tokenIn,
+  tokenOut,
+  amountIn,
+  slippageBps,
+  recipient,
+  details = {}
+) {
   switch (protocol.toLowerCase()) {
-    case 'uniswap':
+    case "uniswap":
       return await uniswapSwap.swapTokens(chainKey, wallet, tokenIn, tokenOut, amountIn, {
         slippageBps,
         recipient,
@@ -246,7 +258,7 @@ async function executeSwapOnProtocol(protocol, chainKey, wallet, tokenIn, tokenO
         v3Fee: details.fee,
       });
 
-    case 'sushiswap':
+    case "sushiswap":
       return await sushiswapSwap.swapTokens(chainKey, wallet, tokenIn, tokenOut, amountIn, {
         slippageBps,
         recipient,
@@ -254,7 +266,7 @@ async function executeSwapOnProtocol(protocol, chainKey, wallet, tokenIn, tokenO
         fee: details.fee,
       });
 
-    case 'curve':
+    case "curve":
       if (!details.curvePoolAddress || !details.curveTokenIndices) {
         throw new Error("Curve swaps require poolAddress and tokenIndices");
       }
@@ -270,7 +282,7 @@ async function executeSwapOnProtocol(protocol, chainKey, wallet, tokenIn, tokenO
         slippageBps
       );
 
-    case 'balancer':
+    case "balancer":
       if (!details.balancerPoolId) {
         throw new Error("Balancer swaps require poolId");
       }

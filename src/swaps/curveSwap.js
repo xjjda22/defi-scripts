@@ -5,7 +5,13 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const { getProvider } = require("../utils/web3");
-const { validateChainKey, validateWallet, validateAddress, validateAmount, validateSlippage } = require("../utils/validation");
+const {
+  validateChainKey,
+  validateWallet,
+  validateAddress,
+  validateAmount,
+  validateSlippage,
+} = require("../utils/validation");
 const POOL_ABI = require("../abis/CurvePool.json");
 const ERC20_ABI = require("../abis/IERC20.json");
 
@@ -20,8 +26,8 @@ const ERC20_ABI = require("../abis/IERC20.json");
  */
 async function getQuote(chainKey, poolAddress, i, j, amountIn) {
   validateChainKey(chainKey);
-  validateAddress(poolAddress, 'poolAddress');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(poolAddress, "poolAddress");
+  validateAmount(amountIn, "amountIn");
 
   const provider = getProvider(chainKey);
   const pool = new ethers.Contract(poolAddress, POOL_ABI, provider);
@@ -43,7 +49,7 @@ async function getQuote(chainKey, poolAddress, i, j, amountIn) {
  */
 async function getPoolInfo(chainKey, poolAddress, numCoins = 2) {
   validateChainKey(chainKey);
-  validateAddress(poolAddress, 'poolAddress');
+  validateAddress(poolAddress, "poolAddress");
 
   const provider = getProvider(chainKey);
   const pool = new ethers.Contract(poolAddress, POOL_ABI, provider);
@@ -51,7 +57,7 @@ async function getPoolInfo(chainKey, poolAddress, numCoins = 2) {
   try {
     const coins = [];
     const balances = [];
-    
+
     for (let i = 0; i < numCoins; i++) {
       const coin = await pool.coins(i);
       const balance = await pool.balances(i);
@@ -61,7 +67,7 @@ async function getPoolInfo(chainKey, poolAddress, numCoins = 2) {
 
     const fee = await pool.fee();
     const virtualPrice = await pool.get_virtual_price();
-    
+
     let amplification = null;
     try {
       amplification = await pool.A();
@@ -98,10 +104,10 @@ async function swapTokens(chainKey, wallet, poolAddress, tokenIn, tokenOut, i, j
   // If multiple pools provided, compare and pick best
   if (Array.isArray(poolAddress)) {
     console.log(`Comparing ${poolAddress.length} Curve pools...`);
-    
+
     let bestPool = null;
     let bestQuote = BigInt(0);
-    
+
     for (const pool of poolAddress) {
       try {
         const quote = await getQuote(chainKey, pool, i, j, amountIn);
@@ -113,15 +119,15 @@ async function swapTokens(chainKey, wallet, poolAddress, tokenIn, tokenOut, i, j
         console.log(`Pool ${pool}: Failed to get quote`);
       }
     }
-    
+
     if (!bestPool) {
       throw new Error("No valid Curve pools found");
     }
-    
+
     console.log(`Best Curve pool: ${bestPool}`);
     poolAddress = bestPool;
   }
-  
+
   return await executeSwap(chainKey, wallet, poolAddress, tokenIn, tokenOut, i, j, amountIn, slippageBps);
 }
 
@@ -131,18 +137,18 @@ async function swapTokens(chainKey, wallet, poolAddress, tokenIn, tokenOut, i, j
 async function executeSwap(chainKey, wallet, poolAddress, tokenIn, tokenOut, i, j, amountIn, slippageBps) {
   validateChainKey(chainKey);
   validateWallet(wallet);
-  validateAddress(poolAddress, 'poolAddress');
-  validateAddress(tokenIn, 'tokenIn');
-  validateAddress(tokenOut, 'tokenOut');
-  validateAmount(amountIn, 'amountIn');
+  validateAddress(poolAddress, "poolAddress");
+  validateAddress(tokenIn, "tokenIn");
+  validateAddress(tokenOut, "tokenOut");
+  validateAmount(amountIn, "amountIn");
   validateSlippage(slippageBps);
 
   const provider = wallet.provider || getProvider(chainKey);
   const walletWithProvider = wallet.connect(provider);
-  
+
   const pool = new ethers.Contract(poolAddress, POOL_ABI, walletWithProvider);
   const tokenInContract = new ethers.Contract(tokenIn, ERC20_ABI, walletWithProvider);
-  
+
   const allowance = await tokenInContract.allowance(wallet.address, poolAddress);
   if (BigInt(allowance) < BigInt(amountIn)) {
     console.log("Approving Curve pool...");
@@ -159,7 +165,7 @@ async function executeSwap(chainKey, wallet, poolAddress, tokenIn, tokenOut, i, 
 
   const tx = await pool.exchange(i, j, amountIn, minAmountOut);
   const receipt = await tx.wait();
-  
+
   return {
     hash: receipt.hash,
     amountOut: quote,
@@ -182,10 +188,10 @@ module.exports = {
  */
 async function findTokenIndices(chainKey, poolAddress, tokenIn, tokenOut, numCoins = 2) {
   const poolInfo = await getPoolInfo(chainKey, poolAddress, numCoins);
-  
+
   let indexIn = -1;
   let indexOut = -1;
-  
+
   for (let i = 0; i < poolInfo.coins.length; i++) {
     if (poolInfo.coins[i].toLowerCase() === tokenIn.toLowerCase()) {
       indexIn = i;
@@ -194,11 +200,10 @@ async function findTokenIndices(chainKey, poolAddress, tokenIn, tokenOut, numCoi
       indexOut = i;
     }
   }
-  
+
   if (indexIn === -1 || indexOut === -1) {
     throw new Error("Tokens not found in pool");
   }
-  
+
   return { i: indexIn, j: indexOut };
 }
-

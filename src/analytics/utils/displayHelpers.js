@@ -34,7 +34,7 @@ function printSection(title) {
  */
 function createTable(headers, options = {}) {
   return new Table({
-    head: headers.map((h) => chalk.bold.white(h)),
+    head: headers.map(h => chalk.bold.white(h)),
     style: {
       head: [],
       border: ["gray"],
@@ -72,7 +72,7 @@ function formatCurrency(value, decimals = 2) {
 function formatPercent(value, decimals = 2, withColor = false) {
   const formatted = `${value >= 0 ? "+" : ""}${value.toFixed(decimals)}%`;
   if (!withColor) return formatted;
-  
+
   if (value > 0) return chalk.green(formatted);
   if (value < 0) return chalk.red(formatted);
   return formatted;
@@ -219,7 +219,7 @@ function createProgressBar(current, total, width = 20) {
   const percentage = (current / total) * 100;
   const filled = Math.floor((current / total) * width);
   const empty = width - filled;
-  
+
   const bar = "█".repeat(filled) + "░".repeat(empty);
   return `${bar} ${percentage.toFixed(1)}%`;
 }
