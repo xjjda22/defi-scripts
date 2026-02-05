@@ -1,21 +1,6 @@
 /**
  * Uniswap TVL Tracker - Current State Analysis
- *
- * PURPOSE: Tracks current Total Value Locked (TVL) across Uniswap V1-V4
- *          protocols for multiple chains
- *
- * DATA SOURCES:
- * - Primary: DefiLlama Protocol API (https://api.llama.fi)
- * - Chains: Ethereum, Arbitrum, Optimism, Base, Polygon, BSC
- * - Protocols: uniswap-v1, uniswap-v2, uniswap-v3, uniswap-v4
- *
- * ANALYSIS: Current TVL snapshot across all supported protocols
- *
- * OUTPUT:
- * - Console: Formatted TVL breakdown tables
- * - CSV: Current TVL data by chain and version
- *
- * USAGE: node tvlTracker.js
+ * Tracks TVL across Uniswap V1-V4 protocols for multiple chains
  */
 
 require("dotenv").config();
@@ -25,17 +10,8 @@ const { formatUSD } = require("../../utils/prices");
 const { writeCSV } = require("../../utils/csv");
 const { printUniswapLogo } = require("../../utils/ascii");
 
-// ================================================================================================
-// CONFIGURATION CONSTANTS
-// ================================================================================================
-
-/** @type {string} Base URL for DefiLlama API */
 const DEFILLAMA_API = "https://api.llama.fi";
-
-/** @type {string[]} Supported Uniswap protocol versions */
 const UNISWAP_VERSIONS = ["uniswap-v1", "uniswap-v2", "uniswap-v3", "uniswap-v4"];
-
-/** @type {Object.<string, string>} Maps internal chain keys to DefiLlama chain names */
 const CHAIN_MAPPING = {
   ethereum: "Ethereum",
   arbitrum: "Arbitrum",
@@ -44,19 +20,7 @@ const CHAIN_MAPPING = {
   polygon: "Polygon",
   bsc: "Binance",
 };
-
-/** @type {number} API request timeout (ms) */
 const API_TIMEOUT_MS = 10000;
-
-// ================================================================================================
-// DATA FETCHING FUNCTIONS
-// ================================================================================================
-
-/**
- * Fetches current TVL data for a specific chain across all Uniswap versions
- * @param {string} chainName - Name of the blockchain (DefiLlama format)
- * @returns {Promise<Object>} TVL data by version and totals
- */
 async function getUniswapTVL(chainName) {
   const tvlData = {};
 
@@ -65,8 +29,6 @@ async function getUniswapTVL(chainName) {
       const response = await axios.get(`${DEFILLAMA_API}/protocol/${protocol}`, {
         timeout: API_TIMEOUT_MS,
       });
-
-      // DefiLlama uses chain names (capitalized) in currentChainTvls
       const chainTVL = response.data.currentChainTvls?.[chainName] || 0;
       tvlData[protocol] = chainTVL;
     } catch (error) {
@@ -75,7 +37,6 @@ async function getUniswapTVL(chainName) {
     }
   }
 
-  // Extract individual versions for cleaner return structure
   const v1 = tvlData["uniswap-v1"] || 0;
   const v2 = tvlData["uniswap-v2"] || 0;
   const v3 = tvlData["uniswap-v3"] || 0;
@@ -162,7 +123,7 @@ async function generateReport() {
   const tvlData = await getPoolTVLBreakdown();
 
   if (!tvlData || tvlData.length === 0) {
-    console.log(`❌ ERROR: No TVL data available`);
+    console.log(` ERROR: No TVL data available`);
     return;
   }
 
@@ -180,7 +141,7 @@ async function generateReport() {
   // Export data
   await exportToCSV(tvlData);
 
-  console.log(`✅ REPORT COMPLETE: Current TVL analysis generated successfully`);
+  console.log(` REPORT COMPLETE: Current TVL analysis generated successfully`);
 }
 
 /**

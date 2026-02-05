@@ -1,19 +1,6 @@
 /**
- * Uniswap Weekly TVL Tracker - Optimized for AI Analysis
- *
- * PURPOSE: Tracks daily TVL (Total Value Locked) stats across Uniswap V1-V4
- *          for multiple chains over the current week (Monday-Sunday)
- *
- * DATA SOURCES:
- * - Primary: DefiLlama Protocol API (https://api.llama.fi)
- * - Chains: Ethereum, Arbitrum, Optimism, Base, Polygon, BSC
- * - Protocols: uniswap-v1, uniswap-v2, uniswap-v3, uniswap-v4
- *
- * OUTPUT:
- * - Console: Formatted tables and visualizations
- * - CSV: Detailed daily breakdown by chain and version
- *
- * USAGE: node weeklyTvlTracker.js
+ * Uniswap Weekly TVL Tracker
+ * Tracks daily TVL stats across Uniswap V1-V4 for multiple chains
  */
 
 require("dotenv").config();
@@ -23,30 +10,17 @@ const { formatUSD } = require("../../utils/prices");
 const { writeCSV } = require("../../utils/csv");
 const { printUniswapLogo } = require("../../utils/ascii");
 
-// ================================================================================================
-// CONFIGURATION CONSTANTS
-// ================================================================================================
-
-/** @type {string} Base URL for DefiLlama API */
 const DEFILLAMA_API = "https://api.llama.fi";
-
-/** @type {string[]} Supported Uniswap protocol versions */
 const UNISWAP_VERSIONS = ["uniswap-v1", "uniswap-v2", "uniswap-v3", "uniswap-v4"];
-
-/** @type {Object.<string, string>} Maps internal chain keys to DefiLlama chain names */
 const CHAIN_MAPPING = {
   ethereum: "Ethereum",
   arbitrum: "Arbitrum",
-  optimism: "Optimism", // Note: Different from volume tracker ("OP Mainnet")
+  optimism: "Optimism",
   base: "Base",
   polygon: "Polygon",
-  bsc: "Binance", // Note: Different from volume tracker ("BSC")
+  bsc: "Binance",
 };
-
-/** @type {number} Rate limiting delay between API calls (ms) */
 const API_RATE_LIMIT_MS = 500;
-
-/** @type {number} API request timeout (ms) */
 const API_TIMEOUT_MS = 10000;
 
 /** @type {number} Maximum bar length for trend visualization */
@@ -414,7 +388,7 @@ async function generateReport() {
   const weeklyData = await getWeeklyStats();
 
   if (!weeklyData || weeklyData.length === 0) {
-    console.log(`❌ ERROR: No weekly data available`);
+    console.log(` ERROR: No weekly data available`);
     return;
   }
 
@@ -430,7 +404,7 @@ async function generateReport() {
   // Export data
   await exportToCSV(weeklyData);
 
-  console.log(`✅ REPORT COMPLETE: Weekly TVL analysis generated successfully`);
+  console.log(` REPORT COMPLETE: Weekly TVL analysis generated successfully`);
 }
 
 /**

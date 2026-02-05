@@ -1,22 +1,6 @@
 /**
  * Uniswap Liquidity Tracker - On-Chain Analysis
- *
- * PURPOSE: Tracks real-time liquidity flows across Uniswap V2, V3, and V4
- *          by analyzing on-chain events and contract states
- *
- * DATA SOURCES:
- * - Primary: Direct blockchain RPC calls (ethers.js)
- * - Events: Mint/Burn (V2), Increase/DecreaseLiquidity (V3), ModifyLiquidity (V4)
- * - Chains: Ethereum, Arbitrum, Optimism, Base, Polygon, BSC
- * - Protocols: Uniswap V2, V3, and V4
- *
- * ANALYSIS: Real-time liquidity provision and removal tracking
- *
- * OUTPUT:
- * - Console: Live liquidity flow monitoring
- * - CSV: Historical liquidity event data
- *
- * USAGE: node liquidityTracker.js
+ * Tracks real-time liquidity flows across Uniswap V2, V3, and V4
  */
 
 require("dotenv").config();
@@ -28,35 +12,22 @@ const { formatUSD } = require("../../utils/prices");
 const { writeCSV } = require("../../utils/csv");
 const { printUniswapLogo } = require("../../utils/ascii");
 
-// ================================================================================================
-// CONFIGURATION CONSTANTS
-// ================================================================================================
-
-/** @type {number} Maximum number of events to process per run */
 const MAX_EVENTS_PER_RUN = 10000;
-
-/** @type {number} Rate limiting delay between contract calls (ms) */
 const CONTRACT_CALL_DELAY_MS = 100;
-
-/** @type {Object.<string, Object>} Contract addresses by chain and protocol */
 const CONTRACT_ADDRESSES = {
   ethereum: {
     v2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
     v3Factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
     v3PositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
-    v4PoolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90", // Fixed: Match chains.js config
+    v4PoolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
   },
-  // Add other chains as needed
 };
-
-/** @type {Object.<string, number>} Default gas limits for different operations */
 const GAS_LIMITS = {
   getReserves: 30000,
   getPool: 50000,
   positions: 100000,
 };
 
-// ============================================================================
 // ABIs
 // ============================================================================
 
@@ -210,7 +181,7 @@ async function trackV2Liquidity(chainKey, token0Address, token1Address) {
 
         await new Promise((resolve) => setTimeout(resolve, 200));
       } catch (chunkError) {
-        console.warn(`      ⚠️  Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
+        console.warn(`        Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
       }
     }
 
@@ -332,7 +303,7 @@ async function trackV3Liquidity(chainKey, token0Address, token1Address, feeTier)
 
       await new Promise((resolve) => setTimeout(resolve, 200));
     } catch (chunkError) {
-      console.warn(`      ⚠️  Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
+      console.warn(`        Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
     }
   }
 
@@ -403,7 +374,7 @@ async function trackV3AllFeeTiers(chainKey, token0Address, token1Address) {
       const flows = await trackV3Liquidity(chainKey, token0Address, token1Address, feeTier);
       allFlows.push(...flows);
     } catch (error) {
-      console.warn(`   ⚠️  Error tracking V3 fee tier ${feeTier}:`, error.message);
+      console.warn(`     Error tracking V3 fee tier ${feeTier}:`, error.message);
     }
   }
   
@@ -456,7 +427,7 @@ async function trackV4Liquidity(chainKey, token0Address, token1Address) {
 
       await new Promise((resolve) => setTimeout(resolve, 200));
     } catch (chunkError) {
-      console.warn(`      ⚠️  Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
+      console.warn(`        Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
     }
   }
 
@@ -521,7 +492,7 @@ async function trackV4Initialize(chainKey) {
       allInitializations.push(...initEvents);
       await new Promise((resolve) => setTimeout(resolve, 200));
     } catch (chunkError) {
-      console.warn(`      ⚠️  Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
+      console.warn(`        Error querying blocks ${fromBlock}-${toBlock}: ${chunkError.message}`);
     }
   }
 
@@ -556,7 +527,7 @@ async function trackV4Initialize(chainKey) {
 // ============================================================================
 
 async function trackAllVersions(chainKey, token0Address, token1Address) {
-  console.log(`\n   🔄 Processing ${CHAINS[chainKey]?.name || chainKey}...`);
+  console.log(`\n    Processing ${CHAINS[chainKey]?.name || chainKey}...`);
 
   const allFlows = [];
 
@@ -565,9 +536,9 @@ async function trackAllVersions(chainKey, token0Address, token1Address) {
     console.log(`      📦 V2...`);
     const v2Flows = await trackV2Liquidity(chainKey, token0Address, token1Address);
     allFlows.push(...v2Flows);
-    console.log(`      ✅ V2: ${v2Flows.length} events`);
+    console.log(`       V2: ${v2Flows.length} events`);
   } catch (error) {
-    console.warn(`      ⚠️  V2 Error: ${error.message}`);
+    console.warn(`        V2 Error: ${error.message}`);
   }
 
   // Track V3 (all fee tiers)
@@ -575,9 +546,9 @@ async function trackAllVersions(chainKey, token0Address, token1Address) {
     console.log(`      📦 V3...`);
     const v3Flows = await trackV3AllFeeTiers(chainKey, token0Address, token1Address);
     allFlows.push(...v3Flows);
-    console.log(`      ✅ V3: ${v3Flows.length} events`);
+    console.log(`       V3: ${v3Flows.length} events`);
   } catch (error) {
-    console.warn(`      ⚠️  V3 Error: ${error.message}`);
+    console.warn(`        V3 Error: ${error.message}`);
   }
 
   // Track V4
@@ -585,9 +556,9 @@ async function trackAllVersions(chainKey, token0Address, token1Address) {
     console.log(`      📦 V4...`);
     const v4Flows = await trackV4Liquidity(chainKey, token0Address, token1Address);
     allFlows.push(...v4Flows);
-    console.log(`      ✅ V4: ${v4Flows.length} events`);
+    console.log(`       V4: ${v4Flows.length} events`);
   } catch (error) {
-    console.warn(`      ⚠️  V4 Error: ${error.message}`);
+    console.warn(`        V4 Error: ${error.message}`);
   }
 
   return allFlows;
@@ -613,7 +584,7 @@ async function generateReport() {
   console.log(``);
 
   console.log(`[INFO] Starting comprehensive liquidity analysis across all chains`);
-  console.log(`ℹ️  Analyzing last ${BLOCKS_TO_ANALYZE} blocks per chain\n`);
+  console.log(`  Analyzing last ${BLOCKS_TO_ANALYZE} blocks per chain\n`);
 
   const allFlows = [];
   const chainsToTrack = ["ethereum", "arbitrum", "optimism", "base", "polygon", "bsc"];
@@ -626,7 +597,7 @@ async function generateReport() {
   for (const chainKey of chainsToTrack) {
     const chain = CHAINS[chainKey];
     if (!chain?.rpcUrl) {
-      console.log(`⏭️  Skipping ${chainKey} (no RPC configured)`);
+      console.log(`  Skipping ${chainKey} (no RPC configured)`);
       continue;
     }
 
@@ -634,16 +605,16 @@ async function generateReport() {
     const token1Address = COMMON_TOKENS[tokenPair.token1]?.[chainKey];
 
     if (!token0Address || !token1Address) {
-      console.log(`⏭️  Skipping ${chain.name} (tokens not configured)`);
+      console.log(`  Skipping ${chain.name} (tokens not configured)`);
       continue;
     }
 
     try {
       const flows = await trackAllVersions(chainKey, token0Address, token1Address);
       allFlows.push(...flows.map((f) => ({ ...f, pair: tokenPair.symbol })));
-      console.log(`   ✅ ${chain.name}: ${flows.length} total liquidity events\n`);
+      console.log(`    ${chain.name}: ${flows.length} total liquidity events\n`);
     } catch (error) {
-      console.error(`   ❌ Error on ${chain.name}:`, error.message);
+      console.error(`    Error on ${chain.name}:`, error.message);
       if (process.env.DEBUG) {
         console.error(error.stack);
       }
@@ -651,7 +622,7 @@ async function generateReport() {
   }
 
   if (allFlows.length === 0) {
-    console.log(`\n✅ No liquidity flows detected in analyzed blocks.\n`);
+    console.log(`\n No liquidity flows detected in analyzed blocks.\n`);
     console.log(`💡 Try increasing BLOCKS_TO_ANALYZE or using START_BLOCK to analyze different periods.\n`);
     return;
   }
@@ -812,7 +783,7 @@ async function generateReport() {
     csvData
   );
 
-  console.log(`\n✅ Unified report generated: output/uniswap-liquidity-flows-all.csv\n`);
+  console.log(`\n Unified report generated: output/uniswap-liquidity-flows-all.csv\n`);
 
   // Generate summary CSV
   const summaryData = [
@@ -847,7 +818,7 @@ async function generateReport() {
     summaryData
   );
 
-  console.log(`✅ Summary report: output/uniswap-liquidity-summary.csv\n`);
+  console.log(` Summary report: output/uniswap-liquidity-summary.csv\n`);
 }
 
 // ============================================================================

@@ -1,21 +1,6 @@
 /**
  * Uniswap Volume Tracker - Current Trading Volume Analysis
- *
- * PURPOSE: Tracks current 24-hour trading volume across Uniswap V1-V4
- *          protocols for multiple chains
- *
- * DATA SOURCES:
- * - Primary: DefiLlama Fees API (https://api.llama.fi)
- * - Chains: Ethereum, Arbitrum, Optimism, Base, Polygon, BSC
- * - Protocols: uniswap-v1, uniswap-v2, uniswap-v3, uniswap-v4
- *
- * ANALYSIS: Latest 24h volume snapshot across all supported protocols
- *
- * OUTPUT:
- * - Console: Formatted volume breakdown tables
- * - CSV: Current volume data by chain and version
- *
- * USAGE: node volumeTracker.js
+ * Tracks 24-hour trading volume across Uniswap V1-V4 for multiple chains
  */
 
 require("dotenv").config();
@@ -25,27 +10,16 @@ const { formatUSD } = require("../../utils/prices");
 const { writeCSV } = require("../../utils/csv");
 const { printUniswapLogo } = require("../../utils/ascii");
 
-// ================================================================================================
-// CONFIGURATION CONSTANTS
-// ================================================================================================
-
-/** @type {string} Base URL for DefiLlama API */
 const DEFILLAMA_API = "https://api.llama.fi";
-
-/** @type {string[]} Supported Uniswap protocol versions */
 const UNISWAP_VERSIONS = ["v1", "v2", "v3", "v4"];
-
-/** @type {Object.<string, string>} Maps internal chain keys to DefiLlama chain names */
 const CHAIN_MAPPING = {
   ethereum: "Ethereum",
   arbitrum: "Arbitrum",
-  optimism: "OP Mainnet", // Note: Different from TVL tracker
+  optimism: "OP Mainnet",
   base: "Base",
   polygon: "Polygon",
-  bsc: "BSC", // Note: Different from TVL tracker ("Binance")
+  bsc: "BSC",
 };
-
-/** @type {number} API request timeout (ms) */
 const API_TIMEOUT_MS = 10000;
 
 // ================================================================================================
@@ -182,7 +156,7 @@ async function generateReport() {
   const volumes = await getChainVolumeFromDefiLlama();
 
   if (!volumes || volumes.length === 0) {
-    console.log(`❌ ERROR: No volume data available`);
+    console.log(` ERROR: No volume data available`);
     return;
   }
 
@@ -200,7 +174,7 @@ async function generateReport() {
   // Export data
   await exportVolumeToCSV(volumes);
 
-  console.log(`✅ REPORT COMPLETE: Current volume analysis generated successfully`);
+  console.log(` REPORT COMPLETE: Current volume analysis generated successfully`);
 }
 
 /**
