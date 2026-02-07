@@ -28,10 +28,6 @@ OPTIMISM_RPC_URL=https://opt-mainnet.g.alchemy.com/v2/YOUR_KEY
 BASE_RPC_URL=https://base-mainnet.g.alchemy.com/v2/YOUR_KEY
 POLYGON_RPC_URL=https://polygon-mainnet.g.alchemy.com/v2/YOUR_KEY
 BSC_RPC_URL=https://bsc-dataseed.binance.org/
-
-# For swaps, also set:
-PRIVATE_KEY=0x...  # Your wallet private key
-CHAIN=ethereum     # Target chain
 ```
 
 ## Scripts
@@ -77,10 +73,6 @@ Track lending rates and compare protocols:
 | **Aave Markets** | `npm run analytics:aave:markets` | Aave V3 supply/borrow rates across all chains |
 | **Aave Versions** | `npm run analytics:aave:versions` | Compare Aave V2 vs V3 with L1/L2 differentiation |
 
-**Coverage:**
-- 🔵 **L1:** Ethereum (V2 + V3)
-- 🔷 **L2:** Arbitrum, Optimism, Base (V3 only), Polygon (V2 + V3)
-- 💰 **Assets:** USDC, USDT, DAI, WETH, WBTC
 
 ### Other Analytics
 
