@@ -36,53 +36,6 @@ CHAIN=ethereum     # Target chain
 
 ## Scripts
 
-### Token Swaps
-
-Execute token swaps across multiple DEX protocols on all supported chains.
-
-#### Multi-Protocol DEX Aggregator
-| Script | Command | Description |
-|--------|---------|-------------|
-| **All DEX Auto-Route** | `npm run swap:autoroute` | Compares Uniswap, SushiSwap, Curve, Balancer - picks best |
-
-#### Per-Protocol Auto-Route Swaps
-| Protocol | Command | Auto-Routes Between | Description |
-|----------|---------|---------------------|-------------|
-| **Uniswap** | `npm run swap:example` | V2 / V3 / V4 | Auto-detects best Uniswap version |
-| **SushiSwap** | `npm run swap:sushiswap` | V2 / V3 | Auto-detects best SushiSwap version |
-| **Balancer** | `npm run swap:balancer` | V2 / V3 | Auto-detects best Balancer vault |
-| **Curve** | `npm run swap:curve` | Multiple pools | Can compare multiple Curve pools |
-
-#### Individual Protocol Versions
-| Protocol | Command | Description |
-|----------|---------|-------------|
-| **Uniswap V2** | `npm run swap:uniswap:v2` | Force Uniswap V2 with multi-hop routing |
-| **Uniswap V3** | `npm run swap:uniswap:v3` | Force Uniswap V3 with fee tier optimization |
-| **Uniswap V4** | `npm run swap:uniswap:v4` | Force Uniswap V4 singleton PoolManager |
-
-**Features:**
-- 🔄 Auto-routing to find best prices across versions
-- 💰 Quote comparison across V2, V3, and V4
-- 🎯 Slippage protection
-- 🔗 Multi-hop routing
-- ⚡ V3 fee tier optimization
-- 🆕 V4 hooks support
-
-**Quick Example:**
-```javascript
-const { swapTokens, getCommonToken } = require('./src/swaps/swap');
-
-// Auto-route to best price across V2/V3/V4
-const result = await swapTokens(
-  'ethereum',
-  wallet,
-  getCommonToken('WETH', 'ethereum'),
-  getCommonToken('USDC', 'ethereum'),
-  ethers.parseEther('0.1').toString(),
-  { slippageBps: 50 } // 0.5% slippage
-);
-```
-
 ### Cross-Chain Analytics
 
 Track TVL and volume across **all major DEXs** on 6 chains (Ethereum, Arbitrum, Optimism, Base, Polygon, BSC):
@@ -103,8 +56,37 @@ Track TVL and volume across **all major DEXs** on 6 chains (Ethereum, Arbitrum, 
 **Additional Uniswap Trackers:**
 - `npm run crosschain:uniswap:liquidity` - Liquidity flows via mint/burn events
 
-**Other Analytics:**
-- `npm run analytics:weekly:blocks` - Comprehensive block-level transaction and gas analysis
+### DEX Analytics
+
+Compare prices and analyze pools across different DEX protocols:
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| **Uniswap Prices** | `npm run analytics:uniswap:prices` | Compare V2/V3/V4 prices and fees |
+| **Curve Pools** | `npm run analytics:curve:pools` | Monitor pool balances and arbitrage opportunities |
+| **Balancer Pools** | `npm run analytics:balancer:pools` | Track weighted pools and impermanent loss |
+| **SushiSwap Pools** | `npm run analytics:sushiswap:pools` | Compare SushiSwap vs Uniswap prices |
+| **Multi-DEX Prices** | `npm run analytics:dex:prices` | Aggregate prices across all DEXs |
+
+### Lending Analytics
+
+Track lending rates and compare protocols:
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| **Aave Markets** | `npm run analytics:aave:markets` | Aave V3 supply/borrow rates across all chains |
+| **Aave Versions** | `npm run analytics:aave:versions` | Compare Aave V2 vs V3 with L1/L2 differentiation |
+
+**Coverage:**
+- 🔵 **L1:** Ethereum (V2 + V3)
+- 🔷 **L2:** Arbitrum, Optimism, Base (V3 only), Polygon (V2 + V3)
+- 💰 **Assets:** USDC, USDT, DAI, WETH, WBTC
+
+### Other Analytics
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| **Weekly Blocks** | `npm run analytics:weekly:blocks` | Block-level transaction and gas analysis |
 
 
 ## Planned Protocols
