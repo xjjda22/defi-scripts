@@ -138,6 +138,16 @@ const CHAINS = {
         router: "0x2E6cd2d30aa43f40aa81619ff4b6E0a41479B13F",
       },
     },
+    aave: {
+      v2: {
+        lendingPool: "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
+        dataProvider: "0x057835Ad21a177dbdd3090bB1CAE03EaCF78Fc6d",
+      },
+      v3: {
+        pool: "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
+        poolDataProvider: "0x7B4EB56E7CD4b454BA8ff71E4518426369a138a3",
+      },
+    },
   },
   arbitrum: {
     name: "Arbitrum",
@@ -184,6 +194,12 @@ const CHAINS = {
         factory: "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e",
         quoter: "0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1",
         router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
+      },
+    },
+    aave: {
+      v3: {
+        pool: "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
+        poolDataProvider: "0x69FA688f1Dc47d4B5d8029D5a35FB7a548310654",
       },
     },
   },
@@ -234,6 +250,12 @@ const CHAINS = {
         router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
       },
     },
+    aave: {
+      v3: {
+        pool: "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
+        poolDataProvider: "0x69FA688f1Dc47d4B5d8029D5a35FB7a548310654",
+      },
+    },
   },
   base: {
     name: "Base",
@@ -282,6 +304,12 @@ const CHAINS = {
         router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
       },
     },
+    aave: {
+      v3: {
+        pool: "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5",
+        poolDataProvider: "0x2d8A3C5677189723C4cB8873CfC9C8976FDF38Ac",
+      },
+    },
   },
   polygon: {
     name: "Polygon",
@@ -328,6 +356,16 @@ const CHAINS = {
         factory: "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e",
         quoter: "0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1",
         router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
+      },
+    },
+    aave: {
+      v2: {
+        lendingPool: "0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf",
+        dataProvider: "0x7551b5D2763519d4e37e8B81929D336De671d46d",
+      },
+      v3: {
+        pool: "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
+        poolDataProvider: "0x69FA688f1Dc47d4B5d8029D5a35FB7a548310654",
       },
     },
   },

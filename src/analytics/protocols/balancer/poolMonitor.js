@@ -18,7 +18,7 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../../../config/chains");
 const { getProvider } = require("../../../utils/web3");
-const { printHeader, formatCurrency, formatPercent, formatNumber } = require("../../utils/displayHelpers");
+const { printHeader, formatPercent, formatNumber } = require("../../utils/displayHelpers");
 const { getTokenInfo, formatTokenAmount } = require("../../utils/priceFeeds");
 
 // ABIs

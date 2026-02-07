@@ -132,7 +132,7 @@ async function getSushiV3Quote(chainKey, tokenIn, tokenOut, amountIn) {
 /**
  * Get Curve quote (if applicable pair)
  */
-async function getCurveQuote(chainKey, tokenInSymbol, tokenOutSymbol, amountIn, tokenInDecimals) {
+async function getCurveQuote(chainKey, tokenInSymbol, tokenOutSymbol, amountIn) {
   const chain = CHAINS[chainKey];
   if (!chain?.curve?.pools) return null;
 
@@ -168,8 +168,6 @@ async function getCurveQuote(chainKey, tokenInSymbol, tokenOutSymbol, amountIn, 
  * Aggregate all DEX prices
  */
 async function aggregatePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) {
-  const chain = CHAINS[chainKey];
-
   // Resolve token addresses
   const tokenInAddress = COMMON_TOKENS[tokenInSymbol]?.[chainKey] || tokenInSymbol;
   const tokenOutAddress = COMMON_TOKENS[tokenOutSymbol]?.[chainKey] || tokenOutSymbol;

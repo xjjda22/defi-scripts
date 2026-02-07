@@ -199,14 +199,7 @@ const MAJOR_PAIRS = {
     category: "lst",
     description: "Rocket Pool ETH/ETH",
   },
-  "rETH/USDC": {
-    name: "rETH/USDC",
-    tokenIn: "rETH",
-    tokenOut: "USDC",
-    amount: "1",
-    category: "lst",
-    description: "Rocket Pool ETH/USD",
-  },
+  // Note: rETH/USDC removed - no direct liquidity (use rETH/WETH instead)
 };
 
 /**
@@ -240,8 +233,8 @@ const PAIR_GROUPS = {
     "LDO/WETH",
   ],
 
-  // Liquid staking tokens (4 pairs)
-  lst: ["wstETH/WETH", "wstETH/USDC", "rETH/WETH", "rETH/USDC"],
+  // Liquid staking tokens (3 pairs - removed rETH/USDC, no direct liquidity)
+  lst: ["wstETH/WETH", "wstETH/USDC", "rETH/WETH"],
 
   // Major pairs (ETH + BTC + top 2 stables = 8 pairs)
   major: ["WETH/USDC", "WETH/USDT", "WETH/DAI", "WBTC/USDC", "WBTC/WETH", "USDC/USDT", "USDC/DAI", "USDT/DAI"],
