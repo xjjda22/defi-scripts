@@ -6,3 +6,7 @@ output/*
 .cursorrules
 
 package-lock.json
+
+# All untracked / generated / sensitive content under data/
+data/
+docs/
