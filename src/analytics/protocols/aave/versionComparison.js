@@ -7,6 +7,8 @@ require("dotenv").config();
 const { ethers } = require("ethers");
 const chalk = require("chalk");
 const { CHAINS, COMMON_TOKENS } = require("../../../config/chains");
+const { getProvider } = require("../../../utils/web3");
+const { installCliSafeStdout } = require("../../utils/cliSafeOutput");
 const AaveV2LendingPoolABI = require("../../../abis/aave/AaveV2LendingPool.json");
 const AaveV3PoolABI = require("../../../abis/aave/AaveV3Pool.json");
 
@@ -67,9 +69,13 @@ async function fetchAllMarkets() {
 
   for (const [chainKey, chain] of Object.entries(CHAINS)) {
     if (!chain.aave) continue;
+    if (!chain.rpcUrl) {
+      console.log(chalk.gray(`Skipping ${chain.name}: no RPC URL in .env`));
+      continue;
+    }
 
     console.log(chalk.gray(`Fetching ${chain.name}...`));
-    const provider = new ethers.JsonRpcProvider(chain.rpcUrl);
+    const provider = getProvider(chainKey);
     allData[chainKey] = { name: chain.name, type: getChainType(chainKey), versions: {} };
 
     try {
@@ -147,7 +153,7 @@ function displayVersionComparison(allData) {
 
     for (const row of assetData) {
       const typeColor = row.type === "L1" ? chalk.blue : chalk.cyan;
-      
+
       if (row.v2) {
         console.log(
           typeColor(row.chain.padEnd(15)),
@@ -164,7 +170,7 @@ function displayVersionComparison(allData) {
         if (row.v2 && row.v3) {
           const v2Supply = parseFloat(row.v2.supplyAPY);
           const v3Supply = parseFloat(row.v3.supplyAPY);
-          const diff = ((v3Supply - v2Supply) / v2Supply * 100).toFixed(1);
+          const diff = (((v3Supply - v2Supply) / v2Supply) * 100).toFixed(1);
           improvement = diff > 0 ? chalk.green(`+${diff}%`) : chalk.red(`${diff}%`);
         }
 
@@ -256,13 +262,12 @@ function displayBestRates(allData) {
 }
 
 async function main() {
+  installCliSafeStdout();
   console.log(chalk.cyan("\nFetching Aave V2 and V3 data across all chains...\n"));
 
   const allData = await fetchAllMarkets();
 
-  const hasData = Object.values(allData).some(
-    (chain) => Object.keys(chain.versions).length > 0
-  );
+  const hasData = Object.values(allData).some(chain => Object.keys(chain.versions).length > 0);
 
   if (!hasData) {
     console.log(chalk.red("\nNo market data available\n"));
@@ -274,7 +279,10 @@ async function main() {
 }
 
 if (require.main === module) {
-  main().catch(console.error);
+  main().catch(err => {
+    console.error(chalk.red(err.message || err));
+    process.exit(1);
+  });
 }
 
 module.exports = { fetchAllMarkets, displayVersionComparison, displayBestRates };

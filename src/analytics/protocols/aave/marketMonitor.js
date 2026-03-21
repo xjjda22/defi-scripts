@@ -7,7 +7,17 @@ require("dotenv").config();
 const { ethers } = require("ethers");
 const chalk = require("chalk");
 const { CHAINS, COMMON_TOKENS } = require("../../../config/chains");
+const { getProvider } = require("../../../utils/web3");
+const { installCliSafeStdout } = require("../../utils/cliSafeOutput");
 const AaveV3PoolABI = require("../../../abis/aave/AaveV3Pool.json");
+
+const ERC20_BALANCE_ABI = ["function balanceOf(address account) view returns (uint256)"];
+const ERC20_TOTAL_SUPPLY_ABI = ["function totalSupply() view returns (uint256)"];
+
+/** Full pool reserve tuple (addresses + indexes for utilization). */
+const AAVE_POOL_RESERVE_FULL_ABI = [
+  "function getReserveData(address asset) view returns (tuple(uint256 configuration, uint128 liquidityIndex, uint128 currentLiquidityRate, uint128 variableBorrowIndex, uint128 currentVariableBorrowRate, uint128 currentStableBorrowRate, uint40 lastUpdateTimestamp, uint16 id, address aTokenAddress, address stableDebtTokenAddress, address variableDebtTokenAddress, address interestRateStrategyAddress, uint128 accruedToTreasury, uint128 unbacked, uint128 isolationModeTotalDebt))",
+];
 
 const MONITORED_CHAINS = ["ethereum", "arbitrum", "optimism", "base", "polygon"];
 
@@ -33,6 +43,35 @@ function getHealthStatus(utilization) {
   return chalk.green("✅");
 }
 
+/**
+ * Utilization = totalDebt / (availableLiquidity + totalDebt).
+ * Available underlying sits on the aToken contract, not the pool address.
+ * Variable debt = rayMul(scaledTotalSupply, variableBorrowIndex).
+ */
+async function getReserveUtilizationPct(provider, poolAddress, assetAddress) {
+  try {
+    const poolFull = new ethers.Contract(poolAddress, AAVE_POOL_RESERVE_FULL_ABI, provider);
+    const r = await poolFull.getReserveData(assetAddress);
+    const vd = new ethers.Contract(r.variableDebtTokenAddress, ERC20_TOTAL_SUPPLY_ABI, provider);
+    const sd = new ethers.Contract(r.stableDebtTokenAddress, ERC20_TOTAL_SUPPLY_ABI, provider);
+    const underlying = new ethers.Contract(assetAddress, ERC20_BALANCE_ABI, provider);
+    const [vSup, sSup, cash] = await Promise.all([
+      vd.totalSupply(),
+      sd.totalSupply(),
+      underlying.balanceOf(r.aTokenAddress),
+    ]);
+    const variableBorrowIndex = BigInt(r.variableBorrowIndex);
+    const totalVariableDebt = (vSup * variableBorrowIndex) / RAY;
+    const totalStableDebt = sSup;
+    const totalDebt = totalVariableDebt + totalStableDebt;
+    const denom = cash + totalDebt;
+    if (denom === 0n) return 0;
+    return Number((totalDebt * 10000n) / denom) / 100;
+  } catch {
+    return null;
+  }
+}
+
 async function getReserveData(provider, poolAddress, assetAddress) {
   try {
     const pool = new ethers.Contract(poolAddress, AaveV3PoolABI, provider);
@@ -41,11 +80,14 @@ async function getReserveData(provider, poolAddress, assetAddress) {
     const supplyRate = reserveData.currentLiquidityRate;
     const borrowRate = reserveData.currentVariableBorrowRate;
 
+    const utilizationPct = await getReserveUtilizationPct(provider, poolAddress, assetAddress);
+
     return {
       supplyAPY: formatAPY(supplyRate),
       borrowAPY: formatAPY(borrowRate),
       supplyRateRaw: supplyRate,
       borrowRateRaw: borrowRate,
+      utilizationPct,
     };
   } catch (error) {
     return null;
@@ -54,24 +96,29 @@ async function getReserveData(provider, poolAddress, assetAddress) {
 
 async function fetchMarketDataForChain(chainKey) {
   const chain = CHAINS[chainKey];
-  
+
   if (!chain.aave?.v3?.pool) {
     return null;
   }
 
+  if (!chain.rpcUrl) {
+    console.warn(chalk.gray(`Skipping ${chain.name}: set ${chainKey.toUpperCase()}_RPC_URL in .env`));
+    return null;
+  }
+
   try {
-    const provider = new ethers.JsonRpcProvider(chain.rpcUrl);
+    const provider = getProvider(chainKey);
     const marketData = {};
 
     for (const asset of MONITORED_ASSETS) {
       const assetAddress = COMMON_TOKENS[asset.symbol]?.[chainKey];
-      
+
       if (!assetAddress) {
         continue;
       }
 
       const data = await getReserveData(provider, chain.aave.v3.pool, assetAddress);
-      
+
       if (data) {
         marketData[asset.symbol] = data;
       }
@@ -84,14 +131,12 @@ async function fetchMarketDataForChain(chainKey) {
   }
 }
 
-function calculateUtilization(supplyRateRaw, borrowRateRaw) {
+/** Fallback if Protocol Data Provider read fails (not meaningful vs on-chain U). */
+function calculateUtilizationFallback(supplyRateRaw, borrowRateRaw) {
   if (!supplyRateRaw || !borrowRateRaw || borrowRateRaw === 0n) return 0;
-  
   const supplyNum = Number(supplyRateRaw);
   const borrowNum = Number(borrowRateRaw);
-  
   if (borrowNum === 0) return 0;
-  
   return Math.min(100, (supplyNum / borrowNum) * 100);
 }
 
@@ -102,7 +147,7 @@ function displayMarketsByAsset(allMarketsData) {
 
   for (const asset of MONITORED_ASSETS) {
     const assetMarkets = [];
-    
+
     for (const chainKey of MONITORED_CHAINS) {
       const chainData = allMarketsData[chainKey];
       if (chainData && chainData[asset.symbol]) {
@@ -130,7 +175,10 @@ function displayMarketsByAsset(allMarketsData) {
     let cheapestBorrow = { apy: 100, chain: "" };
 
     for (const market of assetMarkets) {
-      const utilization = calculateUtilization(market.supplyRateRaw, market.borrowRateRaw);
+      const utilization =
+        market.utilizationPct != null
+          ? market.utilizationPct
+          : calculateUtilizationFallback(market.supplyRateRaw, market.borrowRateRaw);
       const healthStatus = getHealthStatus(utilization);
 
       const supplyAPYNum = parseFloat(market.supplyAPY);
@@ -169,6 +217,7 @@ function displayMarketsByAsset(allMarketsData) {
 }
 
 async function main() {
+  installCliSafeStdout();
   console.log(chalk.cyan("\nFetching Aave V3 market data across all chains...\n"));
 
   const allMarketsData = {};
@@ -190,7 +239,10 @@ async function main() {
 }
 
 if (require.main === module) {
-  main().catch(console.error);
+  main().catch(err => {
+    console.error(chalk.red(err.message || err));
+    process.exit(1);
+  });
 }
 
 module.exports = { fetchMarketDataForChain, displayMarketsByAsset };

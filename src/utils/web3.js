@@ -10,7 +10,8 @@ function getProvider(chainKey) {
   if (!chain.rpcUrl) {
     throw new Error(`RPC URL not configured for ${chain.name}`);
   }
-  return new ethers.JsonRpcProvider(chain.rpcUrl);
+  // Pass chainId to skip eth_chainId detection (avoids flaky "cannot detect network" on some RPCs).
+  return new ethers.JsonRpcProvider(chain.rpcUrl, chain.chainId);
 }
 
 function getContract(address, abi, chainKey) {
