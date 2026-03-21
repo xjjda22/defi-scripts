@@ -70,9 +70,19 @@ Track lending rates and compare protocols:
 
 | Script | Command | Description |
 |--------|---------|-------------|
-| **Aave Markets** | `npm run analytics:aave:markets` | Aave V3 supply/borrow rates across all chains |
-| **Aave Versions** | `npm run analytics:aave:versions` | Compare Aave V2 vs V3 with L1/L2 differentiation |
+| **Aave Markets** | `npm run analytics:aave:markets` | Aave V3 supply/borrow rates and utilization (all configured chains) |
+| **Aave Versions** | `npm run analytics:aave:versions` | Aave V2 vs V3 comparison (L1/L2 labels) |
+| **Aave Liquidations** | `npm run analytics:aave:liquidations` | Recent `LiquidationCall` logs; optional `AAVE_WATCH_ADDRESSES` for health factors |
+| **Morpho vs Aave** | `npm run analytics:morpho:optimizer` | Morpho Blue (API) vs Aave V3 rates per chain |
+| **Lending aggregator** | `npm run analytics:lending:rates` | Best supply/borrow across Aave + Morpho; cross-chain summary |
 
+### Simulation and swaps
+
+| Command | Purpose |
+|---------|---------|
+| `npm run simulate:quote` / `simulate:swap` | Quote or simulate a swap (`SIMULATE_ONLY=true` for quote-only) |
+| `npm run simulate:multi:quote` / `simulate:multi` | Multi-protocol quote comparison |
+| `npm run swap:example`, `swap:uniswap:v2`, `v3`, `v4`, `swap:sushiswap`, `swap:balancer`, `swap:curve`, `swap:autoroute`, `swap:crosschain`, `swap:check` | Example execution flows (require wallet config in `.env`) |
 
 ### Other Analytics
 
