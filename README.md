@@ -76,6 +76,15 @@ Track lending rates and compare protocols:
 | **Morpho vs Aave** | `npm run analytics:morpho:optimizer` | Morpho Blue (API) vs Aave V3 rates per chain |
 | **Lending aggregator** | `npm run analytics:lending:rates` | Best supply/borrow across Aave + Morpho; cross-chain summary |
 
+### Staking (LST) analytics
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| **Lido** | `npm run analytics:lido:staking` | stETH APR (Lido API), TVL (DefiLlama), mainnet peg; L2 wstETH needs RPCs |
+| **StakeStone** | `npm run analytics:stakestone:staking` | TVL from DefiLlama; optional `STAKESTONE_YIELDS_POOL_ID` for chart APY |
+| **Kintsu** | `npm run analytics:kintsu:staking` | TVL from DefiLlama; APY from yields chart (override with `KINTSU_YIELDS_POOL_ID`) |
+| **LST compare** | `npm run analytics:staking:compare` | Lido vs StakeStone vs Kintsu — heuristic score + size-band notes |
+
 ### Simulation and swaps
 
 | Command | Purpose |
