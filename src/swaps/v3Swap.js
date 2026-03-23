@@ -16,6 +16,13 @@ const SWAP_ROUTER_ABI = require("../abis/ISwapRouter.json");
 const QUOTER_ABI = require("../abis/IQuoter.json");
 const ERC20_ABI = require("../abis/IERC20.json");
 
+const QUOTER_V2_SINGLE_ABI = [
+  "function quoteExactInputSingle((address tokenIn,address tokenOut,uint256 amountIn,uint24 fee,uint160 sqrtPriceLimitX96)) external returns (uint256 amountOut,uint160,uint32,uint256)",
+];
+const QUOTER_V2_MULTI_ABI = [
+  "function quoteExactInput(bytes path,uint256 amountIn) external returns (uint256 amountOut,uint160[],uint32[],uint256)",
+];
+
 // Common V3 fee tiers (in hundredths of basis points)
 const FEE_TIERS = {
   LOWEST: 100, // 0.01%
@@ -71,14 +78,22 @@ async function getQuote(chainKey, tokenIn, tokenOut, fee, amountIn) {
   }
 
   const provider = getProvider(chainKey);
-  const quoter = new ethers.Contract(chain.uniswap.v3.quoter, QUOTER_ABI, provider);
+  const quoterAddr = chain.uniswap.v3.quoter;
+  const legacy = new ethers.Contract(quoterAddr, QUOTER_ABI, provider);
 
   try {
-    // sqrtPriceLimitX96 = 0 means no price limit
-    const amountOut = await quoter.quoteExactInputSingle.staticCall(tokenIn, tokenOut, fee, amountIn, 0);
+    const amountOut = await legacy.quoteExactInputSingle.staticCall(tokenIn, tokenOut, fee, amountIn, 0);
     return amountOut.toString();
-  } catch (error) {
-    throw new Error(`V3 quote failed: ${error.message}`);
+  } catch (e1) {
+    try {
+      const v2 = new ethers.Contract(quoterAddr, QUOTER_V2_SINGLE_ABI, provider);
+      const params = { tokenIn, tokenOut, amountIn, fee, sqrtPriceLimitX96: 0 };
+      const r = await v2.quoteExactInputSingle.staticCall(params);
+      const out = r.amountOut ?? r[0];
+      return out.toString();
+    } catch {
+      throw new Error(`V3 quote failed: ${e1.message}`);
+    }
   }
 }
 
@@ -102,15 +117,23 @@ async function getQuoteMultiHop(chainKey, tokens, fees, amountIn) {
   }
 
   const provider = getProvider(chainKey);
-  const quoter = new ethers.Contract(chain.uniswap.v3.quoter, QUOTER_ABI, provider);
+  const quoterAddr = chain.uniswap.v3.quoter;
+  const legacy = new ethers.Contract(quoterAddr, QUOTER_ABI, provider);
 
   const path = encodePath(tokens, fees);
 
   try {
-    const amountOut = await quoter.quoteExactInput.staticCall(path, amountIn);
+    const amountOut = await legacy.quoteExactInput.staticCall(path, amountIn);
     return amountOut.toString();
-  } catch (error) {
-    throw new Error(`V3 multi-hop quote failed: ${error.message}`);
+  } catch (e1) {
+    try {
+      const v2 = new ethers.Contract(quoterAddr, QUOTER_V2_MULTI_ABI, provider);
+      const r = await v2.quoteExactInput.staticCall(path, amountIn);
+      const out = r.amountOut ?? r[0];
+      return out.toString();
+    } catch {
+      throw new Error(`V3 multi-hop quote failed: ${e1.message}`);
+    }
   }
 }
 

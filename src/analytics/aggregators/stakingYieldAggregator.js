@@ -46,49 +46,52 @@ function stakingHeuristicScore(p) {
   return 10 * blend;
 }
 
-async function main() {
-  installCliSafeStdout();
-  try {
-    const [lido, stone, kintsu] = await Promise.all([
-      fetchLidoStakingSnapshot(),
-      fetchStakeStoneSnapshot(),
-      fetchKintsuSnapshot(),
-    ]);
+/**
+ * @param {{ compact?: boolean, title?: string, skipTitle?: boolean }} [opts]
+ */
+async function runStakingYieldComparison(opts = {}) {
+  const [lido, stone, kintsu] = await Promise.all([
+    fetchLidoStakingSnapshot(),
+    fetchStakeStoneSnapshot(),
+    fetchKintsuSnapshot(),
+  ]);
 
-    const ethRow = lido.rows?.find(r => r.chainKey === "ethereum");
-    const lidoPegDev = ethRow?.pegDevPct ?? null;
+  const ethRow = lido.rows?.find(r => r.chainKey === "ethereum");
+  const lidoPegDev = ethRow?.pegDevPct ?? null;
 
-    const protocols = [
-      {
-        id: "Lido",
-        aprPct: lido.aprPct,
-        tvlUsd: lido.tvlUsdTotal,
-        pegNote:
-          ethRow?.pegRatio != null
-            ? `${ethRow.pegRatio.toFixed(4)} (${lidoPegDev != null ? `${lidoPegDev >= 0 ? "+" : ""}${lidoPegDev.toFixed(2)}%` : "—"})`
-            : "—",
-        liqNote: "Deep (aggregate, not DEX depth)",
-        pegDevPct: lidoPegDev,
-      },
-      {
-        id: "StakeStone",
-        aprPct: stone.aprPct,
-        tvlUsd: stone.tvlUsd,
-        pegNote: "—",
-        liqNote: stone.tvlUsd != null && stone.tvlUsd < 5e8 ? "Moderate vs Lido" : "—",
-        pegDevPct: null,
-      },
-      {
-        id: "Kintsu",
-        aprPct: kintsu.aprPct,
-        tvlUsd: kintsu.tvlUsd,
-        pegNote: "—",
-        liqNote: kintsu.tvlUsd != null && kintsu.tvlUsd < 1e8 ? "Thin vs majors" : "—",
-        pegDevPct: null,
-      },
-    ];
+  const protocols = [
+    {
+      id: "Lido",
+      aprPct: lido.aprPct,
+      tvlUsd: lido.tvlUsdTotal,
+      pegNote:
+        ethRow?.pegRatio != null
+          ? `${ethRow.pegRatio.toFixed(4)} (${lidoPegDev != null ? `${lidoPegDev >= 0 ? "+" : ""}${lidoPegDev.toFixed(2)}%` : "—"})`
+          : "—",
+      liqNote: "Deep (aggregate, not DEX depth)",
+      pegDevPct: lidoPegDev,
+    },
+    {
+      id: "StakeStone",
+      aprPct: stone.aprPct,
+      tvlUsd: stone.tvlUsd,
+      pegNote: "—",
+      liqNote: stone.tvlUsd != null && stone.tvlUsd < 5e8 ? "Moderate vs Lido" : "—",
+      pegDevPct: null,
+    },
+    {
+      id: "Kintsu",
+      aprPct: kintsu.aprPct,
+      tvlUsd: kintsu.tvlUsd,
+      pegNote: "—",
+      liqNote: kintsu.tvlUsd != null && kintsu.tvlUsd < 1e8 ? "Thin vs majors" : "—",
+      pegDevPct: null,
+    },
+  ];
 
-    console.log(chalk.cyan.bold("\nMulti-protocol LST comparison (MVP)\n"));
+  const title = opts.title ?? chalk.cyan.bold("\nMulti-protocol LST comparison (MVP)\n");
+  if (!opts.skipTitle) console.log(title);
+  if (!opts.compact) {
     console.log(
       chalk.gray(
         "Yield: Lido APR from Lido API; Kintsu APY from DefiLlama yields chart when protocol.apy is missing; StakeStone may use STAKESTONE_YIELDS_POOL_ID. TVL from Llama series.",
@@ -99,41 +102,59 @@ async function main() {
         "Score uses a fixed blend (see file header); it is not financial advice.\n",
       ),
     );
+  }
 
-    const overview = createTable(
-      ["Protocol", "APR/APY", "TVL", "Peg (Lido only)", "Liquidity note", "Score"],
-      { colAligns: ["left", "right", "right", "left", "left", "right"] },
-    );
+  const overview = createTable(
+    ["Protocol", "APR/APY", "TVL", "Peg (Lido only)", "Liquidity note", "Score"],
+    { colAligns: ["left", "right", "right", "left", "left", "right"] },
+  );
 
-    for (const p of protocols) {
-      const aprStr = p.aprPct != null ? `${p.aprPct.toFixed(2)}%` : "—";
-      const tvlStr = p.tvlUsd != null ? formatCurrency(p.tvlUsd) : "—";
-      const sc = stakingHeuristicScore(p);
-      overview.push([p.id, aprStr, tvlStr, p.pegNote, p.liqNote, `${sc.toFixed(1)}/10`]);
-    }
-    console.log(overview.toString());
+  for (const p of protocols) {
+    const aprStr = p.aprPct != null ? `${p.aprPct.toFixed(2)}%` : "—";
+    const tvlStr = p.tvlUsd != null ? formatCurrency(p.tvlUsd) : "—";
+    const sc = stakingHeuristicScore(p);
+    overview.push([p.id, aprStr, tvlStr, p.pegNote, p.liqNote, `${sc.toFixed(1)}/10`]);
+  }
+  console.log(overview.toString());
 
-    console.log(chalk.yellow("\nHeuristic bands (use your own risk checks)\n"));
-    const lidoTvl = lido.tvlUsdTotal ?? 0;
-    const stoneTvl = stone.tvlUsd ?? 0;
-    const kTvl = kintsu.tvlUsd ?? 0;
-
-    const lines = [];
-    lines.push(`Large / institution-sized notionals: favor deep aggregate liquidity — Lido TVL ${lidoTvl ? formatCurrency(lidoTvl) : "—"}.`);
-    lines.push(
-      `Mid-size (rough $50k–$500k): compare listed APR/APY when available; StakeStone TVL ${stoneTvl ? formatCurrency(stoneTvl) : "—"}.`,
-    );
-    lines.push(
-      `Small / experimental tickets: higher protocol APR (when shown) may not compensate for thin TVL — Kintsu TVL ${kTvl ? formatCurrency(kTvl) : "—"}.`,
-    );
-    for (const line of lines) console.log(`  • ${line}`);
+  if (opts.compact) {
     if (stone.aprPct == null && kintsu.aprPct == null) {
       console.log(
         chalk.gray(
-          "\nNo APY resolved for StakeStone/Kintsu — set STAKESTONE_YIELDS_POOL_ID, check KINTSU_YIELDS_POOL_ID, or use protocol UIs.",
+          "\nNo APY for StakeStone/Kintsu — set STAKESTONE_YIELDS_POOL_ID / KINTSU_YIELDS_POOL_ID if needed.",
         ),
       );
     }
+    return;
+  }
+
+  console.log(chalk.yellow("\nHeuristic bands (use your own risk checks)\n"));
+  const lidoTvl = lido.tvlUsdTotal ?? 0;
+  const stoneTvl = stone.tvlUsd ?? 0;
+  const kTvl = kintsu.tvlUsd ?? 0;
+
+  const lines = [];
+  lines.push(`Large / institution-sized notionals: favor deep aggregate liquidity — Lido TVL ${lidoTvl ? formatCurrency(lidoTvl) : "—"}.`);
+  lines.push(
+    `Mid-size (rough $50k–$500k): compare listed APR/APY when available; StakeStone TVL ${stoneTvl ? formatCurrency(stoneTvl) : "—"}.`,
+  );
+  lines.push(
+    `Small / experimental tickets: higher protocol APR (when shown) may not compensate for thin TVL — Kintsu TVL ${kTvl ? formatCurrency(kTvl) : "—"}.`,
+  );
+  for (const line of lines) console.log(`  • ${line}`);
+  if (stone.aprPct == null && kintsu.aprPct == null) {
+    console.log(
+      chalk.gray(
+        "\nNo APY resolved for StakeStone/Kintsu — set STAKESTONE_YIELDS_POOL_ID, check KINTSU_YIELDS_POOL_ID, or use protocol UIs.",
+      ),
+    );
+  }
+}
+
+async function main() {
+  installCliSafeStdout();
+  try {
+    await runStakingYieldComparison();
   } catch (e) {
     console.error(chalk.red(e.message || String(e)));
     process.exit(1);
@@ -144,4 +165,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { stakingHeuristicScore };
+module.exports = { stakingHeuristicScore, runStakingYieldComparison };

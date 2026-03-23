@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 // Uniswap Price Monitor - Real-time price tracking across V2, V3, V4
-// Shows best execution venue, liquidity depth, and fee tier comparison
 require("dotenv").config();
 const { ethers } = require("ethers");
 const { CHAINS, COMMON_TOKENS } = require("../../../config/chains");

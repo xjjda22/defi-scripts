@@ -107,6 +107,10 @@ async function fetchWstethPegRatio(chainKey, ref) {
  *     pegLabel: string,
  *     liquidityNote: string,
  *   }>,
+ *   missingRpcForWstethPeg: string[],
+ *   l2PegAttempted: number,
+ *   l2PegSucceeded: number,
+ *   l2PegFirstError: string|null,
  * }>}
  */
 async function fetchLidoStakingSnapshot() {

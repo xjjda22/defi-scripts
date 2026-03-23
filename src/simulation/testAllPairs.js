@@ -1,26 +1,12 @@
-/**
- * Test All Pairs - Batch Testing Script
- * Tests simulation across all configured pairs or a specific group
- *
- * Usage:
- *   node src/simulation/testAllPairs.js                    # Test default group
- *   GROUP=all node src/simulation/testAllPairs.js          # Test all 25 pairs
- *   GROUP=stable node src/simulation/testAllPairs.js       # Test stablecoin pairs
- *   GROUP=defi node src/simulation/testAllPairs.js         # Test DeFi token pairs
- */
 require("dotenv").config();
 const { spawn } = require("child_process");
 const chalk = require("chalk");
 const { getPairGroup, PAIR_GROUPS } = require("../config/pairs");
 
-// Configuration
 const GROUP = process.env.GROUP || "default";
 const CHAIN = process.env.CHAIN || "ethereum";
 const PROTOCOL = process.env.PROTOCOL || null;
 
-/**
- * Run simulation for a single pair
- */
 function runSimulation(pairName) {
   return new Promise((resolve) => {
     const env = {
@@ -60,7 +46,6 @@ function runSimulation(pairName) {
       });
     });
 
-    // Timeout after 30 seconds
     setTimeout(() => {
       child.kill();
       resolve({
@@ -73,9 +58,6 @@ function runSimulation(pairName) {
   });
 }
 
-/**
- * Extract best quote from output
- */
 function extractBestQuote(output) {
   const match = output.match(/Best Quote[\s\S]*?Protocol:\s+([^\n]+)/);
   if (match) {
@@ -84,9 +66,6 @@ function extractBestQuote(output) {
   return null;
 }
 
-/**
- * Main function
- */
 async function main() {
   console.log(chalk.cyan("\n" + "═".repeat(70)));
   console.log(chalk.cyan.bold("  BATCH PAIR TESTING"));
@@ -99,7 +78,6 @@ async function main() {
     console.log(`  Protocol Filter: ${chalk.green(PROTOCOL)}`);
   }
 
-  // Validate group
   if (!PAIR_GROUPS[GROUP]) {
     console.error(chalk.red(`\n❌ Unknown group: ${GROUP}`));
     console.log(chalk.gray(`Available groups: ${Object.keys(PAIR_GROUPS).join(", ")}`));
@@ -144,7 +122,6 @@ async function main() {
   const endTime = Date.now();
   const duration = ((endTime - startTime) / 1000).toFixed(1);
 
-  // Print summary
   console.log(chalk.yellow("\n" + "─".repeat(70)));
   console.log(chalk.cyan("\n" + "═".repeat(70)));
   console.log(chalk.cyan.bold("  TEST SUMMARY"));
@@ -160,7 +137,6 @@ async function main() {
   console.log(`  Duration: ${chalk.yellow(duration + "s")}`);
   console.log(`  Avg time per pair: ${chalk.gray((duration / results.length).toFixed(1) + "s")}`);
 
-  // Show failed pairs
   if (failedCount > 0) {
     console.log(chalk.red("\nFailed Pairs:"));
     results
@@ -170,7 +146,6 @@ async function main() {
       });
   }
 
-  // Show protocol distribution
   if (successCount > 0) {
     console.log(chalk.green("\nProtocol Distribution:"));
     const protocols = {};
