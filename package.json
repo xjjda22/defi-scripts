@@ -85,7 +85,11 @@
     "swap:uniswap:v3": "node src/examples/v3SwapExample.js",
     "swap:uniswap:v4": "node src/examples/v4SwapExample.js",
     "lint:fix": "eslint . --ignore-path .eslintignore --ext .js,.sol --fix --quiet",
-    "prettier": "prettier --write './**/*.{js,json,yaml,yml,sol}'"
+    "prettier": "prettier --write './**/*.{js,json,yaml,yml,sol}'",
+    "report:crosschain": "bash scripts/healthCheckReport.sh crosschain",
+    "report:analytics": "bash scripts/healthCheckReport.sh analytics",
+    "report:simulation": "bash scripts/healthCheckReport.sh simulation",
+    "report:swap": "bash scripts/healthCheckReport.sh swap"
   },
   "keywords": [
     "uniswap",
