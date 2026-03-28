@@ -3,10 +3,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?logo=ethereum&logoColor=white)](https://ethereum.org)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)](https://nodejs.org)
-[![Chains](https://img.shields.io/badge/chains-6-orange.svg)](#setup)
+[![Chains](https://img.shields.io/badge/chains-8-orange.svg)](#setup)
 
 
-Ethereum DeFi analytics and swap scripts for cross-chain DEX analytics, token swaps, and MEV analysis. Supports Ethereum, Arbitrum, Optimism, Base, Polygon, and BSC.
+DeFi analytics and swap scripts for Ethereum, Arbitrum, Optimism, Base, Polygon, BSC, zkSync and Scroll.
 
 <p align="center">
   <img src="no-money-meme.jpg" alt="No Money Meme" width="500"/>
@@ -28,13 +28,15 @@ OPTIMISM_RPC_URL=https://opt-mainnet.g.alchemy.com/v2/YOUR_KEY
 BASE_RPC_URL=https://base-mainnet.g.alchemy.com/v2/YOUR_KEY
 POLYGON_RPC_URL=https://polygon-mainnet.g.alchemy.com/v2/YOUR_KEY
 BSC_RPC_URL=https://bsc-dataseed.binance.org/
+ZKSYNC_RPC_URL=https://mainnet.era.zksync.io
+SCROLL_RPC_URL=https://rpc.scroll.io
 ```
 
 ## Scripts
 
 ### Cross-Chain Analytics
 
-Track TVL and volume across **all major DEXs** on 6 chains (Ethereum, Arbitrum, Optimism, Base, Polygon, BSC):
+Track TVL and volume across **all major DEXs** on 8 chains (Ethereum, Arbitrum, Optimism, Base, Polygon, BSC, zkSync and Scroll):
 
 | Protocol | TVL | Volume |
 |----------|-----|--------|
@@ -62,8 +64,18 @@ Compare prices and analyze pools across different DEX protocols:
 | **Curve Pools** | `npm run analytics:curve:pools` | Monitor pool balances and arbitrage opportunities |
 | **Balancer Pools** | `npm run analytics:balancer:pools` | Track weighted pools and impermanent loss |
 | **SushiSwap Pools** | `npm run analytics:sushiswap:pools` | Compare SushiSwap vs Uniswap prices |
-| **Multi-DEX Prices** | `npm run analytics:dex:prices` | Aggregate prices across all DEXs |
+| **Multi-DEX Prices** | `npm run analytics:dex:prices` | Aggregate prices across DEXs; `CHAIN=base` `PAIR_GROUP=daytrade` supported |
 | **AMM aggregate (Llama)** | `npm run analytics:amm:aggregate` | One-shot TVL snapshot for major AMMs via DefiLlama |
+| **Aerodrome (Llama)** | `npm run analytics:aerodrome:dex` | Base DEX TVL snapshot (`DEFILLAMA_SLUG` overridable) |
+| **Velodrome (Llama)** | `npm run analytics:velodrome:dex` | Optimism DEX TVL snapshot |
+| **PancakeSwap v3 (Llama)** | `npm run analytics:pancakeswap:dex` | Multichain Pancake v3 TVL (`pancakeswap-amm-v3`) |
+| **GMX (Llama)** | `npm run analytics:gmx:perps` | Perps / liquidity TVL snapshot |
+| **Gains (Llama)** | `npm run analytics:gains:perps` | gTrade TVL snapshot |
+| **SynFutures (Llama)** | `npm run analytics:synfutures:perps` | Perp DEX TVL snapshot |
+| **Orderly (Llama)** | `npm run analytics:orderly:perps` | Omnichain orderbook infra TVL |
+| **MUX (Llama)** | `npm run analytics:mux:perps` | Aggregated perp liquidity TVL |
+| **Aster (Llama)** | `npm run analytics:aster:perps` | Hybrid perp/spot TVL |
+| **Lighter (Llama)** | `npm run analytics:lighter:perps` | TVL when listed on DefiLlama |
 | **Reya (Llama)** | `npm run analytics:reya:dex` | Protocol summary when listed (slug overridable via env) |
 | **Ammalgam (Llama)** | `npm run analytics:ammalgam:hybrid` | Hybrid AMM + lending summary when `AMMALGAM_LLAMA_SLUG` is set |
 | **Curvy (Llama)** | `npm run analytics:curvy:aggregator` | Curvy / ZK aggregator monitor from DefiLlama |
@@ -80,6 +92,7 @@ Track lending rates and compare protocols:
 | **Morpho vs Aave** | `npm run analytics:morpho:optimizer` | Morpho Blue (API) vs Aave V3 rates per chain |
 | **Lending aggregator** | `npm run analytics:lending:rates` | Best supply/borrow across Aave + Morpho; cross-chain summary |
 | **All lending (Llama)** | `npm run analytics:lending:aggregate` | Pull several lending protocols from DefiLlama in one run |
+| **Compound / Venus (Llama)** | `npm run analytics:lending:venues` | BSC + L2 TVL rows for Compound V3 and Venus (`LENDING_LLAMA_CHAINS`) |
 
 ### Staking (LST) analytics
 
@@ -119,13 +132,13 @@ Track lending rates and compare protocols:
 
 ### 2025 Launched Protocols
 - [x] **Reya Network** - High-Speed AMM DEX L2 [![Reya](https://img.shields.io/badge/Reya-2B2D42?logoColor=white)](https://reya.network)
-- [ ] **Aster DEX** - Multi-Chain AMM Perp/Spot [![Aster](https://img.shields.io/badge/Aster-7B2CBF?logoColor=white)](https://aster.finance)
+- [x] **Aster DEX** - Multi-Chain AMM Perp/Spot [![Aster](https://img.shields.io/badge/Aster-7B2CBF?logoColor=white)](https://aster.finance) *(DefiLlama monitor: `npm run analytics:aster:perps`)*
 - [x] **Ammalgam** - Hybrid AMM + Lending [![Ammalgam](https://img.shields.io/badge/Ammalgam-06FFA5?logoColor=black)](https://ammalgam.fi)
 - [ ] **Kinto** - KYC-Modular AMM DEX [![Kinto](https://img.shields.io/badge/Kinto-000000?logoColor=white)](https://kinto.xyz)
 - [x] **Curvy v2** - ZK Stealth AMM Aggregator [![Curvy](https://img.shields.io/badge/Curvy-FF6B6B?logoColor=white)](https://curvy.finance)
 - [ ] **Milk Road Swap** - Gasless Multi-Chain AMM [![Milk Road](https://img.shields.io/badge/Milk_Road-FFFFFF?logoColor=black)](https://milkroad.com)
 - [ ] **HumidiFi** - Prop AMM DEX [![HumidiFi](https://img.shields.io/badge/HumidiFi-4ECDC4?logoColor=white)](https://humidifi.xyz)
-- [ ] **Lighter** - ZK Perp AMM Starknet L2 [![Lighter](https://img.shields.io/badge/Lighter-FFD93D?logoColor=black)](https://lighter.xyz)
+- [x] **Lighter** - ZK Perp AMM L2 [![Lighter](https://img.shields.io/badge/Lighter-FFD93D?logoColor=black)](https://lighter.xyz) *(DefiLlama monitor: `npm run analytics:lighter:perps`)*
 - [ ] **Drake Exchange** - CLOB-AMM Perp DEX [![Drake](https://img.shields.io/badge/Drake-E63946?logoColor=white)](https://drake.exchange)
 - [x] **Kintsu** - Liquid Staking AMM [![Kintsu](https://img.shields.io/badge/Kintsu-F77F00?logoColor=white)](https://kintsu.xyz)
 - [x] **Curvance** - Multi-Chain Isolated AMM [![Curvance](https://img.shields.io/badge/Curvance-6A4C93?logoColor=white)](https://curvance.com) *(DefiLlama slug in `simulate:lending:aggregate:smoke`)*
