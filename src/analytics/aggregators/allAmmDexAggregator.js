@@ -13,6 +13,9 @@ const AMM_PROTOCOLS = [
   ["Curve DEX", "curve-dex"],
   ["Balancer", "balancer"],
   ["SushiSwap", "sushiswap"],
+  ["Aerodrome", "aerodrome"],
+  ["Velodrome", "velodrome"],
+  ["PancakeSwap AMM v3", "pancakeswap-amm-v3"],
 ];
 
 async function main() {

@@ -13,7 +13,7 @@ const ANVIL_RETRIES = Math.min(5, Math.max(1, parseInt(process.env.FORK_VALIDATE
 const RETRY_WAIT_MS = parseInt(process.env.FORK_VALIDATE_RETRY_WAIT_MS || "10000", 10);
 const PAIR = process.env.PAIR || "WETH/USDC";
 
-const CHAIN_ORDER = ["ethereum", "arbitrum", "optimism", "base", "polygon", "bsc"];
+const CHAIN_ORDER = ["ethereum", "arbitrum", "optimism", "base", "polygon", "bsc", "zksync", "scroll"];
 
 const RPC_ENV_KEY = {
   ethereum: "ETHEREUM_RPC_URL",
@@ -22,6 +22,8 @@ const RPC_ENV_KEY = {
   base: "BASE_RPC_URL",
   polygon: "POLYGON_RPC_URL",
   bsc: "BSC_RPC_URL",
+  zksync: "ZKSYNC_RPC_URL",
+  scroll: "SCROLL_RPC_URL",
 };
 
 function sleep(ms) {
@@ -43,7 +45,7 @@ function parseChainFilter() {
     raw
       .split(",")
       .map(s => s.trim().toLowerCase())
-      .filter(Boolean),
+      .filter(Boolean)
   );
 }
 
@@ -264,13 +266,15 @@ async function main() {
   console.log(chalk.gray(`Pair: ${PAIR} | chains: ${chains.join(", ")}`));
   console.log(
     chalk.gray(
-      `Anvil: ready ≤${ANVIL_READY_MS}ms, ${ANVIL_RETRIES} retries, ${RETRY_WAIT_MS}ms backoff | gap between chains: ${CHAIN_GAP_MS}ms\n`,
-    ),
+      `Anvil: ready ≤${ANVIL_READY_MS}ms, ${ANVIL_RETRIES} retries, ${RETRY_WAIT_MS}ms backoff | gap between chains: ${CHAIN_GAP_MS}ms\n`
+    )
   );
 
   const anvilCheck = spawnSync("anvil", ["--version"], { encoding: "utf8" });
   if (anvilCheck.error || anvilCheck.status !== 0) {
-    console.error(chalk.red("anvil not found. Install Foundry: https://book.getfoundry.sh/getting-started/installation"));
+    console.error(
+      chalk.red("anvil not found. Install Foundry: https://book.getfoundry.sh/getting-started/installation")
+    );
     process.exit(1);
   }
 
@@ -292,8 +296,8 @@ async function main() {
       if (r.noLiquidity) {
         console.log(
           chalk.gray(
-            "  hint: no quotes for this PAIR — check `src/config/chains.js` pools/routers or try another PAIR= for this chain",
-          ),
+            "  hint: no quotes for this PAIR — check `src/config/chains.js` pools/routers or try another PAIR= for this chain"
+          )
         );
       }
       if (r.anvilStderr) console.log(chalk.gray(`  anvil: ${String(r.anvilStderr).slice(-400)}`));

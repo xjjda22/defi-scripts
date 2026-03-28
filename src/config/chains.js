@@ -417,6 +417,74 @@ const CHAINS = {
       },
     },
   },
+  zksync: {
+    name: "zkSync Era",
+    chainId: 324,
+    rpcUrl: process.env.ZKSYNC_RPC_URL,
+    explorer: "https://explorer.zksync.io",
+    // Uniswap v3 — https://docs.uniswap.org/contracts/v3/reference/deployments/ZKsync-deployments
+    uniswap: {
+      v3: {
+        factory: "0x8FdA5a7a8dCA67BBcDd10F02Fa0649A937215422",
+        quoter: "0x8Cb537fc92E26d8EBBb760E632c95484b6Ea3e28",
+        router: "0x99c56385daBCE3E81d8499d0b8d0257aBC07E8A3",
+        nftPositionManager: "0x0616e5762c1E7Dc3723c50663dF10a162D690a86",
+      },
+    },
+    curve: {
+      addressProvider: "0x0000000022D53366457F9d5E68Ec105046FC4383",
+      pools: {},
+    },
+    balancer: {
+      v2: { vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8", pools: {} },
+      v3: { vault: "0xba1333333333a1BA1108E8412f11850A5C319bA9", pools: {} },
+    },
+    sushiswap: {
+      v2: {
+        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
+        router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
+      },
+      v3: {
+        factory: "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e",
+        quoter: "0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1",
+        router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
+      },
+    },
+  },
+  scroll: {
+    name: "Scroll",
+    chainId: 534352,
+    rpcUrl: process.env.SCROLL_RPC_URL,
+    explorer: "https://scrollscan.com",
+    // Uniswap v3 — factory + periphery from same deployer bundle (Scrollscan verified)
+    uniswap: {
+      v3: {
+        factory: "0xe52a36bb76e8f40e1117db5ff14bd1f7b058b720",
+        quoter: "0x6f1a2f63ea06b475edbf2e6393406058c12a7910",
+        router: "0xfc30937f5cDe93Df8d48aCAF7e6f5D8D8A31F636",
+        nftPositionManager: "0x78a087d713be963bf307b18f2ff8122ef9a63ae9",
+      },
+    },
+    curve: {
+      addressProvider: "0x0000000022D53366457F9d5E68Ec105046FC4383",
+      pools: {},
+    },
+    balancer: {
+      v2: { vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8", pools: {} },
+      v3: { vault: "0xba1333333333a1BA1108E8412f11850A5C319bA9", pools: {} },
+    },
+    sushiswap: {
+      v2: {
+        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
+        router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
+      },
+      v3: {
+        factory: "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e",
+        quoter: "0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1",
+        router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
+      },
+    },
+  },
 };
 
 // Common tokens for analysis
@@ -428,6 +496,8 @@ const COMMON_TOKENS = {
     base: "0x4200000000000000000000000000000000000006",
     polygon: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
     bsc: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+    zksync: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
+    scroll: "0x5300000000000000000000000000000000000004",
   },
   USDC: {
     ethereum: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -436,6 +506,8 @@ const COMMON_TOKENS = {
     base: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
     polygon: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
     bsc: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+    zksync: "0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4",
+    scroll: "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4",
   },
   USDT: {
     ethereum: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
@@ -444,6 +516,7 @@ const COMMON_TOKENS = {
     base: "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
     polygon: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
     bsc: "0x55d398326f99059fF775485246999027B3197955",
+    scroll: "0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df",
   },
   DAI: {
     ethereum: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -452,6 +525,7 @@ const COMMON_TOKENS = {
     base: "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
     polygon: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
     bsc: "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
+    scroll: "0xcA77eB3fEFe3725Dc33bccB54eDEFc3D9f764f97",
   },
   WBTC: {
     ethereum: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",

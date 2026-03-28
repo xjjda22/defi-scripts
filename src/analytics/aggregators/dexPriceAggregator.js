@@ -20,6 +20,7 @@
  */
 
 const { ethers } = require("ethers");
+const chalk = require("chalk");
 const { CHAINS, COMMON_TOKENS } = require("../../config/chains");
 const { getPairGroup } = require("../../config/pairs");
 const { getProvider } = require("../../utils/web3");
@@ -288,6 +289,10 @@ Multi-DEX Price Aggregator - Find the best price across all DEXs
 Usage:
   npm run analytics:dex:prices
 
+Environment:
+  CHAIN=ethereum|arbitrum|base|bsc|zksync|scroll|...   (default: ethereum)
+  PAIR_GROUP=default|daytrade|major|...                 (see src/config/pairs.js)
+
 Monitors default pairs:
   - WETH/USDC (1 ETH)
   - USDC/USDT (1000)
@@ -299,17 +304,20 @@ Checks all DEXs:
   - Curve (major pools)
 
 Configuration:
-  - Chain: Ethereum (hardcoded)
-  - Pairs: src/config/pairs.js (default group)
-  - To change pairs: Edit src/config/pairs.js
-  - Set ETHEREUM_RPC_URL in .env file
+  - RPC: <CHAIN>_RPC_URL in .env (e.g. ETHEREUM_RPC_URL, ZKSYNC_RPC_URL)
     `);
     process.exit(0);
   }
 
-  // Use default configuration (no CLI parameters)
-  const chainKey = "ethereum";
-  const pairs = getPairGroup("default");
+  const chainKey = (process.env.CHAIN || "ethereum").toLowerCase().trim();
+  const pairGroup = (process.env.PAIR_GROUP || "default").trim();
+  let pairs;
+  try {
+    pairs = getPairGroup(pairGroup);
+  } catch (e) {
+    console.error(`❌ ${e.message}`);
+    process.exit(1);
+  }
 
   // Validate chain
   const chain = CHAINS[chainKey];
@@ -328,6 +336,7 @@ Configuration:
   const chainEmoji = "🔷";
   printHeader(`Multi-DEX Price Aggregator`, `Chain: ${chainEmoji} ${chain.name}`);
 
+  console.log(chalk.gray(`PAIR_GROUP=${pairGroup} | CHAIN=${chainKey} (set env to change)\n`));
   console.log(`Monitoring ${pairs.length} pair(s) across all DEXs...\n`);
 
   // Aggregate prices for each pair

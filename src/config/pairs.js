@@ -209,6 +209,9 @@ const PAIR_GROUPS = {
   // Most important pairs for daily monitoring (8 pairs: major liquidity)
   default: ["WETH/USDC", "WETH/USDT", "WETH/DAI", "WBTC/USDC", "WBTC/WETH", "USDC/USDT", "USDC/DAI", "wstETH/WETH"],
 
+  // Tight set for L1/L2 day-trade quote checks (majors + stables; needs token addresses per chain in chains.js)
+  daytrade: ["WETH/USDC", "WETH/USDT", "USDC/USDT"],
+
   // ETH pairs (3 pairs)
   eth: ["WETH/USDC", "WETH/USDT", "WETH/DAI"],
 
