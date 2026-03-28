@@ -152,6 +152,19 @@ Track lending rates and compare protocols:
 - [ ] **Soneium DEX** - Enterprise AMM L2 [![Soneium](https://img.shields.io/badge/Soneium-00D4FF?logoColor=white)](https://soneium.org)
 - [ ] **MegaETH AMM** - High-Perf AMM L2 [![MegaETH](https://img.shields.io/badge/MegaETH-FF6B35?logoColor=white)](https://megaeth.systems)
 
+### Trending 2026
+
+- [ ] **Unichain** - OP Stack L2 with Flashblocks [![Unichain](https://img.shields.io/badge/Unichain-627EEA?logoColor=white)](https://www.unichain.org)
+- [ ] **Ink** - Kraken-aligned L2 (OP Stack) [![Ink](https://img.shields.io/badge/Ink-000000?logoColor=white)](https://inkonchain.com)
+- [ ] **Plasma** - Stablecoin-centric L1 [![Plasma](https://img.shields.io/badge/Plasma-6366F1?logoColor=white)](https://plasma.to)
+- [ ] **Sonic** - High-throughput EVM L1 [![Sonic](https://img.shields.io/badge/Sonic-3B82F6?logoColor=white)](https://soniclabs.com)
+- [ ] **UniswapX / Dutch auctions** - Intent-based routing across fillers [![Uniswap](https://img.shields.io/badge/UniswapX-ff007a?logoColor=white)](https://docs.uniswap.org/contracts/uniswapx/overview)
+- [ ] **1inch Fusion / resolver networks** - RFQ & Dutch-style settlement [![1inch](https://img.shields.io/badge/1inch-94BF3B?logoColor=white)](https://1inch.io)
+- [ ] **Ondo Global Markets** - Tokenized securities & stable yield rails [![Ondo](https://img.shields.io/badge/Ondo-1A1A2E?logoColor=white)](https://ondo.finance)
+- [ ] **BlackRock BUIDL / tokenized funds** - Institutional on-chain cash & MMFs [![BUIDL](https://img.shields.io/badge/BUIDL-000000?logoColor=white)](https://www.blackrock.com)
+- [ ] **Sky (ex-Maker)** - DAI / USDS & subDAO liquidity [![Sky](https://img.shields.io/badge/Sky-1E88E5?logoColor=white)](https://sky.money)
+- [ ] **Ethena / USDe-style synthetic dollars** - Basis-trade stablecoin design [![Ethena](https://img.shields.io/badge/Ethena-111111?logoColor=white)](https://ethena.fi)
+
 ## Contributing
 
 Contributions are welcome! Please follow these guidelines:
