@@ -94,20 +94,15 @@ async function runStakingYieldComparison(opts = {}) {
   if (!opts.compact) {
     console.log(
       chalk.gray(
-        "Yield: Lido APR from Lido API; Kintsu APY from DefiLlama yields chart when protocol.apy is missing; StakeStone may use STAKESTONE_YIELDS_POOL_ID. TVL from Llama series.",
-      ),
+        "Yield: Lido APR from Lido API; Kintsu APY from DefiLlama yields chart when protocol.apy is missing; StakeStone may use STAKESTONE_YIELDS_POOL_ID. TVL from Llama series."
+      )
     );
-    console.log(
-      chalk.gray(
-        "Score uses a fixed blend (see file header); it is not financial advice.\n",
-      ),
-    );
+    console.log(chalk.gray("Score uses a fixed blend (see file header); it is not financial advice.\n"));
   }
 
-  const overview = createTable(
-    ["Protocol", "APR/APY", "TVL", "Peg (Lido only)", "Liquidity note", "Score"],
-    { colAligns: ["left", "right", "right", "left", "left", "right"] },
-  );
+  const overview = createTable(["Protocol", "APR/APY", "TVL", "Peg (Lido only)", "Liquidity note", "Score"], {
+    colAligns: ["left", "right", "right", "left", "left", "right"],
+  });
 
   for (const p of protocols) {
     const aprStr = p.aprPct != null ? `${p.aprPct.toFixed(2)}%` : "—";
@@ -120,9 +115,7 @@ async function runStakingYieldComparison(opts = {}) {
   if (opts.compact) {
     if (stone.aprPct == null && kintsu.aprPct == null) {
       console.log(
-        chalk.gray(
-          "\nNo APY for StakeStone/Kintsu — set STAKESTONE_YIELDS_POOL_ID / KINTSU_YIELDS_POOL_ID if needed.",
-        ),
+        chalk.gray("\nNo APY for StakeStone/Kintsu — set STAKESTONE_YIELDS_POOL_ID / KINTSU_YIELDS_POOL_ID if needed.")
       );
     }
     return;
@@ -134,19 +127,21 @@ async function runStakingYieldComparison(opts = {}) {
   const kTvl = kintsu.tvlUsd ?? 0;
 
   const lines = [];
-  lines.push(`Large / institution-sized notionals: favor deep aggregate liquidity — Lido TVL ${lidoTvl ? formatCurrency(lidoTvl) : "—"}.`);
   lines.push(
-    `Mid-size (rough $50k–$500k): compare listed APR/APY when available; StakeStone TVL ${stoneTvl ? formatCurrency(stoneTvl) : "—"}.`,
+    `Large / institution-sized notionals: favor deep aggregate liquidity — Lido TVL ${lidoTvl ? formatCurrency(lidoTvl) : "—"}.`
   );
   lines.push(
-    `Small / experimental tickets: higher protocol APR (when shown) may not compensate for thin TVL — Kintsu TVL ${kTvl ? formatCurrency(kTvl) : "—"}.`,
+    `Mid-size (rough $50k–$500k): compare listed APR/APY when available; StakeStone TVL ${stoneTvl ? formatCurrency(stoneTvl) : "—"}.`
+  );
+  lines.push(
+    `Small / experimental tickets: higher protocol APR (when shown) may not compensate for thin TVL — Kintsu TVL ${kTvl ? formatCurrency(kTvl) : "—"}.`
   );
   for (const line of lines) console.log(`  • ${line}`);
   if (stone.aprPct == null && kintsu.aprPct == null) {
     console.log(
       chalk.gray(
-        "\nNo APY resolved for StakeStone/Kintsu — set STAKESTONE_YIELDS_POOL_ID, check KINTSU_YIELDS_POOL_ID, or use protocol UIs.",
-      ),
+        "\nNo APY resolved for StakeStone/Kintsu — set STAKESTONE_YIELDS_POOL_ID, check KINTSU_YIELDS_POOL_ID, or use protocol UIs."
+      )
     );
   }
 }

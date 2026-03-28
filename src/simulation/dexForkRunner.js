@@ -69,7 +69,7 @@ async function getUniswapV2Quote(chainKey, tokenIn, tokenOut, amountIn) {
     const router = new ethers.Contract(
       chain.uniswap.v2.router,
       ["function getAmountsOut(uint amountIn, address[] path) view returns (uint[] amounts)"],
-      provider,
+      provider
     );
     const amounts = await router.getAmountsOut(amountIn, [tokenIn, tokenOut]);
     return amounts[1].toString();
@@ -114,7 +114,7 @@ async function getSushiSwapV2Quote(chainKey, tokenIn, tokenOut, amountIn) {
     const router = new ethers.Contract(
       chain.sushiswap.v2.router,
       ["function getAmountsOut(uint amountIn, address[] path) view returns (uint[] amounts)"],
-      provider,
+      provider
     );
     const amounts = await router.getAmountsOut(amountIn, [tokenIn, tokenOut]);
     return amounts[1].toString();
@@ -190,8 +190,7 @@ async function getBalancerV2Quote(chainKey, poolId, tokenIn, tokenOut, amountIn)
       "function queryBatchSwap(uint8 kind, tuple(bytes32 poolId,uint256 assetInIndex,uint256 assetOutIndex,uint256 amount,bytes userData)[] swaps, address[] assets, tuple(address sender, bool fromInternalBalance, address recipient, bool toInternalBalance) funds) view returns (int256[])",
     ]);
     const vault = new ethers.Contract(chain.balancer.v2.vault, iface, provider);
-    const assets =
-      tokenIn.toLowerCase() < tokenOut.toLowerCase() ? [tokenIn, tokenOut] : [tokenOut, tokenIn];
+    const assets = tokenIn.toLowerCase() < tokenOut.toLowerCase() ? [tokenIn, tokenOut] : [tokenOut, tokenIn];
     const assetInIndex = assets.findIndex(a => a.toLowerCase() === tokenIn.toLowerCase());
     const assetOutIndex = assets.findIndex(a => a.toLowerCase() === tokenOut.toLowerCase());
     const swaps = [
@@ -262,7 +261,7 @@ async function aggregateQuotes(chainKey, tokenInSymbol, tokenOutSymbol, amountIn
       });
       console.log(
         chalk.green("✓") +
-          ` ${formatAmount(uniV3Quote.amountOut, 6)} ${tokenOutSymbol} (${uniV3Quote.fee / 10000}% fee)`,
+          ` ${formatAmount(uniV3Quote.amountOut, 6)} ${tokenOutSymbol} (${uniV3Quote.fee / 10000}% fee)`
       );
     } else {
       console.log(chalk.red("✗") + " Not available");
@@ -281,7 +280,7 @@ async function aggregateQuotes(chainKey, tokenInSymbol, tokenOutSymbol, amountIn
       });
       console.log(
         chalk.green("✓") +
-          ` ${formatAmount(uniV4Quote.amountOut, 6)} ${tokenOutSymbol} (${uniV4Quote.fee / 10000}% fee)`,
+          ` ${formatAmount(uniV4Quote.amountOut, 6)} ${tokenOutSymbol} (${uniV4Quote.fee / 10000}% fee)`
       );
     } else {
       console.log(chalk.red("✗") + " Not available");
@@ -315,8 +314,7 @@ async function aggregateQuotes(chainKey, tokenInSymbol, tokenOutSymbol, amountIn
         data: { tokenIn, tokenOut, fee: sushiV3.fee },
       });
       console.log(
-        chalk.green("✓") +
-          ` ${formatAmount(sushiV3.amountOut, 6)} ${tokenOutSymbol} (${sushiV3.fee / 10000}% fee)`,
+        chalk.green("✓") + ` ${formatAmount(sushiV3.amountOut, 6)} ${tokenOutSymbol} (${sushiV3.fee / 10000}% fee)`
       );
     } else {
       console.log(chalk.red("✗") + " Not available");
@@ -340,7 +338,7 @@ async function aggregateQuotes(chainKey, tokenInSymbol, tokenOutSymbol, amountIn
         },
       });
       console.log(
-        chalk.green("✓") + ` ${formatAmount(curveQuote.amountOut, 6)} ${tokenOutSymbol} (${curveQuote.poolName})`,
+        chalk.green("✓") + ` ${formatAmount(curveQuote.amountOut, 6)} ${tokenOutSymbol} (${curveQuote.poolName})`
       );
     } else {
       console.log(chalk.red("✗") + " Not available");
@@ -368,14 +366,10 @@ async function aggregateQuotes(chainKey, tokenInSymbol, tokenOutSymbol, amountIn
     }
   }
 
-  const filtered = quotes.filter(q =>
-    isSaneWethUsdcQuote(tokenInSymbol, tokenOutSymbol, q.amountOut),
-  );
+  const filtered = quotes.filter(q => isSaneWethUsdcQuote(tokenInSymbol, tokenOutSymbol, q.amountOut));
   if (filtered.length < quotes.length) {
     console.log(
-      chalk.yellow(
-        `\n  Dropped ${quotes.length - filtered.length} implausible WETH→USDC quote(s) (sanity band).`,
-      ),
+      chalk.yellow(`\n  Dropped ${quotes.length - filtered.length} implausible WETH→USDC quote(s) (sanity band).`)
     );
   }
   return filtered;
@@ -383,9 +377,7 @@ async function aggregateQuotes(chainKey, tokenInSymbol, tokenOutSymbol, amountIn
 
 function findBestQuote(quotes) {
   if (quotes.length === 0) return null;
-  return quotes.reduce((best, current) =>
-    BigInt(current.amountOut) > BigInt(best.amountOut) ? current : best,
-  );
+  return quotes.reduce((best, current) => (BigInt(current.amountOut) > BigInt(best.amountOut) ? current : best));
 }
 
 async function executeSwap(chainKey, signer, bestQuote, amountIn, slippageBps = 50) {
@@ -393,14 +385,7 @@ async function executeSwap(chainKey, signer, bestQuote, amountIn, slippageBps = 
   console.log(chalk.gray(`\n  Executing ${protocol} ${version} swap...`));
 
   if (protocol === "Uniswap" && version === "V2") {
-    return await v2Swap.swapExactTokensForTokens(
-      chainKey,
-      signer,
-      data.tokenIn,
-      data.tokenOut,
-      amountIn,
-      slippageBps,
-    );
+    return await v2Swap.swapExactTokensForTokens(chainKey, signer, data.tokenIn, data.tokenOut, amountIn, slippageBps);
   }
   if (protocol === "Uniswap" && version === "V3") {
     return await v3Swap.swapExactInputSingle(
@@ -410,19 +395,11 @@ async function executeSwap(chainKey, signer, bestQuote, amountIn, slippageBps = 
       data.tokenOut,
       data.fee,
       amountIn,
-      slippageBps,
+      slippageBps
     );
   }
   if (protocol === "Uniswap" && version === "V4") {
-    const r = await v4Swap.swapV4(
-      chainKey,
-      signer,
-      data.tokenIn,
-      data.tokenOut,
-      data.fee,
-      amountIn,
-      slippageBps,
-    );
+    const r = await v4Swap.swapV4(chainKey, signer, data.tokenIn, data.tokenOut, data.fee, amountIn, slippageBps);
     return { hash: r.hash };
   }
   if (protocol === "SushiSwap" && version === "V2") {
@@ -432,7 +409,7 @@ async function executeSwap(chainKey, signer, bestQuote, amountIn, slippageBps = 
       [
         "function swapExactTokensForTokens(uint amountIn, uint amountOutMin, address[] path, address to, uint deadline) returns (uint[] amounts)",
       ],
-      signer,
+      signer
     );
     const ERC20_ABI = ["function approve(address spender, uint256 amount) returns (bool)"];
     const tokenContract = new ethers.Contract(data.tokenIn, ERC20_ABI, signer);
@@ -445,7 +422,7 @@ async function executeSwap(chainKey, signer, bestQuote, amountIn, slippageBps = 
       amountOutMin.toString(),
       [data.tokenIn, data.tokenOut],
       await signer.getAddress(),
-      deadline,
+      deadline
     );
     const receipt = await tx.wait();
     return { hash: receipt.hash };
@@ -458,7 +435,7 @@ async function executeSwap(chainKey, signer, bestQuote, amountIn, slippageBps = 
       data.tokenOut,
       amountIn,
       slippageBps,
-      data.fee,
+      data.fee
     );
     return { hash: r.hash };
   }
@@ -472,7 +449,7 @@ async function executeSwap(chainKey, signer, bestQuote, amountIn, slippageBps = 
       data.i,
       data.j,
       amountIn,
-      slippageBps,
+      slippageBps
     );
   }
   if (protocol === "Balancer") {
@@ -483,7 +460,7 @@ async function executeSwap(chainKey, signer, bestQuote, amountIn, slippageBps = 
       data.tokenIn,
       data.tokenOut,
       amountIn,
-      slippageBps,
+      slippageBps
     );
     return { hash: r.hash };
   }
@@ -521,8 +498,7 @@ async function runDexForkSimulation(options = {}) {
   const tokenOutSymbol = pair.tokenOut;
   const tokenInDecimals = ["USDC", "USDT"].includes(tokenInSymbol) ? 6 : 18;
   const tokenOutDecimals = ["USDC", "USDT"].includes(tokenOutSymbol) ? 6 : 18;
-  const amountIn =
-    tokenInDecimals === 6 ? ethers.parseUnits(pair.amount, 6) : ethers.parseEther(pair.amount);
+  const amountIn = tokenInDecimals === 6 ? ethers.parseUnits(pair.amount, 6) : ethers.parseEther(pair.amount);
 
   printSection("Trade Parameters");
   console.log(`  Token In: ${chalk.cyan(tokenInSymbol)}`);
@@ -558,18 +534,15 @@ async function runDexForkSimulation(options = {}) {
 
   printSection("Best Quote");
   console.log(`  Protocol: ${chalk.cyan(bestQuote.protocol + " " + bestQuote.version)}`);
-  console.log(
-    `  Expected Output: ${chalk.green(formatAmount(bestQuote.amountOut, tokenOutDecimals, tokenOutSymbol))}`,
-  );
+  console.log(`  Expected Output: ${chalk.green(formatAmount(bestQuote.amountOut, tokenOutDecimals, tokenOutSymbol))}`);
 
   if (quotes.length > 1) {
     const worstQuote = quotes.reduce((worst, current) =>
-      BigInt(current.amountOut) < BigInt(worst.amountOut) ? current : worst,
+      BigInt(current.amountOut) < BigInt(worst.amountOut) ? current : worst
     );
     if (BigInt(worstQuote.amountOut) > 0n) {
       const savings =
-        ((BigInt(bestQuote.amountOut) - BigInt(worstQuote.amountOut)) * BigInt(10000)) /
-        BigInt(worstQuote.amountOut);
+        ((BigInt(bestQuote.amountOut) - BigInt(worstQuote.amountOut)) * BigInt(10000)) / BigInt(worstQuote.amountOut);
       console.log(`  Savings vs Worst: ${chalk.yellow((Number(savings) / 100).toFixed(2) + "%")}`);
     }
   }
@@ -601,7 +574,7 @@ async function runDexForkSimulation(options = {}) {
     const tokenInBalance = await getTokenBalance(tokenIn, whaleAddress, CHAIN);
     const ethBalance = await getProvider(CHAIN).getBalance(whaleAddress);
     console.log(
-      `  ${tokenInSymbol} Balance: ${chalk.green(formatAmount(tokenInBalance, tokenInDecimals, tokenInSymbol))}`,
+      `  ${tokenInSymbol} Balance: ${chalk.green(formatAmount(tokenInBalance, tokenInDecimals, tokenInSymbol))}`
     );
     console.log(`  ETH Balance: ${chalk.green(formatAmount(ethBalance, 18, "ETH"))}`);
 
@@ -611,7 +584,7 @@ async function runDexForkSimulation(options = {}) {
 
     const initialBalance = await getTokenBalance(tokenOut, whaleAddress, CHAIN);
     console.log(
-      `\n  Initial ${tokenOutSymbol} Balance: ${chalk.gray(formatAmount(initialBalance, tokenOutDecimals, tokenOutSymbol))}`,
+      `\n  Initial ${tokenOutSymbol} Balance: ${chalk.gray(formatAmount(initialBalance, tokenOutDecimals, tokenOutSymbol))}`
     );
 
     printSection("Executing Swap on Fork");
@@ -625,14 +598,11 @@ async function runDexForkSimulation(options = {}) {
 
     printSection("Execution Results");
     console.log(
-      `  Expected Output: ${chalk.yellow(formatAmount(bestQuote.amountOut, tokenOutDecimals, tokenOutSymbol))}`,
+      `  Expected Output: ${chalk.yellow(formatAmount(bestQuote.amountOut, tokenOutDecimals, tokenOutSymbol))}`
     );
-    console.log(
-      `  Actual Received: ${chalk.green(formatAmount(actualReceived, tokenOutDecimals, tokenOutSymbol))}`,
-    );
+    console.log(`  Actual Received: ${chalk.green(formatAmount(actualReceived, tokenOutDecimals, tokenOutSymbol))}`);
 
-    const priceImpact =
-      ((Number(bestQuote.amountOut) - Number(actualReceived)) / Number(bestQuote.amountOut)) * 100;
+    const priceImpact = ((Number(bestQuote.amountOut) - Number(actualReceived)) / Number(bestQuote.amountOut)) * 100;
     const impactColor = Math.abs(priceImpact) > 1 ? chalk.red : chalk.green;
     console.log(`  Price Impact: ${impactColor(priceImpact.toFixed(4) + "%")}`);
 

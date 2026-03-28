@@ -73,12 +73,7 @@ async function getV3Quote(chainKey, tokenIn, tokenOut, amountIn, fee = 3000) {
     };
 
     const result = await quoter.quoteExactInputSingle.staticCall(params);
-    const rawOut =
-      result?.amountOut != null
-        ? result.amountOut
-        : typeof result === "bigint"
-          ? result
-          : result?.[0];
+    const rawOut = result?.amountOut != null ? result.amountOut : typeof result === "bigint" ? result : result?.[0];
     return {
       amountOut: rawOut != null ? rawOut.toString() : "0",
       fee,

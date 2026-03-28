@@ -22,10 +22,8 @@ async function fetchYieldsChartLatest(poolId, timeoutMs = DEFAULT_TIMEOUT_MS) {
   if (!Array.isArray(arr) || arr.length === 0) return null;
   const last = arr[arr.length - 1];
   const apy = typeof last.apy === "number" && Number.isFinite(last.apy) ? last.apy : null;
-  const apyBase =
-    typeof last.apyBase === "number" && Number.isFinite(last.apyBase) ? last.apyBase : null;
-  const tvlUsd =
-    typeof last.tvlUsd === "number" && Number.isFinite(last.tvlUsd) ? last.tvlUsd : null;
+  const apyBase = typeof last.apyBase === "number" && Number.isFinite(last.apyBase) ? last.apyBase : null;
+  const tvlUsd = typeof last.tvlUsd === "number" && Number.isFinite(last.tvlUsd) ? last.tvlUsd : null;
   return { apy, apyBase, tvlUsd, timestamp: last.timestamp };
 }
 

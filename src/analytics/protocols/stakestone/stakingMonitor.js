@@ -67,23 +67,18 @@ async function main() {
     console.log(chalk.gray(`Data: ${stone.source} (${stone.slug})`));
     console.log(
       chalk.gray(
-        "APY: protocol payload often omits apy; set STAKESTONE_YIELDS_POOL_ID for yields.llama.fi chart fallback.\n",
-      ),
+        "APY: protocol payload often omits apy; set STAKESTONE_YIELDS_POOL_ID for yields.llama.fi chart fallback.\n"
+      )
     );
 
     const t = createTable(["Metric", "Value"], { colAligns: ["left", "right"] });
     t.push(["TVL (latest series)", stone.tvlUsd != null ? formatCurrency(stone.tvlUsd) : "—"]);
     t.push(["APY (Llama protocol)", stone.apyFromLlama != null ? `${stone.apyFromLlama.toFixed(2)}%` : "—"]);
-    t.push([
-      "APY (yields chart)",
-      stone.apyFromYieldsChart != null ? `${stone.apyFromYieldsChart.toFixed(2)}%` : "—",
-    ]);
+    t.push(["APY (yields chart)", stone.apyFromYieldsChart != null ? `${stone.apyFromYieldsChart.toFixed(2)}%` : "—"]);
     t.push(["APY (effective)", stone.aprPct != null ? `${stone.aprPct.toFixed(2)}%` : "—"]);
     console.log(t.toString());
 
-    const stoneChainRows = Object.entries(stone.currentChainTvls).filter(
-      ([, v]) => typeof v === "number" && v > 0,
-    );
+    const stoneChainRows = Object.entries(stone.currentChainTvls).filter(([, v]) => typeof v === "number" && v > 0);
     if (stoneChainRows.length) {
       const ct = createTable(["Chain (Llama)", "TVL"], { colAligns: ["left", "right"] });
       for (const [c, v] of stoneChainRows) ct.push([c, formatCurrency(v)]);

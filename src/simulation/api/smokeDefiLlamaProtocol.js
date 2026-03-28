@@ -25,9 +25,7 @@ async function main() {
   } catch (e) {
     const status = e.response?.status;
     if (process.env.SMOKE_ALLOW_NOT_LISTED === "1" && (status === 404 || status === 400)) {
-      console.log(
-        chalk.yellow(`skip: protocol not listed or invalid slug (HTTP ${status}) — ${slug}`),
-      );
+      console.log(chalk.yellow(`skip: protocol not listed or invalid slug (HTTP ${status}) — ${slug}`));
       process.exit(0);
     }
     console.error(chalk.red(e.message || String(e)));

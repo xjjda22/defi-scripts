@@ -16,8 +16,8 @@ async function main() {
   if (!SLUG) {
     console.log(
       chalk.yellow(
-        "Set AMMALGAM_LLAMA_SLUG to a DefiLlama protocol slug when the project is listed (api.llama.fi/protocols).",
-      ),
+        "Set AMMALGAM_LLAMA_SLUG to a DefiLlama protocol slug when the project is listed (api.llama.fi/protocols)."
+      )
     );
     process.exit(0);
   }

@@ -14,9 +14,21 @@ async function main() {
 
   console.log(chalk.cyan.bold("\nStaking compare — API smoke (read-only)\n"));
   const t = createTable(["Protocol", "APR/APY", "TVL"], { colAligns: ["left", "right", "right"] });
-  t.push(["Lido", lido.aprPct != null ? `${lido.aprPct.toFixed(2)}%` : "—", lido.tvlUsdTotal != null ? formatCurrency(lido.tvlUsdTotal) : "—"]);
-  t.push(["StakeStone", stone.aprPct != null ? `${stone.aprPct.toFixed(2)}%` : "—", stone.tvlUsd != null ? formatCurrency(stone.tvlUsd) : "—"]);
-  t.push(["Kintsu", kintsu.aprPct != null ? `${kintsu.aprPct.toFixed(2)}%` : "—", kintsu.tvlUsd != null ? formatCurrency(kintsu.tvlUsd) : "—"]);
+  t.push([
+    "Lido",
+    lido.aprPct != null ? `${lido.aprPct.toFixed(2)}%` : "—",
+    lido.tvlUsdTotal != null ? formatCurrency(lido.tvlUsdTotal) : "—",
+  ]);
+  t.push([
+    "StakeStone",
+    stone.aprPct != null ? `${stone.aprPct.toFixed(2)}%` : "—",
+    stone.tvlUsd != null ? formatCurrency(stone.tvlUsd) : "—",
+  ]);
+  t.push([
+    "Kintsu",
+    kintsu.aprPct != null ? `${kintsu.aprPct.toFixed(2)}%` : "—",
+    kintsu.tvlUsd != null ? formatCurrency(kintsu.tvlUsd) : "—",
+  ]);
   console.log(t.toString());
   console.log(chalk.green("\nOK\n"));
 }

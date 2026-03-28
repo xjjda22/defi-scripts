@@ -48,14 +48,14 @@ function processVolumeData(data) {
     if (chainData[chainName]) {
       const protocolData = chainData[chainName];
       let totalVolume = 0;
-      
+
       // Sum up all Balancer versions (V1, V2, V3)
       for (const [key, value] of Object.entries(protocolData)) {
         if (key.startsWith("Balancer")) {
           totalVolume += value || 0;
         }
       }
-      
+
       volumeByChain[chainKey] = {
         name: chainName,
         volume24h: totalVolume,

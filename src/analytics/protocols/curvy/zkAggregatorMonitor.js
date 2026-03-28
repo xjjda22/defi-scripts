@@ -14,11 +14,7 @@ const DEFAULT_SLUG = process.env.CURVY_LLAMA_SLUG || "curves-protocol";
 async function main() {
   installCliSafeStdout();
   console.log(chalk.cyan.bold("\nCurvy / curves monitor (DefiLlama)\n"));
-  console.log(
-    chalk.gray(
-      `Slug: ${DEFAULT_SLUG} — set CURVY_LLAMA_SLUG if a dedicated Curvy listing exists.\n`,
-    ),
-  );
+  console.log(chalk.gray(`Slug: ${DEFAULT_SLUG} — set CURVY_LLAMA_SLUG if a dedicated Curvy listing exists.\n`));
   try {
     const d = await fetchDefiLlamaProtocol(DEFAULT_SLUG);
     const tvl = lastTvlUsdFromSeries(d.tvl);

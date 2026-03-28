@@ -72,7 +72,7 @@ function processWeeklyVolumeData(dexData, weekDates) {
 
   for (const entry of dexData.totalDataChartBreakdown) {
     if (!Array.isArray(entry) || entry.length < 2) continue;
-    
+
     const timestamp = entry[0];
     const chainData = entry[1];
     const date = new Date(timestamp * 1000).toISOString().split("T")[0];
@@ -92,7 +92,7 @@ function processWeeklyVolumeData(dexData, weekDates) {
           }
         }
       }
-      
+
       chainVolumeData[chainKey].push({ date, volume });
     }
   }

@@ -51,13 +51,13 @@ const anvil = spawn("anvil", args, {
   stdio: "inherit",
 });
 
-anvil.on("error", (error) => {
+anvil.on("error", error => {
   console.error(`❌ Failed to start Anvil: ${error.message}`);
   console.error(`Make sure Foundry is installed: https://book.getfoundry.sh/getting-started/installation`);
   process.exit(1);
 });
 
-anvil.on("close", (code) => {
+anvil.on("close", code => {
   console.log(`\n\nAnvil exited with code ${code}`);
   process.exit(code);
 });

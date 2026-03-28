@@ -48,7 +48,7 @@ function processVolumeData(data) {
     if (chainData[chainName]) {
       const protocolData = chainData[chainName];
       const volume = protocolData["SushiSwap"] || 0;
-      
+
       volumeByChain[chainKey] = {
         name: chainName,
         volume24h: volume,

@@ -136,11 +136,9 @@ async function fetchLidoStakingSnapshot() {
     unwrapRef = null;
   }
 
-  const l2PegChains = ROW_CHAINS.filter(
-    ck => ck !== "ethereum" && COMMON_TOKENS.wstETH?.[ck] && CHAINS[ck]?.rpcUrl,
-  );
+  const l2PegChains = ROW_CHAINS.filter(ck => ck !== "ethereum" && COMMON_TOKENS.wstETH?.[ck] && CHAINS[ck]?.rpcUrl);
   const missingRpcForWstethPeg = ROW_CHAINS.filter(
-    ck => ck !== "ethereum" && COMMON_TOKENS.wstETH?.[ck] && !CHAINS[ck]?.rpcUrl,
+    ck => ck !== "ethereum" && COMMON_TOKENS.wstETH?.[ck] && !CHAINS[ck]?.rpcUrl
   );
 
   const l2PegByChain = {};
@@ -158,7 +156,7 @@ async function fetchLidoStakingSnapshot() {
           const rpcError = raw.split("\n")[0].slice(0, 160);
           return { ck, pegRatio: null, rpcError };
         }
-      }),
+      })
     );
     for (const { ck, pegRatio, rpcError } of l2Results) {
       l2PegAttempted += 1;
@@ -174,8 +172,7 @@ async function fetchLidoStakingSnapshot() {
     const chain = CHAINS[chainKey];
     const llamaName = LLAMA_TVL_NAMES[chainKey];
     const rawTvl = llamaName != null ? chainTvls[llamaName] : undefined;
-    const tvlUsd =
-      typeof rawTvl === "number" && Number.isFinite(rawTvl) && rawTvl > 0 ? rawTvl : null;
+    const tvlUsd = typeof rawTvl === "number" && Number.isFinite(rawTvl) && rawTvl > 0 ? rawTvl : null;
 
     let pegRatio = null;
     let pegLabel = "—";
@@ -225,38 +222,32 @@ function printSnapshot(snap) {
   }
   console.log(
     chalk.gray(
-      "Note: DefiLlama’s Lido adapter does not split most L2 bridged wstETH; non-Ethereum TVL often shows as —.",
-    ),
+      "Note: DefiLlama’s Lido adapter does not split most L2 bridged wstETH; non-Ethereum TVL often shows as —."
+    )
   );
   console.log(
     chalk.gray(
-      "Peg: Ethereum = pooled ETH per 1 stETH; L2 = same unwrap math vs mainnet ref (needs RPC; bridged wstETH often reverts on-chain).\n",
-    ),
+      "Peg: Ethereum = pooled ETH per 1 stETH; L2 = same unwrap math vs mainnet ref (needs RPC; bridged wstETH often reverts on-chain).\n"
+    )
   );
   if (snap.missingRpcForWstethPeg?.length) {
-    console.log(
-      chalk.gray(`L2 peg skipped — set env: ${snap.missingRpcForWstethPeg.join(", ")}`),
-    );
+    console.log(chalk.gray(`L2 peg skipped — set env: ${snap.missingRpcForWstethPeg.join(", ")}`));
   }
   if (!CHAINS.ethereum?.rpcUrl) {
-    console.log(
-      chalk.gray("Ethereum on-chain peg skipped — set ETHEREUM_RPC_URL or ETH_RPC_URL."),
-    );
+    console.log(chalk.gray("Ethereum on-chain peg skipped — set ETHEREUM_RPC_URL or ETH_RPC_URL."));
   }
   if (snap.l2PegAttempted > 0) {
     if (snap.l2PegSucceeded === 0) {
       console.log(
         chalk.gray(
-          `L2 wstETH peg: no chain returned a rate (${snap.l2PegAttempted} RPCs tried). Bridged wstETH often reverts on getStETHByWstETH; rely on mainnet stETH peg above.`,
-        ),
+          `L2 wstETH peg: no chain returned a rate (${snap.l2PegAttempted} RPCs tried). Bridged wstETH often reverts on getStETHByWstETH; rely on mainnet stETH peg above.`
+        )
       );
       if (snap.l2PegFirstError) {
         console.log(chalk.gray(`  Example revert: ${snap.l2PegFirstError}`));
       }
     } else if (snap.l2PegSucceeded < snap.l2PegAttempted) {
-      console.log(
-        chalk.gray(`L2 wstETH peg: ${snap.l2PegSucceeded}/${snap.l2PegAttempted} chains returned a rate.`),
-      );
+      console.log(chalk.gray(`L2 wstETH peg: ${snap.l2PegSucceeded}/${snap.l2PegAttempted} chains returned a rate.`));
     }
   }
   console.log("");

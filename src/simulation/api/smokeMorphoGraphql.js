@@ -15,7 +15,7 @@ async function morphoGraphql(query, variables) {
         "Content-Type": "application/json",
         "User-Agent": "defi-scripts/morpho-smoke",
       },
-    },
+    }
   );
   if (data.errors?.length) {
     throw new Error(data.errors.map(e => e.message).join("; "));

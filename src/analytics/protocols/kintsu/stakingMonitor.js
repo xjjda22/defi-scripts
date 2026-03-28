@@ -73,17 +73,12 @@ async function main() {
 
     console.log(chalk.cyan.bold("\nKintsu liquid staking monitor\n"));
     console.log(chalk.gray(`Data: ${k.source} (${k.slug})`));
-    console.log(
-      chalk.gray(`Yields chart pool: ${k.yieldsPoolId} (override with KINTSU_YIELDS_POOL_ID).\n`),
-    );
+    console.log(chalk.gray(`Yields chart pool: ${k.yieldsPoolId} (override with KINTSU_YIELDS_POOL_ID).\n`));
 
     const t = createTable(["Metric", "Value"], { colAligns: ["left", "right"] });
     t.push(["TVL (latest series)", k.tvlUsd != null ? formatCurrency(k.tvlUsd) : "—"]);
     t.push(["APY (Llama protocol)", k.apyFromLlama != null ? `${k.apyFromLlama.toFixed(2)}%` : "—"]);
-    t.push([
-      "APY (yields chart)",
-      k.apyFromYieldsChart != null ? `${k.apyFromYieldsChart.toFixed(2)}%` : "—",
-    ]);
+    t.push(["APY (yields chart)", k.apyFromYieldsChart != null ? `${k.apyFromYieldsChart.toFixed(2)}%` : "—"]);
     t.push(["APY (effective)", k.aprPct != null ? `${k.aprPct.toFixed(2)}%` : "—"]);
     console.log(t.toString());
 
@@ -100,12 +95,7 @@ async function main() {
       colAligns: ["left", "right", "right", "right"],
     });
     const fmtYield = x => (x != null ? `${x.toFixed(2)}%` : "—");
-    cmp.push([
-      "APR / APY",
-      fmtYield(lido.aprPct),
-      fmtYield(stone.aprPct),
-      fmtYield(k.aprPct),
-    ]);
+    cmp.push(["APR / APY", fmtYield(lido.aprPct), fmtYield(stone.aprPct), fmtYield(k.aprPct)]);
     cmp.push([
       "TVL",
       lido.tvlUsdTotal != null ? formatCurrency(lido.tvlUsdTotal) : "—",

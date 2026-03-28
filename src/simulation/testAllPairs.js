@@ -8,7 +8,7 @@ const CHAIN = process.env.CHAIN || "ethereum";
 const PROTOCOL = process.env.PROTOCOL || null;
 
 function runSimulation(pairName) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const env = {
       ...process.env,
       PAIR: pairName,
@@ -28,16 +28,16 @@ function runSimulation(pairName) {
     let output = "";
     let hasData = false;
 
-    child.stdout.on("data", (data) => {
+    child.stdout.on("data", data => {
       output += data.toString();
       hasData = true;
     });
 
-    child.stderr.on("data", (data) => {
+    child.stderr.on("data", data => {
       output += data.toString();
     });
 
-    child.on("close", (code) => {
+    child.on("close", code => {
       resolve({
         pairName,
         success: code === 0 && hasData,
@@ -95,9 +95,7 @@ async function main() {
 
   for (let i = 0; i < pairs.length; i++) {
     const pair = pairs[i];
-    process.stdout.write(
-      chalk.gray(`[${i + 1}/${pairs.length}] Testing ${pair.name.padEnd(20)}... `)
-    );
+    process.stdout.write(chalk.gray(`[${i + 1}/${pairs.length}] Testing ${pair.name.padEnd(20)}... `));
 
     const result = await runSimulation(pair.name);
 
@@ -127,8 +125,8 @@ async function main() {
   console.log(chalk.cyan.bold("  TEST SUMMARY"));
   console.log(chalk.cyan("═".repeat(70) + "\n"));
 
-  const successCount = results.filter((r) => r.status === "success").length;
-  const failedCount = results.filter((r) => r.status === "failed").length;
+  const successCount = results.filter(r => r.status === "success").length;
+  const failedCount = results.filter(r => r.status === "failed").length;
 
   console.log(chalk.bold("Results:"));
   console.log(`  Total: ${chalk.cyan(results.length)} pairs`);
@@ -140,8 +138,8 @@ async function main() {
   if (failedCount > 0) {
     console.log(chalk.red("\nFailed Pairs:"));
     results
-      .filter((r) => r.status === "failed")
-      .forEach((r) => {
+      .filter(r => r.status === "failed")
+      .forEach(r => {
         console.log(`  ${chalk.red("✗")} ${r.pair} - ${chalk.gray(r.error)}`);
       });
   }
@@ -150,8 +148,8 @@ async function main() {
     console.log(chalk.green("\nProtocol Distribution:"));
     const protocols = {};
     results
-      .filter((r) => r.status === "success")
-      .forEach((r) => {
+      .filter(r => r.status === "success")
+      .forEach(r => {
         const proto = r.protocol || "Unknown";
         protocols[proto] = (protocols[proto] || 0) + 1;
       });
@@ -171,7 +169,7 @@ async function main() {
   process.exit(failedCount > 0 ? 1 : 0);
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error(chalk.red("\n❌ Test failed:"), error.message);
   process.exit(1);
 });

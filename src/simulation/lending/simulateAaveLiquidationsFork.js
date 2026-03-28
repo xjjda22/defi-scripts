@@ -6,10 +6,7 @@ const { getProvider } = require("../../utils/web3");
 const { getForkContext, printForkContext } = require("../lib/forkSimEnv");
 
 const CHAIN = process.env.CHAIN || "ethereum";
-const MAX_BLOCKS = Math.min(
-  5000,
-  Math.max(100, parseInt(process.env.AAVE_LIQ_SIM_BLOCKS || "2000", 10) || 2000),
-);
+const MAX_BLOCKS = Math.min(5000, Math.max(100, parseInt(process.env.AAVE_LIQ_SIM_BLOCKS || "2000", 10) || 2000));
 
 const POOL_IFACE = new ethers.Interface([
   "event LiquidationCall(address indexed collateralAsset, address indexed debtAsset, address indexed user, uint256 debtToCover, uint256 liquidatedCollateralAmount, address liquidator, bool receiveAToken)",

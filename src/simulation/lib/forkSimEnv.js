@@ -16,9 +16,7 @@ function printForkContext(chainKey, ctx, extra = {}) {
   console.log(`  Fork Status: ${isFork ? chalk.green(`YES (${forkType})`) : chalk.red("NO (Mainnet)")}`);
   if (forkBlock != null) console.log(`  Fork Block: ${chalk.cyan(String(forkBlock))}`);
   if (extra.simulateOnly != null) {
-    console.log(
-      `  Mode: ${extra.simulateOnly ? chalk.yellow("READ / API ONLY") : chalk.green("INCLUDES FORK TX")}`,
-    );
+    console.log(`  Mode: ${extra.simulateOnly ? chalk.yellow("READ / API ONLY") : chalk.green("INCLUDES FORK TX")}`);
   }
 }
 

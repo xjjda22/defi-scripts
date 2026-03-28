@@ -61,11 +61,7 @@ async function main() {
   }
 
   const pool = new ethers.Contract(poolAddr, POOL_SUPPLY_WITHDRAW_ABI, signer);
-  const token = new ethers.Contract(
-    assetAddr,
-    ["function approve(address,uint256) returns (bool)"],
-    signer,
-  );
+  const token = new ethers.Contract(assetAddr, ["function approve(address,uint256) returns (bool)"], signer);
 
   console.log(chalk.cyan("\nSupply → withdraw on fork"));
   let tx = await token.approve(poolAddr, amountIn);
