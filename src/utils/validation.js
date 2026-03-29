@@ -94,6 +94,13 @@ function validateFeeTier(fee) {
   }
 }
 
+/** For Slipstream / forks where pool fee uint24 is not limited to Uniswap’s four tiers. */
+function validateFeeTierFlexible(fee) {
+  if (typeof fee !== "number" || !Number.isInteger(fee) || fee < 1 || fee > 1_000_000) {
+    throw new Error(`Invalid V3 fee: ${fee} (expect integer 1…1000000)`);
+  }
+}
+
 /**
  * Validates wallet has private key
  * @param {object} wallet - ethers.Wallet instance
@@ -153,6 +160,7 @@ module.exports = {
   validateAmount,
   validateSlippage,
   validateFeeTier,
+  validateFeeTierFlexible,
   validateWallet,
   validateMultiHopPath,
 };

@@ -10,6 +10,7 @@ const {
   validateAmount,
   validateSlippage,
   validateFeeTier,
+  validateFeeTierFlexible,
   validateMultiHopPath,
 } = require("../utils/validation");
 const SWAP_ROUTER_ABI = require("../abis/ISwapRouter.json");
@@ -30,6 +31,22 @@ const FEE_TIERS = {
   MEDIUM: 3000, // 0.3%
   HIGH: 10000, // 1%
 };
+
+/** @param {string} chainKey @param {string} [dexId] uniswap | aerodrome | velodrome */
+function resolveV3Endpoints(chainKey, dexId = "uniswap") {
+  const chain = CHAINS[chainKey];
+  if (!chain) throw new Error(`Unknown chain: ${chainKey}`);
+  const id = (dexId || "uniswap").toLowerCase();
+  let cfg;
+  if (id === "uniswap") cfg = chain.uniswap?.v3;
+  else if (id === "aerodrome") cfg = chain.aerodrome?.v3;
+  else if (id === "velodrome") cfg = chain.velodrome?.v3;
+  else throw new Error(`Unknown V3 dexId: ${dexId} (use uniswap, aerodrome, velodrome)`);
+  if (!cfg?.quoter || !cfg?.router) {
+    throw new Error(`V3 ${id} not configured on ${chainKey}`);
+  }
+  return cfg;
+}
 
 /**
  * Encode path for V3 multi-hop swaps
@@ -64,21 +81,19 @@ function encodePath(tokens, fees) {
  * @param {string} amountIn - Amount of input token (in wei/smallest unit)
  * @returns {Promise<string>} Expected output amount
  */
-async function getQuote(chainKey, tokenIn, tokenOut, fee, amountIn) {
+async function getQuote(chainKey, tokenIn, tokenOut, fee, amountIn, dexId = "uniswap") {
   // Validate inputs
   validateChainKey(chainKey);
   validateAddress(tokenIn, "tokenIn");
   validateAddress(tokenOut, "tokenOut");
-  validateFeeTier(fee);
+  const id = (dexId || "uniswap").toLowerCase();
+  if (id === "uniswap") validateFeeTier(fee);
+  else validateFeeTierFlexible(fee);
   validateAmount(amountIn, "amountIn");
 
-  const chain = CHAINS[chainKey];
-  if (!chain?.uniswap?.v3?.quoter) {
-    throw new Error(`Uniswap V3 not available on ${chainKey}`);
-  }
-
+  const v3cfg = resolveV3Endpoints(chainKey, dexId);
   const provider = getProvider(chainKey);
-  const quoterAddr = chain.uniswap.v3.quoter;
+  const quoterAddr = v3cfg.quoter;
   const legacy = new ethers.Contract(quoterAddr, QUOTER_ABI, provider);
 
   try {
@@ -105,19 +120,15 @@ async function getQuote(chainKey, tokenIn, tokenOut, fee, amountIn) {
  * @param {string} amountIn - Amount of input token (in wei/smallest unit)
  * @returns {Promise<string>} Expected output amount
  */
-async function getQuoteMultiHop(chainKey, tokens, fees, amountIn) {
+async function getQuoteMultiHop(chainKey, tokens, fees, amountIn, dexId = "uniswap") {
   // Validate inputs
   validateChainKey(chainKey);
   validateMultiHopPath(tokens, fees);
   validateAmount(amountIn, "amountIn");
 
-  const chain = CHAINS[chainKey];
-  if (!chain?.uniswap?.v3?.quoter) {
-    throw new Error(`Uniswap V3 not available on ${chainKey}`);
-  }
-
+  const v3cfg = resolveV3Endpoints(chainKey, dexId);
   const provider = getProvider(chainKey);
-  const quoterAddr = chain.uniswap.v3.quoter;
+  const quoterAddr = v3cfg.quoter;
   const legacy = new ethers.Contract(quoterAddr, QUOTER_ABI, provider);
 
   const path = encodePath(tokens, fees);
@@ -145,13 +156,13 @@ async function getQuoteMultiHop(chainKey, tokens, fees, amountIn) {
  * @param {string} amountIn - Amount to test with
  * @returns {Promise<{fee: number, amountOut: string}>}
  */
-async function findBestFee(chainKey, tokenIn, tokenOut, amountIn) {
+async function findBestFee(chainKey, tokenIn, tokenOut, amountIn, dexId = "uniswap") {
   const tiers = [FEE_TIERS.LOWEST, FEE_TIERS.LOW, FEE_TIERS.MEDIUM, FEE_TIERS.HIGH];
   let bestQuote = { fee: FEE_TIERS.MEDIUM, amountOut: "0" };
 
   for (const fee of tiers) {
     try {
-      const amountOut = await getQuote(chainKey, tokenIn, tokenOut, fee, amountIn);
+      const amountOut = await getQuote(chainKey, tokenIn, tokenOut, fee, amountIn, dexId);
       if (BigInt(amountOut) > BigInt(bestQuote.amountOut)) {
         bestQuote = { fee, amountOut };
       }
@@ -188,43 +199,44 @@ async function swapExactInputSingle(
   fee,
   amountIn,
   slippageBps = 50,
-  recipient = null
+  recipient = null,
+  dexId = "uniswap"
 ) {
   // Validate inputs
   validateChainKey(chainKey);
   validateWallet(wallet);
   validateAddress(tokenIn, "tokenIn");
   validateAddress(tokenOut, "tokenOut");
-  validateFeeTier(fee);
+  const dex = (dexId || "uniswap").toLowerCase();
+  if (dex === "uniswap") validateFeeTier(fee);
+  else validateFeeTierFlexible(fee);
   validateAmount(amountIn, "amountIn");
   validateSlippage(slippageBps);
 
   const chain = CHAINS[chainKey];
-  if (!chain?.uniswap?.v3?.router) {
-    throw new Error(`Uniswap V3 not available on ${chainKey}`);
-  }
+  const v3cfg = resolveV3Endpoints(chainKey, dexId);
 
   const provider = getProvider(chainKey);
   const signer = wallet.connect(provider);
   const recipientAddr = recipient || wallet.address;
 
   // Get quote to calculate minimum output with slippage
-  const quote = await getQuote(chainKey, tokenIn, tokenOut, fee, amountIn);
+  const quote = await getQuote(chainKey, tokenIn, tokenOut, fee, amountIn, dexId);
   const amountOutMin = ((BigInt(quote) * BigInt(10000 - slippageBps)) / BigInt(10000)).toString();
 
   // Check and approve token if needed
   const tokenContract = new ethers.Contract(tokenIn, ERC20_ABI, signer);
-  const allowance = await tokenContract.allowance(wallet.address, chain.uniswap.v3.router);
+  const allowance = await tokenContract.allowance(wallet.address, v3cfg.router);
 
   if (BigInt(allowance.toString()) < BigInt(amountIn)) {
     console.log(`Approving ${tokenIn} for V3 Router...`);
-    const approveTx = await tokenContract.approve(chain.uniswap.v3.router, ethers.MaxUint256);
+    const approveTx = await tokenContract.approve(v3cfg.router, ethers.MaxUint256);
     await approveTx.wait();
     console.log(`Approval confirmed: ${approveTx.hash}`);
   }
 
   // Execute swap
-  const router = new ethers.Contract(chain.uniswap.v3.router, SWAP_ROUTER_ABI, signer);
+  const router = new ethers.Contract(v3cfg.router, SWAP_ROUTER_ABI, signer);
 
   // Deadline: 20 minutes from now
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
@@ -240,7 +252,7 @@ async function swapExactInputSingle(
     sqrtPriceLimitX96: 0, // No price limit
   };
 
-  console.log(`\nExecuting V3 swap on ${chain.name}:`);
+  console.log(`\nExecuting V3 swap on ${chain.name} (${dexId}):`);
   console.log(`  Input: ${amountIn} ${tokenIn}`);
   console.log(`  Min Output: ${amountOutMin} ${tokenOut}`);
   console.log(`  Fee Tier: ${fee / 10000}%`);
@@ -268,7 +280,16 @@ async function swapExactInputSingle(
  * @param {string} recipient - Recipient address (defaults to wallet address)
  * @returns {Promise<{hash: string, amountOut: string}>}
  */
-async function swapExactInputMultiHop(chainKey, wallet, tokens, fees, amountIn, slippageBps = 50, recipient = null) {
+async function swapExactInputMultiHop(
+  chainKey,
+  wallet,
+  tokens,
+  fees,
+  amountIn,
+  slippageBps = 50,
+  recipient = null,
+  dexId = "uniswap"
+) {
   // Validate inputs
   validateChainKey(chainKey);
   validateWallet(wallet);
@@ -277,31 +298,29 @@ async function swapExactInputMultiHop(chainKey, wallet, tokens, fees, amountIn, 
   validateSlippage(slippageBps);
 
   const chain = CHAINS[chainKey];
-  if (!chain?.uniswap?.v3?.router) {
-    throw new Error(`Uniswap V3 not available on ${chainKey}`);
-  }
+  const v3cfg = resolveV3Endpoints(chainKey, dexId);
 
   const provider = getProvider(chainKey);
   const signer = wallet.connect(provider);
   const recipientAddr = recipient || wallet.address;
 
   // Get quote
-  const quote = await getQuoteMultiHop(chainKey, tokens, fees, amountIn);
+  const quote = await getQuoteMultiHop(chainKey, tokens, fees, amountIn, dexId);
   const amountOutMin = ((BigInt(quote) * BigInt(10000 - slippageBps)) / BigInt(10000)).toString();
 
   // Approve input token
   const tokenContract = new ethers.Contract(tokens[0], ERC20_ABI, signer);
-  const allowance = await tokenContract.allowance(wallet.address, chain.uniswap.v3.router);
+  const allowance = await tokenContract.allowance(wallet.address, v3cfg.router);
 
   if (BigInt(allowance.toString()) < BigInt(amountIn)) {
     console.log(`Approving ${tokens[0]} for V3 Router...`);
-    const approveTx = await tokenContract.approve(chain.uniswap.v3.router, ethers.MaxUint256);
+    const approveTx = await tokenContract.approve(v3cfg.router, ethers.MaxUint256);
     await approveTx.wait();
     console.log(`Approval confirmed: ${approveTx.hash}`);
   }
 
   // Execute swap
-  const router = new ethers.Contract(chain.uniswap.v3.router, SWAP_ROUTER_ABI, signer);
+  const router = new ethers.Contract(v3cfg.router, SWAP_ROUTER_ABI, signer);
 
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
   const path = encodePath(tokens, fees);
@@ -335,6 +354,7 @@ async function swapExactInputMultiHop(chainKey, wallet, tokens, fees, amountIn, 
 module.exports = {
   FEE_TIERS,
   encodePath,
+  resolveV3Endpoints,
   getQuote,
   getQuoteMultiHop,
   findBestFee,

@@ -479,6 +479,16 @@ async function runDexForkSimulation(options = {}) {
   const title = options.title || "MULTI-PROTOCOL TRADE SIMULATION";
   printHeader(title);
 
+  if (process.env.DEFI_SLIPSTREAM_PROXY === "1") {
+    const label = (process.env.DEFI_SLIPSTREAM_LABEL || "Slipstream").trim();
+    console.log(
+      chalk.yellow(
+        `[Note] ${label}: on-chain QuoterV2-style static calls to Slipstream quoters revert with this stack. ` +
+          `Showing Uniswap V3 on the same chain as a liquid reference for the same pair.\n`
+      )
+    );
+  }
+
   const { isFork, forkType } = await detectFork(CHAIN);
   const chain = CHAINS[CHAIN];
   const forkBlock = isFork ? await getForkBlockNumber(CHAIN) : null;

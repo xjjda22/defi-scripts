@@ -250,6 +250,14 @@ const CHAINS = {
         router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
       },
     },
+    // Velodrome Slipstream (Uniswap V3–style periphery) — https://github.com/velodrome-finance/slipstream
+    velodrome: {
+      v3: {
+        factory: "0xCc0bDDB707055e04e497aB22a59c2aF4391cd12F",
+        quoter: "0x89D8218ed5fF1e46d8dcd33fb0bbeE3be1621466",
+        router: "0x0792a633F0c19c351081CF4B211F68F79bCc9676",
+      },
+    },
     aave: {
       v3: {
         pool: "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
@@ -302,6 +310,15 @@ const CHAINS = {
         factory: "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e",
         quoter: "0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1",
         router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
+      },
+    },
+    // Aerodrome Slipstream (Base) — https://github.com/aerodrome-finance/slipstream
+    aerodrome: {
+      v3: {
+        // Pool factory from Slipstream router.factory(); not the NFT position factory.
+        factory: "0x5e7BB104d84c7CB9B682AaC2F3d509f5F406809A",
+        quoter: "0x254cF9E1E6e233aa1AC962CB9B05b2cfeAaE15b0",
+        router: "0xBE6D8f0d05cC4be24d5167a3eF062215bE6D18a5",
       },
     },
     aave: {
@@ -503,6 +520,21 @@ const CHAINS = {
       },
     },
   },
+  // https://docs.uniswap.org/contracts/v3/reference/deployments/monad-deployments — WMON used as wrapped native in COMMON_TOKENS.WETH
+  monad: {
+    name: "Monad",
+    chainId: 143,
+    rpcUrl: process.env.MONAD_RPC_URL || "https://rpc.monad.xyz",
+    explorer: "https://monadvision.com",
+    uniswap: {
+      v3: {
+        factory: "0x204faca1764b154221e35c0d20abb3c525710498",
+        quoter: "0x661e93cca42afacb172121ef892830ca3b70f08d",
+        router: "0xfe31f71c1b106eac32f1a19239c9a9a72ddfb900",
+        nftPositionManager: "0x7197e214c0b767cfb76fb734ab638e2c192f4e53",
+      },
+    },
+  },
 };
 
 // Common tokens for analysis
@@ -517,6 +549,7 @@ const COMMON_TOKENS = {
     zksync: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
     scroll: "0x5300000000000000000000000000000000000004",
     unichain: "0x4200000000000000000000000000000000000006",
+    monad: "0x3bd359C1119dA7Da1D913D1C4D2B7c461115433A",
   },
   USDC: {
     ethereum: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -528,6 +561,7 @@ const COMMON_TOKENS = {
     zksync: "0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4",
     scroll: "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4",
     unichain: "0x078D782b760474a361dDA0AF3839290b0EF57AD6",
+    monad: "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
   },
   USDT: {
     ethereum: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
