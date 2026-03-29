@@ -485,6 +485,24 @@ const CHAINS = {
       },
     },
   },
+  unichain: {
+    name: "Unichain",
+    chainId: 130,
+    rpcUrl: process.env.UNICHAIN_RPC_URL,
+    explorer: "https://uniscan.xyz",
+    // https://docs.uniswap.org/contracts/v3/reference/deployments/unichain-deployments
+    uniswap: {
+      v3: {
+        factory: "0x1f98400000000000000000000000000000000003",
+        quoter: "0x385a5cf5f83e99f7bb2852b6a19c3538b9fa7658",
+        router: "0x73855d06de49d0fe4a9c42636ba96c62da12ff9c",
+        nftPositionManager: "0x943e6e07a7e8e791dafc44083e54041d743c46e9",
+      },
+      v4: {
+        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
+      },
+    },
+  },
 };
 
 // Common tokens for analysis
@@ -498,6 +516,7 @@ const COMMON_TOKENS = {
     bsc: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
     zksync: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
     scroll: "0x5300000000000000000000000000000000000004",
+    unichain: "0x4200000000000000000000000000000000000006",
   },
   USDC: {
     ethereum: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -508,6 +527,7 @@ const COMMON_TOKENS = {
     bsc: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
     zksync: "0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4",
     scroll: "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4",
+    unichain: "0x078D782b760474a361dDA0AF3839290b0EF57AD6",
   },
   USDT: {
     ethereum: "0xdAC17F958D2ee523a2206206994597C13D831ec7",

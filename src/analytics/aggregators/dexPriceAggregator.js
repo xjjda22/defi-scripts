@@ -39,6 +39,10 @@ const UNISWAP_V2_ROUTER_ABI = require("../../abis/IUniswapV2Router02.json");
 const UNISWAP_V3_QUOTER_ABI = require("../../abis/IQuoter.json");
 const CURVE_POOL_ABI = require("../../abis/CurvePool.json");
 
+const QUOTER_V2_SINGLE_ABI = [
+  "function quoteExactInputSingle((address tokenIn,address tokenOut,uint256 amountIn,uint24 fee,uint160 sqrtPriceLimitX96)) external returns (uint256 amountOut,uint160,uint32,uint256)",
+];
+
 // Uniswap V3 fee tiers
 const V3_FEE_TIERS = [100, 500, 3000, 10000];
 
@@ -79,8 +83,20 @@ async function getUniV3Quotes(chainKey, tokenIn, tokenOut, amountIn) {
           dex: `Uniswap V3 (${(fee / 10000).toFixed(2)}%)`,
           fee,
         };
-      } catch (error) {
-        return null;
+      } catch {
+        try {
+          const v2q = new ethers.Contract(chain.uniswap.v3.quoter, QUOTER_V2_SINGLE_ABI, provider);
+          const params = { tokenIn, tokenOut, amountIn, fee, sqrtPriceLimitX96: 0 };
+          const r = await v2q.quoteExactInputSingle.staticCall(params);
+          const out = r.amountOut ?? r[0];
+          return {
+            amountOut: out.toString(),
+            dex: `Uniswap V3 (${(fee / 10000).toFixed(2)}%)`,
+            fee,
+          };
+        } catch {
+          return null;
+        }
       }
     })
   );
@@ -172,6 +188,16 @@ async function aggregatePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) 
   // Resolve token addresses
   const tokenInAddress = COMMON_TOKENS[tokenInSymbol]?.[chainKey] || tokenInSymbol;
   const tokenOutAddress = COMMON_TOKENS[tokenOutSymbol]?.[chainKey] || tokenOutSymbol;
+
+  const addrRe = /^0x[a-fA-F0-9]{40}$/;
+  if (!addrRe.test(tokenInAddress) || !addrRe.test(tokenOutAddress)) {
+    console.log(
+      chalk.gray(
+        `\n⏭ Skipping ${tokenInSymbol}/${tokenOutSymbol}: no ${chainKey} address in COMMON_TOKENS (use a pair with both tokens on this chain).`
+      )
+    );
+    return;
+  }
 
   // Get token info
   const tokenIn = await getTokenInfo(tokenInAddress, chainKey);

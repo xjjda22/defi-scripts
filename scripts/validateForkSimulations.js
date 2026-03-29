@@ -13,7 +13,7 @@ const ANVIL_RETRIES = Math.min(5, Math.max(1, parseInt(process.env.FORK_VALIDATE
 const RETRY_WAIT_MS = parseInt(process.env.FORK_VALIDATE_RETRY_WAIT_MS || "10000", 10);
 const PAIR = process.env.PAIR || "WETH/USDC";
 
-const CHAIN_ORDER = ["ethereum", "arbitrum", "optimism", "base", "polygon", "bsc", "zksync", "scroll"];
+const CHAIN_ORDER = ["ethereum", "arbitrum", "optimism", "base", "polygon", "bsc", "zksync", "scroll", "unichain"];
 
 const RPC_ENV_KEY = {
   ethereum: "ETHEREUM_RPC_URL",
@@ -24,6 +24,7 @@ const RPC_ENV_KEY = {
   bsc: "BSC_RPC_URL",
   zksync: "ZKSYNC_RPC_URL",
   scroll: "SCROLL_RPC_URL",
+  unichain: "UNICHAIN_RPC_URL",
 };
 
 function sleep(ms) {
