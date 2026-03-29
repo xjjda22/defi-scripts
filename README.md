@@ -3,10 +3,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?logo=ethereum&logoColor=white)](https://ethereum.org)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)](https://nodejs.org)
-[![Chains](https://img.shields.io/badge/chains-8-orange.svg)](#setup)
+[![Chains](https://img.shields.io/badge/chains-9-orange.svg)](#setup)
 
 
-DeFi analytics and swap scripts for Ethereum, Arbitrum, Optimism, Base, Polygon, BSC, zkSync and Scroll.
+DeFi analytics and swap scripts for Ethereum, Arbitrum, Optimism, Base, Polygon, BSC, zkSync, Scroll, and Unichain.
 
 <p align="center">
   <img src="no-money-meme.jpg" alt="No Money Meme" width="500"/>
@@ -30,6 +30,8 @@ POLYGON_RPC_URL=https://polygon-mainnet.g.alchemy.com/v2/YOUR_KEY
 BSC_RPC_URL=https://bsc-dataseed.binance.org/
 ZKSYNC_RPC_URL=https://mainnet.era.zksync.io
 SCROLL_RPC_URL=https://rpc.scroll.io
+# Optional — Unichain (Uniswap V3/V4 in chains.js; use CHAIN=unichain for quotes)
+UNICHAIN_RPC_URL=https://mainnet.unichain.org
 ```
 
 ## Scripts
@@ -79,6 +81,21 @@ Compare prices and analyze pools across different DEX protocols:
 | **Reya (Llama)** | `npm run analytics:reya:dex` | Protocol summary when listed (slug overridable via env) |
 | **Ammalgam (Llama)** | `npm run analytics:ammalgam:hybrid` | Hybrid AMM + lending summary when `AMMALGAM_LLAMA_SLUG` is set |
 | **Curvy (Llama)** | `npm run analytics:curvy:aggregator` | Curvy / ZK aggregator monitor from DefiLlama |
+
+### Trending / 2026 monitors
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| **Unichain (quotes)** | `CHAIN=unichain npm run analytics:dex:prices` | OP Stack L2 — Uniswap V3/V4 + WETH/USDC in [`chains.js`](src/config/chains.js); set `UNICHAIN_RPC_URL` |
+| **Ondo (Llama)** | `npm run analytics:ondo:markets` | Ondo Finance TVL (`ondo-finance`) |
+| **BlackRock BUIDL (Llama)** | `npm run analytics:buidl:markets` | Tokenized fund TVL (`blackrock-buidl`) |
+| **BUIDL supply (optional)** | `npm run analytics:buidl:supply` | ERC-20 `totalSupply` when `BUIDL_TOKEN_ADDRESS` is set |
+| **Sky / Maker** | `npm run analytics:sky:rates` | DSR from Maker Pot + DefiLlama Maker & Sky rows |
+| **Ethena** | `npm run analytics:ethena:monitor` | DefiLlama TVL, public mint/redeem pairs API, USDe / sUSDe `totalSupply` |
+| **UniswapX** | `npm run analytics:uniswapx:activity` | Recent `Fill` events on the configured reactor (`CHAIN`, `UNISWAPX_REACTOR`, `UNISWAPX_MAX_BLOCKS`) |
+| **1inch Fusion** | `npm run analytics:1inch:fusion` | Indicative Fusion quote when `ONEINCH_API_KEY` is set (`FUSION_*` env optional) |
+
+DefiLlama smoke tests: `npm run simulate:ondo:smoke`, `simulate:ethena:smoke`, `simulate:sky:smoke`, `simulate:buidl:smoke`.
 
 ### Lending Analytics
 
@@ -154,16 +171,12 @@ Track lending rates and compare protocols:
 
 ### Trending 2026
 
-- [ ] **Unichain** - OP Stack L2 with Flashblocks [![Unichain](https://img.shields.io/badge/Unichain-627EEA?logoColor=white)](https://www.unichain.org)
-- [ ] **Ink** - Kraken-aligned L2 (OP Stack) [![Ink](https://img.shields.io/badge/Ink-000000?logoColor=white)](https://inkonchain.com)
-- [ ] **Plasma** - Stablecoin-centric L1 [![Plasma](https://img.shields.io/badge/Plasma-6366F1?logoColor=white)](https://plasma.to)
-- [ ] **Sonic** - High-throughput EVM L1 [![Sonic](https://img.shields.io/badge/Sonic-3B82F6?logoColor=white)](https://soniclabs.com)
-- [ ] **UniswapX / Dutch auctions** - Intent-based routing across fillers [![Uniswap](https://img.shields.io/badge/UniswapX-ff007a?logoColor=white)](https://docs.uniswap.org/contracts/uniswapx/overview)
-- [ ] **1inch Fusion / resolver networks** - RFQ & Dutch-style settlement [![1inch](https://img.shields.io/badge/1inch-94BF3B?logoColor=white)](https://1inch.io)
-- [ ] **Ondo Global Markets** - Tokenized securities & stable yield rails [![Ondo](https://img.shields.io/badge/Ondo-1A1A2E?logoColor=white)](https://ondo.finance)
-- [ ] **BlackRock BUIDL / tokenized funds** - Institutional on-chain cash & MMFs [![BUIDL](https://img.shields.io/badge/BUIDL-000000?logoColor=white)](https://www.blackrock.com)
-- [ ] **Sky (ex-Maker)** - DAI / USDS & subDAO liquidity [![Sky](https://img.shields.io/badge/Sky-1E88E5?logoColor=white)](https://sky.money)
-- [ ] **Ethena / USDe-style synthetic dollars** - Basis-trade stablecoin design [![Ethena](https://img.shields.io/badge/Ethena-111111?logoColor=white)](https://ethena.fi)
+- [x] **UniswapX** — Intent / Dutch-style orders (settles on existing chains) [![Uniswap](https://img.shields.io/badge/UniswapX-ff007a?logoColor=white)](https://docs.uniswap.org/contracts/uniswapx/overview) *(`npm run analytics:uniswapx:activity`)*
+- [x] **1inch Fusion** — Resolver / auction-style swaps [![1inch](https://img.shields.io/badge/1inch-94BF3B?logoColor=white)](https://1inch.io) *(`npm run analytics:1inch:fusion` + `ONEINCH_API_KEY`)*
+- [x] **Ondo Global Markets** — Tokenized securities / yield [![Ondo](https://img.shields.io/badge/Ondo-1A1A2E?logoColor=white)](https://ondo.finance) *(`npm run analytics:ondo:markets`)*
+- [x] **BlackRock BUIDL** — Tokenized fund (e.g. ERC-20) [![BUIDL](https://img.shields.io/badge/BUIDL-000000?logoColor=white)](https://www.blackrock.com) *(`analytics:buidl:markets`, optional `analytics:buidl:supply`)*
+- [x] **Sky (ex-Maker)** — Stablecoin / DSR / lending [![Sky](https://img.shields.io/badge/Sky-1E88E5?logoColor=white)](https://sky.money) *(`npm run analytics:sky:rates`)*
+- [x] **Ethena** — USDe / minting [![Ethena](https://img.shields.io/badge/Ethena-111111?logoColor=white)](https://ethena.fi) *(`npm run analytics:ethena:monitor`)*
 
 ## Contributing
 
