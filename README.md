@@ -93,7 +93,6 @@ Compare prices and analyze pools across different DEX protocols:
 | **Sky / Maker** | `npm run analytics:sky:rates` | DSR from Maker Pot + DefiLlama Maker & Sky rows |
 | **Ethena** | `npm run analytics:ethena:monitor` | DefiLlama TVL, public mint/redeem pairs API, USDe / sUSDe `totalSupply` |
 | **UniswapX** | `npm run analytics:uniswapx:activity` | Recent `Fill` events on the configured reactor (`CHAIN`, `UNISWAPX_REACTOR`, `UNISWAPX_MAX_BLOCKS`) |
-| **1inch Fusion** | `npm run analytics:1inch:fusion` | Indicative Fusion quote when `ONEINCH_API_KEY` is set (`FUSION_*` env optional) |
 
 DefiLlama smoke tests: `npm run simulate:ondo:smoke`, `simulate:ethena:smoke`, `simulate:sky:smoke`, `simulate:buidl:smoke`.
 
@@ -172,7 +171,6 @@ Track lending rates and compare protocols:
 ### Trending 2026
 
 - [x] **UniswapX** — Intent / Dutch-style orders (settles on existing chains) [![Uniswap](https://img.shields.io/badge/UniswapX-ff007a?logoColor=white)](https://docs.uniswap.org/contracts/uniswapx/overview) *(`npm run analytics:uniswapx:activity`)*
-- [x] **1inch Fusion** — Resolver / auction-style swaps [![1inch](https://img.shields.io/badge/1inch-94BF3B?logoColor=white)](https://1inch.io) *(`npm run analytics:1inch:fusion` + `ONEINCH_API_KEY`)*
 - [x] **Ondo Global Markets** — Tokenized securities / yield [![Ondo](https://img.shields.io/badge/Ondo-1A1A2E?logoColor=white)](https://ondo.finance) *(`npm run analytics:ondo:markets`)*
 - [x] **BlackRock BUIDL** — Tokenized fund (e.g. ERC-20) [![BUIDL](https://img.shields.io/badge/BUIDL-000000?logoColor=white)](https://www.blackrock.com) *(`analytics:buidl:markets`, optional `analytics:buidl:supply`)*
 - [x] **Sky (ex-Maker)** — Stablecoin / DSR / lending [![Sky](https://img.shields.io/badge/Sky-1E88E5?logoColor=white)](https://sky.money) *(`npm run analytics:sky:rates`)*
