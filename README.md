@@ -81,6 +81,10 @@ Compare prices and analyze pools across different DEX protocols:
 | **Reya (Llama)** | `npm run analytics:reya:dex` | Protocol summary when listed (slug overridable via env) |
 | **Ammalgam (Llama)** | `npm run analytics:ammalgam:hybrid` | Hybrid AMM + lending summary when `AMMALGAM_LLAMA_SLUG` is set |
 | **Curvy (Llama)** | `npm run analytics:curvy:aggregator` | Curvy / ZK aggregator monitor from DefiLlama |
+| **Kinto (Llama)** | `npm run analytics:kinto:dex` | Kinto TVL snapshot (`kinto`) |
+| **HumidiFi (Llama)** | `npm run analytics:humidifi:dex` | HumidiFi TVL snapshot (`humidifi`) |
+| **Monad (Llama)** | `npm run analytics:monad:dex` | Monad TVL snapshot (`monad`; often chain-level) |
+| **Aztec (Llama)** | `npm run analytics:aztec:dex` | Aztec row on DefiLlama (`aztec`; may show as Aztec Connect) |
 
 ### Trending / 2026 monitors
 
@@ -93,6 +97,7 @@ Compare prices and analyze pools across different DEX protocols:
 | **Sky / Maker** | `npm run analytics:sky:rates` | DSR from Maker Pot + DefiLlama Maker & Sky rows |
 | **Ethena** | `npm run analytics:ethena:monitor` | DefiLlama TVL, public mint/redeem pairs API, USDe / sUSDe `totalSupply` |
 | **UniswapX** | `npm run analytics:uniswapx:activity` | Recent `Fill` events on the configured reactor (`CHAIN`, `UNISWAPX_REACTOR`, `UNISWAPX_MAX_BLOCKS`) |
+| **UniswapX fill replay** | `npm run simulate:uniswapx:fill` | Chunked `Fill` log scan + `eth_call` replay at block (`UNISWAPX_REPLAY_TX`, `UNISWAPX_LOG_CHUNK`, `UNISWAPX_REPLAY_STRICT`) |
 
 DefiLlama smoke tests: `npm run simulate:ondo:smoke`, `simulate:ethena:smoke`, `simulate:sky:smoke`, `simulate:buidl:smoke`.
 
@@ -126,7 +131,11 @@ Track lending rates and compare protocols:
 |---------|---------|
 | `npm run simulate:quote` / `simulate:swap` | Quote or simulate a swap (`SIMULATE_ONLY=true` for quote-only) |
 | `npm run simulate:multi:quote` / `simulate:multi` | Multi-protocol quote comparison |
-| `npm run swap:example`, `swap:uniswap:v2`, `v3`, `v4`, `swap:sushiswap`, `swap:balancer`, `swap:curve`, `swap:autoroute`, `swap:crosschain`, `swap:check` | Example execution flows (require wallet config in `.env`) |
+| `npm run simulate:dex:aerodrome:v3` / `simulate:dex:velodrome:v3` | Slipstream **reference**: Uniswap V3 quote on Base / Optimism (see [coverage doc](docs/protocol-script-coverage.md#aerodrome--velodrome-slipstream--reference-quotes)) |
+| `npm run simulate:dex:monad:v3` | Uniswap V3 quote on Monad (`MONAD_RPC_URL`; WMON as `WETH` in `chains.js`) |
+| `npm run simulate:uniswapx:fill` | UniswapX fill `eth_call` replay helper |
+| `npm run simulate:morpho:fork` | Morpho Blue `market(bytes32)` read (`MORPHO_MARKET_ID` optional) |
+| `npm run swap:example`, `swap:uniswap:v2`, `v3`, `v4`, `swap:sushiswap`, `swap:balancer`, `swap:curve`, `swap:aerodrome`, `swap:velodrome`, `swap:uniswapx`, `swap:autoroute`, `swap:crosschain`, `swap:check` | Example flows (`swap:aerodrome` / `swap:velodrome` = Uni V3 reference quote on that chain; see docs) |
 
 ### Other Analytics
 
