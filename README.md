@@ -77,6 +77,7 @@ Compare prices and analyze pools across different DEX protocols:
 | **Orderly (Llama)** | `npm run analytics:orderly:perps` | Omnichain orderbook infra TVL |
 | **MUX (Llama)** | `npm run analytics:mux:perps` | Aggregated perp liquidity TVL |
 | **Aster (Llama)** | `npm run analytics:aster:perps` | Hybrid perp/spot TVL |
+| **Aevo (Llama)** | `npm run analytics:aevo:perps` | Options + perps L2 TVL snapshot |
 | **Lighter (Llama)** | `npm run analytics:lighter:perps` | TVL when listed on DefiLlama |
 | **Reya (Llama)** | `npm run analytics:reya:dex` | Protocol summary when listed (slug overridable via env) |
 | **Ammalgam (Llama)** | `npm run analytics:ammalgam:hybrid` | Hybrid AMM + lending summary when `AMMALGAM_LLAMA_SLUG` is set |
@@ -112,8 +113,9 @@ Track lending rates and compare protocols:
 | **Aave Liquidations** | `npm run analytics:aave:liquidations` | Recent `LiquidationCall` logs; optional `AAVE_WATCH_ADDRESSES` for health factors |
 | **Morpho vs Aave** | `npm run analytics:morpho:optimizer` | Morpho Blue (API) vs Aave V3 rates per chain |
 | **Lending aggregator** | `npm run analytics:lending:rates` | Best supply/borrow across Aave + Morpho; cross-chain summary |
-| **All lending (Llama)** | `npm run analytics:lending:aggregate` | Pull several lending protocols from DefiLlama in one run |
+| **All lending (Llama)** | `npm run analytics:lending:aggregate` | Pull several lending protocols from DefiLlama in one run (Aave, Morpho, Compound, Spark, Venus, Euler, Curvance, Resolv) |
 | **Compound / Venus (Llama)** | `npm run analytics:lending:venues` | BSC + L2 TVL rows for Compound V3 and Venus (`LENDING_LLAMA_CHAINS`) |
+| **Spark (Llama)** | `npm run analytics:spark:lend` | Spark lending TVL snapshot (MakerDAO/Sky-aligned rates) |
 
 ### Staking (LST) analytics
 

@@ -2,7 +2,16 @@ require("dotenv").config();
 const chalk = require("chalk");
 const { fetchDefiLlamaProtocol, lastTvlUsdFromSeries } = require("../../analytics/utils/defiLlamaProtocol");
 
-const SLUGS = [["aave-v3"], ["morpho-v1"], ["curvance"], ["resolv"]];
+const SLUGS = [
+  ["aave-v3"],
+  ["morpho-v1"],
+  ["compound-v3"],
+  ["spark"],
+  ["venus"],
+  ["euler-v2"],
+  ["curvance"],
+  ["resolv"],
+];
 
 async function main() {
   let ok = 0;

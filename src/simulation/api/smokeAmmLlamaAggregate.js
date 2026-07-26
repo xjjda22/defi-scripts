@@ -1,8 +1,9 @@
 require("dotenv").config();
 const chalk = require("chalk");
 const { fetchDefiLlamaProtocol, lastTvlUsdFromSeries } = require("../../analytics/utils/defiLlamaProtocol");
+const { AMM_PROTOCOLS } = require("../../analytics/aggregators/allAmmDexAggregator");
 
-const SLUGS = ["uniswap-v3", "curve-dex", "balancer", "sushiswap"];
+const SLUGS = AMM_PROTOCOLS.map(([, slug]) => slug);
 
 async function main() {
   let ok = 0;

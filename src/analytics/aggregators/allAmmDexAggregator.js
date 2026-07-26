@@ -16,12 +16,33 @@ const AMM_PROTOCOLS = [
   ["Aerodrome", "aerodrome"],
   ["Velodrome", "velodrome"],
   ["PancakeSwap AMM v3", "pancakeswap-amm-v3"],
+  ["Ambient", "ambient"],
+  ["Camelot", "camelot"],
+  ["Fluid DEX", "fluid-dex"],
+  ["Hashflow", "hashflow"],
+  ["Maverick", "maverick-protocol"],
+  ["QuickSwap V3", "quickswap-v3"],
+  ["SyncSwap", "syncswap"],
+  ["THENA", "thena"],
+  ["Thruster", "thruster"],
+  ["1inch", "1inch"],
+  ["CoW Protocol", "cowswap"],
+  ["KyberSwap", "kyberswap"],
+  ["Matcha", "matcha"],
+  ["Odos", "odos"],
+  ["ParaSwap", "paraswap"],
 ];
+
+module.exports = { AMM_PROTOCOLS };
 
 async function main() {
   installCliSafeStdout();
   console.log(chalk.cyan.bold("\nAll AMM protocols — TVL snapshot (DefiLlama)\n"));
-  console.log(chalk.gray("2025 names from roadmap are not separate rows until slugs are wired.\n"));
+  console.log(
+    chalk.gray(
+      "Core AMMs plus day-trading catalog spot venues and major aggregators (see docs/day-trading-protocol-catalog-early-2026.md).\n"
+    )
+  );
 
   const table = createTable(["Protocol", "Slug", "TVL (latest)"], {
     colAligns: ["left", "left", "right"],

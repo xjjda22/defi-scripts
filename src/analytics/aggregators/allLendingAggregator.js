@@ -13,6 +13,7 @@ const LENDING_PROTOCOLS = [
   ["Aave V3", "aave-v3"],
   ["Morpho", "morpho-v1"],
   ["Compound V3", "compound-v3"],
+  ["Spark", "spark"],
   ["Venus", "venus"],
   ["Euler v2", "euler-v2"],
   ["Curvance", "curvance"],
