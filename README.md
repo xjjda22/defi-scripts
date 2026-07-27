@@ -133,7 +133,7 @@ Track lending rates and compare protocols:
 |---------|---------|
 | `npm run simulate:quote` / `simulate:swap` | Quote or simulate a swap (`SIMULATE_ONLY=true` for quote-only) |
 | `npm run simulate:multi:quote` / `simulate:multi` | Multi-protocol quote comparison |
-| `npm run simulate:dex:aerodrome:v3` / `simulate:dex:velodrome:v3` | Slipstream **reference**: Uniswap V3 quote on Base / Optimism (see [coverage doc](docs/protocol-script-coverage.md#aerodrome--velodrome-slipstream--reference-quotes)) |
+| `npm run simulate:dex:aerodrome:v3` / `simulate:dex:velodrome:v3` | Slipstream **reference**: Uniswap V3 quote on Base / Optimism (see [coverage doc](docs/02-protocol-script-coverage.md#aerodrome--velodrome-slipstream--reference-quotes)) |
 | `npm run simulate:dex:monad:v3` | Uniswap V3 quote on Monad (`MONAD_RPC_URL`; WMON as `WETH` in `chains.js`) |
 | `npm run simulate:uniswapx:fill` | UniswapX fill `eth_call` replay helper |
 | `npm run simulate:morpho:fork` | Morpho Blue `market(bytes32)` read (`MORPHO_MARKET_ID` optional) |

@@ -40,7 +40,7 @@ async function main() {
   console.log(chalk.cyan.bold("\nAll AMM protocols — TVL snapshot (DefiLlama)\n"));
   console.log(
     chalk.gray(
-      "Core AMMs plus day-trading catalog spot venues and major aggregators (see docs/day-trading-protocol-catalog-early-2026.md).\n"
+      "Core AMMs plus day-trading catalog spot venues and major aggregators (see docs/03-protocol-catalog-2026.md).\n"
     )
   );
 
