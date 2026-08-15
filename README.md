@@ -8,11 +8,31 @@
 
 DeFi analytics and swap scripts for Ethereum, Arbitrum, Optimism, Base, Polygon, BSC, zkSync, Scroll, and Unichain.
 
+Workspace map: [`docs/00-architecture.md`](docs/00-architecture.md). Protocol command matrix: [`docs/01-protocol-script-coverage.md`](docs/01-protocol-script-coverage.md).
+
 <p align="center">
   <img src="no-money-meme.jpg" alt="No Money Meme" width="500"/>
 </p>
 
 **⭐ Star this repo if you find it useful!**
+
+## Repo layout
+
+```
+src/
+  config/          # chains.js (RPC + protocol addresses), pairs.js
+  utils/           # web3 provider, validation, token helpers
+  abis/            # contract ABIs
+  swaps/           # Uniswap V2/V3/V4, Sushi, Curve, Balancer, dexAggregator
+  simulation/      # fork quotes, lending/staking/UniswapX sims, Llama smokes
+  analytics/       # protocols/<name>/ monitors + aggregators/
+  crosschain/      # Uniswap/Curve/Balancer/Sushi TVL + volume trackers
+  examples/        # CLI demos of swap/quote flows
+scripts/           # startFork, validateForkSimulations, healthCheckReport
+docs/              # 00-architecture.md, 01-protocol-script-coverage.md (README.md is the only package-root .md)
+```
+
+Placement vs MEV bots: `.cursor/rules/defi-mev-vs-defi-scripts.mdc`.
 
 ## Setup
 
@@ -133,7 +153,7 @@ Track lending rates and compare protocols:
 |---------|---------|
 | `npm run simulate:quote` / `simulate:swap` | Quote or simulate a swap (`SIMULATE_ONLY=true` for quote-only) |
 | `npm run simulate:multi:quote` / `simulate:multi` | Multi-protocol quote comparison |
-| `npm run simulate:dex:aerodrome:v3` / `simulate:dex:velodrome:v3` | Slipstream **reference**: Uniswap V3 quote on Base / Optimism (see [coverage doc](docs/02-protocol-script-coverage.md#aerodrome--velodrome-slipstream--reference-quotes)) |
+| `npm run simulate:dex:aerodrome:v3` / `simulate:dex:velodrome:v3` | Slipstream **reference**: Uniswap V3 quote on Base / Optimism (see [coverage doc](docs/01-protocol-script-coverage.md#aerodrome--velodrome-slipstream--reference-quotes)) |
 | `npm run simulate:dex:monad:v3` | Uniswap V3 quote on Monad (`MONAD_RPC_URL`; WMON as `WETH` in `chains.js`) |
 | `npm run simulate:uniswapx:fill` | UniswapX fill `eth_call` replay helper |
 | `npm run simulate:morpho:fork` | Morpho Blue `market(bytes32)` read (`MORPHO_MARKET_ID` optional) |
