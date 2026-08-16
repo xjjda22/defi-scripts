@@ -1,0 +1,66 @@
+{
+  "updated": "2026-08-16",
+  "notes": "Research watchlist only. Floors are optional (Reservoir). Not a snipe bot.",
+  "collections": [
+    {
+      "name": "Bored Ape Yacht Club",
+      "slug": "boredapeyachtclub",
+      "chain": "ethereum",
+      "contract": "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d"
+    },
+    {
+      "name": "CryptoPunks",
+      "slug": "cryptopunks",
+      "chain": "ethereum",
+      "contract": "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb"
+    },
+    {
+      "name": "Pudgy Penguins",
+      "slug": "pudgypenguins",
+      "chain": "ethereum",
+      "contract": "0xBd3531dA5CF5857e7CfAA92426877b022e612cf8"
+    },
+    {
+      "name": "Azuki",
+      "slug": "azuki",
+      "chain": "ethereum",
+      "contract": "0xed5af388653567af2f388e6224dc7c4b3241c544"
+    },
+    {
+      "name": "Milady Maker",
+      "slug": "milady",
+      "chain": "ethereum",
+      "contract": "0x5af0d9827e0c53e4799bb226655a1de152a425a5"
+    },
+    {
+      "name": "Doodles",
+      "slug": "doodles-official",
+      "chain": "ethereum",
+      "contract": "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e"
+    },
+    {
+      "name": "Moonbirds",
+      "slug": "proof-moonbirds",
+      "chain": "ethereum",
+      "contract": "0x23581767a106ae21c074b2276d25e5c3e136a68b"
+    },
+    {
+      "name": "CloneX",
+      "slug": "clonex",
+      "chain": "ethereum",
+      "contract": "0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b"
+    },
+    {
+      "name": "Otherdeed for Otherside",
+      "slug": "otherdeed",
+      "chain": "ethereum",
+      "contract": "0x34d85c9cdeb23fa97cb08333b511ac86e1c4e258"
+    },
+    {
+      "name": "Mutant Ape Yacht Club",
+      "slug": "mutant-ape-yacht-club",
+      "chain": "ethereum",
+      "contract": "0x60e4d786628fea6478f785a6d7e704777c86a7c6"
+    }
+  ]
+}
