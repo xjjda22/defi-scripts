@@ -1,0 +1,70 @@
+{
+  "updated": "2026-08-16",
+  "notes": "Research calendar only. Not a claimer or sybil farm. Join social via optional trends-report.json.",
+  "campaigns": [
+    {
+      "protocol": "Linea",
+      "chain": "linea",
+      "season": "LXP",
+      "status": "farming",
+      "claimWindow": null,
+      "notes": "L2 points; watch sybil filters. No claim script."
+    },
+    {
+      "protocol": "Scroll",
+      "chain": "scroll",
+      "season": "Marks / SCR",
+      "status": "watch",
+      "claimWindow": null,
+      "notes": "Post-TGE seasons still chatter in social packs."
+    },
+    {
+      "protocol": "Base",
+      "chain": "base",
+      "season": "onchain summer / retro TBD",
+      "status": "watch",
+      "claimWindow": null,
+      "notes": "No official token; treat social 'Base airdrop' as rumor."
+    },
+    {
+      "protocol": "Optimism",
+      "chain": "optimism",
+      "season": "OP retro rounds",
+      "status": "watch",
+      "claimWindow": null,
+      "notes": "RetroPGF-style, not a searcher claim portal."
+    },
+    {
+      "protocol": "zkSync",
+      "chain": "zksync",
+      "season": "ZK",
+      "status": "ended",
+      "claimWindow": "2024 TGE",
+      "notes": "Historical; keep for pack keyword overlap."
+    },
+    {
+      "protocol": "Unichain",
+      "chain": "unichain",
+      "season": "points TBD",
+      "status": "watch",
+      "claimWindow": null,
+      "notes": "OP Stack L2; social-only until a season is published."
+    },
+    {
+      "protocol": "EigenLayer",
+      "chain": "ethereum",
+      "season": "EIGEN / restaking points",
+      "status": "watch",
+      "claimWindow": null,
+      "notes": "Research overlay; not a claimer."
+    },
+    {
+      "protocol": "Hyperliquid",
+      "chain": "hyperliquid",
+      "season": "HYPE",
+      "status": "ended",
+      "claimWindow": "2024–2025 TGE",
+      "notes": "Points meta still shows up in perp-venue + airdrop packs."
+    }
+  ]
+}
