@@ -11,7 +11,7 @@ Sibling of `defi-mev/` (not one npm workspace). Placement: `.cursor/rules/defi-m
 | Quote / swap | `src/swaps/` | Uniswap V2/V3/V4, Sushi, Curve, Balancer; `dexAggregator.getBestQuote` → `swapTokens` |
 | Fork simulation | `src/simulation/` | `dexForkRunner`, lending/staking/UniswapX sims, `scripts/validateForkSimulations.js` |
 | Cross-chain TVL/volume | `src/crosschain/{uniswap,curve,balancer,sushiswap}/` | Subgraph + DefiLlama trackers |
-| Analytics | `src/analytics/protocols/` + `aggregators/` | Per-protocol monitors, Llama slug wrappers, lending/AMM/staking aggregates |
+| Analytics | `src/analytics/protocols/` + `aggregators/` + `nft/` + `airdrop/` | Per-protocol monitors, Llama slug wrappers, lending/AMM/staking aggregates, L2/NFT/airdrop overviews |
 | Shared utils | `src/config/chains.js`, `src/utils/web3.js`, `src/utils/validation.js`, `src/abis/` | Chain map, providers, checks |
 
 `src/examples/` are CLIs on top of `src/swaps/`, not a separate cluster.

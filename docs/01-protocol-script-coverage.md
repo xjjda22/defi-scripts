@@ -78,6 +78,16 @@ Spot venues, aggregators, perps, and Synthetix use **`dexProtocolMonitor.js`** +
 
 - **AMM aggregate:** `analytics:amm:aggregate` / `simulate:amm:aggregate:smoke` — rows are defined in `AMM_PROTOCOLS` in `src/analytics/aggregators/allAmmDexAggregator.js` (reused by the smoke script).
 
+## Landscape analytics (L2 / NFT / airdrop — no money-legos)
+
+Read-only DefiLlama / calendar views. Not claimers, not MEV submit.
+
+- **L2** — `analytics:l2:overview` (DefiLlama chain TVL + DEX volume). Smoke: `simulate:l2:overview:smoke`.
+- **NFT** — `analytics:nft:markets` (marketplace fees + collection watchlist). Smoke: `simulate:nft:markets:smoke`.
+- **Airdrop** — `analytics:airdrop:watch` (research calendar; optional trends join). Smoke: `simulate:airdrop:watch:smoke`.
+
+Social chatter for the same landscapes is the collective `defi-mev` scrape (`TWITTER_URLS` + `DISCORD_CHANNEL_URLS`).
+
 ## Adding a missing protocol
 
 1. Confirm a **DefiLlama slug** via `https://api.llama.fi/protocol/<slug>` (HTTP 200 and sensible `name`).

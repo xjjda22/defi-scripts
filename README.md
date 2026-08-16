@@ -25,7 +25,7 @@ src/
   abis/            # contract ABIs
   swaps/           # Uniswap V2/V3/V4, Sushi, Curve, Balancer, dexAggregator
   simulation/      # fork quotes, lending/staking/UniswapX sims, Llama smokes
-  analytics/       # protocols/<name>/ monitors + aggregators/
+  analytics/       # protocols/<name>/ monitors + aggregators/ + nft/ + airdrop/
   crosschain/      # Uniswap/Curve/Balancer/Sushi TVL + volume trackers
   examples/        # CLI demos of swap/quote flows
 scripts/           # startFork, validateForkSimulations, healthCheckReport
@@ -121,6 +121,18 @@ Compare prices and analyze pools across different DEX protocols:
 | **UniswapX fill replay** | `npm run simulate:uniswapx:fill` | Chunked `Fill` log scan + `eth_call` replay at block (`UNISWAPX_REPLAY_TX`, `UNISWAPX_LOG_CHUNK`, `UNISWAPX_REPLAY_STRICT`) |
 
 DefiLlama smoke tests: `npm run simulate:ondo:smoke`, `simulate:ethena:smoke`, `simulate:sky:smoke`, `simulate:buidl:smoke`.
+
+### Landscape analytics (no money-legos)
+
+Read-only boards. Social chatter for the same topics is the collective `defi-mev` scrape (`TWITTER_URLS` + `DISCORD_CHANNEL_URLS`).
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| **L2 overview** | `npm run analytics:l2:overview` | Live DefiLlama TVL + DEX 30d volume for Arb/OP/Base/Polygon/Scroll/zkSync/Linea/Unichain |
+| **NFT markets** | `npm run analytics:nft:markets` | Marketplace fees + 10-collection watchlist; optional `RESERVOIR_API_KEY` floors |
+| **Airdrop watch** | `npm run analytics:airdrop:watch` | Research calendar (not a claimer). Optional join to `defi-mev` `trends-report.json` |
+
+Smokes: `simulate:l2:overview:smoke`, `simulate:nft:markets:smoke`, `simulate:airdrop:watch:smoke`.
 
 ### Lending Analytics
 
