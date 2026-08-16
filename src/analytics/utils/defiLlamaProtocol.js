@@ -47,8 +47,36 @@ function lastTvlUsdFromSeries(tvlSeries) {
   return null;
 }
 
+/**
+ * @param {string} pathname - e.g. "/v2/chains"
+ * @param {number} [timeoutMs]
+ */
+async function fetchLlamaJson(pathname, timeoutMs = resolveTimeoutMs()) {
+  const url = pathname.startsWith("http") ? pathname : `${DEFILLAMA_API}${pathname}`;
+  const { data } = await axios.get(url, { timeout: timeoutMs });
+  return data;
+}
+
+function fetchLlamaChains(timeoutMs) {
+  return fetchLlamaJson("/v2/chains", timeoutMs);
+}
+
+function fetchDexOverview(chain, timeoutMs) {
+  const q = "excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true";
+  return fetchLlamaJson(`/overview/dexs/${encodeURIComponent(chain)}?${q}`, timeoutMs);
+}
+
+function fetchFeesSummary(slug, timeoutMs) {
+  const q = "excludeTotalDataChart=true";
+  return fetchLlamaJson(`/summary/fees/${encodeURIComponent(slug)}?${q}`, timeoutMs);
+}
+
 module.exports = {
   fetchDefiLlamaProtocol,
   lastTvlUsdFromSeries,
+  fetchLlamaJson,
+  fetchLlamaChains,
+  fetchDexOverview,
+  fetchFeesSummary,
   DEFILLAMA_API,
 };
