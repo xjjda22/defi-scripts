@@ -71,6 +71,14 @@ function fetchFeesSummary(slug, timeoutMs) {
   return fetchLlamaJson(`/summary/fees/${encodeURIComponent(slug)}?${q}`, timeoutMs);
 }
 
+function fetchLlamaProtocols(timeoutMs) {
+  return fetchLlamaJson("/protocols", timeoutMs);
+}
+
+function fetchHistoricalChainTvl(chain, timeoutMs) {
+  return fetchLlamaJson(`/v2/historicalChainTvl/${encodeURIComponent(chain)}`, timeoutMs);
+}
+
 module.exports = {
   fetchDefiLlamaProtocol,
   lastTvlUsdFromSeries,
@@ -78,5 +86,7 @@ module.exports = {
   fetchLlamaChains,
   fetchDexOverview,
   fetchFeesSummary,
+  fetchLlamaProtocols,
+  fetchHistoricalChainTvl,
   DEFILLAMA_API,
 };
