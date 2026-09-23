@@ -155,6 +155,7 @@ Track lending rates and compare protocols:
 | **Aave Versions** | `npm run analytics:aave:versions` | Aave V2 vs V3 comparison (L1/L2 labels) |
 | **Aave Liquidations** | `npm run analytics:aave:liquidations` | Recent `LiquidationCall` logs; optional `AAVE_WATCH_ADDRESSES` for health factors |
 | **Morpho vs Aave** | `npm run analytics:morpho:optimizer` | Morpho Blue (API) vs Aave V3 rates per chain |
+| **Nostra Finance (Llama)** | `npm run analytics:nostra:lending` | Nostra Starknet lending/money-market TVL (`nostra`) |
 | **Lending aggregator** | `npm run analytics:lending:rates` | Best supply/borrow across Aave + Morpho; cross-chain summary |
 | **All lending (Llama)** | `npm run analytics:lending:aggregate` | Pull several lending protocols from DefiLlama in one run (Aave, Morpho, Compound, Spark, Venus, Euler, Curvance, Resolv) |
 | **Compound / Venus (Llama)** | `npm run analytics:lending:venues` | BSC + L2 TVL rows for Compound V3 and Venus (`LENDING_LLAMA_CHAINS`) |
@@ -229,6 +230,7 @@ Track lending rates and compare protocols:
 - [x] **BlackRock BUIDL** — Tokenized fund (e.g. ERC-20) [![BUIDL](https://img.shields.io/badge/BUIDL-000000?logoColor=white)](https://www.blackrock.com) *(`analytics:buidl:markets`, optional `analytics:buidl:supply`)*
 - [x] **Sky (ex-Maker)** — Stablecoin / DSR / lending [![Sky](https://img.shields.io/badge/Sky-1E88E5?logoColor=white)](https://sky.money) *(`npm run analytics:sky:rates`)*
 - [x] **Ethena** — USDe / minting [![Ethena](https://img.shields.io/badge/Ethena-111111?logoColor=white)](https://ethena.fi) *(`npm run analytics:ethena:monitor`)*
+- [x] **Nostra Finance** — Starknet lending/money-market [![Nostra](https://img.shields.io/badge/Nostra-FF6B00?logoColor=white)](https://nostra.finance) *(`npm run analytics:nostra:lending`)*
 
 ## Contributing
 
