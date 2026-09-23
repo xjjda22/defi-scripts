@@ -83,6 +83,17 @@ Spot venues, aggregators, perps, and Synthetix use **`dexProtocolMonitor.js`** +
 Read-only DefiLlama / calendar views. Not claimers, not MEV submit.
 
 - **L2** — `analytics:l2:overview` (DefiLlama chain TVL + DEX volume). Smoke: `simulate:l2:overview:smoke`.
+- **ETH DEX share** — `analytics:eth:dex-share` (Uniswap V4/V3/Aqua venue volume on Ethereum). Smoke: `simulate:eth:dex-share:smoke`.
+- **ETH/BTC TVL** — `analytics:ethbtc:tvl` (chain TVL last month / this month / this week). Smoke: `simulate:ethbtc:tvl:smoke`.
+- **ETH/BTC ratio** — `analytics:ethbtc:ratio` (spot + ratio windows). Smoke: `simulate:ethbtc:ratio:smoke`.
+- **ETH lending movers** — `analytics:eth:lending-movers` (Lending/CDP 7d TVL Δ). Smoke: `simulate:eth:lending-movers:smoke`.
+- **ETH yield / Pendle** — `analytics:eth:yield` (Pendle DEX volume + yield TVL). Smoke: `simulate:eth:yield:smoke`.
+- **ETH TVL drivers** — `analytics:eth:tvl-drivers` (7d $ inflow/outflow, CEX omitted). Smoke: `simulate:eth:tvl-drivers:smoke`.
+- **Aave mix** — `analytics:eth:aave-mix` (V3/V4/Horizon collateral). Smoke: `simulate:eth:aave-mix:smoke`.
+- **Pendle markets** — `analytics:eth:pendle-markets` (chain TVL + ETH PT/YT). Smoke: `simulate:eth:pendle-markets:smoke`.
+- **BTC wraps** — `analytics:btc:wraps` (Bitcoin wrap/restake TVL, CEX omitted). Smoke: `simulate:btc:wraps:smoke`.
+- **BTC wrap trail** — `analytics:btc:wrap-trail` (Circle daily path vs peers). Smoke: `simulate:btc:wrap-trail:smoke`.
+- **RWA** — `analytics:rwa:overview` (RWA protocol TVL board; Ondo/BUIDL one-offs remain). Smoke: `simulate:rwa:overview:smoke`.
 - **NFT** — `analytics:nft:markets` (marketplace fees + collection watchlist). Smoke: `simulate:nft:markets:smoke`.
 - **Airdrop** — `analytics:airdrop:watch` (research calendar; optional trends join). Smoke: `simulate:airdrop:watch:smoke`.
 

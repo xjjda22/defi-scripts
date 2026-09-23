@@ -129,10 +129,21 @@ Read-only boards. Social chatter for the same topics is the collective `defi-mev
 | Script | Command | Description |
 |--------|---------|-------------|
 | **L2 overview** | `npm run analytics:l2:overview` | Live DefiLlama TVL + DEX 30d volume for Arb/OP/Base/Polygon/Scroll/zkSync/Linea/Unichain |
+| **ETH DEX share** | `npm run analytics:eth:dex-share` | Ethereum venue volume: Uniswap V4 vs V3 vs 1inch Aqua vs long-tail; 7d Δ ≥ 400% marked new |
+| **ETH/BTC TVL** | `npm run analytics:ethbtc:tvl` | Ethereum vs Bitcoin chain TVL for last month, this month, and this week |
+| **ETH/BTC ratio** | `npm run analytics:ethbtc:ratio` | ETH vs BTC spot and ratio for the same windows (CoinGecko) |
+| **ETH lending movers** | `npm run analytics:eth:lending-movers` | Ethereum lending/CDP 7d TVL Δ (Aave V4, Spark, Morpho) |
+| **ETH yield / Pendle** | `npm run analytics:eth:yield` | Pendle V2 DEX volume plus Ethereum yield TVL week-up |
+| **ETH TVL drivers** | `npm run analytics:eth:tvl-drivers` | Ethereum DeFi 7d $ inflow/outflow by protocol (CEX omitted) |
+| **Aave mix** | `npm run analytics:eth:aave-mix` | Aave V3 vs V4 vs Horizon collateral and borrowed on Ethereum |
+| **Pendle markets** | `npm run analytics:eth:pendle-markets` | Pendle chain TVL plus Ethereum PT/YT market liquidity |
+| **BTC wraps** | `npm run analytics:btc:wraps` | Bitcoin wrap / restake TVL (WBTC, Babylon, Citrea, Nexus). CEX omitted |
+| **BTC wrap trail** | `npm run analytics:btc:wrap-trail` | Circle Bitcoin daily TVL path vs Kraken / Babylon / Nexus |
+| **RWA overview** | `npm run analytics:rwa:overview` | RWA protocol TVL (DigiFT, Huma, Ondo, BUIDL, thBill). Complements slug one-offs |
 | **NFT markets** | `npm run analytics:nft:markets` | Marketplace fees + 10-collection watchlist; optional `RESERVOIR_API_KEY` floors |
 | **Airdrop watch** | `npm run analytics:airdrop:watch` | Research calendar (not a claimer). Optional join to `defi-mev` `trends-report.json` |
 
-Smokes: `simulate:l2:overview:smoke`, `simulate:nft:markets:smoke`, `simulate:airdrop:watch:smoke`.
+Smokes: `simulate:l2:overview:smoke`, `simulate:eth:dex-share:smoke`, `simulate:ethbtc:tvl:smoke`, `simulate:ethbtc:ratio:smoke`, `simulate:eth:lending-movers:smoke`, `simulate:eth:yield:smoke`, `simulate:eth:tvl-drivers:smoke`, `simulate:eth:aave-mix:smoke`, `simulate:eth:pendle-markets:smoke`, `simulate:btc:wraps:smoke`, `simulate:btc:wrap-trail:smoke`, `simulate:rwa:overview:smoke`, `simulate:nft:markets:smoke`, `simulate:airdrop:watch:smoke`.
 
 ### Lending Analytics
 
