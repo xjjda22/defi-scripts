@@ -92,6 +92,7 @@ Compare prices and analyze pools across different DEX protocols:
 | **Velodrome (Llama)** | `npm run analytics:velodrome:dex` | Optimism DEX TVL snapshot |
 | **PancakeSwap v3 (Llama)** | `npm run analytics:pancakeswap:dex` | Multichain Pancake v3 TVL (`pancakeswap-amm-v3`) |
 | **GMX (Llama)** | `npm run analytics:gmx:perps` | Perps / liquidity TVL snapshot |
+| **Hyperliquid (Llama)** | `npm run analytics:hyperliquid:perps` | Perps TVL snapshot (`hyperliquid`) |
 | **Gains (Llama)** | `npm run analytics:gains:perps` | gTrade TVL snapshot |
 | **SynFutures (Llama)** | `npm run analytics:synfutures:perps` | Perp DEX TVL snapshot |
 | **Orderly (Llama)** | `npm run analytics:orderly:perps` | Omnichain orderbook infra TVL |
