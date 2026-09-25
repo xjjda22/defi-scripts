@@ -75,6 +75,7 @@ Spot venues, aggregators, perps, and Synthetix use **`dexProtocolMonitor.js`** +
 - **Aevo** — Analytics: `analytics:aevo:perps` (slug `aevo`). Simulate: `simulate:aevo:smoke`. Cross-chain / swap: no.
 - **Spark** — Analytics: `analytics:spark:lend` (slug `spark`); row in `analytics:lending:aggregate`. Simulate: `simulate:spark:smoke`, `simulate:lending:aggregate:smoke`. Cross-chain / swap: no.
 - **Gains / MUX / SynFutures** — Analytics: `analytics:gains:perps`, `analytics:mux:perps`, `analytics:synfutures:perps`. Simulate: `simulate:gains:smoke`, `simulate:mux:smoke`, `simulate:synfutures:smoke` (slugs `gains-network`, `mux-protocol`, `synfutures-v3`).
+- **Hyperliquid** — Analytics: `analytics:hyperliquid:perps` (slug `hyperliquid`). Simulate: `simulate:hyperliquid:smoke`. Cross-chain / swap: no.
 - **Lending aggregate smoke** now covers `aave-v3`, `morpho-v1`, `compound-v3`, `spark`, `venus`, `euler-v2`, `curvance`, `resolv` (matches `LENDING_PROTOCOLS` in `allLendingAggregator.js`).
 
 - **AMM aggregate:** `analytics:amm:aggregate` / `simulate:amm:aggregate:smoke` — rows are defined in `AMM_PROTOCOLS` in `src/analytics/aggregators/allAmmDexAggregator.js` (reused by the smoke script).
