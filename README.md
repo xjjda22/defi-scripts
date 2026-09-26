@@ -107,6 +107,17 @@ Compare prices and analyze pools across different DEX protocols:
 | **HumidiFi (Llama)** | `npm run analytics:humidifi:dex` | HumidiFi TVL snapshot (`humidifi`) |
 | **Monad (Llama)** | `npm run analytics:monad:dex` | Monad TVL snapshot (`monad`; often chain-level) |
 | **Aztec (Llama)** | `npm run analytics:aztec:dex` | Aztec row on DefiLlama (`aztec`; may show as Aztec Connect) |
+| **Drake Exchange (Llama)** | `npm run analytics:drake:perps` | Monad perp DEX TVL snapshot (`drake-exchange`) |
+| **Rhea Finance (Llama)** | `npm run analytics:rhea:defi` | NEAR DEX + lending + LST parent TVL (`rhea-finance`) |
+| **Rhea Lend (Llama)** | `npm run analytics:rhea:lending` | Rhea lending market TVL (`rhea-lend`) |
+| **Stargate Finance (Llama)** | `npm run analytics:stargate:bridge` | Stargate V1+V2 bridge parent TVL (`stargate-finance`) |
+| **Stargate V2 (Llama)** | `npm run analytics:stargate:v2` | Stargate V2 bridge TVL only (`stargate-v2`) |
+| **Zama (Llama)** | `npm run analytics:zama:privacy` | Zama confidential-DeFi TVL (`zama`) |
+| **Astroport (Llama)** | `npm run analytics:astroport:dex` | Cosmos DEX TVL incl. Neutron (`astroport`) |
+| **Meter Passport (Llama)** | `npm run analytics:meter:bridge` | Meter bridge TVL (`meter-passport`) |
+| **EigenLayer (Llama)** | `npm run analytics:eigenlayer:restaking` | Restaking TVL (`eigencloud`, ex-`eigenlayer`) |
+| **Bitget (Llama)** | `npm run analytics:bitget:cex` | CEX reserve TVL by chain (`bitget`) |
+| **Payy bridge (on-chain)** | `npm run analytics:payy:bridge` | USDC `balanceOf` Payy Ethereum bridge `0x367C…5270` (needs `ETHEREUM_RPC_URL`) |
 
 ### Trending / 2026 monitors
 
@@ -157,6 +168,7 @@ Track lending rates and compare protocols:
 | **Aave Liquidations** | `npm run analytics:aave:liquidations` | Recent `LiquidationCall` logs; optional `AAVE_WATCH_ADDRESSES` for health factors |
 | **Morpho vs Aave** | `npm run analytics:morpho:optimizer` | Morpho Blue (API) vs Aave V3 rates per chain |
 | **Nostra Finance (Llama)** | `npm run analytics:nostra:lending` | Nostra Starknet lending/money-market TVL (`nostra`) |
+| **Benqi Lending (Llama)** | `npm run analytics:benqi:lending` | Avalanche lending market TVL (`benqi-lending`) |
 | **Lending aggregator** | `npm run analytics:lending:rates` | Best supply/borrow across Aave + Morpho; cross-chain summary |
 | **All lending (Llama)** | `npm run analytics:lending:aggregate` | Pull several lending protocols from DefiLlama in one run (Aave, Morpho, Compound, Spark, Venus, Euler, Curvance, Resolv) |
 | **Compound / Venus (Llama)** | `npm run analytics:lending:venues` | BSC + L2 TVL rows for Compound V3 and Venus (`LENDING_LLAMA_CHAINS`) |
@@ -211,12 +223,12 @@ Track lending rates and compare protocols:
 - [ ] **Milk Road Swap** - Gasless Multi-Chain AMM [![Milk Road](https://img.shields.io/badge/Milk_Road-FFFFFF?logoColor=black)](https://milkroad.com)
 - [ ] **HumidiFi** - Prop AMM DEX [![HumidiFi](https://img.shields.io/badge/HumidiFi-4ECDC4?logoColor=white)](https://humidifi.xyz)
 - [x] **Lighter** - ZK Perp AMM L2 [![Lighter](https://img.shields.io/badge/Lighter-FFD93D?logoColor=black)](https://lighter.xyz) *(DefiLlama monitor: `npm run analytics:lighter:perps`)*
-- [ ] **Drake Exchange** - CLOB-AMM Perp DEX [![Drake](https://img.shields.io/badge/Drake-E63946?logoColor=white)](https://drake.exchange)
+- [x] **Drake Exchange** - CLOB-AMM Perp DEX [![Drake](https://img.shields.io/badge/Drake-E63946?logoColor=white)](https://drake.exchange) *(DefiLlama monitor: `npm run analytics:drake:perps`)*
 - [x] **Kintsu** - Liquid Staking AMM [![Kintsu](https://img.shields.io/badge/Kintsu-F77F00?logoColor=white)](https://kintsu.xyz)
 - [x] **Curvance** - Multi-Chain Isolated AMM [![Curvance](https://img.shields.io/badge/Curvance-6A4C93?logoColor=white)](https://curvance.com) *(DefiLlama slug in `simulate:lending:aggregate:smoke`)*
 - [x] **Resolv Labs** - Trustless Stablecoin AMM [![Resolv](https://img.shields.io/badge/Resolv-2EC4B6?logoColor=white)](https://resolv.xyz) *(DefiLlama slug in `simulate:lending:aggregate:smoke`)*
 - [x] **StakeStone** - LST AMM DEX [![StakeStone](https://img.shields.io/badge/StakeStone-8B5CF6?logoColor=white)](https://stakestone.io)
-- [ ] **Zama FHEVM DEX** - Privacy AMM FHE [![Zama](https://img.shields.io/badge/Zama-000000?logoColor=white)](https://zama.ai)
+- [x] **Zama FHEVM DEX** - Privacy AMM FHE [![Zama](https://img.shields.io/badge/Zama-000000?logoColor=white)](https://zama.ai) *(DefiLlama monitor: `npm run analytics:zama:privacy`)*
 - [ ] **Aztec Ignition DEX** - Decentralized Privacy AMM L2 [![Aztec](https://img.shields.io/badge/Aztec-1E1E1E?logoColor=white)](https://aztec.network)
 - [ ] **Monad AMM (Native)** - EVM-Compatible AMM L1 [![Monad](https://img.shields.io/badge/Monad-9333EA?logoColor=white)](https://monad.xyz)
 - [ ] **Base Liquidity AMM (AERO Fork)** - Base Ecosystem AMM [![Base](https://img.shields.io/badge/Base-0052FF?logo=base&logoColor=white)](https://base.org)
@@ -233,6 +245,14 @@ Track lending rates and compare protocols:
 - [x] **Ethena** — USDe / minting [![Ethena](https://img.shields.io/badge/Ethena-111111?logoColor=white)](https://ethena.fi) *(`npm run analytics:ethena:monitor`)*
 - [x] **Nostra Finance** — Starknet lending/money-market [![Nostra](https://img.shields.io/badge/Nostra-FF6B00?logoColor=white)](https://nostra.finance) *(`npm run analytics:nostra:lending`)*
 - [x] **Suilend** — Sui lending protocol [![Suilend](https://img.shields.io/badge/Suilend-4DA2FF?logoColor=white)](https://suilend.fi) *(DefiLlama monitor: `npm run analytics:suilend:lending`)*
+- [x] **Rhea Finance** — NEAR DEX + lending + LST [![Rhea](https://img.shields.io/badge/Rhea-00C08B?logoColor=white)](https://www.rhea.finance) *(DefiLlama monitors: `npm run analytics:rhea:defi`, `npm run analytics:rhea:lending`)*
+- [x] **Stargate Finance** — LayerZero bridge (STG→ZRO migration) [![Stargate](https://img.shields.io/badge/Stargate-999999?logoColor=white)](https://stargate.finance) *(DefiLlama monitors: `npm run analytics:stargate:bridge`, `npm run analytics:stargate:v2`)*
+- [x] **Benqi Lending** — Avalanche lending market [![Benqi](https://img.shields.io/badge/Benqi-00B3FF?logoColor=white)](https://benqi.fi) *(DefiLlama monitor: `npm run analytics:benqi:lending`)*
+- [x] **EigenLayer / EigenCloud** — Ethereum restaking [![EigenLayer](https://img.shields.io/badge/EigenLayer-1A0C6D?logoColor=white)](https://www.eigenlayer.xyz) *(DefiLlama monitor: `npm run analytics:eigenlayer:restaking`)*
+- [x] **Astroport** — Cosmos DEX (Neutron governance exploit, 2026-09-22) [![Astroport](https://img.shields.io/badge/Astroport-5A3FFF?logoColor=white)](https://astroport.fi) *(DefiLlama monitor: `npm run analytics:astroport:dex`)*
+- [x] **Meter Passport** — Bridge (unbacked wMTRG mint, 2026-09-23) [![Meter](https://img.shields.io/badge/Meter-2F80ED?logoColor=white)](https://meter.io) *(DefiLlama monitor: `npm run analytics:meter:bridge`)*
+- [x] **Bitget** — CEX reserves (hot-wallet incident, 2026-09-24) [![Bitget](https://img.shields.io/badge/Bitget-00F0FF?logoColor=black)](https://www.bitget.com) *(DefiLlama monitor: `npm run analytics:bitget:cex`)*
+- [x] **Payy Network** — Ethereum ZK payments rollup bridge (drained 2026-09-24) [![Payy](https://img.shields.io/badge/Payy-C6FF00?logoColor=black)](https://payy.network) *(on-chain USDC balance: `npm run analytics:payy:bridge`)*
 
 ## Contributing
 
