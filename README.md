@@ -232,6 +232,7 @@ Track lending rates and compare protocols:
 - [x] **Sky (ex-Maker)** — Stablecoin / DSR / lending [![Sky](https://img.shields.io/badge/Sky-1E88E5?logoColor=white)](https://sky.money) *(`npm run analytics:sky:rates`)*
 - [x] **Ethena** — USDe / minting [![Ethena](https://img.shields.io/badge/Ethena-111111?logoColor=white)](https://ethena.fi) *(`npm run analytics:ethena:monitor`)*
 - [x] **Nostra Finance** — Starknet lending/money-market [![Nostra](https://img.shields.io/badge/Nostra-FF6B00?logoColor=white)](https://nostra.finance) *(`npm run analytics:nostra:lending`)*
+- [x] **Suilend** — Sui lending protocol [![Suilend](https://img.shields.io/badge/Suilend-4DA2FF?logoColor=white)](https://suilend.fi) *(DefiLlama monitor: `npm run analytics:suilend:lending`)*
 
 ## Contributing
 
