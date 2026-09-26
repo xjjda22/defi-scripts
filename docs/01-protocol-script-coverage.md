@@ -46,12 +46,12 @@ Slipstream **on-chain quoters** at the published addresses do not return success
 - **Milk Road Swap** — No dedicated scripts; confirm a DefiLlama slug (or on-chain scope) before adding smokes.
 - **HumidiFi** — Analytics: `analytics:humidifi:dex`. Simulate: `simulate:humidifi:smoke` (slug `humidifi`). Cross-chain / swap: no.
 - **Lighter** — Analytics: `analytics:lighter:perps`. Simulate: `simulate:lighter:smoke`. Cross-chain / swap: no.
-- **Drake Exchange** — No verified DefiLlama slug in-repo; add `analytics:drake:dex` / `simulate:drake:smoke` after slug is confirmed.
+- **Drake Exchange** — Analytics: `analytics:drake:perps` (Monad perp DEX; slug `drake-exchange`). Simulate: `simulate:drake:smoke`. Points / MON campaign row in `analytics:airdrop:watch`. Cross-chain / swap: no.
 - **Kintsu** — Analytics: `analytics:kintsu:staking`, `analytics:staking:compare`. Simulate: `simulate:kintsu:smoke`, `simulate:staking:compare:smoke`. Cross-chain / swap: no.
 - **Curvance** — Analytics: **`analytics:lending:aggregate`** (TVL row for slug `curvance`). Simulate: **`simulate:lending:aggregate:smoke`**. Cross-chain / swap: no.
 - **Resolv** — Same as Curvance via lending aggregate + `simulate:lending:aggregate:smoke` (slug `resolv`). Cross-chain / swap: no.
 - **StakeStone** — Analytics: `analytics:stakestone:staking`, `analytics:staking:compare`. Simulate: `simulate:stakestone:smoke`, `simulate:staking:compare:smoke`. Cross-chain / swap: no.
-- **Zama FHEVM DEX** — No DefiLlama protocol entry found for a stable `zama` slug; scope TBD (testnet vs mainnet listing).
+- **Zama FHEVM DEX** — Analytics: `analytics:zama:privacy` (confidential DeFi on Ethereum; slug `zama`, category Privacy). Simulate: `simulate:zama:smoke`. Cross-chain / swap: no (FHEVM toolchain).
 - **Aztec Ignition DEX** — Analytics: `analytics:aztec:dex`. Simulate: `simulate:aztec:smoke`. DefiLlama currently surfaces **Aztec Connect** under slug `aztec`; naming may differ from “Ignition DEX.” Cross-chain / swap: no.
 - **Monad AMM (native)** — Analytics: `analytics:monad:dex`. Simulate: `simulate:monad:smoke`, **`simulate:dex:monad:v3`** (Uniswap V3 on Monad; `CHAINS.monad` + `MONAD_RPC_URL` override). WMON is under `COMMON_TOKENS.WETH.monad`. Pool liquidity can be thin — quotes may fail sanity filters. Cross-chain: no.
 - **Base liquidity AMM (Aerodrome)** — Analytics: `analytics:aerodrome:dex`, row in `analytics:amm:aggregate`. Simulate: `simulate:aerodrome:smoke`, **`simulate:dex:aerodrome:v3`** (Slipstream proxy → Uniswap V3 on Base; see above). Swap: **`swap:aerodrome`** (reference quote). Cross-chain: no `crosschain:aerodrome:*`.
@@ -68,6 +68,14 @@ Slipstream **on-chain quoters** at the published addresses do not return success
 - **Ethena** — Analytics: `analytics:ethena:monitor`. Simulate: `simulate:ethena:smoke`. Cross-chain / swap: no.
 - **Nostra Finance** — Analytics: `analytics:nostra:lending` (Starknet lending/money-market; slug `nostra`). Simulate: `simulate:nostra:smoke`. Cross-chain / swap: no.
 - **Suilend** — Analytics: `analytics:suilend:lending` (Sui lending; slug `suilend`). Simulate: `simulate:suilend:smoke`. Cross-chain / swap: no.
+- **Rhea Finance** — Analytics: `analytics:rhea:defi` (NEAR DEX + lending + LST parent; slug `rhea-finance`), `analytics:rhea:lending` (Rhea Lend; slug `rhea-lend`). Simulate: `simulate:rhea:smoke`, `simulate:rhea:lending:smoke`. Cross-chain / swap: no.
+- **Stargate Finance** — Analytics: `analytics:stargate:bridge` (V1+V2 bridge parent; slug `stargate-finance`), `analytics:stargate:v2` (slug `stargate-v2`). Simulate: `simulate:stargate:smoke`, `simulate:stargate:v2:smoke`. Cross-chain / swap: no.
+- **Benqi Lending** — Analytics: `analytics:benqi:lending` (Avalanche lending; slug `benqi-lending`). Simulate: `simulate:benqi:smoke`. Cross-chain / swap: no.
+- **EigenLayer (EigenCloud)** — Analytics: `analytics:eigenlayer:restaking` (slug `eigencloud`; `eigenlayer` resolves to the same entry). Simulate: `simulate:eigenlayer:smoke`. Cross-chain / swap: no.
+- **Astroport** — Analytics: `analytics:astroport:dex` (Terra2/Injective/Osmosis/Neutron DEX; slug `astroport`). Simulate: `simulate:astroport:smoke`. Neutron sibling **Drop** (slug `drop`) is not wired: its Llama series ends at $0 on 2026-09-15 and Cosmos reads need a non-ethers client.
+- **Meter Passport** — Analytics: `analytics:meter:bridge` (slug `meter-passport`). Simulate: `simulate:meter:smoke`. Cross-chain / swap: no.
+- **Bitget (CEX)** — Analytics: `analytics:bitget:cex` (CEX reserve TVL by chain; slug `bitget`). Simulate: `simulate:bitget:smoke`. Read-only; not a DeFi venue.
+- **Payy Network** — No DefiLlama slug. Analytics: `analytics:payy:bridge` (generic `src/analytics/protocols/onchain/erc20BalanceMonitor.js`: USDC `balanceOf` the Payy Ethereum bridge `0x367C1eAF14AA06b78ce76bd0243297de79d85270`). Simulate: `simulate:payy:smoke` (same module, `ERC20_SMOKE=1`). Needs `ETHEREUM_RPC_URL`.
 
 ## Day-trading catalog (early 2026)
 
@@ -107,4 +115,5 @@ Social chatter for the same landscapes is the collective `defi-mev` scrape (`TWI
 1. Confirm a **DefiLlama slug** via `https://api.llama.fi/protocol/<slug>` (HTTP 200 and sensible `name`).
 2. **Analytics:** add a line to `package.json`, e.g. `DEFILLAMA_SLUG=<slug> DEFILLAMA_LABEL=<Name> node src/analytics/protocols/llama/dexProtocolMonitor.js` (copy `analytics:aster:perps` pattern).
 3. **Smoke:** add `SMOKE_SLUG=<slug> node src/simulation/api/smokeDefiLlamaProtocol.js` (copy `simulate:lighter:smoke`). Use `SMOKE_ALLOW_NOT_LISTED=1` only when a 404 should not fail CI.
-4. **Lending-style** protocols: consider extending `LENDING_PROTOCOLS` in `src/analytics/aggregators/allLendingAggregator.js` and `SLUGS` in `src/simulation/api/smokeLendingLlamaAggregate.js` instead of one-off monitors.
+4. **No slug but a checkable contract balance** (e.g. a drained bridge): reuse `src/analytics/protocols/onchain/erc20BalanceMonitor.js` with `ERC20_TOKEN` / `ERC20_HOLDER` / `ERC20_CHAIN` (copy `analytics:payy:bridge`).
+5. **Lending-style** protocols: consider extending `LENDING_PROTOCOLS` in `src/analytics/aggregators/allLendingAggregator.js` and `SLUGS` in `src/simulation/api/smokeLendingLlamaAggregate.js` instead of one-off monitors.
