@@ -67,6 +67,7 @@ Slipstream **on-chain quoters** at the published addresses do not return success
 - **Sky** — Analytics: `analytics:sky:rates`. Simulate: `simulate:sky:smoke`. Cross-chain / swap: no.
 - **Ethena** — Analytics: `analytics:ethena:monitor`. Simulate: `simulate:ethena:smoke`. Cross-chain / swap: no.
 - **Nostra Finance** — Analytics: `analytics:nostra:lending` (Starknet lending/money-market; slug `nostra`). Simulate: `simulate:nostra:smoke`. Cross-chain / swap: no.
+- **Suilend** — Analytics: `analytics:suilend:lending` (Sui lending; slug `suilend`). Simulate: `simulate:suilend:smoke`. Cross-chain / swap: no.
 
 ## Day-trading catalog (early 2026)
 
