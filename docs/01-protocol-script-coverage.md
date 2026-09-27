@@ -75,6 +75,30 @@ Slipstream **on-chain quoters** at the published addresses do not return success
 - **Astroport** — Analytics: `analytics:astroport:dex` (Terra2/Injective/Osmosis/Neutron DEX; slug `astroport`). Simulate: `simulate:astroport:smoke`. Neutron sibling **Drop** (slug `drop`) is not wired: its Llama series ends at $0 on 2026-09-15 and Cosmos reads need a non-ethers client.
 - **Meter Passport** — Analytics: `analytics:meter:bridge` (slug `meter-passport`). Simulate: `simulate:meter:smoke`. Cross-chain / swap: no.
 - **Bitget (CEX)** — Analytics: `analytics:bitget:cex` (CEX reserve TVL by chain; slug `bitget`). Simulate: `simulate:bitget:smoke`. Read-only; not a DeFi venue.
+- **Bitget SOL** — Analytics: `analytics:bitget:sol` (Bitget SOL LST; slug `bitget-sol`; 7d +35.5% TVL $56.1M; distinct from Bitget CEX). Simulate: `simulate:bitget:sol:smoke`. Cross-chain / swap: no.
+- **Drop** — Analytics: `analytics:drop:staking` (Neutron liquid staking; slug `drop`; Neutron governance exploit drain 2026-09-22, TVL $0). Simulate: `simulate:drop:smoke` (SMOKE_MIN_TVL_USD=0 so $0 is OK). Previously unwired; now wired even at $0 TVL.
+- **THORChain DEX** — Analytics: `analytics:thorchain:dex` (Cross-chain DEX; slug `thorchain-dex`; routed ~500k stolen ATOM; 7d +21.7% TVL $71.9M). Simulate: `simulate:thorchain:smoke`. Cross-chain / swap: no.
+- **Polymarket** — Analytics: `analytics:polymarket:pred` (Prediction market; slug `polymarket`; TVL ~$358M; unofficial $POLY airdrop chatter). Simulate: `simulate:polymarket:smoke`. Also added to `src/analytics/airdrop/watchlist.json` as status=watch (native $POLY unofficial/rumor; proxy tokens are not the official token). Cross-chain / swap: no.
+- **Circle** — Analytics: `analytics:circle:stable` (Circle protocol; slug `circle`; TVL ~$68M; chains Ethereum+Arc). Simulate: `simulate:circle:smoke`. Cross-chain / swap: no.
+- **Arc Chain** — Analytics: `analytics:arc:chain` (Circle L1, chainId 5042; chain TVL $504M from DefiLlama v2/chains name=Arc). Simulate: `simulate:arc:smoke` (reuses `fetchLlamaChains` from `src/analytics/utils/defiLlamaProtocol.js`; exits 0 when Arc TVL is a finite number). Do NOT add Arc to L2_CHAINS (it is Circle's L1, not an L2). Cross-chain / swap: no.
+- **NEAR Intents** — Analytics: `analytics:near:intents` (slug `near-intents`; 7d +50.9% TVL $255M). Simulate: `simulate:near:intents:smoke`. Cross-chain / swap: no.
+- **NEAR Bridge** — Analytics: `analytics:near:bridge` (slug `near-bridge`; 7d +84.4% TVL $128M). Simulate: `simulate:near:bridge:smoke`. Cross-chain / swap: no.
+- **Jupiter Lend DEX** — Analytics: `analytics:jupiter:lend-dex` (slug `jupiter-lend-dex`; 7d +108% TVL $23.3M). Simulate: `simulate:jupiter:lend-dex:smoke`. Cross-chain / swap: no.
+- **Fables** — Analytics: `analytics:fables:dex` (Robinhood Chain DEX; slug `fables`; 7d +74.9% TVL $50.7M). Simulate: `simulate:fables:smoke`. Cross-chain / swap: no.
+- **Stellar DeFi Hub** — Analytics: `analytics:stellar:hub` (slug `stellar-defi-hub`; 7d +62.8% TVL $57.3M). Simulate: `simulate:stellar:smoke`. Cross-chain / swap: no.
+- **Gravity by Galxe** — Analytics: `analytics:gravity:bridge` (slug `gravity-by-galxe`; 7d -54.5% TVL $32.2M). Simulate: `simulate:gravity:smoke`. Cross-chain / swap: no.
+- **Lisk Bridge** — Analytics: `analytics:lisk:bridge` (slug `lisk-bridge`; 7d -45.1% TVL $44.9M). Simulate: `simulate:lisk:smoke`. Cross-chain / swap: no.
+- **Haedal Protocol** — Analytics: `analytics:haedal:staking` (liquid staking; slug `haedal-protocol`; 7d +41.7% TVL $44.1M). Simulate: `simulate:haedal:smoke`. Cross-chain / swap: no.
+- **Meta Pool Near** — Analytics: `analytics:metapool:near` (NEAR LST; slug `meta-pool-near`; 7d +40% TVL $124.4M). Simulate: `simulate:metapool:smoke`. Cross-chain / swap: no.
+- **RHEA LST** — Analytics: `analytics:rhea:lst` (Rhea liquid staking; slug `rhea-lst`; 7d +39.4% TVL $43.3M; sibling to Rhea Dex). Simulate: `simulate:rhea:lst:smoke`. Cross-chain / swap: no.
+- **Volo LST** — Analytics: `analytics:volo:staking` (slug `volo-lst`; 7d +39% TVL $26.6M). Simulate: `simulate:volo:smoke`. Cross-chain / swap: no.
+- **LiNEAR Protocol** — Analytics: `analytics:linear:staking` (NEAR LST; slug `linear-protocol`; 7d +38.6% TVL $120.8M). Simulate: `simulate:linear:smoke`. Cross-chain / swap: no.
+- **Rhea Dex** — Analytics: `analytics:rhea:dex` (slug `rhea-dex`; 7d -31.2% TVL $29.5M; sibling to Rhea LST). Simulate: `simulate:rhea:dex:smoke`. Cross-chain / swap: no.
+- **vfat.io** — Analytics: `analytics:vfat:yield` (yield aggregator; slug `vfat.io` contains a dot; 7d +33.7% TVL $38.7M). Simulate: `simulate:vfat:smoke`. Cross-chain / swap: no.
+- **Unit** — Analytics: `analytics:unit:bridge` (bridge; slug `unit`; 7d +31.9% TVL $1.08B). Simulate: `simulate:unit:smoke`. Cross-chain / swap: no.
+- **40 Acres** — Analytics: `analytics:40acres:lending` (lending; slug `40-acres`; 7d +30.4% TVL $54.4M). Simulate: `simulate:40acres:smoke`. Cross-chain / swap: no.
+- **USD AI** — Analytics: `analytics:usdai:rwa` (RWA; slug `usd-ai`; 7d -30.1% TVL $214.9M). Simulate: `simulate:usdai:smoke`. Cross-chain / swap: no.
+- **Current** — Analytics: `analytics:current:lending` (lending; slug `current`; 7d +25.4% TVL $54.4M). Simulate: `simulate:current:smoke`. Cross-chain / swap: no.
 - **Payy Network** — No DefiLlama slug. Analytics: `analytics:payy:bridge` (generic `src/analytics/protocols/onchain/erc20BalanceMonitor.js`: USDC `balanceOf` the Payy Ethereum bridge `0x367C1eAF14AA06b78ce76bd0243297de79d85270`). Simulate: `simulate:payy:smoke` (same module, `ERC20_SMOKE=1`). Needs `ETHEREUM_RPC_URL`.
 
 ## Day-trading catalog (early 2026)

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-26",
+  "updated": "2026-09-27",
   "notes": "Research calendar only. Not a claimer or sybil farm. Join social via optional trends-report.json.",
   "campaigns": [
     {
@@ -81,6 +81,14 @@
       "status": "farming",
       "claimWindow": "APYX TGE moved beyond 2026-10-13; new date TBD",
       "notes": "Source: https://blog.apyx.fi/apyx-tge-update/ (2026-09-23). DefiLlama apyx-protocol has no TVL series yet."
+    },
+    {
+      "protocol": "Polymarket",
+      "chain": "polygon",
+      "season": "$POLY (unofficial/rumor)",
+      "status": "watch",
+      "claimWindow": null,
+      "notes": "Native $POLY token is unofficial/rumor; proxy tokens are not the official token. TVL: npm run analytics:polymarket:pred"
     }
   ]
 }
