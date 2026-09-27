@@ -89,6 +89,14 @@
       "status": "watch",
       "claimWindow": null,
       "notes": "Native $POLY token is unofficial/rumor; proxy tokens are not the official token. TVL: npm run analytics:polymarket:pred"
+    },
+    {
+      "protocol": "Fables",
+      "chain": "robinhood-chain",
+      "season": "Points program ending 2026-10-05 ahead of TGE",
+      "status": "watch",
+      "claimWindow": "TGE expected shortly after 2026-10-05",
+      "notes": "Tokenized-stock AMM on Robinhood Chain; points program ends 2026-10-05. TVL: npm run analytics:fables:dex"
     }
   ]
 }
