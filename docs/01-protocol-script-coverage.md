@@ -99,6 +99,47 @@ Slipstream **on-chain quoters** at the published addresses do not return success
 - **40 Acres** — Analytics: `analytics:40acres:lending` (lending; slug `40-acres`; 7d +30.4% TVL $54.4M). Simulate: `simulate:40acres:smoke`. Cross-chain / swap: no.
 - **USD AI** — Analytics: `analytics:usdai:rwa` (RWA; slug `usd-ai`; 7d -30.1% TVL $214.9M). Simulate: `simulate:usdai:smoke`. Cross-chain / swap: no.
 - **Current** — Analytics: `analytics:current:lending` (lending; slug `current`; 7d +25.4% TVL $54.4M). Simulate: `simulate:current:smoke`. Cross-chain / swap: no.
+- **Jupiter Lend** — Analytics: `analytics:jupiter:lend` (Solana lending; slug `jupiter-lend`; TVL $1.18B). Simulate: `simulate:jupiter:lend:smoke`. Sibling to Jupiter Lend DEX above. Cross-chain / swap: no.
+- **Kuru CLOB** — Analytics: `analytics:kuru:clob` (Monad CLOB; slug `kuru-clob`; vol24 $143.9M, 7d chg +489.6%). Simulate: `simulate:kuru:smoke`. Cross-chain / swap: no.
+- **Maple** — Analytics: `analytics:maple:lending` (lending; slug `maple`; TVL $3.00B, fees24 $1.11M). Simulate: `simulate:maple:smoke`. Cross-chain / swap: no.
+- **NAVI Lending** — Analytics: `analytics:navi:lending` (Sui lending; slug `navi-lending`; TVL $176.6M, 7d +19.61%). Simulate: `simulate:navi:smoke`. Cross-chain / swap: no.
+- **HyperLend Pooled** — Analytics: `analytics:hyperlend:lending` (Hyperliquid L1 lending; slug `hyperlend-pooled`; TVL $430.9M). Simulate: `simulate:hyperlend:smoke`. Cross-chain / swap: no.
+- **PumpSwap** — Analytics: `analytics:pumpswap:dex` (Solana DEX; slug `pumpswap`; vol24 $426.0M, fees24 $5.59M). Simulate: `simulate:pumpswap:smoke`. Cross-chain / swap: no.
+- **Orca DEX** — Analytics: `analytics:orca:dex` (Solana DEX; slug `orca-dex`; vol24 $230.8M, 7d chg +62.95%). Simulate: `simulate:orca:smoke`. Cross-chain / swap: no.
+- **Portal** — Analytics: `analytics:portal:bridge` (Wormhole bridge; slug `portal`; TVL $1.87B, 7d +17.01%). Simulate: `simulate:portal:smoke`. Cross-chain / swap: no.
+- **Kamino Lend** — Analytics: `analytics:kamino:lending` (Solana lending; slug `kamino-lend`; TVL $1.46B, 7d +5.82%). Simulate: `simulate:kamino:smoke`. Cross-chain / swap: no.
+- **Fluid Lending** — Analytics: `analytics:fluid:lending` (lending; slug `fluid-lending`; TVL $734.7M; new metric vs Fluid DEX). Simulate: `simulate:fluid:lending:smoke`. Fluid DEX (`fluid-dex`) already covered separately. Cross-chain / swap: no.
+- **Raydium AMM** — Analytics: `analytics:raydium:dex` (Solana DEX; slug `raydium-amm`; TVL $1.36B, vol24 $199.0M). Simulate: `simulate:raydium:smoke`. Cross-chain / swap: no.
+- **Meteora DLMM** — Analytics: `analytics:meteora:dex` (Solana DEX; slug `meteora-dlmm`; vol24 $204.6M, TVL $189.6M). Simulate: `simulate:meteora:smoke`. Cross-chain / swap: no.
+- **World Chain** — Analytics: `analytics:worldchain:bridge` (canonical bridge; slug `world-chain`; TVL $474.4M, 7d +19.09%). Simulate: `simulate:worldchain:smoke`. Cross-chain / swap: no.
+- **Backpack** — Analytics: `analytics:backpack:cex` (CEX; slug `backpack`; TVL $633.5M, 7d +31.61%). Simulate: `simulate:backpack:smoke`. Read-only; not a DeFi venue. Cross-chain / swap: no.
+- **Bittensor dTAO** — Analytics: `analytics:bittensor:dtao` (slug `bittensor-dtao`; TVL $568.5M, 7d +21.59%). Simulate: `simulate:bittensor:smoke`. Cross-chain / swap: no.
+- **cap** — Analytics: `analytics:cap:lending` (lending; slug `cap`; TVL $291.7M). Simulate: `simulate:cap:smoke`. Cross-chain / swap: no.
+- **SpringSui** — Analytics: `analytics:springsui:staking` (Sui staking; slug `springsui`; TVL $74.2M, 7d +22.04%). Simulate: `simulate:springsui:smoke`. Cross-chain / swap: no.
+- **DFDV Staked SOL** — Analytics: `analytics:dfdv:staking` (Solana LST; slug `dfdv-staked-sol`; TVL $218.7M, 7d +24.78%). Simulate: `simulate:dfdv:smoke`. Cross-chain / swap: no.
+- **Cetus CLMM** — Analytics: `analytics:cetus:dex` (Sui DEX; slug `cetus-clmm`; vol 7d chg +150.54%). Simulate: `simulate:cetus:smoke`. Cross-chain / swap: no.
+- **Bluefin Spot** — Analytics: `analytics:bluefin:dex` (Sui DEX; slug `bluefin-spot`; vol 7d chg +149.76%). Simulate: `simulate:bluefin:smoke`. Cross-chain / swap: no.
+- **DeepBook V3** — Analytics: `analytics:deepbook:dex` (Sui DEX; slug `deepbook-v3`; vol 7d chg +141.27%). Simulate: `simulate:deepbook:smoke`. Cross-chain / swap: no.
+- **Chainflip AMM** — Analytics: `analytics:chainflip:dex` (cross-chain DEX; slug `chainflip-amm`; vol 7d chg +148.17%). Simulate: `simulate:chainflip:smoke`. Cross-chain / swap: no.
+- **Dexalot DEX** — Analytics: `analytics:dexalot:dex` (multi-chain DEX; slug `dexalot-dex`; vol24 $123.1M). Simulate: `simulate:dexalot:smoke`. Cross-chain / swap: no.
+- **Scorch** — Analytics: `analytics:scorch:dex` (Solana DEX; slug `scorch`; vol24 $97.4M, 7d chg +58.21%). Simulate: `simulate:scorch:smoke`. Cross-chain / swap: no.
+- **BisonFi** — Analytics: `analytics:bisonfi:dex` (Solana DEX; slug `bisonfi`; vol24 $327.8M). Simulate: `simulate:bisonfi:smoke`. Cross-chain / swap: no.
+- **Manifest Trade** — Analytics: `analytics:manifest:dex` (Solana DEX; slug `manifest-trade`; vol24 $128.4M). Simulate: `simulate:manifest:smoke`. Cross-chain / swap: no.
+- **Pharaoh DLMM** — Analytics: `analytics:pharaoh:dex` (Avalanche DEX; slug `pharaoh-dlmm`; vol 7d chg +72.93%). Simulate: `simulate:pharaoh:smoke`. Cross-chain / swap: no.
+- **AO Bridge** — Analytics: `analytics:ao:bridge` (bridge; slug `ao-bridge`; TVL $91.4M, 7d +29.68%). Simulate: `simulate:ao:smoke`. Cross-chain / swap: no.
+- **Sonic Gateway** — Analytics: `analytics:sonic:bridge` (bridge; slug `sonic-gateway`; TVL $59.5M, 7d +17.35%). Simulate: `simulate:sonic:smoke`. Cross-chain / swap: no.
+- **Hylo Protocol** — Analytics: `analytics:hylo:stable` (dual-token stablecoin; slug `hylo-protocol`; TVL $42.2M). Simulate: `simulate:hylo:smoke`. Cross-chain / swap: no.
+- **Contango V2** — Analytics: `analytics:contango:perps` (derivatives; slug `contango-v2`; TVL $13.1M, 7d +41.79%). Simulate: `simulate:contango:smoke`. Cross-chain / swap: no.
+- **Liquid Collective** — Analytics: `analytics:liquidcollective:staking` (staking; slug `liquid-collective`; TVL $738.1M). Simulate: `simulate:liquidcollective:smoke`. Cross-chain / swap: no.
+- **Steakhouse Financial** — Analytics: `analytics:steakhouse:curator` (risk curator; slug `steakhouse-financial`; TVL $2.61B). Simulate: `simulate:steakhouse:smoke`. Cross-chain / swap: no.
+- **Frankencoin** — Analytics: `analytics:frankencoin:cdp` (CDP; slug `frankencoin`; TVL $66.0M). Simulate: `simulate:frankencoin:smoke`. Cross-chain / swap: no.
+- **Rysk V12** — Analytics: `analytics:rysk:options` (options; slug `rysk-v12`; TVL $37.7M). Simulate: `simulate:rysk:smoke`. Cross-chain / swap: no.
+- **Galaxy Curation** — Analytics: `analytics:galaxy:curator` (curation; slug `galaxy-curation`; TVL $46.9M). Simulate: `simulate:galaxy:smoke`. Cross-chain / swap: no.
+- **Drift** — Analytics: `analytics:drift:perps` (Solana perps; slug `drift`; TVL $343.0M parent). Simulate: `simulate:drift:smoke`. Cross-chain / swap: no.
+- **Jito** — Analytics: `analytics:jito:staking` (Solana staking; slug `jito`; TVL $1.26B parent). Simulate: `simulate:jito:smoke`. Cross-chain / swap: no.
+- **Marinade** — Analytics: `analytics:marinade:staking` (Solana staking; slug `marinade`; TVL $949.9M parent). Simulate: `simulate:marinade:smoke`. Cross-chain / swap: no.
+- **Sanctum** — Analytics: `analytics:sanctum:staking` (Solana staking; slug `sanctum`; TVL $2.28B parent). Simulate: `simulate:sanctum:smoke`. Cross-chain / swap: no.
+- **Fables** — Analytics: `analytics:fables:dex` (Robinhood Chain DEX; slug `fables`; 7d +74.9% TVL $50.7M; points program ending 2026-10-05 ahead of TGE). Simulate: `simulate:fables:smoke`. Also added to `src/analytics/airdrop/watchlist.json` as status=watch. Cross-chain / swap: no.
 - **Payy Network** — No DefiLlama slug. Analytics: `analytics:payy:bridge` (generic `src/analytics/protocols/onchain/erc20BalanceMonitor.js`: USDC `balanceOf` the Payy Ethereum bridge `0x367C1eAF14AA06b78ce76bd0243297de79d85270`). Simulate: `simulate:payy:smoke` (same module, `ERC20_SMOKE=1`). Needs `ETHEREUM_RPC_URL`.
 
 ## Day-trading catalog (early 2026)
