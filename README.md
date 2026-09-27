@@ -117,69 +117,25 @@ Compare prices and analyze pools across different DEX protocols:
 | **Meter Passport (Llama)** | `npm run analytics:meter:bridge` | Meter bridge TVL (`meter-passport`) |
 | **EigenLayer (Llama)** | `npm run analytics:eigenlayer:restaking` | Restaking TVL (`eigencloud`, ex-`eigenlayer`) |
 | **Bitget (Llama)** | `npm run analytics:bitget:cex` | CEX reserve TVL by chain (`bitget`) |
-| **Bitget SOL (Llama)** | `npm run analytics:bitget:sol` | Bitget SOL LST TVL (`bitget-sol`) |
 | **Drop (Llama)** | `npm run analytics:drop:staking` | Drop liquid staking (Neutron drain, $0 TVL OK) (`drop`) |
 | **THORChain DEX (Llama)** | `npm run analytics:thorchain:dex` | THORChain DEX TVL (`thorchain-dex`) |
 | **Polymarket (Llama)** | `npm run analytics:polymarket:pred` | Polymarket prediction market TVL (`polymarket`) |
 | **Circle (Llama)** | `npm run analytics:circle:stable` | Circle protocol TVL (`circle`) |
 | **Arc Chain (Llama)** | `npm run analytics:arc:chain` | Arc (Circle L1, chainId 5042) chain TVL |
 | **NEAR Intents (Llama)** | `npm run analytics:near:intents` | NEAR Intents TVL (`near-intents`) |
-| **NEAR Bridge (Llama)** | `npm run analytics:near:bridge` | NEAR Bridge TVL (`near-bridge`) |
 | **Jupiter Lend DEX (Llama)** | `npm run analytics:jupiter:lend-dex` | Jupiter Lend DEX TVL (`jupiter-lend-dex`) |
-| **Fables (Llama)** | `npm run analytics:fables:dex` | Fables DEX TVL (`fables`) |
-| **Stellar DeFi Hub (Llama)** | `npm run analytics:stellar:hub` | Stellar DeFi Hub TVL (`stellar-defi-hub`) |
 | **Gravity by Galxe (Llama)** | `npm run analytics:gravity:bridge` | Gravity bridge TVL (`gravity-by-galxe`) |
-| **Lisk Bridge (Llama)** | `npm run analytics:lisk:bridge` | Lisk bridge TVL (`lisk-bridge`) |
-| **Haedal Protocol (Llama)** | `npm run analytics:haedal:staking` | Haedal liquid staking TVL (`haedal-protocol`) |
-| **Meta Pool Near (Llama)** | `npm run analytics:metapool:near` | Meta Pool Near LST TVL (`meta-pool-near`) |
-| **RHEA LST (Llama)** | `npm run analytics:rhea:lst` | Rhea liquid staking TVL (`rhea-lst`) |
-| **Volo LST (Llama)** | `npm run analytics:volo:staking` | Volo LST TVL (`volo-lst`) |
-| **LiNEAR Protocol (Llama)** | `npm run analytics:linear:staking` | LiNEAR liquid staking TVL (`linear-protocol`) |
-| **Rhea Dex (Llama)** | `npm run analytics:rhea:dex` | Rhea DEX TVL (`rhea-dex`) |
-| **vfat.io (Llama)** | `npm run analytics:vfat:yield` | vfat.io yield aggregator TVL (`vfat.io`) |
-| **Unit (Llama)** | `npm run analytics:unit:bridge` | Unit bridge TVL (`unit`) |
-| **40 Acres (Llama)** | `npm run analytics:40acres:lending` | 40 Acres lending TVL (`40-acres`) |
 | **USD AI (Llama)** | `npm run analytics:usdai:rwa` | USD AI RWA TVL (`usd-ai`) |
-| **Current (Llama)** | `npm run analytics:current:lending` | Current lending TVL (`current`) |
 | **Jupiter Lend (Llama)** | `npm run analytics:jupiter:lend` | Jupiter Lend lending TVL (`jupiter-lend`) |
 | **Kuru CLOB (Llama)** | `npm run analytics:kuru:clob` | Kuru CLOB (Monad) TVL (`kuru-clob`) |
-| **Maple (Llama)** | `npm run analytics:maple:lending` | Maple lending TVL (`maple`) |
 | **NAVI Lending (Llama)** | `npm run analytics:navi:lending` | NAVI Lending (Sui) TVL (`navi-lending`) |
-| **HyperLend (Llama)** | `npm run analytics:hyperlend:lending` | HyperLend Pooled TVL (`hyperlend-pooled`) |
 | **PumpSwap (Llama)** | `npm run analytics:pumpswap:dex` | PumpSwap DEX TVL (`pumpswap`) |
-| **Orca DEX (Llama)** | `npm run analytics:orca:dex` | Orca DEX TVL (`orca-dex`) |
-| **Portal (Llama)** | `npm run analytics:portal:bridge` | Portal (Wormhole) bridge TVL (`portal`) |
 | **Kamino Lend (Llama)** | `npm run analytics:kamino:lending` | Kamino Lend TVL (`kamino-lend`) |
-| **Fluid Lending (Llama)** | `npm run analytics:fluid:lending` | Fluid Lending TVL (`fluid-lending`) |
 | **Raydium AMM (Llama)** | `npm run analytics:raydium:dex` | Raydium AMM TVL (`raydium-amm`) |
-| **Meteora DLMM (Llama)** | `npm run analytics:meteora:dex` | Meteora DLMM TVL (`meteora-dlmm`) |
-| **World Chain (Llama)** | `npm run analytics:worldchain:bridge` | World Chain bridge TVL (`world-chain`) |
-| **Backpack (Llama)** | `npm run analytics:backpack:cex` | Backpack CEX TVL (`backpack`) |
-| **Bittensor dTAO (Llama)** | `npm run analytics:bittensor:dtao` | Bittensor dTAO TVL (`bittensor-dtao`) |
-| **cap (Llama)** | `npm run analytics:cap:lending` | cap lending TVL (`cap`) |
-| **SpringSui (Llama)** | `npm run analytics:springsui:staking` | SpringSui staking TVL (`springsui`) |
 | **DFDV Staked SOL (Llama)** | `npm run analytics:dfdv:staking` | DFDV Staked SOL TVL (`dfdv-staked-sol`) |
-| **Cetus CLMM (Llama)** | `npm run analytics:cetus:dex` | Cetus CLMM TVL (`cetus-clmm`) |
-| **Bluefin Spot (Llama)** | `npm run analytics:bluefin:dex` | Bluefin Spot TVL (`bluefin-spot`) |
 | **DeepBook V3 (Llama)** | `npm run analytics:deepbook:dex` | DeepBook V3 TVL (`deepbook-v3`) |
-| **Chainflip AMM (Llama)** | `npm run analytics:chainflip:dex` | Chainflip AMM TVL (`chainflip-amm`) |
-| **Dexalot DEX (Llama)** | `npm run analytics:dexalot:dex` | Dexalot DEX TVL (`dexalot-dex`) |
-| **Scorch (Llama)** | `npm run analytics:scorch:dex` | Scorch DEX TVL (`scorch`) |
 | **BisonFi (Llama)** | `npm run analytics:bisonfi:dex` | BisonFi DEX TVL (`bisonfi`) |
-| **Manifest Trade (Llama)** | `npm run analytics:manifest:dex` | Manifest Trade TVL (`manifest-trade`) |
-| **Pharaoh DLMM (Llama)** | `npm run analytics:pharaoh:dex` | Pharaoh DLMM TVL (`pharaoh-dlmm`) |
-| **AO Bridge (Llama)** | `npm run analytics:ao:bridge` | AO Bridge TVL (`ao-bridge`) |
-| **Sonic Gateway (Llama)** | `npm run analytics:sonic:bridge` | Sonic Gateway TVL (`sonic-gateway`) |
-| **Hylo Protocol (Llama)** | `npm run analytics:hylo:stable` | Hylo Protocol stablecoin TVL (`hylo-protocol`) |
-| **Contango V2 (Llama)** | `npm run analytics:contango:perps` | Contango V2 derivatives TVL (`contango-v2`) |
-| **Liquid Collective (Llama)** | `npm run analytics:liquidcollective:staking` | Liquid Collective staking TVL (`liquid-collective`) |
-| **Steakhouse Financial (Llama)** | `npm run analytics:steakhouse:curator` | Steakhouse Financial curator TVL (`steakhouse-financial`) |
-| **Frankencoin (Llama)** | `npm run analytics:frankencoin:cdp` | Frankencoin CDP TVL (`frankencoin`) |
-| **Rysk V12 (Llama)** | `npm run analytics:rysk:options` | Rysk V12 options TVL (`rysk-v12`) |
-| **Galaxy Curation (Llama)** | `npm run analytics:galaxy:curator` | Galaxy Curation TVL (`galaxy-curation`) |
-| **Drift (Llama)** | `npm run analytics:drift:perps` | Drift perps TVL (`drift`) |
 | **Jito (Llama)** | `npm run analytics:jito:staking` | Jito staking TVL (`jito`) |
-| **Marinade (Llama)** | `npm run analytics:marinade:staking` | Marinade staking TVL (`marinade`) |
 | **Sanctum (Llama)** | `npm run analytics:sanctum:staking` | Sanctum staking TVL (`sanctum`) |
 | **Payy bridge (on-chain)** | `npm run analytics:payy:bridge` | USDC `balanceOf` Payy Ethereum bridge `0x367C…5270` (needs `ETHEREUM_RPC_URL`) |
 
@@ -316,69 +272,25 @@ Track lending rates and compare protocols:
 - [x] **Astroport** — Cosmos DEX (Neutron governance exploit, 2026-09-22) [![Astroport](https://img.shields.io/badge/Astroport-5A3FFF?logoColor=white)](https://astroport.fi) *(DefiLlama monitor: `npm run analytics:astroport:dex`)*
 - [x] **Meter Passport** — Bridge (unbacked wMTRG mint, 2026-09-23) [![Meter](https://img.shields.io/badge/Meter-2F80ED?logoColor=white)](https://meter.io) *(DefiLlama monitor: `npm run analytics:meter:bridge`)*
 - [x] **Bitget** — CEX reserves (hot-wallet incident, 2026-09-24) [![Bitget](https://img.shields.io/badge/Bitget-00F0FF?logoColor=black)](https://www.bitget.com) *(DefiLlama monitor: `npm run analytics:bitget:cex`)*
-- [x] **Bitget SOL** — Bitget SOL LST (sibling to Bitget CEX; 7d +35.5%, distinct from CEX) [![Bitget](https://img.shields.io/badge/Bitget_SOL-00F0FF?logoColor=black)](https://www.bitget.com) *(DefiLlama monitor: `npm run analytics:bitget:sol`)*
-- [x] **Drop** — Liquid staking (Neutron governance exploit drain, 2026-09-22; TVL $0) [![Drop](https://img.shields.io/badge/Drop-5B21B6?logoColor=white)](https://drop.money) *(DefiLlama monitor: `npm run analytics:drop:staking`)*
-- [x] **THORChain DEX** — Cross-chain DEX (routed stolen ATOM; 7d +21.7% TVL $71.9M) [![THORChain](https://img.shields.io/badge/THORChain-00CCBB?logoColor=white)](https://thorchain.org) *(DefiLlama monitor: `npm run analytics:thorchain:dex`)*
-- [x] **Polymarket** — Prediction market (TVL ~$358M; unofficial $POLY airdrop chatter) [![Polymarket](https://img.shields.io/badge/Polymarket-6366F1?logoColor=white)](https://polymarket.com) *(DefiLlama monitor: `npm run analytics:polymarket:pred`)*
-- [x] **Circle / Arc** — Circle protocol + Arc L1 (chainId 5042; $504M chain TVL, $68M protocol) [![Circle](https://img.shields.io/badge/Circle-3E73C4?logoColor=white)](https://circle.com) *(DefiLlama monitors: `npm run analytics:circle:stable`, `npm run analytics:arc:chain`)*
-- [x] **NEAR Intents / NEAR Bridge** — NEAR Intents 7d +50.9% $255M; NEAR Bridge 7d +84.4% $128M [![NEAR](https://img.shields.io/badge/NEAR-000000?logoColor=white)](https://near.org) *(DefiLlama monitors: `npm run analytics:near:intents`, `npm run analytics:near:bridge`)*
-- [x] **Jupiter Lend DEX** — Jupiter Lend DEX 7d +108% TVL $23.3M [![Jupiter](https://img.shields.io/badge/Jupiter-19FB9B?logoColor=black)](https://jup.ag) *(DefiLlama monitor: `npm run analytics:jupiter:lend-dex`)*
-- [x] **Fables** — Robinhood Chain DEX 7d +74.9% TVL $50.7M [![Fables](https://img.shields.io/badge/Fables-00D4AA?logoColor=black)](https://fables.market) *(DefiLlama monitor: `npm run analytics:fables:dex`)*
-- [x] **Stellar DeFi Hub** — Stellar DeFi Hub 7d +62.8% TVL $57.3M [![Stellar](https://img.shields.io/badge/Stellar-7D00FF?logoColor=white)](https://stellar.org) *(DefiLlama monitor: `npm run analytics:stellar:hub`)*
-- [x] **Gravity by Galxe** — Gravity bridge 7d -54.5% TVL $32.2M [![Gravity](https://img.shields.io/badge/Gravity-5865F2?logoColor=white)](https://gravity.xyz) *(DefiLlama monitor: `npm run analytics:gravity:bridge`)*
-- [x] **Lisk Bridge** — Lisk bridge 7d -45.1% TVL $44.9M [![Lisk](https://img.shields.io/badge/Lisk-1A6EAA?logoColor=white)](https://lisk.com) *(DefiLlama monitor: `npm run analytics:lisk:bridge`)*
-- [x] **Haedal Protocol** — Liquid staking 7d +41.7% TVL $44.1M [![Haedal](https://img.shields.io/badge/Haedal-FF6B00?logoColor=white)](https://haedal.xyz) *(DefiLlama monitor: `npm run analytics:haedal:staking`)*
-- [x] **Meta Pool Near** — NEAR LST 7d +40% TVL $124.4M [![MetaPool](https://img.shields.io/badge/MetaPool-00DC82?logoColor=black)](https://metapool.app) *(DefiLlama monitor: `npm run analytics:metapool:near`)*
-- [x] **RHEA LST** — Rhea liquid staking 7d +39.4% TVL $43.3M [![RHEA](https://img.shields.io/badge/RHEA-00C08B?logoColor=white)](https://www.rhea.finance) *(DefiLlama monitor: `npm run analytics:rhea:lst`)*
-- [x] **Volo LST** — Volo LST 7d +39% TVL $26.6M [![Volo](https://img.shields.io/badge/Volo-8B5CF6?logoColor=white)](https://volo.fi) *(DefiLlama monitor: `npm run analytics:volo:staking`)*
-- [x] **LiNEAR Protocol** — NEAR LST 7d +38.6% TVL $120.8M [![LiNEAR](https://img.shields.io/badge/LiNEAR-00D4AA?logoColor=black)](https://linearprotocol.org) *(DefiLlama monitor: `npm run analytics:linear:staking`)*
-- [x] **Rhea Dex** — Rhea DEX 7d -31.2% TVL $29.5M (sibling to Rhea LST) [![RHEA](https://img.shields.io/badge/RHEA_DEX-00C08B?logoColor=white)](https://www.rhea.finance) *(DefiLlama monitor: `npm run analytics:rhea:dex`)*
-- [x] **vfat.io** — Yield aggregator 7d +33.7% TVL $38.7M [![vfat](https://img.shields.io/badge/vfat.io-000000?logoColor=white)](https://vfat.io) *(DefiLlama monitor: `npm run analytics:vfat:yield`)*
-- [x] **Unit** — Bridge 7d +31.9% TVL $1.08B [![Unit](https://img.shields.io/badge/Unit-FF6B35?logoColor=white)](https://unit.network) *(DefiLlama monitor: `npm run analytics:unit:bridge`)*
-- [x] **40 Acres** — Lending 7d +30.4% TVL $54.4M [![40Acres](https://img.shields.io/badge/40_Acres-8B4513?logoColor=white)](https://40acres.xyz) *(DefiLlama monitor: `npm run analytics:40acres:lending`)*
-- [x] **USD AI** — RWA 7d -30.1% TVL $214.9M [![USDAI](https://img.shields.io/badge/USD_AI-1E88E5?logoColor=white)](https://usdai.money) *(DefiLlama monitor: `npm run analytics:usdai:rwa`)*
-- [x] **Current** — Lending 7d +25.4% TVL $54.4M [![Current](https://img.shields.io/badge/Current-00B4D8?logoColor=white)](https://current.tech) *(DefiLlama monitor: `npm run analytics:current:lending`)*
-- [x] **Jupiter Lend** — Jupiter Lend lending $1.18B TVL [![Jupiter](https://img.shields.io/badge/Jupiter-19FB9B?logoColor=black)](https://jup.ag) *(DefiLlama monitor: `npm run analytics:jupiter:lend`)*
-- [x] **Kuru CLOB** — Monad CLOB vol24 $143.9M, 7d chg +489.6% [![Kuru](https://img.shields.io/badge/Kuru-9333EA?logoColor=white)](https://kuru.io) *(DefiLlama monitor: `npm run analytics:kuru:clob`)*
-- [x] **Maple** — Lending TVL $3.00B, fees24 $1.11M [![Maple](https://img.shields.io/badge/Maple-8B5CF6?logoColor=white)](https://maple.finance) *(DefiLlama monitor: `npm run analytics:maple:lending`)*
-- [x] **NAVI Lending** — Sui lending TVL $176.6M, 7d +19.61% [![NAVI](https://img.shields.io/badge/NAVI-4DA2FF?logoColor=white)](https://naviprotocol.io) *(DefiLlama monitor: `npm run analytics:navi:lending`)*
-- [x] **HyperLend** — Hyperliquid L1 lending TVL $430.9M [![HyperLend](https://img.shields.io/badge/HyperLend-5865F2?logoColor=white)](https://hyperlend.finance) *(DefiLlama monitor: `npm run analytics:hyperlend:lending`)*
-- [x] **PumpSwap** — Solana DEX vol24 $426.0M, fees24 $5.59M [![PumpSwap](https://img.shields.io/badge/PumpSwap-14F195?logoColor=black)](https://pumpswap.io) *(DefiLlama monitor: `npm run analytics:pumpswap:dex`)*
-- [x] **Orca DEX** — Solana DEX vol24 $230.8M, 7d chg +62.95% [![Orca](https://img.shields.io/badge/Orca-FFD15C?logoColor=black)](https://orca.so) *(DefiLlama monitor: `npm run analytics:orca:dex`)*
-- [x] **Portal** — Wormhole bridge TVL $1.87B, 7d +17.01% [![Portal](https://img.shields.io/badge/Portal-999999?logoColor=white)](https://portalbridge.com) *(DefiLlama monitor: `npm run analytics:portal:bridge`)*
-- [x] **Kamino Lend** — Solana lending TVL $1.46B, 7d +5.82% [![Kamino](https://img.shields.io/badge/Kamino-00CCBB?logoColor=white)](https://kamino.finance) *(DefiLlama monitor: `npm run analytics:kamino:lending`)*
-- [x] **Fluid Lending** — Lending TVL $734.7M (new metric vs Fluid DEX) [![Fluid](https://img.shields.io/badge/Fluid-1E88E5?logoColor=white)](https://fluid.instadapp.io) *(DefiLlama monitor: `npm run analytics:fluid:lending`)*
-- [x] **Raydium AMM** — Solana DEX TVL $1.36B, vol24 $199.0M [![Raydium](https://img.shields.io/badge/Raydium-C042FF?logoColor=white)](https://raydium.io) *(DefiLlama monitor: `npm run analytics:raydium:dex`)*
-- [x] **Meteora DLMM** — Solana DEX vol24 $204.6M, TVL $189.6M [![Meteora](https://img.shields.io/badge/Meteora-8B5CF6?logoColor=white)](https://meteora.ag) *(DefiLlama monitor: `npm run analytics:meteora:dex`)*
-- [x] **World Chain** — Bridge TVL $474.4M, 7d +19.09% [![WorldChain](https://img.shields.io/badge/World_Chain-000000?logoColor=white)](https://worldchain.org) *(DefiLlama monitor: `npm run analytics:worldchain:bridge`)*
-- [x] **Backpack** — CEX TVL $633.5M, 7d +31.61% [![Backpack](https://img.shields.io/badge/Backpack-FF6B35?logoColor=white)](https://backpack.exchange) *(DefiLlama monitor: `npm run analytics:backpack:cex`)*
-- [x] **Bittensor dTAO** — TVL $568.5M, 7d +21.59% [![Bittensor](https://img.shields.io/badge/Bittensor-000000?logoColor=white)](https://bittensor.com) *(DefiLlama monitor: `npm run analytics:bittensor:dtao`)*
-- [x] **cap** — Lending TVL $291.7M [![cap](https://img.shields.io/badge/cap-1A1A2E?logoColor=white)](https://cap.xyz) *(DefiLlama monitor: `npm run analytics:cap:lending`)*
-- [x] **SpringSui** — Sui staking TVL $74.2M, 7d +22.04% [![SpringSui](https://img.shields.io/badge/SpringSui-4DA2FF?logoColor=white)](https://springsui.io) *(DefiLlama monitor: `npm run analytics:springsui:staking`)*
-- [x] **DFDV Staked SOL** — Solana LST TVL $218.7M, 7d +24.78% [![DFDV](https://img.shields.io/badge/DFDV-14F195?logoColor=black)](https://dfdv.com) *(DefiLlama monitor: `npm run analytics:dfdv:staking`)*
-- [x] **Cetus CLMM** — Sui DEX vol 7d chg +150.54% [![Cetus](https://img.shields.io/badge/Cetus-4DA2FF?logoColor=white)](https://cetus.zone) *(DefiLlama monitor: `npm run analytics:cetus:dex`)*
-- [x] **Bluefin Spot** — Sui DEX vol 7d chg +149.76% [![Bluefin](https://img.shields.io/badge/Bluefin-5B21B6?logoColor=white)](https://bluefin.io) *(DefiLlama monitor: `npm run analytics:bluefin:dex`)*
-- [x] **DeepBook V3** — Sui DEX vol 7d chg +141.27% [![DeepBook](https://img.shields.io/badge/DeepBook-4DA2FF?logoColor=white)](https://deepbook.tech) *(DefiLlama monitor: `npm run analytics:deepbook:dex`)*
-- [x] **Chainflip AMM** — Cross-chain DEX vol 7d chg +148.17% [![Chainflip](https://img.shields.io/badge/Chainflip-00D4AA?logoColor=black)](https://chainflip.io) *(DefiLlama monitor: `npm run analytics:chainflip:dex`)*
-- [x] **Dexalot DEX** — Multi-chain DEX vol24 $123.1M [![Dexalot](https://img.shields.io/badge/Dexalot-FF6B00?logoColor=white)](https://dexalot.com) *(DefiLlama monitor: `npm run analytics:dexalot:dex`)*
-- [x] **Scorch** — Solana DEX vol24 $97.4M, 7d chg +58.21% [![Scorch](https://img.shields.io/badge/Scorch-14F195?logoColor=black)](https://scorch.io) *(DefiLlama monitor: `npm run analytics:scorch:dex`)*
-- [x] **BisonFi** — Solana DEX vol24 $327.8M [![BisonFi](https://img.shields.io/badge/BisonFi-14F195?logoColor=black)](https://bisonfi.io) *(DefiLlama monitor: `npm run analytics:bisonfi:dex`)*
-- [x] **Manifest Trade** — Solana DEX vol24 $128.4M [![Manifest](https://img.shields.io/badge/Manifest-14F195?logoColor=black)](https://manifest.trade) *(DefiLlama monitor: `npm run analytics:manifest:dex`)*
-- [x] **Pharaoh DLMM** — Avalanche DEX vol 7d chg +72.93% [![Pharaoh](https://img.shields.io/badge/Pharaoh-E84142?logoColor=white)](https://pharaoh.exchange) *(DefiLlama monitor: `npm run analytics:pharaoh:dex`)*
-- [x] **AO Bridge** — Bridge TVL $91.4M, 7d +29.68% [![AO](https://img.shields.io/badge/AO-000000?logoColor=white)](https://ao.arweave.dev) *(DefiLlama monitor: `npm run analytics:ao:bridge`)*
-- [x] **Sonic Gateway** — Bridge TVL $59.5M, 7d +17.35% [![Sonic](https://img.shields.io/badge/Sonic-0052FF?logoColor=white)](https://soniclabs.com) *(DefiLlama monitor: `npm run analytics:sonic:bridge`)*
-- [x] **Hylo Protocol** — Dual-token stablecoin TVL $42.2M [![Hylo](https://img.shields.io/badge/Hylo-8B5CF6?logoColor=white)](https://hylo.com) *(DefiLlama monitor: `npm run analytics:hylo:stable`)*
-- [x] **Contango V2** — Derivatives TVL $13.1M, 7d +41.79% [![Contango](https://img.shields.io/badge/Contango-1E88E5?logoColor=white)](https://contango.xyz) *(DefiLlama monitor: `npm run analytics:contango:perps`)*
-- [x] **Liquid Collective** — Staking TVL $738.1M [![LiquidCollective](https://img.shields.io/badge/Liquid_Collective-5B21B6?logoColor=white)](https://liquidcollective.io) *(DefiLlama monitor: `npm run analytics:liquidcollective:staking`)*
-- [x] **Steakhouse Financial** — Risk curator TVL $2.61B [![Steakhouse](https://img.shields.io/badge/Steakhouse-1A1A2E?logoColor=white)](https://steakhouse.financial) *(DefiLlama monitor: `npm run analytics:steakhouse:curator`)*
-- [x] **Frankencoin** — CDP TVL $66.0M [![Frankencoin](https://img.shields.io/badge/Frankencoin-000000?logoColor=white)](https://frankencoin.com) *(DefiLlama monitor: `npm run analytics:frankencoin:cdp`)*
-- [x] **Rysk V12** — Options TVL $37.7M [![Rysk](https://img.shields.io/badge/Rysk-5865F2?logoColor=white)](https://rysk.finance) *(DefiLlama monitor: `npm run analytics:rysk:options`)*
-- [x] **Galaxy Curation** — Curation TVL $46.9M [![Galaxy](https://img.shields.io/badge/Galaxy-5865F2?logoColor=white)](https://galaxy.eco) *(DefiLlama monitor: `npm run analytics:galaxy:curator`)*
-- [x] **Drift** — Solana perps TVL $343.0M [![Drift](https://img.shields.io/badge/Drift-14F195?logoColor=black)](https://drift.trade) *(DefiLlama monitor: `npm run analytics:drift:perps`)*
-- [x] **Jito** — Solana staking TVL $1.26B [![Jito](https://img.shields.io/badge/Jito-14F195?logoColor=black)](https://jito.network) *(DefiLlama monitor: `npm run analytics:jito:staking`)*
-- [x] **Marinade** — Solana staking TVL $949.9M [![Marinade](https://img.shields.io/badge/Marinade-14F195?logoColor=black)](https://marinade.finance) *(DefiLlama monitor: `npm run analytics:marinade:staking`)*
-- [x] **Sanctum** — Solana staking TVL $2.28B [![Sanctum](https://img.shields.io/badge/Sanctum-14F195?logoColor=black)](https://sanctum.so) *(DefiLlama monitor: `npm run analytics:sanctum:staking`)*
-- [x] **Fables** — Robinhood Chain DEX (points program ending 2026-10-05 ahead of TGE) [![Fables](https://img.shields.io/badge/Fables-00D4AA?logoColor=black)](https://fables.market) *(DefiLlama monitor: `npm run analytics:fables:dex`; airdrop watch row added)*
+- [x] **Drop** — Neutron Prop 9 governance attack emptied Astroport and Drop contracts (~$9.4M per Rarma) on 2026-09-22 ([Altcoin Buzz](https://www.altcoinbuzz.io/cosmos-hub-moves-2-1m-of-stolen-atom-after-25-hour-halt), 2026-09-23); Llama TVL is $0 [![Drop](https://img.shields.io/badge/Drop-5B21B6?logoColor=white)](https://drop.money) *(DefiLlama monitor: `npm run analytics:drop:staking`)*
+- [x] **THORChain DEX** — ~500k stolen ATOM swapped through THORChain; 168,990.9 ATOM refunded to the attacker after the Hub restart ([Cosmos forum](https://forum.cosmos.network/t/neutron-governance-attack-cosmos-hub-response-and-recovery-update/17369); [CryptoSlate](https://cryptoslate.com/cosmos-restarted-to-seize-2-2-million-in-stolen-atom-but-169000-tokens-still-escaped/), 2026-09-24) [![THORChain](https://img.shields.io/badge/THORChain-00CCBB?logoColor=white)](https://thorchain.org) *(DefiLlama monitor: `npm run analytics:thorchain:dex`)*
+- [x] **Polymarket** — Polymarket U.S. just over $1.03B notional volume on the Sep 19-20 weekend ([SCCG](https://sccgmanagement.com/sccg-articles/2026/09/23/kalshi-crypto-volume-allegations-emerge-against-backdrop-of-764-billion-prediction-market-record/), 2026-09-23); the Llama slug tracks the international book [![Polymarket](https://img.shields.io/badge/Polymarket-6366F1?logoColor=white)](https://polymarket.com) *(DefiLlama monitor: `npm run analytics:polymarket:pred`)*
+- [x] **Circle / Arc** — Arc DeFi TVL $494M, +44.52% 7d, 10 days after mainnet ([TokenPost](https://www.tokenpost.com/news/technology/24382), 2026-09-26); Circle 24h revenue $7.35M per DefiLlama ([BlockBeats](https://en.theblockbeats.news/flash/369146), 2026-09-26) [![Circle](https://img.shields.io/badge/Circle-3E73C4?logoColor=white)](https://circle.com) *(DefiLlama monitors: `npm run analytics:circle:stable`, `npm run analytics:arc:chain`)*
+- [x] **NEAR Intents** — NEAR Intents passed ~$31.4B cumulative volume ([Bitinsider](https://bitinsider.io/articles/near-protocol-intents-surpass-30b-in-all-time-volume-as-daily-records-fall), 2026-09-22) [![NEAR](https://img.shields.io/badge/NEAR-000000?logoColor=white)](https://near.org) *(DefiLlama monitor: `npm run analytics:near:intents`)*
+- [x] **Jupiter Lend DEX** — Jupiter Earn to seed $10M of sUSDai DEX liquidity on the Jupiter Lend AMM ([Altcoin Buzz](https://www.altcoinbuzz.io/kamino-opens-usdc-borrowing-against-gpu-loan-yields-on-solana), 2026-09-25) [![Jupiter](https://img.shields.io/badge/Jupiter-19FB9B?logoColor=black)](https://jup.ag) *(DefiLlama monitor: `npm run analytics:jupiter:lend-dex`)*
+- [x] **Gravity by Galxe** — $G cross-exchange spread hit 40% on bridge limits ([GetChain](https://www.getchainnews.com/en/newflash/E6KkDYb68k), 2026-09-20); Fast Withdraw cut Alpha Mainnet to Ethereum settlement from 7 days to ~10 min ([TradingView](https://www.tradingview.com/news/coinmarketcal:61ad0b705094b:0-gravity-by-galxe-fast-withdraw-goes-live-for-g-bridge-transfers-to-ethereum-20-sep-2026/), 2026-09-20) [![Gravity](https://img.shields.io/badge/Gravity-5865F2?logoColor=white)](https://gravity.xyz) *(DefiLlama monitor: `npm run analytics:gravity:bridge`)*
+- [x] **USD AI** — $128.9M GPU financing facility, its largest to date ([PR Newswire](https://www.prnewswire.com/news-releases/usdai-announces-128-9m-gpu-financing-facility-its-largest-to-date-302888224.html), 2026-09-23) [![USDAI](https://img.shields.io/badge/USD_AI-1E88E5?logoColor=white)](https://usdai.money) *(DefiLlama monitor: `npm run analytics:usdai:rwa`)*
+- [x] **Jupiter Lend** — record $2.41B total deposits on 2026-09-22 ([Solana Compass](https://solanacompass.com/news/jupiter-perps-adds-six-markets-including-tokenized-spacex-hype-and-zec-via-gum-orderbook), 2026-09-22) [![Jupiter](https://img.shields.io/badge/Jupiter-19FB9B?logoColor=black)](https://jup.ag) *(DefiLlama monitor: `npm run analytics:jupiter:lend`)*
+- [x] **Kuru CLOB** — Kuru cumulative trading volume passed $7B on Monad ([TokenPost](https://www.tokenpost.com/news/investing/24062), 2026-09-25) [![Kuru](https://img.shields.io/badge/Kuru-9333EA?logoColor=white)](https://kuru.io) *(DefiLlama monitor: `npm run analytics:kuru:clob`)*
+- [x] **NAVI Lending** — NAVI held >$420M of deposits in Sui's $1.21B TVL snapshot of 2026-09-22 ([Bitcoinist](https://bitcoinist.com/sui-tvl-moves-above-1-2b-as-defi-liquidity-expands/), 2026-09-24) [![NAVI](https://img.shields.io/badge/NAVI-4DA2FF?logoColor=white)](https://naviprotocol.io) *(DefiLlama monitor: `npm run analytics:navi:lending`)*
+- [x] **PumpSwap** — ~$482.79M 24h volume, ~17% of Solana's $2.80B DEX volume ([The Chain Observer](https://thechainobserver.com/solana-dex-volume-reaches-2-8b/), 2026-09-22 snapshot) [![PumpSwap](https://img.shields.io/badge/PumpSwap-14F195?logoColor=black)](https://pumpswap.io) *(DefiLlama monitor: `npm run analytics:pumpswap:dex`)*
+- [x] **Kamino Lend** — sUSDai/USDC market opened at 80% max LTV, 85% liquidation LTV, 5M supply/borrow caps ([Altcoin Buzz](https://www.altcoinbuzz.io/kamino-opens-usdc-borrowing-against-gpu-loan-yields-on-solana), 2026-09-25) [![Kamino](https://img.shields.io/badge/Kamino-00CCBB?logoColor=white)](https://kamino.finance) *(DefiLlama monitor: `npm run analytics:kamino:lending`)*
+- [x] **Raydium AMM** — Raydium TVL $1.26B; handled $1.713B (64%) of StonkFun's $2.67B volume ([KuCoin](https://www.kucoin.com/news/flash/ray-gains-10-as-raydium-captures-64-of-stonkfun-volume), 2026-09-22) [![Raydium](https://img.shields.io/badge/Raydium-C042FF?logoColor=white)](https://raydium.io) *(DefiLlama monitor: `npm run analytics:raydium:dex`)*
+- [x] **DFDV Staked SOL** — DFDV added 101,381 SOL in a week to ~2,490,304 SOL, deployed via its staking/validator stack ([KuCoin / The Coin Republic](https://www.kucoin.com/news/flash/dfdv-adds-101-381-sol-to-treasury-as-sol-price-surpasses-116), 2026-09-22) [![DFDV](https://img.shields.io/badge/DFDV-14F195?logoColor=black)](https://dfdv.com) *(DefiLlama monitor: `npm run analytics:dfdv:staking`)*
+- [x] **DeepBook V3** — DeepBook App launched on the order book behind $20B+ of Sui volume ([Sui blog](https://www.sui.io/blog/deepbook-app-is-live-onchain-power-for-serious-traders); [TradingView](https://www.tradingview.com/news/coinmarketcal:e0ad19724094b:0-deepbook-alpha-app-goes-live-with-spot-trading-btc-prediction-markets-and-api-24-sep-2026/), 2026-09-24) [![DeepBook](https://img.shields.io/badge/DeepBook-4DA2FF?logoColor=white)](https://deepbook.tech) *(DefiLlama monitor: `npm run analytics:deepbook:dex`)*
+- [x] **BisonFi** — ~$424.26M 24h volume ([The Chain Observer](https://thechainobserver.com/solana-dex-volume-reaches-2-8b/), 2026-09-22); top Solana AMM by volume for 25 straight weeks ([Gate News](https://www.gate.com/news/detail/SOL/bisonfi-dominates-solana-amm-market-for-25-consecutive-weeks-24501218), 2026-09-23) [![BisonFi](https://img.shields.io/badge/BisonFi-14F195?logoColor=black)](https://bisonfi.io) *(DefiLlama monitor: `npm run analytics:bisonfi:dex`)*
+- [x] **Jito** — Jito pool held 10.38M SOL vs 7.96M JitoSOL supply at epoch 1042 ([Solana Compass](https://solanacompass.com/news/sec-staff-faq-says-staking-receipt-tokens-can-be-digital-commodities-jito), 2026-09-25) [![Jito](https://img.shields.io/badge/Jito-14F195?logoColor=black)](https://jito.network) *(DefiLlama monitor: `npm run analytics:jito:staking`)*
+- [x] **Sanctum** — CLOUD-008 passed: 259M CLOUD burned, total supply 1B to ~741M; TVL $2.05B ([Solana Compass](https://solanacompass.com/news/sanctum-governance-vote-passes-259m-cloud-tokens-to-be-burned-ticker-renames-to-sanc), 2026-09-19 19:35 UTC = 2026-09-20 UTC+8) [![Sanctum](https://img.shields.io/badge/Sanctum-14F195?logoColor=black)](https://sanctum.so) *(DefiLlama monitor: `npm run analytics:sanctum:staking`)*
 - [x] **Payy Network** — Ethereum ZK payments rollup bridge (drained 2026-09-24) [![Payy](https://img.shields.io/badge/Payy-C6FF00?logoColor=black)](https://payy.network) *(on-chain USDC balance: `npm run analytics:payy:bridge`)*
 
 ## Contributing
