@@ -115,14 +115,13 @@ Compare prices and analyze pools across different DEX protocols:
 | **Zama (Llama)** | `npm run analytics:zama:privacy` | Zama confidential-DeFi TVL (`zama`) |
 | **Astroport (Llama)** | `npm run analytics:astroport:dex` | Cosmos DEX TVL incl. Neutron (`astroport`) |
 | **Meter Passport (Llama)** | `npm run analytics:meter:bridge` | Meter bridge TVL (`meter-passport`) |
-| **Meteora DLMM (Llama)** | `npm run analytics:meteora:dex` | Meteora DLMM TVL (`meteora-dlmm`); referral staking cycle 2 paid $700K+ USDC, cycle ended 2026-09-21 ([Solana Compass](https://solanacompass.com/news/meteora-referral-staking-cycle-2-distributes-over-700k-in-usdc-more-than-double-cycle-1), 2026-09-23) |
+| **Meteora DLMM (Llama)** | `npm run analytics:meteora:dex` | Meteora DLMM TVL + fees/revenue (`meteora-dlmm`); referral staking cycle 2 paid $700K+ USDC, cycle ended 2026-09-21 ([Solana Compass](https://solanacompass.com/news/meteora-referral-staking-cycle-2-distributes-over-700k-in-usdc-more-than-double-cycle-1), 2026-09-23) |
 | **EigenLayer (Llama)** | `npm run analytics:eigenlayer:restaking` | Restaking TVL (`eigencloud`, ex-`eigenlayer`) |
 | **Bitget (Llama)** | `npm run analytics:bitget:cex` | CEX reserve TVL by chain (`bitget`) |
 | **Drop (Llama)** | `npm run analytics:drop:staking` | Drop liquid staking (Neutron drain, $0 TVL OK) (`drop`) |
 | **THORChain DEX (Llama)** | `npm run analytics:thorchain:dex` | THORChain DEX TVL (`thorchain-dex`) |
 | **Polymarket (Llama)** | `npm run analytics:polymarket:pred` | Polymarket prediction market TVL (`polymarket`) |
 | **Circle (Llama)** | `npm run analytics:circle:stable` | Circle protocol TVL (`circle`) |
-| **Circle Bitcoin (Llama)** | `npm run analytics:circle-bitcoin:bridge` | Circle Bitcoin bridge TVL (`circle-bitcoin`); cirBTC live on Arc 2026-09-21, ~$302M mcap / Llama TVL ~$376M (+409% 7d) ([Arc blog](https://www.arc.io/blog/cirbtc-is-now-live-on-arc), [CoinFomania](https://coinfomania.com/301-9m-circles-wrapped-bitcoin-circles-defi-landscape/), 2026-09-21/25) |
 | **Arc Chain (Llama)** | `npm run analytics:arc:chain` | Arc (Circle L1, chainId 5042) chain TVL |
 | **NEAR Intents (Llama)** | `npm run analytics:near:intents` | NEAR Intents TVL (`near-intents`) |
 | **Jupiter Lend DEX (Llama)** | `npm run analytics:jupiter:lend-dex` | Jupiter Lend DEX TVL (`jupiter-lend-dex`) |
@@ -132,7 +131,7 @@ Compare prices and analyze pools across different DEX protocols:
 | **Kuru CLOB (Llama)** | `npm run analytics:kuru:clob` | Kuru CLOB (Monad) TVL (`kuru-clob`) |
 | **NAVI Lending (Llama)** | `npm run analytics:navi:lending` | NAVI Lending (Sui) TVL (`navi-lending`) |
 | **PumpSwap (Llama)** | `npm run analytics:pumpswap:dex` | PumpSwap DEX TVL (`pumpswap`) |
-| **pump.fun (Llama)** | `npm run analytics:pumpfun:launchpad` | pump.fun launchpad fees/revenue (`pump.fun`); $1.96M 24h protocol revenue ahead of Hyperliquid ([The Block Beats](https://en.theblockbeats.news/flash/369146), [Gate.com](https://www.gate.com/zh-tw/news/detail/pumpfun-surpasses-hyperliquid-with-196m-protocol-revenue-in-24-hours-24572571), 2026-09-26) |
+| **pump.fun (Llama)** | `npm run analytics:pumpfun:launchpad` | pump.fun launchpad fees/revenue via `/summary/fees` (`pump.fun`, `DEFILLAMA_FEES=1`; Llama TVL is empty/$0); $1.96M 24h protocol revenue ahead of Hyperliquid ($1.86M) ([The Block Beats](https://en.theblockbeats.news/flash/369146), [Gate.com](https://www.gate.com/zh-tw/news/detail/pumpfun-surpasses-hyperliquid-with-196m-protocol-revenue-in-24-hours-24572571), 2026-09-26) |
 | **Kamino Lend (Llama)** | `npm run analytics:kamino:lending` | Kamino Lend TVL (`kamino-lend`) |
 | **Raydium AMM (Llama)** | `npm run analytics:raydium:dex` | Raydium AMM TVL (`raydium-amm`) |
 | **DFDV Staked SOL (Llama)** | `npm run analytics:dfdv:staking` | DFDV Staked SOL TVL (`dfdv-staked-sol`) |
@@ -140,8 +139,8 @@ Compare prices and analyze pools across different DEX protocols:
 | **BisonFi (Llama)** | `npm run analytics:bisonfi:dex` | BisonFi DEX TVL (`bisonfi`) |
 | **Jito (Llama)** | `npm run analytics:jito:staking` | Jito staking TVL (`jito`) |
 | **Sanctum (Llama)** | `npm run analytics:sanctum:staking` | Sanctum staking TVL (`sanctum`) |
-| **Steakhouse Financial (Llama)** | `npm run analytics:steakhouse:curator` | Steakhouse Financial TVL (`steakhouse-financial`); Steakhouse Prime Instant on Base $444.37M TVL (Portals week-4) ([Portals blog](https://blog.portals.fi/defi-tvl-september-2026-week-4/), 2026-09-25) |
-| **Upshift (Llama)** | `npm run analytics:upshift:allocator` | Upshift TVL (`upshift`); Upshift Sentora USD Earn $94.41M TVL on Ethereum ([Portals blog](https://blog.portals.fi/defi-tvl-september-2026-week-4/), 2026-09-25) |
+| **Steakhouse Financial (Llama)** | `npm run analytics:steakhouse:curator` | Steakhouse Financial curated TVL by chain (`steakhouse-financial`); Steakhouse Prime Instant (Morpho USDC vault) on Base $444.37M TVL (Portals week-4) ([Portals blog](https://blog.portals.fi/defi-tvl-september-2026-week-4/), 2026-09-25) |
+| **Upshift (Llama)** | `npm run analytics:upshift:allocator` | Upshift TVL by chain (`upshift`); Upshift Sentora USD Earn $94.41M TVL on Ethereum ([Portals blog](https://blog.portals.fi/defi-tvl-september-2026-week-4/), 2026-09-25) |
 | **Payy bridge (on-chain)** | `npm run analytics:payy:bridge` | USDC `balanceOf` Payy Ethereum bridge `0x367C…5270` (needs `ETHEREUM_RPC_URL`) |
 
 ### Trending / 2026 monitors
@@ -296,6 +295,10 @@ Track lending rates and compare protocols:
 - [x] **BisonFi** — ~$424.26M 24h volume ([The Chain Observer](https://thechainobserver.com/solana-dex-volume-reaches-2-8b/), 2026-09-22); top Solana AMM by volume for 25 straight weeks ([Gate News](https://www.gate.com/news/detail/SOL/bisonfi-dominates-solana-amm-market-for-25-consecutive-weeks-24501218), 2026-09-23) [![BisonFi](https://img.shields.io/badge/BisonFi-14F195?logoColor=black)](https://bisonfi.io) *(DefiLlama monitor: `npm run analytics:bisonfi:dex`)*
 - [x] **Jito** — Jito pool held 10.38M SOL vs 7.96M JitoSOL supply at epoch 1042 ([Solana Compass](https://solanacompass.com/news/sec-staff-faq-says-staking-receipt-tokens-can-be-digital-commodities-jito), 2026-09-25) [![Jito](https://img.shields.io/badge/Jito-14F195?logoColor=black)](https://jito.network) *(DefiLlama monitor: `npm run analytics:jito:staking`)*
 - [x] **Sanctum** — CLOUD-008 passed: 259M CLOUD burned, total supply 1B to ~741M; TVL $2.05B ([Solana Compass](https://solanacompass.com/news/sanctum-governance-vote-passes-259m-cloud-tokens-to-be-burned-ticker-renames-to-sanc), 2026-09-19 19:35 UTC = 2026-09-20 UTC+8) [![Sanctum](https://img.shields.io/badge/Sanctum-14F195?logoColor=black)](https://sanctum.so) *(DefiLlama monitor: `npm run analytics:sanctum:staking`)*
+- [x] **Meteora DLMM** — Referral Staking Cycle 2 paid $700K+ USDC from DLMM fees (vs $336K in Cycle 1); cycle ended 2026-09-21 ([Solana Compass](https://solanacompass.com/news/meteora-referral-staking-cycle-2-distributes-over-700k-in-usdc-more-than-double-cycle-1), 2026-09-23) [![Meteora](https://img.shields.io/badge/Meteora-F97316?logoColor=white)](https://meteora.ag) *(DefiLlama monitor with fees/revenue: `npm run analytics:meteora:dex`)*
+- [x] **pump.fun** — $1.96M 24h protocol revenue per DefiLlama, ahead of Hyperliquid's $1.86M ([BlockBeats](https://en.theblockbeats.news/flash/369146), [Gate](https://www.gate.com/zh-tw/news/detail/pumpfun-surpasses-hyperliquid-with-196m-protocol-revenue-in-24-hours-24572571), 2026-09-26) [![pump.fun](https://img.shields.io/badge/pump.fun-14F195?logoColor=black)](https://pump.fun) *(DefiLlama fees/revenue monitor: `npm run analytics:pumpfun:launchpad`)*
+- [x] **Steakhouse Financial** — Steakhouse Prime Instant (Morpho USDC vault) on Base at $444.37M TVL ([Portals](https://blog.portals.fi/defi-tvl-september-2026-week-4/), 2026-09-25) [![Steakhouse](https://img.shields.io/badge/Steakhouse-B91C1C?logoColor=white)](https://www.steakhouse.financial) *(DefiLlama monitor: `npm run analytics:steakhouse:curator`)*
+- [x] **Upshift** — Upshift Sentora USD Earn on Ethereum at $94.41M TVL ([Portals](https://blog.portals.fi/defi-tvl-september-2026-week-4/), 2026-09-25) [![Upshift](https://img.shields.io/badge/Upshift-111827?logoColor=white)](https://www.upshift.finance) *(DefiLlama monitor: `npm run analytics:upshift:allocator`)*
 - [x] **Payy Network** — Ethereum ZK payments rollup bridge (drained 2026-09-24) [![Payy](https://img.shields.io/badge/Payy-C6FF00?logoColor=black)](https://payy.network) *(on-chain USDC balance: `npm run analytics:payy:bridge`)*
 
 ## Contributing
