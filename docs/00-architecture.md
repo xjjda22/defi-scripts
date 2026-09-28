@@ -36,16 +36,6 @@ npm scripts in `package.json` → `src/analytics/`, `src/crosschain/`, `src/simu
 
 No in-repo HTTP server. Outbound: DefiLlama `api.llama.fi`, Morpho GraphQL, Lido, Ethena, CoinGecko, plus `*_RPC_URL`.
 
-## Harness
-
-From the workspace root (`defi/`):
-
-```bash
-bash harness/verify.sh [quick|smoke|full] [all|defi-scripts|defi-mev]
-```
-
-`quick` after every edit; `smoke` when APIs/sims/data change. Queue: `harness/TASKS.md`. Agent loop: `.cursor/rules/harness-and-loop.mdc`.
-
 ## Code graph
 
 Indexed project: `Users-harirana-Documents-git-eth-defi`. Scope with `get_architecture` `path: "defi-scripts"`.
