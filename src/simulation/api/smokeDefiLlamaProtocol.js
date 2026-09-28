@@ -1,9 +1,15 @@
 require("dotenv").config();
 const chalk = require("chalk");
-const { fetchDefiLlamaProtocol, lastTvlUsdFromSeries } = require("../../analytics/utils/defiLlamaProtocol");
+const {
+  fetchDefiLlamaProtocol,
+  fetchFeesSummary,
+  lastTvlUsdFromSeries,
+} = require("../../analytics/utils/defiLlamaProtocol");
 
 const slug = (process.env.SMOKE_SLUG || "").trim();
 const minTvl = parseFloat(process.env.SMOKE_MIN_TVL_USD || "0") || 0;
+// SMOKE_FEES=1: also require a positive 24h revenue from /summary/fees/{slug}?dataType=dailyRevenue
+const checkFees = process.env.SMOKE_FEES === "1";
 
 async function main() {
   if (!slug) {
@@ -21,6 +27,15 @@ async function main() {
     if (minTvl > 0 && (tvl == null || tvl < minTvl)) {
       console.error(chalk.red(`TVL below SMOKE_MIN_TVL_USD (${minTvl})`));
       process.exit(1);
+    }
+    if (checkFees) {
+      const r = await fetchFeesSummary(slug, undefined, "dailyRevenue");
+      const rev24h = typeof r?.total24h === "number" && Number.isFinite(r.total24h) ? r.total24h : null;
+      if (rev24h == null || rev24h <= 0) {
+        console.error(chalk.red(`No positive 24h revenue on /summary/fees/${slug}`));
+        process.exit(1);
+      }
+      console.log(chalk.green(`OK: ${d.name || slug} | 24h revenue $${rev24h.toFixed(0)}`));
     }
   } catch (e) {
     const status = e.response?.status;

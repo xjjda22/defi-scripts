@@ -66,8 +66,14 @@ function fetchDexOverview(chain, timeoutMs) {
   return fetchLlamaJson(`/overview/dexs/${encodeURIComponent(chain)}?${q}`, timeoutMs);
 }
 
-function fetchFeesSummary(slug, timeoutMs) {
-  const q = "excludeTotalDataChart=true";
+/**
+ * @param {string} slug - Protocol slug (e.g. "pump.fun")
+ * @param {number} [timeoutMs]
+ * @param {string} [dataType] - Llama dataType, e.g. "dailyRevenue" (default: daily fees)
+ */
+function fetchFeesSummary(slug, timeoutMs, dataType) {
+  let q = "excludeTotalDataChart=true";
+  if (dataType) q += `&dataType=${encodeURIComponent(dataType)}`;
   return fetchLlamaJson(`/summary/fees/${encodeURIComponent(slug)}?${q}`, timeoutMs);
 }
 
