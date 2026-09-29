@@ -231,7 +231,7 @@
     "simulate:meter:smoke": "SMOKE_SLUG=meter-passport node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:meteora:smoke": "SMOKE_SLUG=meteora-dlmm node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:bitget:smoke": "SMOKE_SLUG=bitget node src/simulation/api/smokeDefiLlamaProtocol.js",
-    "simulate:bedrock:smoke": "SMOKE_SLUG=bedrock node src/simulation/api/smokeDefiLlamaProtocol.js",
+    "simulate:bedrock:smoke": "SMOKE_FEES=1 SMOKE_SLUG=bedrock node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:eigenlayer:smoke": "SMOKE_SLUG=eigencloud node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:etherfi:smoke": "SMOKE_FEES=1 SMOKE_SLUG=ether.fi node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:kelp:smoke": "SMOKE_FEES=1 SMOKE_SLUG=kelp node src/simulation/api/smokeDefiLlamaProtocol.js",
