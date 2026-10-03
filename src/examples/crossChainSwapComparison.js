@@ -3,7 +3,7 @@
 // Useful for identifying best execution venues and cross-chain arbitrage opportunities
 require("dotenv").config();
 const { ethers } = require("ethers");
-const { CHAINS, COMMON_TOKENS } = require("../config/chains");
+const { CHAINS } = require("../config/chains");
 const { compareQuotes, getCommonToken } = require("../swaps/swap");
 
 /**

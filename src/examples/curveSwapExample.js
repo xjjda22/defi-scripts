@@ -4,7 +4,7 @@
  */
 require("dotenv").config();
 const { ethers } = require("ethers");
-const { swapTokens, getQuote, getPoolInfo, findTokenIndices } = require("../swaps/curveSwap");
+const { getQuote, getPoolInfo, findTokenIndices } = require("../swaps/curveSwap");
 const { COMMON_TOKENS } = require("../config/chains");
 
 async function main() {

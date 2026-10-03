@@ -5,7 +5,6 @@
 
 require("dotenv").config();
 const axios = require("axios");
-const { CHAINS } = require("../../config/chains");
 const { formatUSD } = require("../../utils/prices");
 const { writeCSV } = require("../../utils/csv");
 const chalk = require("chalk");
@@ -68,7 +67,7 @@ function displayVolume(volumeByChain, totalVolume) {
   console.log(chalk.bold("24h Volume by Chain:"));
   console.log("─".repeat(80));
 
-  for (const [chainKey, data] of sortedChains) {
+  for (const [, data] of sortedChains) {
     const percentage = totalVolume > 0 ? ((data.volume24h / totalVolume) * 100).toFixed(2) : "0.00";
     const bar = "█".repeat(Math.floor(parseFloat(percentage) / 2));
 
@@ -100,7 +99,7 @@ async function main() {
 
   displayVolume(volumeByChain, totalVolume);
 
-  const csvData = Object.entries(volumeByChain).map(([chainKey, data]) => ({
+  const csvData = Object.entries(volumeByChain).map(([, data]) => ({
     chain: data.name,
     volume24h: data.volume24h,
     percentage: totalVolume > 0 ? ((data.volume24h / totalVolume) * 100).toFixed(2) : "0.00",

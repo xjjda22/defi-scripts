@@ -13,7 +13,6 @@ const {
   printSection,
   createTable,
   formatPrice,
-  formatCurrency,
   formatPercent,
   formatChain,
   printInsights,
@@ -22,7 +21,6 @@ const { getTokenInfo, formatTokenAmount, calculatePercentageDiff, isValidPrice }
 
 // Configuration
 const DEFAULT_CHAIN = process.env.CHAIN || "ethereum";
-const DEFAULT_AMOUNT_IN = "1"; // 1 token
 
 /**
  * Get Uniswap V2 price

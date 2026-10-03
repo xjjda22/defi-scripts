@@ -5,7 +5,6 @@
 
 require("dotenv").config();
 const axios = require("axios");
-const { CHAINS } = require("../../config/chains");
 const { formatUSD } = require("../../utils/prices");
 const { writeCSV } = require("../../utils/csv");
 const chalk = require("chalk");
@@ -115,7 +114,7 @@ function processWeeklyVolumeData(dexData, weekDates) {
   return weeklyData;
 }
 
-function displayWeeklyVolume(weeklyData, weekDates) {
+function displayWeeklyVolume(weeklyData) {
   console.log("\n" + "=".repeat(80));
   console.log(chalk.cyan.bold("  CURVE FINANCE - WEEKLY VOLUME TRACKER"));
   console.log("=".repeat(80) + "\n");
@@ -126,7 +125,7 @@ function displayWeeklyVolume(weeklyData, weekDates) {
     return;
   }
 
-  for (const [chainKey, chainInfo] of chains) {
+  for (const [, chainInfo] of chains) {
     if (chainInfo.daily.length === 0) continue;
 
     console.log(chalk.cyan.bold(`\n${chainInfo.name}`));
@@ -159,7 +158,7 @@ function displayWeeklyVolume(weeklyData, weekDates) {
 async function exportToCSV(weeklyData) {
   const csvData = [];
 
-  for (const [chainKey, chainInfo] of Object.entries(weeklyData)) {
+  for (const [, chainInfo] of Object.entries(weeklyData)) {
     for (const day of chainInfo.daily) {
       csvData.push({
         chain: chainInfo.name,

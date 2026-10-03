@@ -2,7 +2,7 @@
 // This script demonstrates auto-routing to find the best swap route
 require("dotenv").config();
 const { ethers } = require("ethers");
-const { swapTokens, compareQuotes, getCommonToken } = require("../swaps/swap");
+const { compareQuotes, getCommonToken } = require("../swaps/swap");
 
 async function main() {
   // Configuration
@@ -31,7 +31,7 @@ async function main() {
   try {
     // Step 1: Compare quotes across all versions
     console.log("Step 1: Comparing quotes across V2, V3, and V4...");
-    const quotes = await compareQuotes(CHAIN, tokenIn, tokenOut, amountIn.toString());
+    await compareQuotes(CHAIN, tokenIn, tokenOut, amountIn.toString());
 
     // Step 2: Execute swap with auto-routing (finds best price)
     console.log("\nStep 2: Executing swap with best route...");

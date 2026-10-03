@@ -286,7 +286,7 @@ function getPairsByCategory(category) {
  * Check if pair exists
  */
 function hasPair(pairName) {
-  return MAJOR_PAIRS.hasOwnProperty(pairName);
+  return Object.prototype.hasOwnProperty.call(MAJOR_PAIRS, pairName);
 }
 
 module.exports = {

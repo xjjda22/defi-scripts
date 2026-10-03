@@ -9,7 +9,6 @@ const {
   getTokenAllowance,
   getNativeBalance,
   preFlightCheck,
-  getTokenInfo,
 } = require("../utils/tokenHelpers");
 
 async function main() {

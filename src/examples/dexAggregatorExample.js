@@ -5,7 +5,7 @@
  */
 require("dotenv").config();
 const { ethers } = require("ethers");
-const { swapTokens, getBestQuote } = require("../swaps/dexAggregator");
+const { getBestQuote } = require("../swaps/dexAggregator");
 const { COMMON_TOKENS } = require("../config/chains");
 
 async function main() {

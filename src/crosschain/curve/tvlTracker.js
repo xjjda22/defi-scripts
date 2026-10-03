@@ -5,7 +5,6 @@
 
 require("dotenv").config();
 const axios = require("axios");
-const { CHAINS } = require("../../config/chains");
 const { formatUSD } = require("../../utils/prices");
 const { writeCSV } = require("../../utils/csv");
 const chalk = require("chalk");
@@ -74,7 +73,7 @@ function displayTVL(tvlByChain, totalTVL) {
   console.log(chalk.bold("TVL by Chain:"));
   console.log("─".repeat(80));
 
-  for (const [chainKey, data] of sortedChains) {
+  for (const [, data] of sortedChains) {
     const percentage = totalTVL > 0 ? ((data.tvl / totalTVL) * 100).toFixed(2) : "0.00";
     const bar = "█".repeat(Math.floor(parseFloat(percentage) / 2));
 
@@ -111,7 +110,7 @@ async function main() {
 
   displayTVL(tvlByChain, totalTVL);
 
-  const csvData = Object.entries(tvlByChain).map(([chainKey, data]) => ({
+  const csvData = Object.entries(tvlByChain).map(([, data]) => ({
     chain: data.name,
     tvl: data.tvl,
     percentage: totalTVL > 0 ? ((data.tvl / totalTVL) * 100).toFixed(2) : "0.00",

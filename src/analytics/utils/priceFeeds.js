@@ -1,7 +1,7 @@
 // Price feed utilities for fetching and formatting token prices
 // Shared across all analytics scripts
 const { ethers } = require("ethers");
-const { getProvider, getContract } = require("../../utils/web3");
+const { getProvider } = require("../../utils/web3");
 const ERC20_ABI = require("../../abis/IERC20.json");
 
 /**

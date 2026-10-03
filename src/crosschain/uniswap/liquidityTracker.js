@@ -12,22 +12,6 @@ const { formatUSD } = require("../../utils/prices");
 const { writeCSV } = require("../../utils/csv");
 const { printUniswapLogo } = require("../../utils/ascii");
 
-const MAX_EVENTS_PER_RUN = 10000;
-const CONTRACT_CALL_DELAY_MS = 100;
-const CONTRACT_ADDRESSES = {
-  ethereum: {
-    v2Factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
-    v3Factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
-    v3PositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
-    v4PoolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
-  },
-};
-const GAS_LIMITS = {
-  getReserves: 30000,
-  getPool: 50000,
-  positions: 100000,
-};
-
 // ABIs
 // ============================================================================
 
@@ -88,9 +72,6 @@ const START_BLOCK = process.env.START_BLOCK ? parseInt(process.env.START_BLOCK) 
 
 /** @type {Array<number>} V3 fee tiers in basis points */
 const V3_FEE_TIERS = [500, 3000, 10000]; // 0.05%, 0.3%, 1%
-
-/** @type {Array<number>} V4 fee tiers in basis points */
-const V4_FEE_TIERS = [100, 500, 3000, 10000]; // 0.01%, 0.05%, 0.3%, 1%
 
 // ================================================================================================
 // UTILITY FUNCTIONS

@@ -119,23 +119,6 @@ function extractTimestamp(point) {
   return null;
 }
 
-/**
- * Extracts volume value from a data point (handles both array and object formats)
- * @param {Object|Array} point - Data point containing volume information
- * @returns {number} Volume value
- */
-function extractVolumeValue(point) {
-  if (!point) return 0;
-
-  // Array format: [timestamp, value]
-  if (Array.isArray(point) && point.length >= 2) {
-    return point[1] || 0;
-  }
-
-  // Object format: check various possible fields
-  return point.volume || point.value || point.totalVolume || 0;
-}
-
 // ================================================================================================
 // DATA FETCHING FUNCTIONS
 // ================================================================================================

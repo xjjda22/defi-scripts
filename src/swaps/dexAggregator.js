@@ -3,7 +3,6 @@
  * Compares quotes from Uniswap, SushiSwap, Curve, and Balancer
  * Automatically executes on the protocol with the best price
  */
-const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const {
   validateChainKey,
@@ -32,7 +31,7 @@ async function getBestQuote(chainKey, tokenIn, tokenOut, amountIn, options = {})
   validateAddress(tokenOut, "tokenOut");
   validateAmount(amountIn, "amountIn");
 
-  const { curvePoolAddress = null, curveTokenIndices = null, balancerPoolId = null } = options;
+  const { curvePoolAddress = null, curveTokenIndices = null } = options;
 
   console.log(`\nComparing quotes across all DEX protocols on ${CHAINS[chainKey].name}...`);
 

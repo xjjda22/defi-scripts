@@ -4,8 +4,7 @@
  */
 require("dotenv").config();
 const { ethers } = require("ethers");
-const { swapTokens, getPoolInfo } = require("../swaps/balancerSwap");
-const { COMMON_TOKENS } = require("../config/chains");
+const { getPoolInfo } = require("../swaps/balancerSwap");
 
 async function main() {
   const chainKey = process.env.CHAIN || "ethereum";
@@ -21,10 +20,6 @@ async function main() {
 
   console.log(`\nBalancer Swap Example on ${chainKey}`);
   console.log(`Wallet: ${wallet.address}\n`);
-
-  const WETH = COMMON_TOKENS.WETH[chainKey];
-  const USDC = COMMON_TOKENS.USDC[chainKey];
-  const amountIn = ethers.parseEther("0.01").toString();
 
   // Example pool ID - Replace with actual Balancer pool ID for your token pair
   // You can find pool IDs on https://app.balancer.fi/
@@ -49,6 +44,11 @@ async function main() {
   console.log("\nSwap execution is commented out.");
   console.log("Uncomment the code below to execute a real swap:\n");
 
+  // const { swapTokens } = require("../swaps/balancerSwap");
+  // const { COMMON_TOKENS } = require("../config/chains");
+  // const WETH = COMMON_TOKENS.WETH[chainKey];
+  // const USDC = COMMON_TOKENS.USDC[chainKey];
+  // const amountIn = ethers.parseEther("0.01").toString();
   // const result = await swapTokens(
   //   chainKey,
   //   wallet,

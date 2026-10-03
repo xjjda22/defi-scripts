@@ -109,8 +109,6 @@ async function getUniV3Quote(chainKey, tokenIn, tokenOut, amountIn, fee = 3000) 
  * Compare SushiSwap and Uniswap prices
  */
 async function comparePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) {
-  const chain = CHAINS[chainKey];
-
   // Resolve token addresses
   const tokenInAddress = COMMON_TOKENS[tokenInSymbol]?.[chainKey] || tokenInSymbol;
   const tokenOutAddress = COMMON_TOKENS[tokenOutSymbol]?.[chainKey] || tokenOutSymbol;

@@ -4,7 +4,7 @@
  */
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
-const { getProvider, getContract } = require("../utils/web3");
+const { getProvider } = require("../utils/web3");
 const {
   validateChainKey,
   validateWallet,

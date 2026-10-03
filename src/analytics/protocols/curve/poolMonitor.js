@@ -17,17 +17,9 @@
 
 const { ethers } = require("ethers");
 const axios = require("axios");
-const { CHAINS, COMMON_TOKENS } = require("../../../config/chains");
-const { getProvider, getContract } = require("../../../utils/web3");
-const {
-  printHeader,
-  printSection,
-  createTable,
-  formatCurrency,
-  formatPercent,
-  printInsight,
-  formatNumber,
-} = require("../../utils/displayHelpers");
+const { CHAINS } = require("../../../config/chains");
+const { getProvider } = require("../../../utils/web3");
+const { printHeader, formatPercent } = require("../../utils/displayHelpers");
 
 // ABIs
 const CURVE_POOL_ABI = require("../../../abis/CurvePool.json");
