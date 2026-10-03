@@ -22,7 +22,7 @@ async function fetchTopMarketUniqueKey(chainId) {
   const query = `
     query Q($w: MarketFilters) {
       markets(first: 1, orderBy: BorrowAssetsUsd, orderDirection: Desc, where: $w) {
-        items { uniqueKey }
+        items { marketId }
       }
     }
   `;
@@ -35,7 +35,7 @@ async function fetchTopMarketUniqueKey(chainId) {
     }
   );
   if (data.errors?.length) throw new Error(data.errors.map(e => e.message).join("; "));
-  const k = data.data?.markets?.items?.[0]?.uniqueKey;
+  const k = data.data?.markets?.items?.[0]?.marketId;
   if (!k) throw new Error("No Morpho markets returned for this chain");
   return k;
 }
@@ -53,13 +53,13 @@ async function main() {
 
   let marketId = (process.env.MORPHO_MARKET_ID || "").trim();
   if (!marketId) {
-    console.log(chalk.gray("Fetching top market uniqueKey from Morpho API…"));
+    console.log(chalk.gray("Fetching top market id from Morpho API…"));
     marketId = await fetchTopMarketUniqueKey(chain.chainId);
   }
 
   const idBytes = marketId.startsWith("0x") ? marketId : `0x${marketId}`;
   if (!ethers.isHexString(idBytes, 32)) {
-    console.error(chalk.red("MORPHO_MARKET_ID must be a 32-byte hex string (uniqueKey from Morpho API)."));
+    console.error(chalk.red("MORPHO_MARKET_ID must be a 32-byte hex string (marketId from Morpho API)."));
     process.exit(1);
   }
 

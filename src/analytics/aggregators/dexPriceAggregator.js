@@ -46,6 +46,52 @@ const QUOTER_V2_SINGLE_ABI = [
 // Uniswap V3 fee tiers
 const V3_FEE_TIERS = [100, 500, 3000, 10000];
 
+const STABLE_SYMBOLS = new Set([
+  "USDC",
+  "USDT",
+  "DAI",
+  "USDBC",
+  "USDC.E",
+  "USDT0",
+  "USDS",
+  "USDE",
+  "FRAX",
+  "LUSD",
+  "GHO",
+  "CRVUSD",
+  "PYUSD",
+  "FDUSD",
+  "TUSD",
+]);
+const DEFAULT_MAX_DEVIATION_PCT = 50;
+const DEFAULT_STABLE_MAX_DEVIATION_PCT = 5;
+
+function envPct(name, fallback) {
+  const v = Number(process.env[name]);
+  return Number.isFinite(v) && v > 0 ? v : fallback;
+}
+
+function isStablePair(symbolA, symbolB) {
+  return STABLE_SYMBOLS.has(symbolA.toUpperCase()) && STABLE_SYMBOLS.has(symbolB.toUpperCase());
+}
+
+/**
+ * Split quotes (sorted best-first) into valid and outliers by deviation from the upper median.
+ * Outliers are typically near-empty pools whose quote is dominated by price impact.
+ */
+function partitionOutlierQuotes(sortedQuotes, maxDeviationPct) {
+  const reference = sortedQuotes[Math.floor((sortedQuotes.length - 1) / 2)].amountOut;
+  if (!(reference > 0)) return { valid: sortedQuotes, excluded: [] };
+
+  const valid = [];
+  const excluded = [];
+  for (const q of sortedQuotes) {
+    const deviationPct = ((q.amountOut - reference) / reference) * 100;
+    (Math.abs(deviationPct) > maxDeviationPct ? excluded : valid).push({ ...q, deviationPct });
+  }
+  return { valid, excluded };
+}
+
 /**
  * Get Uniswap V2 quote
  */
@@ -220,7 +266,7 @@ async function aggregatePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) 
     getUniV3Quotes(chainKey, tokenInAddress, tokenOutAddress, amountInWei.toString()),
     getSushiV2Quote(chainKey, tokenInAddress, tokenOutAddress, amountInWei.toString()),
     getSushiV3Quote(chainKey, tokenInAddress, tokenOutAddress, amountInWei.toString()),
-    getCurveQuote(chainKey, tokenIn.symbol, tokenOut.symbol, amountInWei.toString(), tokenIn.decimals),
+    getCurveQuote(chainKey, tokenIn.symbol, tokenOut.symbol, amountInWei.toString()),
   ]);
 
   // Collect all results
@@ -240,12 +286,18 @@ async function aggregatePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) 
 
   parsedQuotes.sort((a, b) => b.amountOut - a.amountOut);
 
+  const stablePair = isStablePair(tokenIn.symbol, tokenOut.symbol);
+  const maxDeviationPct = stablePair
+    ? envPct("DEX_STABLE_MAX_DEVIATION_PCT", DEFAULT_STABLE_MAX_DEVIATION_PCT)
+    : envPct("DEX_MAX_DEVIATION_PCT", DEFAULT_MAX_DEVIATION_PCT);
+  const { valid: validQuotes, excluded } = partitionOutlierQuotes(parsedQuotes, maxDeviationPct);
+
   // Create table
   const table = createTable(["Rank", "DEX", "Output Amount", "vs Best", "Status"]);
 
-  const bestPrice = parsedQuotes[0].amountOut;
+  const bestPrice = validQuotes[0].amountOut;
 
-  parsedQuotes.forEach((quote, index) => {
+  validQuotes.forEach((quote, index) => {
     const diff = ((quote.amountOut - bestPrice) / bestPrice) * 100;
     const diffStr = index === 0 ? "BEST" : formatPercent(diff, 2);
     const status = index === 0 ? "⭐ Best" : diff >= -0.5 ? "✅ Good" : "⚠️ Low";
@@ -255,16 +307,25 @@ async function aggregatePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) 
 
   console.log(table.toString());
 
+  if (excluded.length > 0) {
+    const list = excluded.map(q => `${q.dex} (${formatPercent(q.deviationPct, 1)})`).join(", ");
+    console.log(
+      chalk.gray(
+        `Excluded ${excluded.length} venue(s) >${maxDeviationPct}% from median (likely thin liquidity): ${list}`
+      )
+    );
+  }
+
   // Analysis
   console.log("\nAnalysis");
   console.log("─".repeat(60));
 
-  const bestDex = parsedQuotes[0];
-  const worstDex = parsedQuotes[parsedQuotes.length - 1];
+  const bestDex = validQuotes[0];
+  const worstDex = validQuotes[validQuotes.length - 1];
   const spread = ((bestDex.amountOut - worstDex.amountOut) / worstDex.amountOut) * 100;
 
   printInsight(`Best venue: ${bestDex.dex} at ${formatCurrency(bestDex.amountOut)}`, "success");
-  printInsight(`Price spread: ${formatPercent(spread, 2)} across ${parsedQuotes.length} venues`, "info");
+  printInsight(`Price spread: ${formatPercent(spread, 2)} across ${validQuotes.length} venues`, "info");
 
   if (spread > 1) {
     const arbProfit = bestDex.amountOut - worstDex.amountOut;
@@ -279,10 +340,11 @@ async function aggregatePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) 
   console.log("─".repeat(60));
   console.log(`Best Price:    ${formatCurrency(bestDex.amountOut)}`);
   console.log(`Worst Price:   ${formatCurrency(worstDex.amountOut)}`);
-  const avgPrice = parsedQuotes.reduce((sum, q) => sum + q.amountOut, 0) / parsedQuotes.length;
+  const avgPrice = validQuotes.reduce((sum, q) => sum + q.amountOut, 0) / validQuotes.length;
   console.log(`Average Price: ${formatCurrency(avgPrice)}`);
   console.log(`Price Spread:  ${formatCurrency(bestDex.amountOut - worstDex.amountOut)} (${formatPercent(spread, 2)})`);
-  console.log(`DEXs Checked:  ${parsedQuotes.length}`);
+  const excludedNote = excluded.length > 0 ? ` (+${excluded.length} excluded)` : "";
+  console.log(`DEXs Checked:  ${validQuotes.length}${excludedNote}`);
 
   // Recommendation
   console.log("\nRecommendation");
@@ -290,8 +352,8 @@ async function aggregatePrices(chainKey, tokenInSymbol, tokenOutSymbol, amount) 
   console.log(`✅ Use ${bestDex.dex} for this swap`);
   console.log(`💰 Expected output: ${formatNumber(bestDex.amountOut)} ${tokenOut.symbol}`);
 
-  if (parsedQuotes.length > 1) {
-    const secondBest = parsedQuotes[1];
+  if (validQuotes.length > 1) {
+    const secondBest = validQuotes[1];
     const diffToSecond = ((bestDex.amountOut - secondBest.amountOut) / secondBest.amountOut) * 100;
 
     if (diffToSecond < 0.1) {
@@ -318,6 +380,8 @@ Usage:
 Environment:
   CHAIN=ethereum|arbitrum|base|bsc|zksync|scroll|...   (default: ethereum)
   PAIR_GROUP=default|daytrade|major|...                 (see src/config/pairs.js)
+  DEX_MAX_DEVIATION_PCT=50          Exclude quotes this far from the median (default: 50)
+  DEX_STABLE_MAX_DEVIATION_PCT=5    Same, for stable/stable pairs (default: 5)
 
 Monitors default pairs:
   - WETH/USDC (1 ETH)

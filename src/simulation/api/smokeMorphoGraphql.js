@@ -34,7 +34,7 @@ async function main() {
   const query = `
     query Smoke($where: MarketFilters) {
       markets(first: 3, orderBy: BorrowAssetsUsd, orderDirection: Desc, where: $where) {
-        items { uniqueKey loanAsset { symbol } state { borrowAssetsUsd } }
+        items { marketId loanAsset { symbol } state { borrowAssetsUsd } }
       }
     }
   `;
@@ -47,7 +47,7 @@ async function main() {
   }
   console.log(chalk.green(`OK: ${items.length} market(s) on ${chain.name}`));
   for (const m of items) {
-    console.log(chalk.gray(`  ${m.uniqueKey?.slice(0, 20)}… ${m.loanAsset?.symbol}`));
+    console.log(chalk.gray(`  ${m.marketId?.slice(0, 20)}… ${m.loanAsset?.symbol}`));
   }
 }
 

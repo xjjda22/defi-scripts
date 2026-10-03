@@ -67,8 +67,14 @@ function keep(r) {
 async function buildEthTvlDrivers() {
   const protocols = await fetchLlamaProtocols();
   const rows = (Array.isArray(protocols) ? protocols : []).map(toRow).filter(keep);
-  const inflow = rows.filter((r) => r.dUsd > 0).sort((a, b) => b.dUsd - a.dUsd).slice(0, 12);
-  const outflow = rows.filter((r) => r.dUsd < 0).sort((a, b) => a.dUsd - b.dUsd).slice(0, 8);
+  const inflow = rows
+    .filter(r => r.dUsd > 0)
+    .sort((a, b) => b.dUsd - a.dUsd)
+    .slice(0, 12);
+  const outflow = rows
+    .filter(r => r.dUsd < 0)
+    .sort((a, b) => a.dUsd - b.dUsd)
+    .slice(0, 8);
   const byCat = new Map();
   for (const r of rows) {
     const k = r.category || "Other";
@@ -94,13 +100,7 @@ function printProto(title, list) {
     colAligns: ["left", "left", "right", "right", "right"],
   });
   for (const r of list) {
-    table.push([
-      r.name,
-      r.category,
-      r.tvl != null ? formatCurrency(r.tvl) : "—",
-      formatPct(r.change_7d),
-      r.dUsd != null ? formatCurrency(r.dUsd) : "—",
-    ]);
+    table.push([r.name, r.category, formatCurrency(r.tvl), formatPct(r.change_7d), formatCurrency(r.dUsd)]);
   }
   console.log(chalk.yellow(`\n${title}\n`));
   console.log(table.toString());
@@ -111,12 +111,7 @@ function printCats(list) {
     colAligns: ["left", "right", "right", "right"],
   });
   for (const r of list) {
-    table.push([
-      r.category,
-      String(r.n),
-      formatCurrency(r.tvl),
-      formatCurrency(r.dUsd),
-    ]);
+    table.push([r.category, String(r.n), formatCurrency(r.tvl), formatCurrency(r.dUsd)]);
   }
   console.log(chalk.yellow("\nCategory rollup (ETH share ≥ 50%, no CEX)\n"));
   console.log(table.toString());
@@ -125,11 +120,7 @@ function printCats(list) {
 async function main() {
   installCliSafeStdout();
   console.log(chalk.cyan.bold("\nEthereum TVL drivers (DefiLlama)\n"));
-  console.log(
-    chalk.gray(
-      "Est. 7d $ applies protocol-wide change_7d to Ethereum TVL. ETH share ≥ 50%.\n"
-    )
-  );
+  console.log(chalk.gray("Est. 7d $ applies protocol-wide change_7d to Ethereum TVL. ETH share ≥ 50%.\n"));
   const board = await buildEthTvlDrivers();
   printCats(board.categories);
   printProto("Inflow", board.inflow);
@@ -140,7 +131,7 @@ async function main() {
 module.exports = { CHAIN, MIN_TVL, ETH_SHARE_MIN, buildEthTvlDrivers };
 
 if (require.main === module) {
-  main().catch((e) => {
+  main().catch(e => {
     console.error(chalk.red(e.message || e));
     process.exit(1);
   });

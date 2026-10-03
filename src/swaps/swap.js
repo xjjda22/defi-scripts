@@ -1,6 +1,5 @@
 // Unified Uniswap swap interface across V2, V3, and V4
 // Provides a simple API for token swaps regardless of protocol version
-const { ethers } = require("ethers");
 const { CHAINS, COMMON_TOKENS } = require("../config/chains");
 const {
   validateChainKey,
@@ -60,7 +59,6 @@ async function swapTokens(chainKey, wallet, tokenIn, tokenOut, amountIn, options
   ]);
 
   // Find best quote
-  let bestVersion = null;
   let bestQuote = { version: null, amountOut: "0", fee: null };
 
   quotes.forEach((result, idx) => {
@@ -102,7 +100,7 @@ async function swapTokens(chainKey, wallet, tokenIn, tokenOut, amountIn, options
  */
 async function swapWithVersion(version, chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps, recipient, fee) {
   switch (version.toLowerCase()) {
-    case "v2":
+    case "v2": {
       const v2Result = await v2Swap.swapExactTokensForTokens(
         chainKey,
         wallet,
@@ -113,8 +111,9 @@ async function swapWithVersion(version, chainKey, wallet, tokenIn, tokenOut, amo
         recipient
       );
       return { version: "v2", ...v2Result };
+    }
 
-    case "v3":
+    case "v3": {
       const v3Fee = fee || 3000; // Default to 0.3%
       const v3Result = await v3Swap.swapExactInputSingle(
         chainKey,
@@ -127,8 +126,9 @@ async function swapWithVersion(version, chainKey, wallet, tokenIn, tokenOut, amo
         recipient
       );
       return { version: "v3", ...v3Result };
+    }
 
-    case "v4":
+    case "v4": {
       const v4Fee = fee || 3000;
       const v4Result = await v4Swap.swapV4(
         chainKey,
@@ -141,6 +141,7 @@ async function swapWithVersion(version, chainKey, wallet, tokenIn, tokenOut, amo
         recipient
       );
       return { version: "v4", ...v4Result };
+    }
 
     default:
       throw new Error(`Unknown version: ${version}`);
@@ -276,6 +277,9 @@ module.exports = {
   swapTokens,
   compareQuotes,
   getCommonToken,
+  getV2Quote,
+  getV3Quote,
+  getV4Quote,
   // Re-export version-specific functions for advanced usage
   v2: v2Swap,
   v3: v3Swap,

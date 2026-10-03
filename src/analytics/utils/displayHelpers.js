@@ -49,17 +49,21 @@ function createTable(headers, options = {}) {
  * Format a number as currency
  * @param {number} value - Number to format
  * @param {number} decimals - Decimal places
- * @returns {string} Formatted string
+ * @returns {string} Formatted string ("-$1.23M" for negatives, "—" for non-finite)
  */
 function formatCurrency(value, decimals = 2) {
-  if (value >= 1e9) {
-    return `$${(value / 1e9).toFixed(decimals)}B`;
-  } else if (value >= 1e6) {
-    return `$${(value / 1e6).toFixed(decimals)}M`;
-  } else if (value >= 1e3) {
-    return `$${(value / 1e3).toFixed(decimals)}K`;
+  const n = typeof value === "string" && value.trim() !== "" ? Number(value) : value;
+  if (typeof n !== "number" || !Number.isFinite(n)) return "—";
+  const sign = n < 0 ? "-" : "";
+  const abs = Math.abs(n);
+  if (abs >= 1e9) {
+    return `${sign}$${(abs / 1e9).toFixed(decimals)}B`;
+  } else if (abs >= 1e6) {
+    return `${sign}$${(abs / 1e6).toFixed(decimals)}M`;
+  } else if (abs >= 1e3) {
+    return `${sign}$${(abs / 1e3).toFixed(decimals)}K`;
   }
-  return `$${value.toFixed(decimals)}`;
+  return `${sign}$${abs.toFixed(decimals)}`;
 }
 
 /**

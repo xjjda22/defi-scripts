@@ -72,10 +72,26 @@ async function getReserveUtilizationPct(provider, poolAddress, assetAddress) {
   }
 }
 
+/** ReserveConfigurationMap bit positions (Aave V3). */
+const CONFIG_ACTIVE_BIT = 56n;
+const CONFIG_FROZEN_BIT = 57n;
+const CONFIG_BORROWING_BIT = 58n;
+const CONFIG_PAUSED_BIT = 60n;
+
+function configFlag(configuration, bit) {
+  return ((BigInt(configuration) >> bit) & 1n) === 1n;
+}
+
 async function getReserveData(provider, poolAddress, assetAddress) {
   try {
     const pool = new ethers.Contract(poolAddress, AaveV3PoolABI, provider);
     const reserveData = await pool.getReserveData(assetAddress);
+
+    // Pool returns a zeroed struct (no revert) for assets that are not listed.
+    const isActive = configFlag(reserveData.configuration, CONFIG_ACTIVE_BIT);
+    if (reserveData.aTokenAddress === ethers.ZeroAddress || !isActive) {
+      return null;
+    }
 
     const supplyRate = reserveData.currentLiquidityRate;
     const borrowRate = reserveData.currentVariableBorrowRate;
@@ -88,6 +104,9 @@ async function getReserveData(provider, poolAddress, assetAddress) {
       supplyRateRaw: supplyRate,
       borrowRateRaw: borrowRate,
       utilizationPct,
+      isFrozen: configFlag(reserveData.configuration, CONFIG_FROZEN_BIT),
+      isPaused: configFlag(reserveData.configuration, CONFIG_PAUSED_BIT),
+      borrowingEnabled: configFlag(reserveData.configuration, CONFIG_BORROWING_BIT),
     };
   } catch (error) {
     return null;

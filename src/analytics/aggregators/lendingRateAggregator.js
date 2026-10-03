@@ -19,6 +19,31 @@ function parseAaveApy(apyStr) {
   return Number.isFinite(n) ? n : null;
 }
 
+/**
+ * Usable supply/borrow quotes for one asset on one chain. Paused/frozen/borrow-disabled Aave reserves and
+ * all-zero rate pairs (unlisted reserve signature) are excluded so they never win best-rate selection.
+ * @returns {{ aS: number|null, aB: number|null, mS: number|null, mB: number|null }}
+ */
+function usableRates(rowA, rowM) {
+  let aS = null;
+  let aB = null;
+  if (rowA && !rowA.isPaused) {
+    const s = parseAaveApy(rowA.supplyAPY);
+    const b = parseAaveApy(rowA.borrowAPY);
+    if (!(s === 0 && b === 0)) {
+      aS = rowA.isFrozen ? null : s;
+      aB = rowA.borrowingEnabled === false || rowA.isFrozen ? null : b;
+    }
+  }
+  let mS = rowM?.supplyApyPct ?? null;
+  let mB = rowM?.borrowApyPct ?? null;
+  if (mS === 0 && mB === 0) {
+    mS = null;
+    mB = null;
+  }
+  return { aS, aB, mS, mB };
+}
+
 function bestTwoSupply(aS, mS) {
   const opts = [
     { v: aS, label: "Aave" },
@@ -62,12 +87,8 @@ async function main() {
       const sym = asset.symbol;
       const rowA = aave?.[sym];
       const rowM = morpho?.[sym];
-      if (!rowA && !rowM) continue;
-
-      const aS = rowA ? parseAaveApy(rowA.supplyAPY) : null;
-      const aB = rowA ? parseAaveApy(rowA.borrowAPY) : null;
-      const mS = rowM?.supplyApyPct ?? null;
-      const mB = rowM?.borrowApyPct ?? null;
+      const { aS, aB, mS, mB } = usableRates(rowA, rowM);
+      if ([aS, aB, mS, mB].every(v => v == null)) continue;
 
       const s2 = bestTwoSupply(aS, mS);
       const b2 = bestTwoBorrow(aB, mB);
@@ -127,12 +148,7 @@ async function main() {
     let bestB = { v: Infinity, label: "", chain: "" };
 
     for (const snap of chainSnapshots) {
-      const rowA = snap.aave?.[sym];
-      const rowM = snap.morpho?.[sym];
-      const aS = rowA ? parseAaveApy(rowA.supplyAPY) : null;
-      const aB = rowA ? parseAaveApy(rowA.borrowAPY) : null;
-      const mS = rowM?.supplyApyPct ?? null;
-      const mB = rowM?.borrowApyPct ?? null;
+      const { aS, aB, mS, mB } = usableRates(snap.aave?.[sym], snap.morpho?.[sym]);
 
       if (aS != null && aS > bestS.v) bestS = { v: aS, label: "Aave", chain: snap.name };
       if (mS != null && mS > bestS.v) bestS = { v: mS, label: "Morpho", chain: snap.name };

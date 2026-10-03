@@ -72,7 +72,7 @@ const CHAINS = {
           name: "tBTC/WBTC",
           version: "V1",
           type: "StableSwap",
-          address: "0xf95AaCB582520f8e5B7Dec1b3C97a4f6B39f9c09",
+          address: "0xf95aaCB582520f8e5b7dEc1b3c97A4f6B39F9C09",
           lpToken: "0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd",
           coins: ["tBTC", "WBTC"],
         },

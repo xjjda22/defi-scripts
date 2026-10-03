@@ -65,7 +65,7 @@ async function fetchTopMorphoMarket(chainKey, loanAssetAddress) {
         where: $where
       ) {
         items {
-          uniqueKey
+          marketId
           collateralAsset { symbol }
           loanAsset { symbol address }
           state {
@@ -98,7 +98,7 @@ async function fetchTopMorphoMarket(chainKey, loanAssetAddress) {
   if (supplyPct > 500 || borrowPct > 500) return null;
 
   return {
-    uniqueKey: pick.uniqueKey,
+    marketId: pick.marketId,
     collateral: pick.collateralAsset?.symbol || "?",
     supplyApyPct: supplyPct,
     borrowApyPct: borrowPct,
@@ -106,6 +106,14 @@ async function fetchTopMorphoMarket(chainKey, loanAssetAddress) {
     borrowUsd: s.borrowAssetsUsd,
     supplyUsd: s.supplyAssetsUsd,
   };
+}
+
+const warnedMorphoErrors = new Set();
+
+function describeMorphoError(e) {
+  const gqlErrors = e?.response?.data?.errors;
+  if (Array.isArray(gqlErrors) && gqlErrors.length) return gqlErrors.map(x => x.message).join("; ");
+  return e?.message || String(e);
 }
 
 /**
@@ -120,7 +128,12 @@ async function fetchMorphoSummaryForChain(chainKey) {
       try {
         const row = await fetchTopMorphoMarket(chainKey, addr);
         return [asset.symbol, row];
-      } catch {
+      } catch (e) {
+        const msg = describeMorphoError(e);
+        if (!warnedMorphoErrors.has(msg)) {
+          warnedMorphoErrors.add(msg);
+          console.warn(chalk.yellow(`Morpho API error (${chainKey} ${asset.symbol}): ${msg}`));
+        }
         return [asset.symbol, null];
       }
     })

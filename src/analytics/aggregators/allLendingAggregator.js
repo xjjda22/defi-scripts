@@ -28,14 +28,21 @@ async function main() {
     colAligns: ["left", "left", "right"],
   });
 
+  const rows = [];
   for (const [label, slug] of LENDING_PROTOCOLS) {
     try {
       const d = await fetchDefiLlamaProtocol(slug);
       const tvl = lastTvlUsdFromSeries(d.tvl);
-      table.push([label, slug, tvl != null ? formatCurrency(tvl) : "—"]);
+      rows.push({ label, slug, tvl: Number.isFinite(tvl) ? tvl : null, failed: false });
     } catch {
-      table.push([label, slug, chalk.red("fetch failed")]);
+      rows.push({ label, slug, tvl: null, failed: true });
     }
+  }
+
+  rows.sort((a, b) => (b.tvl ?? -Infinity) - (a.tvl ?? -Infinity));
+  for (const r of rows) {
+    const tvlCell = r.failed ? chalk.red("fetch failed") : formatCurrency(r.tvl);
+    table.push([r.label, r.slug, tvlCell]);
   }
   console.log(table.toString());
   console.log(chalk.gray("\nRates: npm run analytics:lending:rates"));

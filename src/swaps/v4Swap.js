@@ -114,7 +114,7 @@ async function estimateSwapOutput(chainKey, tokenIn, tokenOut, fee, amountIn) {
   const poolKey = createPoolKey(tokenIn, tokenOut, fee, tickSpacing);
 
   try {
-    const poolState = await getPoolState(chainKey, poolKey);
+    await getPoolState(chainKey, poolKey);
 
     // Simple approximation: deduct fee from input
     // In production, use proper sqrt price math or static call
@@ -160,7 +160,9 @@ async function swapV4(chainKey, wallet, tokenIn, tokenOut, fee, amountIn, slippa
 
   const provider = getProvider(chainKey);
   const signer = wallet.connect(provider);
-  const recipientAddr = recipient || wallet.address;
+  if (recipient && recipient.toLowerCase() !== wallet.address.toLowerCase()) {
+    throw new Error("swapV4 settles to the signing wallet; a custom recipient needs a V4 router");
+  }
 
   // Determine swap direction
   const zeroForOne = tokenIn.toLowerCase() < tokenOut.toLowerCase();
