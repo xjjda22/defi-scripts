@@ -1,8 +1,7 @@
 {
   "name": "defi-scripts",
   "version": "1.0.0",
-  "description": "DeFi analytics and swap scripts",
-  "main": "src/index.js",
+  "description": "Live DeFi data, DEX quotes and fork simulations from your terminal: 300+ npm commands across 100+ protocols",
   "scripts": {
     "crosschain:balancer:tvl": "node src/crosschain/balancer/tvlTracker.js",
     "crosschain:balancer:volume": "node src/crosschain/balancer/volumeTracker.js",
@@ -309,26 +308,40 @@
     "swap:aerodrome": "node src/examples/aerodromeSwapExample.js",
     "swap:velodrome": "node src/examples/velodromeSwapExample.js",
     "swap:uniswapx": "node src/examples/uniswapxSwapExample.js",
+    "catalog": "node scripts/catalog.js",
+    "catalog:docs": "node scripts/catalog.js --docs",
+    "catalog:check": "node scripts/catalog.js --check",
     "lint:fix": "eslint . --ignore-path .eslintignore --ext .js,.sol --fix --quiet",
     "prettier": "prettier --write './**/*.{js,json,yaml,yml,sol}'",
     "report:crosschain": "bash scripts/healthCheckReport.sh crosschain",
     "report:analytics": "bash scripts/healthCheckReport.sh analytics",
     "report:simulation": "bash scripts/healthCheckReport.sh simulation",
-    "report:swap": "bash scripts/healthCheckReport.sh swap"
+    "report:swap": "bash scripts/healthCheckReport.sh swap",
+    "lint": "eslint . --ignore-path .eslintignore --ext .js --quiet"
   },
   "keywords": [
-    "uniswap",
     "defi",
-    "mev",
-    "cross-chain",
+    "ethereum",
+    "defillama",
+    "uniswap",
+    "aave",
+    "morpho",
+    "lido",
+    "hyperliquid",
+    "dex",
+    "lending",
+    "tvl",
     "analytics",
-    "swap",
-    "uniswap-v2",
-    "uniswap-v3",
-    "uniswap-v4"
+    "cli",
+    "ethers",
+    "simulation",
+    "cross-chain"
   ],
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xjjda22/defi-scripts.git"
@@ -343,8 +356,7 @@
     "cli-table3": "^0.6.5",
     "csv-writer": "^1.6.0",
     "dotenv": "^16.6.1",
-    "ethers": "^6.15.0",
-    "ora": "^9.1.0"
+    "ethers": "^6.15.0"
   },
   "devDependencies": {
     "eslint": "^8.57.0",

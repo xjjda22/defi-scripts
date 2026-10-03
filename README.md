@@ -1,350 +1,221 @@
-## Overview
+# defi-scripts
 
+> **Live DeFi data, DEX quotes and fork simulations from your terminal.** 100+ protocols, 300+ commands, one naming scheme. Most need no API key.
+
+[![CI](https://github.com/xjjda22/defi-scripts/actions/workflows/ci.yml/badge.svg)](https://github.com/xjjda22/defi-scripts/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?logo=ethereum&logoColor=white)](https://ethereum.org)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)](https://nodejs.org)
-[![Chains](https://img.shields.io/badge/chains-9-orange.svg)](#setup)
+[![EVM chains](https://img.shields.io/badge/EVM_chains-10-orange.svg)](#what-you-need)
+[![Protocols](https://img.shields.io/badge/protocols-103-purple.svg)](docs/02-protocol-catalog.md)
 
+Where is the best USDC borrow rate right now, across Aave and Morpho, on five chains? One command:
 
-DeFi analytics and swap scripts for Ethereum, Arbitrum, Optimism, Base, Polygon, BSC, zkSync, Scroll, and Unichain.
+```text
+$ npm run analytics:lending:rates
 
-Workspace map: [`docs/00-architecture.md`](docs/00-architecture.md). Protocol command matrix: [`docs/01-protocol-script-coverage.md`](docs/01-protocol-script-coverage.md).
+Cross-chain — best supply & borrow per asset (all chains scanned)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Asset   Best supply                 Best borrow                 Notes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+USDC    Morpho 5.95% @ Arbitrum     Aave 3.83% @ Optimism
+USDT    Aave 3.70% @ Ethereum       Morpho 2.61% @ Polygon
+DAI     Aave 4.68% @ Polygon        Morpho 4.46% @ Ethereum
+WETH    Morpho 3.36% @ Ethereum     Morpho 1.36% @ Optimism
+WBTC    Morpho 0.12% @ Ethereum     Morpho 0.14% @ Ethereum     same chain+protocol
+```
 
-<p align="center">
-  <img src="no-money-meme.jpg" alt="No Money Meme" width="500"/>
-</p>
+<sub>Live output captured 2026-10-03. Aave is read on-chain (one RPC URL per chain: Ethereum, Arbitrum, Optimism, Base, Polygon; chains without one are skipped), Morpho comes from its public API. Your numbers will differ.</sub>
 
-**⭐ Star this repo if you find it useful!**
+## Contents
+
+[Try it](#try-it-in-60-seconds) · [More output](#more-output) · [Why this repo](#why-this-repo) · [What you need](#what-you-need) · [Protocols](#protocols) · [Command families](#command-families) · [Use as a library](#use-as-a-library) · [Repo layout](#repo-layout) · [Contributing](#contributing)
+
+## Try it in 60 seconds
+
+No keys needed for these:
+
+```bash
+git clone https://github.com/xjjda22/defi-scripts.git && cd defi-scripts
+npm install
+npm run analytics:l2:overview        # TVL + DEX volume for 8 Ethereum L2s
+npm run analytics:eth:tvl-drivers    # who brought TVL onto Ethereum this week
+npm run crosschain:uniswap:tvl       # Uniswap V1–V4 TVL on every chain
+npm run catalog                      # every protocol and what's covered
+npm run catalog -- hyperliquid       # one protocol: its commands and what each prints
+```
+
+Add an Ethereum RPC URL to `.env` (`cp sample.env .env`) and the on-chain commands open up: `analytics:lending:rates`, `simulate:multi:quote`, `analytics:aave:markets`, `analytics:dex:prices`.
+
+## More output
+
+**L2 landscape**: `npm run analytics:l2:overview` (no key)
+
+```text
+┌────────────┬──────────┬──────────┬──────────┬────────┬───────────┐
+│ L2         │      TVL │  DEX 24h │  DEX 30d │  30d Δ │ Uni share │
+├────────────┼──────────┼──────────┼──────────┼────────┼───────────┤
+│ Arbitrum   │   $1.41B │ $191.81M │   $6.05B │  -3.2% │       75% │
+│ Optimism   │ $487.86M │  $33.84M │   $1.06B │  +9.0% │       32% │
+│ Base       │   $6.36B │   $1.36B │  $29.36B │ +64.5% │       28% │
+│ Polygon    │ $750.67M │ $166.59M │   $6.86B │ -23.7% │       37% │
+│ …          │        … │        … │        … │      … │         … │
+│ Unichain   │  $31.16M │  $11.99M │ $347.72M │ +40.9% │       97% │
+└────────────┴──────────┴──────────┴──────────┴────────┴───────────┘
+```
+
+**Where Ethereum TVL came from this week**: `npm run analytics:eth:tvl-drivers` (no key)
+
+```text
+┌───────────────────────┬───────────────────────────┬──────────┬────────┬───────────┐
+│ Name                  │ Category                  │  ETH TVL │   7d Δ │ Est. 7d $ │
+├───────────────────────┼───────────────────────────┼──────────┼────────┼───────────┤
+│ LayerZero V2          │ Bridge                    │   $7.22B │ +45.8% │    $2.27B │
+│ Falcon Finance        │ Basis Trading             │   $1.44B │ +19.2% │  $231.57M │
+│ Arbitrum Bridge       │ Canonical Bridge          │   $3.74B │  +6.5% │  $229.62M │
+│ Spark Liquidity Layer │ Onchain Capital Allocator │   $2.38B │  +6.6% │  $147.86M │
+│ Base Bridge           │ Canonical Bridge          │   $3.18B │  +4.5% │  $137.73M │
+└───────────────────────┴───────────────────────────┴──────────┴────────┴───────────┘
+```
+
+<details>
+<summary><b>Best route for 1 WETH across six DEXs</b>: <code>npm run simulate:multi:quote</code> (RPC)</summary>
+
+```text
+  Chain: Ethereum (ethereum)
+  Mode: QUOTE ONLY
+  Amount In: 1 WETH
+
+  Uniswap V2        ✓ 2668.398668 USDC
+  Uniswap V3        ✓ 2675.306771 USDC (0.01% fee)
+  SushiSwap V2      ✓ 2622.382795 USDC
+  SushiSwap V3      ✗ Not available
+  Curve             ✗ Not available
+  Balancer V2       ✓ 2601.7609 USDC (WETH/USDC (50/50))
+
+Best Quote
+  Protocol: Uniswap V3
+  Expected Output: 2675.306771 USDC
+  Savings vs Worst: 2.82%
+```
+
+</details>
+
+## Why this repo
+
+DefiLlama, Dune and protocol dashboards are great for looking. This is for **scripting**:
+
+- **Composable.** Every command is a plain Node script with a meaningful exit code. Pipe it, cron it, or run `npm run report:analytics` to health-check every data source at once.
+- **On-chain where it matters.** Rates, quotes and pool state are read straight from contracts over your RPC, and quotes and liquidations can be replayed on an anvil fork. DefiLlama fills in breadth (Solana, Sui, Cosmos and everything else it tracks).
+- **One naming scheme.** `<family>:<protocol>:<what>`, so `analytics:aave:markets`, `simulate:aave:v3:fork` and `simulate:kelp:smoke` are guessable. `npm run catalog -- <protocol>` lists them all.
+- **Smoke tests for data sources.** Each DefiLlama monitor has a `:smoke` twin that fails when a protocol is delisted, returns empty TVL, or stops earning revenue.
+
+## What you need
+
+| Commands | Needs |
+| --- | --- |
+| DefiLlama monitors and boards (`analytics:<protocol>:*`, `analytics:l2:*`, `analytics:eth:*`, `simulate:*:smoke`, `crosschain:*` TVL/volume, `catalog`) | Nothing |
+| On-chain reads and quotes (`analytics:aave:*`, `analytics:lending:rates`, `analytics:dex:prices`, `simulate:multi:quote`, `crosschain:uniswap:liquidity`) | RPC URLs in `.env` for the chains you query |
+| Fork simulations (`simulate:*:fork`, `simulate:validate:forks`) | RPC + [anvil](https://book.getfoundry.sh/anvil/) |
+| `swap:*` examples | RPC + `PRIVATE_KEY` |
+
+> [!WARNING]
+> `swap:*` scripts sign with `PRIVATE_KEY` and can broadcast **real transactions**. Use a throwaway wallet, or point the RPC at a local anvil fork (`node scripts/startFork.js`) first.
+
+On-chain quotes and simulations cover 10 EVM chains: Ethereum, Arbitrum, Optimism, Base, Polygon, BSC, zkSync, Scroll, Unichain and Monad (`src/config/chains.js`). Analytics covers any chain DefiLlama tracks. All env vars are listed in [`sample.env`](sample.env).
+
+## Protocols
+
+<!-- catalog:start -->
+
+**103 protocols**, **21 cross-protocol boards/tools**, **305 commands** (not counting repo tooling such as lint and reports). Each name links to its card in the [protocol catalog](docs/02-protocol-catalog.md): every command, what it prints, and what it needs.
+
+| Category | Count | Entries |
+|---|---:|---|
+| [Spot DEX / AMM](docs/02-protocol-catalog.md#c-dex) | 28 | [Uniswap](docs/02-protocol-catalog.md#p-uniswap) · [Curve Finance](docs/02-protocol-catalog.md#p-curve) · [Balancer](docs/02-protocol-catalog.md#p-balancer) · [SushiSwap](docs/02-protocol-catalog.md#p-sushiswap) · [Aerodrome](docs/02-protocol-catalog.md#p-aerodrome) · [Velodrome](docs/02-protocol-catalog.md#p-velodrome) · [+22 more](docs/02-protocol-catalog.md#c-dex) |
+| [Aggregators & intents](docs/02-protocol-catalog.md#c-aggregator) | 10 | [1inch](docs/02-protocol-catalog.md#p-1inch) · [CoW Swap](docs/02-protocol-catalog.md#p-cowswap) · [KyberSwap](docs/02-protocol-catalog.md#p-kyberswap) · [Matcha](docs/02-protocol-catalog.md#p-matcha) · [Odos](docs/02-protocol-catalog.md#p-odos) · [ParaSwap](docs/02-protocol-catalog.md#p-paraswap) · [+4 more](docs/02-protocol-catalog.md#c-aggregator) |
+| [Perps & derivatives](docs/02-protocol-catalog.md#c-perps) | 19 | [Hyperliquid](docs/02-protocol-catalog.md#p-hyperliquid) · [GMX](docs/02-protocol-catalog.md#p-gmx) · [Gains Network](docs/02-protocol-catalog.md#p-gains) · [SynFutures V3](docs/02-protocol-catalog.md#p-synfutures) · [Orderly](docs/02-protocol-catalog.md#p-orderly) · [MUX](docs/02-protocol-catalog.md#p-mux) · [+13 more](docs/02-protocol-catalog.md#c-perps) |
+| [Lending & money markets](docs/02-protocol-catalog.md#c-lending) | 11 | [Aave](docs/02-protocol-catalog.md#p-aave) · [Morpho](docs/02-protocol-catalog.md#p-morpho) · [Spark](docs/02-protocol-catalog.md#p-spark) · [Nostra Finance](docs/02-protocol-catalog.md#p-nostra) · [Suilend](docs/02-protocol-catalog.md#p-suilend) · [Benqi Lending](docs/02-protocol-catalog.md#p-benqi) · [+5 more](docs/02-protocol-catalog.md#c-lending) |
+| [Vault curators & allocators](docs/02-protocol-catalog.md#c-vaults) | 4 | [Sentora Curator](docs/02-protocol-catalog.md#p-sentora) · [Steakhouse Financial](docs/02-protocol-catalog.md#p-steakhouse) · [Upshift](docs/02-protocol-catalog.md#p-upshift) · [Keyrock Prime USDC](docs/02-protocol-catalog.md#p-keyrock) |
+| [Liquid staking](docs/02-protocol-catalog.md#c-staking) | 7 | [Lido](docs/02-protocol-catalog.md#p-lido) · [StakeStone](docs/02-protocol-catalog.md#p-stakestone) · [Kintsu](docs/02-protocol-catalog.md#p-kintsu) · [Jito](docs/02-protocol-catalog.md#p-jito) · [Sanctum](docs/02-protocol-catalog.md#p-sanctum) · [DFDV Staked SOL](docs/02-protocol-catalog.md#p-dfdv) · [+1 more](docs/02-protocol-catalog.md#c-staking) |
+| [Restaking](docs/02-protocol-catalog.md#c-restaking) | 7 | [EigenLayer (EigenCloud)](docs/02-protocol-catalog.md#p-eigenlayer) · [ether.fi](docs/02-protocol-catalog.md#p-etherfi) · [Kelp](docs/02-protocol-catalog.md#p-kelp) · [Bedrock](docs/02-protocol-catalog.md#p-bedrock) · [Swell](docs/02-protocol-catalog.md#p-swell) · [Renzo](docs/02-protocol-catalog.md#p-renzo) · [+1 more](docs/02-protocol-catalog.md#c-restaking) |
+| [Stablecoins & RWA](docs/02-protocol-catalog.md#c-stable-rwa) | 6 | [Sky (ex-Maker)](docs/02-protocol-catalog.md#p-sky) · [Ethena](docs/02-protocol-catalog.md#p-ethena) · [Circle](docs/02-protocol-catalog.md#p-circle) · [Ondo Finance](docs/02-protocol-catalog.md#p-ondo) · [BlackRock BUIDL](docs/02-protocol-catalog.md#p-buidl) · [USD AI](docs/02-protocol-catalog.md#p-usdai) |
+| [Bridges & chains](docs/02-protocol-catalog.md#c-bridge-chain) | 6 | [Stargate Finance](docs/02-protocol-catalog.md#p-stargate) · [Meter Passport](docs/02-protocol-catalog.md#p-meter) · [Gravity by Galxe](docs/02-protocol-catalog.md#p-gravity) · [Payy Network](docs/02-protocol-catalog.md#p-payy) · [Arc Chain](docs/02-protocol-catalog.md#p-arc) · [Kinto](docs/02-protocol-catalog.md#p-kinto) |
+| [Launchpads, prediction & other](docs/02-protocol-catalog.md#c-other) | 5 | [pump.fun](docs/02-protocol-catalog.md#p-pumpfun) · [Polymarket](docs/02-protocol-catalog.md#p-polymarket) · [Zama](docs/02-protocol-catalog.md#p-zama) · [Aztec](docs/02-protocol-catalog.md#p-aztec) · [Bitget](docs/02-protocol-catalog.md#p-bitget) |
+| [Market boards (cross-protocol)](docs/02-protocol-catalog.md#c-boards) | 12 | [Ethereum boards](docs/02-protocol-catalog.md#p-eth) · [ETH vs BTC](docs/02-protocol-catalog.md#p-ethbtc) · [Bitcoin wraps](docs/02-protocol-catalog.md#p-btc) · [L2 overview](docs/02-protocol-catalog.md#p-l2) · [RWA overview](docs/02-protocol-catalog.md#p-rwa) · [NFT markets](docs/02-protocol-catalog.md#p-nft) · [+6 more](docs/02-protocol-catalog.md#c-boards) |
+| [Swap & simulation tooling](docs/02-protocol-catalog.md#c-tooling) | 9 | [Quote](docs/02-protocol-catalog.md#p-quote) · [Swap simulation](docs/02-protocol-catalog.md#p-swap) · [Multi-protocol](docs/02-protocol-catalog.md#p-multi) · [Pair sweep](docs/02-protocol-catalog.md#p-pairs) · [Fork validator](docs/02-protocol-catalog.md#p-validate) · [Auto-route swap](docs/02-protocol-catalog.md#p-autoroute) · [+3 more](docs/02-protocol-catalog.md#c-tooling) |
+
+<!-- catalog:end -->
+
+## Command families
+
+| Family | What it does |
+| --- | --- |
+| `analytics:*` | Live snapshot: TVL by chain, rates, fees/revenue, pool state |
+| `simulate:*:smoke` | Pass/fail check of the same data source; non-zero exit when it breaks |
+| `simulate:*` | Quotes, fork reads, and fill replays |
+| `swap:*` | Wallet-backed swap examples |
+| `crosschain:*` | One protocol aggregated across chains (Uniswap, Curve, Balancer, SushiSwap); weekly variants write CSV to `output/` |
+| `report:*` | Run a whole family and write a pass/fail report to `output/` |
+
+## Use as a library
+
+It's CLI-first, but the building blocks are plain CommonJS modules you can `require` from a clone (run from the repo root so `.env` is picked up; `getBestQuote` logs each venue as it goes):
+
+```js
+const { ethers } = require("ethers");
+const { getBestQuote } = require("./src/swaps/dexAggregator");
+const { COMMON_TOKENS } = require("./src/config/chains");
+const { fetchDefiLlamaProtocol, lastTvlUsdFromSeries } = require("./src/analytics/utils/defiLlamaProtocol");
+
+(async () => {
+  const aave = await fetchDefiLlamaProtocol("aave-v3");
+  console.log(lastTvlUsdFromSeries(aave.tvl)); // 18100598067
+
+  const { WETH, USDC } = COMMON_TOKENS;
+  const best = await getBestQuote("ethereum", WETH.ethereum, USDC.ethereum, ethers.parseEther("1").toString());
+  console.log(best.protocol, best.version, best.amountOut); // uniswap v3 2674176801 (USDC, 6 decimals)
+})();
+```
+
+Useful entry points: `src/config/chains.js` (RPCs, router/quoter/pool addresses for 10 chains), `src/swaps/` (Uniswap V2/V3/V4, SushiSwap, Curve, Balancer quotes and swaps), `src/analytics/utils/defiLlamaProtocol.js` (DefiLlama protocol, fees and chain fetchers).
 
 ## Repo layout
 
 ```
 src/
+  catalog/         # protocols.js registry → npm run catalog / catalog:docs / catalog:check
   config/          # chains.js (RPC + protocol addresses), pairs.js
   utils/           # web3 provider, validation, token helpers
   abis/            # contract ABIs
   swaps/           # Uniswap V2/V3/V4, Sushi, Curve, Balancer, dexAggregator
-  simulation/      # fork quotes, lending/staking/UniswapX sims, Llama smokes
+  simulation/      # fork quotes, lending/staking/UniswapX sims, DefiLlama smokes
   analytics/       # protocols/<name>/ monitors + aggregators/ + nft/ + airdrop/
   crosschain/      # Uniswap/Curve/Balancer/Sushi TVL + volume trackers
   examples/        # CLI demos of swap/quote flows
-scripts/           # startFork, validateForkSimulations, healthCheckReport
-docs/              # 00-architecture.md, 01-protocol-script-coverage.md (README.md is the only package-root .md)
+scripts/           # catalog, startFork, validateForkSimulations, healthCheckReport
+docs/              # architecture, coverage notes, generated protocol catalog
 ```
 
-Placement vs MEV bots: `.cursor/rules/defi-mev-vs-defi-scripts.mdc`.
-
-## Setup
-
-```bash
-npm install
-```
-
-Create `.env` with RPC URLs:
-```env
-ETHEREUM_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY
-ARBITRUM_RPC_URL=https://arb-mainnet.g.alchemy.com/v2/YOUR_KEY
-OPTIMISM_RPC_URL=https://opt-mainnet.g.alchemy.com/v2/YOUR_KEY
-BASE_RPC_URL=https://base-mainnet.g.alchemy.com/v2/YOUR_KEY
-POLYGON_RPC_URL=https://polygon-mainnet.g.alchemy.com/v2/YOUR_KEY
-BSC_RPC_URL=https://bsc-dataseed.binance.org/
-ZKSYNC_RPC_URL=https://mainnet.era.zksync.io
-SCROLL_RPC_URL=https://rpc.scroll.io
-# Optional — Unichain (Uniswap V3/V4 in chains.js; use CHAIN=unichain for quotes)
-UNICHAIN_RPC_URL=https://mainnet.unichain.org
-```
-
-## Scripts
-
-### Cross-Chain Analytics
-
-Track TVL and volume across **all major DEXs** on 8 chains (Ethereum, Arbitrum, Optimism, Base, Polygon, BSC, zkSync and Scroll):
-
-| Protocol | TVL | Volume |
-|----------|-----|--------|
-| **Uniswap** | `npm run crosschain:uniswap:tvl` | `npm run crosschain:uniswap:volume` |
-| **Curve** | `npm run crosschain:curve:tvl` | `npm run crosschain:curve:volume` |
-| **Balancer** | `npm run crosschain:balancer:tvl` | `npm run crosschain:balancer:volume` |
-| **SushiSwap** | `npm run crosschain:sushiswap:tvl` | `npm run crosschain:sushiswap:volume` |
-
-**Weekly Trackers (Historical Data):**
-- Uniswap: `npm run crosschain:uniswap:weekly:tvl`, `npm run crosschain:uniswap:weekly:volume`, `npm run crosschain:uniswap:weekly:liquidity`
-- Curve: `npm run crosschain:curve:weekly:tvl`, `npm run crosschain:curve:weekly:volume`
-- Balancer: `npm run crosschain:balancer:weekly:tvl`, `npm run crosschain:balancer:weekly:volume`
-- SushiSwap: `npm run crosschain:sushiswap:weekly:tvl`, `npm run crosschain:sushiswap:weekly:volume`
-
-**Additional Uniswap Trackers:**
-- `npm run crosschain:uniswap:liquidity` - Liquidity flows via mint/burn events
-
-### DEX Analytics
-
-Compare prices and analyze pools across different DEX protocols:
-
-| Script | Command | Description |
-|--------|---------|-------------|
-| **Uniswap Prices** | `npm run analytics:uniswap:prices` | Compare V2/V3/V4 prices and fees (`priceMonitor.js`; quote-centric, unlike `poolMonitor` on other DEXs). |
-| **Curve Pools** | `npm run analytics:curve:pools` | Monitor pool balances and arbitrage opportunities |
-| **Balancer Pools** | `npm run analytics:balancer:pools` | Track weighted pools and impermanent loss |
-| **SushiSwap Pools** | `npm run analytics:sushiswap:pools` | Compare SushiSwap vs Uniswap prices |
-| **Multi-DEX Prices** | `npm run analytics:dex:prices` | Aggregate prices across DEXs; `CHAIN=base` `PAIR_GROUP=daytrade` supported |
-| **AMM aggregate (Llama)** | `npm run analytics:amm:aggregate` | One-shot TVL snapshot for major AMMs via DefiLlama |
-| **Aerodrome (Llama)** | `npm run analytics:aerodrome:dex` | Base DEX TVL snapshot (`DEFILLAMA_SLUG` overridable) |
-| **Velodrome (Llama)** | `npm run analytics:velodrome:dex` | Optimism DEX TVL snapshot |
-| **PancakeSwap v3 (Llama)** | `npm run analytics:pancakeswap:dex` | Multichain Pancake v3 TVL (`pancakeswap-amm-v3`) |
-| **GMX (Llama)** | `npm run analytics:gmx:perps` | Perps / liquidity TVL snapshot |
-| **Hyperliquid (Llama)** | `npm run analytics:hyperliquid:perps` | Perps TVL snapshot (`hyperliquid`) |
-| **Gains (Llama)** | `npm run analytics:gains:perps` | gTrade TVL snapshot |
-| **SynFutures (Llama)** | `npm run analytics:synfutures:perps` | Perp DEX TVL snapshot |
-| **Orderly (Llama)** | `npm run analytics:orderly:perps` | Omnichain orderbook infra TVL |
-| **MUX (Llama)** | `npm run analytics:mux:perps` | Aggregated perp liquidity TVL |
-| **Aster (Llama)** | `npm run analytics:aster:perps` | Hybrid perp/spot TVL |
-| **Aevo (Llama)** | `npm run analytics:aevo:perps` | Options + perps L2 TVL snapshot |
-| **Lighter (Llama)** | `npm run analytics:lighter:perps` | TVL when listed on DefiLlama |
-| **Reya (Llama)** | `npm run analytics:reya:dex` | Protocol summary when listed (slug overridable via env) |
-| **Ammalgam (Llama)** | `npm run analytics:ammalgam:hybrid` | Hybrid AMM + lending summary when `AMMALGAM_LLAMA_SLUG` is set |
-| **Curvy (Llama)** | `npm run analytics:curvy:aggregator` | Curvy / ZK aggregator monitor from DefiLlama |
-| **Kinto (Llama)** | `npm run analytics:kinto:dex` | Kinto TVL snapshot (`kinto`) |
-| **HumidiFi (Llama)** | `npm run analytics:humidifi:dex` | HumidiFi TVL snapshot (`humidifi`) |
-| **Monad (Llama)** | `npm run analytics:monad:dex` | Monad TVL snapshot (`monad`; often chain-level) |
-| **Aztec (Llama)** | `npm run analytics:aztec:dex` | Aztec row on DefiLlama (`aztec`; may show as Aztec Connect) |
-| **Drake Exchange (Llama)** | `npm run analytics:drake:perps` | Monad perp DEX TVL snapshot (`drake-exchange`) |
-| **Rhea Finance (Llama)** | `npm run analytics:rhea:defi` | NEAR DEX + lending + LST parent TVL (`rhea-finance`) |
-| **Rhea Lend (Llama)** | `npm run analytics:rhea:lending` | Rhea lending market TVL (`rhea-lend`) |
-| **Stargate Finance (Llama)** | `npm run analytics:stargate:bridge` | Stargate V1+V2 bridge parent TVL (`stargate-finance`) |
-| **Stargate V2 (Llama)** | `npm run analytics:stargate:v2` | Stargate V2 bridge TVL only (`stargate-v2`) |
-| **Zama (Llama)** | `npm run analytics:zama:privacy` | Zama confidential-DeFi TVL (`zama`) |
-| **Astroport (Llama)** | `npm run analytics:astroport:dex` | Cosmos DEX TVL incl. Neutron (`astroport`) |
-| **Meter Passport (Llama)** | `npm run analytics:meter:bridge` | Meter bridge TVL (`meter-passport`) |
-| **Meteora DLMM (Llama)** | `npm run analytics:meteora:dex` | Meteora DLMM TVL + fees/revenue (`meteora-dlmm`); referral staking cycle 2 paid $700K+ USDC, cycle ended 2026-09-21 ([Solana Compass](https://solanacompass.com/news/meteora-referral-staking-cycle-2-distributes-over-700k-in-usdc-more-than-double-cycle-1), 2026-09-23) |
-| **EigenLayer (Llama)** | `npm run analytics:eigenlayer:restaking` | Restaking TVL (`eigencloud`, ex-`eigenlayer`) |
-| **ether.fi (Llama)** | `npm run analytics:etherfi:neobank` | ether.fi TVL + fees/revenue (`ether.fi`, `DEFILLAMA_FEES=1`); exits EigenLayer restaking this quarter (<1% of assets still restaked as of August); card share of monthly revenue 17% (Jan) → 46% (Jul); Q2'26 card gross profit $3.14M vs EigenLayer restaking $2.87M; Llama gross profit fell 47% from $18.71M (Q3'25) to $9.99M (Q2'26) ([CoinDesk](https://www.coindesk.com/business/2026/09/28/the-restaking-gold-rush-is-over-and-top-protocols-are-barely-making-a-profit), 2026-09-28) |
-| **Kelp (Llama)** | `npm run analytics:kelp:restaking` | Kelp liquid restaking TVL + fees/revenue (`kelp`, `DEFILLAMA_FEES=1`); Renzo, Kelp, Swell, Puffer Finance and Bedrock (five largest remaining LRTs) made $953,350 combined Q2'26 gross profit, down from $2.18M three quarters earlier; Kelp books $460,600 EIGEN rewards as both revenue and cost of revenue (pass-through) ([CoinDesk](https://www.coindesk.com/business/2026/09/28/the-restaking-gold-rush-is-over-and-top-protocols-are-barely-making-a-profit), 2026-09-28) |
-| **Bedrock (Llama)** | `npm run analytics:bedrock:restaking` | Bedrock liquid restaking TVL + fees/revenue (`bedrock`, `DEFILLAMA_FEES=1`); Renzo, Kelp, Swell, Puffer Finance and Bedrock (five largest remaining LRTs) made $953,350 combined Q2'26 gross profit, down from $2.18M three quarters earlier ([CoinDesk](https://www.coindesk.com/business/2026/09/28/the-restaking-gold-rush-is-over-and-top-protocols-are-barely-making-a-profit), 2026-09-28) |
-| **Swell (Llama)** | `npm run analytics:swell:restaking` | Swell liquid restaking TVL + fees/revenue (`swell`, `DEFILLAMA_FEES=1`); Swell recorded $22,370 gross profit in Q2'26; one of the five LRTs whose combined Q2 gross profit was $953,350 ([CoinDesk](https://www.coindesk.com/business/2026/09/28/the-restaking-gold-rush-is-over-and-top-protocols-are-barely-making-a-profit), 2026-09-28) |
-| **Renzo (Llama)** | `npm run analytics:renzo:restaking` | Renzo liquid restaking TVL + fees/revenue (`renzo`, `DEFILLAMA_FEES=1`); Renzo, Kelp, Swell, Puffer Finance and Bedrock (five largest remaining LRTs) made $953,350 combined Q2'26 gross profit, down from $2.18M three quarters earlier ([CoinDesk](https://www.coindesk.com/business/2026/09/28/the-restaking-gold-rush-is-over-and-top-protocols-are-barely-making-a-profit), 2026-09-28) |
-| **Puffer Finance (Llama)** | `npm run analytics:puffer:restaking` | Puffer Finance liquid restaking TVL + fees/revenue (`puffer-finance`, `DEFILLAMA_FEES=1`); Puffer Finance (raised $23M) recorded $21,590 gross profit in Q2'26; one of the five LRTs whose combined Q2 gross profit was $953,350 ([CoinDesk](https://www.coindesk.com/business/2026/09/28/the-restaking-gold-rush-is-over-and-top-protocols-are-barely-making-a-profit), 2026-09-28) |
-| **Bitget (Llama)** | `npm run analytics:bitget:cex` | CEX reserve TVL by chain (`bitget`) |
-| **Drop (Llama)** | `npm run analytics:drop:staking` | Drop liquid staking (Neutron drain, $0 TVL OK) (`drop`) |
-| **THORChain DEX (Llama)** | `npm run analytics:thorchain:dex` | THORChain DEX TVL (`thorchain-dex`) |
-| **Polymarket (Llama)** | `npm run analytics:polymarket:pred` | Polymarket prediction market TVL (`polymarket`) |
-| **Circle (Llama)** | `npm run analytics:circle:stable` | Circle protocol TVL (`circle`) |
-| **Arc Chain (Llama)** | `npm run analytics:arc:chain` | Arc (Circle L1, chainId 5042) chain TVL |
-| **NEAR Intents (Llama)** | `npm run analytics:near:intents` | NEAR Intents TVL (`near-intents`) |
-| **Jupiter Lend DEX (Llama)** | `npm run analytics:jupiter:lend-dex` | Jupiter Lend DEX TVL (`jupiter-lend-dex`) |
-| **Gravity by Galxe (Llama)** | `npm run analytics:gravity:bridge` | Gravity bridge TVL (`gravity-by-galxe`) |
-| **USD AI (Llama)** | `npm run analytics:usdai:rwa` | USD AI RWA TVL (`usd-ai`) |
-| **Jupiter Lend (Llama)** | `npm run analytics:jupiter:lend` | Jupiter Lend lending TVL (`jupiter-lend`) |
-| **Kuru CLOB (Llama)** | `npm run analytics:kuru:clob` | Kuru CLOB (Monad) TVL (`kuru-clob`) |
-| **NAVI Lending (Llama)** | `npm run analytics:navi:lending` | NAVI Lending (Sui) TVL (`navi-lending`) |
-| **PumpSwap (Llama)** | `npm run analytics:pumpswap:dex` | PumpSwap DEX TVL (`pumpswap`) |
-| **pump.fun (Llama)** | `npm run analytics:pumpfun:launchpad` | pump.fun launchpad fees/revenue via `/summary/fees` (`pump.fun`, `DEFILLAMA_FEES=1`; Llama TVL is empty/$0); $1.96M 24h protocol revenue ahead of Hyperliquid ($1.86M) ([The Block Beats](https://en.theblockbeats.news/flash/369146), [Gate.com](https://www.gate.com/zh-tw/news/detail/pumpfun-surpasses-hyperliquid-with-196m-protocol-revenue-in-24-hours-24572571), 2026-09-26) |
-| **Kamino Lend (Llama)** | `npm run analytics:kamino:lending` | Kamino Lend TVL (`kamino-lend`) |
-| **Raydium AMM (Llama)** | `npm run analytics:raydium:dex` | Raydium AMM TVL (`raydium-amm`) |
-| **DFDV Staked SOL (Llama)** | `npm run analytics:dfdv:staking` | DFDV Staked SOL TVL (`dfdv-staked-sol`) |
-| **DeepBook V3 (Llama)** | `npm run analytics:deepbook:dex` | DeepBook V3 TVL (`deepbook-v3`) |
-| **BisonFi (Llama)** | `npm run analytics:bisonfi:dex` | BisonFi DEX TVL (`bisonfi`) |
-| **Jito (Llama)** | `npm run analytics:jito:staking` | Jito staking TVL (`jito`) |
-| **Sanctum (Llama)** | `npm run analytics:sanctum:staking` | Sanctum staking TVL (`sanctum`) |
-| **Sentora Curator (Llama)** | `npm run analytics:sentora:curator` | Sentora curator TVL by chain (`sentora-curator`; Llama covers all Sentora vaults, not the single vault); Morpho Sentora RLUSD Main on Ethereum $424.20M TVL at 5.67% APY ([Portals blog](https://blog.portals.fi/defi-tvl-september-2026-week-4/), 2026-09-25) |
-| **Steakhouse Financial (Llama)** | `npm run analytics:steakhouse:curator` | Steakhouse Financial curated TVL by chain (`steakhouse-financial`); Steakhouse Prime Instant (Morpho USDC vault) on Base $444.37M TVL (Portals week-4) ([Portals blog](https://blog.portals.fi/defi-tvl-september-2026-week-4/), 2026-09-25) |
-| **Upshift (Llama)** | `npm run analytics:upshift:allocator` | Upshift TVL by chain (`upshift`); Upshift Sentora USD Earn $94.41M TVL on Ethereum ([Portals blog](https://blog.portals.fi/defi-tvl-september-2026-week-4/), 2026-09-25) |
-| **Drift (Llama)** | `npm run analytics:drift:perps` | Drift TVL + fees/revenue (`drift`, `DEFILLAMA_FEES=1`); DFX recovery-token claims opened for the April 1 incident (~$295M stolen); fixed supply 299.5M DFX (1 per verified USDT lost); Recovery Pool ~3.1–3.11M USDT ([CryptoBriefing](https://cryptobriefing.com/drift-dfx-recovery-token-claims-april-exploit/), [TokenPost](https://www.tokenpost.com/news/technology/26196), 2026-10-01). The monitor tracks post-incident TVL and fees; it does not read the Recovery Pool or DFX supply |
-| **Pharaoh Exchange (Llama)** | `npm run analytics:pharaoh:dex` | Avalanche DEX TVL + fees/revenue (`pharaoh-exchange`, `DEFILLAMA_FEES=1`); record month — ~$2.866B 30-day DEX volume and ~$2.48M 30-day fees; cumulative volume >$34B; lifetime fees >$32M; TVL ~$47–53M; V2 wind-down closes 2026-10-31 ([CryptoBriefing](https://cryptobriefing.com/pharaoh-exchange-record-monthly-volume-fees/), 2026-10-01) |
-| **HyperLend (Llama)** | `npm run analytics:hyperlend:lending` | HyperLend TVL + borrowed + fees/revenue (`hyperlend`, `DEFILLAMA_FEES=1`); first institutional credit facility on HyperLend's Aviya Finance with Anchorage Digital custody; HyperLend states over $800M market size ([GlobeNewswire via Stockhouse](https://stockhouse.com/news/press-releases/2026/09/30/hyperion-defi-anchorage-digital-and-hyperlend-together-announce-the-first), 2026-09-30). Market size ≈ TVL + borrowed rows on Llama |
-| **Fables (Llama)** | `npm run analytics:fables:dex` | Robinhood Chain DEX TVL + fees (`fables`, `DEFILLAMA_FEES=1`; Llama revenue is $0, smoke is TVL-only); FABLES TGE 2026-10-20 with ve(3,3); max circulating supply at TGE 75M; 52 markets; about $45M deposits; over $2B cumulative trading volume on Robinhood Chain ([PANews](https://www.panews.io/articles/01a0f277-bfed-723b-af07-8d537ac49956), 2026-09-30) |
-| **Keyrock Prime USDC (Morpho)** | `npm run analytics:keyrock:vault` | Single Morpho Vault V2 read via Morpho's public GraphQL (`morphoVaultV2Monitor.js`; `krUSDC` `0x5bEf…3123` on Arc, chainId 5042). DefiLlama's `keyrock` slug does not index this Arc vault; Arc cirBTC/USDC Morpho market allocations include $74.99M in Keyrock Prime USDC; market size $176.71M ([TokenPost](https://www.tokenpost.com/news/business/25020), 2026-09-28) |
-| **Ostium (Llama)** | `npm run analytics:ostium:perps` | Ostium OLP / perp TVL (`ostium`); OLP Recovery Plan repays 3,321 of 3,666 wallets in full; confirmed drain 23,752,746 USDC; initial recovery funding 649,967.55 USDC (~2.7%) ([The Crypto Times](https://www.cryptotimes.io/2026/10/01/ostium-23-75m-hack-recovery-3321-wallets-repaid-345-lps-face-1000-choice/), 2026-10-01). The monitor tracks post-exploit TVL; it does not read recovery-portal payouts |
-| **Payy bridge (on-chain)** | `npm run analytics:payy:bridge` | USDC `balanceOf` Payy Ethereum bridge `0x367C…5270` (needs `ETHEREUM_RPC_URL`) |
-
-### Trending / 2026 monitors
-
-| Script | Command | Description |
-|--------|---------|-------------|
-| **Unichain (quotes)** | `CHAIN=unichain npm run analytics:dex:prices` | OP Stack L2 — Uniswap V3/V4 + WETH/USDC in [`chains.js`](src/config/chains.js); set `UNICHAIN_RPC_URL` |
-| **Ondo (Llama)** | `npm run analytics:ondo:markets` | Ondo Finance TVL (`ondo-finance`) |
-| **BlackRock BUIDL (Llama)** | `npm run analytics:buidl:markets` | Tokenized fund TVL (`blackrock-buidl`) |
-| **BUIDL supply (optional)** | `npm run analytics:buidl:supply` | ERC-20 `totalSupply` when `BUIDL_TOKEN_ADDRESS` is set |
-| **Sky / Maker** | `npm run analytics:sky:rates` | DSR from Maker Pot + DefiLlama Maker & Sky rows |
-| **Ethena** | `npm run analytics:ethena:monitor` | DefiLlama TVL, public mint/redeem pairs API, USDe / sUSDe `totalSupply` |
-| **UniswapX** | `npm run analytics:uniswapx:activity` | Recent `Fill` events on the configured reactor (`CHAIN`, `UNISWAPX_REACTOR`, `UNISWAPX_MAX_BLOCKS`) |
-| **UniswapX fill replay** | `npm run simulate:uniswapx:fill` | Chunked `Fill` log scan + `eth_call` replay at block (`UNISWAPX_REPLAY_TX`, `UNISWAPX_LOG_CHUNK`, `UNISWAPX_REPLAY_STRICT`) |
-
-DefiLlama smoke tests: `npm run simulate:ondo:smoke`, `simulate:ethena:smoke`, `simulate:sky:smoke`, `simulate:buidl:smoke`.
-
-### Landscape analytics (no money-legos)
-
-Read-only boards. Social chatter for the same topics is the collective `defi-mev` scrape (`TWITTER_URLS` + `DISCORD_CHANNEL_URLS`).
-
-| Script | Command | Description |
-|--------|---------|-------------|
-| **L2 overview** | `npm run analytics:l2:overview` | Live DefiLlama TVL + DEX 30d volume for Arb/OP/Base/Polygon/Scroll/zkSync/Linea/Unichain |
-| **ETH DEX share** | `npm run analytics:eth:dex-share` | Ethereum venue volume: Uniswap V4 vs V3 vs 1inch Aqua vs long-tail; 7d Δ ≥ 400% marked new |
-| **ETH/BTC TVL** | `npm run analytics:ethbtc:tvl` | Ethereum vs Bitcoin chain TVL for last month, this month, and this week |
-| **ETH/BTC ratio** | `npm run analytics:ethbtc:ratio` | ETH vs BTC spot and ratio for the same windows (CoinGecko) |
-| **ETH lending movers** | `npm run analytics:eth:lending-movers` | Ethereum lending/CDP 7d TVL Δ (Aave V4, Spark, Morpho) |
-| **ETH yield / Pendle** | `npm run analytics:eth:yield` | Pendle V2 DEX volume plus Ethereum yield TVL week-up |
-| **ETH TVL drivers** | `npm run analytics:eth:tvl-drivers` | Ethereum DeFi 7d $ inflow/outflow by protocol (CEX omitted) |
-| **Aave mix** | `npm run analytics:eth:aave-mix` | Aave V3 vs V4 vs Horizon collateral and borrowed on Ethereum |
-| **Pendle markets** | `npm run analytics:eth:pendle-markets` | Pendle chain TVL plus Ethereum PT/YT market liquidity |
-| **BTC wraps** | `npm run analytics:btc:wraps` | Bitcoin wrap / restake TVL (WBTC, Babylon, Citrea, Nexus). CEX omitted |
-| **BTC wrap trail** | `npm run analytics:btc:wrap-trail` | Circle Bitcoin daily TVL path vs Kraken / Babylon / Nexus |
-| **RWA overview** | `npm run analytics:rwa:overview` | RWA protocol TVL (DigiFT, Huma, Ondo, BUIDL, thBill). Complements slug one-offs |
-| **NFT markets** | `npm run analytics:nft:markets` | Marketplace fees + 10-collection watchlist; optional `RESERVOIR_API_KEY` floors |
-| **Airdrop watch** | `npm run analytics:airdrop:watch` | Research calendar (not a claimer). Optional join to `defi-mev` `trends-report.json` |
-
-Smokes: `simulate:l2:overview:smoke`, `simulate:eth:dex-share:smoke`, `simulate:ethbtc:tvl:smoke`, `simulate:ethbtc:ratio:smoke`, `simulate:eth:lending-movers:smoke`, `simulate:eth:yield:smoke`, `simulate:eth:tvl-drivers:smoke`, `simulate:eth:aave-mix:smoke`, `simulate:eth:pendle-markets:smoke`, `simulate:btc:wraps:smoke`, `simulate:btc:wrap-trail:smoke`, `simulate:rwa:overview:smoke`, `simulate:nft:markets:smoke`, `simulate:airdrop:watch:smoke`.
-
-### Lending Analytics
-
-Track lending rates and compare protocols:
-
-| Script | Command | Description |
-|--------|---------|-------------|
-| **Aave Markets** | `npm run analytics:aave:markets` | Aave V3 supply/borrow rates and utilization (all configured chains) |
-| **Aave Versions** | `npm run analytics:aave:versions` | Aave V2 vs V3 comparison (L1/L2 labels) |
-| **Aave Liquidations** | `npm run analytics:aave:liquidations` | Recent `LiquidationCall` logs; optional `AAVE_WATCH_ADDRESSES` for health factors |
-| **Morpho vs Aave** | `npm run analytics:morpho:optimizer` | Morpho Blue (API) vs Aave V3 rates per chain |
-| **Nostra Finance (Llama)** | `npm run analytics:nostra:lending` | Nostra Starknet lending/money-market TVL (`nostra`) |
-| **Benqi Lending (Llama)** | `npm run analytics:benqi:lending` | Avalanche lending market TVL (`benqi-lending`) |
-| **Lending aggregator** | `npm run analytics:lending:rates` | Best supply/borrow across Aave + Morpho; cross-chain summary |
-| **All lending (Llama)** | `npm run analytics:lending:aggregate` | Pull several lending protocols from DefiLlama in one run (Aave, Morpho, Compound, Spark, Venus, Euler, Curvance, Resolv) |
-| **Compound / Venus (Llama)** | `npm run analytics:lending:venues` | BSC + L2 TVL rows for Compound V3 and Venus (`LENDING_LLAMA_CHAINS`) |
-| **Spark (Llama)** | `npm run analytics:spark:lend` | Spark lending TVL snapshot (MakerDAO/Sky-aligned rates) |
-
-### Staking (LST) analytics
-
-| Script | Command | Description |
-|--------|---------|-------------|
-| **Lido** | `npm run analytics:lido:staking` | stETH APR (Lido API), TVL (DefiLlama), mainnet peg; L2 wstETH needs RPCs |
-| **StakeStone** | `npm run analytics:stakestone:staking` | TVL from DefiLlama; optional `STAKESTONE_YIELDS_POOL_ID` for chart APY |
-| **Kintsu** | `npm run analytics:kintsu:staking` | TVL from DefiLlama; APY from yields chart (override with `KINTSU_YIELDS_POOL_ID`) |
-| **LST compare** | `npm run analytics:staking:compare` | Lido vs StakeStone vs Kintsu — heuristic score + size-band notes |
-| **All staking (Llama)** | `npm run analytics:staking:aggregate` | Pull multiple LST / staking protocols from DefiLlama in one run |
-
-### Simulation and swaps
-
-| Command | Purpose |
-|---------|---------|
-| `npm run simulate:quote` / `simulate:swap` | Quote or simulate a swap (`SIMULATE_ONLY=true` for quote-only) |
-| `npm run simulate:multi:quote` / `simulate:multi` | Multi-protocol quote comparison |
-| `npm run simulate:dex:aerodrome:v3` / `simulate:dex:velodrome:v3` | Slipstream **reference**: Uniswap V3 quote on Base / Optimism (see [coverage doc](docs/01-protocol-script-coverage.md#aerodrome--velodrome-slipstream--reference-quotes)) |
-| `npm run simulate:dex:monad:v3` | Uniswap V3 quote on Monad (`MONAD_RPC_URL`; WMON as `WETH` in `chains.js`) |
-| `npm run simulate:uniswapx:fill` | UniswapX fill `eth_call` replay helper |
-| `npm run simulate:morpho:fork` | Morpho Blue `market(bytes32)` read (`MORPHO_MARKET_ID` optional) |
-| `npm run swap:example`, `swap:uniswap:v2`, `v3`, `v4`, `swap:sushiswap`, `swap:balancer`, `swap:curve`, `swap:aerodrome`, `swap:velodrome`, `swap:uniswapx`, `swap:autoroute`, `swap:crosschain`, `swap:check` | Example flows (`swap:aerodrome` / `swap:velodrome` = Uni V3 reference quote on that chain; see docs) |
-
-### Other Analytics
-
-| Script | Command | Description |
-|--------|---------|-------------|
-| **Weekly Blocks** | `npm run analytics:weekly:blocks` | Block-level transaction and gas analysis |
-
-
-## Planned Protocols
-
-### Established Protocols (Pre-2025)
-- [x] **Uniswap** - DEX AMM [![Uniswap](https://img.shields.io/badge/Uniswap-V2%20%7C%20V3%20%7C%20V4-ff007a.svg)](https://uniswap.org)
-- [x] **Lido Finance** - Liquid Staking [![Lido](https://img.shields.io/badge/Lido-00A3FF?logo=lido&logoColor=white)](https://lido.fi)
-- [x] **Aave** - Lending & Borrowing [![Aave](https://img.shields.io/badge/Aave-1C202F?logo=aave&logoColor=white)](https://aave.com)
-- [x] **Curve Finance** - DEX Stablecoin-Focused [![Curve](https://img.shields.io/badge/Curve-0000FF?logo=curve&logoColor=white)](https://curve.fi)
-- [x] **Balancer** - DEX & Liquidity Management [![Balancer](https://img.shields.io/badge/Balancer-1E1E1E?logo=balancer&logoColor=white)](https://balancer.fi)
-- [x] **Morpho** - Lending Optimizer [![Morpho](https://img.shields.io/badge/Morpho-161C3D?logoColor=white)](https://morpho.org)
-- [x] **SushiSwap** - AMM DEX [![SushiSwap](https://img.shields.io/badge/SushiSwap-FA52A0?logo=sushi&logoColor=white)](https://sushi.com)
-
-### 2025 Launched Protocols
-- [x] **Reya Network** - High-Speed AMM DEX L2 [![Reya](https://img.shields.io/badge/Reya-2B2D42?logoColor=white)](https://reya.network)
-- [x] **Aster DEX** - Multi-Chain AMM Perp/Spot [![Aster](https://img.shields.io/badge/Aster-7B2CBF?logoColor=white)](https://aster.finance) *(DefiLlama monitor: `npm run analytics:aster:perps`)*
-- [x] **Ammalgam** - Hybrid AMM + Lending [![Ammalgam](https://img.shields.io/badge/Ammalgam-06FFA5?logoColor=black)](https://ammalgam.fi)
-- [ ] **Kinto** - KYC-Modular AMM DEX [![Kinto](https://img.shields.io/badge/Kinto-000000?logoColor=white)](https://kinto.xyz)
-- [x] **Curvy v2** - ZK Stealth AMM Aggregator [![Curvy](https://img.shields.io/badge/Curvy-FF6B6B?logoColor=white)](https://curvy.finance)
-- [ ] **Milk Road Swap** - Gasless Multi-Chain AMM [![Milk Road](https://img.shields.io/badge/Milk_Road-FFFFFF?logoColor=black)](https://milkroad.com)
-- [ ] **HumidiFi** - Prop AMM DEX [![HumidiFi](https://img.shields.io/badge/HumidiFi-4ECDC4?logoColor=white)](https://humidifi.xyz)
-- [x] **Lighter** - ZK Perp AMM L2 [![Lighter](https://img.shields.io/badge/Lighter-FFD93D?logoColor=black)](https://lighter.xyz) *(DefiLlama monitor: `npm run analytics:lighter:perps`)*
-- [x] **Drake Exchange** - CLOB-AMM Perp DEX [![Drake](https://img.shields.io/badge/Drake-E63946?logoColor=white)](https://drake.exchange) *(DefiLlama monitor: `npm run analytics:drake:perps`)*
-- [x] **Kintsu** - Liquid Staking AMM [![Kintsu](https://img.shields.io/badge/Kintsu-F77F00?logoColor=white)](https://kintsu.xyz)
-- [x] **Curvance** - Multi-Chain Isolated AMM [![Curvance](https://img.shields.io/badge/Curvance-6A4C93?logoColor=white)](https://curvance.com) *(DefiLlama slug in `simulate:lending:aggregate:smoke`)*
-- [x] **Resolv Labs** - Trustless Stablecoin AMM [![Resolv](https://img.shields.io/badge/Resolv-2EC4B6?logoColor=white)](https://resolv.xyz) *(DefiLlama slug in `simulate:lending:aggregate:smoke`)*
-- [x] **StakeStone** - LST AMM DEX [![StakeStone](https://img.shields.io/badge/StakeStone-8B5CF6?logoColor=white)](https://stakestone.io)
-- [x] **Zama FHEVM DEX** - Privacy AMM FHE [![Zama](https://img.shields.io/badge/Zama-000000?logoColor=white)](https://zama.ai) *(DefiLlama monitor: `npm run analytics:zama:privacy`)*
-- [ ] **Aztec Ignition DEX** - Decentralized Privacy AMM L2 [![Aztec](https://img.shields.io/badge/Aztec-1E1E1E?logoColor=white)](https://aztec.network)
-- [ ] **Monad AMM (Native)** - EVM-Compatible AMM L1 [![Monad](https://img.shields.io/badge/Monad-9333EA?logoColor=white)](https://monad.xyz)
-- [ ] **Base Liquidity AMM (AERO Fork)** - Base Ecosystem AMM [![Base](https://img.shields.io/badge/Base-0052FF?logo=base&logoColor=white)](https://base.org)
-- [x] **Morpho Base AMM** - Lending-Optimized AMM [![Morpho](https://img.shields.io/badge/Morpho-161C3D?logoColor=white)](https://morpho.org) *(same Morpho / lending stack as above)*
-- [ ] **Soneium DEX** - Enterprise AMM L2 [![Soneium](https://img.shields.io/badge/Soneium-00D4FF?logoColor=white)](https://soneium.org)
-- [ ] **MegaETH AMM** - High-Perf AMM L2 [![MegaETH](https://img.shields.io/badge/MegaETH-FF6B35?logoColor=white)](https://megaeth.systems)
-
-### Trending 2026
-
-- [x] **UniswapX** — Intent / Dutch-style orders (settles on existing chains) [![Uniswap](https://img.shields.io/badge/UniswapX-ff007a?logoColor=white)](https://docs.uniswap.org/contracts/uniswapx/overview) *(`npm run analytics:uniswapx:activity`)*
-- [x] **Ondo Global Markets** — Tokenized securities / yield [![Ondo](https://img.shields.io/badge/Ondo-1A1A2E?logoColor=white)](https://ondo.finance) *(`npm run analytics:ondo:markets`)*
-- [x] **BlackRock BUIDL** — Tokenized fund (e.g. ERC-20) [![BUIDL](https://img.shields.io/badge/BUIDL-000000?logoColor=white)](https://www.blackrock.com) *(`analytics:buidl:markets`, optional `analytics:buidl:supply`)*
-- [x] **Sky (ex-Maker)** — Stablecoin / DSR / lending [![Sky](https://img.shields.io/badge/Sky-1E88E5?logoColor=white)](https://sky.money) *(`npm run analytics:sky:rates`)*
-- [x] **Ethena** — USDe / minting [![Ethena](https://img.shields.io/badge/Ethena-111111?logoColor=white)](https://ethena.fi) *(`npm run analytics:ethena:monitor`)*
-- [x] **Nostra Finance** — Starknet lending/money-market [![Nostra](https://img.shields.io/badge/Nostra-FF6B00?logoColor=white)](https://nostra.finance) *(`npm run analytics:nostra:lending`)*
-- [x] **Suilend** — Sui lending protocol [![Suilend](https://img.shields.io/badge/Suilend-4DA2FF?logoColor=white)](https://suilend.fi) *(DefiLlama monitor: `npm run analytics:suilend:lending`)*
-- [x] **Rhea Finance** — NEAR DEX + lending + LST [![Rhea](https://img.shields.io/badge/Rhea-00C08B?logoColor=white)](https://www.rhea.finance) *(DefiLlama monitors: `npm run analytics:rhea:defi`, `npm run analytics:rhea:lending`)*
-- [x] **Stargate Finance** — LayerZero bridge (STG→ZRO migration) [![Stargate](https://img.shields.io/badge/Stargate-999999?logoColor=white)](https://stargate.finance) *(DefiLlama monitors: `npm run analytics:stargate:bridge`, `npm run analytics:stargate:v2`)*
-- [x] **Benqi Lending** — Avalanche lending market [![Benqi](https://img.shields.io/badge/Benqi-00B3FF?logoColor=white)](https://benqi.fi) *(DefiLlama monitor: `npm run analytics:benqi:lending`)*
-- [x] **EigenLayer / EigenCloud** — Ethereum restaking [![EigenLayer](https://img.shields.io/badge/EigenLayer-1A0C6D?logoColor=white)](https://www.eigenlayer.xyz) *(DefiLlama monitor: `npm run analytics:eigenlayer:restaking`)*
-- [x] **ether.fi** — exits EigenLayer restaking this quarter (<1% of assets still restaked as of August); card share of monthly revenue 17% (Jan) → 46% (Jul); Q2'26 card gross profit $3.14M vs EigenLayer restaking $2.87M; Llama gross profit fell 47% from $18.71M (Q3'25) to $9.99M (Q2'26) ([CoinDesk](https://www.coindesk.com/business/2026/09/28/the-restaking-gold-rush-is-over-and-top-protocols-are-barely-making-a-profit), 2026-09-28) [![ether.fi](https://img.shields.io/badge/ether.fi-5B21B6?logoColor=white)](https://www.ether.fi) *(DefiLlama fees/revenue monitor: `npm run analytics:etherfi:neobank`)*
-- [x] **Kelp** — Renzo, Kelp, Swell, Puffer Finance and Bedrock (five largest remaining LRTs) made $953,350 combined Q2'26 gross profit, down from $2.18M three quarters earlier; Kelp books $460,600 EIGEN rewards as both revenue and cost of revenue (pass-through) ([CoinDesk](https://www.coindesk.com/business/2026/09/28/the-restaking-gold-rush-is-over-and-top-protocols-are-barely-making-a-profit), 2026-09-28) [![Kelp](https://img.shields.io/badge/Kelp-16A34A?logoColor=white)](https://kelpdao.xyz) *(DefiLlama monitor: `npm run analytics:kelp:restaking`)*
-- [x] **Bedrock** — Renzo, Kelp, Swell, Puffer Finance and Bedrock (five largest remaining LRTs) made $953,350 combined Q2'26 gross profit, down from $2.18M three quarters earlier ([CoinDesk](https://www.coindesk.com/business/2026/09/28/the-restaking-gold-rush-is-over-and-top-protocols-are-barely-making-a-profit), 2026-09-28) [![Bedrock](https://img.shields.io/badge/Bedrock-0F172A?logoColor=white)](https://www.bedrock.technology) *(DefiLlama monitor: `npm run analytics:bedrock:restaking`)*
-- [x] **Swell** — Swell recorded $22,370 gross profit in Q2'26; one of the five LRTs whose combined Q2 gross profit was $953,350 ([CoinDesk](https://www.coindesk.com/business/2026/09/28/the-restaking-gold-rush-is-over-and-top-protocols-are-barely-making-a-profit), 2026-09-28) [![Swell](https://img.shields.io/badge/Swell-2563EB?logoColor=white)](https://www.swellnetwork.io) *(DefiLlama monitor: `npm run analytics:swell:restaking`)*
-- [x] **Renzo** — Renzo, Kelp, Swell, Puffer Finance and Bedrock (five largest remaining LRTs) made $953,350 combined Q2'26 gross profit, down from $2.18M three quarters earlier ([CoinDesk](https://www.coindesk.com/business/2026/09/28/the-restaking-gold-rush-is-over-and-top-protocols-are-barely-making-a-profit), 2026-09-28) [![Renzo](https://img.shields.io/badge/Renzo-6366F1?logoColor=white)](https://www.renzoprotocol.com) *(DefiLlama monitor: `npm run analytics:renzo:restaking`)*
-- [x] **Puffer Finance** — Puffer Finance (raised $23M) recorded $21,590 gross profit in Q2'26; one of the five LRTs whose combined Q2 gross profit was $953,350 ([CoinDesk](https://www.coindesk.com/business/2026/09/28/the-restaking-gold-rush-is-over-and-top-protocols-are-barely-making-a-profit), 2026-09-28) [![Puffer](https://img.shields.io/badge/Puffer-F97316?logoColor=white)](https://www.puffer.fi) *(DefiLlama monitor: `npm run analytics:puffer:restaking`)*
-- [x] **Astroport** — Cosmos DEX (Neutron governance exploit, 2026-09-22) [![Astroport](https://img.shields.io/badge/Astroport-5A3FFF?logoColor=white)](https://astroport.fi) *(DefiLlama monitor: `npm run analytics:astroport:dex`)*
-- [x] **Meter Passport** — Bridge (unbacked wMTRG mint, 2026-09-23) [![Meter](https://img.shields.io/badge/Meter-2F80ED?logoColor=white)](https://meter.io) *(DefiLlama monitor: `npm run analytics:meter:bridge`)*
-- [x] **Bitget** — CEX reserves (hot-wallet incident, 2026-09-24) [![Bitget](https://img.shields.io/badge/Bitget-00F0FF?logoColor=black)](https://www.bitget.com) *(DefiLlama monitor: `npm run analytics:bitget:cex`)*
-- [x] **Drop** — Neutron Prop 9 governance attack emptied Astroport and Drop contracts (~$9.4M per Rarma) on 2026-09-22 ([Altcoin Buzz](https://www.altcoinbuzz.io/cosmos-hub-moves-2-1m-of-stolen-atom-after-25-hour-halt), 2026-09-23); Llama TVL is $0 [![Drop](https://img.shields.io/badge/Drop-5B21B6?logoColor=white)](https://drop.money) *(DefiLlama monitor: `npm run analytics:drop:staking`)*
-- [x] **THORChain DEX** — ~500k stolen ATOM swapped through THORChain; 168,990.9 ATOM refunded to the attacker after the Hub restart ([Cosmos forum](https://forum.cosmos.network/t/neutron-governance-attack-cosmos-hub-response-and-recovery-update/17369); [CryptoSlate](https://cryptoslate.com/cosmos-restarted-to-seize-2-2-million-in-stolen-atom-but-169000-tokens-still-escaped/), 2026-09-24) [![THORChain](https://img.shields.io/badge/THORChain-00CCBB?logoColor=white)](https://thorchain.org) *(DefiLlama monitor: `npm run analytics:thorchain:dex`)*
-- [x] **Polymarket** — Polymarket U.S. just over $1.03B notional volume on the Sep 19-20 weekend ([SCCG](https://sccgmanagement.com/sccg-articles/2026/09/23/kalshi-crypto-volume-allegations-emerge-against-backdrop-of-764-billion-prediction-market-record/), 2026-09-23); the Llama slug tracks the international book [![Polymarket](https://img.shields.io/badge/Polymarket-6366F1?logoColor=white)](https://polymarket.com) *(DefiLlama monitor: `npm run analytics:polymarket:pred`)*
-- [x] **Circle / Arc** — Arc DeFi TVL $494M, +44.52% 7d, 10 days after mainnet ([TokenPost](https://www.tokenpost.com/news/technology/24382), 2026-09-26); Circle 24h revenue $7.35M per DefiLlama ([BlockBeats](https://en.theblockbeats.news/flash/369146), 2026-09-26) [![Circle](https://img.shields.io/badge/Circle-3E73C4?logoColor=white)](https://circle.com) *(DefiLlama monitors: `npm run analytics:circle:stable`, `npm run analytics:arc:chain`)*
-- [x] **NEAR Intents** — NEAR Intents passed ~$31.4B cumulative volume ([Bitinsider](https://bitinsider.io/articles/near-protocol-intents-surpass-30b-in-all-time-volume-as-daily-records-fall), 2026-09-22) [![NEAR](https://img.shields.io/badge/NEAR-000000?logoColor=white)](https://near.org) *(DefiLlama monitor: `npm run analytics:near:intents`)*
-- [x] **Jupiter Lend DEX** — Jupiter Earn to seed $10M of sUSDai DEX liquidity on the Jupiter Lend AMM ([Altcoin Buzz](https://www.altcoinbuzz.io/kamino-opens-usdc-borrowing-against-gpu-loan-yields-on-solana), 2026-09-25) [![Jupiter](https://img.shields.io/badge/Jupiter-19FB9B?logoColor=black)](https://jup.ag) *(DefiLlama monitor: `npm run analytics:jupiter:lend-dex`)*
-- [x] **Gravity by Galxe** — $G cross-exchange spread hit 40% on bridge limits ([GetChain](https://www.getchainnews.com/en/newflash/E6KkDYb68k), 2026-09-20); Fast Withdraw cut Alpha Mainnet to Ethereum settlement from 7 days to ~10 min ([TradingView](https://www.tradingview.com/news/coinmarketcal:61ad0b705094b:0-gravity-by-galxe-fast-withdraw-goes-live-for-g-bridge-transfers-to-ethereum-20-sep-2026/), 2026-09-20) [![Gravity](https://img.shields.io/badge/Gravity-5865F2?logoColor=white)](https://gravity.xyz) *(DefiLlama monitor: `npm run analytics:gravity:bridge`)*
-- [x] **USD AI** — $128.9M GPU financing facility, its largest to date ([PR Newswire](https://www.prnewswire.com/news-releases/usdai-announces-128-9m-gpu-financing-facility-its-largest-to-date-302888224.html), 2026-09-23) [![USDAI](https://img.shields.io/badge/USD_AI-1E88E5?logoColor=white)](https://usdai.money) *(DefiLlama monitor: `npm run analytics:usdai:rwa`)*
-- [x] **Jupiter Lend** — record $2.41B total deposits on 2026-09-22 ([Solana Compass](https://solanacompass.com/news/jupiter-perps-adds-six-markets-including-tokenized-spacex-hype-and-zec-via-gum-orderbook), 2026-09-22) [![Jupiter](https://img.shields.io/badge/Jupiter-19FB9B?logoColor=black)](https://jup.ag) *(DefiLlama monitor: `npm run analytics:jupiter:lend`)*
-- [x] **Kuru CLOB** — Kuru cumulative trading volume passed $7B on Monad ([TokenPost](https://www.tokenpost.com/news/investing/24062), 2026-09-25) [![Kuru](https://img.shields.io/badge/Kuru-9333EA?logoColor=white)](https://kuru.io) *(DefiLlama monitor: `npm run analytics:kuru:clob`)*
-- [x] **NAVI Lending** — NAVI held >$420M of deposits in Sui's $1.21B TVL snapshot of 2026-09-22 ([Bitcoinist](https://bitcoinist.com/sui-tvl-moves-above-1-2b-as-defi-liquidity-expands/), 2026-09-24) [![NAVI](https://img.shields.io/badge/NAVI-4DA2FF?logoColor=white)](https://naviprotocol.io) *(DefiLlama monitor: `npm run analytics:navi:lending`)*
-- [x] **PumpSwap** — ~$482.79M 24h volume, ~17% of Solana's $2.80B DEX volume ([The Chain Observer](https://thechainobserver.com/solana-dex-volume-reaches-2-8b/), 2026-09-22 snapshot) [![PumpSwap](https://img.shields.io/badge/PumpSwap-14F195?logoColor=black)](https://pumpswap.io) *(DefiLlama monitor: `npm run analytics:pumpswap:dex`)*
-- [x] **Kamino Lend** — sUSDai/USDC market opened at 80% max LTV, 85% liquidation LTV, 5M supply/borrow caps ([Altcoin Buzz](https://www.altcoinbuzz.io/kamino-opens-usdc-borrowing-against-gpu-loan-yields-on-solana), 2026-09-25) [![Kamino](https://img.shields.io/badge/Kamino-00CCBB?logoColor=white)](https://kamino.finance) *(DefiLlama monitor: `npm run analytics:kamino:lending`)*
-- [x] **Raydium AMM** — Raydium TVL $1.26B; handled $1.713B (64%) of StonkFun's $2.67B volume ([KuCoin](https://www.kucoin.com/news/flash/ray-gains-10-as-raydium-captures-64-of-stonkfun-volume), 2026-09-22) [![Raydium](https://img.shields.io/badge/Raydium-C042FF?logoColor=white)](https://raydium.io) *(DefiLlama monitor: `npm run analytics:raydium:dex`)*
-- [x] **DFDV Staked SOL** — DFDV added 101,381 SOL in a week to ~2,490,304 SOL, deployed via its staking/validator stack ([KuCoin / The Coin Republic](https://www.kucoin.com/news/flash/dfdv-adds-101-381-sol-to-treasury-as-sol-price-surpasses-116), 2026-09-22) [![DFDV](https://img.shields.io/badge/DFDV-14F195?logoColor=black)](https://dfdv.com) *(DefiLlama monitor: `npm run analytics:dfdv:staking`)*
-- [x] **DeepBook V3** — DeepBook App launched on the order book behind $20B+ of Sui volume ([Sui blog](https://www.sui.io/blog/deepbook-app-is-live-onchain-power-for-serious-traders); [TradingView](https://www.tradingview.com/news/coinmarketcal:e0ad19724094b:0-deepbook-alpha-app-goes-live-with-spot-trading-btc-prediction-markets-and-api-24-sep-2026/), 2026-09-24) [![DeepBook](https://img.shields.io/badge/DeepBook-4DA2FF?logoColor=white)](https://deepbook.tech) *(DefiLlama monitor: `npm run analytics:deepbook:dex`)*
-- [x] **BisonFi** — ~$424.26M 24h volume ([The Chain Observer](https://thechainobserver.com/solana-dex-volume-reaches-2-8b/), 2026-09-22); top Solana AMM by volume for 25 straight weeks ([Gate News](https://www.gate.com/news/detail/SOL/bisonfi-dominates-solana-amm-market-for-25-consecutive-weeks-24501218), 2026-09-23) [![BisonFi](https://img.shields.io/badge/BisonFi-14F195?logoColor=black)](https://bisonfi.io) *(DefiLlama monitor: `npm run analytics:bisonfi:dex`)*
-- [x] **Jito** — Jito pool held 10.38M SOL vs 7.96M JitoSOL supply at epoch 1042 ([Solana Compass](https://solanacompass.com/news/sec-staff-faq-says-staking-receipt-tokens-can-be-digital-commodities-jito), 2026-09-25) [![Jito](https://img.shields.io/badge/Jito-14F195?logoColor=black)](https://jito.network) *(DefiLlama monitor: `npm run analytics:jito:staking`)*
-- [x] **Sanctum** — CLOUD-008 passed: 259M CLOUD burned, total supply 1B to ~741M; TVL $2.05B ([Solana Compass](https://solanacompass.com/news/sanctum-governance-vote-passes-259m-cloud-tokens-to-be-burned-ticker-renames-to-sanc), 2026-09-19 19:35 UTC = 2026-09-20 UTC+8) [![Sanctum](https://img.shields.io/badge/Sanctum-14F195?logoColor=black)](https://sanctum.so) *(DefiLlama monitor: `npm run analytics:sanctum:staking`)*
-- [x] **Meteora DLMM** — Referral Staking Cycle 2 paid $700K+ USDC from DLMM fees (vs $336K in Cycle 1); cycle ended 2026-09-21 ([Solana Compass](https://solanacompass.com/news/meteora-referral-staking-cycle-2-distributes-over-700k-in-usdc-more-than-double-cycle-1), 2026-09-23) [![Meteora](https://img.shields.io/badge/Meteora-F97316?logoColor=white)](https://meteora.ag) *(DefiLlama monitor with fees/revenue: `npm run analytics:meteora:dex`)*
-- [x] **pump.fun** — $1.96M 24h protocol revenue per DefiLlama, ahead of Hyperliquid's $1.86M ([BlockBeats](https://en.theblockbeats.news/flash/369146), [Gate](https://www.gate.com/zh-tw/news/detail/pumpfun-surpasses-hyperliquid-with-196m-protocol-revenue-in-24-hours-24572571), 2026-09-26) [![pump.fun](https://img.shields.io/badge/pump.fun-14F195?logoColor=black)](https://pump.fun) *(DefiLlama fees/revenue monitor: `npm run analytics:pumpfun:launchpad`)*
-- [x] **Sentora Curator** — Morpho Sentora RLUSD Main on Ethereum at $424.20M TVL and 5.67% APY ([Portals](https://blog.portals.fi/defi-tvl-september-2026-week-4/), 2026-09-25) [![Sentora](https://img.shields.io/badge/Sentora-0F766E?logoColor=white)](https://sentora.com) *(DefiLlama monitor: `npm run analytics:sentora:curator`)*
-- [x] **Steakhouse Financial** — Steakhouse Prime Instant (Morpho USDC vault) on Base at $444.37M TVL ([Portals](https://blog.portals.fi/defi-tvl-september-2026-week-4/), 2026-09-25) [![Steakhouse](https://img.shields.io/badge/Steakhouse-B91C1C?logoColor=white)](https://www.steakhouse.financial) *(DefiLlama monitor: `npm run analytics:steakhouse:curator`)*
-- [x] **Upshift** — Upshift Sentora USD Earn on Ethereum at $94.41M TVL ([Portals](https://blog.portals.fi/defi-tvl-september-2026-week-4/), 2026-09-25) [![Upshift](https://img.shields.io/badge/Upshift-111827?logoColor=white)](https://www.upshift.finance) *(DefiLlama monitor: `npm run analytics:upshift:allocator`)*
-- [x] **Payy Network** — Ethereum ZK payments rollup bridge (drained 2026-09-24) [![Payy](https://img.shields.io/badge/Payy-C6FF00?logoColor=black)](https://payy.network) *(on-chain USDC balance: `npm run analytics:payy:bridge`)*
-- [x] **Drift** — DFX recovery-token claims opened for the April 1 incident (~$295M stolen); fixed supply 299.5M DFX; Recovery Pool ~3.1–3.11M USDT ([CryptoBriefing](https://cryptobriefing.com/drift-dfx-recovery-token-claims-april-exploit/), [TokenPost](https://www.tokenpost.com/news/technology/26196), 2026-10-01) [![Drift](https://img.shields.io/badge/Drift-E11D48?logoColor=white)](https://app.drift.trade) *(DefiLlama fees/revenue monitor: `npm run analytics:drift:perps`)*
-- [x] **Pharaoh Exchange** — record month — ~$2.866B 30-day DEX volume and ~$2.48M 30-day fees; cumulative volume >$34B; lifetime fees >$32M; TVL ~$47–53M; V2 wind-down closes 2026-10-31 ([CryptoBriefing](https://cryptobriefing.com/pharaoh-exchange-record-monthly-volume-fees/), 2026-10-01) [![Pharaoh](https://img.shields.io/badge/Pharaoh-F59E0B?logoColor=black)](https://www.phar.gg/) *(DefiLlama fees/revenue monitor: `npm run analytics:pharaoh:dex`)*
-- [x] **HyperLend** — first institutional credit facility on HyperLend's Aviya Finance with Anchorage Digital custody; HyperLend states over $800M market size ([GlobeNewswire via Stockhouse](https://stockhouse.com/news/press-releases/2026/09/30/hyperion-defi-anchorage-digital-and-hyperlend-together-announce-the-first), 2026-09-30) [![HyperLend](https://img.shields.io/badge/HyperLend-0EA5E9?logoColor=white)](https://app.hyperlend.finance) *(DefiLlama fees/revenue monitor: `npm run analytics:hyperlend:lending`)*
-- [x] **Fables** — FABLES TGE 2026-10-20 with ve(3,3); max circulating supply at TGE 75M; 52 markets; about $45M deposits; over $2B cumulative trading volume on Robinhood Chain ([PANews](https://www.panews.io/articles/01a0f277-bfed-723b-af07-8d537ac49956), 2026-09-30) [![Fables](https://img.shields.io/badge/Fables-7C3AED?logoColor=white)](https://www.fables.fi/) *(DefiLlama fees monitor: `npm run analytics:fables:dex`)*
-- [x] **Keyrock** — Arc cirBTC/USDC Morpho market allocations include $74.99M in Keyrock Prime USDC; market size $176.71M ([TokenPost](https://www.tokenpost.com/news/business/25020), 2026-09-28) [![Keyrock](https://img.shields.io/badge/Keyrock-111827?logoColor=white)](https://keyrock.com/) *(Morpho vault monitor: `npm run analytics:keyrock:vault`)*
-- [x] **Ostium** — OLP Recovery Plan repays 3,321 of 3,666 wallets in full; confirmed drain 23,752,746 USDC; initial recovery funding 649,967.55 USDC (~2.7%) ([The Crypto Times](https://www.cryptotimes.io/2026/10/01/ostium-23-75m-hack-recovery-3321-wallets-repaid-345-lps-face-1000-choice/), 2026-10-01) [![Ostium](https://img.shields.io/badge/Ostium-16A34A?logoColor=white)](https://www.ostium.io/) *(DefiLlama monitor: `npm run analytics:ostium:perps`)*
+Deeper reading: [architecture](docs/00-architecture.md) · [coverage notes and scope](docs/01-protocol-script-coverage.md) · [full protocol catalog](docs/02-protocol-catalog.md).
 
 ## Contributing
 
-Contributions are welcome! Please follow these guidelines:
+Issues and PRs welcome, especially new protocols. A DefiLlama-listed protocol is two npm scripts plus one catalog entry.
 
-**Code Guidelines:**
-- Follow existing code structure and style
-- Add JSDoc comments for functions
-- Run `npm run prettier` before committing
-- Test with fork tests when applicable
+**Add a protocol in 3 steps:**
 
-**Submitting:**
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request with clear description
+1. Add the npm scripts to `package.json`. For a DefiLlama-listed protocol that's two lines: copy `analytics:aster:perps` and `simulate:aster:smoke` and change the slug ([recipes](docs/01-protocol-script-coverage.md#adding-a-missing-protocol)).
+2. Add one entry to `PROTOCOLS` in [`src/catalog/protocols.js`](src/catalog/protocols.js): id, name, category, url, and a one-line `about`.
+3. Run `npm run catalog:docs`, then `npm run lint && npm run catalog:check` (CI runs the same).
 
-**Security:** Never commit private keys or `.env` files.
+**Wanted:** Milk Road Swap, Soneium DEX and MegaETH AMM (waiting on a DefiLlama listing), and Slipstream-native quotes for Aerodrome/Velodrome (today they quote Uniswap V3 as a reference).
+
+**Guidelines:** follow the existing style (`npm run prettier`), keep scripts general-purpose (no MEV bots or personal strategies), and never commit `.env` or keys.
 
 ## License
-MIT
+
+MIT. If this saved you a dashboard tab, a ⭐ helps others find it.
+
+<p align="center">
+  <img src="no-money-meme.jpg" alt="No Money Meme" width="320"/>
+</p>

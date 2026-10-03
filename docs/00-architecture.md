@@ -1,8 +1,8 @@
 # Architecture (defi-scripts)
 
-Sibling of `defi-mev/` (not one npm workspace). Placement: `.cursor/rules/defi-mev-vs-defi-scripts.mdc`. MEV map: [`../../defi-mev/docs/00-architecture.md`](../../defi-mev/docs/00-architecture.md). Coverage matrix: [`01-protocol-script-coverage.md`](./01-protocol-script-coverage.md). Commands: root `README.md`.
+A collection of standalone Node.js (CommonJS) scripts, exposed as npm scripts. No server, no database. Coverage notes: [`01-protocol-script-coverage.md`](./01-protocol-script-coverage.md). Commands per protocol: [`02-protocol-catalog.md`](./02-protocol-catalog.md) (generated from `src/catalog/protocols.js` + `package.json`; `npm run catalog`).
 
-`defi-mev` may reuse this package’s `src/config/chains.js`, quotes, and web3. Today the graph records one inbound require: `defi-mev/scripts/lib/aaveLiquidation.js` → `src/config/chains.js`.
+MEV tooling (bundle simulation, sandwich/flashloan analysis, bots) is intentionally out of scope; other projects can reuse `src/config/chains.js`, the quote helpers and `src/utils/web3.js` directly.
 
 ## Module boundaries
 
@@ -35,7 +35,3 @@ npm scripts in `package.json` → `src/analytics/`, `src/crosschain/`, `src/simu
 ## External APIs
 
 No in-repo HTTP server. Outbound: DefiLlama `api.llama.fi`, Morpho GraphQL, Lido, Ethena, CoinGecko, plus `*_RPC_URL`.
-
-## Code graph
-
-Indexed project: `Users-harirana-Documents-git-eth-defi`. Scope with `get_architecture` `path: "defi-scripts"`.
