@@ -3,6 +3,8 @@
  * Set DEFILLAMA_SLUG (required). Optional: DEFILLAMA_LABEL for the banner title.
  * Optional: DEFILLAMA_FEES=1 adds fees + revenue (24h / 7d / 30d) from /summary/fees/{slug},
  * for protocols whose claim is about fees/revenue rather than TVL (e.g. pump.fun, $0 TVL).
+ * Optional: DEFILLAMA_OI=1 adds open interest (`total24h`) from /summary/open-interest/{slug}.
+ * Off unless set to "1", so existing scripts are unchanged. Do not use /summary/derivatives (paywalled).
  */
 
 require("dotenv").config();
@@ -11,6 +13,7 @@ const { installCliSafeStdout } = require("../../utils/cliSafeOutput");
 const {
   fetchDefiLlamaProtocol,
   fetchFeesSummary,
+  fetchOpenInterestSummary,
   lastTvlUsdFromSeries,
 } = require("../../utils/defiLlamaProtocol");
 const { createTable, formatCurrency } = require("../../utils/displayHelpers");
@@ -37,6 +40,23 @@ async function printFeesAndRevenue(slug) {
   console.log(ft.toString());
   if (fees?.error && revenue?.error) {
     console.log(chalk.gray(`  fees unavailable: ${fees.error.message || fees.error}`));
+  }
+}
+
+async function printOpenInterest(slug) {
+  let oi;
+  try {
+    oi = await fetchOpenInterestSummary(slug);
+  } catch (e) {
+    oi = { error: e };
+  }
+  const n = oi && !oi.error ? numOrNull(oi.total24h) : null;
+  const t = createTable(["Field", "Value"], { colAligns: ["left", "right"] });
+  t.push(["Open interest (total24h)", n != null ? formatCurrency(n) : "n/a"]);
+  console.log(chalk.yellow("\nOpen interest (DefiLlama /summary/open-interest)\n"));
+  console.log(t.toString());
+  if (oi?.error) {
+    console.log(chalk.gray(`  open interest unavailable: ${oi.error.message || oi.error}`));
   }
 }
 
@@ -71,6 +91,9 @@ async function main() {
     }
     if (process.env.DEFILLAMA_FEES === "1") {
       await printFeesAndRevenue(slug);
+    }
+    if (process.env.DEFILLAMA_OI === "1") {
+      await printOpenInterest(slug);
     }
   } catch (e) {
     console.error(chalk.red((e && e.response?.status === 404 && "Protocol not found on DefiLlama") || e.message));

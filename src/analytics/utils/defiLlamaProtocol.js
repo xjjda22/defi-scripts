@@ -77,6 +77,17 @@ function fetchFeesSummary(slug, timeoutMs, dataType) {
   return fetchLlamaJson(`/summary/fees/${encodeURIComponent(slug)}?${q}`, timeoutMs);
 }
 
+/**
+ * Free open-interest summary. `/summary/derivatives` is paywalled; this is not.
+ * `total24h` is the latest open interest (not perp volume).
+ * @param {string} slug
+ * @param {number} [timeoutMs]
+ */
+function fetchOpenInterestSummary(slug, timeoutMs) {
+  const q = "excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true";
+  return fetchLlamaJson(`/summary/open-interest/${encodeURIComponent(slug)}?${q}`, timeoutMs);
+}
+
 function fetchLlamaProtocols(timeoutMs) {
   return fetchLlamaJson("/protocols", timeoutMs);
 }
@@ -92,6 +103,7 @@ module.exports = {
   fetchLlamaChains,
   fetchDexOverview,
   fetchFeesSummary,
+  fetchOpenInterestSummary,
   fetchLlamaProtocols,
   fetchHistoricalChainTvl,
   DEFILLAMA_API,
