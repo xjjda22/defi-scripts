@@ -44,8 +44,8 @@ function changeOverDays(series, days) {
 
 function formatChange(change) {
   if (!change) return "—";
-  const money = formatCurrency(change.abs);
-  if (change.pct == null || !Number.isFinite(change.pct)) return money;
+  const money = change.abs > 0 ? `+${formatCurrency(change.abs)}` : formatCurrency(change.abs);
+  if (change.pct == null || !Number.isFinite(change.pct)) return `${money} (from $0)`;
   return `${money} (${formatPercent(change.pct)})`;
 }
 
