@@ -3,6 +3,7 @@ const chalk = require("chalk");
 const {
   fetchDefiLlamaProtocol,
   fetchFeesSummary,
+  fetchOpenInterestSummary,
   lastTvlUsdFromSeries,
 } = require("../../analytics/utils/defiLlamaProtocol");
 
@@ -10,6 +11,8 @@ const slug = (process.env.SMOKE_SLUG || "").trim();
 const minTvl = parseFloat(process.env.SMOKE_MIN_TVL_USD || "0") || 0;
 // SMOKE_FEES=1: also require a positive 24h revenue from /summary/fees/{slug}?dataType=dailyRevenue
 const checkFees = process.env.SMOKE_FEES === "1";
+// SMOKE_OI=1: also require a positive open interest (`total24h`) from /summary/open-interest/{slug}
+const checkOi = process.env.SMOKE_OI === "1";
 
 async function main() {
   if (!slug) {
@@ -36,6 +39,15 @@ async function main() {
         process.exit(1);
       }
       console.log(chalk.green(`OK: ${d.name || slug} | 24h revenue $${rev24h.toFixed(0)}`));
+    }
+    if (checkOi) {
+      const r = await fetchOpenInterestSummary(slug);
+      const oi = typeof r?.total24h === "number" && Number.isFinite(r.total24h) ? r.total24h : null;
+      if (oi == null || oi <= 0) {
+        console.error(chalk.red(`No positive open interest on /summary/open-interest/${slug}`));
+        process.exit(1);
+      }
+      console.log(chalk.green(`OK: ${d.name || slug} | open interest $${oi.toFixed(0)}`));
     }
   } catch (e) {
     const status = e.response?.status;
