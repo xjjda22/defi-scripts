@@ -239,6 +239,16 @@ const PROTOCOLS = [
       "FABLES TGE 2026-10-20 with ve(3,3); 52 markets; about $45M deposits; over $2B cumulative volume ([PANews](https://www.panews.io/articles/01a0f277-bfed-723b-af07-8d537ac49956), 2026-09-30).",
     ],
   },
+  {
+    id: "arcus",
+    name: "Arcus",
+    category: "dex",
+    url: "https://arcus.xyz/",
+    about: "Robinhood Chain DEX. Analytics adds fees/revenue; DEX volume and fees are indexed on Llama.",
+    notes: [
+      ">$5B cumulative spot+perp volume since the July launch, 15,000+ traders, >$500M peak daily volume, >$28M TVL; integrated into Robinhood Wallet for 190+ Stock Tokens; points Season 1 started 2026-10-01 ([CryptoBriefing](https://cryptobriefing.com/arcus-joins-robinhood-wallets-stock-token-lineup-as-volume-tops-5-billion/), 2026-10-01; [Arcus blog](https://arcus.xyz/blog/introducing-arcus-points), 2026-10-01).",
+    ],
+  },
 
   // Aggregators & intents
   { id: "1inch", name: "1inch", category: "aggregator", url: "https://1inch.io", about: "DEX aggregator." },
@@ -357,6 +367,17 @@ const PROTOCOLS = [
       "OLP Recovery Plan repays 3,321 of 3,666 wallets in full; confirmed drain 23,752,746 USDC ([The Crypto Times](https://www.cryptotimes.io/2026/10/01/ostium-23-75m-hack-recovery-3321-wallets-repaid-345-lps-face-1000-choice/), 2026-10-01). The monitor does not read recovery payouts.",
     ],
   },
+  {
+    id: "variational",
+    name: "Variational",
+    category: "perps",
+    url: "https://omni.variational.io",
+    about:
+      "Off-chain perp DEX. Llama TVL is empty ($0); analytics adds open interest (`DEFILLAMA_OI=1`). The smoke allows $0 TVL.",
+    notes: [
+      "~23% of all perp DEX volume; September volume >$48B (~60% above August); 30-day volume ~$50B with ~$1.07B open interest; 32% of VAR supply to the genesis airdrop at the Q4 TGE ([The Block Data & Insights](https://www.theblock.co/newsletters/data-and-insights/2026-09-30-data-passive-base-417118), 2026-09-30). Analytics prints `/summary/open-interest/variational` `total24h`, not perp volume.",
+    ],
+  },
 
   // Lending & money markets
   {
@@ -434,6 +455,17 @@ const PROTOCOLS = [
     ],
   },
   {
+    id: "3jane",
+    name: "3Jane",
+    category: "lending",
+    url: "https://www.3jane.xyz/",
+    about:
+      "Credit protocol on Ethereum. The chain table includes the `borrowed` row (supplied ≈ TVL + borrowed). `Ethereum-borrowed` repeats that same balance.",
+    notes: [
+      "USD3 minted grew to over $100M after the Levered Callable Capital launch ([X post](https://x.com/DeFi_Dad/status/2104951698246475944) by @DeFi_Dad, 2026-09-29), corroborated by DefiLlama TVL + borrowed.",
+    ],
+  },
+  {
     id: "rhea",
     name: "Rhea Finance",
     category: "lending",
@@ -479,6 +511,16 @@ const PROTOCOLS = [
     data: "Morpho GraphQL",
     notes: [
       "Arc cirBTC/USDC Morpho market allocations include $74.99M in Keyrock Prime USDC; market size $176.71M ([TokenPost](https://www.tokenpost.com/news/business/25020), 2026-09-28).",
+    ],
+  },
+  {
+    id: "concrete",
+    name: "Concrete",
+    category: "vaults",
+    url: "https://app.concrete.xyz",
+    about: "Onchain capital allocator, mostly Ethereum. Analytics adds fees/revenue.",
+    notes: [
+      "CT token TGE on 2026-09-30; >$1.2B deposits, >$23B cumulative volume, 54,000+ depositors; fixed 1B CT supply ([TokenPost](https://www.tokenpost.com/news/technology/25663), 2026-09-30; [BSC News](https://bsc.news/news/concrete-ct-token-tge-governance), 2026-09-30).",
     ],
   },
 
@@ -545,6 +587,16 @@ const PROTOCOLS = [
     about: "Neutron liquid staking. Llama TVL is $0 after the drain; the smoke allows $0.",
     notes: [
       "Neutron Prop 9 governance attack emptied Astroport and Drop contracts (~$9.4M) on 2026-09-22 ([Altcoin Buzz](https://www.altcoinbuzz.io/cosmos-hub-moves-2-1m-of-stolen-atom-after-25-hour-halt), 2026-09-23).",
+    ],
+  },
+  {
+    id: "kinetiq",
+    name: "Kinetiq",
+    category: "staking",
+    url: "https://kinetiq.xyz/",
+    about: "HYPE liquid staking on Hyperliquid L1. Analytics adds fees/revenue; the smoke is TVL-only.",
+    notes: [
+      "kPoints program ended: 36.8M kPoints → 50M KNTQ (5% of the 1B max supply), claimable at a fixed $0.26 for 10 days from 2026-10-01 (up to ~$13M gross); KNTQ fell 20%+ from ~$0.448 ATH to ~$0.33 ([CryptoBriefing](https://cryptobriefing.com/kinetiq-ends-kpoints-kntq-price-drop/), 2026-10-02; [The Defiant](https://thedefiant.io/news/defi/kinetiq-ends-kpoints-with-paid-claim-as-kntq-drops-23), 2026-10-02). The monitor reads TVL and fees, not the claim sale.",
     ],
   },
 
@@ -711,6 +763,18 @@ const PROTOCOLS = [
     ],
   },
   {
+    id: "blast",
+    name: "Blast",
+    category: "bridge-chain",
+    url: "https://blast.io",
+    about:
+      "Blast L2 (chainId 81457). Chain TVL from DefiLlama `/v2/chains`, not a protocol slug. The smoke allows $0 TVL while the chain winds down and fails if the Blast row disappears.",
+    data: "DefiLlama chains",
+    notes: [
+      "Blast L2 is shutting down (announced 2026-10-02) because operating costs exceed revenue; TVL ~$32M vs >$2B peak (−98%); ~$63.03M still in the canonical bridge on Ethereum; normal-UI withdrawals until 2026-10-26 after ~1-week Lido unwind ([The Block](https://www.theblock.co/news/business/2026-10-02-blast-ethereum-layer-2-shutting-down-417583), 2026-10-02; [Cointelegraph](https://cointelegraph.com/news/blast-to-wind-down-ethereum-l2-after-costs-outpace-revenue), 2026-10-02; [The Crypto Times](https://www.cryptotimes.io/2026/10/02/blast-shuts-down-ethereum-l2-as-operating-costs-exceed-revenue/), 2026-10-02). The monitor reads chain TVL, not the Ethereum bridge balance.",
+    ],
+  },
+  {
     id: "kinto",
     name: "Kinto",
     category: "bridge-chain",
@@ -837,7 +901,9 @@ const SCRIPT_DESCRIPTIONS = {
   "analytics:ethena:monitor": "TVL, mint/redeem pairs and USDe / sUSDe `totalSupply`",
   "analytics:buidl:supply": "ERC-20 `totalSupply` when `BUIDL_TOKEN_ADDRESS` is set",
   "analytics:payy:bridge": "USDC `balanceOf` the Payy Ethereum bridge",
-  "analytics:arc:chain": "Arc chain TVL from DefiLlama `/v2/chains`",
+  "analytics:arc:chain": "Arc chain TVL from DefiLlama `/v2/chains`, plus 7d/30d change (`LLAMA_CHAIN_NAME` defaults to Arc)",
+  "analytics:blast:chain":
+    "Blast chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Blast`), plus 7d/30d change",
   "analytics:reya:dex": "DefiLlama TVL + TVL by chain (`REYA_LLAMA_SLUG`, default `reya-perps`)",
   "analytics:ammalgam:hybrid": "DefiLlama summary when `AMMALGAM_LLAMA_SLUG` is set",
   "analytics:curvy:aggregator": "DefiLlama summary (`CURVY_LLAMA_SLUG`, default `curves-protocol`)",

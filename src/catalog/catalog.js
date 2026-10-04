@@ -25,7 +25,8 @@ function describeLlamaMonitor(command) {
   const slug = envValue(command, "DEFILLAMA_SLUG");
   if (!slug) return null;
   const fees = envValue(command, "DEFILLAMA_FEES") === "1" ? " + fees/revenue (24h/7d/30d)" : "";
-  return `DefiLlama TVL + TVL by chain${fees} (\`${slug}\`)`;
+  const oi = envValue(command, "DEFILLAMA_OI") === "1" ? " + open interest (total24h)" : "";
+  return `DefiLlama TVL + TVL by chain${fees}${oi} (\`${slug}\`)`;
 }
 
 function describeLlamaSmoke(command) {
