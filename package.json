@@ -296,7 +296,7 @@
     "simulate:fables:smoke": "SMOKE_SLUG=fables node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:keyrock:smoke": "MORPHO_VAULT_SMOKE=1 MORPHO_VAULT_MIN_USD=1000000 MORPHO_VAULT_CHAIN_ID=5042 MORPHO_VAULT_ADDRESS=0x5bEfAb92a5A3D60F578Cb51EEb4e4FD50a1e3123 MORPHO_VAULT_LABEL='Keyrock Prime USDC (Arc)' node src/analytics/protocols/morpho/morphoVaultV2Monitor.js",
     "simulate:ostium:smoke": "SMOKE_SLUG=ostium node src/simulation/api/smokeDefiLlamaProtocol.js",
-    "simulate:variational:smoke": "SMOKE_MIN_TVL_USD=0 SMOKE_SLUG=variational node src/simulation/api/smokeDefiLlamaProtocol.js",
+    "simulate:variational:smoke": "SMOKE_MIN_TVL_USD=0 SMOKE_OI=1 SMOKE_SLUG=variational node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:kinetiq:smoke": "SMOKE_SLUG=kinetiq node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:arcus:smoke": "SMOKE_SLUG=arcus node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:concrete:smoke": "SMOKE_SLUG=concrete node src/simulation/api/smokeDefiLlamaProtocol.js",
