@@ -378,6 +378,17 @@ const PROTOCOLS = [
       "~23% of all perp DEX volume; September volume >$48B (~60% above August); 30-day volume ~$50B with ~$1.07B open interest; 32% of VAR supply to the genesis airdrop at the Q4 TGE ([The Block Data & Insights](https://www.theblock.co/newsletters/data-and-insights/2026-09-30-data-passive-base-417118), 2026-09-30). Analytics prints `/summary/open-interest/variational` `total24h`, not perp volume.",
     ],
   },
+  {
+    id: "derive",
+    name: "Derive",
+    category: "perps",
+    url: "https://app.derive.xyz",
+    about:
+      "Onchain options. Notional and premium from `/summary/options/derive-options`, TVL from `/protocol/derive`, and share vs Paradex and the rest of `/overview/options`. Hypercall TVL is included; its options volume is not tracked on DefiLlama. The smoke fails unless Derive 30d notional is > 0.",
+    notes: [
+      "September 2026 onchain options notional more than doubled to ~$4.83B (+121.7% MoM). Derive ~$3.8B with share 88.1% → 79.3%; Paradex notional +285% and open interest >$250M; Hypercall ~11.2% share ([CryptoBriefing](https://cryptobriefing.com/derive-leads-onchain-options-volume-doubles/), 2026-10-05; [Coinfomania](https://coinfomania.com/onchain-options-market-surges-to-4-83b-as-competition-grows/), 2026-10-05; [X](https://x.com/Delphi_Digital/status/2107083828389187613), 2026-10-05). Analytics prints trailing 24h/7d/30d notional and premium, not that calendar month. Hypercall volume is not on DefiLlama.",
+    ],
+  },
 
   // Lending & money markets
   {
@@ -775,6 +786,30 @@ const PROTOCOLS = [
     ],
   },
   {
+    id: "abstract",
+    name: "Abstract",
+    category: "bridge-chain",
+    url: "https://www.abs.xyz/",
+    about:
+      "Ethereum L2 (chainId 2741) winding down. Chain TVL from DefiLlama `/v2/chains` (name `Abstract`), plus DEX volume. Shuts down 2026-12-15. Not the protocol slug `abstract`.",
+    data: "DefiLlama chains",
+    notes: [
+      "Abstract (Pudgy Penguins / Igloo) is winding down; the chain shuts down 2026-12-15 and funds not bridged out become inaccessible. Peaked ~$57M TVL / $32M daily DEX volume; reported ~$9.5M TVL / ~$316K daily DEX volume at the announcement ([The Block](https://www.theblock.co/news/ecosystems/2026-10-06-abstract-ethereum-layer-2-shutting-down-pudgy-penguins-igloo-417855), 2026-10-06; [TokenPost](https://www.tokenpost.com/news/technology/27126), 2026-10-07; [X](https://x.com/NickPreszler/status/2107574455106994679), 2026-10-06). Analytics prints live `/v2/chains` TVL and `/overview/dexs/Abstract`, not that snapshot. Protocol slug `abstract` is a separate Chain-category page and is not this monitor.",
+    ],
+  },
+  {
+    id: "robinhood",
+    name: "Robinhood Chain",
+    category: "bridge-chain",
+    url: "https://robinhood.com",
+    about:
+      "Robinhood Chain (chainId 4663). Chain TVL, DEX volume, and fees from DefiLlama. The npm script percent-encodes the space in `Robinhood Chain`.",
+    data: "DefiLlama chains",
+    notes: [
+      "About three months old: ~$1.04B TVL, ~$5M app fees in 24h, ~$1.5B DEX volume ([X](https://x.com/ripchillpill/status/2106018905907237207), 2026-10-02). Analytics prints live chain TVL, `/overview/dexs/Robinhood%20Chain`, and `/overview/fees/Robinhood%20Chain`.",
+    ],
+  },
+  {
     id: "kinto",
     name: "Kinto",
     category: "bridge-chain",
@@ -901,9 +936,16 @@ const SCRIPT_DESCRIPTIONS = {
   "analytics:ethena:monitor": "TVL, mint/redeem pairs and USDe / sUSDe `totalSupply`",
   "analytics:buidl:supply": "ERC-20 `totalSupply` when `BUIDL_TOKEN_ADDRESS` is set",
   "analytics:payy:bridge": "USDC `balanceOf` the Payy Ethereum bridge",
-  "analytics:arc:chain": "Arc chain TVL from DefiLlama `/v2/chains`, plus 7d/30d change (`LLAMA_CHAIN_NAME` defaults to Arc)",
-  "analytics:blast:chain":
-    "Blast chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Blast`), plus 7d/30d change",
+  "analytics:arc:chain":
+    "Arc chain TVL from DefiLlama `/v2/chains`, plus 7d/30d change (`LLAMA_CHAIN_NAME` defaults to Arc)",
+  "analytics:blast:chain": "Blast chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Blast`), plus 7d/30d change",
+  "analytics:abstract:chain":
+    "Abstract chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Abstract`), 7d/30d change, DEX volume, and the 2026-12-15 shutdown note",
+  "analytics:robinhood:chain":
+    "Robinhood Chain TVL, DEX volume, and fees (`LLAMA_CHAIN_NAME` percent-encoded as `Robinhood%20Chain`)",
+  "analytics:derive:options":
+    "Derive options notional and premium (24h/7d/30d), TVL, share vs Paradex and the rest, plus Hypercall TVL",
+  "simulate:derive:smoke": "Fails unless Derive 30d options notional is > 0 (`/summary/options/derive-options`)",
   "analytics:reya:dex": "DefiLlama TVL + TVL by chain (`REYA_LLAMA_SLUG`, default `reya-perps`)",
   "analytics:ammalgam:hybrid": "DefiLlama summary when `AMMALGAM_LLAMA_SLUG` is set",
   "analytics:curvy:aggregator": "DefiLlama summary (`CURVY_LLAMA_SLUG`, default `curves-protocol`)",
