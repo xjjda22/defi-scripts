@@ -1,18 +1,27 @@
 /**
  * DefiLlama chain TVL monitor (no protocol slug).
  * LLAMA_CHAIN_NAME defaults to "Arc" (Circle L1, chainId 5042), so `analytics:arc:chain` is unchanged.
+ * Names with spaces are percent-encoded in the npm script (`Robinhood%20Chain`) and decoded here;
+ * request paths are encoded again via encodeURIComponent.
  * Also prints 7d/30d TVL change from /v2/historicalChainTvl/<name> when that series is available.
+ * Optional, off unless set to "1" so Arc/Blast stay TVL-only:
+ *   LLAMA_CHAIN_DEX=1  — /overview/dexs/<name> 24h/7d/30d
+ *   LLAMA_CHAIN_FEES=1 — /overview/fees/<name> 24h/7d/30d
+ * Optional LLAMA_CHAIN_NOTE (percent-encoded) is printed after the tables.
  */
 
 require("dotenv").config();
 const chalk = require("chalk");
 const { installCliSafeStdout } = require("../../utils/cliSafeOutput");
-const { fetchLlamaChains, fetchHistoricalChainTvl } = require("../../utils/defiLlamaProtocol");
+const {
+  fetchLlamaChains,
+  fetchHistoricalChainTvl,
+  fetchDexOverview,
+  fetchChainFeesOverview,
+  decodeLlamaToken,
+  llamaChainNameFromEnv,
+} = require("../../utils/defiLlamaProtocol");
 const { createTable, formatCurrency, formatPercent } = require("../../utils/displayHelpers");
-
-function chainNameFromEnv() {
-  return (process.env.LLAMA_CHAIN_NAME || "Arc").trim() || "Arc";
-}
 
 function chainBanner(name) {
   if (name === "Arc") return "\nArc Chain (Circle L1, chainId 5042)\n";
@@ -49,9 +58,31 @@ function formatChange(change) {
   return `${money} (${formatPercent(change.pct)})`;
 }
 
+function moneyCell(row, key) {
+  const n = row?.[key];
+  return typeof n === "number" && Number.isFinite(n) ? formatCurrency(n) : "—";
+}
+
+async function printWindows(title, loader) {
+  let data = null;
+  let error = null;
+  try {
+    data = await loader();
+  } catch (e) {
+    error = e;
+  }
+  const t = createTable(["Window", "Value"], { colAligns: ["left", "right"] });
+  t.push(["24h", moneyCell(data, "total24h")]);
+  t.push(["7d", moneyCell(data, "total7d")]);
+  t.push(["30d", moneyCell(data, "total30d")]);
+  console.log(chalk.yellow(`\n${title}\n`));
+  console.log(t.toString());
+  if (error) console.log(chalk.gray(`  unavailable: ${error.message || error}`));
+}
+
 async function main() {
   installCliSafeStdout();
-  const chainName = chainNameFromEnv();
+  const chainName = llamaChainNameFromEnv();
   console.log(chalk.cyan.bold(chainBanner(chainName)));
 
   try {
@@ -84,6 +115,15 @@ async function main() {
     if (histError) {
       console.log(chalk.gray(`  historical TVL unavailable: ${histError.message || histError}`));
     }
+
+    if (process.env.LLAMA_CHAIN_DEX === "1") {
+      await printWindows(`DEX volume (DefiLlama /overview/dexs/${chainName})`, () => fetchDexOverview(chainName));
+    }
+    if (process.env.LLAMA_CHAIN_FEES === "1") {
+      await printWindows(`Fees (DefiLlama /overview/fees/${chainName})`, () => fetchChainFeesOverview(chainName));
+    }
+    const note = decodeLlamaToken(process.env.LLAMA_CHAIN_NOTE);
+    if (note) console.log(chalk.gray(`\nNote: ${note}\n`));
   } catch (e) {
     console.error(chalk.red(e.message || String(e)));
     process.exit(1);

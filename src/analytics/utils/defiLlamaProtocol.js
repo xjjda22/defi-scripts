@@ -66,6 +66,57 @@ function fetchDexOverview(chain, timeoutMs) {
   return fetchLlamaJson(`/overview/dexs/${encodeURIComponent(chain)}?${q}`, timeoutMs);
 }
 
+function fetchChainFeesOverview(chain, timeoutMs) {
+  const q = "excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true";
+  return fetchLlamaJson(`/overview/fees/${encodeURIComponent(chain)}?${q}`, timeoutMs);
+}
+
+/**
+ * npm scripts cannot portably quote values that contain spaces or `;`.
+ * Pass a percent-encoded token (`Robinhood%20Chain`) and decode here.
+ * Plain names (`Abstract`, `Blast`) are unchanged.
+ * @param {string|undefined|null} raw
+ * @returns {string}
+ */
+function decodeLlamaToken(raw) {
+  if (raw == null) return "";
+  const trimmed = String(raw).trim();
+  if (!trimmed) return "";
+  try {
+    return decodeURIComponent(trimmed);
+  } catch {
+    return trimmed;
+  }
+}
+
+/** `LLAMA_CHAIN_NAME`, percent-decoded. Defaults to Arc. */
+function llamaChainNameFromEnv() {
+  return decodeLlamaToken(process.env.LLAMA_CHAIN_NAME) || "Arc";
+}
+
+/**
+ * Options notional or premium for one protocol.
+ * @param {string} slug - e.g. "derive-options"
+ * @param {string} dataType - "dailyNotionalVolume" or "dailyPremiumVolume"
+ * @param {number} [timeoutMs]
+ */
+function fetchOptionsSummary(slug, dataType, timeoutMs) {
+  const q =
+    "excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true" + `&dataType=${encodeURIComponent(dataType)}`;
+  return fetchLlamaJson(`/summary/options/${encodeURIComponent(slug)}?${q}`, timeoutMs);
+}
+
+/**
+ * Market-wide options overview (protocols + totals).
+ * @param {string} dataType - "dailyNotionalVolume" or "dailyPremiumVolume"
+ * @param {number} [timeoutMs]
+ */
+function fetchOptionsOverview(dataType, timeoutMs) {
+  const q =
+    "excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true" + `&dataType=${encodeURIComponent(dataType)}`;
+  return fetchLlamaJson(`/overview/options?${q}`, timeoutMs);
+}
+
 /**
  * @param {string} slug - Protocol slug (e.g. "pump.fun")
  * @param {number} [timeoutMs]
@@ -102,6 +153,11 @@ module.exports = {
   fetchLlamaJson,
   fetchLlamaChains,
   fetchDexOverview,
+  fetchChainFeesOverview,
+  decodeLlamaToken,
+  llamaChainNameFromEnv,
+  fetchOptionsSummary,
+  fetchOptionsOverview,
   fetchFeesSummary,
   fetchOpenInterestSummary,
   fetchLlamaProtocols,

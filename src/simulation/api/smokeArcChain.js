@@ -1,13 +1,9 @@
 require("dotenv").config();
 const chalk = require("chalk");
-const { fetchLlamaChains } = require("../../analytics/utils/defiLlamaProtocol");
-
-function chainNameFromEnv() {
-  return (process.env.LLAMA_CHAIN_NAME || "Arc").trim() || "Arc";
-}
+const { fetchLlamaChains, llamaChainNameFromEnv } = require("../../analytics/utils/defiLlamaProtocol");
 
 async function main() {
-  const chainName = chainNameFromEnv();
+  const chainName = llamaChainNameFromEnv();
   const minRaw = process.env.LLAMA_CHAIN_MIN_TVL_USD;
   const minTvl = minRaw == null || String(minRaw).trim() === "" ? null : parseFloat(minRaw);
   try {
