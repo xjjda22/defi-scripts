@@ -189,6 +189,10 @@ async function repayUsdc({ chain, protocol, action, ctx, poolAddr, usdc, weth })
     // already enabled
   }
   await (await pool.borrow(usdc, borrow, VARIABLE, 0, user)).wait();
+  // Aave V3 rejects a repay in the same timestamp as the borrow (SAME_BLOCK_BORROW_REPAY).
+  // Anvil can mine both in one second, so move the clock before repaying.
+  await signer.provider.send("evm_increaseTime", [12]);
+  await signer.provider.send("evm_mine", []);
   const debtBefore = (await pool.getUserAccountData(user)).totalDebtBase;
   // Repay exactly what this test borrowed. MaxUint256 would also try to clear debt
   // (plus accrued interest) the account carried in, which the allowance does not cover.
