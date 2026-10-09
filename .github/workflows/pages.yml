@@ -1,8 +1,22 @@
 name: Pages
 
+# Publishes showcase/ to GitHub Pages. Each deploy rebuilds the ranking from
+# DefiLlama's free API first, so the live page is never older than the last
+# run; if DefiLlama is down, the committed showcase/data.json is published.
+# Needs Settings → Pages → Source: GitHub Actions.
+
 on:
   push:
     branches: [main]
+    paths:
+      - "showcase/**"
+      - "src/analytics/ranking/**"
+      - "data/x-mentions.json"
+      - ".github/workflows/pages.yml"
+  schedule:
+    # Mon/Wed/Fri 05:30 Asia/Kuala_Lumpur, after the claims routine.
+    - cron: "30 21 * * 0,2,4"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,16 +28,33 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Rebuild the ranking
+        id: rebuild
+        continue-on-error: true
+        run: node src/analytics/ranking/top200Trending.js && node scripts/showcaseCheck.js
+      - name: Fall back to the committed data
+        if: steps.rebuild.outcome != 'success'
+        run: git checkout -- showcase/data.json && node scripts/showcaseCheck.js
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: showcase
+
   deploy:
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: showcase
       - id: deployment
         uses: actions/deploy-pages@v4
