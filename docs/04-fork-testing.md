@@ -65,6 +65,29 @@ Every action starts from the block Anvil forked (latest, or `FORK_BLOCK`). Whale
 
 Raydium is Solana. The suite does not fork it. The showcase marks that row API-only.
 
+## Stablecoins, RWA, and bridges
+
+Same rules: pinned block via `FORK_BLOCK`, whale impersonation or `anvil_deal`, no `PRIVATE_KEY`. Addresses are in `src/catalog/contracts.js` with the doc link.
+
+| Script | What it asserts |
+| --- | --- |
+| `fork:sky:convert` | DAI→USDS→DAI on the Sky converter, 1:1 |
+| `fork:sky:susds` | Deposit USDS into sUSDS and redeem |
+| `fork:sky:sdai` | Deposit DAI into sDAI and redeem |
+| `fork:ethena:stake` | USDe→sUSDe. Mint is whitelisted and is not called |
+| `fork:ethena:cooldown` | Start the sUSDe cooldown. Completing the unstake waits out `cooldownDuration` |
+| `fork:circle:transfer` / `fork:tether:transfer` | Transfer only. Mint and redeem are off-chain or KYC'd. The panel says **Transfer / read-only** |
+| `fork:frax:rate` | `sfrxUSD.convertToAssets`. Ethereum `maxDeposit` is 0, so there is no local deposit. The panel says **Read-only** (not KYC; there is just no Ethereum deposit path) |
+| `fork:buidl:read` | BUIDL `totalSupply`. **KYC-gated: read-only** |
+| `fork:ondo:rate` | USDY `getPrice` and OUSG `getAssetPrice`. **KYC-gated: read-only** |
+| `fork:superstate:nav` | USTB continuous oracle `latestRoundData`. **KYC-gated: read-only** |
+| `fork:arbitrum:deposit` | `Inbox.depositEth`. Bridge ETH increases and `InboxMessageDelivered` is emitted |
+| `fork:base:deposit` / `fork:optimism:deposit` | `L1StandardBridge.depositETH`. ETH held by the bridge + portal (+ the `ETHLockbox` that `OptimismPortal.ethLockbox()` returns; OP Mainnet holds its ETH there, Base returned none on 2026-10-10) increases by the deposit and `ETHDepositInitiated` is emitted |
+| `fork:across:deposit` | `SpokePool.depositV3` locks USDC on Ethereum toward Base |
+| `fork:stargate:quote` / `:deposit` | `quoteOFT` + `quoteSend`, then `send` locks USDC toward Arbitrum |
+
+Bridge panels are labeled **Source chain only**. A single fork cannot see the destination credit. Rollup derivation, Across fillers, and LayerZero relayers are off this machine.
+
 Addresses are in `src/catalog/contracts.js`. Each one is either already in `src/config/chains.js` or copied from the official doc linked next to it.
 
 A passing test prints a line like:
