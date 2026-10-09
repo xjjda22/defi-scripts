@@ -5,54 +5,48 @@
  *   npm run showcase:build
  *
  * Free DefiLlama endpoints only (`api.llama.fi`). `/summary/derivatives` and
- * `pro-api.llama.fi` are not called.
+ * `pro-api.llama.fi` are not called. Full write-up: docs/03-showcase-ranking.md.
  *
- * Score (higher is more "trending"):
+ * Rows. One row per protocol family and category: DefiLlama children that
+ * share a `parentProtocol` and land in the same showcase category are summed
+ * (Aave V2 + V3 + V4 → "Aave"), so versions of one protocol never take
+ * several top-200 slots. Children of one parent in different categories stay
+ * separate rows (Jupiter's aggregator, perps and lending). CEX, Ponzi and
+ * token-locker rows are left out.
  *
- *   size        = ln(sizeUsd / $1M)
- *                 sizeUsd is current TVL when TVL >= $5M, otherwise the
- *                 larger of 30d fees and 30d DEX volume
- *   tvlGrowth   = clamp(ln(tvlNow) - ln(max(tvlThen, $1M)), ln(0.2), ln(5))
- *                 tvlThen is the TVL sample on or just before 180 days ago.
- *                 A $0 or missing baseline contributes no growth term (a new
- *                 listing is not a 180-day trend). The $1M floor and the 5×
- *                 cap keep a dust starting point from outranking a large
- *                 protocol that actually doubled. Series younger than 30 days
- *                 contribute no growth term. A series that starts inside the
- *                 window uses its first sample (partial window).
- *   feesMom     = clamp(ln(fees30d) - ln(feesPrev30d), ln(0.2), ln(5))
- *                 fees and dailyRevenue are averaged when both exist
- *                 (30d vs the previous 30d on /overview/fees)
- *   volumeMom   = the same clamp on /overview/dexs 30d vs the previous 30d
+ * Score. Every input is turned into a percentile (0–1) across the eligible
+ * rows, so no single outlier or clamp decides the order and there are no
+ * ties at a cap. A missing input scores 0.5 (neutral).
  *
- *   Each of those four is a z-score across the eligible set (missing → 0,
- *   so a protocol without a fees adapter is not punished).
+ *   size          TVL percentile among TVL rows; a row under $5M TVL is ranked on
+ *                 its 30d fees among all rows' fees (or 30d volume)
+ *   growth        ln(TVL now / max(TVL 180 days ago, $1M)), unclamped
+ *   tvlAdded      TVL now − TVL 180 days ago, in dollars
+ *   feesMom       30d fees vs the previous 30d (both ≥ $10k)
+ *   volumeMom     30d volume vs the previous 30d (both ≥ $1M); spot DEX, then
+ *                 aggregator, then options volume. Perp volume is a paid
+ *                 DefiLlama endpoint, so perps lean on fees.
  *
- *   score = 0.34*z(size) + 0.46*z(tvlGrowth) + 0.12*z(feesMom) + 0.08*z(volumeMom)
- *           + 0.04 * min(xMentions, 6)
+ *   score = 0.35·size + 0.25·growth + 0.20·tvlAdded + 0.12·feesMom + 0.08·volumeMom
+ *           + 0.012 · min(X posts, 6)
  *
- *   The mention term caps at +0.24. A z-score term is typically order 1, so
- *   size and 6-month growth still decide the order.
+ * New listings. A family with no TVL sample on or before the 180-day cutoff
+ * is "new": its relative growth is neutral (0.5) and tvlAdded is its whole
+ * TVL since its first sample. The page shows a "New" badge with its age.
  *
- * Eligibility: current TVL >= $5M, or (below that) 30d fees >= $100k, or
- * 30d DEX volume >= $5M. CEX and Ponzi rows are omitted. One failed protocol
- * history fetch is a warning; the process exits non-zero only when /protocols
- * itself fails.
+ * X mentions: set X_MENTIONS_DIR to a directory of list reads (raw post JSON
+ * or markdown notes with status links) to recount distinct posts and rewrite
+ * data/x-mentions.json. Otherwise the committed file is reused.
  *
- * X mentions: set X_MENTIONS_DIR to a directory of markdown notes to recount
- * and rewrite data/x-mentions.json. Otherwise the committed file is reused.
+ * RANKING_CACHE_DIR=/tmp/llama-cache keeps each protocol's TVL series on disk
+ * for 20 hours, so a re-run does not refetch ~800 histories.
  */
 
 const fs = require("fs");
 const path = require("path");
 const chalk = require("chalk");
 const { installCliSafeStdout } = require("../utils/cliSafeOutput");
-const {
-  fetchLlamaProtocols,
-  fetchLlamaJson,
-  fetchDefiLlamaProtocol,
-  tvlBaseline,
-} = require("../utils/defiLlamaProtocol");
+const { fetchLlamaProtocols, fetchLlamaJson, fetchDefiLlamaProtocol } = require("../utils/defiLlamaProtocol");
 const { createTable, formatCurrency } = require("../utils/displayHelpers");
 const { buildCatalog } = require("../../catalog/catalog");
 const { BOARDS } = require("../../catalog/protocols");
@@ -65,7 +59,7 @@ const {
   CATEGORY_BY_ID,
 } = require("./categoryMap");
 const { countProtocolMentions, toPublicMentions, loadPublicMentions } = require("./mentions");
-const { buildCoverageIndex, linkCatalog, scriptNames, MONITOR, RANKING_ONLY } = require("./coverage");
+const { buildCoverageIndex, linkCatalog, scriptLinks, MONITOR, RANKING_ONLY } = require("./coverage");
 
 const ROOT = path.resolve(__dirname, "../../..");
 const DATA_JSON = path.join(ROOT, "showcase", "data.json");
@@ -75,19 +69,20 @@ const MIN_TVL_USD = 5_000_000;
 const MIN_FEES_30D_USD = 100_000;
 const MIN_VOLUME_30D_USD = 5_000_000;
 const TVL_LOG_FLOOR_USD = 1_000_000;
+const FEES_MOMENTUM_FLOOR_USD = 10_000;
+const VOLUME_MOMENTUM_FLOOR_USD = 1_000_000;
 const WINDOW_DAYS = 180;
-const MIN_GROWTH_DAYS = 30;
 const TOP_N = 200;
-const WEIGHTS = { size: 0.34, tvlGrowth: 0.46, feesMomentum: 0.12, volumeMomentum: 0.08 };
+const CATEGORY_LIMIT = 100;
+const WEIGHTS = { size: 0.35, growth: 0.25, tvlAdded: 0.2, feesMomentum: 0.12, volumeMomentum: 0.08 };
 const MENTION_CAP = 6;
-const MENTION_STEP = 0.04;
-const MOMENTUM_MIN = Math.log(0.2);
-const MOMENTUM_MAX = Math.log(5);
-const GROWTH_MIN = MOMENTUM_MIN;
-const GROWTH_MAX = MOMENTUM_MAX;
-const HISTORY_CONCURRENCY = Math.max(1, parseInt(process.env.RANKING_CONCURRENCY || "4", 10) || 4);
+const MENTION_STEP = 0.012;
+const DAY = 86400;
+const CACHE_MAX_AGE_MS = 20 * 3600 * 1000;
+const HISTORY_CONCURRENCY = Math.max(1, parseInt(process.env.RANKING_CONCURRENCY || "6", 10) || 6);
+const CACHE_DIR = process.env.RANKING_CACHE_DIR || "";
 
-if (!process.env.DEFILLAMA_TIMEOUT_MS) process.env.DEFILLAMA_TIMEOUT_MS = "90000";
+if (!process.env.DEFILLAMA_TIMEOUT_MS) process.env.DEFILLAMA_TIMEOUT_MS = "120000";
 
 function num(value) {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
@@ -97,6 +92,10 @@ function roundTo(value, places) {
   if (value == null || !Number.isFinite(value)) return null;
   const factor = 10 ** places;
   return Math.round(value * factor) / factor;
+}
+
+function money(value) {
+  return value == null || !Number.isFinite(value) ? null : Math.round(value);
 }
 
 function sleep(ms) {
@@ -110,20 +109,18 @@ function overviewRows(data) {
   return [];
 }
 
+/**
+ * Index overview rows by slug and DefiLlama id. Rows with protocolType "chain"
+ * are a chain's own gas fees (Ethereum, Solana, Tron), not a protocol's, so
+ * they are skipped; otherwise whole chains enter on the fees floor.
+ */
 function indexOverview(rows) {
   const bySlug = new Map();
   const byId = new Map();
   for (const row of rows) {
-    const slug = row && row.slug ? String(row.slug) : "";
-    if (slug) {
-      const prev = bySlug.get(slug);
-      if (!prev || (num(row.total30d) || 0) > (num(prev.total30d) || 0)) bySlug.set(slug, row);
-    }
-    if (row && row.defillamaId != null) {
-      const id = String(row.defillamaId);
-      const prev = byId.get(id);
-      if (!prev || (num(row.total30d) || 0) > (num(prev.total30d) || 0)) byId.set(id, row);
-    }
+    if (!row || row.protocolType === "chain") continue;
+    if (row.slug) bySlug.set(String(row.slug), row);
+    if (row.defillamaId != null) byId.set(String(row.defillamaId), row);
   }
   return { bySlug, byId };
 }
@@ -133,27 +130,29 @@ function lookupOverview(index, protocol) {
   return index.bySlug.get(protocol.slug) || index.byId.get(String(protocol.id)) || null;
 }
 
-function momentum(current, prior) {
-  const now = num(current);
-  const then = num(prior);
-  if (now == null || then == null || then <= 0 || now < 0) return null;
-  const raw = Math.log(now + 1) - Math.log(then + 1);
-  return Math.min(MOMENTUM_MAX, Math.max(MOMENTUM_MIN, raw));
+/** Percentile in (0, 1) with average rank for ties; missing values get 0.5. */
+function percentiles(values) {
+  const present = [];
+  values.forEach((value, idx) => {
+    if (value != null && Number.isFinite(value)) present.push({ value, idx });
+  });
+  const out = values.map(() => 0.5);
+  if (present.length < 2) return out;
+  present.sort((a, b) => a.value - b.value);
+  let i = 0;
+  while (i < present.length) {
+    let j = i;
+    while (j + 1 < present.length && present[j + 1].value === present[i].value) j += 1;
+    const pct = ((i + j) / 2 + 0.5) / present.length;
+    for (let k = i; k <= j; k += 1) out[present[k].idx] = pct;
+    i = j + 1;
+  }
+  return out;
 }
 
-function blendMomentum(a, b) {
-  if (a != null && b != null) return (a + b) / 2;
-  return a != null ? a : b;
-}
-
-function zScores(values) {
-  const present = values.filter(value => value != null && Number.isFinite(value));
-  if (present.length < 2) return values.map(() => 0);
-  const mean = present.reduce((sum, value) => sum + value, 0) / present.length;
-  const variance = present.reduce((sum, value) => sum + (value - mean) ** 2, 0) / present.length;
-  const std = Math.sqrt(variance);
-  if (std < 1e-9) return values.map(() => 0);
-  return values.map(value => (value == null || !Number.isFinite(value) ? 0 : (value - mean) / std));
+function logRatio(now, then, floor) {
+  if (now == null || then == null || now < floor || then < floor) return null;
+  return Math.log(now) - Math.log(then);
 }
 
 async function fetchOverview(pathname, label) {
@@ -166,30 +165,59 @@ async function fetchOverview(pathname, label) {
 }
 
 async function mapPool(items, limit, fn) {
-  const out = new Array(items.length);
   let cursor = 0;
   async function worker() {
     for (;;) {
       const idx = cursor;
       cursor += 1;
       if (idx >= items.length) return;
-      if (idx > 0) await sleep(50);
-      out[idx] = await fn(items[idx], idx);
+      await fn(items[idx], idx);
     }
   }
-  const workers = Math.min(limit, items.length);
-  await Promise.all(Array.from({ length: workers }, () => worker()));
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, () => worker()));
+}
+
+function cacheFile(slug) {
+  return path.join(CACHE_DIR, `${slug.replace(/[^a-zA-Z0-9._-]/g, "_")}.json`);
+}
+
+function compactSeries(series) {
+  const out = [];
+  for (const point of series || []) {
+    const date = point && num(point.date);
+    const tvl = point ? Number(point.totalLiquidityUSD) : NaN;
+    if (date == null || !Number.isFinite(tvl)) continue;
+    out.push([date, tvl]);
+  }
+  out.sort((a, b) => a[0] - b[0]);
   return out;
 }
 
 async function fetchHistory(slug) {
-  const waits = [0, 600, 1800, 4000];
+  if (CACHE_DIR) {
+    try {
+      const file = cacheFile(slug);
+      const stat = fs.statSync(file);
+      if (Date.now() - stat.mtimeMs < CACHE_MAX_AGE_MS) {
+        const cached = JSON.parse(fs.readFileSync(file, "utf8"));
+        return compactSeries(cached.map(p => (Array.isArray(p) ? { date: p[0], totalLiquidityUSD: p[1] } : p)));
+      }
+    } catch {
+      // no usable cache entry
+    }
+  }
+  const waits = [0, 800, 2500, 6000];
   let lastError = null;
   for (let attempt = 0; attempt < waits.length; attempt += 1) {
     if (waits[attempt]) await sleep(waits[attempt]);
     try {
       const data = await fetchDefiLlamaProtocol(slug);
-      return data && Array.isArray(data.tvl) ? data.tvl : null;
+      const series = data && Array.isArray(data.tvl) ? compactSeries(data.tvl) : null;
+      if (series && CACHE_DIR) {
+        fs.mkdirSync(CACHE_DIR, { recursive: true });
+        fs.writeFileSync(cacheFile(slug), JSON.stringify(series));
+      }
+      return series;
     } catch (err) {
       lastError = err;
       const status = err.response && err.response.status;
@@ -203,119 +231,270 @@ async function fetchHistory(slug) {
   return null;
 }
 
-function robustGrowth(tvlNow, baseline) {
-  if (tvlNow == null || baseline == null || tvlNow <= 0 || baseline <= 0) return { log: null, pct: null };
-  const base = Math.max(baseline, TVL_LOG_FLOOR_USD);
-  const raw = Math.log(tvlNow) - Math.log(base);
-  const log = Math.min(GROWTH_MAX, Math.max(GROWTH_MIN, raw));
+/** Last sample on or before `cutoff`, the first sample, and the series end. */
+function seriesPoints(series, cutoff) {
+  if (!series || !series.length) return null;
+  let atCutoff = null;
+  for (const [date, tvl] of series) {
+    if (date <= cutoff) atCutoff = tvl;
+    else break;
+  }
+  return { atCutoff, first: series[0][1], firstDate: series[0][0] };
+}
+
+function parentSlug(parentId) {
+  return String(parentId || "").replace(/^parent#/, "");
+}
+
+/**
+ * Six-month TVL for a family from its children's histories.
+ * Children without a history (below the TVL floor, or a failed fetch) are
+ * left out of both ends so they cannot fake growth.
+ */
+function familyHistory(members, historyCache, cutoff, nowSec) {
+  let now = 0;
+  let then = 0;
+  let firstSum = 0;
+  let firstDate = null;
+  let withHistory = 0;
+  let anyOld = false;
+  let missing = 0;
+  for (const member of members) {
+    if (!member.needsHistory) continue;
+    const series = historyCache.get(member.protocol.slug);
+    const points = seriesPoints(series, cutoff);
+    if (!points) {
+      missing += 1;
+      continue;
+    }
+    withHistory += 1;
+    now += member.tvl || 0;
+    firstSum += points.first;
+    if (firstDate == null || points.firstDate < firstDate) firstDate = points.firstDate;
+    if (points.atCutoff != null) {
+      anyOld = true;
+      then += points.atCutoff;
+    }
+  }
+  if (!withHistory) return { known: false, missing };
+  const ageDays = firstDate == null ? null : Math.max(0, Math.round((nowSec - firstDate) / DAY));
+  if (!anyOld) {
+    return { known: true, isNew: true, ageDays, now, then: null, growth: null, added: now - firstSum, missing };
+  }
+  const base = Math.max(then, TVL_LOG_FLOOR_USD);
   return {
-    log,
-    pct: (Math.exp(log) - 1) * 100,
-    rawPct: ((tvlNow - base) / base) * 100,
+    known: true,
+    isNew: false,
+    ageDays,
+    now,
+    then,
+    growth: now > 0 ? Math.log(now) - Math.log(base) : null,
+    pct: now > 0 ? (now / base - 1) * 100 : null,
+    added: now - then,
+    missing,
   };
 }
 
-function mentionIndex(rows) {
+const SHORT_LABELS = {
+  dex: "DEX",
+  aggregator: "Aggregator",
+  perps: "Perps",
+  lending: "Lending",
+  vaults: "Vaults",
+  staking: "Staking",
+  restaking: "Restaking",
+  "stable-rwa": "Stablecoin",
+  "bridge-chain": "Bridge",
+  other: "Other",
+};
+
+function shortLabel(categoryId) {
+  return SHORT_LABELS[categoryId] || categoryMeta(categoryId).label;
+}
+
+function buildGroups(candidates, parentNames) {
+  const byKey = new Map();
+  for (const row of candidates) {
+    const parent = row.protocol.parentProtocol || null;
+    const key = parent ? `${parent}::${row.category}` : `slug:${row.protocol.slug}`;
+    if (!byKey.has(key)) byKey.set(key, { key, parent, category: row.category, members: [] });
+    byKey.get(key).members.push(row);
+  }
+  const groupsPerParent = new Map();
+  for (const group of byKey.values()) {
+    if (group.parent) groupsPerParent.set(group.parent, (groupsPerParent.get(group.parent) || 0) + 1);
+  }
+  const groups = [...byKey.values()];
+  for (const group of groups) {
+    group.members.sort((a, b) => (b.tvl || 0) - (a.tvl || 0));
+    const lead = group.members[0].protocol;
+    const siblings = group.parent ? groupsPerParent.get(group.parent) : 1;
+    const parentName = group.parent ? parentNames.get(group.parent) || null : null;
+    if (group.members.length === 1) {
+      group.name = lead.name;
+      group.slug = lead.slug;
+      group.id = lead.slug;
+    } else {
+      const base = parentName || lead.name;
+      group.name = siblings > 1 ? `${base} (${shortLabel(group.category)})` : base;
+      group.slug = parentSlug(group.parent);
+      group.id = siblings > 1 ? `${group.slug}--${group.category}` : group.slug;
+    }
+    group.parentName = parentName;
+    group.siblings = siblings;
+  }
+  return groups;
+}
+
+function sumField(members, field) {
+  let total = null;
+  for (const member of members) {
+    const value = num(member[field]);
+    if (value == null) continue;
+    total = (total || 0) + value;
+  }
+  return total;
+}
+
+/** Momentum from children that report both windows. */
+function familyMomentum(members, nowField, prevField, floor) {
+  let now = 0;
+  let prev = 0;
+  let seen = 0;
+  for (const member of members) {
+    const a = num(member[nowField]);
+    const b = num(member[prevField]);
+    if (a == null || b == null) continue;
+    now += a;
+    prev += b;
+    seen += 1;
+  }
+  if (!seen) return { log: null, pct: null };
+  const log = logRatio(now, prev, floor);
+  return { log, pct: log == null ? null : (Math.exp(log) - 1) * 100 };
+}
+
+function mentionLookup(result) {
+  const byId = new Map();
   const byName = new Map();
-  for (const row of rows) {
+  for (const row of result.rows) {
+    if (row.id) byId.set(row.id, row);
     const key = String(row.name || "").toLowerCase();
     const prev = byName.get(key);
     if (!prev || row.count > prev.count) byName.set(key, row);
   }
-  return byName;
-}
-
-function mentionsFor(protocol, byName) {
-  const row = byName.get(String(protocol.name || "").toLowerCase());
-  return row ? row.count : 0;
+  return (id, name) => byId.get(id) || byName.get(String(name || "").toLowerCase()) || null;
 }
 
 function compareScore(a, b) {
   if (a.score !== b.score) return b.score - a.score;
-  const tvlA = a.tvl || 0;
-  const tvlB = b.tvl || 0;
-  if (tvlA !== tvlB) return tvlB - tvlA;
-  return String(a.slug).localeCompare(String(b.slug));
+  if ((a.tvl || 0) !== (b.tvl || 0)) return (b.tvl || 0) - (a.tvl || 0);
+  return String(a.id).localeCompare(String(b.id));
 }
 
 function toOutputRow(row, rank, overallRank) {
   return {
     rank,
     overallRank,
+    id: row.id,
     name: row.name,
     slug: row.slug,
     category: row.category,
-    tvl: row.tvl == null ? null : Math.round(row.tvl),
-    tvl6mAgo: row.tvl6mAgo == null ? null : Math.round(row.tvl6mAgo),
+    llamaCategories: row.llamaCategories,
+    members: row.members,
+    tvl: money(row.tvl),
+    tvl6mAgo: money(row.tvl6mAgo),
+    tvlAdded6m: money(row.tvlAdded6m),
     tvlChange6m: roundTo(row.tvlChange6m, 2),
-    tvlChange6mRaw: roundTo(row.tvlChange6mRaw, 2),
-    tvlWindowDays: row.tvlWindowDays,
-    fees30d: row.fees30d == null ? null : Math.round(row.fees30d),
+    isNew: row.isNew,
+    ageDays: row.ageDays,
+    fees30d: money(row.fees30d),
+    feesChange30d: roundTo(row.feesChange30d, 1),
+    volume30d: money(row.volume30d),
+    volumeChange30d: roundTo(row.volumeChange30d, 1),
     xMentions: row.xMentions || 0,
+    xLists: row.xLists || [],
     llamaUrl: row.llamaUrl,
     scripts: row.scripts,
     coverage: row.coverage,
     score: roundTo(row.score, 4),
+    components: row.components,
   };
 }
 
-function catalogExtra(entry, mentionByName) {
-  const metaName = entry.name;
-  const mention = mentionByName.get(String(metaName).toLowerCase());
+function catalogExtra(entry, mentionFor) {
+  const mention = mentionFor(entry.id, entry.name);
   return {
     rank: null,
     overallRank: null,
+    id: entry.id,
     name: entry.name,
     slug: entry.id,
     category: entry.category || entry.group,
+    llamaCategories: [],
+    members: null,
     tvl: null,
     tvl6mAgo: null,
+    tvlAdded6m: null,
     tvlChange6m: null,
-    tvlWindowDays: null,
+    isNew: false,
+    ageDays: null,
     fees30d: null,
+    feesChange30d: null,
+    volume30d: null,
+    volumeChange30d: null,
     xMentions: mention ? mention.count : 0,
+    xLists: mention ? mention.lists : [],
     llamaUrl: null,
-    scripts: scriptNames(entry),
+    scripts: scriptLinks(entry),
     coverage: MONITOR,
     score: null,
+    components: null,
+    catalogOnly: true,
   };
 }
 
-function methodology() {
+function methodology(corpus) {
   return {
     windowDays: WINDOW_DAYS,
     weights: WEIGHTS,
-    mentionBonus: `min(count, ${MENTION_CAP}) * ${MENTION_STEP} added after the weighted z-scores (max +${MENTION_CAP * MENTION_STEP})`,
+    scoring: "percentile",
+    mentionBonus: `${MENTION_STEP} per distinct X post, capped at ${MENTION_CAP} posts (max +${roundTo(MENTION_CAP * MENTION_STEP, 3)})`,
+    mentionCorpus: corpus || null,
     floors: {
       minTvlUsd: MIN_TVL_USD,
       minFees30dUsd: MIN_FEES_30D_USD,
       minVolume30dUsd: MIN_VOLUME_30D_USD,
       tvlLogFloorUsd: TVL_LOG_FLOOR_USD,
-      minGrowthDays: MIN_GROWTH_DAYS,
+      feesMomentumFloorUsd: FEES_MOMENTUM_FLOOR_USD,
+      volumeMomentumFloorUsd: VOLUME_MOMENTUM_FLOOR_USD,
     },
     endpoints: [
       "GET /protocols",
-      "GET /protocol/{slug} (eligible TVL rows only; cached in-process)",
+      "GET /lite/protocols2 (parent protocol names)",
+      "GET /protocol/{slug} (rows with TVL >= $5M)",
       "GET /overview/fees",
-      "GET /overview/fees?dataType=dailyRevenue",
       "GET /overview/dexs",
+      "GET /overview/aggregators",
+      "GET /overview/options",
     ],
-    excluded: ["CEX and Ponzi rows are omitted from the scored ranking."],
+    excluded: [...EXCLUDED_LLAMA_CATEGORIES],
     summary:
-      "Trending score is a weighted z-score of log TVL size (0.34), robust 180-day log TVL growth (0.46), " +
-      "30-day fees/revenue momentum (0.12) and 30-day DEX volume momentum (0.08), plus a capped X-mention bonus. " +
-      "Growth uses ln(now) - ln(max(then, $1M)), clamped to a 0.2×–5× move, and a $0 baseline is omitted. " +
-      "Protocols need about $5M TVL, or $100k of 30-day fees, or $5M of 30-day volume. " +
-      "Market boards and swap tooling are repo catalog entries, not Llama protocols.",
+      "Each row is a protocol family in one category (DefiLlama children with the same parent are summed, so Aave V2/V3/V4 are one row). " +
+      "The score is a weighted sum of percentiles across all eligible rows: size 0.35, 6-month relative TVL growth 0.25, " +
+      "6-month TVL added in dollars 0.20, 30-day fees momentum 0.12 and 30-day DEX volume momentum 0.08, plus a small bonus " +
+      "per distinct X post from the user's lists. Percentiles cannot saturate, so a fresh listing cannot jump the board on a " +
+      "capped growth number. A family with no TVL 180 days ago is marked New: its relative growth is neutral and it is judged on " +
+      "the dollars it has gathered. CEX, Ponzi and token-locker rows are excluded.",
   };
 }
 
 async function main() {
   installCliSafeStdout();
   const generatedAt = new Date().toISOString();
-  console.log(
-    chalk.cyan("Fetching DefiLlama /protocols, /overview/fees, /overview/fees?dataType=dailyRevenue, /overview/dexs")
-  );
+  const nowSec = Math.floor(Date.now() / 1000);
+  const cutoff = nowSec - WINDOW_DAYS * DAY;
+  console.log(chalk.cyan("Fetching DefiLlama /protocols, /lite/protocols2, /overview/fees, /overview/dexs"));
 
   let protocols;
   try {
@@ -329,181 +508,244 @@ async function main() {
     process.exit(1);
   }
 
-  const feesQuery = "excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true";
-  const [feesBody, revenueBody, dexBody] = await Promise.all([
-    fetchOverview(`/overview/fees?${feesQuery}`, "fees overview"),
-    fetchOverview(`/overview/fees?${feesQuery}&dataType=dailyRevenue`, "revenue overview"),
-    fetchOverview(`/overview/dexs?${feesQuery}`, "dex volume overview"),
+  const overviewQuery = "excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true";
+  const [feesBody, dexBody, aggBody, optionsBody, liteBody] = await Promise.all([
+    fetchOverview(`/overview/fees?${overviewQuery}`, "fees overview"),
+    fetchOverview(`/overview/dexs?${overviewQuery}`, "dex volume overview"),
+    fetchOverview(`/overview/aggregators?${overviewQuery}`, "aggregator volume overview"),
+    fetchOverview(`/overview/options?${overviewQuery}`, "options volume overview"),
+    fetchOverview("/lite/protocols2", "parent protocol names"),
   ]);
   const feesIndex = indexOverview(overviewRows(feesBody));
-  const revenueIndex = indexOverview(overviewRows(revenueBody));
-  const dexIndex = indexOverview(overviewRows(dexBody));
+  // Spot DEX volume first, then aggregator and options volume for rows that have none.
+  const dexIndex = indexOverview([
+    ...overviewRows(optionsBody),
+    ...overviewRows(aggBody),
+    ...overviewRows(dexBody),
+  ]);
+  const parentNames = new Map();
+  for (const parent of (liteBody && liteBody.parentProtocols) || []) {
+    if (parent && parent.id && parent.name) parentNames.set(parent.id, parent.name);
+  }
 
   const catalog = buildCatalog();
   const coverage = buildCoverageIndex(catalog);
   const unknownCategories = new Set();
+  const excludedCounts = {};
 
   const candidates = [];
   for (const protocol of protocols) {
     if (!protocol || !protocol.slug || !protocol.name) continue;
-    if (EXCLUDED_LLAMA_CATEGORIES.has(protocol.category)) continue;
-    const link = linkCatalog(protocol, coverage);
-    const category = resolveCategory(protocol, link);
-    if (protocol.category && !LLAMA_TO_CATEGORY[protocol.category] && !SLUG_OVERRIDES[protocol.slug]) {
-      unknownCategories.add(protocol.category);
+    if (EXCLUDED_LLAMA_CATEGORIES.has(protocol.category)) {
+      excludedCounts[protocol.category] = (excludedCounts[protocol.category] || 0) + 1;
+      continue;
     }
     const tvl = num(protocol.tvl);
     const feesRow = lookupOverview(feesIndex, protocol);
-    const revenueRow = lookupOverview(revenueIndex, protocol);
     const dexRow = lookupOverview(dexIndex, protocol);
     const fees30d = feesRow ? num(feesRow.total30d) : null;
-    const feesPrev = feesRow ? num(feesRow.total60dto30d) : null;
-    const rev30d = revenueRow ? num(revenueRow.total30d) : null;
-    const revPrev = revenueRow ? num(revenueRow.total60dto30d) : null;
     const volume30d = dexRow ? num(dexRow.total30d) : null;
-    const volumePrev = dexRow ? num(dexRow.total60dto30d) : null;
     const tvlOk = tvl != null && tvl >= MIN_TVL_USD;
     const feesOk = fees30d != null && fees30d >= MIN_FEES_30D_USD;
     const volumeOk = volume30d != null && volume30d >= MIN_VOLUME_30D_USD;
     if (!tvlOk && !feesOk && !volumeOk) continue;
+    const link = linkCatalog(protocol, coverage);
+    if (protocol.category && !LLAMA_TO_CATEGORY[protocol.category] && !SLUG_OVERRIDES[protocol.slug]) {
+      unknownCategories.add(protocol.category);
+    }
     candidates.push({
       protocol,
       link,
-      category,
+      category: resolveCategory(protocol, link),
       tvl,
       fees30d,
-      feesMom: blendMomentum(momentum(fees30d, feesPrev), momentum(rev30d, revPrev)),
+      feesPrev30d: feesRow ? num(feesRow.total60dto30d) : null,
       volume30d,
-      volumeMom: momentum(volume30d, volumePrev),
+      volumePrev30d: dexRow ? num(dexRow.total60dto30d) : null,
       needsHistory: tvlOk,
     });
   }
-
   candidates.sort((a, b) => a.protocol.slug.localeCompare(b.protocol.slug));
+
   const historyTargets = candidates.filter(row => row.needsHistory);
   console.log(
     chalk.gray(
-      `${protocols.length} protocols, ${candidates.length} eligible, ${historyTargets.length} history fetches (concurrency ${HISTORY_CONCURRENCY})`
+      `${protocols.length} protocols, ${candidates.length} eligible, ${historyTargets.length} history fetches (concurrency ${HISTORY_CONCURRENCY}${CACHE_DIR ? `, cache ${CACHE_DIR}` : ""})`
     )
   );
-
   const historyCache = new Map();
   let historyMisses = 0;
   let finished = 0;
   await mapPool(historyTargets, HISTORY_CONCURRENCY, async row => {
-    const slug = row.protocol.slug;
-    if (historyCache.has(slug)) return;
-    const series = await fetchHistory(slug);
-    historyCache.set(slug, series);
+    const series = await fetchHistory(row.protocol.slug);
+    historyCache.set(row.protocol.slug, series);
     if (!series) historyMisses += 1;
     finished += 1;
-    if (finished % 25 === 0 || finished === historyTargets.length) {
+    if (finished % 50 === 0 || finished === historyTargets.length) {
       console.error(chalk.gray(`history ${finished}/${historyTargets.length}`));
     }
   });
 
-  const mentionDir = process.env.X_MENTIONS_DIR;
-  let mentionRows = [];
-  if (mentionDir && fs.existsSync(mentionDir)) {
-    const mentionProtocols = candidates.map(row => ({ name: row.protocol.name, slug: row.protocol.slug }));
-    for (const entry of [...catalog.protocols, ...catalog.boards]) {
-      mentionProtocols.push({ name: entry.name, slug: entry.id });
+  const groups = buildGroups(candidates, parentNames);
+
+  const mentionTargets = groups.map(group => ({
+    id: group.id,
+    name: group.name,
+    names: [
+      group.name,
+      ...group.members.map(m => m.protocol.name),
+      ...(group.parentName && group.siblings === 1 ? [group.parentName] : []),
+    ],
+    slugs: group.members.map(m => m.protocol.slug),
+  }));
+  // A catalog card can share its id with a family row (aave, uniswap): merge
+  // the names into that target so the public file lists each id once.
+  const targetById = new Map(mentionTargets.map(target => [target.id, target]));
+  for (const entry of [...catalog.protocols, ...catalog.boards]) {
+    const existing = targetById.get(entry.id);
+    if (existing) {
+      existing.names.push(entry.name);
+      continue;
     }
-    mentionRows = countProtocolMentions(mentionDir, mentionProtocols);
+    const target = { id: entry.id, name: entry.name, names: [entry.name], slugs: [] };
+    targetById.set(entry.id, target);
+    mentionTargets.push(target);
+  }
+  const mentionDir = process.env.X_MENTIONS_DIR;
+  let mentionResult = { rows: [], corpus: null };
+  if (mentionDir && fs.existsSync(mentionDir)) {
+    mentionResult = countProtocolMentions(mentionDir, mentionTargets);
     fs.mkdirSync(path.dirname(MENTIONS_JSON), { recursive: true });
-    fs.writeFileSync(MENTIONS_JSON, `${JSON.stringify(toPublicMentions(mentionRows, generatedAt), null, 2)}\n`);
-    console.log(chalk.gray(`wrote ${path.relative(ROOT, MENTIONS_JSON)} (${mentionRows.length} names)`));
+    fs.writeFileSync(MENTIONS_JSON, `${JSON.stringify(toPublicMentions(mentionResult, generatedAt), null, 2)}\n`);
+    const c = mentionResult.corpus;
+    console.log(
+      chalk.gray(
+        `wrote ${path.relative(ROOT, MENTIONS_JSON)}: ${mentionResult.rows.length} names from ${c.posts} posts (${c.from} to ${c.to})`
+      )
+    );
   } else if (fs.existsSync(MENTIONS_JSON)) {
-    mentionRows = loadPublicMentions(MENTIONS_JSON).map(row => ({ ...row, slug: null }));
-    console.log(chalk.gray(`reused ${path.relative(ROOT, MENTIONS_JSON)} (${mentionRows.length} names)`));
+    mentionResult = loadPublicMentions(MENTIONS_JSON);
+    console.log(chalk.gray(`reused ${path.relative(ROOT, MENTIONS_JSON)} (${mentionResult.rows.length} names)`));
   } else {
     console.warn(chalk.yellow("warning: no X notes directory and no data/x-mentions.json; mention bonus is 0"));
   }
-  const byMention = mentionIndex(mentionRows);
+  const mentionFor = mentionLookup(mentionResult);
 
-  const scored = candidates.map(row => {
-    const series = historyCache.get(row.protocol.slug);
-    const baseline = series ? tvlBaseline(series, WINDOW_DAYS) : null;
-    let tvl6mAgo = null;
-    let tvlWindowDays = null;
-    let growthLog = null;
-    let tvlChange6m = null;
-    let tvlChange6mRaw = null;
-    if (baseline && row.tvl != null) {
-      const young = baseline.partial && baseline.windowDays < MIN_GROWTH_DAYS;
-      tvlWindowDays = baseline.windowDays;
-      if (!young) {
-        tvl6mAgo = baseline.past != null ? baseline.past : baseline.first;
-        const growth = robustGrowth(row.tvl, tvl6mAgo);
-        growthLog = growth.log;
-        tvlChange6m = growth.pct;
-        tvlChange6mRaw = growth.rawPct;
+  const scored = groups.map(group => {
+    const members = group.members;
+    const tvl = sumField(members, "tvl");
+    const history = familyHistory(members, historyCache, cutoff, nowSec);
+    const fees = familyMomentum(members, "fees30d", "feesPrev30d", FEES_MOMENTUM_FLOOR_USD);
+    const volume = familyMomentum(members, "volume30d", "volumePrev30d", VOLUME_MOMENTUM_FLOOR_USD);
+    const fees30d = sumField(members, "fees30d");
+    const volume30d = sumField(members, "volume30d");
+    const links = [];
+    const seenLinks = new Set();
+    for (const member of members) {
+      if (member.link && !seenLinks.has(member.link.id)) {
+        seenLinks.add(member.link.id);
+        links.push(member.link);
       }
     }
-    const sizeUsd =
-      row.tvl != null && row.tvl >= MIN_TVL_USD ? row.tvl : Math.max(row.fees30d || 0, row.volume30d || 0);
-    const sizeLog = sizeUsd > 0 ? Math.log(sizeUsd / 1e6) : null;
-    const scripts = scriptNames(row.link);
+    const scripts = [];
+    const seenScripts = new Set();
+    for (const link of links) {
+      for (const script of scriptLinks(link)) {
+        if (seenScripts.has(script.name)) continue;
+        seenScripts.add(script.name);
+        scripts.push(script);
+      }
+    }
+    const mention = mentionFor(group.id, group.name);
+    const llamaSlug = group.slug;
     return {
-      name: row.protocol.name,
-      slug: row.protocol.slug,
-      category: row.category,
-      tvl: row.tvl,
-      tvl6mAgo,
-      tvlChange6m,
-      tvlChange6mRaw,
-      tvlWindowDays,
-      fees30d: row.fees30d,
-      xMentions: mentionsFor(row.protocol, byMention),
-      llamaUrl: `https://defillama.com/protocol/${encodeURIComponent(row.protocol.slug)}`,
+      id: group.id,
+      name: group.name,
+      slug: llamaSlug,
+      category: group.category,
+      llamaCategories: [...new Set(members.map(m => m.protocol.category).filter(Boolean))],
+      members:
+        members.length > 1
+          ? members.map(m => ({ slug: m.protocol.slug, name: m.protocol.name, tvl: money(m.tvl) }))
+          : null,
+      tvl,
+      tvl6mAgo: history.known && !history.isNew ? history.then : null,
+      tvlAdded6m: history.known ? history.added : null,
+      tvlChange6m: history.known && !history.isNew ? history.pct : null,
+      isNew: Boolean(history.known && history.isNew),
+      ageDays: history.known ? history.ageDays : null,
+      fees30d,
+      feesChange30d: fees.pct,
+      volume30d,
+      volumeChange30d: volume.pct,
+      xMentions: mention ? mention.count : 0,
+      xLists: mention ? mention.lists : [],
+      llamaUrl: `https://defillama.com/protocol/${encodeURIComponent(llamaSlug)}`,
       scripts,
       coverage: scripts.length ? MONITOR : RANKING_ONLY,
-      sizeLog,
-      growthLog,
-      feesMom: row.feesMom,
-      volumeMom: row.volumeMom,
-      catalogId: row.link ? row.link.id : null,
+      catalogIds: links.map(link => link.id),
+      sizeBasis: tvl != null && tvl >= MIN_TVL_USD ? "tvl" : fees30d != null && fees30d > 0 ? "fees" : "volume",
+      inputs: {
+        size: null,
+        growth: history.known && !history.isNew ? history.growth : null,
+        tvlAdded: history.known ? history.added : null,
+        feesMomentum: fees.log,
+        volumeMomentum: volume.log,
+      },
     };
   });
 
-  const sizeZ = zScores(scored.map(row => row.sizeLog));
-  const growthZ = zScores(scored.map(row => row.growthLog));
-  const feesZ = zScores(scored.map(row => row.feesMom));
-  const volumeZ = zScores(scored.map(row => row.volumeMom));
-  for (let i = 0; i < scored.length; i += 1) {
-    const mentionBonus = MENTION_STEP * Math.min(scored[i].xMentions || 0, MENTION_CAP);
-    scored[i].score =
-      WEIGHTS.size * sizeZ[i] +
-      WEIGHTS.tvlGrowth * growthZ[i] +
-      WEIGHTS.feesMomentum * feesZ[i] +
-      WEIGHTS.volumeMomentum * volumeZ[i] +
-      mentionBonus;
+  // Size is ranked on the row's own basis so dollars of TVL, fees and volume are
+  // never compared directly: TVL rows against TVL rows, the rest against every
+  // row's 30-day fees (or, without fees, every row's 30-day volume).
+  const tvlPct = percentiles(scored.map(row => (row.sizeBasis === "tvl" ? Math.log(row.tvl) : null)));
+  const feesPct = percentiles(scored.map(row => (row.fees30d > 0 ? Math.log(row.fees30d) : null)));
+  const volumePct = percentiles(scored.map(row => (row.volume30d > 0 ? Math.log(row.volume30d) : null)));
+  scored.forEach((row, i) => {
+    if (row.sizeBasis === "tvl") row.inputs.size = tvlPct[i];
+    else if (row.sizeBasis === "fees") row.inputs.size = feesPct[i];
+    else row.inputs.size = row.volume30d > 0 ? volumePct[i] : null;
+  });
+  const pct = {};
+  for (const key of Object.keys(WEIGHTS)) {
+    pct[key] = key === "size" ? scored.map(row => row.inputs.size ?? 0) : percentiles(scored.map(row => row.inputs[key]));
   }
+  scored.forEach((row, i) => {
+    const mentionBonus = MENTION_STEP * Math.min(row.xMentions || 0, MENTION_CAP);
+    let score = mentionBonus;
+    const components = {};
+    for (const [key, weight] of Object.entries(WEIGHTS)) {
+      score += weight * pct[key][i];
+      components[key] = roundTo(pct[key][i], 3);
+    }
+    components.mentions = roundTo(mentionBonus, 3);
+    row.score = score;
+    row.components = components;
+  });
 
   scored.sort(compareScore);
   const overall = scored.slice(0, TOP_N).map((row, index) => toOutputRow(row, index + 1, index + 1));
-  const overallRankBySlug = new Map(overall.map(row => [row.slug, row.rank]));
+  const overallRankById = new Map(overall.map(row => [row.id, row.rank]));
 
-  const matchedCatalogIds = new Set(scored.map(row => row.catalogId).filter(Boolean));
+  const matchedCatalogIds = new Set(scored.flatMap(row => row.catalogIds));
   const byCategory = {};
   for (const [id] of CATEGORY_BY_ID) byCategory[id] = [];
-
+  const categoryTotals = {};
   for (const row of scored) {
     const list = byCategory[row.category] || (byCategory[row.category] = []);
-    const overallRank = overallRankBySlug.get(row.slug) || null;
-    list.push(toOutputRow(row, list.length + 1, overallRank));
+    categoryTotals[row.category] = (categoryTotals[row.category] || 0) + 1;
+    const overallRank = overallRankById.get(row.id) || null;
+    // Keep the category's top rows plus anything that made the overall top 200.
+    if (list.length < CATEGORY_LIMIT || overallRank) list.push(toOutputRow(row, categoryTotals[row.category], overallRank));
   }
-
   for (const entry of catalog.protocols) {
     if (matchedCatalogIds.has(entry.id)) continue;
-    const extra = catalogExtra(entry, byMention);
-    const list = byCategory[extra.category] || (byCategory[extra.category] = []);
-    list.push(extra);
+    const extra = catalogExtra(entry, mentionFor);
+    (byCategory[extra.category] || (byCategory[extra.category] = [])).push(extra);
   }
-
   for (const entry of BOARDS) {
     const group = entry.group === "tooling" ? "tooling" : "boards";
-    byCategory[group].push(catalogExtra(entry, byMention));
+    byCategory[group].push(catalogExtra(entry, mentionFor));
   }
   for (const list of Object.values(byCategory)) {
     let next = list.reduce((max, row) => Math.max(max, row.rank || 0), 0);
@@ -523,44 +765,51 @@ async function main() {
       note = "Repo tooling from the catalog, not a DefiLlama protocol ranking. Ordered as in the catalog.";
     } else if (!scoredRows.length) {
       note = "No protocol cleared the TVL, fees, or volume floor in this category.";
+    } else if ((categoryTotals[meta.id] || 0) > scoredRows.length) {
+      note = `Top ${scoredRows.length} of ${categoryTotals[meta.id]} eligible rows by score.`;
     }
-    return { ...meta, count: rows.length, scored: scoredRows.length, note };
+    return {
+      ...meta,
+      count: rows.length,
+      scored: scoredRows.length,
+      eligible: categoryTotals[meta.id] || 0,
+      inTop200: overall.filter(row => row.category === meta.id).length,
+      note,
+    };
   });
 
   const monitored = overall.filter(row => row.coverage === MONITOR).length;
   const payload = {
     generatedAt,
-    methodology: methodology(),
+    methodology: methodology(mentionResult.corpus),
     categories,
     overall,
     byCategory,
     stats: {
       protocolsSeen: protocols.length,
+      eligibleProtocols: candidates.length,
       eligible: scored.length,
       overall: overall.length,
       dedicatedMonitor: monitored,
       rankingOnly: overall.length - monitored,
+      newInTop200: overall.filter(row => row.isNew).length,
       historyMisses,
-      mentionedNames: mentionRows.length,
+      mentionedNames: mentionResult.rows.length,
+      excluded: excludedCounts,
     },
   };
-
   fs.mkdirSync(path.dirname(DATA_JSON), { recursive: true });
-  fs.writeFileSync(DATA_JSON, `${JSON.stringify(payload, null, 2)}\n`);
+  fs.writeFileSync(DATA_JSON, `${JSON.stringify(payload, null, 1)}\n`);
 
-  const monitoredEligible = scored.filter(row => row.coverage === MONITOR).length;
   console.log(chalk.green(`\nWrote ${path.relative(ROOT, DATA_JSON)}`));
   console.log(
     chalk.gray(
-      `eligible ${scored.length} · top ${overall.length} · monitors in top ${overall.length}: ${monitored} · ranking only: ${overall.length - monitored} · eligible with a monitor: ${monitoredEligible} · history misses: ${historyMisses}`
+      `eligible protocols ${candidates.length} → ${scored.length} rows · top ${overall.length}: ${monitored} with a monitor, ${overall.length - monitored} ranking only, ${payload.stats.newInTop200} new · history misses ${historyMisses}`
     )
   );
   if (unknownCategories.size) {
-    console.log(
-      chalk.gray(`unmapped Llama categories (filed under other): ${[...unknownCategories].sort().join(", ")}`)
-    );
+    console.log(chalk.yellow(`unmapped Llama categories (filed under other): ${[...unknownCategories].sort().join(", ")}`));
   }
-
   printRanked("Overall top 20", overall.slice(0, 20));
   for (const meta of categories) {
     const rows = (byCategory[meta.id] || []).filter(row => row.score != null).slice(0, 3);
@@ -570,21 +819,29 @@ async function main() {
     }
     printRanked(`${meta.label} top 3`, rows);
   }
+  if (historyMisses > Math.max(10, historyTargets.length * 0.05)) {
+    console.error(chalk.red(`too many history misses (${historyMisses}); the growth terms are unreliable`));
+    process.exitCode = 1;
+  }
 }
 
 function printRanked(title, rows) {
   console.log(chalk.cyan.bold(`\n${title}`));
-  const table = createTable(["#", "Protocol", "Category", "TVL", "6m Δ", "30d fees", "X"]);
+  const table = createTable(["#", "Protocol", "Category", "TVL", "6m Δ", "6m added", "30d fees", "X", "Score"]);
   for (const row of rows) {
-    const change = row.tvlChange6m == null ? "—" : `${row.tvlChange6m > 0 ? "+" : ""}${row.tvlChange6m.toFixed(1)}%`;
+    let change = "—";
+    if (row.isNew) change = `new (${row.ageDays}d)`;
+    else if (row.tvlChange6m != null) change = `${row.tvlChange6m > 0 ? "+" : ""}${row.tvlChange6m.toFixed(1)}%`;
     table.push([
       row.rank ?? "—",
       row.name,
       categoryMeta(row.category).label,
       formatCurrency(row.tvl),
       change,
+      row.tvlAdded6m == null ? "—" : formatCurrency(row.tvlAdded6m),
       formatCurrency(row.fees30d),
       row.xMentions || 0,
+      row.score == null ? "—" : row.score.toFixed(3),
     ]);
   }
   console.log(table.toString());
