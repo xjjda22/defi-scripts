@@ -15,7 +15,11 @@ const {
 } = require("../utils/validation");
 const V2_ROUTER_ABI = require("../abis/IUniswapV2Router02.json");
 const V3_ROUTER_ABI = require("../abis/ISwapRouter.json");
-const QUOTER_ABI = require("../abis/IQuoter.json");
+// SushiSwap V3 deploys QuoterV2 (struct params, returns amountOut + extras); the V1
+// positional IQuoter.json ABI has no matching fragment for the struct call below.
+const QUOTER_ABI = [
+  "function quoteExactInputSingle(tuple(address tokenIn, address tokenOut, uint256 amountIn, uint24 fee, uint160 sqrtPriceLimitX96) params) returns (uint256 amountOut, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256 gasEstimate)",
+];
 const ERC20_ABI = require("../abis/IERC20.json");
 
 /**
