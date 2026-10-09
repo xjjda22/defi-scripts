@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)](https://nodejs.org)
 [![EVM chains](https://img.shields.io/badge/EVM_chains-10-orange.svg)](#what-you-need)
-[![Protocols](https://img.shields.io/badge/protocols-109-purple.svg)](docs/02-protocol-catalog.md)
+[![Protocols](https://img.shields.io/badge/protocols-117-purple.svg)](docs/02-protocol-catalog.md)
 
 Where is the best USDC borrow rate right now, across Aave and Morpho, on five chains? One command:
 
@@ -119,7 +119,13 @@ node scripts/showcaseCheck.js   # offline sanity check of showcase/data.json (al
 npm run showcase:serve     # http://127.0.0.1:4173
 ```
 
-Live page: <https://xjjda22.github.io/defi-scripts/> (deep links work, for example `#tab=perps` or `#q=morpho`). Methodology, the category map and the refresh routine are in [docs/03-showcase-ranking.md](docs/03-showcase-ranking.md).
+Live page: <https://xjjda22.github.io/defi-scripts/> (deep links work, for example `#tab=perps`, `#q=morpho`, or `#p=uniswap`). Methodology, the category map and the refresh routine are in [docs/03-showcase-ranking.md](docs/03-showcase-ranking.md). Each row opens a test panel (`#p=<slug>` or `showcase/protocol.html?slug=`) with its scripts, fork commands, contracts and testnet faucets. Fork setup is in [docs/04-fork-testing.md](docs/04-fork-testing.md).
+
+```bash
+CHAIN=ethereum node scripts/startFork.js
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:uniswap:v3
+npm run fork:all
+```
 
 GitHub Pages publishes the `showcase/` folder from [`.github/workflows/pages.yml`](.github/workflows/pages.yml). Each deploy rebuilds the ranking from DefiLlama first (on a push that touches the showcase, Monday/Wednesday/Friday at 05:30 Malaysia time, or a manual run) and falls back to the committed `showcase/data.json` if DefiLlama is down. Pages must be enabled on the repository with **Source** set to **GitHub Actions**. The **Showcase refresh** workflow rebuilds and commits `showcase/data.json` on a feature branch that changes the ranking code, or on demand.
 
@@ -129,7 +135,7 @@ GitHub Pages publishes the `showcase/` folder from [`.github/workflows/pages.yml
 | --- | --- |
 | DefiLlama monitors and boards (`analytics:<protocol>:*`, `analytics:l2:*`, `analytics:eth:*`, `simulate:*:smoke`, `crosschain:*` TVL/volume, `catalog`) | Nothing |
 | On-chain reads and quotes (`analytics:aave:*`, `analytics:lending:rates`, `analytics:dex:prices`, `simulate:multi:quote`, `crosschain:uniswap:liquidity`) | RPC URLs in `.env` for the chains you query |
-| Fork simulations (`simulate:*:fork`, `simulate:validate:forks`) | RPC + [anvil](https://book.getfoundry.sh/anvil/) |
+| Fork simulations (`fork:<protocol>:<action>`, `npm run fork:all`, `simulate:*:fork`, `simulate:validate:forks`) | RPC + [anvil](https://book.getfoundry.sh/anvil/) (no `PRIVATE_KEY`) |
 | `swap:*` examples | RPC + `PRIVATE_KEY` |
 
 > [!WARNING]
@@ -141,16 +147,16 @@ On-chain quotes and simulations cover 10 EVM chains: Ethereum, Arbitrum, Optimis
 
 <!-- catalog:start -->
 
-**114 protocols**, **21 cross-protocol boards/tools**, **329 commands** (not counting repo tooling such as lint and reports). Each name links to its card in the [protocol catalog](docs/02-protocol-catalog.md): every command, what it prints, and what it needs.
+**117 protocols**, **21 cross-protocol boards/tools**, **362 commands** (not counting repo tooling such as lint and reports). Each name links to its card in the [protocol catalog](docs/02-protocol-catalog.md): every command, what it prints, and what it needs.
 
 | Category | Count | Entries |
 |---|---:|---|
 | [Spot DEX / AMM](docs/02-protocol-catalog.md#c-dex) | 29 | [Uniswap](docs/02-protocol-catalog.md#p-uniswap) · [Curve Finance](docs/02-protocol-catalog.md#p-curve) · [Balancer](docs/02-protocol-catalog.md#p-balancer) · [SushiSwap](docs/02-protocol-catalog.md#p-sushiswap) · [Aerodrome](docs/02-protocol-catalog.md#p-aerodrome) · [Velodrome](docs/02-protocol-catalog.md#p-velodrome) · [+23 more](docs/02-protocol-catalog.md#c-dex) |
 | [Aggregators & intents](docs/02-protocol-catalog.md#c-aggregator) | 10 | [1inch](docs/02-protocol-catalog.md#p-1inch) · [CoW Swap](docs/02-protocol-catalog.md#p-cowswap) · [KyberSwap](docs/02-protocol-catalog.md#p-kyberswap) · [Matcha](docs/02-protocol-catalog.md#p-matcha) · [Odos](docs/02-protocol-catalog.md#p-odos) · [ParaSwap](docs/02-protocol-catalog.md#p-paraswap) · [+4 more](docs/02-protocol-catalog.md#c-aggregator) |
 | [Perps & derivatives](docs/02-protocol-catalog.md#c-perps) | 22 | [Hyperliquid](docs/02-protocol-catalog.md#p-hyperliquid) · [GMX](docs/02-protocol-catalog.md#p-gmx) · [Gains Network](docs/02-protocol-catalog.md#p-gains) · [SynFutures V3](docs/02-protocol-catalog.md#p-synfutures) · [Orderly](docs/02-protocol-catalog.md#p-orderly) · [MUX](docs/02-protocol-catalog.md#p-mux) · [+16 more](docs/02-protocol-catalog.md#c-perps) |
-| [Lending & money markets](docs/02-protocol-catalog.md#c-lending) | 12 | [Aave](docs/02-protocol-catalog.md#p-aave) · [Morpho](docs/02-protocol-catalog.md#p-morpho) · [Spark](docs/02-protocol-catalog.md#p-spark) · [Nostra Finance](docs/02-protocol-catalog.md#p-nostra) · [Suilend](docs/02-protocol-catalog.md#p-suilend) · [Benqi Lending](docs/02-protocol-catalog.md#p-benqi) · [+6 more](docs/02-protocol-catalog.md#c-lending) |
+| [Lending & money markets](docs/02-protocol-catalog.md#c-lending) | 13 | [Aave](docs/02-protocol-catalog.md#p-aave) · [Morpho](docs/02-protocol-catalog.md#p-morpho) · [Spark](docs/02-protocol-catalog.md#p-spark) · [Nostra Finance](docs/02-protocol-catalog.md#p-nostra) · [Suilend](docs/02-protocol-catalog.md#p-suilend) · [Benqi Lending](docs/02-protocol-catalog.md#p-benqi) · [+7 more](docs/02-protocol-catalog.md#c-lending) |
 | [Vault curators & allocators](docs/02-protocol-catalog.md#c-vaults) | 5 | [Sentora Curator](docs/02-protocol-catalog.md#p-sentora) · [Steakhouse Financial](docs/02-protocol-catalog.md#p-steakhouse) · [Upshift](docs/02-protocol-catalog.md#p-upshift) · [Keyrock Prime USDC](docs/02-protocol-catalog.md#p-keyrock) · [Concrete](docs/02-protocol-catalog.md#p-concrete) |
-| [Liquid staking](docs/02-protocol-catalog.md#c-staking) | 8 | [Lido](docs/02-protocol-catalog.md#p-lido) · [StakeStone](docs/02-protocol-catalog.md#p-stakestone) · [Kintsu](docs/02-protocol-catalog.md#p-kintsu) · [Jito](docs/02-protocol-catalog.md#p-jito) · [Sanctum](docs/02-protocol-catalog.md#p-sanctum) · [DFDV Staked SOL](docs/02-protocol-catalog.md#p-dfdv) · [+2 more](docs/02-protocol-catalog.md#c-staking) |
+| [Liquid staking](docs/02-protocol-catalog.md#c-staking) | 10 | [Lido](docs/02-protocol-catalog.md#p-lido) · [Rocket Pool](docs/02-protocol-catalog.md#p-rocketpool) · [Coinbase Wrapped Staked ETH](docs/02-protocol-catalog.md#p-cbeth) · [StakeStone](docs/02-protocol-catalog.md#p-stakestone) · [Kintsu](docs/02-protocol-catalog.md#p-kintsu) · [Jito](docs/02-protocol-catalog.md#p-jito) · [+4 more](docs/02-protocol-catalog.md#c-staking) |
 | [Restaking](docs/02-protocol-catalog.md#c-restaking) | 7 | [EigenLayer (EigenCloud)](docs/02-protocol-catalog.md#p-eigenlayer) · [ether.fi](docs/02-protocol-catalog.md#p-etherfi) · [Kelp](docs/02-protocol-catalog.md#p-kelp) · [Bedrock](docs/02-protocol-catalog.md#p-bedrock) · [Swell](docs/02-protocol-catalog.md#p-swell) · [Renzo](docs/02-protocol-catalog.md#p-renzo) · [+1 more](docs/02-protocol-catalog.md#c-restaking) |
 | [Stablecoins & RWA](docs/02-protocol-catalog.md#c-stable-rwa) | 6 | [Sky (ex-Maker)](docs/02-protocol-catalog.md#p-sky) · [Ethena](docs/02-protocol-catalog.md#p-ethena) · [Circle](docs/02-protocol-catalog.md#p-circle) · [Ondo Finance](docs/02-protocol-catalog.md#p-ondo) · [BlackRock BUIDL](docs/02-protocol-catalog.md#p-buidl) · [USD AI](docs/02-protocol-catalog.md#p-usdai) |
 | [Bridges & chains](docs/02-protocol-catalog.md#c-bridge-chain) | 10 | [Stargate Finance](docs/02-protocol-catalog.md#p-stargate) · [Meter Passport](docs/02-protocol-catalog.md#p-meter) · [Gravity by Galxe](docs/02-protocol-catalog.md#p-gravity) · [Payy Network](docs/02-protocol-catalog.md#p-payy) · [Arc Chain](docs/02-protocol-catalog.md#p-arc) · [Blast](docs/02-protocol-catalog.md#p-blast) · [+4 more](docs/02-protocol-catalog.md#c-bridge-chain) |
@@ -223,13 +229,13 @@ src/
   utils/           # web3 provider, validation, token helpers
   abis/            # contract ABIs
   swaps/           # Uniswap V2/V3/V4, Sushi, Curve, Balancer, dexAggregator
-  simulation/      # fork quotes, lending/staking/UniswapX sims, DefiLlama smokes
+  simulation/      # fork quotes, fork:<protocol>:<action>, lending/staking/UniswapX sims, DefiLlama smokes
   analytics/       # protocols/<name>/ monitors + aggregators/ + ranking/ + nft/ + airdrop/
   crosschain/      # Uniswap/Curve/Balancer/Sushi TVL + volume trackers
   examples/        # CLI demos of swap/quote flows
-scripts/           # catalog, startFork, validateForkSimulations, healthCheckReport
-docs/              # architecture, coverage notes, showcase ranking, generated protocol catalog
-showcase/          # static top-200 page (index.html + data.json)
+scripts/           # catalog, startFork, forkSuite, validateForkSimulations, healthCheckReport
+docs/              # architecture, coverage notes, showcase ranking, fork testing, generated protocol catalog
+showcase/          # static top-200 page (index.html, protocol.html, data.json)
 ```
 
 Deeper reading: [architecture](docs/00-architecture.md) · [coverage notes and scope](docs/01-protocol-script-coverage.md) · [full protocol catalog](docs/02-protocol-catalog.md).

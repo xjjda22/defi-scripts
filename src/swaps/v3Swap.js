@@ -3,6 +3,7 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const { getProvider } = require("../utils/web3");
+const { signerOn } = require("../utils/signer");
 const {
   validateChainKey,
   validateWallet,
@@ -217,7 +218,7 @@ async function swapExactInputSingle(
   const v3cfg = resolveV3Endpoints(chainKey, dexId);
 
   const provider = getProvider(chainKey);
-  const signer = wallet.connect(provider);
+  const signer = signerOn(wallet, provider);
   const recipientAddr = recipient || wallet.address;
 
   // Get quote to calculate minimum output with slippage
@@ -301,7 +302,7 @@ async function swapExactInputMultiHop(
   const v3cfg = resolveV3Endpoints(chainKey, dexId);
 
   const provider = getProvider(chainKey);
-  const signer = wallet.connect(provider);
+  const signer = signerOn(wallet, provider);
   const recipientAddr = recipient || wallet.address;
 
   // Get quote

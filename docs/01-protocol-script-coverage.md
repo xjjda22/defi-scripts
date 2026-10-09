@@ -8,6 +8,7 @@ Architecture: [`00-architecture.md`](./00-architecture.md). The per-protocol com
 - **Analytics (`analytics:*`)** — Dedicated monitors or generic DefiLlama summaries (`DEFILLAMA_SLUG`), plus category aggregators such as `analytics:lending:aggregate` and `analytics:amm:aggregate`.
 - **Smoke (`simulate:*:smoke`)** — Pass/fail check of the same data source as the analytics twin; exits non-zero when the source breaks.
 - **Simulate (`simulate:*`)** — On-chain fork / quote flows and fill replays.
+- **Fork (`fork:<protocol>:<action>`)** — Anvil fork actions that impersonate a whale, assert a balance or position change, and exit non-zero on failure. `npm run fork:all` runs the suite. See [04-fork-testing.md](./04-fork-testing.md).
 - **Swap (`swap:*`)** — Wallet-backed examples in `src/examples/`. Only major pool DEX routes have named scripts; lending, LST, perp, and RWA protocols do not (by design).
 
 ## Swap / simulate: not applicable in this stack

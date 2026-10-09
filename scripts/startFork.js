@@ -8,7 +8,7 @@
  *   CHAIN=arbitrum node scripts/startFork.js  # Fork Arbitrum
  */
 require("dotenv").config();
-const { spawn } = require("child_process");
+const { spawn, spawnSync } = require("child_process");
 const { CHAINS } = require("../src/config/chains");
 
 const CHAIN = process.env.CHAIN || "ethereum";
@@ -45,6 +45,18 @@ if (FORK_BLOCK) {
   args.push("--fork-block-number", FORK_BLOCK);
 }
 
+function anvilMissing() {
+  const check = spawnSync("anvil", ["--version"], { encoding: "utf8" });
+  return Boolean(check.error) || check.status !== 0;
+}
+
+if (anvilMissing()) {
+  console.error("anvil was not found on PATH.");
+  console.error("Install Foundry, then open a new shell:");
+  console.error("  curl -L https://foundry.paradigm.xyz | bash && foundryup");
+  process.exit(1);
+}
+
 console.log(`Starting Anvil...\n`);
 
 const anvil = spawn("anvil", args, {
@@ -53,7 +65,13 @@ const anvil = spawn("anvil", args, {
 
 anvil.on("error", error => {
   console.error(`❌ Failed to start Anvil: ${error.message}`);
-  console.error(`Make sure Foundry is installed: https://book.getfoundry.sh/getting-started/installation`);
+  if (error.code === "ENOENT") {
+    console.error("anvil was not found on PATH.");
+    console.error("Install Foundry, then open a new shell:");
+    console.error("  curl -L https://foundry.paradigm.xyz | bash && foundryup");
+  } else {
+    console.error("Make sure Foundry is installed: https://book.getfoundry.sh/getting-started/installation");
+  }
   process.exit(1);
 });
 

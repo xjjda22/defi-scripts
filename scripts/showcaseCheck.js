@@ -15,6 +15,30 @@ const ROOT = path.resolve(__dirname, "..");
 const FILE = path.join(ROOT, "showcase", "data.json");
 const NUMERIC = ["tvl", "tvl6mAgo", "tvlAdded6m", "tvlChange6m", "fees30d", "volume30d", "xMentions", "score"];
 
+function checkTesting(row, problems) {
+  const testing = row.testing;
+  if (!testing || (testing.mode !== "fork" && testing.mode !== "api-only")) {
+    problems.push(`${row.id}: testing.mode must be fork or api-only`);
+    return;
+  }
+  if (testing.mode === "fork" && (!Array.isArray(testing.commands) || testing.commands.length < 2)) {
+    problems.push(`${row.id}: fork row needs copy-paste commands`);
+  }
+  if (testing.mode === "api-only" && (!testing.recipe || !testing.recipe.commands || !testing.recipe.commands.length)) {
+    problems.push(`${row.id}: API-only row needs a category recipe`);
+  }
+  for (const contract of testing.contracts || []) {
+    if (!/^0x[a-fA-F0-9]{40}$/.test(contract.address || "")) {
+      problems.push(`${row.id}: bad contract address ${contract.address}`);
+    }
+  }
+  for (const item of row.chainTvls || []) {
+    if (!item || typeof item.tvl !== "number" || !Number.isFinite(item.tvl)) {
+      problems.push(`${row.id}: bad chain TVL`);
+    }
+  }
+}
+
 function main() {
   const problems = [];
   const data = JSON.parse(fs.readFileSync(FILE, "utf8"));
@@ -30,6 +54,7 @@ function main() {
     seen.add(row.id);
     if (!categoryIds.has(row.category)) problems.push(`${row.id}: unknown category ${row.category}`);
     if (!row.name) problems.push(`${row.id}: empty name`);
+    checkTesting(row, problems);
     if (row.tvl == null && row.fees30d == null && row.volume30d == null) problems.push(`${row.id}: no TVL, fees or volume`);
     if (typeof row.score !== "number") problems.push(`${row.id}: missing score`);
     if (idx > 0 && row.score > overall[idx - 1].score) problems.push(`${row.id}: out of score order`);
@@ -40,6 +65,7 @@ function main() {
     if (!rows.length) problems.push(`tab ${id} is empty`);
     rows.forEach((row, idx) => {
       if (row.rank !== idx + 1) problems.push(`${id} row ${idx} has rank ${row.rank}`);
+      checkTesting(row, problems);
       for (const key of NUMERIC) {
         const value = row[key];
         if (value != null && (typeof value !== "number" || !Number.isFinite(value))) {
@@ -66,7 +92,11 @@ function main() {
   const tabs = Object.entries(data.byCategory)
     .map(([id, rows]) => `${id} ${rows.length}`)
     .join(", ");
-  console.log(`showcase/data.json ok: ${overall.length} rows, generated ${data.generatedAt}; tabs: ${tabs}`);
+  const fork = data.stats && data.stats.forkInTop200;
+  const apiOnly = data.stats && data.stats.apiOnlyInTop200;
+  console.log(
+    `showcase/data.json ok: ${overall.length} rows, generated ${data.generatedAt}; fork tests ${fork}, API-only ${apiOnly}; tabs: ${tabs}`
+  );
 }
 
 main();

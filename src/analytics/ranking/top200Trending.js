@@ -59,7 +59,7 @@ const {
   CATEGORY_BY_ID,
 } = require("./categoryMap");
 const { countProtocolMentions, toPublicMentions, loadPublicMentions } = require("./mentions");
-const { buildCoverageIndex, linkCatalog, scriptLinks, MONITOR, RANKING_ONLY } = require("./coverage");
+const { buildCoverageIndex, linkCatalog, scriptLinks, MONITOR, RANKING_ONLY, enrichShowcase, cleanChainTvl, topChainTvl } = require("./coverage");
 
 const ROOT = path.resolve(__dirname, "../../..");
 const DATA_JSON = path.join(ROOT, "showcase", "data.json");
@@ -415,6 +415,8 @@ function toOutputRow(row, rank, overallRank) {
     xMentions: row.xMentions || 0,
     xLists: row.xLists || [],
     llamaUrl: row.llamaUrl,
+    appUrl: row.appUrl || null,
+    chainTvls: row.chainTvls || [],
     scripts: row.scripts,
     coverage: row.coverage,
     score: roundTo(row.score, 4),
@@ -446,6 +448,8 @@ function catalogExtra(entry, mentionFor) {
     xMentions: mention ? mention.count : 0,
     xLists: mention ? mention.lists : [],
     llamaUrl: null,
+    appUrl: entry.url || null,
+    chainTvls: [],
     scripts: scriptLinks(entry),
     coverage: MONITOR,
     score: null,
@@ -681,6 +685,14 @@ async function main() {
       xMentions: mention ? mention.count : 0,
       xLists: mention ? mention.lists : [],
       llamaUrl: `https://defillama.com/protocol/${encodeURIComponent(llamaSlug)}`,
+      appUrl: members.map(member => member.protocol && member.protocol.url).find(Boolean) || null,
+      chainTvls: topChainTvl(
+        members.reduce((acc, member) => {
+          const part = cleanChainTvl(member.protocol && member.protocol.chainTvls);
+          for (const [name, value] of Object.entries(part)) acc[name] = (acc[name] || 0) + value;
+          return acc;
+        }, {})
+      ),
       scripts,
       coverage: scripts.length ? MONITOR : RANKING_ONLY,
       catalogIds: links.map(link => link.id),
@@ -798,6 +810,7 @@ async function main() {
       excluded: excludedCounts,
     },
   };
+  enrichShowcase(payload);
   fs.mkdirSync(path.dirname(DATA_JSON), { recursive: true });
   fs.writeFileSync(DATA_JSON, `${JSON.stringify(payload, null, 1)}\n`);
 

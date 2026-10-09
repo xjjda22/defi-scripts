@@ -6,6 +6,7 @@
  */
 
 const { CATALOG_ALIASES } = require("./categoryMap");
+const { scriptKind, enrichShowcase, applyProtocolMeta, cleanChainTvl, topChainTvl } = require("../../catalog/forkRecipes");
 
 function envValue(command, key) {
   const match = String(command || "").match(new RegExp(`(?:^|\\s)${key}=('[^']*'|\\S+)`));
@@ -72,7 +73,7 @@ function scriptLinks(entry) {
   if (!entry || !entry.scripts) return [];
   return entry.scripts.map(script => {
     const match = String(script.command || "").match(/(?:^|\s)node\s+((?:src|scripts)\/\S+\.js)/);
-    return { name: script.name, file: match ? match[1] : null };
+    return { name: script.name, file: match ? match[1] : null, kind: scriptKind(script.name) };
   });
 }
 
@@ -84,6 +85,11 @@ module.exports = {
   linkCatalog,
   scriptNames,
   scriptLinks,
+  scriptKind,
+  enrichShowcase,
+  applyProtocolMeta,
+  cleanChainTvl,
+  topChainTvl,
   MONITOR,
   RANKING_ONLY,
 };

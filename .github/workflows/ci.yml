@@ -25,3 +25,27 @@ jobs:
       - name: Live DefiLlama smoke (informational)
         run: node src/simulation/api/smokeL2Overview.js
         continue-on-error: true
+
+  fork-suite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - uses: foundry-rs/foundry-toolchain@v1
+      - name: Fork suite
+        env:
+          ETHEREUM_RPC_URL: ${{ secrets.ETHEREUM_RPC_URL }}
+          BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
+          OPTIMISM_RPC_URL: ${{ secrets.OPTIMISM_RPC_URL }}
+          ARBITRUM_RPC_URL: ${{ secrets.ARBITRUM_RPC_URL }}
+          BSC_RPC_URL: ${{ secrets.BSC_RPC_URL }}
+        run: |
+          if [ -z "$ETHEREUM_RPC_URL" ]; then
+            echo "ETHEREUM_RPC_URL secret is not set; skipping the fork suite."
+            exit 0
+          fi
+          npm run fork:all

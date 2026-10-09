@@ -5,6 +5,7 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const { getProvider } = require("../utils/web3");
+const { signerOn } = require("../utils/signer");
 const {
   validateChainKey,
   validateWallet,
@@ -159,7 +160,7 @@ async function swapV4(chainKey, wallet, tokenIn, tokenOut, fee, amountIn, slippa
   }
 
   const provider = getProvider(chainKey);
-  const signer = wallet.connect(provider);
+  const signer = signerOn(wallet, provider);
   if (recipient && recipient.toLowerCase() !== wallet.address.toLowerCase()) {
     throw new Error("swapV4 settles to the signing wallet; a custom recipient needs a V4 router");
   }

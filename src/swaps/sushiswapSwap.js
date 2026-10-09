@@ -5,6 +5,7 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const { getProvider } = require("../utils/web3");
+const { signerOn } = require("../utils/signer");
 const {
   validateChainKey,
   validateWallet,
@@ -100,7 +101,7 @@ async function swapV2(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps
   }
 
   const provider = wallet.provider || getProvider(chainKey);
-  const walletWithProvider = wallet.connect(provider);
+  const walletWithProvider = signerOn(wallet, provider);
 
   const router = new ethers.Contract(chain.sushiswap.v2.router, V2_ROUTER_ABI, walletWithProvider);
 
@@ -146,7 +147,7 @@ async function swapV3(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps
   }
 
   const provider = wallet.provider || getProvider(chainKey);
-  const walletWithProvider = wallet.connect(provider);
+  const walletWithProvider = signerOn(wallet, provider);
 
   const router = new ethers.Contract(chain.sushiswap.v3.router, V3_ROUTER_ABI, walletWithProvider);
 

@@ -5,6 +5,7 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const { getProvider } = require("../utils/web3");
+const { signerOn } = require("../utils/signer");
 const {
   validateChainKey,
   validateWallet,
@@ -41,7 +42,7 @@ async function swapV2(chainKey, wallet, poolId, tokenIn, tokenOut, amountIn, sli
   }
 
   const provider = wallet.provider || getProvider(chainKey);
-  const walletWithProvider = wallet.connect(provider);
+  const walletWithProvider = signerOn(wallet, provider);
 
   const vault = new ethers.Contract(chain.balancer.v2.vault, VAULT_ABI, walletWithProvider);
 

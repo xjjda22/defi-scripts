@@ -5,6 +5,7 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const { getProvider } = require("../utils/web3");
+const { signerOn } = require("../utils/signer");
 const {
   validateChainKey,
   validateWallet,
@@ -144,7 +145,7 @@ async function executeSwap(chainKey, wallet, poolAddress, tokenIn, tokenOut, i, 
   validateSlippage(slippageBps);
 
   const provider = wallet.provider || getProvider(chainKey);
-  const walletWithProvider = wallet.connect(provider);
+  const walletWithProvider = signerOn(wallet, provider);
 
   const pool = new ethers.Contract(poolAddress, POOL_ABI, walletWithProvider);
   const tokenInContract = new ethers.Contract(tokenIn, ERC20_ABI, walletWithProvider);

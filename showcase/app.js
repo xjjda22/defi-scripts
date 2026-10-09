@@ -3,12 +3,22 @@ const REPO_BLOB = "https://github.com/xjjda22/defi-scripts/blob/main/";
 const MONITOR = "covered by a dedicated monitor";
 const TEXT_KEYS = new Set(["name", "category", "coverage"]);
 
+const PROTOCOL_PAGE = document.body.dataset.page === "protocol";
+const SCRIPT_GROUPS = [
+  ["analytics", "Analytics"],
+  ["smoke", "API smoke"],
+  ["fork", "Fork test"],
+  ["quote", "Quote"],
+  ["swap", "Swap"],
+];
+
 const state = {
   data: null,
   tab: "overall",
   query: "",
   sortKey: "rank",
   sortDir: 1,
+  protocol: "",
 };
 
 const $ = id => document.getElementById(id);
@@ -68,6 +78,178 @@ function mentionBadge(row) {
   if (!n) return '<span class="chg">0</span>';
   const lists = (row.xLists || []).join(", ");
   return `<span class="badge mentions" title="${esc(`${n} distinct posts${lists ? ` on ${lists}` : ""}`)}">${n}</span>`;
+}
+
+function scriptKind(name) {
+  const script = String(name || "");
+  if (script.startsWith("fork:")) return "fork";
+  if (script.startsWith("swap:")) return "swap";
+  if (script.startsWith("analytics:") || script.startsWith("crosschain:")) return "analytics";
+  if (script.includes(":smoke")) return "smoke";
+  if (/^simulate:(uniswapx:fill|aave:(v3:fork|liquidations|versions)|morpho:fork|lido:fork)/.test(script)) return "fork";
+  if (script.startsWith("simulate:")) return "quote";
+  return "other";
+}
+
+function scriptName(script) {
+  return typeof script === "string" ? script : script.name;
+}
+
+function findProtocol(slug) {
+  const needle = String(slug || "").toLowerCase();
+  if (!needle || !state.data) return null;
+  const pools = [state.data.overall || []].concat(Object.values(state.data.byCategory || {}));
+  for (const rows of pools) {
+    const found = rows.find(row => String(row.slug || "").toLowerCase() === needle || String(row.id || "").toLowerCase() === needle);
+    if (found) return found;
+  }
+  return null;
+}
+
+function copyButton(text) {
+  return `<button type="button" class="copy" data-copy="${esc(text)}">Copy</button>`;
+}
+
+function commandRow(text) {
+  return `<div class="cmd"><code>${esc(text)}</code>${copyButton(text)}</div>`;
+}
+
+function scriptGroups(scripts) {
+  const items = (scripts || []).map(script => ({
+    name: scriptName(script),
+    file: typeof script === "string" ? null : script.file,
+    kind: (typeof script === "string" ? null : script.kind) || scriptKind(scriptName(script)),
+  }));
+  const blocks = SCRIPT_GROUPS.map(([kind, label]) => {
+    const rows = items.filter(item => item.kind === kind);
+    if (!rows.length) return "";
+    const body = rows
+      .map(item => {
+        const command = `npm run ${item.name}`;
+        const link = item.file
+          ? `<a href="${esc(REPO_BLOB + item.file)}" target="_blank" rel="noreferrer">${esc(item.file)}</a>`
+          : "";
+        return `<div class="script-row"><code>${esc(command)}</code>${copyButton(command)}${link}</div>`;
+      })
+      .join("");
+    return `<div class="kind-block"><h4>${esc(label)}</h4>${body}</div>`;
+  }).filter(Boolean);
+  return blocks.length ? blocks.join("") : "<p>No npm scripts for this row.</p>";
+}
+
+function chainTvlHtml(row) {
+  const chains = row.chainTvls || [];
+  if (!chains.length) return "<p>Per-chain TVL is not in this snapshot.</p>";
+  return `<ul class="chain-list">${chains
+    .map(item => `<li>${esc(item.chain)} <b>${esc(money(item.tvl))}</b></li>`)
+    .join("")}</ul>`;
+}
+
+function faucetsHtml(chainKey) {
+  const testnets = (state.data.methodology && state.data.methodology.testnets) || [];
+  const chainlink = state.data.methodology && state.data.methodology.chainlinkFaucet;
+  const rows = testnets.filter(item => item.chain === chainKey);
+  const shown = rows.length ? rows : testnets.filter(item => item.chain === "ethereum");
+  const lists = shown
+    .map(item => {
+      const links = (item.faucets || [])
+        .map(faucet => `<a href="${esc(faucet.url)}" target="_blank" rel="noreferrer">${esc(faucet.name)}</a>`)
+        .join(" · ");
+      return `<li><b>${esc(item.name)}</b> — ${links}</li>`;
+    })
+    .join("");
+  const extra = chainlink
+    ? `<li><a href="${esc(chainlink.url)}" target="_blank" rel="noreferrer">${esc(chainlink.name)}</a> covers several of these networks.</li>`
+    : "";
+  return `<ul class="chain-list">${lists}${extra}</ul>`;
+}
+
+function contractsHtml(contracts) {
+  if (!contracts || !contracts.length) return "<p>No contract addresses are configured for this protocol in the repo.</p>";
+  return `<ul class="chain-list">${contracts
+    .map(
+      item =>
+        `<li>${esc(item.chain)} ${esc(item.label)} <code>${esc(item.address)}</code>${
+          item.doc ? ` <a href="${esc(item.doc)}" target="_blank" rel="noreferrer">docs</a>` : ""
+        }</li>`
+    )
+    .join("")}</ul>`;
+}
+
+function detailHtml(row) {
+  const testing = row.testing || { mode: "api-only", note: "No fork test for this protocol.", recipe: null };
+  const fork = testing.mode === "fork";
+  const mode = fork
+    ? '<span class="badge fork">Fork test</span>'
+    : '<span class="badge api">API-only</span>';
+  const back = PROTOCOL_PAGE
+    ? `<a class="back" href="index.html">← Back to the board</a>`
+    : `<a class="back" href="#${state.tab === "overall" ? "" : `tab=${encodeURIComponent(state.tab)}`}">← Back to the board</a>`;
+  const app = testing.appUrl || row.appUrl;
+  const links = [
+    app ? `<a href="${esc(app)}" target="_blank" rel="noreferrer">Official app</a>` : "",
+    row.llamaUrl ? `<a href="${esc(row.llamaUrl)}" target="_blank" rel="noreferrer">DefiLlama</a>` : "",
+  ]
+    .filter(Boolean)
+    .join("");
+  const commands = fork
+    ? `<h3>Fork commands</h3>
+       <p>RPC env var: <code>${esc(testing.rpcEnv || "")}</code> on ${esc(testing.chain || "")}. Start Anvil, then point that variable at the local fork. <code>FORK_BLOCK</code> pins the block.</p>
+       ${(testing.commands || []).map(commandRow).join("")}
+       ${testing.note ? `<p>${esc(testing.note)}</p>` : ""}`
+    : `<h3>API-only</h3>
+       <p>${esc(testing.note || "No fork test for this protocol.")}</p>
+       ${
+         testing.recipe
+           ? `<p><b>${esc(testing.recipe.title)}</b>. ${esc(testing.recipe.note || "")}</p>${(testing.recipe.commands || []).map(commandRow).join("")}`
+           : ""
+       }`;
+  return `<article class="detail-card">
+    ${back}
+    <p class="kicker">${esc(labelFor(row.category))} · ${esc(row.slug || "")}</p>
+    <h2>${esc(row.name)} ${mode}</h2>
+    <div class="links">${links}</div>
+    <div class="facts">
+      <div class="fact"><b>${esc(money(row.tvl))}</b><span>TVL</span></div>
+      <div class="fact"><b>${row.isNew ? "New" : esc(signedPct(row.tvlChange6m))}</b><span>6-month TVL</span></div>
+      <div class="fact"><b>${esc(money(row.fees30d))}</b><span>30d fees</span></div>
+      <div class="fact"><b>${esc(money(row.tvlAdded6m))}</b><span>6-month added</span></div>
+    </div>
+    <h3>TVL by chain</h3>
+    ${chainTvlHtml(row)}
+    <h3>Test it</h3>
+    ${scriptGroups(row.scripts)}
+    ${commands}
+    <h3>Contracts</h3>
+    ${contractsHtml(testing.contracts)}
+    <h3>Testnets &amp; faucets</h3>
+    ${faucetsHtml(testing.chain || "ethereum")}
+  </article>`;
+}
+
+function renderDetail() {
+  const host = $("detail");
+  if (!host) return;
+  const row = findProtocol(state.protocol);
+  const table = $("table-wrap");
+  if (!state.protocol) {
+    host.hidden = true;
+    host.innerHTML = "";
+    if (table) table.hidden = false;
+    const status = $("status");
+    if (status) status.hidden = false;
+    return;
+  }
+  host.hidden = false;
+  if (table) table.hidden = true;
+  const status = $("status");
+  if (status) status.hidden = true;
+  if (!row) {
+    host.innerHTML = `<article class="detail-card"><a class="back" href="index.html">← Back to the board</a><h2>Protocol not found</h2><p>No row matches <code>${esc(state.protocol)}</code>.</p></article>`;
+    return;
+  }
+  document.title = `${row.name} · Trending DeFi`;
+  host.innerHTML = detailHtml(row);
 }
 
 function scriptsCell(scripts) {
@@ -173,6 +355,8 @@ function renderStats() {
   const bits = [
     [stats.overall ?? (state.data.overall || []).length, "in the top 200"],
     [stats.dedicatedMonitor ?? "—", "with a monitor"],
+    [stats.forkInTop200 ?? "—", "with a fork test"],
+    [stats.apiOnlyInTop200 ?? "—", "API-only"],
     [stats.rankingOnly ?? "—", "ranking only"],
     [stats.newInTop200 ?? "—", "new in 6 months"],
   ];
@@ -221,7 +405,7 @@ function renderTable() {
         state.tab !== "overall" && row.overallRank ? `<span class="slug">#${esc(row.overallRank)} overall</span>` : "";
       return `<tr>
         <td data-label="#">${esc(row.rank ?? "—")}</td>
-        <td data-label="Protocol"><span class="name">${esc(row.name)}</span><span class="slug">${esc(row.slug)}${link}</span>${overall}${breakdown(row)}</td>
+        <td data-label="Protocol"><a class="name" href="${PROTOCOL_PAGE ? `protocol.html?slug=${encodeURIComponent(row.slug || row.id)}` : `#p=${encodeURIComponent(row.slug || row.id)}`}">${esc(row.name)}</a><span class="slug">${esc(row.slug)}${link}</span>${overall}${breakdown(row)}</td>
         <td class="col-cat" data-label="Category">${esc(labelFor(row.category))}</td>
         <td class="num" data-label="TVL">${money(row.tvl)}</td>
         <td class="num" data-label="6-month TVL">${changeCell(row)}</td>
@@ -248,27 +432,37 @@ function generatedLabel(iso) {
 }
 
 function readHash() {
+  if (PROTOCOL_PAGE) {
+    state.protocol = new URLSearchParams(location.search).get("slug") || "";
+    return;
+  }
   const params = new URLSearchParams(location.hash.replace(/^#/, ""));
   const tab = params.get("tab");
   if (tab && tabList().some(t => t.id === tab)) state.tab = tab;
   state.query = params.get("q") || "";
-  $("search").value = state.query;
+  state.protocol = params.get("p") || "";
+  const search = $("search");
+  if (search) search.value = state.query;
 }
 
 function writeHash() {
+  if (PROTOCOL_PAGE) return;
   const params = new URLSearchParams();
   if (state.tab !== "overall") params.set("tab", state.tab);
   if (state.query) params.set("q", state.query);
+  if (state.protocol) params.set("p", state.protocol);
   const next = params.toString();
   history.replaceState(null, "", next ? `#${next}` : location.pathname + location.search);
 }
 
 function selectTab(id, focus) {
   state.tab = id;
+  state.protocol = "";
   state.sortKey = "rank";
   state.sortDir = 1;
   renderTabs();
   renderTable();
+  renderDetail();
   writeHash();
   if (focus) {
     const button = $(`tab-${id}`);
@@ -280,6 +474,25 @@ function selectTab(id, focus) {
 }
 
 function bind() {
+  document.addEventListener("click", event => {
+    const button = event.target.closest("button[data-copy]");
+    if (!button) return;
+    const text = button.getAttribute("data-copy") || "";
+    const done = () => {
+      button.classList.add("done");
+      button.textContent = "Copied";
+      setTimeout(() => {
+        button.classList.remove("done");
+        button.textContent = "Copy";
+      }, 1200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(() => done());
+    } else {
+      done();
+    }
+  });
+  if (PROTOCOL_PAGE || !$("tabs")) return;
   $("tabs").addEventListener("click", event => {
     const button = event.target.closest("button[data-tab]");
     if (button) selectTab(button.getAttribute("data-tab"), false);
@@ -317,6 +530,7 @@ function bind() {
     readHash();
     renderTabs();
     renderTable();
+    renderDetail();
   });
 }
 
@@ -333,10 +547,18 @@ async function init() {
   $("lede").textContent = `The top ${stats.overall || 200} DeFi protocols by a six-month trend score: size, TVL growth in percent and in dollars, fees and volume momentum, and a small bonus for posts on the tracked X lists.`;
   $("generated").textContent = generatedLabel(state.data.generatedAt);
   readHash();
+  if (PROTOCOL_PAGE) {
+    const lede = $("lede");
+    if (lede) lede.textContent = "Protocol test panel.";
+    renderDetail();
+    bind();
+    return;
+  }
   renderStats();
   renderMethod();
   renderTabs();
   renderTable();
+  renderDetail();
   bind();
 }
 
