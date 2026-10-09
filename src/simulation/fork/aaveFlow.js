@@ -190,8 +190,10 @@ async function repayUsdc({ chain, protocol, action, ctx, poolAddr, usdc, weth })
   }
   await (await pool.borrow(usdc, borrow, VARIABLE, 0, user)).wait();
   const debtBefore = (await pool.getUserAccountData(user)).totalDebtBase;
-  await (await usdcToken.approve(poolAddr, borrow * 2n)).wait();
-  const tx = await pool.repay(usdc, ethers.MaxUint256, VARIABLE, user);
+  // Repay exactly what this test borrowed. MaxUint256 would also try to clear debt
+  // (plus accrued interest) the account carried in, which the allowance does not cover.
+  await (await usdcToken.approve(poolAddr, borrow)).wait();
+  const tx = await pool.repay(usdc, borrow, VARIABLE, user);
   const receipt = await tx.wait();
   const debtAfter = (await pool.getUserAccountData(user)).totalDebtBase;
   const ok = debtAfter < debtBefore;
@@ -202,7 +204,7 @@ async function repayUsdc({ chain, protocol, action, ctx, poolAddr, usdc, weth })
     chain,
     block: ctx.forkBlock,
     key: `debtBase=${debtBefore}->${debtAfter}`,
-    detail: `repaid variable USDC\ndebtBase ${debtBefore} -> ${debtAfter}\ntx ${receipt.hash}`,
+    detail: `repaid ${formatUnits(borrow, 6)} variable USDC\ndebtBase ${debtBefore} -> ${debtAfter}\ntx ${receipt.hash}`,
     error: ok ? null : "debt did not fall",
   });
 }

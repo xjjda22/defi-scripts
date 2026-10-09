@@ -1076,7 +1076,7 @@ const SCRIPT_DESCRIPTIONS = {
 
   "fork:uniswap:v2": "Swap WETH→USDC on Uniswap V2 on an Anvil fork and assert USDC increased",
   "fork:uniswap:v3": "Swap WETH→USDC on Uniswap V3 on an Anvil fork and assert USDC increased",
-  "fork:uniswap:v4": "Swap WETH→USDC on Uniswap V4 on an Anvil fork and assert USDC increased",
+  "fork:uniswap:v4": "Swap ETH→USDC on Uniswap V4 through the Universal Router on an Anvil fork and assert USDC increased",
   "fork:sushiswap:v2": "Swap WETH→USDC on SushiSwap V2 on an Anvil fork and assert USDC increased",
   "fork:sushiswap:v3": "Swap WETH→USDC on SushiSwap V3 on an Anvil fork and assert USDC increased",
   "fork:balancer:swap": "Swap WETH→USDC through the Balancer V2 Vault on an Anvil fork",
