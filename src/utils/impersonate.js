@@ -10,7 +10,7 @@ const { detectFork } = require("./forkDetection");
 const WHALES = {
   ethereum: {
     WETH: "0x2f0b23f53734252bda2277357e97e1517d6b042a", // Binance wallet
-    USDC: "0x47ac0fb4f2d84898e4d9e7b4dab3c24507a6d503", // Binance
+    USDC: "0x55FE002aefF02F77364de339a1292923A15844B8", // Circle (52.8M USDC at block 26157910)
     DAI: "0x40ec5b33f54e0e8a33a975908c5ba1c14e5bbbdf", // Polygon Bridge
     USDT: "0x5754284f345afc66a98fbb0a0afe71e0f007b949", // Tether Treasury
     WBTC: "0xbf72da2bd84c5170618fbe5914b0eca9638d5eb5", // Large holder
