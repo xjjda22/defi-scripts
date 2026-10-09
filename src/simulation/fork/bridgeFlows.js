@@ -92,7 +92,17 @@ async function opDeposit(base, name, bridgeAddr, portalAddr) {
     ["function depositETH(uint32 _minGasLimit, bytes _extraData) payable"],
     signer
   );
-  const locks = [bridgeAddr, portalAddr];
+  // Newer OP Stack portals keep ETH in an ETHLockbox (OP Mainnet does; Base returned none
+  // on 2026-10-10). Read it from the portal so the lock check follows the real custody.
+  const portal = new ethers.Contract(portalAddr, ["function ethLockbox() view returns (address)"], provider);
+  let lockbox = null;
+  try {
+    lockbox = await portal.ethLockbox();
+    if (lockbox === ethers.ZeroAddress) lockbox = null;
+  } catch {
+    lockbox = null;
+  }
+  const locks = lockbox ? [bridgeAddr, portalAddr, lockbox] : [bridgeAddr, portalAddr];
   const before = await lockedEth(provider, locks);
   const tx = await bridge.depositETH(200000, "0x", { value });
   const receipt = await tx.wait();
@@ -102,8 +112,8 @@ async function opDeposit(base, name, bridgeAddr, portalAddr) {
   return finish({
     ...base,
     ok,
-    key: `lockedEth=${formatUnits(before, 18)}->${formatUnits(after, 18)} event=${event}`,
-    detail: `${name} L1StandardBridge depositETH ${formatUnits(value, 18)} from ${user}\nbridge+portal ETH ${formatUnits(before, 18)} -> ${formatUnits(after, 18)}\nETHDepositInitiated ${event}\n${DEST_NOTE}\ntx ${receipt.hash}`,
+    key: `lockedEth=${formatUnits(before, 18)}->${formatUnits(after, 18)} event=${event}${lockbox ? " lockbox=yes" : ""}`,
+    detail: `${name} L1StandardBridge depositETH ${formatUnits(value, 18)} from ${user}\n${lockbox ? `ETHLockbox ${lockbox}\n` : ""}bridge+portal${lockbox ? "+lockbox" : ""} ETH ${formatUnits(before, 18)} -> ${formatUnits(after, 18)}\nETHDepositInitiated ${event}\n${DEST_NOTE}\ntx ${receipt.hash}`,
     error: ok ? null : `${name} bridge did not lock ETH and emit ETHDepositInitiated`,
   });
 }

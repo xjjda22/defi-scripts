@@ -1,6 +1,6 @@
 /**
  * Testnet faucets for the showcase. Every URL was requested and returned HTTP 200
- * on 2026-10-09 (redirects followed). Official or widely used faucets only.
+ * on 2026-10-10 (redirects followed). Official or widely used faucets only.
  */
 
 const TESTNETS = [
@@ -20,7 +20,7 @@ const TESTNETS = [
     name: "Base Sepolia",
     faucets: [
       { name: "Coinbase CDP", url: "https://portal.cdp.coinbase.com/products/faucet" },
-      { name: "Base docs", url: "https://docs.base.org/base-chain/tools/network-faucets" },
+      { name: "Base docs", url: "https://docs.base.org/get-started/get-funds" },
       { name: "Alchemy", url: "https://www.alchemy.com/faucets/base-sepolia" },
     ],
   },

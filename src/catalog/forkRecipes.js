@@ -86,6 +86,7 @@ const FORK_RECIPES = [
     appUrl: "https://aerodrome.finance",
     chain: "base",
     contractKeys: ["aerodrome"],
+    label: "Reference swap (Uniswap V3 on Base)",
     note: "Slipstream quoters revert in this stack. The fork script swaps Uniswap V3 on Base as the liquid reference, same as simulate:dex:aerodrome:v3.",
     tests: [test("fork:aerodrome:swap", "swap", "base")],
   }),
@@ -94,6 +95,7 @@ const FORK_RECIPES = [
     appUrl: "https://velodrome.finance",
     chain: "optimism",
     contractKeys: ["velodrome"],
+    label: "Reference swap (Uniswap V3 on Optimism)",
     note: "Slipstream quoters revert in this stack. The fork script swaps Uniswap V3 on Optimism as the liquid reference.",
     tests: [test("fork:velodrome:swap", "swap", "optimism")],
   }),
@@ -175,7 +177,9 @@ const FORK_RECIPES = [
     tests: [test("fork:cbeth:rate", "rate", "ethereum")],
   }),
   recipe({
-    keys: ["etherfi", "ether.fi", "ether.fi-stake", "ether.fi-liquid"],
+    keys: ["etherfi", "ether.fi", "ether.fi-stake"],
+    // ether.fi Liquid (vaults) and the borrowing market share the etherfi scripts but are not eETH staking.
+    category: "restaking",
     appUrl: "https://www.ether.fi",
     chain: "ethereum",
     contractKeys: ["etherfi"],
@@ -240,7 +244,8 @@ const FORK_RECIPES = [
   recipe({
     keys: ["frax-finance", "frax", "frax-usd"],
     category: "stable-rwa",
-    label: "KYC-gated: read-only",
+    // Not KYC-gated: Ethereum sfrxUSD simply has maxDeposit 0, so only a read is possible here.
+    label: "Read-only",
     appUrl: "https://frax.com",
     chain: "ethereum",
     contractKeys: ["frax"],
@@ -304,7 +309,7 @@ const FORK_RECIPES = [
     appUrl: "https://app.optimism.io/bridge",
     chain: "ethereum",
     contractKeys: ["optimism"],
-    note: "L1StandardBridge.depositETH locks ETH and emits ETHDepositInitiated. Destination delivery on OP Mainnet needs the rollup; a single Ethereum fork cannot verify it.",
+    note: "L1StandardBridge.depositETH locks ETH (into the ETHLockbox that OptimismPortal.ethLockbox() reports) and emits ETHDepositInitiated. Destination delivery on OP Mainnet needs the rollup; a single Ethereum fork cannot verify it.",
     tests: [test("fork:optimism:deposit", "deposit", "ethereum")],
   }),
   recipe({
