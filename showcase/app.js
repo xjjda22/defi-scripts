@@ -180,8 +180,8 @@ function detailHtml(row) {
   const testing = row.testing || { mode: "api-only", note: "No fork test for this protocol.", recipe: null };
   const fork = testing.mode === "fork";
   const mode = fork
-    ? '<span class="badge fork">Fork test</span>'
-    : '<span class="badge api">API-only</span>';
+    ? `<span class="badge fork">${esc(testing.label || "Fork test")}</span>`
+    : `<span class="badge api">${esc(testing.label || "API-only")}</span>`;
   const back = PROTOCOL_PAGE
     ? `<a class="back" href="index.html">← Back to the board</a>`
     : `<a class="back" href="#${state.tab === "overall" ? "" : `tab=${encodeURIComponent(state.tab)}`}">← Back to the board</a>`;
