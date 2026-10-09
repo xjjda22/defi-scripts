@@ -1,0 +1,420 @@
+{
+  "generatedAt": "2026-10-09T17:18:18.252Z",
+  "corpus": {
+    "posts": 614,
+    "from": "2026-09-18",
+    "to": "2026-10-09",
+    "lists": [
+      "Airdrop?",
+      "Dev Alpha",
+      "Inner Circle CT",
+      "MEV KOL",
+      "ON CHAIN",
+      "Privacy dashboard update",
+      "Privacy x web3 projects",
+      "Smart Contract Security",
+      "mev gigachads",
+      "mev twitter"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "revert-lend",
+      "name": "Revert Lend",
+      "count": 13,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "Dev Alpha",
+        "MEV KOL",
+        "mev gigachads"
+      ]
+    },
+    {
+      "id": "aerodrome",
+      "name": "Aerodrome",
+      "count": 5,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "Dev Alpha",
+        "MEV KOL",
+        "mev gigachads"
+      ]
+    },
+    {
+      "id": "aerodrome--dex",
+      "name": "Aerodrome (DEX)",
+      "count": 5,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "Dev Alpha",
+        "MEV KOL",
+        "mev gigachads"
+      ]
+    },
+    {
+      "id": "hyperliquid",
+      "name": "Hyperliquid",
+      "count": 5,
+      "lastSeen": "2026-09-24",
+      "lists": [
+        "Dev Alpha",
+        "mev twitter"
+      ]
+    },
+    {
+      "id": "hyperliquid--perps",
+      "name": "Hyperliquid (Perps)",
+      "count": 5,
+      "lastSeen": "2026-09-24",
+      "lists": [
+        "Dev Alpha",
+        "mev twitter"
+      ]
+    },
+    {
+      "id": "uniswap",
+      "name": "Uniswap",
+      "count": 5,
+      "lastSeen": "2026-09-24",
+      "lists": [
+        "Dev Alpha",
+        "ON CHAIN",
+        "Smart Contract Security",
+        "mev gigachads"
+      ]
+    },
+    {
+      "id": "aave",
+      "name": "Aave",
+      "count": 3,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "ON CHAIN",
+        "Privacy x web3 projects"
+      ]
+    },
+    {
+      "id": "bitget",
+      "name": "Bitget",
+      "count": 3,
+      "lastSeen": "2026-09-24",
+      "lists": [
+        "Smart Contract Security"
+      ]
+    },
+    {
+      "id": "pons",
+      "name": "Pons",
+      "count": 3,
+      "lastSeen": "2026-10-04",
+      "lists": [
+        "Airdrop?",
+        "Dev Alpha"
+      ]
+    },
+    {
+      "id": "robinhood",
+      "name": "Robinhood Chain",
+      "count": 3,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "Inner Circle CT",
+        "ON CHAIN"
+      ]
+    },
+    {
+      "id": "robinhood-chain-bridge",
+      "name": "Robinhood Chain Bridge",
+      "count": 3,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "Inner Circle CT",
+        "ON CHAIN"
+      ]
+    },
+    {
+      "id": "circle",
+      "name": "Circle",
+      "count": 2,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "ON CHAIN"
+      ]
+    },
+    {
+      "id": "cowswap",
+      "name": "CoWSwap",
+      "count": 2,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "mev twitter"
+      ]
+    },
+    {
+      "id": "deepbook-v3",
+      "name": "DeepBook V3",
+      "count": 2,
+      "lastSeen": "2026-09-24",
+      "lists": [
+        "Dev Alpha"
+      ]
+    },
+    {
+      "id": "ondo-finance",
+      "name": "Ondo Finance",
+      "count": 2,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "ON CHAIN",
+        "mev twitter"
+      ]
+    },
+    {
+      "id": "papertrade",
+      "name": "Papertrade",
+      "count": 2,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "Inner Circle CT"
+      ]
+    },
+    {
+      "id": "plume-vaults",
+      "name": "Plume Vaults",
+      "count": 2,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "Privacy dashboard update"
+      ]
+    },
+    {
+      "id": "spark",
+      "name": "Spark",
+      "count": 2,
+      "lastSeen": null,
+      "lists": [
+        "Privacy x web3 projects"
+      ]
+    },
+    {
+      "id": "anthias-labs",
+      "name": "Anthias Labs",
+      "count": 1,
+      "lastSeen": "2026-09-23",
+      "lists": [
+        "mev twitter"
+      ]
+    },
+    {
+      "id": "arc",
+      "name": "Arc Chain",
+      "count": 1,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?"
+      ]
+    },
+    {
+      "id": "aztec",
+      "name": "Aztec",
+      "count": 1,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "Privacy x web3 projects"
+      ]
+    },
+    {
+      "id": "exponent",
+      "name": "Exponent",
+      "count": 1,
+      "lastSeen": "2026-09-22",
+      "lists": [
+        "Dev Alpha"
+      ]
+    },
+    {
+      "id": "hastra",
+      "name": "Hastra",
+      "count": 1,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "Privacy dashboard update"
+      ]
+    },
+    {
+      "id": "kalshi",
+      "name": "Kalshi",
+      "count": 1,
+      "lastSeen": "2026-09-24",
+      "lists": [
+        "Smart Contract Security"
+      ]
+    },
+    {
+      "id": "kamino-lend",
+      "name": "Kamino Lend",
+      "count": 1,
+      "lastSeen": null,
+      "lists": [
+        "ON CHAIN"
+      ]
+    },
+    {
+      "id": "kamino",
+      "name": "Kamino Lend",
+      "count": 1,
+      "lastSeen": null,
+      "lists": [
+        "ON CHAIN"
+      ]
+    },
+    {
+      "id": "kinetiq",
+      "name": "Kinetiq",
+      "count": 1,
+      "lastSeen": "2026-09-23",
+      "lists": [
+        "Dev Alpha"
+      ]
+    },
+    {
+      "id": "kinetiq--staking",
+      "name": "Kinetiq (Staking)",
+      "count": 1,
+      "lastSeen": "2026-09-23",
+      "lists": [
+        "Dev Alpha"
+      ]
+    },
+    {
+      "id": "layerzero-v2",
+      "name": "LayerZero V2",
+      "count": 1,
+      "lastSeen": null,
+      "lists": [
+        "Privacy dashboard update"
+      ]
+    },
+    {
+      "id": "lighter",
+      "name": "Lighter",
+      "count": 1,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "MEV KOL"
+      ]
+    },
+    {
+      "id": "lighter--perps",
+      "name": "Lighter (Perps)",
+      "count": 1,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "MEV KOL"
+      ]
+    },
+    {
+      "id": "moonwell-vaults",
+      "name": "Moonwell Vaults",
+      "count": 1,
+      "lastSeen": "2026-09-23",
+      "lists": [
+        "mev twitter"
+      ]
+    },
+    {
+      "id": "near-intents",
+      "name": "NEAR Intents",
+      "count": 1,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "mev twitter"
+      ]
+    },
+    {
+      "id": "near",
+      "name": "NEAR Intents",
+      "count": 1,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "mev twitter"
+      ]
+    },
+    {
+      "id": "pendle-v2",
+      "name": "Pendle V2",
+      "count": 1,
+      "lastSeen": null,
+      "lists": [
+        "ON CHAIN"
+      ]
+    },
+    {
+      "id": "pump--other",
+      "name": "Pump (Other)",
+      "count": 1,
+      "lastSeen": null,
+      "lists": [
+        "Privacy x web3 projects"
+      ]
+    },
+    {
+      "id": "rabby",
+      "name": "Rabby",
+      "count": 1,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "Privacy x web3 projects"
+      ]
+    },
+    {
+      "id": "railgun",
+      "name": "Railgun",
+      "count": 1,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "Privacy x web3 projects"
+      ]
+    },
+    {
+      "id": "maker",
+      "name": "Sky",
+      "count": 1,
+      "lastSeen": "2026-10-01",
+      "lists": [
+        "Dev Alpha"
+      ]
+    },
+    {
+      "id": "tradexyz",
+      "name": "tradeXYZ",
+      "count": 1,
+      "lastSeen": "2026-09-24",
+      "lists": [
+        "Dev Alpha"
+      ]
+    },
+    {
+      "id": "variational",
+      "name": "Variational",
+      "count": 1,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "Dev Alpha"
+      ]
+    },
+    {
+      "id": "zama",
+      "name": "Zama",
+      "count": 1,
+      "lastSeen": "2026-09-23",
+      "lists": [
+        "Dev Alpha"
+      ]
+    }
+  ]
+}

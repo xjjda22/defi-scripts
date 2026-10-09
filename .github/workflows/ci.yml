@@ -20,6 +20,8 @@ jobs:
         run: npm run lint
       - name: Catalog check
         run: node scripts/catalog.js --check
+      - name: Showcase data check
+        run: node scripts/showcaseCheck.js
       - name: Live DefiLlama smoke (informational)
         run: node src/simulation/api/smokeL2Overview.js
         continue-on-error: true

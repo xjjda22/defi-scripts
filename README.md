@@ -28,7 +28,7 @@ WBTC    Morpho 0.12% @ Ethereum     Morpho 0.14% @ Ethereum     same chain+proto
 
 ## Contents
 
-[Try it](#try-it-in-60-seconds) · [More output](#more-output) · [Why this repo](#why-this-repo) · [What you need](#what-you-need) · [Protocols](#protocols) · [Command families](#command-families) · [Use as a library](#use-as-a-library) · [Repo layout](#repo-layout) · [Contributing](#contributing)
+[Try it](#try-it-in-60-seconds) · [More output](#more-output) · [Why this repo](#why-this-repo) · [Trending showcase](#trending-showcase) · [What you need](#what-you-need) · [Protocols](#protocols) · [Command families](#command-families) · [Use as a library](#use-as-a-library) · [Repo layout](#repo-layout) · [Contributing](#contributing)
 
 ## Try it in 60 seconds
 
@@ -108,6 +108,20 @@ DefiLlama, Dune and protocol dashboards are great for looking. This is for **scr
 - **On-chain where it matters.** Rates, quotes and pool state are read straight from contracts over your RPC, and quotes and liquidations can be replayed on an anvil fork. DefiLlama fills in breadth (Solana, Sui, Cosmos and everything else it tracks).
 - **One naming scheme.** `<family>:<protocol>:<what>`, so `analytics:aave:markets`, `simulate:aave:v3:fork` and `simulate:kelp:smoke` are guessable. `npm run catalog -- <protocol>` lists them all.
 - **Smoke tests for data sources.** Each DefiLlama monitor has a `:smoke` twin that fails when a protocol is delisted, returns empty TVL, or stops earning revenue.
+
+## Trending showcase
+
+A static top-200 board of DeFi protocols trending over the last six months, with one tab for each of the twelve catalog categories. The score blends size, six-month TVL growth (in percent and in dollars), 30-day fees and volume momentum, and a small bonus for distinct posts on the tracked X lists. Versions of one protocol are combined (Aave V2/V3/V4 is one row), protocols listed in the last six months carry a **New** badge, and rows the repo already monitors link straight to their scripts.
+
+```bash
+npm run showcase:build     # rebuild showcase/data.json from DefiLlama (~800 history pulls)
+node scripts/showcaseCheck.js   # offline sanity check of showcase/data.json (also runs in CI)
+npm run showcase:serve     # http://127.0.0.1:4173
+```
+
+Live page: <https://xjjda22.github.io/defi-scripts/> (deep links work, for example `#tab=perps` or `#q=morpho`). Methodology, the category map and the refresh routine are in [docs/03-showcase-ranking.md](docs/03-showcase-ranking.md).
+
+GitHub Pages publishes the `showcase/` folder from [`.github/workflows/pages.yml`](.github/workflows/pages.yml). Each deploy rebuilds the ranking from DefiLlama first (on a push that touches the showcase, Monday/Wednesday/Friday at 05:30 Malaysia time, or a manual run) and falls back to the committed `showcase/data.json` if DefiLlama is down. Pages must be enabled on the repository with **Source** set to **GitHub Actions**. The **Showcase refresh** workflow rebuilds and commits `showcase/data.json` on a feature branch that changes the ranking code, or on demand.
 
 ## What you need
 
@@ -210,11 +224,12 @@ src/
   abis/            # contract ABIs
   swaps/           # Uniswap V2/V3/V4, Sushi, Curve, Balancer, dexAggregator
   simulation/      # fork quotes, lending/staking/UniswapX sims, DefiLlama smokes
-  analytics/       # protocols/<name>/ monitors + aggregators/ + nft/ + airdrop/
+  analytics/       # protocols/<name>/ monitors + aggregators/ + ranking/ + nft/ + airdrop/
   crosschain/      # Uniswap/Curve/Balancer/Sushi TVL + volume trackers
   examples/        # CLI demos of swap/quote flows
 scripts/           # catalog, startFork, validateForkSimulations, healthCheckReport
-docs/              # architecture, coverage notes, generated protocol catalog
+docs/              # architecture, coverage notes, showcase ranking, generated protocol catalog
+showcase/          # static top-200 page (index.html + data.json)
 ```
 
 Deeper reading: [architecture](docs/00-architecture.md) · [coverage notes and scope](docs/01-protocol-script-coverage.md) · [full protocol catalog](docs/02-protocol-catalog.md).

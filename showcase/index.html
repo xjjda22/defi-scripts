@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trending DeFi · top 200</title>
+    <meta
+      name="description"
+      content="Top 200 trending DeFi protocols by a 6-month score: size, TVL growth, TVL added, fees and volume momentum, plus a small X-list mention bonus."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,680&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2314160f'/%3E%3Cpath d='M6 22l6-7 5 4 9-11' stroke='%23dff26a' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="mast">
+      <div class="mast-copy">
+        <p class="kicker">defi-scripts · 6-month score</p>
+        <h1>Trending DeFi</h1>
+        <p class="lede" id="lede">Loading the ranking…</p>
+      </div>
+      <div class="mast-stats" id="stats" hidden></div>
+    </header>
+
+    <div class="toolbar">
+      <div class="tabs" id="tabs" role="tablist" aria-label="Categories"></div>
+      <label class="search">
+        <span class="sr">Search protocols</span>
+        <input id="search" type="search" placeholder="Search name or slug" autocomplete="off" />
+      </label>
+    </div>
+
+    <p class="tab-note" id="tab-note" hidden></p>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <div class="table-wrap">
+      <table id="board" role="tabpanel">
+        <caption class="sr">Trending DeFi protocols. Column headers sort the table.</caption>
+        <thead>
+          <tr>
+            <th data-sort="rank" aria-sort="ascending"><button type="button">#</button></th>
+            <th data-sort="name"><button type="button">Protocol</button></th>
+            <th data-sort="category" class="col-cat"><button type="button">Category</button></th>
+            <th data-sort="tvl" class="num"><button type="button">TVL</button></th>
+            <th data-sort="tvlChange6m" class="num"><button type="button">6-month TVL</button></th>
+            <th data-sort="tvlAdded6m" class="num"><button type="button">6-month added</button></th>
+            <th data-sort="fees30d" class="num"><button type="button">30d fees</button></th>
+            <th data-sort="xMentions" class="num"><button type="button" title="Distinct posts on the tracked X lists">X posts</button></th>
+            <th data-sort="coverage"><button type="button">Monitor</button></th>
+            <th class="col-scripts" scope="col">Scripts</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+
+    <details class="method">
+      <summary>How the score works</summary>
+      <div id="method-body"></div>
+    </details>
+
+    <footer>
+      <p id="generated"></p>
+      <p>
+        Free DefiLlama endpoints only. Refresh with <code>npm run showcase:build</code>. Script links open the source on GitHub.
+        <a href="https://github.com/xjjda22/defi-scripts/blob/main/docs/03-showcase-ranking.md">Methodology</a>
+      </p>
+    </footer>
+    <script src="app.js"></script>
+  </body>
+</html>

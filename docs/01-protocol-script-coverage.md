@@ -63,6 +63,10 @@ Live numbers move. These scripts print the current DefiLlama windows, not the sn
 | `analytics:stellar:chain`, `simulate:stellar:smoke` | Stellar DeFi TVL record of nearly $273M on 2026-10-02 (from ~$265M a week earlier). Chain name `Stellar`. | [BSC News](https://bsc.news/news/stellar-defi-tvl-record-rwa) (2026-10-05); [Blockonomi](https://blockonomi.com/stellar-defi-hits-new-tvl-record-as-active-wallets-near-100000/) (2026-10-03) |
 | `analytics:near:exploit`, `simulate:near:exploit:smoke` | NEAR Intents exploited for ~$3.8M (USDT on BNB Chain, Sep 30 to Oct 1); funds returned in full 2026-10-02. Read from DefiLlama `/hacks` (id 6225); returned funds are not recorded there. | [Cointelegraph](https://cointelegraph.com/news/near-intents-recovers-entire-stolen-38m-after-ultimatum-to-exploiter) (2026-10-03); [Decrypt](https://decrypt.co/380014/near-intents-recovers-3-8-million-after-48-hour-ultimatum) (2026-10-04); [X](https://x.com/zacodil/status/2108480859942555933) (2026-10-09) |
 
+## Trending showcase
+
+`npm run ranking:top200` (alias `npm run showcase:build`) writes `showcase/data.json`: an overall top 200 and a ranking for each catalog category. It does not add per-protocol npm scripts, so `catalog:check` is unchanged. Methodology, the category map, and the Monday / Wednesday / Friday refresh are in [`03-showcase-ranking.md`](./03-showcase-ranking.md).
+
 ## Claim monitors (2026-10-07)
 
 Live numbers move. These scripts print the current DefiLlama windows, not the snapshot in the source.

@@ -163,6 +163,43 @@ function fetchLlamaProtocols(timeoutMs) {
   return fetchLlamaJson("/protocols", timeoutMs);
 }
 
+/**
+ * Current TVL and the sample on or just before `days` earlier.
+ * `partial` is true when the series starts after that cutoff (baseline is the first sample).
+ * @param {Array<{ date: number, totalLiquidityUSD: number }>|undefined} series
+ * @param {number} days
+ * @returns {{ current: number, past: number|null, first: number|null, windowDays: number, partial: boolean }|null}
+ */
+function tvlBaseline(series, days) {
+  if (!Array.isArray(series) || !series.length || !Number.isFinite(days) || days <= 0) return null;
+  let first = null;
+  let last = null;
+  for (const point of series) {
+    const tvl = coalesceTvlPointUsd(point);
+    const date = point && typeof point.date === "number" ? point.date : null;
+    if (tvl == null || date == null) continue;
+    if (!first || date < first.date) first = { date, tvl };
+    if (!last || date >= last.date) last = { date, tvl };
+  }
+  if (!last || !first) return null;
+  const target = last.date - days * 86400;
+  let past = null;
+  for (const point of series) {
+    const tvl = coalesceTvlPointUsd(point);
+    const date = point && typeof point.date === "number" ? point.date : null;
+    if (tvl == null || date == null || date > target) continue;
+    if (!past || date >= past.date) past = { date, tvl };
+  }
+  const baseline = past || first;
+  return {
+    current: last.tvl,
+    past: past ? past.tvl : null,
+    first: first.tvl,
+    windowDays: Math.max(0, Math.round((last.date - baseline.date) / 86400)),
+    partial: !past,
+  };
+}
+
 function fetchHistoricalChainTvl(chain, timeoutMs) {
   return fetchLlamaJson(`/v2/historicalChainTvl/${encodeURIComponent(chain)}`, timeoutMs);
 }
@@ -184,5 +221,6 @@ module.exports = {
   fetchLlamaHacks,
   fetchLlamaProtocols,
   fetchHistoricalChainTvl,
+  tvlBaseline,
   DEFILLAMA_API,
 };

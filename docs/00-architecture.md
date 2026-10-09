@@ -12,6 +12,7 @@ MEV tooling (bundle simulation, sandwich/flashloan analysis, bots) is intentiona
 | Fork simulation | `src/simulation/` | `dexForkRunner`, lending/staking/UniswapX sims, `scripts/validateForkSimulations.js` |
 | Cross-chain TVL/volume | `src/crosschain/{uniswap,curve,balancer,sushiswap}/` | Subgraph + DefiLlama trackers |
 | Analytics | `src/analytics/protocols/` + `aggregators/` + `nft/` + `airdrop/` | Per-protocol monitors, Llama slug wrappers, lending/AMM/staking aggregates, L2/ETH DEX/yield/BTC wrap/RWA/NFT/airdrop overviews |
+| Ranking | `src/analytics/ranking/` | Top-200 trending score (`ranking:top200` / `showcase:build`) written to `showcase/data.json` |
 | Shared utils | `src/config/chains.js`, `src/utils/web3.js`, `src/utils/validation.js`, `src/abis/` | Chain map, providers, checks |
 
 `src/examples/` are CLIs on top of `src/swaps/`, not a separate cluster.
@@ -22,7 +23,7 @@ MEV tooling (bundle simulation, sandwich/flashloan analysis, bots) is intentiona
 
 ## Entry points
 
-npm scripts in `package.json` → `src/analytics/`, `src/crosschain/`, `src/simulation/`, `src/examples/`. Fork validator: `scripts/validateForkSimulations.js`.
+npm scripts in `package.json` → `src/analytics/`, `src/crosschain/`, `src/simulation/`, `src/examples/`. Fork validator: `scripts/validateForkSimulations.js`. Trending board: `npm run ranking:top200` (same script as `showcase:build`).
 
 ## Hotspots
 
