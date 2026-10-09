@@ -32,7 +32,14 @@ console.log(`\n╔════════════════════�
 console.log(`║                     Starting Anvil Fork                              ║`);
 console.log(`╚══════════════════════════════════════════════════════════════════════╝\n`);
 console.log(`Chain: ${chain.name}`);
-console.log(`RPC URL: ${chain.rpcUrl}`);
+// Print only the host: RPC URLs often carry an API key in the path or query.
+let rpcHost = "(configured)";
+try {
+  rpcHost = new URL(chain.rpcUrl).host;
+} catch {
+  // keep the placeholder
+}
+console.log(`RPC host: ${rpcHost}`);
 console.log(`Local Port: ${PORT}`);
 if (FORK_BLOCK) {
   console.log(`Fork Block: ${FORK_BLOCK}`);

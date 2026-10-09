@@ -70,6 +70,7 @@ function startAnvil(url, port, forkBlock) {
   const args = ["--fork-url", url, "--port", String(port), "--host", "127.0.0.1"];
   if (forkBlock) args.push("--fork-block-number", String(forkBlock));
   const proc = spawn("anvil", args, { stdio: ["ignore", "ignore", "pipe"], cwd: ROOT });
+  LIVE_ANVILS.add(proc);
   let stderr = "";
   proc.stderr.on("data", chunk => {
     stderr += chunk.toString();
@@ -78,7 +79,22 @@ function startAnvil(url, port, forkBlock) {
   return { proc, stderr: () => stderr };
 }
 
+const LIVE_ANVILS = new Set();
+process.on("exit", () => {
+  for (const proc of LIVE_ANVILS) {
+    try {
+      proc.kill("SIGKILL");
+    } catch {
+      // already gone
+    }
+  }
+});
+for (const signal of ["SIGINT", "SIGTERM"]) {
+  process.on(signal, () => process.exit(130));
+}
+
 function stopAnvil(proc) {
+  LIVE_ANVILS.delete(proc);
   if (!proc || proc.killed) return;
   try {
     proc.kill("SIGTERM");
@@ -98,43 +114,79 @@ function printAnvilHelp() {
   console.error("  curl -L https://foundry.paradigm.xyz | bash && foundryup");
 }
 
+const TEST_TIMEOUT_MS = parseInt(process.env.FORK_TEST_TIMEOUT_MS || "180000", 10);
+
+/**
+ * Run one npm fork script in its own process group with a hard deadline.
+ * spawnSync's timeout only kills npm; the node grandchild keeps the pipes open and
+ * the suite hangs. Killing the whole group (-pid) cannot leave anything behind.
+ */
 function runScript(script, chain, forkUrl) {
-  const env = { ...process.env, CHAIN: chain };
+  const env = { ...process.env, CHAIN: chain, FORK_TEST_TIMEOUT_MS: String(TEST_TIMEOUT_MS) };
   const key = RPC_ENV[chain];
   if (key) env[key] = forkUrl;
   if (chain === "ethereum") {
     env.ETHEREUM_RPC_URL = forkUrl;
     env.ETH_RPC_URL = forkUrl;
   }
-  const child = spawnSync("npm", ["run", script], {
-    cwd: ROOT,
-    env,
-    encoding: "utf8",
-    timeout: parseInt(process.env.FORK_TEST_TIMEOUT_MS || "600000", 10),
-    maxBuffer: 12 * 1024 * 1024,
+  return new Promise(resolve => {
+    const started = Date.now();
+    const child = spawn("npm", ["run", "--silent", script], {
+      cwd: ROOT,
+      env,
+      detached: true,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    let out = "";
+    const append = chunk => {
+      out += chunk.toString();
+      if (out.length > 12 * 1024 * 1024) out = out.slice(-1024 * 1024);
+    };
+    child.stdout.on("data", append);
+    child.stderr.on("data", append);
+    let timedOut = false;
+    const killGroup = signal => {
+      try {
+        process.kill(-child.pid, signal);
+      } catch {
+        // group already gone
+      }
+    };
+    // The script has its own watchdog at TEST_TIMEOUT_MS; this is the backstop.
+    const timer = setTimeout(() => {
+      timedOut = true;
+      killGroup("SIGTERM");
+      setTimeout(() => killGroup("SIGKILL"), 3000).unref();
+    }, TEST_TIMEOUT_MS + 15000);
+    child.on("close", code => {
+      clearTimeout(timer);
+      killGroup("SIGKILL");
+      const match = out.match(/FORK_RESULT\s+(.+)/);
+      const fields = {};
+      if (match) {
+        for (const part of match[1].split(/\s+/)) {
+          const idx = part.indexOf("=");
+          if (idx > 0) fields[part.slice(0, idx)] = part.slice(idx + 1);
+        }
+      }
+      let status = fields.status || (code === 0 ? "PASS" : "FAIL");
+      if (timedOut) status = "FAIL";
+      if (status === "PASS" && code !== 0) status = "FAIL";
+      const keyText = timedOut ? `timeout after ${TEST_TIMEOUT_MS + 15000} ms` : (match ? match[1].replace(/^.*?block=\S+\s*/, "") : "");
+      resolve({
+        script,
+        chain,
+        status,
+        block: fields.block || "-",
+        key: keyText,
+        protocol: fields.protocol || script.split(":")[1] || script,
+        action: fields.action || script.split(":")[2] || "-",
+        seconds: Math.round((Date.now() - started) / 1000),
+        tail: out.trim().split("\n").slice(-8).join("\n"),
+        error: timedOut ? "timeout" : "",
+      });
+    });
   });
-  const out = `${child.stdout || ""}\n${child.stderr || ""}`;
-  const match = out.match(/FORK_RESULT\s+(.+)/);
-  const fields = {};
-  if (match) {
-    for (const part of match[1].split(/\s+/)) {
-      const idx = part.indexOf("=");
-      if (idx > 0) fields[part.slice(0, idx)] = part.slice(idx + 1);
-    }
-  }
-  let status = fields.status || (child.status === 0 ? "PASS" : "FAIL");
-  if (child.error && child.error.code === "ETIMEDOUT") status = "FAIL";
-  return {
-    script,
-    chain,
-    status,
-    block: fields.block || "-",
-    key: fields.key || "",
-    protocol: fields.protocol || script.split(":")[1] || script,
-    action: fields.action || script.split(":")[2] || "-",
-    tail: out.trim().split("\n").slice(-8).join("\n"),
-    error: child.error ? child.error.message : "",
-  };
 }
 
 async function main() {
@@ -209,7 +261,7 @@ async function main() {
 
     for (const plan of mine) {
       process.stdout.write(`→ ${plan.script} `);
-      const result = runScript(plan.script, chain, forkUrl);
+      const result = await runScript(plan.script, chain, forkUrl);
       if (result.block === "-") result.block = block;
       rows.push(result);
       console.log(`${result.status}${result.key ? `  ${result.key}` : ""}`);

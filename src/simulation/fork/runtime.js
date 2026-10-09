@@ -99,7 +99,30 @@ async function impersonateFunded(chainKey, symbol, token, minimum) {
     bal = await getTokenBalance(token, user, chainKey);
     if (bal < minimum) throw new Error(`${symbol} balance still ${bal.toString()} after anvil_deal`);
   }
-  return signer;
+  if (process.env.FORK_SHARED_WHALE === "1") return signer;
+  return freshFrom(chainKey, signer, token, minimum);
+}
+
+/**
+ * Move the test amount from the whale to a brand-new impersonated account.
+ * The suite runs every test on one Anvil fork, so a shared whale would carry positions
+ * from earlier tests (an Aave borrow, a Spark supply) into later ones. A fresh account
+ * starts with no positions. A little extra covers stETH-style 1-2 wei transfer rounding.
+ * FORK_SHARED_WHALE=1 keeps the old behaviour.
+ */
+async function freshFrom(chainKey, whale, token, minimum) {
+  const fresh = await impersonateAccount(ethers.Wallet.createRandom().address, chainKey);
+  const to = await fresh.getAddress();
+  const extra = minimum / 1000n + 2n;
+  const total = minimum + extra;
+  const whaleBal = await getTokenBalance(token, await whale.getAddress(), chainKey);
+  const send = whaleBal >= total ? total : minimum;
+  // No return value declared, so USDT (no bool return) works too.
+  const erc = new ethers.Contract(token, ["function transfer(address,uint256)"], whale);
+  await (await erc.transfer(to, send)).wait();
+  const got = await getTokenBalance(token, to, chainKey);
+  if (got + 2n < minimum) throw new Error(`fresh account got ${got.toString()} of ${minimum.toString()}`);
+  return fresh;
 }
 
 function erc20(address, runner) {
