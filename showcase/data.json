@@ -406,7 +406,10 @@
     "commands": [
      "CHAIN=ethereum node scripts/startFork.js",
      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:spark:supply"
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:spark:supply",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:spark:borrow",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:spark:repay",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:spark:withdraw"
     ],
     "tests": [
      {
@@ -905,7 +908,9 @@
     "commands": [
      "CHAIN=ethereum node scripts/startFork.js",
      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:uniswap:v2"
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:uniswap:v2",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:uniswap:v3",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:uniswap:v4"
     ],
     "tests": [
      {
@@ -1274,7 +1279,8 @@
     "commands": [
      "CHAIN=ethereum node scripts/startFork.js",
      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:morpho:supply"
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:morpho:supply",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:morpho:borrow"
     ],
     "tests": [
      {
@@ -1447,9 +1453,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -1520,9 +1527,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -1581,9 +1589,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -1646,9 +1655,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -1804,9 +1814,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -2105,7 +2116,8 @@
     "commands": [
      "CHAIN=ethereum node scripts/startFork.js",
      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:wrap"
     ],
     "tests": [
      {
@@ -2363,9 +2375,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -2516,9 +2529,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -2681,7 +2695,13 @@
      "tvl": 763832398
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:optimism:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.8231,
    "components": {
@@ -2693,22 +2713,41 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://app.optimism.io/bridge/deposit",
+    "mode": "fork",
+    "label": "Source chain only",
+    "note": "L1StandardBridge.depositETH locks ETH (into the ETHLockbox that OptimismPortal.ethLockbox() reports) and emits ETHDepositInitiated. Destination delivery on OP Mainnet needs the rollup; a single Ethereum fork cannot verify it.",
+    "appUrl": "https://app.optimism.io/bridge",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "npm run simulate:stargate:smoke"
-     ],
-     "note": "Bridges and chains are API-only in this suite."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:optimism:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:optimism:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "L1StandardBridge",
+      "address": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
+      "doc": "https://docs.optimism.io/chain/addresses"
+     },
+     {
+      "chain": "ethereum",
+      "label": "OptimismPortal",
+      "address": "0xbEb5Fc579115071764c7423A4f12eDde41f106Ed",
+      "doc": "https://docs.optimism.io/chain/addresses"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -2965,9 +3004,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -3026,9 +3066,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -3271,9 +3312,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -3332,9 +3374,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -3466,9 +3509,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -3776,9 +3820,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -3910,9 +3955,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -4115,9 +4161,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -4383,9 +4430,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -4420,7 +4468,13 @@
      "tvl": 2978961182
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:base:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7936,
    "components": {
@@ -4432,22 +4486,41 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://docs.base.org/base-chain/network-information/bridges-mainnet",
+    "mode": "fork",
+    "label": "Source chain only",
+    "note": "L1StandardBridge.depositETH locks ETH and emits ETHDepositInitiated. Destination delivery on Base needs the rollup; a single Ethereum fork cannot verify it.",
+    "appUrl": "https://bridge.base.org",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "npm run simulate:stargate:smoke"
-     ],
-     "note": "Bridges and chains are API-only in this suite."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:base:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:base:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "L1StandardBridge",
+      "address": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35",
+      "doc": "https://docs.base.org/base-chain/network-information/base-contracts"
+     },
+     {
+      "chain": "ethereum",
+      "label": "OptimismPortal",
+      "address": "0x49048044D57e1C92A77f79988d21Fa8fAF74E97e",
+      "doc": "https://docs.base.org/base-chain/network-information/base-contracts"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -4505,9 +4578,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -4570,9 +4644,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -4918,9 +4993,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -5194,9 +5270,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -5450,9 +5527,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -5638,7 +5716,13 @@
      "tvl": 3562614330
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:arbitrum:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7761,
    "components": {
@@ -5650,22 +5734,41 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://portal.arbitrum.io/bridge",
+    "mode": "fork",
+    "label": "Source chain only",
+    "note": "L1 Inbox.depositEth locks ETH and emits InboxMessageDelivered. Destination delivery on Arbitrum needs the rollup; a single Ethereum fork cannot verify it.",
+    "appUrl": "https://bridge.arbitrum.io",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "npm run simulate:stargate:smoke"
-     ],
-     "note": "Bridges and chains are API-only in this suite."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:arbitrum:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Inbox",
+      "address": "0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f",
+      "doc": "https://docs.arbitrum.io/build-decentralized-apps/reference/contract-addresses"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Bridge",
+      "address": "0x8315177aB297bA92A06054cE80a67Ed4DBd7ed3a",
+      "doc": "https://docs.arbitrum.io/build-decentralized-apps/reference/contract-addresses"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -6409,9 +6512,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -6645,9 +6749,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -7059,9 +7164,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -7282,9 +7388,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -7467,9 +7574,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -8161,7 +8269,8 @@
     "commands": [
      "CHAIN=ethereum node scripts/startFork.js",
      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:compound:supply"
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:compound:supply",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:compound:borrow"
     ],
     "tests": [
      {
@@ -8307,9 +8416,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -8368,9 +8478,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -9081,9 +9192,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -9307,9 +9419,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -10062,9 +10175,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -10445,9 +10559,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -10604,9 +10719,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -10835,9 +10951,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -11134,9 +11251,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -12045,9 +12163,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -12110,9 +12229,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -12874,9 +12994,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -13084,9 +13205,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -13428,7 +13550,13 @@
    "llamaUrl": "https://defillama.com/protocol/tether",
    "appUrl": "https://tether.to/en/",
    "chainTvls": [],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:tether:transfer",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.6663,
    "components": {
@@ -13440,22 +13568,35 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://tether.to/en/",
+    "mode": "fork",
+    "label": "Transfer / read-only",
+    "note": "USDT mint and redeem are off-chain (Tether, KYC). This fork test only transfers USDT and reads totalSupply.",
+    "appUrl": "https://tether.to",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic stablecoin check",
-     "chain": "ethereum",
-     "commands": [
-      "npm run simulate:ethena:smoke"
-     ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:tether:transfer"
+    ],
+    "tests": [
+     {
+      "script": "fork:tether:transfer",
+      "action": "transfer",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "USDT",
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "doc": "https://tether.to/en/transparency/"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -13607,9 +13748,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -13696,9 +13838,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -13966,9 +14109,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   },
@@ -14490,9 +14634,10 @@
      "title": "Generic bridge check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:stargate:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
      ],
-     "note": "Bridges and chains are API-only in this suite."
+     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
     }
    }
   },
@@ -14851,9 +14996,10 @@
      "title": "Generic stablecoin check",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:ethena:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
      ],
-     "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
     }
    }
   }
@@ -15115,7 +15261,9 @@
      "commands": [
       "CHAIN=ethereum node scripts/startFork.js",
       "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:uniswap:v2"
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:uniswap:v2",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:uniswap:v3",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:uniswap:v4"
      ],
      "tests": [
       {
@@ -30472,7 +30620,10 @@
      "commands": [
       "CHAIN=ethereum node scripts/startFork.js",
       "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:spark:supply"
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:spark:supply",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:spark:borrow",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:spark:repay",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:spark:withdraw"
      ],
      "tests": [
       {
@@ -30723,7 +30874,8 @@
      "commands": [
       "CHAIN=ethereum node scripts/startFork.js",
       "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:morpho:supply"
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:morpho:supply",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:morpho:borrow"
      ],
      "tests": [
       {
@@ -31704,7 +31856,8 @@
      "commands": [
       "CHAIN=ethereum node scripts/startFork.js",
       "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:compound:supply"
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:compound:supply",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:compound:borrow"
      ],
      "tests": [
       {
@@ -33968,7 +34121,10 @@
      "commands": [
       "CHAIN=ethereum node scripts/startFork.js",
       "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:borrow",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:repay",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:withdraw"
      ],
      "tests": [
       {
@@ -37784,7 +37940,8 @@
      "commands": [
       "CHAIN=ethereum node scripts/startFork.js",
       "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:compound:supply"
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:compound:supply",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:compound:borrow"
      ],
      "tests": [
       {
@@ -45381,7 +45538,8 @@
      "commands": [
       "CHAIN=ethereum node scripts/startFork.js",
       "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:wrap"
      ],
      "tests": [
       {
@@ -52002,7 +52160,8 @@
      "commands": [
       "CHAIN=ethereum node scripts/startFork.js",
       "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:wrap"
      ],
      "tests": [
       {
@@ -53222,9 +53381,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -53301,9 +53461,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -53373,9 +53534,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -53434,9 +53596,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -53495,9 +53658,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -53568,9 +53732,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -53629,9 +53794,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -53690,9 +53856,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -53751,9 +53918,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -53812,9 +53980,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -53868,9 +54037,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -53924,9 +54094,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -53989,9 +54160,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -54045,9 +54217,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -54114,9 +54287,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -54146,7 +54320,13 @@
     "llamaUrl": "https://defillama.com/protocol/tether",
     "appUrl": "https://tether.to/en/",
     "chainTvls": [],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:tether:transfer",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.6663,
     "components": {
@@ -54158,22 +54338,35 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://tether.to/en/",
+     "mode": "fork",
+     "label": "Transfer / read-only",
+     "note": "USDT mint and redeem are off-chain (Tether, KYC). This fork test only transfers USDT and reads totalSupply.",
+     "appUrl": "https://tether.to",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic stablecoin check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:ethena:smoke"
-      ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:tether:transfer"
+     ],
+     "tests": [
+      {
+       "script": "fork:tether:transfer",
+       "action": "transfer",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "USDT",
+       "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+       "doc": "https://tether.to/en/transparency/"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -54255,9 +54448,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -54311,9 +54505,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -54367,9 +54562,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -54423,9 +54619,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -54484,9 +54681,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -54545,9 +54743,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -54618,6 +54817,11 @@
       "name": "simulate:buidl:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:buidl:read",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -54631,22 +54835,35 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://securitize.io/",
+     "mode": "fork",
+     "label": "KYC-gated: read-only",
+     "note": "KYC-gated: read-only. BUIDL mint is allowlisted. The fork test reads totalSupply of the rebasing token and does not mint.",
+     "appUrl": "https://securitize.io/blackrock/BUIDL",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic stablecoin check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:ethena:smoke"
-      ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:buidl:read"
+     ],
+     "tests": [
+      {
+       "script": "fork:buidl:read",
+       "action": "read",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "BUIDL",
+       "address": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+       "doc": "https://securitize.io/blackrock/BUIDL"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -54701,9 +54918,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -54757,6 +54975,11 @@
       "name": "simulate:ondo:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:ondo:rate",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -54770,22 +54993,53 @@
      "mentions": 0.024
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "KYC-gated: read-only",
+     "note": "KYC-gated: read-only. USDY and OUSG mints are allowlisted. The fork test reads the USDY and OUSG oracles and does not mint.",
      "appUrl": "https://ondo.finance",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic stablecoin check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:ethena:smoke"
-      ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:ondo:rate"
+     ],
+     "tests": [
+      {
+       "script": "fork:ondo:rate",
+       "action": "rate",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "USDY",
+       "address": "0x96F6eF951840721AdBF46Ac996b59E0235CB985C",
+       "doc": "https://docs.ondo.finance/addresses"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDY oracle",
+       "address": "0x87b126e5518b6a1Bb8465779b4607C45C643DF90",
+       "doc": "https://docs.ondo.finance/addresses"
+      },
+      {
+       "chain": "ethereum",
+       "label": "OUSG",
+       "address": "0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92",
+       "doc": "https://docs.ondo.finance/addresses"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Ondo oracle",
+       "address": "0x9Cad45a8BF0Ed41Ff33074449B357C7a1fAb4094",
+       "doc": "https://docs.ondo.finance/addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -54866,9 +55120,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -54921,7 +55176,13 @@
       "tvl": 67160352
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:circle:transfer",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.61,
     "components": {
@@ -54933,22 +55194,35 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.circle.com/xreserve",
+     "mode": "fork",
+     "label": "Transfer / read-only",
+     "note": "USDC mint and redeem are off-chain (Circle). This fork test only transfers USDC and reads totalSupply.",
+     "appUrl": "https://www.circle.com/usdc",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic stablecoin check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:ethena:smoke"
-      ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:circle:transfer"
+     ],
+     "tests": [
+      {
+       "script": "fork:circle:transfer",
+       "action": "transfer",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "USDC",
+       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+       "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -55006,9 +55280,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -55091,9 +55366,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -55147,9 +55423,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -55208,9 +55485,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -55264,9 +55542,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -55320,9 +55599,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -55381,9 +55661,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -55448,6 +55729,21 @@
       "name": "simulate:sky:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:sky:convert",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     },
+     {
+      "name": "fork:sky:susds",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     },
+     {
+      "name": "fork:sky:sdai",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -55461,22 +55757,75 @@
      "mentions": 0.012
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://app.sky.money/",
+     "mode": "fork",
+     "label": null,
+     "note": "Permissionless Sky routes: DAI↔USDS on the official converter, USDS↔sUSDS and DAI↔sDAI through the ERC-4626 vaults.",
+     "appUrl": "https://sky.money",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic stablecoin check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:ethena:smoke"
-      ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:susds",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:sdai"
+     ],
+     "tests": [
+      {
+       "script": "fork:sky:convert",
+       "action": "convert",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      },
+      {
+       "script": "fork:sky:susds",
+       "action": "susds",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      },
+      {
+       "script": "fork:sky:sdai",
+       "action": "sdai",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "DAI",
+       "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+       "doc": "https://developers.skyeco.com/protocol/tokens/usds/"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDS",
+       "address": "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+       "doc": "https://developers.skyeco.com/protocol/tokens/usds/"
+      },
+      {
+       "chain": "ethereum",
+       "label": "DAI/USDS converter",
+       "address": "0x3225737a9Bbb6473CB4a45b7244ACa2BeFdB276A",
+       "doc": "https://developers.skyeco.com/protocol/tokens/usds/"
+      },
+      {
+       "chain": "ethereum",
+       "label": "sUSDS",
+       "address": "0xa3931d71877C0E7a3148CB7Eb4463524FEc27fbD",
+       "doc": "https://developers.skyeco.com/protocol/tokens/susds/"
+      },
+      {
+       "chain": "ethereum",
+       "label": "sDAI",
+       "address": "0x83F20F44975D03b1b09e64809B757c47f942BEeA",
+       "doc": "https://docs.makerdao.com/smart-contract-modules/dai-module/sdai-core-module"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -55550,9 +55899,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -55609,6 +55959,16 @@
       "name": "simulate:ethena:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:ethena:stake",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     },
+     {
+      "name": "fork:ethena:cooldown",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -55622,22 +55982,49 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.app.ethena.fi/join/3y20d",
+     "mode": "fork",
+     "label": null,
+     "note": "Minting USDe is whitelisted, so it is not tested. The public path is staking USDe into sUSDe and starting the cooldown.",
+     "appUrl": "https://ethena.fi",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic stablecoin check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:ethena:smoke"
-      ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:ethena:stake",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:ethena:cooldown"
+     ],
+     "tests": [
+      {
+       "script": "fork:ethena:stake",
+       "action": "stake",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      },
+      {
+       "script": "fork:ethena:cooldown",
+       "action": "cooldown",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "USDe",
+       "address": "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+       "doc": "https://docs.ethena.fi/technical-design/key-addresses"
+      },
+      {
+       "chain": "ethereum",
+       "label": "sUSDe",
+       "address": "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497",
+       "doc": "https://docs.ethena.fi/technical-design/key-addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -55695,9 +56082,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -55756,9 +56144,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -55817,9 +56206,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -55878,9 +56268,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -55939,9 +56330,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56024,9 +56416,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56085,9 +56478,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56154,9 +56548,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56219,9 +56614,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56280,9 +56676,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56341,9 +56738,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56410,9 +56808,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56467,7 +56866,13 @@
       "tvl": 14045659
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:superstate:nav",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.4897,
     "components": {
@@ -56479,22 +56884,41 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://superstate.com/",
+     "mode": "fork",
+     "label": "KYC-gated: read-only",
+     "note": "KYC-gated: read-only. USTB subscribe is allowlisted. The fork test reads the continuous NAV oracle and does not mint.",
+     "appUrl": "https://superstate.com",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic stablecoin check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:ethena:smoke"
-      ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:superstate:nav"
+     ],
+     "tests": [
+      {
+       "script": "fork:superstate:nav",
+       "action": "nav",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "USTB",
+       "address": "0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e",
+       "doc": "https://docs.superstate.com/investors/smart-contracts"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USTB price oracle",
+       "address": "0xe4fa682f94610ccd170680cc3b045d77d9e528a8",
+       "doc": "https://docs.superstate.com/investors/smart-contracts"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -56556,9 +56980,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56617,9 +57042,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56673,9 +57099,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56734,9 +57161,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56795,9 +57223,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56851,9 +57280,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56907,9 +57337,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -56968,9 +57399,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57029,9 +57461,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57078,7 +57511,13 @@
       "tvl": 146420805
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:frax:rate",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.4315,
     "components": {
@@ -57090,22 +57529,41 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://frax.com/",
+     "mode": "fork",
+     "label": "Read-only",
+     "note": "Ethereum sfrxUSD maxDeposit is 0, so there is no local permissionless deposit. The fork test reads convertToAssets. Stake and unstake on Ethereum go through a Fraxtal lockbox.",
+     "appUrl": "https://frax.com",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic stablecoin check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:ethena:smoke"
-      ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:frax:rate"
+     ],
+     "tests": [
+      {
+       "script": "fork:frax:rate",
+       "action": "rate",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "frxUSD",
+       "address": "0xCAcd6fd266aF91b8AeD52aCCc382b4e165586E29",
+       "doc": "https://docs.frax.com/frxusd/frxusd-contracts"
+      },
+      {
+       "chain": "ethereum",
+       "label": "sfrxUSD",
+       "address": "0xcf62F905562626CfcDD2261162a51fd02Fc9c5b6",
+       "doc": "https://docs.frax.com/frxusd/frxusd-contracts"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -57163,9 +57621,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57232,9 +57691,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57293,9 +57753,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57354,9 +57815,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57435,9 +57897,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57496,9 +57959,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57561,9 +58025,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57622,9 +58087,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57683,9 +58149,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57744,9 +58211,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57805,9 +58273,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57861,9 +58330,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57922,9 +58392,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -57983,9 +58454,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58072,9 +58544,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58133,9 +58606,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58194,9 +58668,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58259,9 +58734,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58320,9 +58796,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58397,9 +58874,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58462,9 +58940,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58523,9 +59002,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58596,9 +59076,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58657,9 +59138,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58730,9 +59212,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58803,9 +59286,10 @@
       "title": "Generic stablecoin check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:ethena:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
       ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
+      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
      }
     }
    },
@@ -58854,6 +59338,11 @@
       "name": "simulate:circle:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:circle:transfer",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -58861,22 +59350,35 @@
     "components": null,
     "catalogOnly": true,
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://circle.com",
+     "mode": "fork",
+     "label": "Transfer / read-only",
+     "note": "USDC mint and redeem are off-chain (Circle). This fork test only transfers USDC and reads totalSupply.",
+     "appUrl": "https://www.circle.com/usdc",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic stablecoin check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:ethena:smoke"
-      ],
-      "note": "Stablecoin and RWA rows are API-only unless a fork script is listed."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:circle:transfer"
+     ],
+     "tests": [
+      {
+       "script": "fork:circle:transfer",
+       "action": "transfer",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "USDC",
+       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+       "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses"
+      }
+     ],
+     "recipe": null
     }
    }
   ],
@@ -58952,9 +59454,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59013,9 +59516,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59078,9 +59582,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59167,9 +59672,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59258,9 +59764,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59295,7 +59802,13 @@
       "tvl": 763832398
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:optimism:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.8231,
     "components": {
@@ -59307,22 +59820,41 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://app.optimism.io/bridge/deposit",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "L1StandardBridge.depositETH locks ETH (into the ETHLockbox that OptimismPortal.ethLockbox() reports) and emits ETHDepositInitiated. Destination delivery on OP Mainnet needs the rollup; a single Ethereum fork cannot verify it.",
+     "appUrl": "https://app.optimism.io/bridge",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:stargate:smoke"
-      ],
-      "note": "Bridges and chains are API-only in this suite."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:optimism:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:optimism:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "L1StandardBridge",
+       "address": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
+       "doc": "https://docs.optimism.io/chain/addresses"
+      },
+      {
+       "chain": "ethereum",
+       "label": "OptimismPortal",
+       "address": "0xbEb5Fc579115071764c7423A4f12eDde41f106Ed",
+       "doc": "https://docs.optimism.io/chain/addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -59380,9 +59912,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59441,9 +59974,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59502,9 +60036,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59563,9 +60098,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59648,9 +60184,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59709,9 +60246,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59746,7 +60284,13 @@
       "tvl": 2978961182
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:base:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7936,
     "components": {
@@ -59758,22 +60302,41 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://docs.base.org/base-chain/network-information/bridges-mainnet",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "L1StandardBridge.depositETH locks ETH and emits ETHDepositInitiated. Destination delivery on Base needs the rollup; a single Ethereum fork cannot verify it.",
+     "appUrl": "https://bridge.base.org",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:stargate:smoke"
-      ],
-      "note": "Bridges and chains are API-only in this suite."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:base:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:base:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "L1StandardBridge",
+       "address": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35",
+       "doc": "https://docs.base.org/base-chain/network-information/base-contracts"
+      },
+      {
+       "chain": "ethereum",
+       "label": "OptimismPortal",
+       "address": "0x49048044D57e1C92A77f79988d21Fa8fAF74E97e",
+       "doc": "https://docs.base.org/base-chain/network-information/base-contracts"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -59831,9 +60394,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59896,9 +60460,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -59957,9 +60522,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60026,9 +60592,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60102,9 +60669,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60139,7 +60707,13 @@
       "tvl": 3562614330
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:arbitrum:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7761,
     "components": {
@@ -60151,22 +60725,41 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://portal.arbitrum.io/bridge",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "L1 Inbox.depositEth locks ETH and emits InboxMessageDelivered. Destination delivery on Arbitrum needs the rollup; a single Ethereum fork cannot verify it.",
+     "appUrl": "https://bridge.arbitrum.io",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:stargate:smoke"
-      ],
-      "note": "Bridges and chains are API-only in this suite."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:arbitrum:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Inbox",
+       "address": "0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f",
+       "doc": "https://docs.arbitrum.io/build-decentralized-apps/reference/contract-addresses"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Bridge",
+       "address": "0x8315177aB297bA92A06054cE80a67Ed4DBd7ed3a",
+       "doc": "https://docs.arbitrum.io/build-decentralized-apps/reference/contract-addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -60224,9 +60817,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60313,9 +60907,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60374,9 +60969,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60435,9 +61031,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60496,9 +61093,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60557,9 +61155,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60646,9 +61245,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60746,9 +61346,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60835,9 +61436,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60896,9 +61498,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -60957,9 +61560,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61018,9 +61622,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61118,9 +61723,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61190,14 +61796,22 @@
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "USDC",
+       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+       "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses"
+      }
+     ],
      "recipe": {
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61256,9 +61870,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61317,9 +61932,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61406,9 +62022,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61495,9 +62112,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61560,9 +62178,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61633,9 +62252,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61694,9 +62314,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61755,9 +62376,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61816,9 +62438,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61877,9 +62500,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -61942,9 +62566,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62007,9 +62632,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62072,9 +62698,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62161,9 +62788,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62222,9 +62850,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62283,9 +62912,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62344,9 +62974,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62433,9 +63064,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62494,9 +63126,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62555,9 +63188,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62616,9 +63250,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62672,9 +63307,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62733,9 +63369,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62822,9 +63459,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62891,9 +63529,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -62972,9 +63611,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63033,9 +63673,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63094,9 +63735,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63163,9 +63805,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63259,6 +63902,16 @@
       "name": "simulate:stargate:v2:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:stargate:quote",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     },
+     {
+      "name": "fork:stargate:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -63272,22 +63925,49 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://stargate.finance/",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "Stargate V2 quoteSend and send lock USDC on Ethereum toward Arbitrum. LayerZero relayers deliver the destination; this fork does not.",
+     "appUrl": "https://stargate.finance",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:stargate:smoke"
-      ],
-      "note": "Bridges and chains are API-only in this suite."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:stargate:quote",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:stargate:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:stargate:quote",
+       "action": "quote",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      },
+      {
+       "script": "fork:stargate:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "StargatePoolUSDC",
+       "address": "0xc026395860Db2d07ee33e05fE50ed7bD583189C7",
+       "doc": "https://docs.stargate.finance/resources/contracts/mainnet-contracts"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDC",
+       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+       "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -63345,9 +64025,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63406,9 +64087,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63467,9 +64149,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63523,9 +64206,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63584,9 +64268,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63645,9 +64330,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63706,9 +64392,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63767,9 +64454,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63848,9 +64536,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63937,9 +64626,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -63998,9 +64688,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64059,9 +64750,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64131,9 +64823,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64220,9 +64913,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64281,9 +64975,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64342,9 +65037,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64403,9 +65099,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64464,9 +65161,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64529,9 +65227,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64590,9 +65289,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64651,9 +65351,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64724,9 +65425,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64813,9 +65515,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64874,9 +65577,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64935,9 +65639,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -64996,9 +65701,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65057,9 +65763,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65129,9 +65836,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65202,9 +65910,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65263,9 +65972,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65324,9 +66034,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65361,7 +66072,13 @@
       "tvl": 18861639
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:across:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.3334,
     "components": {
@@ -65373,22 +66090,35 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://across.to",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "SpokePool.depositV3 locks USDC on Ethereum toward Base. A filler or relayer delivers the destination leg; this fork does not.",
+     "appUrl": "https://app.across.to",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:stargate:smoke"
-      ],
-      "note": "Bridges and chains are API-only in this suite."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:across:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:across:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "SpokePool",
+       "address": "0x5c7BCd6E7De5423a257D81B442095A1a6ced35C5",
+       "doc": "https://docs.across.to/chains-and-contracts"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -65446,9 +66176,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65507,9 +66238,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65592,9 +66324,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65669,9 +66402,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65734,9 +66468,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65793,9 +66528,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65861,9 +66597,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65922,9 +66659,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -65981,9 +66719,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    },
@@ -66045,9 +66784,10 @@
       "title": "Generic bridge check",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:stargate:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
       ],
-      "note": "Bridges and chains are API-only in this suite."
+      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
      }
     }
    }
@@ -73490,7 +74230,7 @@
    "Domains": 14,
    "Coins Tracker": 2
   },
-  "forkInTop200": 8,
-  "apiOnlyInTop200": 192
+  "forkInTop200": 12,
+  "apiOnlyInTop200": 188
  }
 }
