@@ -33,20 +33,23 @@ ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply
 | Polygon | `POLYGON_RPC_URL` |
 | Monad | `MONAD_RPC_URL` |
 
-`npm run fork:all` (also `npm run simulate:fork:suite`) starts **one Anvil per chain**, runs every action for that chain, then shuts Anvil down. `CHAINS=ethereum` limits the suite. A chain with no RPC URL is skipped. `SKIP` does not fail the process. `FAIL` does. CI runs this job only when the `ETHEREUM_RPC_URL` secret is set; a missing secret skips the job with exit 0.
+`npm run fork:all` (also `npm run simulate:fork:suite`) starts **one Anvil per chain**, runs every action for that chain, then shuts Anvil down. `CHAINS=ethereum` limits the suite. A chain with no RPC URL is skipped. `SKIP` does not fail the process. `FAIL` does. CI runs this job only when the `ETHEREUM_RPC_URL` secret is set; a missing secret skips its steps, and the job is `continue-on-error`, so it never fails CI.
+
+Every test has a hard deadline, `FORK_TEST_TIMEOUT_MS` (default 180000). The script's own watchdog prints `FORK_RESULT status=FAIL ... key=timeout=<ms>` and exits 1. The suite also runs each script in its own process group and kills the whole group 15 s after that, so a stuck RPC call cannot hang `fork:all`. Anvil processes are killed when the suite exits.
 
 ## What each recipe does
 
-Every action starts from the block Anvil forked (latest, or `FORK_BLOCK`). Whales come from `src/utils/impersonate.js`. If that balance is short, the test calls `anvil_deal` on the fork. It never signs with a private key.
+Every action starts from the block Anvil forked (latest, or `FORK_BLOCK`). Whales come from `src/utils/impersonate.js`. If that balance is short, the test calls `anvil_deal` on the fork. The whale then sends the test amount to a brand-new impersonated account, and the test runs from that account, so positions from earlier tests on the same fork (an Aave borrow, a Spark supply) do not leak into later ones. `FORK_SHARED_WHALE=1` runs from the whale directly. Nothing signs with a private key.
 
 | Script | Chain | Action | Assertion |
 | --- | --- | --- | --- |
-| `fork:uniswap:v2` / `:v3` / `:v4` | Ethereum | WETH→USDC through the existing DEX runner | USDC balance increases |
+| `fork:uniswap:v2` / `:v3` | Ethereum | WETH→USDC through the existing DEX runner | USDC balance increases |
+| `fork:uniswap:v4` | Ethereum | ETH→USDC: V4Quoter, then `V4_SWAP` on the Universal Router | USDC received ≥ quote − 0.5% |
 | `fork:sushiswap:v2` / `:v3` | Ethereum | WETH→USDC | USDC balance increases |
 | `fork:balancer:swap` | Ethereum | WETH→USDC on the V2 Vault | USDC balance increases |
 | `fork:curve:swap` | Ethereum | USDC→USDT on 3pool | USDT balance increases |
-| `fork:aerodrome:swap` | Base | Uniswap V3 reference (Slipstream quoter reverts here) | USDC balance increases |
-| `fork:velodrome:swap` | Optimism | Uniswap V3 reference | USDC balance increases |
+| `fork:aerodrome:swap` | Base | **Reference swap only:** Uniswap V3 (SwapRouter02) on Base, because the Slipstream quoter reverts here. Aerodrome contracts are not exercised | USDC balance increases |
+| `fork:velodrome:swap` | Optimism | **Reference swap only:** Uniswap V3 on Optimism. Velodrome contracts are not exercised | USDC balance increases |
 | `fork:pancakeswap:v3` | Ethereum (`CHAIN=bsc` for BSC) | WETH→USDC on PancakeSwap V3 | USDC balance increases |
 | `fork:monad:v3` | Monad | Uniswap V3 | skipped when `MONAD_RPC_URL` is unset |
 | `fork:aave:supply` / `:borrow` / `:repay` / `:withdraw` | Ethereum | Aave V3 pool from `chains.js` | aToken, debt, or wallet balance moves the right way |
@@ -74,12 +77,12 @@ Same rules: pinned block via `FORK_BLOCK`, whale impersonation or `anvil_deal`, 
 | `fork:ethena:stake` | USDe→sUSDe. Mint is whitelisted and is not called |
 | `fork:ethena:cooldown` | Start the sUSDe cooldown. Completing the unstake waits out `cooldownDuration` |
 | `fork:circle:transfer` / `fork:tether:transfer` | Transfer only. Mint and redeem are off-chain or KYC'd. The panel says **Transfer / read-only** |
-| `fork:frax:rate` | `sfrxUSD.convertToAssets`. Ethereum `maxDeposit` is 0, so there is no local deposit |
+| `fork:frax:rate` | `sfrxUSD.convertToAssets`. Ethereum `maxDeposit` is 0, so there is no local deposit. The panel says **Read-only** (not KYC; there is just no Ethereum deposit path) |
 | `fork:buidl:read` | BUIDL `totalSupply`. **KYC-gated: read-only** |
 | `fork:ondo:rate` | USDY `getPrice` and OUSG `getAssetPrice`. **KYC-gated: read-only** |
 | `fork:superstate:nav` | USTB continuous oracle `latestRoundData`. **KYC-gated: read-only** |
 | `fork:arbitrum:deposit` | `Inbox.depositEth`. Bridge ETH increases and `InboxMessageDelivered` is emitted |
-| `fork:base:deposit` / `fork:optimism:deposit` | `L1StandardBridge.depositETH`. Bridge ETH increases and `ETHDepositInitiated` is emitted |
+| `fork:base:deposit` / `fork:optimism:deposit` | `L1StandardBridge.depositETH`. ETH held by the bridge + portal (+ the `ETHLockbox` that `OptimismPortal.ethLockbox()` returns; OP Mainnet holds its ETH there, Base returned none on 2026-10-10) increases by the deposit and `ETHDepositInitiated` is emitted |
 | `fork:across:deposit` | `SpokePool.depositV3` locks USDC on Ethereum toward Base |
 | `fork:stargate:quote` / `:deposit` | `quoteOFT` + `quoteSend`, then `send` locks USDC toward Arbitrum |
 
@@ -95,12 +98,12 @@ FORK_RESULT status=PASS protocol=aave action=supply chain=ethereum block=2100000
 
 ## Testnet faucets
 
-The showcase reads this list from `src/catalog/faucets.js`. These URLs returned HTTP 200 on 2026-10-09.
+The showcase reads this list from `src/catalog/faucets.js`. These URLs returned HTTP 200 on 2026-10-10 (redirects followed).
 
 | Network | Faucets |
 | --- | --- |
 | Ethereum Sepolia | [Google Cloud](https://cloud.google.com/application/web3/faucet/ethereum/sepolia), [Alchemy](https://www.alchemy.com/faucets/ethereum-sepolia), [QuickNode](https://faucet.quicknode.com/ethereum/sepolia) |
-| Base Sepolia | [Coinbase CDP](https://portal.cdp.coinbase.com/products/faucet), [Base docs](https://docs.base.org/base-chain/tools/network-faucets), [Alchemy](https://www.alchemy.com/faucets/base-sepolia) |
+| Base Sepolia | [Coinbase CDP](https://portal.cdp.coinbase.com/products/faucet), [Base docs](https://docs.base.org/get-started/get-funds), [Alchemy](https://www.alchemy.com/faucets/base-sepolia) |
 | Arbitrum Sepolia | [Alchemy](https://www.alchemy.com/faucets/arbitrum-sepolia), [QuickNode](https://faucet.quicknode.com/arbitrum/sepolia) |
 | OP Sepolia | [Optimism Console](https://console.optimism.io/faucet), [Optimism docs](https://docs.optimism.io/app-developers/tools-sdks/faucets), [Alchemy](https://www.alchemy.com/faucets/optimism-sepolia) |
 | Polygon Amoy | [Google Cloud](https://cloud.google.com/application/web3/faucet/polygon/amoy), [Alchemy](https://www.alchemy.com/faucets/polygon-amoy) |

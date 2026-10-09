@@ -277,7 +277,7 @@ const CHAINS = {
         router: "0x4752ba5DBc23f44D87826288BF4d6A27Cf9A024E",
       },
       v3: {
-        factory: "0x33128a8fC17869897dcE68Ed026d69B80cc6b6C0",
+        factory: "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
         quoter: "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a",
         router: "0x2626664c2603336E57B271c5C0b26F421741e481",
         nftPositionManager: "0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1",
