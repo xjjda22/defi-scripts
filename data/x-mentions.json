@@ -1,0 +1,1411 @@
+{
+  "generatedAt": "2026-10-09T16:36:01.859Z",
+  "protocols": [
+    {
+      "name": "Keyrock",
+      "count": 28,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Keyrock Prime USDC",
+      "count": 28,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Solana",
+      "count": 27,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "daily claims",
+        "mev gigachads",
+        "ON CHAIN",
+        "Smart Contract Security",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Arc Chain",
+      "count": 25,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Circle",
+      "count": 25,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "Inner Circle CT",
+        "ON CHAIN",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Sentora Curator",
+      "count": 25,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Sentora Curator",
+      "count": 25,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Airdrop watch",
+      "count": 24,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop",
+        "daily claims",
+        "ON CHAIN",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Robinhood Chain",
+      "count": 22,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "Dev Alpha / MEV KOL",
+        "Inner Circle CT",
+        "MEV KOL",
+        "ON CHAIN",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Variational",
+      "count": 22,
+      "lastSeen": "2026-10-06",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Morpho",
+      "count": 20,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Morpho Blue",
+      "count": 20,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims",
+        "x lists"
+      ]
+    },
+    {
+      "name": "ether.fi",
+      "count": 18,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "ether.fi Liquid",
+      "count": 18,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "ether.fi Stake",
+      "count": 18,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "HyperLend",
+      "count": 18,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Abstract",
+      "count": 17,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop",
+        "daily claims",
+        "Dev Alpha / MEV KOL",
+        "Inner Circle CT",
+        "Smart Contract Security",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Abstract",
+      "count": 17,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop",
+        "daily claims",
+        "Dev Alpha / MEV KOL",
+        "Inner Circle CT",
+        "Smart Contract Security",
+        "x lists"
+      ]
+    },
+    {
+      "name": "NEAR Intents",
+      "count": 16,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "mev twitter",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Kelp",
+      "count": 15,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims",
+        "Inner Circle CT",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Kelp",
+      "count": 15,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims",
+        "Inner Circle CT",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Pharaoh Exchange",
+      "count": 15,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Robinhood Chain Bridge",
+      "count": 15,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "Dev Alpha / MEV KOL",
+        "ON CHAIN",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Ethereum",
+      "count": 14,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "Inner Circle CT",
+        "mev twitter",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Staking aggregates",
+      "count": 14,
+      "lastSeen": "2026-10-05",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Drift",
+      "count": 13,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Fables",
+      "count": 13,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Fables",
+      "count": 13,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Pools",
+      "count": 13,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "Dev Alpha / MEV KOL",
+        "mev gigachads",
+        "MEV KOL",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Aave",
+      "count": 12,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "daily claims",
+        "ON CHAIN"
+      ]
+    },
+    {
+      "name": "Aave Horizon RWA",
+      "count": 12,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "daily claims",
+        "ON CHAIN"
+      ]
+    },
+    {
+      "name": "Aave V2",
+      "count": 12,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "daily claims",
+        "ON CHAIN"
+      ]
+    },
+    {
+      "name": "Aave V3",
+      "count": 12,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "daily claims",
+        "ON CHAIN"
+      ]
+    },
+    {
+      "name": "Aave V4",
+      "count": 12,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "daily claims",
+        "ON CHAIN"
+      ]
+    },
+    {
+      "name": "Aerodrome",
+      "count": 12,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "mev gigachads",
+        "MEV KOL",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Aerodrome Slipstream",
+      "count": 12,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "mev gigachads",
+        "MEV KOL",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Aerodrome V1",
+      "count": 12,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "mev gigachads",
+        "MEV KOL",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Puffer Finance",
+      "count": 12,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Puffer Stake",
+      "count": 12,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Swell",
+      "count": 12,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Swell Liquid Restaking",
+      "count": 12,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Bedrock",
+      "count": 11,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Bedrock uniETH",
+      "count": 11,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Blast",
+      "count": 11,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims",
+        "Inner Circle CT",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Blast Bridge",
+      "count": 11,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims",
+        "Inner Circle CT",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Ostium",
+      "count": 11,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Ostium",
+      "count": 11,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Renzo",
+      "count": 11,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Renzo",
+      "count": 11,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "EigenCloud",
+      "count": 10,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Lending aggregates",
+      "count": 10,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "ON CHAIN"
+      ]
+    },
+    {
+      "name": "NEAR Intents",
+      "count": 10,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "mev twitter",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Arcus",
+      "count": 9,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Bitcoin",
+      "count": 9,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims",
+        "Dev Alpha / MEV KOL",
+        "x lists"
+      ]
+    },
+    {
+      "name": "EigenLayer (EigenCloud)",
+      "count": 9,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Steakhouse Financial",
+      "count": 9,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Steakhouse Financial",
+      "count": 9,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Ethena USDe",
+      "count": 8,
+      "lastSeen": "2026-09-30",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Kinetiq",
+      "count": 8,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Lighter",
+      "count": 8,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "daily claims",
+        "MEV KOL",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Lighter Perps",
+      "count": 8,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "daily claims",
+        "MEV KOL",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Lighter Robinhood Perps",
+      "count": 8,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "daily claims",
+        "MEV KOL",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Spark",
+      "count": 8,
+      "lastSeen": "2026-10-05",
+      "lists": [
+        "daily claims",
+        "Privacy x web3 projects",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Spark Liquidity Layer",
+      "count": 8,
+      "lastSeen": "2026-10-05",
+      "lists": [
+        "daily claims",
+        "Privacy x web3 projects",
+        "x lists"
+      ]
+    },
+    {
+      "name": "SparkLend",
+      "count": 8,
+      "lastSeen": "2026-10-05",
+      "lists": [
+        "daily claims",
+        "Privacy x web3 projects",
+        "x lists"
+      ]
+    },
+    {
+      "name": "CoW Swap",
+      "count": 7,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "mev twitter",
+        "x lists"
+      ]
+    },
+    {
+      "name": "CoWSwap",
+      "count": 7,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "mev twitter",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Derive",
+      "count": 7,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Derive Options",
+      "count": 7,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Derive V3 Options",
+      "count": 7,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Hyperliquid",
+      "count": 7,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Hyperliquid HLP",
+      "count": 7,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Hyperliquid Perps",
+      "count": 7,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Jito",
+      "count": 7,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims",
+        "mev gigachads",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Jito Liquid Staking",
+      "count": 7,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims",
+        "mev gigachads",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Papertrade",
+      "count": 7,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "daily claims",
+        "Inner Circle CT"
+      ]
+    },
+    {
+      "name": "Railgun",
+      "count": 7,
+      "lastSeen": "2026-10-05",
+      "lists": [
+        "Privacy x web3 projects",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Bitget",
+      "count": 6,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Maple",
+      "count": 6,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Multi-protocol",
+      "count": 6,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "Privacy dashboard update"
+      ]
+    },
+    {
+      "name": "Sky (ex-Maker)",
+      "count": 6,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims",
+        "Dev Alpha / MEV KOL",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Sky Lending",
+      "count": 6,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims",
+        "Dev Alpha / MEV KOL",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Unit",
+      "count": 6,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Upshift",
+      "count": 6,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Upshift",
+      "count": 6,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Zama",
+      "count": 6,
+      "lastSeen": "2026-10-05",
+      "lists": [
+        "daily claims",
+        "Privacy x web3 projects"
+      ]
+    },
+    {
+      "name": "Zama",
+      "count": 6,
+      "lastSeen": "2026-10-05",
+      "lists": [
+        "daily claims",
+        "Privacy x web3 projects"
+      ]
+    },
+    {
+      "name": "Concrete",
+      "count": 5,
+      "lastSeen": "2026-09-30",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Concrete",
+      "count": 5,
+      "lastSeen": "2026-09-30",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Curve DEX",
+      "count": 5,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "x lists"
+      ]
+    },
+    {
+      "name": "Curve Finance",
+      "count": 5,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "x lists"
+      ]
+    },
+    {
+      "name": "Meteora DLMM",
+      "count": 5,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Meteora DLMM",
+      "count": 5,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "pump.fun",
+      "count": 5,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "pump.fun",
+      "count": 5,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Symbiotic",
+      "count": 5,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "3Jane",
+      "count": 4,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Drop",
+      "count": 4,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Ethena",
+      "count": 4,
+      "lastSeen": "2026-09-30",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Jupiter Lend",
+      "count": 4,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Jupiter Lend",
+      "count": 4,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Kamino Lend",
+      "count": 4,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Kamino Lend",
+      "count": 4,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Lido",
+      "count": 4,
+      "lastSeen": "2026-10-05",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Lido",
+      "count": 4,
+      "lastSeen": "2026-10-05",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Across",
+      "count": 3,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "ON CHAIN"
+      ]
+    },
+    {
+      "name": "Astroport",
+      "count": 3,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Astroport",
+      "count": 3,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Avalanche",
+      "count": 3,
+      "lastSeen": "2026-10-07",
+      "lists": [
+        "daily claims",
+        "x lists"
+      ]
+    },
+    {
+      "name": "cap",
+      "count": 3,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "ON CHAIN"
+      ]
+    },
+    {
+      "name": "Circle Bitcoin",
+      "count": 3,
+      "lastSeen": "2026-09-28",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Meter Passport",
+      "count": 3,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Payy Network",
+      "count": 3,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Pendle V2",
+      "count": 3,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Terminal",
+      "count": 3,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "daily claims",
+        "Privacy x web3 projects",
+        "x lists"
+      ]
+    },
+    {
+      "name": "THORChain DEX",
+      "count": 3,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Uniswap",
+      "count": 3,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Uniswap V2",
+      "count": 3,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Uniswap V3",
+      "count": 3,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Uniswap V4",
+      "count": 3,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims",
+        "x lists"
+      ]
+    },
+    {
+      "name": "USD AI",
+      "count": 3,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "USD AI",
+      "count": 3,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Wallet check",
+      "count": 3,
+      "lastSeen": "2026-10-05",
+      "lists": [
+        "daily claims",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Weekly blocks",
+      "count": 3,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "Airdrop?",
+        "daily claims",
+        "x lists"
+      ]
+    },
+    {
+      "name": "Hyperion",
+      "count": 2,
+      "lastSeen": "2026-09-30",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "HyperLend Pooled",
+      "count": 2,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "NAVI Lending",
+      "count": 2,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Nostra Finance",
+      "count": 2,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Portal",
+      "count": 2,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Suilend",
+      "count": 2,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Suilend",
+      "count": 2,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "USDD",
+      "count": 2,
+      "lastSeen": "2026-10-08",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Beefy",
+      "count": 1,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "BisonFi",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "BisonFi",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Current",
+      "count": 1,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "DeepBook V3",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "DFDV Staked SOL",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Kalshi",
+      "count": 1,
+      "lastSeen": "2026-09-28",
+      "lists": [
+        "mev twitter"
+      ]
+    },
+    {
+      "name": "Katana Perps",
+      "count": 1,
+      "lastSeen": "2026-10-05",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Kuru CLOB",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Legion",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Ondo Finance",
+      "count": 1,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "ON CHAIN"
+      ]
+    },
+    {
+      "name": "Ondo Global Markets",
+      "count": 1,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "ON CHAIN"
+      ]
+    },
+    {
+      "name": "Ondo Yield Assets",
+      "count": 1,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "ON CHAIN"
+      ]
+    },
+    {
+      "name": "Pharaoh DLMM",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Pharaoh V3",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Polymarket",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Polymarket International",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Polymarket US",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "PumpSwap",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "PumpSwap",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Quote",
+      "count": 1,
+      "lastSeen": "2026-10-09",
+      "lists": [
+        "mev twitter"
+      ]
+    },
+    {
+      "name": "Raydium AMM",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Raydium AMM",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Sanctum",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Tether",
+      "count": 1,
+      "lastSeen": "2026-10-01",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "THORChain DEX",
+      "count": 1,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Thruster",
+      "count": 1,
+      "lastSeen": "2026-10-03",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Tron",
+      "count": 1,
+      "lastSeen": "2026-09-29",
+      "lists": [
+        "daily claims"
+      ]
+    },
+    {
+      "name": "Venice",
+      "count": 1,
+      "lastSeen": "2026-10-02",
+      "lists": [
+        "daily claims"
+      ]
+    }
+  ]
+}

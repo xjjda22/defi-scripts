@@ -6,5 +6,6 @@ output/*
 .cursorrules
 
 
-# All untracked / generated / sensitive content under data/
-data/
+# Generated and sensitive files. The X mention counts are committed.
+data/*
+!data/x-mentions.json

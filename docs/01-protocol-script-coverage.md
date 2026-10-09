@@ -51,6 +51,10 @@ Slipstream **on-chain quoters** at the published addresses do not return success
 9. **Register it** in `PROTOCOLS` in `src/catalog/protocols.js` (id = second segment of the script name, category, url, one-line `about`, optional sourced `notes`). Scripts that are not DefiLlama one-liners also need a line in `SCRIPT_DESCRIPTIONS`. Ids may start with a digit (`3jane`).
 10. Run `npm run catalog:docs`, then `npm run catalog:check` (fails on unregistered or undescribed scripts and on stale docs).
 
+## Trending showcase
+
+`npm run ranking:top200` (alias `npm run showcase:build`) writes `showcase/data.json`: an overall top 200 and a ranking for each catalog category. It does not add per-protocol npm scripts, so `catalog:check` is unchanged. Methodology, the category map, and the Monday / Wednesday / Friday refresh are in [`03-showcase-ranking.md`](./03-showcase-ranking.md).
+
 ## Claim monitors (2026-10-07)
 
 Live numbers move. These scripts print the current DefiLlama windows, not the snapshot in the source.
