@@ -289,6 +289,7 @@ const PROTOCOLS = [
     about: "Cross-chain intent settlement.",
     notes: [
       "Passed ~$31.4B cumulative volume ([Bitinsider](https://bitinsider.io/articles/near-protocol-intents-surpass-30b-in-all-time-volume-as-daily-records-fall), 2026-09-22).",
+      "Exploited for ~$3.8M in USDT on BNB Chain (Sep 30 to Oct 1) through the Omni deposit/withdrawal layer; funds returned in full on 2026-10-02 ([Cointelegraph](https://cointelegraph.com/news/near-intents-recovers-entire-stolen-38m-after-ultimatum-to-exploiter), 2026-10-03; [Decrypt](https://decrypt.co/380014/near-intents-recovers-3-8-million-after-48-hour-ultimatum), 2026-10-04; [X](https://x.com/zacodil/status/2108480859942555933), 2026-10-09). `analytics:near:exploit` reads the incident from DefiLlama `/hacks` (id 6225); DefiLlama does not record the returned funds.",
     ],
   },
   {
@@ -314,7 +315,27 @@ const PROTOCOLS = [
   { id: "mux", name: "MUX", category: "perps", url: "https://mux.network", about: "Aggregated perp liquidity." },
   { id: "aster", name: "Aster", category: "perps", url: "https://aster.finance", about: "Hybrid perp/spot DEX." },
   { id: "aevo", name: "Aevo", category: "perps", url: "https://aevo.xyz", about: "Options + perps L2." },
-  { id: "lighter", name: "Lighter", category: "perps", url: "https://lighter.xyz", about: "ZK perp order book." },
+  {
+    id: "lighter",
+    name: "Lighter",
+    category: "perps",
+    url: "https://lighter.xyz",
+    about:
+      "ZK perp order book. Analytics adds open interest and its year-to-date high (`DEFILLAMA_OI=1 DEFILLAMA_OI_HIGH=1`); the smoke requires positive open interest (`SMOKE_OI=1`).",
+    notes: [
+      "Open interest hit a 2026 high; core exchange up ~50% since August; the Robinhood partnership is ~a quarter of Lighter's OI and fee revenue and nearly 40% of daily active accounts ([TokenPost](https://www.tokenpost.com/news/business/28319), 2026-10-08; [Coinfomania](https://coinfomania.com/lighter-exchange-hits-2026-high-in-open-interest/), 2026-10-08; [X](https://x.com/Delphi_Digital/status/2108206129574539702), 2026-10-08). Analytics prints `/summary/open-interest/lighter` `total24h` and the YTD high from its daily chart; the Robinhood share is not tracked.",
+    ],
+  },
+  {
+    id: "papertrade",
+    name: "Papertrade",
+    category: "perps",
+    url: "https://papertrade.xyz",
+    about: "Synthetic BTC/ETH perps on HyperEVM against a protocol-owned pool (DefiLlama slug `papertrade`).",
+    notes: [
+      "Pre-deposits opened 2026-10-08; live trading expected ~1h after the 2026-10-10 HyperEVM upgrade (may slip to 2026-10-11) ([DeFi Prime](https://defiprime.com/papertrade-opens-predeposits-before-hyperevm-launch), 2026-10-09; [SignalPlus](https://t.signalplus.com/crypto-news/detail/papertrade-opens-predeposits-ahead-october-trading-launch?lang=en-US), 2026-10-08). ~$25M in user deposits ahead of launch is a single X post ([X](https://x.com/zoomerfied/status/2108565430499717403), 2026-10-09); analytics prints live DefiLlama TVL.",
+    ],
+  },
   {
     id: "reya",
     name: "Reya Network",
@@ -786,6 +807,17 @@ const PROTOCOLS = [
     ],
   },
   {
+    id: "stellar",
+    name: "Stellar",
+    category: "bridge-chain",
+    url: "https://stellar.org",
+    about: "Stellar DeFi chain TVL from DefiLlama `/v2/chains` (name `Stellar`), 7d/30d change, and DEX volume.",
+    data: "DefiLlama chains",
+    notes: [
+      "DeFi TVL hit a record of nearly $273M on 2026-10-02 (from ~$265M a week earlier), with $934.5M in stablecoins and ~$2.82B active RWA AUM ([BSC News](https://bsc.news/news/stellar-defi-tvl-record-rwa), 2026-10-05; [Blockonomi](https://blockonomi.com/stellar-defi-hits-new-tvl-record-as-active-wallets-near-100000/), 2026-10-03). DefiLlama's daily record close is $272.8M on 2026-10-01. Analytics prints live chain TVL and DEX volume, not stablecoins or RWAs.",
+    ],
+  },
+  {
     id: "abstract",
     name: "Abstract",
     category: "bridge-chain",
@@ -943,6 +975,10 @@ const SCRIPT_DESCRIPTIONS = {
     "Abstract chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Abstract`), 7d/30d change, DEX volume, and the 2026-12-15 shutdown note",
   "analytics:robinhood:chain":
     "Robinhood Chain TVL, DEX volume, and fees (`LLAMA_CHAIN_NAME` percent-encoded as `Robinhood%20Chain`)",
+  "analytics:stellar:chain": "Stellar chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Stellar`), 7d/30d change, and DEX volume",
+  "analytics:near:exploit":
+    "NEAR Intents exploit amount, chain, and technique from DefiLlama `/hacks` (`LLAMA_HACK_ID=6225`, since 2026-09-30)",
+  "simulate:near:exploit:smoke": "Fails unless DefiLlama `/hacks` lists a NEAR Intents incident since 2026-09-30 with a positive amount",
   "analytics:derive:options":
     "Derive options notional and premium (24h/7d/30d), TVL, share vs Paradex and the rest, plus Hypercall TVL",
   "simulate:derive:smoke": "Fails unless Derive 30d options notional is > 0 (`/summary/options/derive-options`)",

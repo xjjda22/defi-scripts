@@ -139,6 +139,26 @@ function fetchOpenInterestSummary(slug, timeoutMs) {
   return fetchLlamaJson(`/summary/open-interest/${encodeURIComponent(slug)}?${q}`, timeoutMs);
 }
 
+/**
+ * Open-interest daily series (`totalDataChart`: [unixSeconds, usd][]). Same free endpoint as
+ * `fetchOpenInterestSummary`, with the chart kept so callers can find a period high.
+ * @param {string} slug
+ * @param {number} [timeoutMs]
+ */
+function fetchOpenInterestChart(slug, timeoutMs) {
+  const q = "excludeTotalDataChartBreakdown=true";
+  return fetchLlamaJson(`/summary/open-interest/${encodeURIComponent(slug)}?${q}`, timeoutMs);
+}
+
+/**
+ * Free DefiLlama hacks list (`/hacks`): `{ date, name, amount, chain[], classification, technique,
+ * returnedFunds, bridgeHack, defillamaId, ... }[]`. `date` is unix seconds.
+ * @param {number} [timeoutMs]
+ */
+function fetchLlamaHacks(timeoutMs) {
+  return fetchLlamaJson("/hacks", timeoutMs);
+}
+
 function fetchLlamaProtocols(timeoutMs) {
   return fetchLlamaJson("/protocols", timeoutMs);
 }
@@ -160,6 +180,8 @@ module.exports = {
   fetchOptionsOverview,
   fetchFeesSummary,
   fetchOpenInterestSummary,
+  fetchOpenInterestChart,
+  fetchLlamaHacks,
   fetchLlamaProtocols,
   fetchHistoricalChainTvl,
   DEFILLAMA_API,
