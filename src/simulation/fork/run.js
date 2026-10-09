@@ -19,6 +19,19 @@ const TARGETS = {
   etherfi: () => require("./stakingFlows").run(),
   kelp: () => require("./stakingFlows").run(),
   renzo: () => require("./stakingFlows").run(),
+  sky: () => require("./stableFlows").run(),
+  ethena: () => require("./stableFlows").run(),
+  circle: () => require("./stableFlows").run(),
+  tether: () => require("./stableFlows").run(),
+  frax: () => require("./stableFlows").run(),
+  buidl: () => require("./stableFlows").run(),
+  ondo: () => require("./stableFlows").run(),
+  superstate: () => require("./stableFlows").run(),
+  arbitrum: () => require("./bridgeFlows").run(),
+  base: () => require("./bridgeFlows").run(),
+  optimism: () => require("./bridgeFlows").run(),
+  across: () => require("./bridgeFlows").run(),
+  stargate: () => require("./bridgeFlows").run(),
 };
 
 // Every fork test has a hard deadline so a stuck RPC call cannot hang the suite.
