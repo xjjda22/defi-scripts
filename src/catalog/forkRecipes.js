@@ -36,6 +36,8 @@ function recipe(partial) {
     appUrl: partial.appUrl,
     chain,
     rpcEnv: RPC_ENV[chain],
+    category: partial.category || null,
+    label: partial.label || null,
     note: partial.note || null,
     tests,
     commands: [
@@ -85,6 +87,7 @@ const FORK_RECIPES = [
     appUrl: "https://aerodrome.finance",
     chain: "base",
     contractKeys: ["aerodrome"],
+    label: "Reference swap (Uniswap V3 on Base)",
     note: "Slipstream quoters revert in this stack. The fork script swaps Uniswap V3 on Base as the liquid reference, same as simulate:dex:aerodrome:v3.",
     tests: [test("fork:aerodrome:swap", "swap", "base")],
   }),
@@ -93,6 +96,7 @@ const FORK_RECIPES = [
     appUrl: "https://velodrome.finance",
     chain: "optimism",
     contractKeys: ["velodrome"],
+    label: "Reference swap (Uniswap V3 on Optimism)",
     note: "Slipstream quoters revert in this stack. The fork script swaps Uniswap V3 on Optimism as the liquid reference.",
     tests: [test("fork:velodrome:swap", "swap", "optimism")],
   }),
@@ -174,7 +178,9 @@ const FORK_RECIPES = [
     tests: [test("fork:cbeth:rate", "rate", "ethereum")],
   }),
   recipe({
-    keys: ["etherfi", "ether.fi", "ether.fi-stake", "ether.fi-liquid"],
+    keys: ["etherfi", "ether.fi", "ether.fi-stake"],
+    // ether.fi Liquid (vaults) and the borrowing market share the etherfi scripts but are not eETH staking.
+    category: "restaking",
     appUrl: "https://www.ether.fi",
     chain: "ethereum",
     contractKeys: ["etherfi"],
@@ -290,9 +296,14 @@ function rowKeys(row) {
   return keys.filter(Boolean).map(key => String(key).toLowerCase());
 }
 
-function findByKeys(list, keys) {
+function findByKeys(list, keys, category) {
   const set = new Set(keys);
-  return list.find(entry => entry.keys.some(key => set.has(key))) || null;
+  return (
+    list.find(entry => {
+      if (entry.category && category && entry.category !== category) return false;
+      return entry.keys.some(key => set.has(key));
+    }) || null
+  );
 }
 
 function scriptKind(name) {
@@ -316,8 +327,8 @@ function withKinds(scripts) {
 
 function attachTesting(row) {
   const keys = rowKeys(row);
-  const apiOnly = findByKeys(API_ONLY, keys);
-  const fork = apiOnly ? null : findByKeys(FORK_RECIPES, keys);
+  const apiOnly = findByKeys(API_ONLY, keys, row.category);
+  const fork = apiOnly ? null : findByKeys(FORK_RECIPES, keys, row.category);
   const categoryRecipe = CATEGORY_RECIPES[row.category] || CATEGORY_RECIPES.other;
   const scripts = withKinds(row.scripts).filter(script => script.file !== "src/simulation/fork/run.js");
   if (fork) {
@@ -332,6 +343,7 @@ function attachTesting(row) {
   row.testing = fork
     ? {
         mode: "fork",
+        label: fork.label || null,
         note: fork.note,
         appUrl: fork.appUrl || row.appUrl || null,
         chain: fork.chain,

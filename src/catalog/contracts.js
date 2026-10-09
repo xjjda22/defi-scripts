@@ -66,6 +66,8 @@ function contractBook() {
   push(book.uniswap, eth, "V3 router", uni.v3.router, DOCS.uniswap);
   push(book.uniswap, eth, "V3 quoter", uni.v3.quoter, DOCS.uniswap);
   push(book.uniswap, eth, "V4 pool manager", uni.v4.poolManager, "https://docs.uniswap.org/contracts/v4/deployments");
+  push(book.uniswap, eth, "V4 quoter", "0x52F0E24D1c21C8A0cB1e5a5dD6198556BD9E1203", "https://docs.uniswap.org/contracts/v4/deployments");
+  push(book.uniswap, eth, "Universal Router (V4)", "0x66a9893cC07D91D95644AEDD05D03f95e1dBA8Af", "https://docs.uniswap.org/contracts/v4/deployments");
   push(book.curve, eth, "3pool", CHAINS.ethereum.curve.pools["3pool"].address, "https://curve.readthedocs.io/registry-registry.html");
   push(book.balancer, eth, "V2 vault", CHAINS.ethereum.balancer.v2.vault, "https://docs.balancer.fi/reference/contracts/deployment-addresses/mainnet.html");
   push(book.sushiswap, eth, "V2 router", CHAINS.ethereum.sushiswap.v2.router, "https://docs.sushi.com/contracts/route-processor");
@@ -152,6 +154,11 @@ module.exports = {
     router: "0x1b81D678ffb9C0263b24A97847620C99d213eB14",
     quoter: "0xB048Bbc1Ee6b733FFfCFb9e9CeF7375518e25997",
     doc: DOCS.pancake,
+  },
+  // https://docs.uniswap.org/contracts/v4/deployments (Ethereum)
+  UNISWAP_V4: {
+    quoter: "0x52F0E24D1c21C8A0cB1e5a5dD6198556BD9E1203",
+    universalRouter: "0x66a9893cC07D91D95644AEDD05D03f95e1dBA8Af",
   },
   SPARK_POOL: "0xC13e21B648A5Ee794902342038FF3aDAB66BE987",
   COMPOUND_CUSDC_V3: "0xc3d688B66703497DAA19211EEdff47f25384cdc3",
