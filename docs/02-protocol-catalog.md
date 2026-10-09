@@ -181,7 +181,7 @@ V2/V3/V4 AMM. The deepest coverage in the repo: cross-chain trackers, price moni
 | `npm run crosschain:uniswap:weekly:volume` | Cross-chain | Daily volume history for the past week (CSV in `output/`) |
 | `npm run fork:uniswap:v2` | Fork | Swap WETH→USDC on Uniswap V2 on an Anvil fork and assert USDC increased |
 | `npm run fork:uniswap:v3` | Fork | Swap WETH→USDC on Uniswap V3 on an Anvil fork and assert USDC increased |
-| `npm run fork:uniswap:v4` | Fork | Swap WETH→USDC on Uniswap V4 on an Anvil fork and assert USDC increased |
+| `npm run fork:uniswap:v4` | Fork | Swap ETH→USDC on Uniswap V4 through the Universal Router on an Anvil fork and assert USDC increased |
 
 <a id="p-curve"></a>
 

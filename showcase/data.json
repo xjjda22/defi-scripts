@@ -88,7 +88,7 @@
      },
      {
       "name": "Base docs",
-      "url": "https://docs.base.org/base-chain/tools/network-faucets"
+      "url": "https://docs.base.org/get-started/get-funds"
      },
      {
       "name": "Alchemy",
@@ -347,11 +347,11 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 5101295941
+     "tvl": 5141678120
     },
     {
      "chain": "xDai",
-     "tvl": 210468
+     "tvl": 210404
     }
    ],
    "scripts": [
@@ -480,7 +480,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 1234344383
+     "tvl": 1240045217
     }
    ],
    "scripts": [
@@ -553,35 +553,35 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 139780034
+     "tvl": 139772091
     },
     {
      "chain": "Solana",
-     "tvl": 118487404
+     "tvl": 118390951
     },
     {
      "chain": "Sei",
-     "tvl": 12420059
+     "tvl": 12419288
     },
     {
      "chain": "Pharos",
-     "tvl": 11197664
+     "tvl": 11197637
     },
     {
      "chain": "Monad",
-     "tvl": 5948795
+     "tvl": 5949012
     },
     {
      "chain": "Binance",
-     "tvl": 1159358
+     "tvl": 1159391
     },
     {
      "chain": "Base",
-     "tvl": 584830
+     "tvl": 584843
     },
     {
      "chain": "Citrea",
-     "tvl": 47791
+     "tvl": 47348
     }
    ],
    "scripts": [],
@@ -644,35 +644,35 @@
    "chainTvls": [
     {
      "chain": "Near",
-     "tvl": 126407168
+     "tvl": 124367519
     },
     {
      "chain": "Ethereum",
-     "tvl": 50846918
+     "tvl": 51132109
     },
     {
      "chain": "Tron",
-     "tvl": 8706102
+     "tvl": 8669763
     },
     {
      "chain": "Bitcoin",
-     "tvl": 7041035
+     "tvl": 7031400
     },
     {
      "chain": "Binance",
-     "tvl": 5205992
+     "tvl": 5020026
     },
     {
      "chain": "Arbitrum",
-     "tvl": 4896018
+     "tvl": 4989345
     },
     {
      "chain": "Base",
-     "tvl": 2505939
+     "tvl": 2516785
     },
     {
      "chain": "TON",
-     "tvl": 1636690
+     "tvl": 1632489
     }
    ],
    "scripts": [
@@ -775,35 +775,35 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 2568303326
+     "tvl": 2561745020
     },
     {
      "chain": "Base",
-     "tvl": 486979628
+     "tvl": 487686352
     },
     {
      "chain": "Robinhood Chain",
-     "tvl": 226254392
+     "tvl": 226659319
     },
     {
      "chain": "Binance",
-     "tvl": 193322752
+     "tvl": 193464974
     },
     {
      "chain": "Arbitrum",
-     "tvl": 179096813
+     "tvl": 179364090
     },
     {
      "chain": "Polygon",
-     "tvl": 66307587
+     "tvl": 66264018
     },
     {
      "chain": "X Layer",
-     "tvl": 45145960
+     "tvl": 45652250
     },
     {
      "chain": "Arc",
-     "tvl": 39474153
+     "tvl": 39465452
     }
    ],
    "scripts": [
@@ -965,6 +965,18 @@
       "label": "V4 pool manager",
       "address": "0x000000000004444c5dc75cB358380D2e3dE08A90",
       "doc": "https://docs.uniswap.org/contracts/v4/deployments"
+     },
+     {
+      "chain": "ethereum",
+      "label": "V4 quoter",
+      "address": "0x52F0E24D1c21C8A0cB1e5a5dD6198556BD9E1203",
+      "doc": "https://docs.uniswap.org/contracts/v4/deployments"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Universal Router (V4)",
+      "address": "0x66a9893cC07D91D95644AEDD05D03f95e1dBA8Af",
+      "doc": "https://docs.uniswap.org/contracts/v4/deployments"
      }
     ],
     "recipe": null
@@ -998,35 +1010,35 @@
    "chainTvls": [
     {
      "chain": "Ink",
-     "tvl": 874702270
+     "tvl": 876007745
     },
     {
      "chain": "Ethereum",
-     "tvl": 628244533
+     "tvl": 630496995
     },
     {
      "chain": "Optimism",
-     "tvl": 210343021
+     "tvl": 210769644
     },
     {
      "chain": "Hyperliquid L1",
-     "tvl": 40596828
+     "tvl": 40888404
     },
     {
      "chain": "Monad",
-     "tvl": 39463911
+     "tvl": 39471253
     },
     {
      "chain": "Plasma",
-     "tvl": 32033532
+     "tvl": 32035041
     },
     {
      "chain": "Arbitrum",
-     "tvl": 2544339
+     "tvl": 2595333
     },
     {
      "chain": "Base",
-     "tvl": 1666064
+     "tvl": 1675745
     }
    ],
    "scripts": [],
@@ -1104,19 +1116,19 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 259267540
+     "tvl": 259493154
     },
     {
      "chain": "Arbitrum",
-     "tvl": 1353343
+     "tvl": 1371814
     },
     {
      "chain": "Optimism",
-     "tvl": 386529
+     "tvl": 387133
     },
     {
      "chain": "Fraxtal",
-     "tvl": 91824
+     "tvl": 91808
     }
    ],
    "scripts": [],
@@ -1189,35 +1201,35 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 5122033196
+     "tvl": 5136530646
     },
     {
      "chain": "Base",
-     "tvl": 4417530449
+     "tvl": 4425261317
     },
     {
      "chain": "Robinhood Chain",
-     "tvl": 607380158
+     "tvl": 606735101
     },
     {
      "chain": "Arc",
-     "tvl": 311579771
+     "tvl": 312146726
     },
     {
      "chain": "Monad",
-     "tvl": 176444467
+     "tvl": 176890595
     },
     {
      "chain": "Hyperliquid L1",
-     "tvl": 150289441
+     "tvl": 151002135
     },
     {
      "chain": "Pharos",
-     "tvl": 68114198
+     "tvl": 68313421
     },
     {
      "chain": "Tempo",
-     "tvl": 65105082
+     "tvl": 65152201
     }
    ],
    "scripts": [
@@ -1325,7 +1337,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 1799729135
+     "tvl": 1806898490
     }
    ],
    "scripts": [
@@ -1398,23 +1410,23 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 7804640904
+     "tvl": 7793961054
     },
     {
      "chain": "Ripple",
-     "tvl": 193178198
+     "tvl": 193056449
     },
     {
      "chain": "Cardano",
-     "tvl": 13572068
+     "tvl": 13553921
     },
     {
      "chain": "Doge",
-     "tvl": 11039210
+     "tvl": 11021149
     },
     {
      "chain": "Litecoin",
-     "tvl": 5470936
+     "tvl": 5462024
     }
    ],
    "scripts": [],
@@ -1476,15 +1488,15 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 396335230
+     "tvl": 396347681
     },
     {
      "chain": "Base",
-     "tvl": 4312859
+     "tvl": 4313441
     },
     {
      "chain": "Arbitrum",
-     "tvl": 6449
+     "tvl": 6450
     },
     {
      "chain": "Avalanche",
@@ -1550,7 +1562,7 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 779544315
+     "tvl": 782968551
     }
    ],
    "scripts": [],
@@ -1612,11 +1624,11 @@
    "chainTvls": [
     {
      "chain": "Hyperliquid L1",
-     "tvl": 6521250757
+     "tvl": 6522337470
     },
     {
      "chain": "Arbitrum",
-     "tvl": 381188830
+     "tvl": 380780543
     }
    ],
    "scripts": [],
@@ -1695,7 +1707,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 838376563
+     "tvl": 839347380
     }
    ],
    "scripts": [],
@@ -1946,11 +1958,11 @@
    "chainTvls": [
     {
      "chain": "Base",
-     "tvl": 357769829
+     "tvl": 365644134
     },
     {
      "chain": "Arc",
-     "tvl": 2957663
+     "tvl": 2960751
     }
    ],
    "scripts": [
@@ -1992,7 +2004,7 @@
    },
    "testing": {
     "mode": "fork",
-    "label": null,
+    "label": "Reference swap (Uniswap V3 on Base)",
     "note": "Slipstream quoters revert in this stack. The fork script swaps Uniswap V3 on Base as the liquid reference, same as simulate:dex:aerodrome:v3.",
     "appUrl": "https://aerodrome.finance",
     "chain": "base",
@@ -2168,19 +2180,19 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 322238295
+     "tvl": 319557523
     },
     {
      "chain": "Arbitrum",
-     "tvl": 23407264
+     "tvl": 23475940
     },
     {
      "chain": "Berachain",
-     "tvl": 5112032
+     "tvl": 5116881
     },
     {
      "chain": "Mantle",
-     "tvl": 76655
+     "tvl": 76678
     },
     {
      "chain": "X Layer",
@@ -2246,7 +2258,7 @@
    "chainTvls": [
     {
      "chain": "Binance",
-     "tvl": 768122303
+     "tvl": 769373735
     }
    ],
    "scripts": [],
@@ -2308,35 +2320,35 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 544535504
+     "tvl": 548951261
     },
     {
      "chain": "Zcash",
-     "tvl": 179699250
+     "tvl": 181325733
     },
     {
      "chain": "Ethereum",
-     "tvl": 139326337
+     "tvl": 139648362
     },
     {
      "chain": "Solana",
-     "tvl": 105885502
+     "tvl": 107307260
     },
     {
      "chain": "Plasma",
-     "tvl": 13990821
+     "tvl": 14027222
     },
     {
      "chain": "Monad",
-     "tvl": 2890532
+     "tvl": 2928975
     },
     {
      "chain": "Base",
-     "tvl": 1538261
+     "tvl": 1550864
     },
     {
      "chain": "Avalanche",
-     "tvl": 315366
+     "tvl": 316237
     }
    ],
    "scripts": [],
@@ -2398,7 +2410,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 2794926942
+     "tvl": 2767014689
     }
    ],
    "scripts": [],
@@ -2462,35 +2474,35 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 7067290369
+     "tvl": 7069486424
     },
     {
      "chain": "Polygon",
-     "tvl": 4088053901
+     "tvl": 4080450077
     },
     {
      "chain": "ApeChain",
-     "tvl": 126110664
+     "tvl": 127156479
     },
     {
      "chain": "Base",
-     "tvl": 98316985
+     "tvl": 98826962
     },
     {
      "chain": "Arbitrum",
-     "tvl": 70586400
+     "tvl": 70649311
     },
     {
      "chain": "Tron",
-     "tvl": 52026098
+     "tvl": 51887142
     },
     {
      "chain": "Binance",
-     "tvl": 49688871
+     "tvl": 49711864
     },
     {
      "chain": "Solana",
-     "tvl": 37946117
+     "tvl": 38159319
     }
    ],
    "scripts": [],
@@ -2680,7 +2692,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 765180770
+     "tvl": 763832398
     }
    ],
    "scripts": [
@@ -2703,7 +2715,7 @@
    "testing": {
     "mode": "fork",
     "label": "Source chain only",
-    "note": "L1StandardBridge.depositETH locks ETH and emits ETHDepositInitiated. Destination delivery on OP Mainnet needs the rollup; a single Ethereum fork cannot verify it.",
+    "note": "L1StandardBridge.depositETH locks ETH (into the ETHLockbox that OptimismPortal.ethLockbox() reports) and emits ETHDepositInitiated. Destination delivery on OP Mainnet needs the rollup; a single Ethereum fork cannot verify it.",
     "appUrl": "https://app.optimism.io/bridge",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
@@ -2766,7 +2778,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 476264257
+     "tvl": 477004061
     }
    ],
    "scripts": [
@@ -2858,35 +2870,35 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 3429350481
+     "tvl": 3427111137
     },
     {
      "chain": "Base",
-     "tvl": 363765571
+     "tvl": 363765487
     },
     {
      "chain": "Arbitrum",
-     "tvl": 317438893
+     "tvl": 317302890
     },
     {
      "chain": "Robinhood Chain",
-     "tvl": 10239797
+     "tvl": 10440320
     },
     {
      "chain": "X Layer",
-     "tvl": 4723809
+     "tvl": 4723770
     },
     {
      "chain": "Optimism",
-     "tvl": 3686471
+     "tvl": 3686731
     },
     {
      "chain": "Avalanche",
-     "tvl": 2610140
+     "tvl": 2610102
     },
     {
      "chain": "Unichain",
-     "tvl": 155144
+     "tvl": 155142
     }
    ],
    "scripts": [],
@@ -3027,7 +3039,7 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 9602699949
+     "tvl": 9631682862
     }
    ],
    "scripts": [],
@@ -3089,19 +3101,19 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 1125573976
+     "tvl": 1125733546
     },
     {
      "chain": "Ink",
-     "tvl": 875032197
+     "tvl": 875799696
     },
     {
      "chain": "Solana",
-     "tvl": 496843721
+     "tvl": 496781747
     },
     {
      "chain": "Tempo",
-     "tvl": 64675460
+     "tvl": 64705523
     }
    ],
    "scripts": [
@@ -3173,35 +3185,35 @@
    "chainTvls": [
     {
      "chain": "Base",
-     "tvl": 1008870309
+     "tvl": 1008769340
     },
     {
      "chain": "Ethereum",
-     "tvl": 722183520
+     "tvl": 724811295
     },
     {
      "chain": "Robinhood Chain",
-     "tvl": 536879313
+     "tvl": 535969846
     },
     {
      "chain": "Solana",
-     "tvl": 69079185
+     "tvl": 69109527
     },
     {
      "chain": "Monad",
-     "tvl": 31005810
+     "tvl": 31030068
     },
     {
      "chain": "Arbitrum",
-     "tvl": 6777570
+     "tvl": 6756307
     },
     {
      "chain": "Katana",
-     "tvl": 6074262
+     "tvl": 6074258
     },
     {
      "chain": "Polygon",
-     "tvl": 32194
+     "tvl": 32195
     }
    ],
    "scripts": [
@@ -3335,7 +3347,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 434413234
+     "tvl": 435131800
     }
    ],
    "scripts": [],
@@ -3397,7 +3409,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 1140849719
+     "tvl": 1145394460
     }
    ],
    "scripts": [
@@ -3470,7 +3482,7 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 5613225020
+     "tvl": 5637881744
     }
    ],
    "scripts": [],
@@ -3532,7 +3544,7 @@
    "chainTvls": [
     {
      "chain": "Provenance",
-     "tvl": 197353617
+     "tvl": 198108542
     }
    ],
    "scripts": [],
@@ -3916,7 +3928,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 124648449
+     "tvl": 124281623
     }
    ],
    "scripts": [],
@@ -3978,11 +3990,11 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 8722689483
+     "tvl": 8755542742
     },
     {
      "chain": "Binance",
-     "tvl": 524492231
+     "tvl": 526453750
     }
    ],
    "scripts": [],
@@ -4056,11 +4068,11 @@
    "chainTvls": [
     {
      "chain": "Binance",
-     "tvl": 1054059277
+     "tvl": 1054762212
     },
     {
      "chain": "Ethereum",
-     "tvl": 13451920
+     "tvl": 13461224
     }
    ],
    "scripts": [],
@@ -4246,7 +4258,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 565210318
+     "tvl": 568054108
     }
    ],
    "scripts": [],
@@ -4308,7 +4320,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 1134017222
+     "tvl": 1143760368
     }
    ],
    "scripts": [
@@ -4391,7 +4403,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 293121879
+     "tvl": 293114276
     }
    ],
    "scripts": [],
@@ -4453,7 +4465,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 2974297579
+     "tvl": 2978961182
     }
    ],
    "scripts": [
@@ -4601,7 +4613,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 637135744
+     "tvl": 636455638
     },
     {
      "chain": "Arbitrum",
@@ -4688,7 +4700,7 @@
    "chainTvls": [
     {
      "chain": "Tron",
-     "tvl": 639160726
+     "tvl": 639255657
     }
    ],
    "scripts": [],
@@ -4750,7 +4762,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 111479029
+     "tvl": 111479644
     },
     {
      "chain": "Move",
@@ -4815,7 +4827,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 211320772
+     "tvl": 212009189
     }
    ],
    "scripts": [],
@@ -4877,19 +4889,19 @@
    "chainTvls": [
     {
      "chain": "Sui",
-     "tvl": 39147850
+     "tvl": 39168347
     },
     {
      "chain": "Ethereum",
-     "tvl": 35155511
+     "tvl": 35154959
     },
     {
      "chain": "Pharos",
-     "tvl": 30688796
+     "tvl": 30714408
     },
     {
      "chain": "Base",
-     "tvl": 17385952
+     "tvl": 17430477
     },
     {
      "chain": "Monad",
@@ -4954,7 +4966,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 2769210313
+     "tvl": 2775828606
     }
    ],
    "scripts": [],
@@ -5400,7 +5412,7 @@
    "chainTvls": [
     {
      "chain": "Hyperliquid L1",
-     "tvl": 983066044
+     "tvl": 991845283
     }
    ],
    "scripts": [
@@ -5550,7 +5562,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 303792301
+     "tvl": 305320863
     }
    ],
    "scripts": [],
@@ -5612,35 +5624,35 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 655883038
+     "tvl": 658576001
     },
     {
      "chain": "Binance",
-     "tvl": 56794042
+     "tvl": 56940850
     },
     {
      "chain": "Arbitrum",
-     "tvl": 562156
+     "tvl": 564151
     },
     {
      "chain": "Avalanche",
-     "tvl": 51814
+     "tvl": 52272
     },
     {
      "chain": "xDai",
-     "tvl": 46990
+     "tvl": 46997
     },
     {
      "chain": "Polygon",
-     "tvl": 44461
+     "tvl": 44705
     },
     {
      "chain": "Optimism",
-     "tvl": 28504
+     "tvl": 28609
     },
     {
      "chain": "EthereumClassic",
-     "tvl": 28109
+     "tvl": 28030
     }
    ],
    "scripts": [],
@@ -5701,7 +5713,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 3563706441
+     "tvl": 3562614330
     }
    ],
    "scripts": [
@@ -5798,7 +5810,7 @@
    "chainTvls": [
     {
      "chain": "Near",
-     "tvl": 114243533
+     "tvl": 115566176
     },
     {
      "chain": "Ethereum",
@@ -5868,7 +5880,7 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 284995015
+     "tvl": 286246887
     }
    ],
    "scripts": [],
@@ -6019,7 +6031,7 @@
    "chainTvls": [
     {
      "chain": "Near",
-     "tvl": 112288200
+     "tvl": 113583951
     }
    ],
    "scripts": [],
@@ -6081,15 +6093,15 @@
    "chainTvls": [
     {
      "chain": "Monad",
-     "tvl": 204068309
+     "tvl": 204221380
     },
     {
      "chain": "Ethereum",
-     "tvl": 74116375
+     "tvl": 74137692
     },
     {
      "chain": "Arbitrum",
-     "tvl": 364362
+     "tvl": 364355
     },
     {
      "chain": "Plasma",
@@ -6101,7 +6113,7 @@
     },
     {
      "chain": "Hyperliquid L1",
-     "tvl": 7139
+     "tvl": 7152
     },
     {
      "chain": "Katana",
@@ -6277,7 +6289,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 93448537
+     "tvl": 93545265
     }
    ],
    "scripts": [],
@@ -6338,19 +6350,19 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 70694167
+     "tvl": 70908112
     },
     {
      "chain": "Base",
-     "tvl": 4346156
+     "tvl": 4361203
     },
     {
      "chain": "Binance",
-     "tvl": 39225
+     "tvl": 39320
     },
     {
      "chain": "Sonic",
-     "tvl": 18062
+     "tvl": 18110
     }
    ],
    "scripts": [],
@@ -6411,7 +6423,7 @@
    "chainTvls": [
     {
      "chain": "Sui",
-     "tvl": 61071746
+     "tvl": 61130351
     }
    ],
    "scripts": [],
@@ -6473,7 +6485,7 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 286162753
+     "tvl": 285771169
     }
    ],
    "scripts": [],
@@ -6698,19 +6710,19 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 256217280
+     "tvl": 256213141
     },
     {
      "chain": "Ethereum",
-     "tvl": 140075580
+     "tvl": 140076076
     },
     {
      "chain": "Stellar",
-     "tvl": 2726317
+     "tvl": 2726318
     },
     {
      "chain": "Monad",
-     "tvl": 2091554
+     "tvl": 2091780
     }
    ],
    "scripts": [],
@@ -6772,35 +6784,35 @@
    "chainTvls": [
     {
      "chain": "Monad",
-     "tvl": 193490219
+     "tvl": 193768966
     },
     {
      "chain": "Ethereum",
-     "tvl": 34954536
+     "tvl": 35013352
     },
     {
      "chain": "Optimism",
-     "tvl": 7658809
+     "tvl": 7629234
     },
     {
      "chain": "Hyperliquid L1",
-     "tvl": 2063450
+     "tvl": 2063497
     },
     {
      "chain": "Plasma",
-     "tvl": 1976973
+     "tvl": 1977096
     },
     {
      "chain": "Binance",
-     "tvl": 1337496
+     "tvl": 1338948
     },
     {
      "chain": "Arbitrum",
-     "tvl": 1234146
+     "tvl": 1223780
     },
     {
      "chain": "Unichain",
-     "tvl": 19500
+     "tvl": 19536
     }
    ],
    "scripts": [],
@@ -6917,7 +6929,7 @@
    "chainTvls": [
     {
      "chain": "Tron",
-     "tvl": 3780228151
+     "tvl": 3778580015
     }
    ],
    "scripts": [],
@@ -7187,7 +7199,7 @@
    "chainTvls": [
     {
      "chain": "Monad",
-     "tvl": 128858575
+     "tvl": 128866993
     }
    ],
    "scripts": [],
@@ -7249,35 +7261,35 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 268933641
+     "tvl": 268941224
     },
     {
      "chain": "Flare",
-     "tvl": 52913518
+     "tvl": 53035455
     },
     {
      "chain": "Stellar",
-     "tvl": 28955274
+     "tvl": 28956988
     },
     {
      "chain": "Monad",
-     "tvl": 23824048
+     "tvl": 23824166
     },
     {
      "chain": "Fluent",
-     "tvl": 9105518
+     "tvl": 9105941
     },
     {
      "chain": "Solana",
-     "tvl": 8824498
+     "tvl": 8824628
     },
     {
      "chain": "Hyperliquid L1",
-     "tvl": 4550820
+     "tvl": 4555696
     },
     {
      "chain": "Base",
-     "tvl": 1234582
+     "tvl": 1235587
     }
    ],
    "scripts": [
@@ -7411,7 +7423,7 @@
    "chainTvls": [
     {
      "chain": "ZIGChain",
-     "tvl": 79365494
+     "tvl": 79375409
     }
    ],
    "scripts": [],
@@ -7720,19 +7732,19 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 78971081
+     "tvl": 79126861
     },
     {
      "chain": "Base",
-     "tvl": 7773856
+     "tvl": 7792823
     },
     {
      "chain": "Optimism",
-     "tvl": 2591569
+     "tvl": 2595690
     },
     {
      "chain": "Polygon",
-     "tvl": 28097
+     "tvl": 28152
     }
    ],
    "scripts": [],
@@ -7793,7 +7805,7 @@
    "chainTvls": [
     {
      "chain": "Bittensor",
-     "tvl": 55141584
+     "tvl": 55636598
     }
    ],
    "scripts": [],
@@ -7854,7 +7866,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 145206975
+     "tvl": 145106141
     }
    ],
    "scripts": [],
@@ -8047,15 +8059,15 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 260922429
+     "tvl": 261709947
     },
     {
      "chain": "CORE",
-     "tvl": 3533793
+     "tvl": 3578722
     },
     {
      "chain": "Babylon Genesis",
-     "tvl": 259449
+     "tvl": 258658
     }
    ],
    "scripts": [],
@@ -8117,11 +8129,11 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 937701424
+     "tvl": 936290390
     },
     {
      "chain": "xDai",
-     "tvl": 1223497
+     "tvl": 1223266
     }
    ],
    "scripts": [],
@@ -8194,7 +8206,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 1426879516
+     "tvl": 1427052356
     },
     {
      "chain": "Arbitrum",
@@ -8377,7 +8389,7 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 185326673
+     "tvl": 185623990
     }
    ],
    "scripts": [],
@@ -8439,7 +8451,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 40719031
+     "tvl": 40768274
     }
    ],
    "scripts": [],
@@ -8501,7 +8513,7 @@
    "chainTvls": [
     {
      "chain": "Stellar",
-     "tvl": 146335620
+     "tvl": 146410101
     }
    ],
    "scripts": [],
@@ -8589,19 +8601,19 @@
    "chainTvls": [
     {
      "chain": "Binance",
-     "tvl": 2111640304
+     "tvl": 2101779799
     },
     {
      "chain": "Ethereum",
-     "tvl": 28621580
+     "tvl": 28598938
     },
     {
      "chain": "Base",
-     "tvl": 22168359
+     "tvl": 22170362
     },
     {
      "chain": "Arbitrum",
-     "tvl": 8051736
+     "tvl": 8053015
     },
     {
      "chain": "Solana",
@@ -8609,15 +8621,15 @@
     },
     {
      "chain": "Robinhood Chain",
-     "tvl": 2901132
+     "tvl": 2901096
     },
     {
      "chain": "Monad",
-     "tvl": 1463367
+     "tvl": 1463377
     },
     {
      "chain": "Aptos",
-     "tvl": 1023655
+     "tvl": 1027804
     }
    ],
    "scripts": [
@@ -8737,15 +8749,15 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 328290277
+     "tvl": 328540991
     },
     {
      "chain": "Arbitrum",
-     "tvl": 12055925
+     "tvl": 12074016
     },
     {
      "chain": "Optimism",
-     "tvl": 187664
+     "tvl": 187913
     }
    ],
    "scripts": [],
@@ -8807,7 +8819,7 @@
    "chainTvls": [
     {
      "chain": "Anubis",
-     "tvl": 406149148
+     "tvl": 406303926
     }
    ],
    "scripts": [],
@@ -8869,15 +8881,15 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 88724833
+     "tvl": 88806697
     },
     {
      "chain": "Polygon",
-     "tvl": 6346549
+     "tvl": 6350590
     },
     {
      "chain": "Arbitrum",
-     "tvl": 1634087
+     "tvl": 1635628
     }
    ],
    "scripts": [],
@@ -8938,7 +8950,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 771554733
+     "tvl": 773853977
     }
    ],
    "scripts": [],
@@ -8999,7 +9011,7 @@
    "chainTvls": [
     {
      "chain": "Hyperliquid L1",
-     "tvl": 187359394
+     "tvl": 188709938
     }
    ],
    "scripts": [],
@@ -9226,19 +9238,19 @@
    "chainTvls": [
     {
      "chain": "Base",
-     "tvl": 80555430
+     "tvl": 80557838
     },
     {
      "chain": "Morph",
-     "tvl": 66123977
+     "tvl": 66303932
     },
     {
      "chain": "Ethereum",
-     "tvl": 62271071
+     "tvl": 62462010
     },
     {
      "chain": "Arbitrum",
-     "tvl": 5056560
+     "tvl": 5056688
     },
     {
      "chain": "Optimism",
@@ -9319,7 +9331,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 11057712
+     "tvl": 11110488
     }
    ],
    "scripts": [],
@@ -9380,7 +9392,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 94837939
+     "tvl": 94841982
     }
    ],
    "scripts": [],
@@ -9498,7 +9510,7 @@
    "chainTvls": [
     {
      "chain": "Near",
-     "tvl": 31516891
+     "tvl": 31576728
     }
    ],
    "scripts": [],
@@ -9560,27 +9572,27 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 140124520
+     "tvl": 140223106
     },
     {
      "chain": "Arbitrum",
-     "tvl": 9370913
+     "tvl": 9371100
     },
     {
      "chain": "Base",
-     "tvl": 4760183
+     "tvl": 4762609
     },
     {
      "chain": "Avalanche",
-     "tvl": 1510268
+     "tvl": 1510878
     },
     {
      "chain": "Hyperliquid L1",
-     "tvl": 384220
+     "tvl": 386096
     },
     {
      "chain": "Plasma",
-     "tvl": 314433
+     "tvl": 314461
     },
     {
      "chain": "TAC",
@@ -9766,7 +9778,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 93102690
+     "tvl": 93260016
     }
    ],
    "scripts": [],
@@ -9828,7 +9840,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 135394734
+     "tvl": 136007484
     }
    ],
    "scripts": [],
@@ -9890,7 +9902,7 @@
    "chainTvls": [
     {
      "chain": "Bittensor",
-     "tvl": 485475922
+     "tvl": 489835274
     }
    ],
    "scripts": [],
@@ -9952,7 +9964,7 @@
    "chainTvls": [
     {
      "chain": "ADI",
-     "tvl": 1454337
+     "tvl": 1454420
     }
    ],
    "scripts": [],
@@ -10075,7 +10087,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 131267466
+     "tvl": 131270332
     }
    ],
    "scripts": [],
@@ -10136,7 +10148,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 169424548
+     "tvl": 169099233
     }
    ],
    "scripts": [],
@@ -10254,7 +10266,7 @@
    "chainTvls": [
     {
      "chain": "Sui",
-     "tvl": 168749910
+     "tvl": 180331725
     }
    ],
    "scripts": [
@@ -10385,19 +10397,19 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 107229303
+     "tvl": 107093639
     },
     {
      "chain": "Arbitrum",
-     "tvl": 3340717
+     "tvl": 3374722
     },
     {
      "chain": "Binance",
-     "tvl": 923934
+     "tvl": 923467
     },
     {
      "chain": "Polygon",
-     "tvl": 670495
+     "tvl": 671176
     }
    ],
    "scripts": [],
@@ -10458,7 +10470,7 @@
    "chainTvls": [
     {
      "chain": "Algorand",
-     "tvl": 83124537
+     "tvl": 83680795
     }
    ],
    "scripts": [],
@@ -10520,7 +10532,7 @@
    "chainTvls": [
     {
      "chain": "Binance",
-     "tvl": 56071964
+     "tvl": 56071361
     }
    ],
    "scripts": [],
@@ -10582,15 +10594,15 @@
    "chainTvls": [
     {
      "chain": "Base",
-     "tvl": 41803624
+     "tvl": 42426996
     },
     {
      "chain": "Optimism",
-     "tvl": 4892587
+     "tvl": 4968446
     },
     {
      "chain": "Avalanche",
-     "tvl": 3354400
+     "tvl": 3375198
     }
    ],
    "scripts": [],
@@ -10652,27 +10664,27 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 509582116
+     "tvl": 508884806
     },
     {
      "chain": "Binance",
-     "tvl": 9567260
+     "tvl": 9573765
     },
     {
      "chain": "Ethereum",
-     "tvl": 4465508
+     "tvl": 4458990
     },
     {
      "chain": "Solana",
-     "tvl": 2646588
+     "tvl": 2646906
     },
     {
      "chain": "Base",
-     "tvl": 340028
+     "tvl": 339652
     },
     {
      "chain": "Arbitrum",
-     "tvl": 41841
+     "tvl": 41849
     },
     {
      "chain": "X Layer",
@@ -10811,7 +10823,7 @@
    "chainTvls": [
     {
      "chain": "Near",
-     "tvl": 39247459
+     "tvl": 38853963
     }
    ],
    "scripts": [],
@@ -10884,31 +10896,31 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 134643976
+     "tvl": 134704874
     },
     {
      "chain": "Binance",
-     "tvl": 19586309
+     "tvl": 19599082
     },
     {
      "chain": "Ripple",
-     "tvl": 2142608
+     "tvl": 2141815
     },
     {
      "chain": "Arbitrum",
-     "tvl": 1363518
+     "tvl": 1363997
     },
     {
      "chain": "Optimism",
-     "tvl": 1190308
+     "tvl": 1190699
     },
     {
      "chain": "Base",
-     "tvl": 438692
+     "tvl": 440034
     },
     {
      "chain": "Polygon",
-     "tvl": 104404
+     "tvl": 104396
     },
     {
      "chain": "Fantom",
@@ -10974,7 +10986,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 3119162
+     "tvl": 3117287
     }
    ],
    "scripts": [],
@@ -11416,7 +11428,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 1159383034
+     "tvl": 1163982039
     }
    ],
    "scripts": [],
@@ -11664,23 +11676,23 @@
    "chainTvls": [
     {
      "chain": "Binance",
-     "tvl": 3376121
+     "tvl": 3389861
     },
     {
      "chain": "Robinhood Chain",
-     "tvl": 85560
+     "tvl": 85766
     },
     {
      "chain": "X Layer",
-     "tvl": 20730
+     "tvl": 20689
     },
     {
      "chain": "Base",
-     "tvl": 9248
+     "tvl": 9269
     },
     {
      "chain": "Monad",
-     "tvl": 3022
+     "tvl": 3043
     }
    ],
    "scripts": [],
@@ -11754,7 +11766,7 @@
    "chainTvls": [
     {
      "chain": "Robinhood Chain",
-     "tvl": 110925979
+     "tvl": 110832356
     }
    ],
    "scripts": [
@@ -11972,35 +11984,35 @@
    "chainTvls": [
     {
      "chain": "Thorchain",
-     "tvl": 34193171
+     "tvl": 34217944
     },
     {
      "chain": "Bitcoin",
-     "tvl": 15458859
+     "tvl": 15516259
     },
     {
      "chain": "Ethereum",
-     "tvl": 10160315
+     "tvl": 10171178
     },
     {
      "chain": "Binance",
-     "tvl": 1850871
+     "tvl": 1854326
     },
     {
      "chain": "Bitcoincash",
-     "tvl": 1398470
+     "tvl": 1397806
     },
     {
      "chain": "Avalanche",
-     "tvl": 1000671
+     "tvl": 1004758
     },
     {
      "chain": "Doge",
-     "tvl": 953319
+     "tvl": 956010
     },
     {
      "chain": "Ripple",
-     "tvl": 802853
+     "tvl": 804112
     }
    ],
    "scripts": [
@@ -12186,7 +12198,7 @@
    "chainTvls": [
     {
      "chain": "Pharos",
-     "tvl": 135091272
+     "tvl": 135202025
     },
     {
      "chain": "Sui",
@@ -12252,7 +12264,7 @@
    "chainTvls": [
     {
      "chain": "Avalanche",
-     "tvl": 236306894
+     "tvl": 238010044
     }
    ],
    "scripts": [],
@@ -12314,15 +12326,15 @@
    "chainTvls": [
     {
      "chain": "Plasma",
-     "tvl": 65633209
+     "tvl": 65638956
     },
     {
      "chain": "Monad",
-     "tvl": 7603724
+     "tvl": 7603646
     },
     {
      "chain": "Ethereum",
-     "tvl": 6673771
+     "tvl": 6621770
     }
    ],
    "scripts": [],
@@ -12385,7 +12397,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 113804317
+     "tvl": 113740577
     }
    ],
    "scripts": [
@@ -12457,7 +12469,7 @@
    "chainTvls": [
     {
      "chain": "Sui",
-     "tvl": 167216315
+     "tvl": 167264411
     }
    ],
    "scripts": [
@@ -12586,7 +12598,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 88871949
+     "tvl": 88928027
     }
    ],
    "scripts": [],
@@ -12648,15 +12660,15 @@
    "chainTvls": [
     {
      "chain": "Tron",
-     "tvl": 1277309136
+     "tvl": 1263917982
     },
     {
      "chain": "Ethereum",
-     "tvl": 37623200
+     "tvl": 37621301
     },
     {
      "chain": "Binance",
-     "tvl": 19859648
+     "tvl": 19960359
     }
    ],
    "scripts": [],
@@ -12842,7 +12854,7 @@
    "chainTvls": [
     {
      "chain": "Klaytn",
-     "tvl": 67879621
+     "tvl": 66470725
     }
    ],
    "scripts": [],
@@ -13017,31 +13029,31 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 66931797
+     "tvl": 67225803
     },
     {
      "chain": "Ethereum",
-     "tvl": 19694200
+     "tvl": 19775069
     },
     {
      "chain": "Hyperliquid L1",
-     "tvl": 6744301
+     "tvl": 6800670
     },
     {
      "chain": "Binance",
-     "tvl": 4258330
+     "tvl": 4273184
     },
     {
      "chain": "Ripple",
-     "tvl": 3663466
+     "tvl": 3672280
     },
     {
      "chain": "Solana",
-     "tvl": 3099152
+     "tvl": 3116259
     },
     {
      "chain": "Doge",
-     "tvl": 900547
+     "tvl": 904271
     }
    ],
    "scripts": [],
@@ -13158,15 +13170,15 @@
    "chainTvls": [
     {
      "chain": "Avalanche",
-     "tvl": 171971726
+     "tvl": 171968997
     },
     {
      "chain": "Ethereum",
-     "tvl": 46376896
+     "tvl": 46377588
     },
     {
      "chain": "Plume Mainnet",
-     "tvl": 32732238
+     "tvl": 32731922
     }
    ],
    "scripts": [],
@@ -13355,7 +13367,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 54691538
+     "tvl": 54701132
     }
    ],
    "scripts": [],
@@ -13478,7 +13490,7 @@
    "chainTvls": [
     {
      "chain": "Hyperliquid L1",
-     "tvl": 23491266
+     "tvl": 23924225
     }
    ],
    "scripts": [],
@@ -13697,7 +13709,7 @@
    "chainTvls": [
     {
      "chain": "Binance",
-     "tvl": 212038491
+     "tvl": 212543958
     },
     {
      "chain": "Mantle",
@@ -13705,11 +13717,11 @@
     },
     {
      "chain": "Arbitrum",
-     "tvl": 23349
+     "tvl": 23369
     },
     {
      "chain": "Ethereum",
-     "tvl": 3208
+     "tvl": 3216
     }
    ],
    "scripts": [],
@@ -13771,27 +13783,27 @@
    "chainTvls": [
     {
      "chain": "Base",
-     "tvl": 69617052
+     "tvl": 69699735
     },
     {
      "chain": "Arbitrum",
-     "tvl": 910760
+     "tvl": 910945
     },
     {
      "chain": "Ethereum",
-     "tvl": 805080
+     "tvl": 805732
     },
     {
      "chain": "Binance",
-     "tvl": 381971
+     "tvl": 382007
     },
     {
      "chain": "Solana",
-     "tvl": 281690
+     "tvl": 281740
     },
     {
      "chain": "Bitcoin",
-     "tvl": 167888
+     "tvl": 168626
     },
     {
      "chain": "Polygon",
@@ -13799,7 +13811,7 @@
     },
     {
      "chain": "Hyperliquid L1",
-     "tvl": 69263
+     "tvl": 69864
     }
    ],
    "scripts": [],
@@ -13881,7 +13893,7 @@
     },
     {
      "chain": "Ethereum",
-     "tvl": 31314921
+     "tvl": 31357827
     }
    ],
    "scripts": [],
@@ -13942,7 +13954,7 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 85705117
+     "tvl": 85587839
     }
    ],
    "scripts": [],
@@ -14399,7 +14411,7 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 38015131
+     "tvl": 38371421
     }
    ],
    "scripts": [],
@@ -14517,23 +14529,23 @@
    "chainTvls": [
     {
      "chain": "Dexalot",
-     "tvl": 1833975
+     "tvl": 1845778
     },
     {
      "chain": "Avalanche",
-     "tvl": 248100
+     "tvl": 248253
     },
     {
      "chain": "Arbitrum",
-     "tvl": 242009
+     "tvl": 241985
     },
     {
      "chain": "Binance",
-     "tvl": 127524
+     "tvl": 127532
     },
     {
      "chain": "Base",
-     "tvl": 52839
+     "tvl": 52862
     }
    ],
    "scripts": [],
@@ -14595,7 +14607,7 @@
    "chainTvls": [
     {
      "chain": "Bitcoin",
-     "tvl": 26854119
+     "tvl": 26935171
     }
    ],
    "scripts": [],
@@ -14827,15 +14839,15 @@
    "chainTvls": [
     {
      "chain": "Ethereum",
-     "tvl": 21076486
+     "tvl": 21129344
     },
     {
      "chain": "Avalanche",
-     "tvl": 48405
+     "tvl": 48406
     },
     {
      "chain": "Base",
-     "tvl": 16213
+     "tvl": 16281
     },
     {
      "chain": "Unichain",
@@ -14900,7 +14912,7 @@
    "chainTvls": [
     {
      "chain": "Solana",
-     "tvl": 64510240
+     "tvl": 64774977
     }
    ],
    "scripts": [],
@@ -15022,7 +15034,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 1234344383
+      "tvl": 1240045217
      }
     ],
     "scripts": [
@@ -15116,35 +15128,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 2568303326
+      "tvl": 2561745020
      },
      {
       "chain": "Base",
-      "tvl": 486979628
+      "tvl": 487686352
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 226254392
+      "tvl": 226659319
      },
      {
       "chain": "Binance",
-      "tvl": 193322752
+      "tvl": 193464974
      },
      {
       "chain": "Arbitrum",
-      "tvl": 179096813
+      "tvl": 179364090
      },
      {
       "chain": "Polygon",
-      "tvl": 66307587
+      "tvl": 66264018
      },
      {
       "chain": "X Layer",
-      "tvl": 45145960
+      "tvl": 45652250
      },
      {
       "chain": "Arc",
-      "tvl": 39474153
+      "tvl": 39465452
      }
     ],
     "scripts": [
@@ -15306,6 +15318,18 @@
        "label": "V4 pool manager",
        "address": "0x000000000004444c5dc75cB358380D2e3dE08A90",
        "doc": "https://docs.uniswap.org/contracts/v4/deployments"
+      },
+      {
+       "chain": "ethereum",
+       "label": "V4 quoter",
+       "address": "0x52F0E24D1c21C8A0cB1e5a5dD6198556BD9E1203",
+       "doc": "https://docs.uniswap.org/contracts/v4/deployments"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Universal Router (V4)",
+       "address": "0x66a9893cC07D91D95644AEDD05D03f95e1dBA8Af",
+       "doc": "https://docs.uniswap.org/contracts/v4/deployments"
       }
      ],
      "recipe": null
@@ -15359,11 +15383,11 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 357769829
+      "tvl": 365644134
      },
      {
       "chain": "Arc",
-      "tvl": 2957663
+      "tvl": 2960751
      }
     ],
     "scripts": [
@@ -15405,7 +15429,7 @@
     },
     "testing": {
      "mode": "fork",
-     "label": null,
+     "label": "Reference swap (Uniswap V3 on Base)",
      "note": "Slipstream quoters revert in this stack. The fork script swaps Uniswap V3 on Base as the liquid reference, same as simulate:dex:aerodrome:v3.",
      "appUrl": "https://aerodrome.finance",
      "chain": "base",
@@ -15623,7 +15647,7 @@
     "chainTvls": [
      {
       "chain": "Tron",
-      "tvl": 639160726
+      "tvl": 639255657
      }
     ],
     "scripts": [],
@@ -15685,7 +15709,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 211320772
+      "tvl": 212009189
      }
     ],
     "scripts": [],
@@ -15773,19 +15797,19 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 2111640304
+      "tvl": 2101779799
      },
      {
       "chain": "Ethereum",
-      "tvl": 28621580
+      "tvl": 28598938
      },
      {
       "chain": "Base",
-      "tvl": 22168359
+      "tvl": 22170362
      },
      {
       "chain": "Arbitrum",
-      "tvl": 8051736
+      "tvl": 8053015
      },
      {
       "chain": "Solana",
@@ -15793,15 +15817,15 @@
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 2901132
+      "tvl": 2901096
      },
      {
       "chain": "Monad",
-      "tvl": 1463367
+      "tvl": 1463377
      },
      {
       "chain": "Aptos",
-      "tvl": 1023655
+      "tvl": 1027804
      }
     ],
     "scripts": [
@@ -15921,7 +15945,7 @@
     "chainTvls": [
      {
       "chain": "Anubis",
-      "tvl": 406149148
+      "tvl": 406303926
      }
     ],
     "scripts": [],
@@ -15983,7 +16007,7 @@
     "chainTvls": [
      {
       "chain": "Near",
-      "tvl": 31516891
+      "tvl": 31576728
      }
     ],
     "scripts": [],
@@ -16045,7 +16069,7 @@
     "chainTvls": [
      {
       "chain": "Bittensor",
-      "tvl": 485475922
+      "tvl": 489835274
      }
     ],
     "scripts": [],
@@ -16180,35 +16204,35 @@
     "chainTvls": [
      {
       "chain": "Thorchain",
-      "tvl": 34193171
+      "tvl": 34217944
      },
      {
       "chain": "Bitcoin",
-      "tvl": 15458859
+      "tvl": 15516259
      },
      {
       "chain": "Ethereum",
-      "tvl": 10160315
+      "tvl": 10171178
      },
      {
       "chain": "Binance",
-      "tvl": 1850871
+      "tvl": 1854326
      },
      {
       "chain": "Bitcoincash",
-      "tvl": 1398470
+      "tvl": 1397806
      },
      {
       "chain": "Avalanche",
-      "tvl": 1000671
+      "tvl": 1004758
      },
      {
       "chain": "Doge",
-      "tvl": 953319
+      "tvl": 956010
      },
      {
       "chain": "Ripple",
-      "tvl": 802853
+      "tvl": 804112
      }
     ],
     "scripts": [
@@ -16281,7 +16305,7 @@
     "chainTvls": [
      {
       "chain": "Hyperliquid L1",
-      "tvl": 23491266
+      "tvl": 23924225
      }
     ],
     "scripts": [],
@@ -16343,23 +16367,23 @@
     "chainTvls": [
      {
       "chain": "Dexalot",
-      "tvl": 1833975
+      "tvl": 1845778
      },
      {
       "chain": "Avalanche",
-      "tvl": 248100
+      "tvl": 248253
      },
      {
       "chain": "Arbitrum",
-      "tvl": 242009
+      "tvl": 241985
      },
      {
       "chain": "Binance",
-      "tvl": 127524
+      "tvl": 127532
      },
      {
       "chain": "Base",
-      "tvl": 52839
+      "tvl": 52862
      }
     ],
     "scripts": [],
@@ -16535,7 +16559,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 279993
+      "tvl": 281105
      }
     ],
     "scripts": [],
@@ -16597,7 +16621,7 @@
     "chainTvls": [
      {
       "chain": "Tempo",
-      "tvl": 15754379
+      "tvl": 15764901
      }
     ],
     "scripts": [],
@@ -16951,7 +16975,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 4078960
+      "tvl": 4098437
      }
     ],
     "scripts": [],
@@ -17013,7 +17037,7 @@
     "chainTvls": [
      {
       "chain": "Hyperliquid L1",
-      "tvl": 164256188
+      "tvl": 164219159
      }
     ],
     "scripts": [],
@@ -17075,7 +17099,7 @@
     "chainTvls": [
      {
       "chain": "Mantle",
-      "tvl": 7130573
+      "tvl": 7131192
      }
     ],
     "scripts": [],
@@ -17137,35 +17161,35 @@
     "chainTvls": [
      {
       "chain": "Arbitrum",
-      "tvl": 760662
+      "tvl": 763808
      },
      {
       "chain": "Avalanche",
-      "tvl": 597414
+      "tvl": 598689
      },
      {
       "chain": "Optimism",
-      "tvl": 580733
+      "tvl": 582130
      },
      {
       "chain": "Binance",
-      "tvl": 469862
+      "tvl": 473115
      },
      {
       "chain": "Polygon",
-      "tvl": 439569
+      "tvl": 439941
      },
      {
       "chain": "Base",
-      "tvl": 313551
+      "tvl": 314344
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 256105
+      "tvl": 233716
      },
      {
       "chain": "Monad",
-      "tvl": 86901
+      "tvl": 85070
      }
     ],
     "scripts": [],
@@ -17300,7 +17324,7 @@
     "chainTvls": [
      {
       "chain": "Pulse",
-      "tvl": 58242309
+      "tvl": 58170903
      }
     ],
     "scripts": [],
@@ -17543,7 +17567,7 @@
     "chainTvls": [
      {
       "chain": "Cardano",
-      "tvl": 581758
+      "tvl": 580938
      }
     ],
     "scripts": [],
@@ -17605,7 +17629,7 @@
     "chainTvls": [
      {
       "chain": "EOS",
-      "tvl": 145506
+      "tvl": 145787
      }
     ],
     "scripts": [],
@@ -17735,7 +17759,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 32259268
+      "tvl": 32256809
      }
     ],
     "scripts": [
@@ -17880,7 +17904,7 @@
     "chainTvls": [
      {
       "chain": "Sui",
-      "tvl": 4035777
+      "tvl": 4031551
      }
     ],
     "scripts": [],
@@ -17942,7 +17966,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 38991320
+      "tvl": 39044744
      }
     ],
     "scripts": [],
@@ -18004,27 +18028,27 @@
     "chainTvls": [
      {
       "chain": "Arbitrum",
-      "tvl": 306454
+      "tvl": 307198
      },
      {
       "chain": "Binance",
-      "tvl": 41431
+      "tvl": 41486
      },
      {
       "chain": "Base",
-      "tvl": 41323
+      "tvl": 41327
      },
      {
       "chain": "Polygon",
-      "tvl": 38598
+      "tvl": 38660
      },
      {
       "chain": "Optimism",
-      "tvl": 32454
+      "tvl": 32469
      },
      {
       "chain": "Ethereum",
-      "tvl": 1123
+      "tvl": 1124
      },
      {
       "chain": "Mode",
@@ -18194,7 +18218,7 @@
     "chainTvls": [
      {
       "chain": "Avalanche",
-      "tvl": 38744488
+      "tvl": 38937712
      }
     ],
     "scripts": [
@@ -18278,7 +18302,7 @@
     "chainTvls": [
      {
       "chain": "Robinhood Chain",
-      "tvl": 6502301
+      "tvl": 6504996
      },
      {
       "chain": "Hyperliquid L1",
@@ -18352,7 +18376,7 @@
     "chainTvls": [
      {
       "chain": "TON",
-      "tvl": 2658915
+      "tvl": 2658806
      }
     ],
     "scripts": [],
@@ -18595,7 +18619,7 @@
     "chainTvls": [
      {
       "chain": "GRX Chain",
-      "tvl": 8296926
+      "tvl": 8300055
      }
     ],
     "scripts": [],
@@ -18657,7 +18681,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 868826
+      "tvl": 869258
      }
     ],
     "scripts": [],
@@ -18776,7 +18800,7 @@
     "chainTvls": [
      {
       "chain": "Ripple",
-      "tvl": 37175163
+      "tvl": 37241119
      }
     ],
     "scripts": [],
@@ -18838,19 +18862,15 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 139456
-     },
-     {
-      "chain": "Flare",
-      "tvl": 17478
+      "tvl": 142575
      },
      {
       "chain": "Binance",
-      "tvl": 11173
+      "tvl": 11174
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 9189
+      "tvl": 9260
      },
      {
       "chain": "Polygon",
@@ -18858,11 +18878,11 @@
      },
      {
       "chain": "Ethereum",
-      "tvl": 5122
+      "tvl": 5132
      },
      {
       "chain": "Arbitrum",
-      "tvl": 487
+      "tvl": 488
      },
      {
       "chain": "Linea",
@@ -19131,7 +19151,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 252467735
+      "tvl": 252278304
      }
     ],
     "scripts": [
@@ -19204,7 +19224,7 @@
     "chainTvls": [
      {
       "chain": "BOT Chain",
-      "tvl": 31046642
+      "tvl": 31049490
      }
     ],
     "scripts": [],
@@ -19644,7 +19664,7 @@
     "chainTvls": [
      {
       "chain": "Stellar",
-      "tvl": 37956753
+      "tvl": 37996477
      }
     ],
     "scripts": [],
@@ -19717,7 +19737,7 @@
     "chainTvls": [
      {
       "chain": "Sui",
-      "tvl": 28310905
+      "tvl": 28335042
      },
      {
       "chain": "Aptos",
@@ -19913,7 +19933,7 @@
     "chainTvls": [
      {
       "chain": "Proton",
-      "tvl": 13739938
+      "tvl": 13710980
      }
     ],
     "scripts": [],
@@ -20041,7 +20061,7 @@
     "chainTvls": [
      {
       "chain": "Stellar",
-      "tvl": 16184804
+      "tvl": 16218807
      }
     ],
     "scripts": [],
@@ -20367,7 +20387,7 @@
     "chainTvls": [
      {
       "chain": "Chainflip",
-      "tvl": 11879477
+      "tvl": 11926153
      }
     ],
     "scripts": [],
@@ -20429,7 +20449,7 @@
     "chainTvls": [
      {
       "chain": "Canton",
-      "tvl": 7267552
+      "tvl": 7091960
      }
     ],
     "scripts": [],
@@ -20502,7 +20522,7 @@
     "chainTvls": [
      {
       "chain": "Cronos",
-      "tvl": 98316489
+      "tvl": 97878449
      }
     ],
     "scripts": [],
@@ -20626,7 +20646,7 @@
     "chainTvls": [
      {
       "chain": "IOTA EVM",
-      "tvl": 175263
+      "tvl": 175262
      }
     ],
     "scripts": [],
@@ -20688,7 +20708,7 @@
     "chainTvls": [
      {
       "chain": "MegaETH",
-      "tvl": 1889444
+      "tvl": 1892230
      }
     ],
     "scripts": [],
@@ -20771,19 +20791,19 @@
     "chainTvls": [
      {
       "chain": "Avalanche",
-      "tvl": 15672255
+      "tvl": 15684383
      },
      {
       "chain": "Arbitrum",
-      "tvl": 1508477
+      "tvl": 1508407
      },
      {
       "chain": "Monad",
-      "tvl": 115241
+      "tvl": 115411
      },
      {
       "chain": "Binance",
-      "tvl": 76040
+      "tvl": 76046
      },
      {
       "chain": "Ethereum",
@@ -20991,7 +21011,7 @@
     "chainTvls": [
      {
       "chain": "Robinhood Chain",
-      "tvl": 1166147
+      "tvl": 1166000
      }
     ],
     "scripts": [],
@@ -21064,7 +21084,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 26149975
+      "tvl": 26189686
      }
     ],
     "scripts": [],
@@ -21188,7 +21208,7 @@
     "chainTvls": [
      {
       "chain": "Stellar",
-      "tvl": 13153422
+      "tvl": 13156893
      }
     ],
     "scripts": [],
@@ -21250,15 +21270,15 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 685711
+      "tvl": 685262
      },
      {
       "chain": "Binance",
-      "tvl": 396484
+      "tvl": 396406
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 303657
+      "tvl": 303501
      }
     ],
     "scripts": [],
@@ -21527,7 +21547,7 @@
     "chainTvls": [
      {
       "chain": "Hedera",
-      "tvl": 27048157
+      "tvl": 27120955
      }
     ],
     "scripts": [],
@@ -21608,7 +21628,7 @@
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 2125902
+      "tvl": 2125888
      }
     ],
     "scripts": [],
@@ -21732,7 +21752,7 @@
     "chainTvls": [
      {
       "chain": "Canton",
-      "tvl": 2870999
+      "tvl": 2850490
      }
     ],
     "scripts": [],
@@ -21805,7 +21825,7 @@
     "chainTvls": [
      {
       "chain": "Hyperliquid L1",
-      "tvl": 17855782
+      "tvl": 17918046
      }
     ],
     "scripts": [],
@@ -21878,35 +21898,35 @@
     "chainTvls": [
      {
       "chain": "Optimism",
-      "tvl": 29612337
+      "tvl": 26662742
      },
      {
       "chain": "Ink",
-      "tvl": 7245291
+      "tvl": 7237410
      },
      {
       "chain": "Fraxtal",
-      "tvl": 300871
+      "tvl": 301113
      },
      {
       "chain": "Soneium",
-      "tvl": 133066
+      "tvl": 133207
      },
      {
       "chain": "Celo",
-      "tvl": 108500
+      "tvl": 109476
      },
      {
       "chain": "Unichain",
-      "tvl": 60543
+      "tvl": 60613
      },
      {
       "chain": "BOB",
-      "tvl": 36003
+      "tvl": 36015
      },
      {
       "chain": "Lisk",
-      "tvl": 17819
+      "tvl": 17915
      }
     ],
     "scripts": [
@@ -21948,7 +21968,7 @@
     },
     "testing": {
      "mode": "fork",
-     "label": null,
+     "label": "Reference swap (Uniswap V3 on Optimism)",
      "note": "Slipstream quoters revert in this stack. The fork script swaps Uniswap V3 on Optimism as the liquid reference.",
      "appUrl": "https://velodrome.finance",
      "chain": "optimism",
@@ -22208,19 +22228,19 @@
     "chainTvls": [
      {
       "chain": "Scroll",
-      "tvl": 1759788
+      "tvl": 1761505
      },
      {
       "chain": "Blast",
-      "tvl": 207909
+      "tvl": 208068
      },
      {
       "chain": "Ethereum",
-      "tvl": 207320
+      "tvl": 207438
      },
      {
       "chain": "Plume Mainnet",
-      "tvl": 10218
+      "tvl": 10306
      }
     ],
     "scripts": [
@@ -22285,7 +22305,7 @@
     "chainTvls": [
      {
       "chain": "Blast",
-      "tvl": 6109513
+      "tvl": 6113482
      }
     ],
     "scripts": [
@@ -22350,7 +22370,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 1240038
+      "tvl": 1241483
      }
     ],
     "scripts": [
@@ -22496,35 +22516,35 @@
     "chainTvls": [
      {
       "chain": "Near",
-      "tvl": 126407168
+      "tvl": 124367519
      },
      {
       "chain": "Ethereum",
-      "tvl": 50846918
+      "tvl": 51132109
      },
      {
       "chain": "Tron",
-      "tvl": 8706102
+      "tvl": 8669763
      },
      {
       "chain": "Bitcoin",
-      "tvl": 7041035
+      "tvl": 7031400
      },
      {
       "chain": "Binance",
-      "tvl": 5205992
+      "tvl": 5020026
      },
      {
       "chain": "Arbitrum",
-      "tvl": 4896018
+      "tvl": 4989345
      },
      {
       "chain": "Base",
-      "tvl": 2505939
+      "tvl": 2516785
      },
      {
       "chain": "TON",
-      "tvl": 1636690
+      "tvl": 1632489
      }
     ],
     "scripts": [
@@ -22955,11 +22975,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 2976757
+      "tvl": 2984607
      },
      {
       "chain": "Binance",
-      "tvl": 277323
+      "tvl": 277977
      }
     ],
     "scripts": [
@@ -23883,27 +23903,27 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 141554
+      "tvl": 141401
      },
      {
       "chain": "Arbitrum",
-      "tvl": 57404
+      "tvl": 57400
      },
      {
       "chain": "Polygon",
-      "tvl": 35437
+      "tvl": 35440
      },
      {
       "chain": "Binance",
-      "tvl": 18033
+      "tvl": 18039
      },
      {
       "chain": "Avalanche",
-      "tvl": 10420
+      "tvl": 10413
      },
      {
       "chain": "Optimism",
-      "tvl": 4164
+      "tvl": 4162
      }
     ],
     "scripts": [
@@ -26210,7 +26230,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 771554733
+      "tvl": 773853977
      }
     ],
     "scripts": [],
@@ -26284,7 +26304,7 @@
     "chainTvls": [
      {
       "chain": "Robinhood Chain",
-      "tvl": 110925979
+      "tvl": 110832356
      }
     ],
     "scripts": [
@@ -26711,7 +26731,7 @@
     "chainTvls": [
      {
       "chain": "Hyperliquid L1",
-      "tvl": 42904655
+      "tvl": 40493279
      }
     ],
     "scripts": [
@@ -26800,15 +26820,15 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 110879498
+      "tvl": 111170449
      },
      {
       "chain": "Optimism",
-      "tvl": 402846
+      "tvl": 402693
      },
      {
       "chain": "Base",
-      "tvl": 15413
+      "tvl": 15414
      },
      {
       "chain": "Arbitrum",
@@ -26888,23 +26908,23 @@
     "chainTvls": [
      {
       "chain": "Arbitrum",
-      "tvl": 50451911
+      "tvl": 50461871
      },
      {
       "chain": "Binance",
-      "tvl": 842971
+      "tvl": 843077
      },
      {
       "chain": "Ethereum",
-      "tvl": 620512
+      "tvl": 620590
      },
      {
       "chain": "Bitcoin",
-      "tvl": 79558
+      "tvl": 79798
      },
      {
       "chain": "Berachain",
-      "tvl": 10212
+      "tvl": 10213
      }
     ],
     "scripts": [],
@@ -27133,7 +27153,7 @@
     "chainTvls": [
      {
       "chain": "RISE",
-      "tvl": 21128519
+      "tvl": 21120990
      }
     ],
     "scripts": [],
@@ -27194,11 +27214,11 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 5854406
+      "tvl": 5852465
      },
      {
       "chain": "Solana",
-      "tvl": 715693
+      "tvl": 715657
      }
     ],
     "scripts": [],
@@ -27259,7 +27279,7 @@
     "chainTvls": [
      {
       "chain": "Sui",
-      "tvl": 848960
+      "tvl": 851902
      }
     ],
     "scripts": [],
@@ -27320,11 +27340,11 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 2495711
+      "tvl": 2495910
      },
      {
       "chain": "Blast",
-      "tvl": 483042
+      "tvl": 483607
      }
     ],
     "scripts": [
@@ -27407,19 +27427,19 @@
     "chainTvls": [
      {
       "chain": "Arbitrum",
-      "tvl": 201147688
+      "tvl": 201264038
      },
      {
       "chain": "Solana",
-      "tvl": 27835813
+      "tvl": 27849884
      },
      {
       "chain": "Avalanche",
-      "tvl": 8225293
+      "tvl": 8229748
      },
      {
       "chain": "MegaETH",
-      "tvl": 560341
+      "tvl": 563885
      }
     ],
     "scripts": [
@@ -27603,7 +27623,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 253180
+      "tvl": 253786
      }
     ],
     "scripts": [],
@@ -27928,7 +27948,7 @@
     "chainTvls": [
      {
       "chain": "Katana",
-      "tvl": 1355874
+      "tvl": 1355853
      }
     ],
     "scripts": [],
@@ -27989,7 +28009,7 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 7123749
+      "tvl": 7124217
      }
     ],
     "scripts": [],
@@ -28061,11 +28081,11 @@
     "chainTvls": [
      {
       "chain": "dYdX",
-      "tvl": 70669244
+      "tvl": 70669859
      },
      {
       "chain": "Ethereum",
-      "tvl": 37879124
+      "tvl": 37884160
      }
     ],
     "scripts": [],
@@ -28214,7 +28234,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 27035248
+      "tvl": 27040845
      }
     ],
     "scripts": [],
@@ -28497,11 +28517,11 @@
     "chainTvls": [
      {
       "chain": "Starknet",
-      "tvl": 119071512
+      "tvl": 119005801
      },
      {
       "chain": "Ethereum",
-      "tvl": 188483
+      "tvl": 188480
      }
     ],
     "scripts": [],
@@ -28562,23 +28582,23 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 17467359
+      "tvl": 17483898
      },
      {
       "chain": "Arbitrum",
-      "tvl": 6064924
+      "tvl": 6068621
      },
      {
       "chain": "Base",
-      "tvl": 3238638
+      "tvl": 3242033
      },
      {
       "chain": "Binance",
-      "tvl": 3080618
+      "tvl": 3080615
      },
      {
       "chain": "Mantle",
-      "tvl": 1210030
+      "tvl": 1210546
      }
     ],
     "scripts": [],
@@ -28700,7 +28720,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 5441818
+      "tvl": 5457471
      },
      {
       "chain": "Binance",
@@ -28830,7 +28850,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 7800974
+      "tvl": 7807010
      }
     ],
     "scripts": [],
@@ -28891,11 +28911,11 @@
     "chainTvls": [
      {
       "chain": "Hyperliquid L1",
-      "tvl": 24898753
+      "tvl": 24923788
      },
      {
       "chain": "Ethereum",
-      "tvl": 8574013
+      "tvl": 8569898
      }
     ],
     "scripts": [],
@@ -29203,35 +29223,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 6326010
+      "tvl": 6382386
      },
      {
       "chain": "Arbitrum",
-      "tvl": 4255578
+      "tvl": 4273561
      },
      {
       "chain": "Base",
-      "tvl": 886660
+      "tvl": 906116
      },
      {
       "chain": "Optimism",
-      "tvl": 412528
+      "tvl": 414316
      },
      {
       "chain": "Avalanche",
-      "tvl": 223739
+      "tvl": 229192
      },
      {
       "chain": "xDai",
-      "tvl": 135295
+      "tvl": 135924
      },
      {
       "chain": "Polygon",
-      "tvl": 33191
+      "tvl": 33213
      },
      {
       "chain": "Binance",
-      "tvl": 6377
+      "tvl": 6563
      }
     ],
     "scripts": [],
@@ -29357,19 +29377,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 12601199
+      "tvl": 12599935
      },
      {
       "chain": "Arbitrum",
-      "tvl": 1782782
+      "tvl": 1785770
      },
      {
       "chain": "Base",
-      "tvl": 484807
+      "tvl": 484847
      },
      {
       "chain": "Optimism",
-      "tvl": 358432
+      "tvl": 358832
      }
     ],
     "scripts": [
@@ -29731,7 +29751,7 @@
     "chainTvls": [
      {
       "chain": "Arbitrum",
-      "tvl": 7523561
+      "tvl": 7528044
      }
     ],
     "scripts": [],
@@ -29792,15 +29812,15 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 7910288
+      "tvl": 7927218
      },
      {
       "chain": "Optimism",
-      "tvl": 1989434
+      "tvl": 1994397
      },
      {
       "chain": "Base",
-      "tvl": 575862
+      "tvl": 577702
      }
     ],
     "scripts": [],
@@ -30412,7 +30432,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 304434737
+      "tvl": 305963309
      }
     ],
     "scripts": [
@@ -30541,11 +30561,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 5101295941
+      "tvl": 5141678120
      },
      {
       "chain": "xDai",
-      "tvl": 210468
+      "tvl": 210404
      }
     ],
     "scripts": [
@@ -30691,19 +30711,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 259267540
+      "tvl": 259493154
      },
      {
       "chain": "Arbitrum",
-      "tvl": 1353343
+      "tvl": 1371814
      },
      {
       "chain": "Optimism",
-      "tvl": 386529
+      "tvl": 387133
      },
      {
       "chain": "Fraxtal",
-      "tvl": 91824
+      "tvl": 91808
      }
     ],
     "scripts": [],
@@ -30776,35 +30796,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 5122033196
+      "tvl": 5136530646
      },
      {
       "chain": "Base",
-      "tvl": 4417530449
+      "tvl": 4425261317
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 607380158
+      "tvl": 606735101
      },
      {
       "chain": "Arc",
-      "tvl": 311579771
+      "tvl": 312146726
      },
      {
       "chain": "Monad",
-      "tvl": 176444467
+      "tvl": 176890595
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 150289441
+      "tvl": 151002135
      },
      {
       "chain": "Pharos",
-      "tvl": 68114198
+      "tvl": 68313421
      },
      {
       "chain": "Tempo",
-      "tvl": 65105082
+      "tvl": 65152201
      }
     ],
     "scripts": [
@@ -30912,19 +30932,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 322238295
+      "tvl": 319557523
      },
      {
       "chain": "Arbitrum",
-      "tvl": 23407264
+      "tvl": 23475940
      },
      {
       "chain": "Berachain",
-      "tvl": 5112032
+      "tvl": 5116881
      },
      {
       "chain": "Mantle",
-      "tvl": 76655
+      "tvl": 76678
      },
      {
       "chain": "X Layer",
@@ -30990,7 +31010,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 2794926942
+      "tvl": 2767014689
      }
     ],
     "scripts": [],
@@ -31052,7 +31072,7 @@
     "chainTvls": [
      {
       "chain": "Provenance",
-      "tvl": 197353617
+      "tvl": 198108542
      }
     ],
     "scripts": [],
@@ -31216,11 +31236,11 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 1054059277
+      "tvl": 1054762212
      },
      {
       "chain": "Ethereum",
-      "tvl": 13451920
+      "tvl": 13461224
      }
     ],
     "scripts": [],
@@ -31282,7 +31302,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 1134017222
+      "tvl": 1143760368
      }
     ],
     "scripts": [
@@ -31448,7 +31468,7 @@
     "chainTvls": [
      {
       "chain": "Sui",
-      "tvl": 61071746
+      "tvl": 61130351
      }
     ],
     "scripts": [],
@@ -31510,7 +31530,7 @@
     "chainTvls": [
      {
       "chain": "Tron",
-      "tvl": 3780228151
+      "tvl": 3778580015
      }
     ],
     "scripts": [],
@@ -31572,7 +31592,7 @@
     "chainTvls": [
      {
       "chain": "Monad",
-      "tvl": 128858575
+      "tvl": 128866993
      }
     ],
     "scripts": [],
@@ -31773,7 +31793,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 1426879516
+      "tvl": 1427052356
      },
      {
       "chain": "Arbitrum",
@@ -31956,7 +31976,7 @@
     "chainTvls": [
      {
       "chain": "Stellar",
-      "tvl": 146335620
+      "tvl": 146410101
      }
     ],
     "scripts": [],
@@ -32018,15 +32038,15 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 328290277
+      "tvl": 328540991
      },
      {
       "chain": "Arbitrum",
-      "tvl": 12055925
+      "tvl": 12074016
      },
      {
       "chain": "Optimism",
-      "tvl": 187664
+      "tvl": 187913
      }
     ],
     "scripts": [],
@@ -32088,7 +32108,7 @@
     "chainTvls": [
      {
       "chain": "Sui",
-      "tvl": 168749910
+      "tvl": 180331725
      }
     ],
     "scripts": [
@@ -32161,15 +32181,15 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 41803624
+      "tvl": 42426996
      },
      {
       "chain": "Optimism",
-      "tvl": 4892587
+      "tvl": 4968446
      },
      {
       "chain": "Avalanche",
-      "tvl": 3354400
+      "tvl": 3375198
      }
     ],
     "scripts": [],
@@ -32305,7 +32325,7 @@
     "chainTvls": [
      {
       "chain": "Sui",
-      "tvl": 167216315
+      "tvl": 167264411
      }
     ],
     "scripts": [
@@ -32378,7 +32398,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 88871949
+      "tvl": 88928027
      }
     ],
     "scripts": [],
@@ -32440,15 +32460,15 @@
     "chainTvls": [
      {
       "chain": "Tron",
-      "tvl": 1277309136
+      "tvl": 1263917982
      },
      {
       "chain": "Ethereum",
-      "tvl": 37623200
+      "tvl": 37621301
      },
      {
       "chain": "Binance",
-      "tvl": 19859648
+      "tvl": 19960359
      }
     ],
     "scripts": [],
@@ -32567,7 +32587,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 54691538
+      "tvl": 54701132
      }
     ],
     "scripts": [],
@@ -32706,7 +32726,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 38015131
+      "tvl": 38371421
      }
     ],
     "scripts": [],
@@ -32768,7 +32788,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 64510240
+      "tvl": 64774977
      }
     ],
     "scripts": [],
@@ -32830,15 +32850,15 @@
     "chainTvls": [
      {
       "chain": "Flare",
-      "tvl": 28049168
+      "tvl": 28081063
      },
      {
       "chain": "Citrea",
-      "tvl": 3997186
+      "tvl": 3996300
      },
      {
       "chain": "Plume Mainnet",
-      "tvl": 1970801
+      "tvl": 1970736
      }
     ],
     "scripts": [],
@@ -32900,15 +32920,15 @@
     "chainTvls": [
      {
       "chain": "Stellar",
-      "tvl": 12046199
+      "tvl": 12050655
      },
      {
       "chain": "Ethereum",
-      "tvl": 11112363
+      "tvl": 11106193
      },
      {
       "chain": "Bitcoin",
-      "tvl": 6181359
+      "tvl": 6172901
      },
      {
       "chain": "Near",
@@ -32916,11 +32936,11 @@
      },
      {
       "chain": "Zcash",
-      "tvl": 182301
+      "tvl": 182337
      },
      {
       "chain": "Ripple",
-      "tvl": 53272
+      "tvl": 53238
      },
      {
       "chain": "Solana",
@@ -32990,7 +33010,7 @@
     "chainTvls": [
      {
       "chain": "EOS",
-      "tvl": 40706311
+      "tvl": 40705978
      }
     ],
     "scripts": [],
@@ -33052,7 +33072,7 @@
     "chainTvls": [
      {
       "chain": "Proton",
-      "tvl": 37058432
+      "tvl": 37098578
      }
     ],
     "scripts": [],
@@ -33126,7 +33146,7 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 48411023
+      "tvl": 48370569
      },
      {
       "chain": "Fantom",
@@ -33265,7 +33285,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 277481911
+      "tvl": 278038984
      }
     ],
     "scripts": [],
@@ -33389,7 +33409,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 2623474
+      "tvl": 2625164
      }
     ],
     "scripts": [],
@@ -33451,11 +33471,11 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 9368707
+      "tvl": 9373610
      },
      {
       "chain": "Optimism",
-      "tvl": 2780868
+      "tvl": 2783145
      },
      {
       "chain": "Ethereum",
@@ -33521,7 +33541,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 41397343
+      "tvl": 41397383
      }
     ],
     "scripts": [],
@@ -33583,15 +33603,15 @@
     "chainTvls": [
      {
       "chain": "Monad",
-      "tvl": 409845
+      "tvl": 410670
      },
      {
       "chain": "Arbitrum",
-      "tvl": 379880
+      "tvl": 379891
      },
      {
       "chain": "Ethereum",
-      "tvl": 25741
+      "tvl": 25742
      },
      {
       "chain": "Robinhood Chain",
@@ -33817,7 +33837,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 12800543
+      "tvl": 12800368
      }
     ],
     "scripts": [
@@ -33993,31 +34013,31 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 15250874961
+      "tvl": 15272616838
      },
      {
       "chain": "Base",
-      "tvl": 539876606
+      "tvl": 540923057
      },
      {
       "chain": "Arbitrum",
-      "tvl": 505869622
+      "tvl": 506444084
      },
      {
       "chain": "Plasma",
-      "tvl": 429266035
+      "tvl": 429195604
      },
      {
       "chain": "Avalanche",
-      "tvl": 372655275
+      "tvl": 368638236
      },
      {
       "chain": "Monad",
-      "tvl": 353997016
+      "tvl": 354137397
      },
      {
       "chain": "Binance",
-      "tvl": 207057214
+      "tvl": 207373049
      },
      {
       "chain": "Arc",
@@ -34313,7 +34333,7 @@
     "chainTvls": [
      {
       "chain": "Avalanche",
-      "tvl": 120785691
+      "tvl": 119489563
      }
     ],
     "scripts": [
@@ -34386,7 +34406,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 38500078
+      "tvl": 38624725
      }
     ],
     "scripts": [],
@@ -34448,15 +34468,15 @@
     "chainTvls": [
      {
       "chain": "Manta",
-      "tvl": 221720
+      "tvl": 221766
      },
      {
       "chain": "zkLink",
-      "tvl": 23783
+      "tvl": 23809
      },
      {
       "chain": "Mode",
-      "tvl": 1385
+      "tvl": 1388
      },
      {
       "chain": "WEMIX",
@@ -34464,7 +34484,7 @@
      },
      {
       "chain": "Klaytn",
-      "tvl": 43
+      "tvl": 44
      },
      {
       "chain": "BOB",
@@ -34540,7 +34560,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 1323372966
+      "tvl": 1326162976
      }
     ],
     "scripts": [
@@ -34613,7 +34633,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 271682501
+      "tvl": 271330459
      }
     ],
     "scripts": [],
@@ -34675,7 +34695,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 7325617
+      "tvl": 7347562
      }
     ],
     "scripts": [],
@@ -34737,23 +34757,23 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 490735608
+      "tvl": 490395394
      },
      {
       "chain": "Arbitrum",
-      "tvl": 138150434
+      "tvl": 138181944
      },
      {
       "chain": "Plasma",
-      "tvl": 42161874
+      "tvl": 42255480
      },
      {
       "chain": "Base",
-      "tvl": 25936641
+      "tvl": 25641732
      },
      {
       "chain": "Polygon",
-      "tvl": 4148173
+      "tvl": 4163770
      }
     ],
     "scripts": [],
@@ -34815,7 +34835,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 43607373
+      "tvl": 43607476
      }
     ],
     "scripts": [],
@@ -34877,23 +34897,23 @@
     "chainTvls": [
      {
       "chain": "Bifrost Network",
-      "tvl": 10049918
+      "tvl": 10055522
      },
      {
       "chain": "Ethereum",
-      "tvl": 238655
+      "tvl": 238666
      },
      {
       "chain": "Binance",
-      "tvl": 155739
+      "tvl": 155775
      },
      {
       "chain": "Klaytn",
-      "tvl": 44962
+      "tvl": 45200
      },
      {
       "chain": "Avalanche",
-      "tvl": 2414
+      "tvl": 2426
      }
     ],
     "scripts": [],
@@ -35028,7 +35048,7 @@
     "chainTvls": [
      {
       "chain": "Sui",
-      "tvl": 25290831
+      "tvl": 25376104
      }
     ],
     "scripts": [],
@@ -35090,35 +35110,35 @@
     "chainTvls": [
      {
       "chain": "Monad",
-      "tvl": 214612527
+      "tvl": 214693227
      },
      {
       "chain": "Ethereum",
-      "tvl": 52994618
+      "tvl": 53028839
      },
      {
       "chain": "Base",
-      "tvl": 15563830
+      "tvl": 15792227
      },
      {
       "chain": "BOB",
-      "tvl": 4985516
+      "tvl": 4985538
      },
      {
       "chain": "Avalanche",
-      "tvl": 4513691
+      "tvl": 4515415
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 2032154
+      "tvl": 2043602
      },
      {
       "chain": "Plasma",
-      "tvl": 1981341
+      "tvl": 1981374
      },
      {
       "chain": "Unichain",
-      "tvl": 1939217
+      "tvl": 1940875
      }
     ],
     "scripts": [],
@@ -35180,7 +35200,7 @@
     "chainTvls": [
      {
       "chain": "Mezo",
-      "tvl": 2683984
+      "tvl": 2683184
      }
     ],
     "scripts": [],
@@ -35253,35 +35273,35 @@
     "chainTvls": [
      {
       "chain": "Algorand",
-      "tvl": 26476126
+      "tvl": 26694454
      },
      {
       "chain": "Avalanche",
-      "tvl": 4238444
+      "tvl": 4252509
      },
      {
       "chain": "Polygon",
-      "tvl": 802295
+      "tvl": 802714
      },
      {
       "chain": "Ethereum",
-      "tvl": 246116
+      "tvl": 247024
      },
      {
       "chain": "Monad",
-      "tvl": 212333
+      "tvl": 212497
      },
      {
       "chain": "Arbitrum",
-      "tvl": 67052
+      "tvl": 67107
      },
      {
       "chain": "Base",
-      "tvl": 25730
+      "tvl": 25814
      },
      {
       "chain": "Binance",
-      "tvl": 12199
+      "tvl": 12233
      }
     ],
     "scripts": [],
@@ -35343,11 +35363,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 11541262
+      "tvl": 11551071
      },
      {
       "chain": "Sonic",
-      "tvl": 1318768
+      "tvl": 1319566
      }
     ],
     "scripts": [],
@@ -35409,7 +35429,7 @@
     "chainTvls": [
      {
       "chain": "Injective",
-      "tvl": 5178240
+      "tvl": 5194949
      }
     ],
     "scripts": [],
@@ -35471,7 +35491,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 61480548
+      "tvl": 61567393
      }
     ],
     "scripts": [],
@@ -35595,7 +35615,7 @@
     "chainTvls": [
      {
       "chain": "Waves",
-      "tvl": 7162148
+      "tvl": 7155703
      }
     ],
     "scripts": [],
@@ -35719,7 +35739,7 @@
     "chainTvls": [
      {
       "chain": "RSK",
-      "tvl": 20506824
+      "tvl": 20478762
      }
     ],
     "scripts": [],
@@ -35867,7 +35887,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 130612328
+      "tvl": 130953467
      }
     ],
     "scripts": [],
@@ -35991,7 +36011,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 8946209
+      "tvl": 8946499
      },
      {
       "chain": "Plasma",
@@ -36057,19 +36077,19 @@
     "chainTvls": [
      {
       "chain": "Monad",
-      "tvl": 59128909
+      "tvl": 59129036
      },
      {
       "chain": "Pharos",
-      "tvl": 3912127
+      "tvl": 3912117
      },
      {
       "chain": "Ethereum",
-      "tvl": 3767568
+      "tvl": 3767793
      },
      {
       "chain": "Plasma",
-      "tvl": 3321235
+      "tvl": 3320930
      },
      {
       "chain": "World Chain",
@@ -36267,7 +36287,7 @@
     "chainTvls": [
      {
       "chain": "Flare",
-      "tvl": 36120438
+      "tvl": 36021315
      }
     ],
     "scripts": [],
@@ -36341,7 +36361,7 @@
     "chainTvls": [
      {
       "chain": "Mixin",
-      "tvl": 17460537
+      "tvl": 17460980
      }
     ],
     "scripts": [],
@@ -36403,19 +36423,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 16748724
+      "tvl": 16770171
      },
      {
       "chain": "Arbitrum",
-      "tvl": 255019
+      "tvl": 255107
      },
      {
       "chain": "Optimism",
-      "tvl": 972
+      "tvl": 974
      },
      {
       "chain": "Base",
-      "tvl": 930
+      "tvl": 932
      }
     ],
     "scripts": [],
@@ -36687,7 +36707,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 14414909
+      "tvl": 14339382
      }
     ],
     "scripts": [],
@@ -36749,7 +36769,7 @@
     "chainTvls": [
      {
       "chain": "HydraDX",
-      "tvl": 29326223
+      "tvl": 29304473
      }
     ],
     "scripts": [],
@@ -36811,7 +36831,7 @@
     "chainTvls": [
      {
       "chain": "Hyperliquid L1",
-      "tvl": 29145731
+      "tvl": 29235132
      }
     ],
     "scripts": [],
@@ -36873,7 +36893,7 @@
     "chainTvls": [
      {
       "chain": "Sei",
-      "tvl": 6199541
+      "tvl": 6212439
      }
     ],
     "scripts": [],
@@ -36935,15 +36955,15 @@
     "chainTvls": [
      {
       "chain": "Ontology",
-      "tvl": 5022886
+      "tvl": 5026915
      },
      {
       "chain": "Ethereum",
-      "tvl": 222405
+      "tvl": 222801
      },
      {
       "chain": "Binance",
-      "tvl": 108240
+      "tvl": 108252
      }
     ],
     "scripts": [],
@@ -37005,7 +37025,7 @@
     "chainTvls": [
      {
       "chain": "TON",
-      "tvl": 8504754
+      "tvl": 8513118
      }
     ],
     "scripts": [],
@@ -37067,7 +37087,7 @@
     "chainTvls": [
      {
       "chain": "Fluent",
-      "tvl": 9167671
+      "tvl": 9167858
      }
     ],
     "scripts": [],
@@ -37129,35 +37149,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 21450914
+      "tvl": 21473610
      },
      {
       "chain": "Etherlink",
-      "tvl": 1451579
+      "tvl": 1451585
      },
      {
       "chain": "Monad",
-      "tvl": 256097
+      "tvl": 256127
      },
      {
       "chain": "Plasma",
-      "tvl": 55916
+      "tvl": 55921
      },
      {
       "chain": "Hemi",
-      "tvl": 32846
+      "tvl": 32944
      },
      {
       "chain": "Arbitrum",
-      "tvl": 18521
+      "tvl": 18519
      },
      {
       "chain": "Optimism",
-      "tvl": 11409
+      "tvl": 11424
      },
      {
       "chain": "Somnia",
-      "tvl": 9456
+      "tvl": 9493
      }
     ],
     "scripts": [],
@@ -37219,7 +37239,7 @@
     "chainTvls": [
      {
       "chain": "Flare",
-      "tvl": 8529494
+      "tvl": 8565426
      }
     ],
     "scripts": [],
@@ -37281,15 +37301,15 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 22240742
+      "tvl": 22261301
      },
      {
       "chain": "Fraxtal",
-      "tvl": 424759
+      "tvl": 425480
      },
      {
       "chain": "Arbitrum",
-      "tvl": 186712
+      "tvl": 186504
      }
     ],
     "scripts": [],
@@ -37351,7 +37371,7 @@
     "chainTvls": [
      {
       "chain": "Kava",
-      "tvl": 7839850
+      "tvl": 7817655
      }
     ],
     "scripts": [],
@@ -37413,15 +37433,15 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 3853447
+      "tvl": 3848174
      },
      {
       "chain": "Bifrost Network",
-      "tvl": 3621753
+      "tvl": 3621870
      },
      {
       "chain": "Base",
-      "tvl": 102068
+      "tvl": 101906
      },
      {
       "chain": "CORE",
@@ -37487,7 +37507,7 @@
     "chainTvls": [
      {
       "chain": "Starknet",
-      "tvl": 11718802
+      "tvl": 11757197
      }
     ],
     "scripts": [],
@@ -37549,7 +37569,7 @@
     "chainTvls": [
      {
       "chain": "Cronos",
-      "tvl": 20900108
+      "tvl": 20955153
      }
     ],
     "scripts": [],
@@ -37685,7 +37705,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 7175541
+      "tvl": 7175582
      }
     ],
     "scripts": [],
@@ -37747,31 +37767,31 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 10994506
+      "tvl": 11009871
      },
      {
       "chain": "Morph",
-      "tvl": 4434929
+      "tvl": 4439596
      },
      {
       "chain": "Binance",
-      "tvl": 2227196
+      "tvl": 2227873
      },
      {
       "chain": "Base",
-      "tvl": 621721
+      "tvl": 623483
      },
      {
       "chain": "Arbitrum",
-      "tvl": 493770
+      "tvl": 495234
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 355698
+      "tvl": 356034
      },
      {
       "chain": "X Layer",
-      "tvl": 113525
+      "tvl": 113411
      }
     ],
     "scripts": [],
@@ -37831,7 +37851,7 @@
     "chainTvls": [
      {
       "chain": "Starknet",
-      "tvl": 853782
+      "tvl": 858378
      }
     ],
     "scripts": [
@@ -37980,35 +38000,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 139780034
+      "tvl": 139772091
      },
      {
       "chain": "Solana",
-      "tvl": 118487404
+      "tvl": 118390951
      },
      {
       "chain": "Sei",
-      "tvl": 12420059
+      "tvl": 12419288
      },
      {
       "chain": "Pharos",
-      "tvl": 11197664
+      "tvl": 11197637
      },
      {
       "chain": "Monad",
-      "tvl": 5948795
+      "tvl": 5949012
      },
      {
       "chain": "Binance",
-      "tvl": 1159358
+      "tvl": 1159391
      },
      {
       "chain": "Base",
-      "tvl": 584830
+      "tvl": 584843
      },
      {
       "chain": "Citrea",
-      "tvl": 47791
+      "tvl": 47348
      }
     ],
     "scripts": [],
@@ -38069,35 +38089,35 @@
     "chainTvls": [
      {
       "chain": "Ink",
-      "tvl": 874702270
+      "tvl": 876007745
      },
      {
       "chain": "Ethereum",
-      "tvl": 628244533
+      "tvl": 630496995
      },
      {
       "chain": "Optimism",
-      "tvl": 210343021
+      "tvl": 210769644
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 40596828
+      "tvl": 40888404
      },
      {
       "chain": "Monad",
-      "tvl": 39463911
+      "tvl": 39471253
      },
      {
       "chain": "Plasma",
-      "tvl": 32033532
+      "tvl": 32035041
      },
      {
       "chain": "Arbitrum",
-      "tvl": 2544339
+      "tvl": 2595333
      },
      {
       "chain": "Base",
-      "tvl": 1666064
+      "tvl": 1675745
      }
     ],
     "scripts": [],
@@ -38259,35 +38279,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 3429350481
+      "tvl": 3427111137
      },
      {
       "chain": "Base",
-      "tvl": 363765571
+      "tvl": 363765487
      },
      {
       "chain": "Arbitrum",
-      "tvl": 317438893
+      "tvl": 317302890
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 10239797
+      "tvl": 10440320
      },
      {
       "chain": "X Layer",
-      "tvl": 4723809
+      "tvl": 4723770
      },
      {
       "chain": "Optimism",
-      "tvl": 3686471
+      "tvl": 3686731
      },
      {
       "chain": "Avalanche",
-      "tvl": 2610140
+      "tvl": 2610102
      },
      {
       "chain": "Unichain",
-      "tvl": 155144
+      "tvl": 155142
      }
     ],
     "scripts": [],
@@ -38355,19 +38375,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 1125573976
+      "tvl": 1125733546
      },
      {
       "chain": "Ink",
-      "tvl": 875032197
+      "tvl": 875799696
      },
      {
       "chain": "Solana",
-      "tvl": 496843721
+      "tvl": 496781747
      },
      {
       "chain": "Tempo",
-      "tvl": 64675460
+      "tvl": 64705523
      }
     ],
     "scripts": [
@@ -38439,35 +38459,35 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 1008870309
+      "tvl": 1008769340
      },
      {
       "chain": "Ethereum",
-      "tvl": 722183520
+      "tvl": 724811295
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 536879313
+      "tvl": 535969846
      },
      {
       "chain": "Solana",
-      "tvl": 69079185
+      "tvl": 69109527
      },
      {
       "chain": "Monad",
-      "tvl": 31005810
+      "tvl": 31030068
      },
      {
       "chain": "Arbitrum",
-      "tvl": 6777570
+      "tvl": 6756307
      },
      {
       "chain": "Katana",
-      "tvl": 6074262
+      "tvl": 6074258
      },
      {
       "chain": "Polygon",
-      "tvl": 32194
+      "tvl": 32195
      }
     ],
     "scripts": [
@@ -38539,7 +38559,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 111479029
+      "tvl": 111479644
      },
      {
       "chain": "Move",
@@ -38604,19 +38624,19 @@
     "chainTvls": [
      {
       "chain": "Sui",
-      "tvl": 39147850
+      "tvl": 39168347
      },
      {
       "chain": "Ethereum",
-      "tvl": 35155511
+      "tvl": 35154959
      },
      {
       "chain": "Pharos",
-      "tvl": 30688796
+      "tvl": 30714408
      },
      {
       "chain": "Base",
-      "tvl": 17385952
+      "tvl": 17430477
      },
      {
       "chain": "Monad",
@@ -38859,15 +38879,15 @@
     "chainTvls": [
      {
       "chain": "Monad",
-      "tvl": 204068309
+      "tvl": 204221380
      },
      {
       "chain": "Ethereum",
-      "tvl": 74116375
+      "tvl": 74137692
      },
      {
       "chain": "Arbitrum",
-      "tvl": 364362
+      "tvl": 364355
      },
      {
       "chain": "Plasma",
@@ -38879,7 +38899,7 @@
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 7139
+      "tvl": 7152
      },
      {
       "chain": "Katana",
@@ -39055,7 +39075,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 93448537
+      "tvl": 93545265
      }
     ],
     "scripts": [],
@@ -39116,19 +39136,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 70694167
+      "tvl": 70908112
      },
      {
       "chain": "Base",
-      "tvl": 4346156
+      "tvl": 4361203
      },
      {
       "chain": "Binance",
-      "tvl": 39225
+      "tvl": 39320
      },
      {
       "chain": "Sonic",
-      "tvl": 18062
+      "tvl": 18110
      }
     ],
     "scripts": [],
@@ -39189,35 +39209,35 @@
     "chainTvls": [
      {
       "chain": "Monad",
-      "tvl": 193490219
+      "tvl": 193768966
      },
      {
       "chain": "Ethereum",
-      "tvl": 34954536
+      "tvl": 35013352
      },
      {
       "chain": "Optimism",
-      "tvl": 7658809
+      "tvl": 7629234
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 2063450
+      "tvl": 2063497
      },
      {
       "chain": "Plasma",
-      "tvl": 1976973
+      "tvl": 1977096
      },
      {
       "chain": "Binance",
-      "tvl": 1337496
+      "tvl": 1338948
      },
      {
       "chain": "Arbitrum",
-      "tvl": 1234146
+      "tvl": 1223780
      },
      {
       "chain": "Unichain",
-      "tvl": 19500
+      "tvl": 19536
      }
     ],
     "scripts": [],
@@ -39278,35 +39298,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 268933641
+      "tvl": 268941224
      },
      {
       "chain": "Flare",
-      "tvl": 52913518
+      "tvl": 53035455
      },
      {
       "chain": "Stellar",
-      "tvl": 28955274
+      "tvl": 28956988
      },
      {
       "chain": "Monad",
-      "tvl": 23824048
+      "tvl": 23824166
      },
      {
       "chain": "Fluent",
-      "tvl": 9105518
+      "tvl": 9105941
      },
      {
       "chain": "Solana",
-      "tvl": 8824498
+      "tvl": 8824628
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 4550820
+      "tvl": 4555696
      },
      {
       "chain": "Base",
-      "tvl": 1234582
+      "tvl": 1235587
      }
     ],
     "scripts": [
@@ -39439,19 +39459,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 78971081
+      "tvl": 79126861
      },
      {
       "chain": "Base",
-      "tvl": 7773856
+      "tvl": 7792823
      },
      {
       "chain": "Optimism",
-      "tvl": 2591569
+      "tvl": 2595690
      },
      {
       "chain": "Polygon",
-      "tvl": 28097
+      "tvl": 28152
      }
     ],
     "scripts": [],
@@ -39512,15 +39532,15 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 88724833
+      "tvl": 88806697
      },
      {
       "chain": "Polygon",
-      "tvl": 6346549
+      "tvl": 6350590
      },
      {
       "chain": "Arbitrum",
-      "tvl": 1634087
+      "tvl": 1635628
      }
     ],
     "scripts": [],
@@ -39592,19 +39612,19 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 80555430
+      "tvl": 80557838
      },
      {
       "chain": "Morph",
-      "tvl": 66123977
+      "tvl": 66303932
      },
      {
       "chain": "Ethereum",
-      "tvl": 62271071
+      "tvl": 62462010
      },
      {
       "chain": "Arbitrum",
-      "tvl": 5056560
+      "tvl": 5056688
      },
      {
       "chain": "Optimism",
@@ -39673,27 +39693,27 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 140124520
+      "tvl": 140223106
      },
      {
       "chain": "Arbitrum",
-      "tvl": 9370913
+      "tvl": 9371100
      },
      {
       "chain": "Base",
-      "tvl": 4760183
+      "tvl": 4762609
      },
      {
       "chain": "Avalanche",
-      "tvl": 1510268
+      "tvl": 1510878
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 384220
+      "tvl": 386096
      },
      {
       "chain": "Plasma",
-      "tvl": 314433
+      "tvl": 314461
      },
      {
       "chain": "TAC",
@@ -39823,7 +39843,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 131267466
+      "tvl": 131270332
      }
     ],
     "scripts": [],
@@ -40042,15 +40062,15 @@
     "chainTvls": [
      {
       "chain": "Plasma",
-      "tvl": 65633209
+      "tvl": 65638956
      },
      {
       "chain": "Monad",
-      "tvl": 7603724
+      "tvl": 7603646
      },
      {
       "chain": "Ethereum",
-      "tvl": 6673771
+      "tvl": 6621770
      }
     ],
     "scripts": [],
@@ -40111,31 +40131,31 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 66931797
+      "tvl": 67225803
      },
      {
       "chain": "Ethereum",
-      "tvl": 19694200
+      "tvl": 19775069
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 6744301
+      "tvl": 6800670
      },
      {
       "chain": "Binance",
-      "tvl": 4258330
+      "tvl": 4273184
      },
      {
       "chain": "Ripple",
-      "tvl": 3663466
+      "tvl": 3672280
      },
      {
       "chain": "Solana",
-      "tvl": 3099152
+      "tvl": 3116259
      },
      {
       "chain": "Doge",
-      "tvl": 900547
+      "tvl": 904271
      }
     ],
     "scripts": [],
@@ -40277,7 +40297,7 @@
      },
      {
       "chain": "Ethereum",
-      "tvl": 31314921
+      "tvl": 31357827
      }
     ],
     "scripts": [],
@@ -40338,15 +40358,15 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 21076486
+      "tvl": 21129344
      },
      {
       "chain": "Avalanche",
-      "tvl": 48405
+      "tvl": 48406
      },
      {
       "chain": "Base",
-      "tvl": 16213
+      "tvl": 16281
      },
      {
       "chain": "Unichain",
@@ -40411,7 +40431,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 900146
+      "tvl": 907294
      }
     ],
     "scripts": [],
@@ -40472,7 +40492,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 67881517
+      "tvl": 68151993
      }
     ],
     "scripts": [],
@@ -40589,19 +40609,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 11540824
+      "tvl": 11532277
      },
      {
       "chain": "Avalanche",
-      "tvl": 6639966
+      "tvl": 6641238
      },
      {
       "chain": "Base",
-      "tvl": 1255873
+      "tvl": 1260298
      },
      {
       "chain": "Arbitrum",
-      "tvl": 32247
+      "tvl": 32245
      }
     ],
     "scripts": [],
@@ -40779,7 +40799,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 36122630
+      "tvl": 36122999
      },
      {
       "chain": "zkSync Era",
@@ -40791,7 +40811,7 @@
      },
      {
       "chain": "TAC",
-      "tvl": 3877
+      "tvl": 3878
      }
     ],
     "scripts": [],
@@ -40852,11 +40872,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 45075129
+      "tvl": 45084799
      },
      {
       "chain": "Base",
-      "tvl": 3463
+      "tvl": 3408
      }
     ],
     "scripts": [],
@@ -41002,7 +41022,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 13116574
+      "tvl": 13116768
      }
     ],
     "scripts": [],
@@ -41063,7 +41083,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 70283454
+      "tvl": 70485571
      }
     ],
     "scripts": [],
@@ -41124,23 +41144,23 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 17386511
+      "tvl": 17404929
      },
      {
       "chain": "Ethereum",
-      "tvl": 4298206
+      "tvl": 4298231
      },
      {
       "chain": "Arbitrum",
-      "tvl": 607586
+      "tvl": 608716
      },
      {
       "chain": "Polygon",
-      "tvl": 93988
+      "tvl": 94074
      },
      {
       "chain": "zkSync Era",
-      "tvl": 1314
+      "tvl": 1313
      }
     ],
     "scripts": [],
@@ -41201,7 +41221,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 52890902
+      "tvl": 52907472
      }
     ],
     "scripts": [],
@@ -41262,27 +41282,27 @@
     "chainTvls": [
      {
       "chain": "Stellar",
-      "tvl": 28956988
+      "tvl": 28961273
      },
      {
       "chain": "Ethereum",
-      "tvl": 20243301
+      "tvl": 20247005
      },
      {
       "chain": "Base",
-      "tvl": 2625021
+      "tvl": 2625100
      },
      {
       "chain": "Flare",
-      "tvl": 2048481
+      "tvl": 2041026
      },
      {
       "chain": "Avalanche",
-      "tvl": 1158704
+      "tvl": 1158823
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 593682
+      "tvl": 594720
      },
      {
       "chain": "Hemi",
@@ -41424,15 +41444,15 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 22099456
+      "tvl": 22098773
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 2194291
+      "tvl": 2194367
      },
      {
       "chain": "Ethereum",
-      "tvl": 103992
+      "tvl": 103989
      },
      {
       "chain": "Monad",
@@ -41497,7 +41517,7 @@
     "chainTvls": [
      {
       "chain": "Robinhood Chain",
-      "tvl": 315859
+      "tvl": 315635
      }
     ],
     "scripts": [],
@@ -41558,7 +41578,7 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 80037343
+      "tvl": 80042101
      },
      {
       "chain": "Ethereum",
@@ -41623,11 +41643,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 381762681
+      "tvl": 382746375
      },
      {
       "chain": "Optimism",
-      "tvl": 218029992
+      "tvl": 217970741
      }
     ],
     "scripts": [],
@@ -41744,11 +41764,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 17286694
+      "tvl": 17286222
      },
      {
       "chain": "Base",
-      "tvl": 1807703
+      "tvl": 1810175
      }
     ],
     "scripts": [],
@@ -41809,15 +41829,15 @@
     "chainTvls": [
      {
       "chain": "Robinhood Chain",
-      "tvl": 6470276
+      "tvl": 6471275
      },
      {
       "chain": "Base",
-      "tvl": 6315495
+      "tvl": 6307992
      },
      {
       "chain": "Arbitrum",
-      "tvl": 49847
+      "tvl": 49821
      }
     ],
     "scripts": [],
@@ -41878,11 +41898,11 @@
     "chainTvls": [
      {
       "chain": "Sonic",
-      "tvl": 8812286
+      "tvl": 8784090
      },
      {
       "chain": "Base",
-      "tvl": 264
+      "tvl": 265
      },
      {
       "chain": "Polygon",
@@ -42016,7 +42036,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 26511825
+      "tvl": 26512283
      }
     ],
     "scripts": [],
@@ -42077,11 +42097,11 @@
     "chainTvls": [
      {
       "chain": "Hyperliquid L1",
-      "tvl": 13415139
+      "tvl": 13503929
      },
      {
       "chain": "Hibachi",
-      "tvl": 240896
+      "tvl": 240986
      }
     ],
     "scripts": [],
@@ -42198,27 +42218,27 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 206596830
+      "tvl": 207321521
      },
      {
       "chain": "Mantle",
-      "tvl": 100575423
+      "tvl": 100536894
      },
      {
       "chain": "Arbitrum",
-      "tvl": 2242251
+      "tvl": 2244424
      },
      {
       "chain": "Optimism",
-      "tvl": 13742
+      "tvl": 13755
      },
      {
       "chain": "Base",
-      "tvl": 1312
+      "tvl": 1314
      },
      {
       "chain": "Binance",
-      "tvl": 576
+      "tvl": 577
      }
     ],
     "scripts": [],
@@ -42279,19 +42299,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 582011439
+      "tvl": 582782057
      },
      {
       "chain": "Fraxtal",
-      "tvl": 6371588
+      "tvl": 6365915
      },
      {
       "chain": "Arbitrum",
-      "tvl": 1173812
+      "tvl": 1174581
      },
      {
       "chain": "Polygon",
-      "tvl": 243669
+      "tvl": 244246
      }
     ],
     "scripts": [],
@@ -42421,23 +42441,23 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 3505491
+      "tvl": 3508652
      },
      {
       "chain": "Unichain",
-      "tvl": 2820780
+      "tvl": 2823403
      },
      {
       "chain": "Ethereum",
-      "tvl": 1308934
+      "tvl": 1308977
      },
      {
       "chain": "Linea",
-      "tvl": 97260
+      "tvl": 97352
      },
      {
       "chain": "Monad",
-      "tvl": 26815
+      "tvl": 26816
      }
     ],
     "scripts": [],
@@ -42498,7 +42518,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 406933822
+      "tvl": 407852626
      }
     ],
     "scripts": [
@@ -42511,16 +42531,6 @@
       "name": "simulate:etherfi:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
-     },
-     {
-      "name": "fork:etherfi:deposit",
-      "file": "src/simulation/fork/run.js",
-      "kind": "fork"
-     },
-     {
-      "name": "fork:etherfi:wrap",
-      "file": "src/simulation/fork/run.js",
-      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -42534,34 +42544,13 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "fork",
-     "label": null,
-     "note": null,
+     "mode": "api-only",
+     "note": "No fork test for this protocol.",
      "appUrl": "https://www.ether.fi",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:wrap"
-     ],
-     "tests": [
-      {
-       "script": "fork:etherfi:deposit",
-       "action": "deposit",
-       "chain": "ethereum",
-       "rpcEnv": "ETHEREUM_RPC_URL",
-       "note": null
-      },
-      {
-       "script": "fork:etherfi:wrap",
-       "action": "wrap",
-       "chain": "ethereum",
-       "rpcEnv": "ETHEREUM_RPC_URL",
-       "note": null
-      }
-     ],
+     "commands": [],
+     "tests": [],
      "contracts": [
       {
        "chain": "ethereum",
@@ -42582,7 +42571,14 @@
        "doc": "https://etherfi.gitbook.io/etherfi/contracts-and-integrations/ethereum-mainnet"
       }
      ],
-     "recipe": null
+     "recipe": {
+      "title": "Generic vault check",
+      "chain": "ethereum",
+      "commands": [
+       "npm run simulate:morpho:smoke"
+      ],
+      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     }
     }
    },
    {
@@ -42613,35 +42609,35 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 22140046
+      "tvl": 22226889
      },
      {
       "chain": "Ethereum",
-      "tvl": 2936185
+      "tvl": 2937488
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 2756949
+      "tvl": 2761296
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 2541675
+      "tvl": 2546808
      },
      {
       "chain": "Arbitrum",
-      "tvl": 1525119
+      "tvl": 1526025
      },
      {
       "chain": "Monad",
-      "tvl": 1244655
+      "tvl": 1246375
      },
      {
       "chain": "Optimism",
-      "tvl": 1183977
+      "tvl": 1185384
      },
      {
       "chain": "Binance",
-      "tvl": 953457
+      "tvl": 953642
      }
     ],
     "scripts": [],
@@ -42714,15 +42710,15 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 208295802
+      "tvl": 208380196
      },
      {
       "chain": "Katana",
-      "tvl": 26764348
+      "tvl": 26765159
      },
      {
       "chain": "Base",
-      "tvl": 5074863
+      "tvl": 4955714
      },
      {
       "chain": "Optimism",
@@ -42803,23 +42799,23 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 255877438
+      "tvl": 255737554
      },
      {
       "chain": "RSK",
-      "tvl": 1166404
+      "tvl": 1169796
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 1004845
+      "tvl": 1004828
      },
      {
       "chain": "Mezo",
-      "tvl": 209895
+      "tvl": 210404
      },
      {
       "chain": "Monad",
-      "tvl": 17691
+      "tvl": 17920
      }
     ],
     "scripts": [],
@@ -42880,11 +42876,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 17294106
+      "tvl": 17279792
      },
      {
       "chain": "Base",
-      "tvl": 171981
+      "tvl": 211962
      }
     ],
     "scripts": [],
@@ -42945,11 +42941,11 @@
     "chainTvls": [
      {
       "chain": "Monad",
-      "tvl": 9053188
+      "tvl": 9053026
      },
      {
       "chain": "Ethereum",
-      "tvl": 7989188
+      "tvl": 7989240
      }
     ],
     "scripts": [],
@@ -43010,7 +43006,7 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 17358316
+      "tvl": 17430477
      }
     ],
     "scripts": [],
@@ -43071,11 +43067,11 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 13602501
+      "tvl": 13620628
      },
      {
       "chain": "Klaytn",
-      "tvl": 418
+      "tvl": 411
      }
     ],
     "scripts": [],
@@ -43136,35 +43132,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 50661284
+      "tvl": 50714785
      },
      {
       "chain": "Base",
-      "tvl": 19747957
+      "tvl": 19771856
      },
      {
       "chain": "Arbitrum",
-      "tvl": 8177856
+      "tvl": 8176341
      },
      {
       "chain": "Binance",
-      "tvl": 7479021
+      "tvl": 7499622
      },
      {
       "chain": "Monad",
-      "tvl": 6793819
+      "tvl": 6793129
      },
      {
       "chain": "Fraxtal",
-      "tvl": 5428918
+      "tvl": 5427256
      },
      {
       "chain": "Optimism",
-      "tvl": 3588678
+      "tvl": 2901018
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 2781672
+      "tvl": 2783945
      }
     ],
     "scripts": [],
@@ -43281,7 +43277,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 13311304
+      "tvl": 13344129
      }
     ],
     "scripts": [],
@@ -43342,11 +43338,11 @@
     "chainTvls": [
      {
       "chain": "Arbitrum",
-      "tvl": 12852657
+      "tvl": 12866379
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 804589
+      "tvl": 806000
      }
     ],
     "scripts": [],
@@ -43482,35 +43478,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 761609634
+      "tvl": 760807302
      },
      {
       "chain": "Arbitrum",
-      "tvl": 172066838
+      "tvl": 172027283
      },
      {
       "chain": "Monad",
-      "tvl": 144248985
+      "tvl": 144302247
      },
      {
       "chain": "X Layer",
-      "tvl": 64896349
+      "tvl": 64896852
      },
      {
       "chain": "Plasma",
-      "tvl": 43302271
+      "tvl": 43293575
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 8876227
+      "tvl": 8859985
      },
      {
       "chain": "Binance",
-      "tvl": 7734969
+      "tvl": 7738159
      },
      {
       "chain": "Base",
-      "tvl": 3410198
+      "tvl": 3415294
      }
     ],
     "scripts": [],
@@ -43571,19 +43567,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 144029784
+      "tvl": 144307227
      },
      {
       "chain": "Base",
-      "tvl": 1913777
+      "tvl": 1915224
      },
      {
       "chain": "Fraxtal",
-      "tvl": 1261866
+      "tvl": 1260920
      },
      {
       "chain": "Arbitrum",
-      "tvl": 841615
+      "tvl": 837388
      },
      {
       "chain": "Polygon",
@@ -43591,7 +43587,7 @@
      },
      {
       "chain": "Optimism",
-      "tvl": 339232
+      "tvl": 339563
      },
      {
       "chain": "Avalanche",
@@ -43599,7 +43595,7 @@
      },
      {
       "chain": "Sonic",
-      "tvl": 127557
+      "tvl": 127592
      }
     ],
     "scripts": [],
@@ -43660,15 +43656,15 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 14675011
+      "tvl": 14720614
      },
      {
       "chain": "Arbitrum",
-      "tvl": 335652
+      "tvl": 336743
      },
      {
       "chain": "Base",
-      "tvl": 116771
+      "tvl": 115303
      }
     ],
     "scripts": [],
@@ -43729,11 +43725,11 @@
     "chainTvls": [
      {
       "chain": "Hyperliquid L1",
-      "tvl": 6375017
+      "tvl": 6454689
      },
      {
       "chain": "Arbitrum",
-      "tvl": 513609
+      "tvl": 513616
      },
      {
       "chain": "Ethereum",
@@ -43875,19 +43871,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 42703130
+      "tvl": 42749561
      },
      {
       "chain": "Berachain",
-      "tvl": 84793
+      "tvl": 84794
      },
      {
       "chain": "Avalanche",
-      "tvl": 34443
+      "tvl": 34479
      },
      {
       "chain": "BOB",
-      "tvl": 22206
+      "tvl": 22228
      },
      {
       "chain": "Binance",
@@ -43895,7 +43891,7 @@
      },
      {
       "chain": "Monad",
-      "tvl": 2091
+      "tvl": 2102
      },
      {
       "chain": "TAC",
@@ -43964,7 +43960,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 23500710
+      "tvl": 23499825
      }
     ],
     "scripts": [],
@@ -44142,7 +44138,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 15551721
+      "tvl": 15558036
      }
     ],
     "scripts": [],
@@ -44203,11 +44199,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 24060675
+      "tvl": 24090373
      },
      {
       "chain": "Binance",
-      "tvl": 129300
+      "tvl": 129644
      }
     ],
     "scripts": [],
@@ -44280,27 +44276,27 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 17405451
+      "tvl": 17405604
      },
      {
       "chain": "Arbitrum",
-      "tvl": 5441320
+      "tvl": 5460995
      },
      {
       "chain": "Optimism",
-      "tvl": 4192133
+      "tvl": 4192234
      },
      {
       "chain": "Polygon",
-      "tvl": 2255940
+      "tvl": 2256066
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 1798264
+      "tvl": 1798220
      },
      {
       "chain": "Ethereum",
-      "tvl": 558452
+      "tvl": 558462
      }
     ],
     "scripts": [],
@@ -44361,11 +44357,11 @@
     "chainTvls": [
      {
       "chain": "Monad",
-      "tvl": 5959387
+      "tvl": 5959586
      },
      {
       "chain": "Ethereum",
-      "tvl": 4369987
+      "tvl": 4370025
      },
      {
       "chain": "Fluent",
@@ -44519,7 +44515,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 6341128
+      "tvl": 6351415
      }
     ],
     "scripts": [],
@@ -44636,7 +44632,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 24254664
+      "tvl": 24319073
      }
     ],
     "scripts": [],
@@ -44697,7 +44693,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 21845321
+      "tvl": 21845489
      }
     ],
     "scripts": [],
@@ -44758,23 +44754,23 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 22360299
+      "tvl": 22313420
      },
      {
       "chain": "Sei",
-      "tvl": 6822860
+      "tvl": 6828323
      },
      {
       "chain": "Arbitrum",
-      "tvl": 19927
+      "tvl": 20022
      },
      {
       "chain": "Base",
-      "tvl": 6524
+      "tvl": 7131
      },
      {
       "chain": "Berachain",
-      "tvl": 716
+      "tvl": 715
      }
     ],
     "scripts": [],
@@ -44896,19 +44892,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 11895547
+      "tvl": 12126973
      },
      {
       "chain": "Binance",
-      "tvl": 332786
+      "tvl": 332729
      },
      {
       "chain": "Arbitrum",
-      "tvl": 50463
+      "tvl": 50517
      },
      {
       "chain": "Base",
-      "tvl": 3135
+      "tvl": 3138
      },
      {
       "chain": "Sonic",
@@ -44916,11 +44912,11 @@
      },
      {
       "chain": "Mantle",
-      "tvl": 996
+      "tvl": 988
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 166
+      "tvl": 167
      },
      {
       "chain": "Plasma",
@@ -44985,7 +44981,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 13137301
+      "tvl": 13143814
      }
     ],
     "scripts": [],
@@ -45046,11 +45042,11 @@
     "chainTvls": [
      {
       "chain": "Monad",
-      "tvl": 8018741
+      "tvl": 7718690
      },
      {
       "chain": "Ethereum",
-      "tvl": 260283
+      "tvl": 260285
      }
     ],
     "scripts": [],
@@ -45111,19 +45107,19 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 9421604
+      "tvl": 9421815
      },
      {
       "chain": "Arbitrum",
-      "tvl": 873404
+      "tvl": 873423
      },
      {
       "chain": "Avalanche",
-      "tvl": 116117
+      "tvl": 116119
      },
      {
       "chain": "Base",
-      "tvl": 113734
+      "tvl": 113737
      },
      {
       "chain": "Astar",
@@ -45253,23 +45249,23 @@
     "chainTvls": [
      {
       "chain": "Sei",
-      "tvl": 7294110
+      "tvl": 7293888
      },
      {
       "chain": "Celo",
-      "tvl": 614777
+      "tvl": 614536
      },
      {
       "chain": "MegaETH",
-      "tvl": 551279
+      "tvl": 552042
      },
      {
       "chain": "Polygon",
-      "tvl": 346414
+      "tvl": 346410
      },
      {
       "chain": "Klaytn",
-      "tvl": 313589
+      "tvl": 311164
      },
      {
       "chain": "Ethereum",
@@ -45336,7 +45332,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 1799729135
+      "tvl": 1806898490
      }
     ],
     "scripts": [
@@ -45426,7 +45422,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 838376563
+      "tvl": 839347380
      }
     ],
     "scripts": [],
@@ -45606,7 +45602,7 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 768122303
+      "tvl": 769373735
      }
     ],
     "scripts": [],
@@ -45730,7 +45726,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 476264257
+      "tvl": 477004061
      }
     ],
     "scripts": [
@@ -45810,7 +45806,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 1140849719
+      "tvl": 1145394460
      }
     ],
     "scripts": [
@@ -45956,11 +45952,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 8722689483
+      "tvl": 8755542742
      },
      {
       "chain": "Binance",
-      "tvl": 524492231
+      "tvl": 526453750
      }
     ],
     "scripts": [],
@@ -46084,7 +46080,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 565210318
+      "tvl": 568054108
      }
     ],
     "scripts": [],
@@ -46288,7 +46284,7 @@
     "chainTvls": [
      {
       "chain": "Hyperliquid L1",
-      "tvl": 983066044
+      "tvl": 991845283
      }
     ],
     "scripts": [
@@ -46361,7 +46357,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 303792301
+      "tvl": 305320863
      }
     ],
     "scripts": [],
@@ -46434,7 +46430,7 @@
     "chainTvls": [
      {
       "chain": "Near",
-      "tvl": 114243533
+      "tvl": 115566176
      },
      {
       "chain": "Ethereum",
@@ -46504,7 +46500,7 @@
     "chainTvls": [
      {
       "chain": "Near",
-      "tvl": 112288200
+      "tvl": 113583951
      }
     ],
     "scripts": [],
@@ -46791,7 +46787,7 @@
     "chainTvls": [
      {
       "chain": "ZIGChain",
-      "tvl": 79365494
+      "tvl": 79375409
      }
     ],
     "scripts": [],
@@ -46915,7 +46911,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 145206975
+      "tvl": 145106141
      }
     ],
     "scripts": [],
@@ -46977,11 +46973,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 937701424
+      "tvl": 936290390
      },
      {
       "chain": "xDai",
-      "tvl": 1223497
+      "tvl": 1223266
      }
     ],
     "scripts": [],
@@ -47043,7 +47039,7 @@
     "chainTvls": [
      {
       "chain": "Hyperliquid L1",
-      "tvl": 187359394
+      "tvl": 188709938
      }
     ],
     "scripts": [],
@@ -47105,7 +47101,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 93102690
+      "tvl": 93260016
      }
     ],
     "scripts": [],
@@ -47167,7 +47163,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 135394734
+      "tvl": 136007484
      }
     ],
     "scripts": [],
@@ -47291,7 +47287,7 @@
     "chainTvls": [
      {
       "chain": "Algorand",
-      "tvl": 83124537
+      "tvl": 83680795
      }
     ],
     "scripts": [],
@@ -47353,7 +47349,7 @@
     "chainTvls": [
      {
       "chain": "Near",
-      "tvl": 39247459
+      "tvl": 38853963
      }
     ],
     "scripts": [],
@@ -47529,7 +47525,7 @@
     "chainTvls": [
      {
       "chain": "Avalanche",
-      "tvl": 236306894
+      "tvl": 238010044
      }
     ],
     "scripts": [],
@@ -47715,7 +47711,7 @@
     "chainTvls": [
      {
       "chain": "Klaytn",
-      "tvl": 67879621
+      "tvl": 66470725
      }
     ],
     "scripts": [],
@@ -47961,7 +47957,7 @@
     "chainTvls": [
      {
       "chain": "Sui",
-      "tvl": 25124025
+      "tvl": 25254586
      }
     ],
     "scripts": [],
@@ -48023,7 +48019,7 @@
     "chainTvls": [
      {
       "chain": "TON",
-      "tvl": 28848674
+      "tvl": 28800821
      }
     ],
     "scripts": [],
@@ -48085,7 +48081,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 105815380
+      "tvl": 105979766
      }
     ],
     "scripts": [],
@@ -48204,7 +48200,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 1293932402
+      "tvl": 1291989000
      }
     ],
     "scripts": [
@@ -48347,7 +48343,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 17180502
+      "tvl": 17254956
      }
     ],
     "scripts": [],
@@ -48466,7 +48462,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 72237252
+      "tvl": 72550307
      }
     ],
     "scripts": [],
@@ -48813,7 +48809,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 20715444
+      "tvl": 20775246
      },
      {
       "chain": "Flow",
@@ -48821,15 +48817,15 @@
      },
      {
       "chain": "Binance",
-      "tvl": 564786
+      "tvl": 566643
      },
      {
       "chain": "Avalanche",
-      "tvl": 143789
+      "tvl": 144826
      },
      {
       "chain": "Polkadot",
-      "tvl": 3256
+      "tvl": 3271
      },
      {
       "chain": "Fantom",
@@ -48903,7 +48899,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 28626473
+      "tvl": 28750532
      }
     ],
     "scripts": [],
@@ -49022,7 +49018,7 @@
     "chainTvls": [
      {
       "chain": "AILayer",
-      "tvl": 83816333
+      "tvl": 84157125
      }
     ],
     "scripts": [],
@@ -49141,7 +49137,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 120149631
+      "tvl": 120670324
      }
     ],
     "scripts": [],
@@ -49602,7 +49598,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 237168998
+      "tvl": 238242957
      }
     ],
     "scripts": [],
@@ -49721,7 +49717,7 @@
     "chainTvls": [
      {
       "chain": "Tron",
-      "tvl": 3267615328
+      "tvl": 3273152322
      }
     ],
     "scripts": [],
@@ -49915,7 +49911,7 @@
     "chainTvls": [
      {
       "chain": "TON",
-      "tvl": 11670103
+      "tvl": 11649620
      }
     ],
     "scripts": [],
@@ -50034,7 +50030,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 580843965
+      "tvl": 583031664
      }
     ],
     "scripts": [],
@@ -50096,7 +50092,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 22292921
+      "tvl": 22389532
      }
     ],
     "scripts": [],
@@ -50158,7 +50154,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 679120286
+      "tvl": 681073705
      }
     ],
     "scripts": [],
@@ -50220,7 +50216,7 @@
     "chainTvls": [
      {
       "chain": "Injective",
-      "tvl": 10734877
+      "tvl": 10842757
      }
     ],
     "scripts": [],
@@ -50344,7 +50340,7 @@
     "chainTvls": [
      {
       "chain": "Algorand",
-      "tvl": 29642331
+      "tvl": 30155458
      }
     ],
     "scripts": [],
@@ -50406,7 +50402,7 @@
     "chainTvls": [
      {
       "chain": "Starknet",
-      "tvl": 14084041
+      "tvl": 13386143
      }
     ],
     "scripts": [],
@@ -50468,7 +50464,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 18998033
+      "tvl": 19052679
      }
     ],
     "scripts": [],
@@ -50592,7 +50588,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 33923940
+      "tvl": 34070956
      }
     ],
     "scripts": [],
@@ -50654,7 +50650,7 @@
     "chainTvls": [
      {
       "chain": "Starknet",
-      "tvl": 48490596
+      "tvl": 48556115
      }
     ],
     "scripts": [],
@@ -50778,7 +50774,7 @@
     "chainTvls": [
      {
       "chain": "Bifrost Network",
-      "tvl": 7272015
+      "tvl": 7307113
      }
     ],
     "scripts": [],
@@ -50840,7 +50836,7 @@
     "chainTvls": [
      {
       "chain": "ICP",
-      "tvl": 7193456
+      "tvl": 7246535
      }
     ],
     "scripts": [],
@@ -50902,7 +50898,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 10329787
+      "tvl": 10371176
      }
     ],
     "scripts": [],
@@ -50964,7 +50960,7 @@
     "chainTvls": [
      {
       "chain": "Sui",
-      "tvl": 40016954
+      "tvl": 39922646
      }
     ],
     "scripts": [],
@@ -51026,11 +51022,11 @@
     "chainTvls": [
      {
       "chain": "Filecoin",
-      "tvl": 28662522
+      "tvl": 28942924
      },
      {
       "chain": "Base",
-      "tvl": 360588
+      "tvl": 356381
      }
     ],
     "scripts": [],
@@ -51092,7 +51088,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 6675954
+      "tvl": 6675806
      }
     ],
     "scripts": [],
@@ -51154,7 +51150,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 59038950
+      "tvl": 59274193
      }
     ],
     "scripts": [],
@@ -51216,11 +51212,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 214316264
+      "tvl": 214609907
      },
      {
       "chain": "Hedera",
-      "tvl": 34910906
+      "tvl": 35224559
      }
     ],
     "scripts": [],
@@ -51282,7 +51278,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 19812777
+      "tvl": 19902494
      }
     ],
     "scripts": [],
@@ -51344,7 +51340,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 347720480
+      "tvl": 349149084
      }
     ],
     "scripts": [],
@@ -51406,7 +51402,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 1028142938
+      "tvl": 1031096942
      }
     ],
     "scripts": [],
@@ -51468,7 +51464,7 @@
     "chainTvls": [
      {
       "chain": "Tron",
-      "tvl": 17394430
+      "tvl": 17350612
      }
     ],
     "scripts": [],
@@ -51592,7 +51588,7 @@
     "chainTvls": [
      {
       "chain": "Klaytn",
-      "tvl": 5178786
+      "tvl": 5098123
      }
     ],
     "scripts": [],
@@ -51654,11 +51650,11 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 18954923
+      "tvl": 19031060
      },
      {
       "chain": "Ethereum",
-      "tvl": 5426646
+      "tvl": 5431730
      }
     ],
     "scripts": [],
@@ -51851,7 +51847,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 284995015
+      "tvl": 286246887
      }
     ],
     "scripts": [],
@@ -51913,15 +51909,15 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 260922429
+      "tvl": 261709947
      },
      {
       "chain": "CORE",
-      "tvl": 3533793
+      "tvl": 3578722
      },
      {
       "chain": "Babylon Genesis",
-      "tvl": 259449
+      "tvl": 258658
      }
     ],
     "scripts": [],
@@ -52045,7 +52041,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 645021530
+      "tvl": 649497777
      }
     ],
     "scripts": [],
@@ -52296,7 +52292,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 18533315
+      "tvl": 18587579
      }
     ],
     "scripts": [],
@@ -52358,11 +52354,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 71811023
+      "tvl": 71856678
      },
      {
       "chain": "Bitcoin",
-      "tvl": 8255330
+      "tvl": 8288525
      }
     ],
     "scripts": [],
@@ -52559,7 +52555,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 28713469
+      "tvl": 28752810
      }
     ],
     "scripts": [
@@ -52728,7 +52724,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 6467135750
+      "tvl": 6458633491
      }
     ],
     "scripts": [
@@ -53134,7 +53130,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 40180010
+      "tvl": 40198006
      }
     ],
     "scripts": [],
@@ -53196,7 +53192,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 11132578
+      "tvl": 11179948
      }
     ],
     "scripts": [],
@@ -53346,15 +53342,15 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 396335230
+      "tvl": 396347681
      },
      {
       "chain": "Base",
-      "tvl": 4312859
+      "tvl": 4313441
      },
      {
       "chain": "Arbitrum",
-      "tvl": 6449
+      "tvl": 6450
      },
      {
       "chain": "Avalanche",
@@ -53573,7 +53569,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 124648449
+      "tvl": 124281623
      }
     ],
     "scripts": [],
@@ -53635,7 +53631,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 293121879
+      "tvl": 293114276
      }
     ],
     "scripts": [],
@@ -53697,19 +53693,19 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 256217280
+      "tvl": 256213141
      },
      {
       "chain": "Ethereum",
-      "tvl": 140075580
+      "tvl": 140076076
      },
      {
       "chain": "Stellar",
-      "tvl": 2726317
+      "tvl": 2726318
      },
      {
       "chain": "Monad",
-      "tvl": 2091554
+      "tvl": 2091780
      }
     ],
     "scripts": [],
@@ -53833,7 +53829,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 40719031
+      "tvl": 40768274
      }
     ],
     "scripts": [],
@@ -53957,7 +53953,7 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 56071964
+      "tvl": 56071361
      }
     ],
     "scripts": [],
@@ -54133,7 +54129,7 @@
     "chainTvls": [
      {
       "chain": "Pharos",
-      "tvl": 135091272
+      "tvl": 135202025
      },
      {
       "chain": "Sui",
@@ -54256,15 +54252,15 @@
     "chainTvls": [
      {
       "chain": "Avalanche",
-      "tvl": 171971726
+      "tvl": 171968997
      },
      {
       "chain": "Ethereum",
-      "tvl": 46376896
+      "tvl": 46377588
      },
      {
       "chain": "Plume Mainnet",
-      "tvl": 32732238
+      "tvl": 32731922
      }
     ],
     "scripts": [],
@@ -54413,7 +54409,7 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 212038491
+      "tvl": 212543958
      },
      {
       "chain": "Mantle",
@@ -54421,11 +54417,11 @@
      },
      {
       "chain": "Arbitrum",
-      "tvl": 23349
+      "tvl": 23369
      },
      {
       "chain": "Ethereum",
-      "tvl": 3208
+      "tvl": 3216
      }
     ],
     "scripts": [],
@@ -54658,7 +54654,7 @@
     "chainTvls": [
      {
       "chain": "RSK",
-      "tvl": 24950996
+      "tvl": 25006405
      }
     ],
     "scripts": [],
@@ -54720,7 +54716,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 70590598
+      "tvl": 70586660
      }
     ],
     "scripts": [],
@@ -55085,15 +55081,15 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 132216378
+      "tvl": 132217240
      },
      {
       "chain": "Monad",
-      "tvl": 7194459
+      "tvl": 7197793
      },
      {
       "chain": "Stable",
-      "tvl": 4018110
+      "tvl": 4018111
      },
      {
       "chain": "Arbitrum",
@@ -55177,7 +55173,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 67166404
+      "tvl": 67160352
      }
     ],
     "scripts": [
@@ -55319,19 +55315,19 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 18678049
+      "tvl": 18679563
      },
      {
       "chain": "Ethereum",
-      "tvl": 14511247
+      "tvl": 14511113
      },
      {
       "chain": "Base",
-      "tvl": 10536387
+      "tvl": 10536323
      },
      {
       "chain": "Arbitrum",
-      "tvl": 8403817
+      "tvl": 8403462
      },
      {
       "chain": "Optimism",
@@ -55339,7 +55335,7 @@
      },
      {
       "chain": "Polygon",
-      "tvl": 631732
+      "tvl": 631752
      },
      {
       "chain": "Avalanche",
@@ -55462,7 +55458,7 @@
     "chainTvls": [
      {
       "chain": "Hyperliquid L1",
-      "tvl": 20862393
+      "tvl": 20867869
      }
     ],
     "scripts": [],
@@ -55638,7 +55634,7 @@
     "chainTvls": [
      {
       "chain": "xDai",
-      "tvl": 155062013
+      "tvl": 155061921
      }
     ],
     "scripts": [],
@@ -55720,7 +55716,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 6203479021
+      "tvl": 6199833659
      }
     ],
     "scripts": [
@@ -55860,15 +55856,15 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 29035526
+      "tvl": 29035905
      },
      {
       "chain": "Ethereum",
-      "tvl": 8210199
+      "tvl": 8210381
      },
      {
       "chain": "Base",
-      "tvl": 5114983
+      "tvl": 5114783
      },
      {
       "chain": "Avalanche",
@@ -56059,7 +56055,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 19362201
+      "tvl": 19362487
      }
     ],
     "scripts": [],
@@ -56121,7 +56117,7 @@
     "chainTvls": [
      {
       "chain": "Monad",
-      "tvl": 105684620
+      "tvl": 105688584
      }
     ],
     "scripts": [],
@@ -56245,7 +56241,7 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 111367710
+      "tvl": 111380800
      }
     ],
     "scripts": [],
@@ -56307,7 +56303,7 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 13998003
+      "tvl": 13998317
      }
     ],
     "scripts": [],
@@ -56369,31 +56365,31 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 103604955
+      "tvl": 104006747
      },
      {
       "chain": "Ethereum",
-      "tvl": 72603099
+      "tvl": 72803012
      },
      {
       "chain": "Base",
-      "tvl": 28927166
+      "tvl": 29006817
      },
      {
       "chain": "Pharos",
-      "tvl": 27203031
+      "tvl": 27277935
      },
      {
       "chain": "Hemi",
-      "tvl": 167871
+      "tvl": 168333
      },
      {
       "chain": "Bitlayer",
-      "tvl": 26019
+      "tvl": 26125
      },
      {
       "chain": "CORE",
-      "tvl": 197
+      "tvl": 198
      }
     ],
     "scripts": [],
@@ -56455,7 +56451,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 63597625
+      "tvl": 63586905
      }
     ],
     "scripts": [],
@@ -56517,7 +56513,7 @@
     "chainTvls": [
      {
       "chain": "Polygon",
-      "tvl": 41539243
+      "tvl": 41528540
      },
      {
       "chain": "Arbitrum",
@@ -56587,11 +56583,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 32689573
+      "tvl": 32692354
      },
      {
       "chain": "Binance",
-      "tvl": 1658648
+      "tvl": 1658789
      }
     ],
     "scripts": [],
@@ -56653,7 +56649,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 6734293
+      "tvl": 6732493
      }
     ],
     "scripts": [],
@@ -56777,15 +56773,15 @@
     "chainTvls": [
      {
       "chain": "Stellar",
-      "tvl": 4013552
+      "tvl": 4013554
      },
      {
       "chain": "ZIGChain",
-      "tvl": 2099263
+      "tvl": 2099264
      },
      {
       "chain": "Starknet",
-      "tvl": 1074618
+      "tvl": 1074619
      }
     ],
     "scripts": [],
@@ -56859,7 +56855,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 689859916
+      "tvl": 690059898
      },
      {
       "chain": "Plume Mainnet",
@@ -56953,11 +56949,11 @@
     "chainTvls": [
      {
       "chain": "Tron",
-      "tvl": 54482021
+      "tvl": 54483710
      },
      {
       "chain": "Ethereum",
-      "tvl": 1828415
+      "tvl": 1828471
      }
     ],
     "scripts": [],
@@ -57376,7 +57372,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 84072566
+      "tvl": 84073526
      }
     ],
     "scripts": [],
@@ -57438,7 +57434,7 @@
     "chainTvls": [
      {
       "chain": "Arbitrum",
-      "tvl": 13947382
+      "tvl": 13947800
      }
     ],
     "scripts": [],
@@ -57512,7 +57508,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 146416676
+      "tvl": 146420805
      }
     ],
     "scripts": [
@@ -57534,7 +57530,7 @@
     },
     "testing": {
      "mode": "fork",
-     "label": "KYC-gated: read-only",
+     "label": "Read-only",
      "note": "Ethereum sfrxUSD maxDeposit is 0, so there is no local permissionless deposit. The fork test reads convertToAssets. Stake and unstake on Ethereum go through a Fraxtal lockbox.",
      "appUrl": "https://frax.com",
      "chain": "ethereum",
@@ -57598,7 +57594,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 202077383
+      "tvl": 205216171
      }
     ],
     "scripts": [],
@@ -57660,11 +57656,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 326323664
+      "tvl": 326325464
      },
      {
       "chain": "Base",
-      "tvl": 7150840
+      "tvl": 7150880
      },
      {
       "chain": "Celo",
@@ -57792,7 +57788,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 6715373
+      "tvl": 6736899
      }
     ],
     "scripts": [],
@@ -57866,11 +57862,11 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 51484407
+      "tvl": 51485250
      },
      {
       "chain": "Solana",
-      "tvl": 12431053
+      "tvl": 12431413
      },
      {
       "chain": "Base",
@@ -58064,7 +58060,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 47319450
+      "tvl": 47321247
      }
     ],
     "scripts": [],
@@ -58188,7 +58184,7 @@
     "chainTvls": [
      {
       "chain": "Polygon",
-      "tvl": 8989358
+      "tvl": 8990177
      }
     ],
     "scripts": [],
@@ -58431,7 +58427,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 6812719
+      "tvl": 6812577
      }
     ],
     "scripts": [],
@@ -58583,7 +58579,7 @@
     "chainTvls": [
      {
       "chain": "RSK",
-      "tvl": 22229230
+      "tvl": 22290809
      }
     ],
     "scripts": [],
@@ -58645,7 +58641,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 5289396
+      "tvl": 5289503
      }
     ],
     "scripts": [],
@@ -58773,7 +58769,7 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 12985830
+      "tvl": 12986218
      }
     ],
     "scripts": [],
@@ -58835,23 +58831,23 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 6545739
+      "tvl": 6553816
      },
      {
       "chain": "Ethereum",
-      "tvl": 787923
+      "tvl": 788896
      },
      {
       "chain": "Manta",
-      "tvl": 488975
+      "tvl": 489578
      },
      {
       "chain": "Arbitrum",
-      "tvl": 75733
+      "tvl": 75826
      },
      {
       "chain": "Blast",
-      "tvl": 39586
+      "tvl": 39635
      }
     ],
     "scripts": [],
@@ -58913,11 +58909,11 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 3769043
+      "tvl": 3775812
      },
      {
       "chain": "Solana",
-      "tvl": 2858525
+      "tvl": 2850402
      }
     ],
     "scripts": [],
@@ -59115,7 +59111,7 @@
     "chainTvls": [
      {
       "chain": "Cardano",
-      "tvl": 5822386
+      "tvl": 5868768
      }
     ],
     "scripts": [],
@@ -59177,15 +59173,15 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 6770808
+      "tvl": 6771369
      },
      {
       "chain": "Celo",
-      "tvl": 1731288
+      "tvl": 1698261
      },
      {
       "chain": "Monad",
-      "tvl": 752319
+      "tvl": 694669
      },
      {
       "chain": "Bitcoin",
@@ -59263,7 +59259,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 13376852
+      "tvl": 13376942
      }
     ],
     "scripts": [],
@@ -59325,11 +59321,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 134341900
+      "tvl": 134329797
      },
      {
       "chain": "Arc",
-      "tvl": 9324855
+      "tvl": 9424483
      }
     ],
     "scripts": [
@@ -59415,23 +59411,23 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 7804640904
+      "tvl": 7793961054
      },
      {
       "chain": "Ripple",
-      "tvl": 193178198
+      "tvl": 193056449
      },
      {
       "chain": "Cardano",
-      "tvl": 13572068
+      "tvl": 13553921
      },
      {
       "chain": "Doge",
-      "tvl": 11039210
+      "tvl": 11021149
      },
      {
       "chain": "Litecoin",
-      "tvl": 5470936
+      "tvl": 5462024
      }
     ],
     "scripts": [],
@@ -59493,7 +59489,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 779544315
+      "tvl": 782968551
      }
     ],
     "scripts": [],
@@ -59555,11 +59551,11 @@
     "chainTvls": [
      {
       "chain": "Hyperliquid L1",
-      "tvl": 6521250757
+      "tvl": 6522337470
      },
      {
       "chain": "Arbitrum",
-      "tvl": 381188830
+      "tvl": 380780543
      }
     ],
     "scripts": [],
@@ -59621,35 +59617,35 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 544535504
+      "tvl": 548951261
      },
      {
       "chain": "Zcash",
-      "tvl": 179699250
+      "tvl": 181325733
      },
      {
       "chain": "Ethereum",
-      "tvl": 139326337
+      "tvl": 139648362
      },
      {
       "chain": "Solana",
-      "tvl": 105885502
+      "tvl": 107307260
      },
      {
       "chain": "Plasma",
-      "tvl": 13990821
+      "tvl": 14027222
      },
      {
       "chain": "Monad",
-      "tvl": 2890532
+      "tvl": 2928975
      },
      {
       "chain": "Base",
-      "tvl": 1538261
+      "tvl": 1550864
      },
      {
       "chain": "Avalanche",
-      "tvl": 315366
+      "tvl": 316237
      }
     ],
     "scripts": [],
@@ -59713,35 +59709,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 7067290369
+      "tvl": 7069486424
      },
      {
       "chain": "Polygon",
-      "tvl": 4088053901
+      "tvl": 4080450077
      },
      {
       "chain": "ApeChain",
-      "tvl": 126110664
+      "tvl": 127156479
      },
      {
       "chain": "Base",
-      "tvl": 98316985
+      "tvl": 98826962
      },
      {
       "chain": "Arbitrum",
-      "tvl": 70586400
+      "tvl": 70649311
      },
      {
       "chain": "Tron",
-      "tvl": 52026098
+      "tvl": 51887142
      },
      {
       "chain": "Binance",
-      "tvl": 49688871
+      "tvl": 49711864
      },
      {
       "chain": "Solana",
-      "tvl": 37946117
+      "tvl": 38159319
      }
     ],
     "scripts": [],
@@ -59803,7 +59799,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 765180770
+      "tvl": 763832398
      }
     ],
     "scripts": [
@@ -59826,7 +59822,7 @@
     "testing": {
      "mode": "fork",
      "label": "Source chain only",
-     "note": "L1StandardBridge.depositETH locks ETH and emits ETHDepositInitiated. Destination delivery on OP Mainnet needs the rollup; a single Ethereum fork cannot verify it.",
+     "note": "L1StandardBridge.depositETH locks ETH (into the ETHLockbox that OptimismPortal.ethLockbox() reports) and emits ETHDepositInitiated. Destination delivery on OP Mainnet needs the rollup; a single Ethereum fork cannot verify it.",
      "appUrl": "https://app.optimism.io/bridge",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
@@ -59889,7 +59885,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 9602699949
+      "tvl": 9631682862
      }
     ],
     "scripts": [],
@@ -60013,7 +60009,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 434413234
+      "tvl": 435131800
      }
     ],
     "scripts": [],
@@ -60075,7 +60071,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 5613225020
+      "tvl": 5637881744
      }
     ],
     "scripts": [],
@@ -60285,7 +60281,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 2974297579
+      "tvl": 2978961182
      }
     ],
     "scripts": [
@@ -60433,7 +60429,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 637135744
+      "tvl": 636455638
      },
      {
       "chain": "Arbitrum",
@@ -60499,7 +60495,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 2769210313
+      "tvl": 2775828606
      }
     ],
     "scripts": [],
@@ -60708,7 +60704,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 3563706441
+      "tvl": 3562614330
      }
     ],
     "scripts": [
@@ -60794,7 +60790,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 286162753
+      "tvl": 285771169
      }
     ],
     "scripts": [],
@@ -61008,7 +61004,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 185326673
+      "tvl": 185623990
      }
     ],
     "scripts": [],
@@ -61070,7 +61066,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 94837939
+      "tvl": 94841982
      }
     ],
     "scripts": [],
@@ -61132,7 +61128,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 169424548
+      "tvl": 169099233
      }
     ],
     "scripts": [],
@@ -61194,27 +61190,27 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 509582116
+      "tvl": 508884806
      },
      {
       "chain": "Binance",
-      "tvl": 9567260
+      "tvl": 9573765
      },
      {
       "chain": "Ethereum",
-      "tvl": 4465508
+      "tvl": 4458990
      },
      {
       "chain": "Solana",
-      "tvl": 2646588
+      "tvl": 2646906
      },
      {
       "chain": "Base",
-      "tvl": 340028
+      "tvl": 339652
      },
      {
       "chain": "Arbitrum",
-      "tvl": 41841
+      "tvl": 41849
      },
      {
       "chain": "X Layer",
@@ -61295,31 +61291,31 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 134643976
+      "tvl": 134704874
      },
      {
       "chain": "Binance",
-      "tvl": 19586309
+      "tvl": 19599082
      },
      {
       "chain": "Ripple",
-      "tvl": 2142608
+      "tvl": 2141815
      },
      {
       "chain": "Arbitrum",
-      "tvl": 1363518
+      "tvl": 1363997
      },
      {
       "chain": "Optimism",
-      "tvl": 1190308
+      "tvl": 1190699
      },
      {
       "chain": "Base",
-      "tvl": 438692
+      "tvl": 440034
      },
      {
       "chain": "Polygon",
-      "tvl": 104404
+      "tvl": 104396
      },
      {
       "chain": "Fantom",
@@ -61385,27 +61381,27 @@
     "chainTvls": [
      {
       "chain": "Base",
-      "tvl": 69617052
+      "tvl": 69699735
      },
      {
       "chain": "Arbitrum",
-      "tvl": 910760
+      "tvl": 910945
      },
      {
       "chain": "Ethereum",
-      "tvl": 805080
+      "tvl": 805732
      },
      {
       "chain": "Binance",
-      "tvl": 381971
+      "tvl": 382007
      },
      {
       "chain": "Solana",
-      "tvl": 281690
+      "tvl": 281740
      },
      {
       "chain": "Bitcoin",
-      "tvl": 167888
+      "tvl": 168626
      },
      {
       "chain": "Polygon",
@@ -61413,7 +61409,7 @@
      },
      {
       "chain": "Hyperliquid L1",
-      "tvl": 69263
+      "tvl": 69864
      }
     ],
     "scripts": [],
@@ -61475,7 +61471,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 26854119
+      "tvl": 26935171
      }
     ],
     "scripts": [],
@@ -61599,7 +61595,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 81223447
+      "tvl": 81112301
      }
     ],
     "scripts": [],
@@ -61672,35 +61668,35 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 370413245
+      "tvl": 370981460
      },
      {
       "chain": "Ethereum",
-      "tvl": 157781410
+      "tvl": 157477701
      },
      {
       "chain": "Arbitrum",
-      "tvl": 45119435
+      "tvl": 45131011
      },
      {
       "chain": "Solana",
-      "tvl": 17573359
+      "tvl": 17580072
      },
      {
       "chain": "Manta",
-      "tvl": 575815
+      "tvl": 575823
      },
      {
       "chain": "Op_Bnb",
-      "tvl": 47510
+      "tvl": 47511
      },
      {
       "chain": "zkSync Era",
-      "tvl": 9439
+      "tvl": 9442
      },
      {
       "chain": "Base",
-      "tvl": 3053
+      "tvl": 3055
      }
     ],
     "scripts": [],
@@ -61774,11 +61770,11 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 67175495
+      "tvl": 67169446
      },
      {
       "chain": "Arc",
-      "tvl": 9324855
+      "tvl": 9424483
      }
     ],
     "scripts": [],
@@ -61847,7 +61843,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 31295061
+      "tvl": 31394608
      }
     ],
     "scripts": [],
@@ -61909,7 +61905,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 495817947
+      "tvl": 497995883
      }
     ],
     "scripts": [],
@@ -62061,35 +62057,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 8777160
+      "tvl": 8777838
      },
      {
       "chain": "Solana",
-      "tvl": 7466551
+      "tvl": 7466457
      },
      {
       "chain": "Binance",
-      "tvl": 2063566
+      "tvl": 2063691
      },
      {
       "chain": "Arbitrum",
-      "tvl": 1474148
+      "tvl": 1510175
      },
      {
       "chain": "Berachain",
-      "tvl": 1360684
+      "tvl": 1360663
      },
      {
       "chain": "Near",
-      "tvl": 355699
+      "tvl": 355939
      },
      {
       "chain": "Optimism",
-      "tvl": 270662
+      "tvl": 270658
      },
      {
       "chain": "Base",
-      "tvl": 179625
+      "tvl": 179593
      }
     ],
     "scripts": [],
@@ -62151,11 +62147,11 @@
     "chainTvls": [
      {
       "chain": "Arbitrum",
-      "tvl": 66487128
+      "tvl": 66493189
      },
      {
       "chain": "Morph",
-      "tvl": 584024
+      "tvl": 584012
      }
     ],
     "scripts": [],
@@ -62217,19 +62213,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 1516530
+      "tvl": 1516800
      },
      {
       "chain": "Binance",
-      "tvl": 553286
+      "tvl": 553423
      },
      {
       "chain": "Arbitrum",
-      "tvl": 43641
+      "tvl": 43710
      },
      {
       "chain": "Polygon",
-      "tvl": 18285
+      "tvl": 18297
      }
     ],
     "scripts": [],
@@ -62291,7 +62287,7 @@
     "chainTvls": [
      {
       "chain": "Arbitrum",
-      "tvl": 27997665
+      "tvl": 28003850
      }
     ],
     "scripts": [],
@@ -62415,7 +62411,7 @@
     "chainTvls": [
      {
       "chain": "Endurance",
-      "tvl": 10102101
+      "tvl": 10039093
      }
     ],
     "scripts": [],
@@ -62477,7 +62473,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 64920806
+      "tvl": 64867371
      }
     ],
     "scripts": [],
@@ -62827,7 +62823,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 10813803
+      "tvl": 10813634
      }
     ],
     "scripts": [],
@@ -62889,7 +62885,7 @@
     "chainTvls": [
      {
       "chain": "Bittensor",
-      "tvl": 31383122
+      "tvl": 31597506
      }
     ],
     "scripts": [],
@@ -62951,7 +62947,7 @@
     "chainTvls": [
      {
       "chain": "Astar",
-      "tvl": 20206969
+      "tvl": 20191348
      }
     ],
     "scripts": [],
@@ -63103,7 +63099,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 682390790
+      "tvl": 685134778
      }
     ],
     "scripts": [],
@@ -63165,7 +63161,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 3302437545
+      "tvl": 3302969205
      }
     ],
     "scripts": [],
@@ -63227,7 +63223,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 54572827
+      "tvl": 54540349
      }
     ],
     "scripts": [],
@@ -63346,7 +63342,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 57181477
+      "tvl": 57095767
      }
     ],
     "scripts": [],
@@ -63498,7 +63494,7 @@
     "chainTvls": [
      {
       "chain": "Ripple",
-      "tvl": 24884847
+      "tvl": 24869163
      },
      {
       "chain": "Celo",
@@ -63650,7 +63646,7 @@
     "chainTvls": [
      {
       "chain": "XION",
-      "tvl": 23372220
+      "tvl": 23495436
      }
     ],
     "scripts": [],
@@ -63774,15 +63770,15 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 460571
+      "tvl": 398818
      },
      {
       "chain": "Binance",
-      "tvl": 4436
+      "tvl": 4443
      },
      {
       "chain": "Polygon",
-      "tvl": 3037
+      "tvl": 3105
      }
     ],
     "scripts": [],
@@ -64002,7 +63998,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 216810118
+      "tvl": 216513436
      }
     ],
     "scripts": [],
@@ -64064,7 +64060,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 116978767
+      "tvl": 117274693
      }
     ],
     "scripts": [],
@@ -64245,7 +64241,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 205012381
+      "tvl": 205629077
      }
     ],
     "scripts": [],
@@ -64307,7 +64303,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 28849683
+      "tvl": 28999148
      }
     ],
     "scripts": [],
@@ -64369,7 +64365,7 @@
     "chainTvls": [
      {
       "chain": "BSquared",
-      "tvl": 9790141
+      "tvl": 9825929
      }
     ],
     "scripts": [],
@@ -64431,7 +64427,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 238019399
+      "tvl": 239266078
      }
     ],
     "scripts": [],
@@ -64665,7 +64661,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 20615852
+      "tvl": 20657614
      }
     ],
     "scripts": [],
@@ -64727,7 +64723,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 37642196
+      "tvl": 37748316
      }
     ],
     "scripts": [],
@@ -64862,35 +64858,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 10515463
+      "tvl": 10518409
      },
      {
       "chain": "Linea",
-      "tvl": 1717231
+      "tvl": 1722612
      },
      {
       "chain": "Arbitrum",
-      "tvl": 552096
+      "tvl": 554620
      },
      {
       "chain": "Manta",
-      "tvl": 257671
+      "tvl": 257597
      },
      {
       "chain": "zkSync Era",
-      "tvl": 151510
+      "tvl": 151764
      },
      {
       "chain": "Mantle",
-      "tvl": 74443
+      "tvl": 74580
      },
      {
       "chain": "Base",
-      "tvl": 39952
+      "tvl": 40085
      },
      {
       "chain": "Optimism",
-      "tvl": 25973
+      "tvl": 26093
      }
     ],
     "scripts": [],
@@ -64952,7 +64948,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 15298773
+      "tvl": 15313764
      }
     ],
     "scripts": [],
@@ -65076,7 +65072,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 125377889
+      "tvl": 125638078
      }
     ],
     "scripts": [],
@@ -65200,11 +65196,11 @@
     "chainTvls": [
      {
       "chain": "BSquared",
-      "tvl": 80033667
+      "tvl": 79914384
      },
      {
       "chain": "Bitcoin",
-      "tvl": 5711598
+      "tvl": 5703782
      }
     ],
     "scripts": [],
@@ -65328,7 +65324,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 5225047
+      "tvl": 5231432
      }
     ],
     "scripts": [],
@@ -65390,19 +65386,19 @@
     "chainTvls": [
      {
       "chain": "Tron",
-      "tvl": 18517999
+      "tvl": 18518785
      },
      {
       "chain": "Ethereum",
-      "tvl": 3241425
+      "tvl": 3241519
      },
      {
       "chain": "Binance",
-      "tvl": 1468044
+      "tvl": 1468102
      },
      {
       "chain": "Arbitrum",
-      "tvl": 890651
+      "tvl": 890810
      }
     ],
     "scripts": [],
@@ -65464,35 +65460,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 8900749
+      "tvl": 8906696
      },
      {
       "chain": "Binance",
-      "tvl": 2875776
+      "tvl": 2876993
      },
      {
       "chain": "Polygon",
-      "tvl": 1222672
+      "tvl": 1222880
      },
      {
       "chain": "Arbitrum",
-      "tvl": 745130
+      "tvl": 747093
      },
      {
       "chain": "Optimism",
-      "tvl": 402983
+      "tvl": 402961
      },
      {
       "chain": "Avalanche",
-      "tvl": 268721
+      "tvl": 268817
      },
      {
       "chain": "zkSync Era",
-      "tvl": 251026
+      "tvl": 251025
      },
      {
       "chain": "Linea",
-      "tvl": 173660
+      "tvl": 173661
      }
     ],
     "scripts": [],
@@ -65554,7 +65550,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 32567258
+      "tvl": 32550456
      }
     ],
     "scripts": [],
@@ -65678,7 +65674,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 30209404
+      "tvl": 30286082
      }
     ],
     "scripts": [],
@@ -65740,7 +65736,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 7985831
+      "tvl": 8060186
      }
     ],
     "scripts": [],
@@ -65802,7 +65798,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 14488764
+      "tvl": 14517214
      }
     ],
     "scripts": [
@@ -65875,15 +65871,15 @@
     "chainTvls": [
      {
       "chain": "Arbitrum",
-      "tvl": 46149740
+      "tvl": 46149108
      },
      {
       "chain": "Ethereum",
-      "tvl": 12193144
+      "tvl": 12204281
      },
      {
       "chain": "Arc",
-      "tvl": 2655626
+      "tvl": 2657856
      },
      {
       "chain": "edgeX L1",
@@ -66011,7 +66007,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 53073166
+      "tvl": 53175888
      }
     ],
     "scripts": [],
@@ -66215,7 +66211,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 10191657
+      "tvl": 10193528
      }
     ],
     "scripts": [],
@@ -66277,27 +66273,27 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 27997561
+      "tvl": 28191898
      },
      {
       "chain": "Binance",
-      "tvl": 173576
+      "tvl": 174722
      },
      {
       "chain": "Ethereum",
-      "tvl": 61191
+      "tvl": 61600
      },
      {
       "chain": "Base",
-      "tvl": 60799
+      "tvl": 61156
      },
      {
       "chain": "Arbitrum",
-      "tvl": 27529
+      "tvl": 27709
      },
      {
       "chain": "Sei",
-      "tvl": 64
+      "tvl": 65
      },
      {
       "chain": "Mantle",
@@ -66441,11 +66437,11 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 19204795
+      "tvl": 19205373
      },
      {
       "chain": "Solana",
-      "tvl": 6344357
+      "tvl": 6344548
      }
     ],
     "scripts": [],
@@ -66565,7 +66561,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 711
+      "tvl": 710
      },
      {
       "chain": "Polygon",
@@ -66825,35 +66821,35 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 655883038
+      "tvl": 658576001
      },
      {
       "chain": "Binance",
-      "tvl": 56794042
+      "tvl": 56940850
      },
      {
       "chain": "Arbitrum",
-      "tvl": 562156
+      "tvl": 564151
      },
      {
       "chain": "Avalanche",
-      "tvl": 51814
+      "tvl": 52272
      },
      {
       "chain": "xDai",
-      "tvl": 46990
+      "tvl": 46997
      },
      {
       "chain": "Polygon",
-      "tvl": 44461
+      "tvl": 44705
      },
      {
       "chain": "Optimism",
-      "tvl": 28504
+      "tvl": 28609
      },
      {
       "chain": "EthereumClassic",
-      "tvl": 28109
+      "tvl": 28030
      }
     ],
     "scripts": [],
@@ -67026,7 +67022,7 @@
     "chainTvls": [
      {
       "chain": "Bittensor",
-      "tvl": 55141584
+      "tvl": 55636598
      }
     ],
     "scripts": [],
@@ -67256,7 +67252,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 11057712
+      "tvl": 11110488
      }
     ],
     "scripts": [],
@@ -67429,7 +67425,7 @@
     "chainTvls": [
      {
       "chain": "ADI",
-      "tvl": 1454337
+      "tvl": 1454420
      }
     ],
     "scripts": [],
@@ -67548,19 +67544,19 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 107229303
+      "tvl": 107093639
      },
      {
       "chain": "Arbitrum",
-      "tvl": 3340717
+      "tvl": 3374722
      },
      {
       "chain": "Binance",
-      "tvl": 923934
+      "tvl": 923467
      },
      {
       "chain": "Polygon",
-      "tvl": 670495
+      "tvl": 671176
      }
     ],
     "scripts": [],
@@ -67621,7 +67617,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 3119162
+      "tvl": 3117287
      }
     ],
     "scripts": [],
@@ -67806,7 +67802,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 1159383034
+      "tvl": 1163982039
      }
     ],
     "scripts": [],
@@ -67981,23 +67977,23 @@
     "chainTvls": [
      {
       "chain": "Binance",
-      "tvl": 3376121
+      "tvl": 3389861
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 85560
+      "tvl": 85766
      },
      {
       "chain": "X Layer",
-      "tvl": 20730
+      "tvl": 20689
      },
      {
       "chain": "Base",
-      "tvl": 9248
+      "tvl": 9269
      },
      {
       "chain": "Monad",
-      "tvl": 3022
+      "tvl": 3043
      }
     ],
     "scripts": [],
@@ -68060,7 +68056,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 113804317
+      "tvl": 113740577
      }
     ],
     "scripts": [
@@ -68314,7 +68310,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 85705117
+      "tvl": 85587839
      }
     ],
     "scripts": [],
@@ -68621,7 +68617,7 @@
     "chainTvls": [
      {
       "chain": "Arc",
-      "tvl": 1183922
+      "tvl": 1188684
      }
     ],
     "scripts": [],
@@ -69356,7 +69352,7 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 15625984
+      "tvl": 15627912
      },
      {
       "chain": "Aptos",
@@ -69479,7 +69475,7 @@
     "chainTvls": [
      {
       "chain": "Mezo",
-      "tvl": 66354470
+      "tvl": 66376009
      }
     ],
     "scripts": [],
@@ -69540,7 +69536,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 78217420
+      "tvl": 78270751
      }
     ],
     "scripts": [],
@@ -69601,7 +69597,7 @@
     "chainTvls": [
      {
       "chain": "Arbitrum",
-      "tvl": 18384622
+      "tvl": 18232327
      }
     ],
     "scripts": [],
@@ -69835,7 +69831,7 @@
     "chainTvls": [
      {
       "chain": "Hemi",
-      "tvl": 43786160
+      "tvl": 43816156
      }
     ],
     "scripts": [],
@@ -70215,7 +70211,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 107196154
+      "tvl": 107342648
      }
     ],
     "scripts": [],
@@ -70405,7 +70401,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 19748092
+      "tvl": 19757495
      }
     ],
     "scripts": [],
@@ -70690,11 +70686,11 @@
     "chainTvls": [
      {
       "chain": "Ripple",
-      "tvl": 126037451
+      "tvl": 126375857
      },
      {
       "chain": "Ethereum",
-      "tvl": 153901
+      "tvl": 153898
      }
     ],
     "scripts": [],
@@ -70755,23 +70751,23 @@
     "chainTvls": [
      {
       "chain": "Robinhood Chain",
-      "tvl": 3932390
+      "tvl": 3934253
      },
      {
       "chain": "Arc",
-      "tvl": 21803
+      "tvl": 21821
      },
      {
       "chain": "Monad",
-      "tvl": 3565
+      "tvl": 3617
      },
      {
       "chain": "Merlin",
-      "tvl": 2761
+      "tvl": 2765
      },
      {
       "chain": "MegaETH",
-      "tvl": 2187
+      "tvl": 2190
      },
      {
       "chain": "Stable",
@@ -70779,7 +70775,7 @@
      },
      {
       "chain": "Intuition",
-      "tvl": 113
+      "tvl": 114
      }
     ],
     "scripts": [],
@@ -71983,7 +71979,7 @@
     "chainTvls": [
      {
       "chain": "Polygon",
-      "tvl": 350132847
+      "tvl": 348546125
      }
     ],
     "scripts": [
@@ -72223,7 +72219,7 @@
     "chainTvls": [
      {
       "chain": "Arc",
-      "tvl": 165534
+      "tvl": 157465
      }
     ],
     "scripts": [],
@@ -72340,7 +72336,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 101434
+      "tvl": 107784
      }
     ],
     "scripts": [],
@@ -72635,19 +72631,19 @@
     "chainTvls": [
      {
       "chain": "Solana",
-      "tvl": 1763777
+      "tvl": 1763905
      },
      {
       "chain": "Ethereum",
-      "tvl": 176133
+      "tvl": 176183
      },
      {
       "chain": "Base",
-      "tvl": 67465
+      "tvl": 67546
      },
      {
       "chain": "Robinhood Chain",
-      "tvl": 11029
+      "tvl": 11037
      },
      {
       "chain": "Binance",
@@ -72768,7 +72764,7 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 305758285
+      "tvl": 305339886
      }
     ],
     "scripts": [],
@@ -72885,7 +72881,7 @@
     "chainTvls": [
      {
       "chain": "Flare",
-      "tvl": 70601317
+      "tvl": 70765173
      }
     ],
     "scripts": [],
@@ -73002,7 +72998,7 @@
     "chainTvls": [
      {
       "chain": "Ethereum",
-      "tvl": 6714590
+      "tvl": 6723383
      }
     ],
     "scripts": [],
@@ -73124,35 +73120,35 @@
     "chainTvls": [
      {
       "chain": "Bitcoin",
-      "tvl": 2465547276
+      "tvl": 2470221009
      },
      {
       "chain": "Ethereum",
-      "tvl": 1228808955
+      "tvl": 1230828140
      },
      {
       "chain": "Solana",
-      "tvl": 1027529222
+      "tvl": 1029954410
      },
      {
       "chain": "Binance",
-      "tvl": 586803317
+      "tvl": 587375025
      },
      {
       "chain": "Tron",
-      "tvl": 327296415
+      "tvl": 324450242
      },
      {
       "chain": "Ripple",
-      "tvl": 107821297
+      "tvl": 107977353
      },
      {
       "chain": "Base",
-      "tvl": 62861574
+      "tvl": 63356132
      },
      {
       "chain": "Arbitrum",
-      "tvl": 59950048
+      "tvl": 59858751
      }
     ],
     "scripts": [
