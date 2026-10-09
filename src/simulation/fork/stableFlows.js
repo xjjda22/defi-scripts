@@ -131,9 +131,11 @@ async function skyVault(base, label, vaultAddr, assetAddr, symbol) {
   const sharesBefore = await vault.balanceOf(user);
   const assetsBefore = await asset.balanceOf(user);
   await approve(assetAddr, signer, vaultAddr, amount);
-  await (await vault.deposit(amount, user)).wait();
+  // sDAI's deposit/redeem call pot.drip(); eth_estimateGas on a fork undershoots it and the
+  // transaction runs out of gas, so give both calls an explicit limit.
+  await (await vault.deposit(amount, user, { gasLimit: 1_000_000n })).wait();
   const shares = (await vault.balanceOf(user)) - sharesBefore;
-  const redeemed = await vault.redeem(shares, user, user);
+  const redeemed = await vault.redeem(shares, user, user, { gasLimit: 1_000_000n });
   const receipt = await redeemed.wait();
   const assetsAfter = await asset.balanceOf(user);
   const ok = shares > 0n && assetsAfter + amount / 100n >= assetsBefore;
@@ -177,16 +179,20 @@ async function ethenaCooldown(base) {
     ETHENA.susde,
     [
       ...VAULT,
-      "function cooldownAssets(uint256 assets) returns (uint256)",
+      "function cooldownShares(uint256 shares) returns (uint256)",
       "function cooldownDuration() view returns (uint24)",
       "function cooldowns(address) view returns (uint104 cooldownEnd, uint152 underlyingAmount)",
     ],
     signer
   );
   await approve(ETHENA.usde, signer, ETHENA.susde, amount);
+  const sharesBefore = await susde.balanceOf(user);
   await (await susde.deposit(amount, user)).wait();
+  // Cool down the shares this test minted. cooldownAssets(amount) reverts with
+  // ExcessiveWithdrawAmount because the shares round down to just under `amount` USDe.
+  const shares = (await susde.balanceOf(user)) - sharesBefore;
   const duration = await susde.cooldownDuration();
-  const tx = await susde.cooldownAssets(amount);
+  const tx = await susde.cooldownShares(shares);
   const receipt = await tx.wait();
   const cd = await susde.cooldowns(user);
   const ok = cd.underlyingAmount > 0n && (duration === 0n || cd.cooldownEnd > 0n);
@@ -194,7 +200,7 @@ async function ethenaCooldown(base) {
     ...base,
     ok,
     key: `cooldownEnd=${cd.cooldownEnd} underlying=${formatUnits(cd.underlyingAmount, 18)} duration=${duration}`,
-    detail: `cooldown started for ${formatUnits(amount, 18)} USDe\ncooldownEnd ${cd.cooldownEnd} underlying ${formatUnits(cd.underlyingAmount, 18)}\nduration ${duration}s. Full unstake waits out that cooldown; a single fork does not advance it.\ntx ${receipt.hash}`,
+    detail: `cooldown started for ${formatUnits(shares, 18)} sUSDe (from ${formatUnits(amount, 18)} USDe)\ncooldownEnd ${cd.cooldownEnd} underlying ${formatUnits(cd.underlyingAmount, 18)}\nduration ${duration}s. Full unstake waits out that cooldown; a single fork does not advance it.\ntx ${receipt.hash}`,
     error: ok ? null : "cooldown did not record an unstake",
   });
 }
