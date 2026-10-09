@@ -1,8 +1,8 @@
 const pkg = require("../../package.json");
 const { CATEGORIES, BOARD_GROUPS, PROTOCOLS, BOARDS, SCRIPT_DESCRIPTIONS } = require("./protocols");
 
-const KINDS = ["Analytics", "Smoke", "Simulate", "Swap", "Cross-chain"];
-const FAMILIES = new Set(["analytics", "simulate", "swap", "crosschain"]);
+const KINDS = ["Analytics", "Smoke", "Simulate", "Swap", "Cross-chain", "Fork"];
+const FAMILIES = new Set(["analytics", "simulate", "swap", "crosschain", "fork"]);
 
 function envValue(command, key) {
   const m = command.match(new RegExp(`(?:^|\\s)${key}=('[^']*'|\\S+)`));
@@ -12,6 +12,8 @@ function envValue(command, key) {
 function classify(name, command) {
   const parts = name.split(":");
   if (parts[0] === "test" && parts[1] === "pairs") return { id: "pairs", kind: "Simulate" };
+  if (name === "fork:all" || name === "simulate:fork:suite") return { id: "validate", kind: "Fork" };
+  if (parts[0] === "fork") return { id: parts[1], kind: "Fork" };
   if (!FAMILIES.has(parts[0])) return null;
   const id = parts[0] === "simulate" && parts[1] === "dex" ? parts[2] : parts[1];
   if (parts[0] === "analytics") return { id, kind: "Analytics" };

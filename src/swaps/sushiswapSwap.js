@@ -5,6 +5,7 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const { getProvider } = require("../utils/web3");
+const { signerOn } = require("../utils/signer");
 const {
   validateChainKey,
   validateWallet,
@@ -14,7 +15,11 @@ const {
 } = require("../utils/validation");
 const V2_ROUTER_ABI = require("../abis/IUniswapV2Router02.json");
 const V3_ROUTER_ABI = require("../abis/ISwapRouter.json");
-const QUOTER_ABI = require("../abis/IQuoter.json");
+// SushiSwap V3 deploys QuoterV2 (struct params, returns amountOut + extras); the V1
+// positional IQuoter.json ABI has no matching fragment for the struct call below.
+const QUOTER_ABI = [
+  "function quoteExactInputSingle(tuple(address tokenIn, address tokenOut, uint256 amountIn, uint24 fee, uint160 sqrtPriceLimitX96) params) returns (uint256 amountOut, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256 gasEstimate)",
+];
 const ERC20_ABI = require("../abis/IERC20.json");
 
 /**
@@ -100,7 +105,7 @@ async function swapV2(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps
   }
 
   const provider = wallet.provider || getProvider(chainKey);
-  const walletWithProvider = wallet.connect(provider);
+  const walletWithProvider = signerOn(wallet, provider);
 
   const router = new ethers.Contract(chain.sushiswap.v2.router, V2_ROUTER_ABI, walletWithProvider);
 
@@ -146,7 +151,7 @@ async function swapV3(chainKey, wallet, tokenIn, tokenOut, amountIn, slippageBps
   }
 
   const provider = wallet.provider || getProvider(chainKey);
-  const walletWithProvider = wallet.connect(provider);
+  const walletWithProvider = signerOn(wallet, provider);
 
   const router = new ethers.Contract(chain.sushiswap.v3.router, V3_ROUTER_ABI, walletWithProvider);
 

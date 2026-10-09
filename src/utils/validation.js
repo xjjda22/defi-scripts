@@ -111,7 +111,14 @@ function validateWallet(wallet) {
     throw new Error("Wallet must be an ethers.Wallet instance");
   }
 
-  if (!wallet.address || !wallet.privateKey) {
+  if (!wallet.address) {
+    throw new Error("Invalid wallet: must have an address");
+  }
+
+  // A private-key Wallet signs swaps. An Anvil impersonation returns a JsonRpcSigner
+  // with sendTransaction and no privateKey; fork tests use that signer.
+  const canSign = Boolean(wallet.privateKey) || typeof wallet.sendTransaction === "function";
+  if (!canSign) {
     throw new Error("Invalid wallet: must have address and privateKey properties");
   }
 }

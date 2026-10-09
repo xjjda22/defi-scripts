@@ -25,3 +25,41 @@ jobs:
       - name: Live DefiLlama smoke (informational)
         run: node src/simulation/api/smokeL2Overview.js
         continue-on-error: true
+
+  # Optional. Never blocks CI: no secret means a clean skip, and a fork failure on a
+  # public or rate-limited RPC is reported without failing the workflow.
+  fork-suite:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Check for an RPC secret
+        id: rpc
+        env:
+          ETHEREUM_RPC_URL: ${{ secrets.ETHEREUM_RPC_URL }}
+        run: |
+          if [ -z "$ETHEREUM_RPC_URL" ]; then
+            echo "ETHEREUM_RPC_URL secret is not set; skipping the fork suite."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - run: npm ci --no-audit --no-fund
+        if: steps.rpc.outputs.run == 'true'
+      - uses: foundry-rs/foundry-toolchain@v1
+        if: steps.rpc.outputs.run == 'true'
+      - name: Fork suite
+        if: steps.rpc.outputs.run == 'true'
+        env:
+          ETHEREUM_RPC_URL: ${{ secrets.ETHEREUM_RPC_URL }}
+          BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
+          OPTIMISM_RPC_URL: ${{ secrets.OPTIMISM_RPC_URL }}
+          ARBITRUM_RPC_URL: ${{ secrets.ARBITRUM_RPC_URL }}
+          BSC_RPC_URL: ${{ secrets.BSC_RPC_URL }}
+          FORK_TEST_TIMEOUT_MS: "180000"
+        run: npm run fork:all

@@ -3,6 +3,7 @@
 const { ethers } = require("ethers");
 const { CHAINS } = require("../config/chains");
 const { getProvider } = require("../utils/web3");
+const { signerOn } = require("../utils/signer");
 const {
   validateChainKey,
   validateWallet,
@@ -14,6 +15,22 @@ const {
   validateMultiHopPath,
 } = require("../utils/validation");
 const SWAP_ROUTER_ABI = require("../abis/ISwapRouter.json");
+
+// SwapRouter02 drops `deadline` from the exactInput* structs, so the V1 selectors revert.
+// Base only has SwapRouter02 (https://docs.uniswap.org/contracts/v3/reference/deployments/base-deployments).
+const SWAP_ROUTER02 = new Set([
+  "0x2626664c2603336e57b271c5c0b26f421741e481", // Base
+  "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45", // Ethereum, Arbitrum, Optimism, Polygon
+]);
+const SWAP_ROUTER02_ABI = [
+  "function exactInputSingle(tuple(address tokenIn, address tokenOut, uint24 fee, address recipient, uint256 amountIn, uint256 amountOutMinimum, uint160 sqrtPriceLimitX96) params) payable returns (uint256 amountOut)",
+  "function exactInput(tuple(bytes path, address recipient, uint256 amountIn, uint256 amountOutMinimum) params) payable returns (uint256 amountOut)",
+];
+
+function routerFor(address, signer) {
+  const is02 = SWAP_ROUTER02.has(String(address).toLowerCase());
+  return { router: new ethers.Contract(address, is02 ? SWAP_ROUTER02_ABI : SWAP_ROUTER_ABI, signer), is02 };
+}
 const QUOTER_ABI = require("../abis/IQuoter.json");
 const ERC20_ABI = require("../abis/IERC20.json");
 
@@ -217,7 +234,7 @@ async function swapExactInputSingle(
   const v3cfg = resolveV3Endpoints(chainKey, dexId);
 
   const provider = getProvider(chainKey);
-  const signer = wallet.connect(provider);
+  const signer = signerOn(wallet, provider);
   const recipientAddr = recipient || wallet.address;
 
   // Get quote to calculate minimum output with slippage
@@ -236,7 +253,7 @@ async function swapExactInputSingle(
   }
 
   // Execute swap
-  const router = new ethers.Contract(v3cfg.router, SWAP_ROUTER_ABI, signer);
+  const { router, is02 } = routerFor(v3cfg.router, signer);
 
   // Deadline: 20 minutes from now
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
@@ -251,6 +268,7 @@ async function swapExactInputSingle(
     amountOutMinimum: amountOutMin,
     sqrtPriceLimitX96: 0, // No price limit
   };
+  if (is02) delete params.deadline;
 
   console.log(`\nExecuting V3 swap on ${chain.name} (${dexId}):`);
   console.log(`  Input: ${amountIn} ${tokenIn}`);
@@ -301,7 +319,7 @@ async function swapExactInputMultiHop(
   const v3cfg = resolveV3Endpoints(chainKey, dexId);
 
   const provider = getProvider(chainKey);
-  const signer = wallet.connect(provider);
+  const signer = signerOn(wallet, provider);
   const recipientAddr = recipient || wallet.address;
 
   // Get quote
@@ -320,7 +338,7 @@ async function swapExactInputMultiHop(
   }
 
   // Execute swap
-  const router = new ethers.Contract(v3cfg.router, SWAP_ROUTER_ABI, signer);
+  const { router, is02 } = routerFor(v3cfg.router, signer);
 
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
   const path = encodePath(tokens, fees);
@@ -332,6 +350,7 @@ async function swapExactInputMultiHop(
     amountIn,
     amountOutMinimum: amountOutMin,
   };
+  if (is02) delete params.deadline;
 
   console.log(`\nExecuting V3 multi-hop swap on ${chain.name}:`);
   console.log(`  Input: ${amountIn} ${tokens[0]}`);

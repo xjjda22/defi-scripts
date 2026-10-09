@@ -460,7 +460,9 @@ async function executeSwap(chainKey, signer, bestQuote, amountIn, slippageBps = 
       data.tokenIn,
       data.tokenOut,
       amountIn,
-      slippageBps
+      slippageBps,
+      null,
+      bestQuote.amountOut
     );
     return { hash: r.hash };
   }

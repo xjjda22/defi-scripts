@@ -23,6 +23,7 @@ const KIND_COLORS = {
   Simulate: chalk.magenta,
   Swap: chalk.yellow,
   "Cross-chain": chalk.blue,
+  Fork: chalk.red,
 };
 
 const tick = n => (n ? chalk.green(n > 1 ? `✓${n}` : "✓") : chalk.gray("·"));
