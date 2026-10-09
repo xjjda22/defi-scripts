@@ -64,6 +64,18 @@ function scriptNames(entry) {
   return entry.scripts.map(script => script.name);
 }
 
+/**
+ * npm script name plus the source file it runs, so the showcase can link to it.
+ * @returns {{ name: string, file: string|null }[]}
+ */
+function scriptLinks(entry) {
+  if (!entry || !entry.scripts) return [];
+  return entry.scripts.map(script => {
+    const match = String(script.command || "").match(/(?:^|\s)node\s+((?:src|scripts)\/\S+\.js)/);
+    return { name: script.name, file: match ? match[1] : null };
+  });
+}
+
 const MONITOR = "covered by a dedicated monitor";
 const RANKING_ONLY = "ranking only";
 
@@ -71,6 +83,7 @@ module.exports = {
   buildCoverageIndex,
   linkCatalog,
   scriptNames,
+  scriptLinks,
   MONITOR,
   RANKING_ONLY,
 };

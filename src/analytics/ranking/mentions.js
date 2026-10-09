@@ -1,280 +1,321 @@
 /**
- * Count protocol names in local markdown research notes (X list reads and
- * daily claim files). The committed file keeps only name, count, last-seen
- * date and list names — not post text.
+ * Count how many distinct X posts from the user's lists mention each ranked
+ * protocol.
  *
- * Match is case-insensitive on the protocol name, the slug (hyphens as
- * spaces), and a small alias map. Word boundaries are letters and digits, so
- * "Aave" does not match "Aavegotchi".
+ * Input is a directory (X_MENTIONS_DIR) of list reads:
+ *   - raw post JSON: an array of posts, `{ posts: [...] }`, or the X API
+ *     `{ data: [...] }` shape. A post needs an `id` and `text`; the list comes
+ *     from the post (`list`), the file (`list`), or the file name.
+ *   - markdown list notes: only lines that carry an `x.com/<user>/status/<id>`
+ *     link count, filed under the nearest `## <list>` heading.
+ * Files whose name starts with `daily-` are skipped: those are this repo's own
+ * claim write-ups, and counting them would reward protocols for already having
+ * a monitor.
+ *
+ * Posts are de-duplicated by status id, so the same post read on two days, or
+ * on two lists, counts once. A protocol scores one mention per post no matter
+ * how many times the post names it.
+ *
+ * Matching is on word boundaries (letters and digits), so "Aave" does not hit
+ * "Aavegotchi". Names that are ordinary English words, or four letters or
+ * fewer, match case-sensitively only (Title case, ALL CAPS, or a $TICKER), so
+ * "lighter fees" or "a sky-high APY" do not count for Lighter or Sky. Category
+ * words such as "swap" or "bridge", and names that are too generic even when
+ * capitalised ("World", "Quote", "Exactly"), are never used as a pattern.
+ *
+ * The committed file keeps only id, name, count, last-seen date and list
+ * names. No post text.
  */
 
 const fs = require("fs");
 const path = require("path");
 
-/** Extra names that the notes use for a slug. Kept small on purpose. */
+/** Extra names the lists use for a Llama slug. Only unambiguous ones. */
 const MENTION_ALIASES = {
-  "aave-v2": ["Aave"],
-  "aave-v3": ["Aave"],
-  "aave-v4": ["Aave"],
-  "aave-horizon-rwa": ["Aave"],
   eigencloud: ["EigenLayer", "EigenCloud"],
-  "ether.fi-stake": ["ether.fi", "etherfi"],
-  "ether.fi-liquid": ["ether.fi", "etherfi"],
-  "ethena-usde": ["Ethena", "USDe"],
-  "sky-lending": ["Sky", "MakerDAO"],
+  "ether.fi-stake": ["ether.fi", "etherfi", "weETH", "eETH"],
+  "ethena-usde": ["Ethena", "USDe", "sUSDe"],
+  "sky-lending": ["MakerDAO", "USDS"],
   "polymarket-international": ["Polymarket"],
   "polymarket-us": ["Polymarket"],
-  "hyperliquid-hlp": ["Hyperliquid"],
-  "hyperliquid-perps": ["Hyperliquid"],
+  "hyperliquid-perps": ["Hyperliquid", "HLP"],
+  "hyperliquid-hlp": ["Hyperliquid", "HLP"],
   "gmx-v2-perps": ["GMX"],
   "gmx-v1-perps": ["GMX"],
   "pendle-v2": ["Pendle"],
-  "jito-liquid-staking": ["Jito"],
+  "jito-liquid-staking": ["Jito", "JitoSOL"],
   "raydium-amm": ["Raydium"],
   "meteora-dlmm": ["Meteora"],
   "pump.fun": ["pumpfun", "pump.fun"],
-  "uniswap-v2": ["Uniswap"],
-  "uniswap-v3": ["Uniswap"],
-  "uniswap-v4": ["Uniswap"],
-  "curve-dex": ["Curve"],
-  lido: ["stETH"],
+  "curve-dex": ["Curve Finance"],
+  lido: ["stETH", "wstETH"],
   "morpho-blue": ["Morpho"],
-  sparklend: ["Spark"],
+  sparklend: ["SparkLend"],
   "blackrock-buidl": ["BUIDL"],
   "ondo-global-markets": ["Ondo"],
-  "ondo-yield-assets": ["Ondo"],
   "near-intents": ["NEAR Intents"],
   "pancakeswap-amm": ["PancakeSwap"],
   "pancakeswap-amm-v3": ["PancakeSwap"],
-  "rocket-pool": ["Rocket Pool"],
-  wbtc: ["WBTC"],
-  cowswap: ["CoW Swap", "CowSwap"],
+  "rocket-pool": ["rETH"],
+  cowswap: ["CoW Swap", "CowSwap", "CoW Protocol"],
   "1inch-swap": ["1inch"],
-  "jupiter-lend": ["Jupiter"],
   "kamino-lend": ["Kamino"],
-  "drift-trade": ["Drift"],
+  "drift-trade": ["Drift Protocol"],
   "lighter-perps": ["Lighter"],
-  "lighter-robinhood-perps": ["Lighter"],
   "derive-v3-options": ["Derive"],
-  "derive-options": ["Derive"],
   "aerodrome-slipstream": ["Aerodrome"],
   "aerodrome-v1": ["Aerodrome"],
   "velodrome-v2": ["Velodrome"],
-  sushiswap: ["Sushi"],
-  "sushiswap-v3": ["SushiSwap", "Sushi"],
-  "balancer-v2": ["Balancer"],
+  "sushiswap-v3": ["SushiSwap"],
   "robinhood-chain-bridge": ["Robinhood Chain"],
   "usd-ai": ["USD.AI", "USDai"],
   "sentora-curator": ["Sentora"],
   "steakhouse-financial": ["Steakhouse"],
-  "fluid-dex": ["Fluid"],
-  "fluid-lending": ["Fluid"],
-  "blast-bridge": ["Blast"],
-  "gains-network": ["Gains Network", "gTrade"],
-  variational: ["Variational"],
-  ostium: ["Ostium"],
-  synthetix: ["Synthetix"],
-  concrete: ["Concrete"],
-  upshift: ["Upshift"],
-  renzo: ["Renzo"],
-  kelp: ["Kelp"],
+  "gains-network": ["gTrade"],
   "puffer-stake": ["Puffer"],
   "swell-liquid-restaking": ["Swell"],
   "bedrock-unieth": ["Bedrock"],
-  "spark-liquidity-layer": ["Spark"],
+  "kinetiq-khype": ["Kinetiq", "kHYPE"],
 };
 
-/**
- * Single tokens that are category words, not a protocol. A longer name or
- * slug that merely contains one of these still matches.
- */
+/** Single tokens that are category words, not a protocol. */
 const GENERIC_PATTERNS = new Set([
-  "yield",
-  "farm",
-  "swap",
-  "bridge",
-  "chain",
-  "dex",
-  "interface",
-  "services",
-  "index",
-  "vault",
-  "pool",
-  "market",
-  "token",
-  "finance",
-  "protocol",
-  "network",
-  "app",
-  "labs",
-  "exchange",
-  "defi",
-  "nft",
-  "rwa",
-  "tvl",
-  "amm",
-  "eth",
-  "btc",
-  "sol",
-  "usdc",
-  "usdt",
-  "dai",
-  "usd",
+  "yield", "farm", "swap", "bridge", "chain", "dex", "interface", "services", "index", "vault", "pool",
+  "pools", "market", "markets", "token", "finance", "protocol", "network", "app", "labs", "exchange",
+  "defi", "nft", "rwa", "tvl", "amm", "eth", "btc", "sol", "usdc", "usdt", "dai", "usd", "staking",
+  "lending", "perps", "options", "stake", "earn", "liquid", "money", "cash", "pay", "wallet", "bank",
+  "capital", "fund", "base", "core", "one", "prime", "x", "v2", "v3", "v4",
 ]);
 
-const WINDOW_START = "2026-09-28";
-const WINDOW_END = "2026-10-09";
-const JUNK_HEADING =
-  /^(meta|counts|ship|shipped|skipped|inputs|coverage note|claims shipped|claims to ship.*|backlog.*|top build.*|suggested next.*|[a-d]\)\s.*)$/i;
+/** Protocol names that are also ordinary words: case-sensitive matching only. */
+const COMMON_WORDS = new Set([
+  "abstract", "across", "arc", "aura", "axis", "balance", "blast", "bounce", "circle", "compound",
+  "concrete", "core", "curve", "derive", "drift", "echo", "ember", "euler", "fables", "fluid", "frax",
+  "gearbox", "harvest", "hop", "infinity", "ink", "instadapp", "jupiter", "kelp", "level", "lighter",
+  "linea", "liquity", "maple", "mantle", "mode", "morph", "noble", "noon", "orbit", "orca", "origin",
+  "papertrade", "portal", "proxy", "radiant", "river", "scroll", "silo", "sky", "solstice", "sonic",
+  "spark", "spectra", "strata", "superform", "swell", "symbiotic", "treehouse", "unit", "venus",
+  "wrapped", "yearn", "zircuit",
+]);
+
+/** Names too generic to count at all, even capitalised ("World", "Quote", "Exactly"). */
+const NEVER_MATCH = new Set(["world", "quote", "monster", "fomo", "exactly", "bend", "opinion", "re", "unit", "notional"]);
+
+/** File-name stems from the X list reads → list display name. */
+const LIST_NAMES = {
+  airdrop: "Airdrop?",
+  "01-airdrop": "Airdrop?",
+  "dev-alpha-mev-kol": "Dev Alpha",
+  "02-dev-alpha": "Dev Alpha",
+  "inner-circle-ct": "Inner Circle CT",
+  "03-inner-circle": "Inner Circle CT",
+  "mev-gigachads": "mev gigachads",
+  "04-mev-gigachads": "mev gigachads",
+  "mev-twitter": "mev twitter",
+  "05-mev-twitter": "mev twitter",
+  "on-chain": "ON CHAIN",
+  "06-on-chain": "ON CHAIN",
+  "privacy-dashboard-update": "Privacy dashboard update",
+  "07-privacy-dashboard": "Privacy dashboard update",
+  "privacy-x-web3-projects": "Privacy x web3 projects",
+  "08-privacy-web3": "Privacy x web3 projects",
+  "smart-contract-security": "Smart Contract Security",
+  "09-smart-contract-security": "Smart Contract Security",
+};
+
+const LIST_ALIASES = {
+  Airdrop: "Airdrop?",
+  "Dev Alpha / MEV KOL": "Dev Alpha",
+  "Dev Alpha/MEV KOL": "Dev Alpha",
+};
+
+function canonicalList(name) {
+  const text = String(name || "").trim();
+  return LIST_ALIASES[text] || text || "unknown list";
+}
 
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function compilePattern(raw) {
-  const text = String(raw || "")
-    .trim()
-    .toLowerCase();
-  if (text.length < 3) return null;
-  if (GENERIC_PATTERNS.has(text)) return null;
-  const body = escapeRegExp(text);
-  return new RegExp(`(?<![a-z0-9])${body}(?![a-z0-9])`, "gi");
-}
-
-function patternsFor(protocol) {
-  const slug = protocol.slug || "";
-  const candidates = [
-    protocol.name,
-    slug,
-    slug.replace(/-/g, " "),
-    ...(MENTION_ALIASES[slug] || []),
-    ...(protocol.aliases || []),
-  ];
-  const seen = new Set();
-  const compiled = [];
-  for (const candidate of candidates) {
-    const key = String(candidate || "")
-      .trim()
-      .toLowerCase();
-    if (!key || seen.has(key)) continue;
-    seen.add(key);
-    const re = compilePattern(key);
-    if (re) compiled.push(re);
-  }
-  return compiled;
-}
-
-function countMatches(text, regexes) {
-  const starts = new Set();
-  for (const re of regexes) {
-    re.lastIndex = 0;
-    let match = re.exec(text);
-    while (match) {
-      starts.add(match.index);
-      if (match[0].length === 0) re.lastIndex += 1;
-      match = re.exec(text);
-    }
-  }
-  return starts.size;
-}
-
-function lineDate(line, fallback) {
-  const found = String(line).match(/\d{4}-\d{2}-\d{2}/g) || [];
-  const inWindow = found.filter(date => date >= WINDOW_START && date <= WINDOW_END).sort();
-  if (inWindow.length) return inWindow[inWindow.length - 1];
-  if (fallback && fallback >= WINDOW_START && fallback <= WINDOW_END) return fallback;
-  return fallback || null;
+function titleCase(word) {
+  return word.replace(/(^|[\s-])([a-z])/g, (m, pre, ch) => pre + ch.toUpperCase());
 }
 
 /**
- * Split a note into blocks tagged with the X list (or "daily claims") they came from.
- * @returns {{ list: string, date: string|null, text: string }[]}
+ * @param {string} raw display form, e.g. "Lighter" or "aave v3"
+ * @returns {RegExp[]}
  */
-function blocksFromFile(filename, text) {
-  const fileDate = (filename.match(/\d{4}-\d{2}-\d{2}/) || [])[0] || null;
-  const isDaily = filename.startsWith("daily-");
-  const lines = text.split(/\n/);
-  const blocks = [];
-  let list = isDaily ? "daily claims" : "x lists";
-  let inListTable = false;
-
-  for (const line of lines) {
-    const heading = line.match(/^##\s+(.+?)\s*$/);
-    if (heading) {
-      const title = heading[1].replace(/\s*\(oldest seen:.*\)$/i, "").trim();
-      inListTable = /^lists$/i.test(title);
-      const fallback = isDaily ? "daily claims" : "x lists";
-      list = !inListTable && !JUNK_HEADING.test(title) ? title : fallback;
-      continue;
-    }
-    if (inListTable && /^\|/.test(line) && !/^\|\s*-/.test(line) && !/^\|\s*List\s*\|/i.test(line)) {
-      const cells = line
-        .split("|")
-        .slice(1, -1)
-        .map(cell => cell.trim());
-      if (cells[0]) {
-        blocks.push({ list: cells[0], date: lineDate(line, fileDate), text: cells.join(" ") });
-        continue;
-      }
-    }
-    if (line.trim()) blocks.push({ list, date: lineDate(line, fileDate), text: line });
-  }
-  return blocks;
+function compilePatterns(raw) {
+  const text = String(raw || "").trim();
+  const lower = text.toLowerCase();
+  if (lower.length < 3 || GENERIC_PATTERNS.has(lower) || NEVER_MATCH.has(lower)) return [];
+  const strict = COMMON_WORDS.has(lower) || lower.replace(/[^a-z0-9]/g, "").length <= 4;
+  const edge = body => `(?<![a-z0-9])${body}(?![a-z0-9])`;
+  if (!strict) return [new RegExp(edge(escapeRegExp(lower)), "gi")];
+  const forms = new Set([text, titleCase(lower), lower.toUpperCase()]);
+  if (text === lower) forms.delete(text);
+  return [...forms]
+    .filter(form => /[A-Z]/.test(form))
+    .map(form => new RegExp(`(?<![A-Za-z0-9])\\$?${escapeRegExp(form)}(?![A-Za-z0-9])`, "g"));
 }
 
-function readNoteFiles(dir) {
-  const files = fs
-    .readdirSync(dir)
-    .filter(name => name.endsWith(".md"))
-    .sort();
-  const blocks = [];
-  for (const name of files) {
-    const text = fs.readFileSync(path.join(dir, name), "utf8");
-    blocks.push(...blocksFromFile(name, text));
+/**
+ * @param {{ names: string[], slugs: string[] }} target
+ */
+function patternsFor(target) {
+  const candidates = [];
+  for (const name of target.names || []) candidates.push(name);
+  for (const slug of target.slugs || []) {
+    candidates.push(slug.replace(/-/g, " "));
+    candidates.push(...(MENTION_ALIASES[slug] || []));
   }
-  return blocks;
+  const seen = new Set();
+  const out = [];
+  for (const candidate of candidates) {
+    const key = String(candidate || "").trim();
+    if (!key || seen.has(key.toLowerCase())) continue;
+    seen.add(key.toLowerCase());
+    out.push(...compilePatterns(key));
+  }
+  return out;
+}
+
+function hits(text, regexes) {
+  for (const re of regexes) {
+    re.lastIndex = 0;
+    if (re.test(text)) return true;
+  }
+  return false;
+}
+
+function isoDay(value) {
+  if (!value) return null;
+  const match = String(value).match(/\d{4}-\d{2}-\d{2}/);
+  return match ? match[0] : null;
+}
+
+function postsFromJson(file, parsed) {
+  const stem = path.basename(file, ".json").replace(/^\d{4}-\d{2}-\d{2}__/, "");
+  const fileList = parsed && !Array.isArray(parsed) && parsed.list ? parsed.list : LIST_NAMES[stem] || stem;
+  let rows = [];
+  if (Array.isArray(parsed)) rows = parsed;
+  else if (parsed && Array.isArray(parsed.posts)) rows = parsed.posts;
+  else if (parsed && Array.isArray(parsed.data)) rows = parsed.data;
+  const out = [];
+  for (const row of rows) {
+    if (!row || !row.text) continue;
+    const id = row.id ? String(row.id) : (String(row.url || "").match(/status\/(\d+)/) || [])[1];
+    if (!id) continue;
+    out.push({
+      id,
+      list: canonicalList(row.list || fileList),
+      date: isoDay(row.created_at || row.t || row.date),
+      text: String(row.text),
+    });
+  }
+  return out;
+}
+
+function postsFromMarkdown(text) {
+  const out = [];
+  let list = "x lists";
+  for (const line of text.split(/\n/)) {
+    const heading = line.match(/^##\s+(.+?)\s*$/);
+    if (heading) {
+      list = canonicalList(heading[1].replace(/\s*\(.*\)\s*$/, ""));
+      continue;
+    }
+    const status = line.match(/x\.com\/[A-Za-z0-9_]+\/status\/(\d+)/);
+    if (!status) continue;
+    out.push({ id: status[1], list, date: isoDay(line), text: line });
+  }
+  return out;
 }
 
 /**
  * @param {string} dir
- * @param {Array<{ name: string, slug: string, aliases?: string[] }>} protocols
- * @returns {Array<{ name: string, slug: string, count: number, lastSeen: string|null, lists: string[] }>}
+ * @returns {{ id: string, lists: string[], date: string|null, text: string }[]}
  */
-function countProtocolMentions(dir, protocols) {
-  const blocks = readNoteFiles(dir);
+function readPosts(dir) {
+  const byId = new Map();
+  const files = fs
+    .readdirSync(dir)
+    .filter(name => !name.startsWith("daily-") && (name.endsWith(".json") || name.endsWith(".md")))
+    .sort();
+  for (const name of files) {
+    const file = path.join(dir, name);
+    const raw = fs.readFileSync(file, "utf8");
+    let posts = [];
+    if (name.endsWith(".json")) {
+      try {
+        posts = postsFromJson(file, JSON.parse(raw));
+      } catch (err) {
+        console.warn(`warning: skip ${name} (${err.message})`);
+      }
+    } else {
+      posts = postsFromMarkdown(raw);
+    }
+    for (const post of posts) {
+      const prev = byId.get(post.id);
+      if (!prev) {
+        byId.set(post.id, { id: post.id, lists: new Set([post.list]), date: post.date, text: post.text });
+        continue;
+      }
+      prev.lists.add(post.list);
+      if (!prev.date && post.date) prev.date = post.date;
+      // Raw post text beats a note line that only paraphrases it.
+      if (post.text.length > prev.text.length) prev.text = post.text;
+    }
+  }
+  return [...byId.values()].map(post => ({ ...post, lists: [...post.lists].sort() }));
+}
+
+/**
+ * @param {string} dir
+ * @param {Array<{ id: string, name: string, names: string[], slugs: string[] }>} targets
+ */
+function countProtocolMentions(dir, targets) {
+  const posts = readPosts(dir);
   const rows = [];
-  for (const protocol of protocols) {
-    const regexes = patternsFor(protocol);
+  for (const target of targets) {
+    const regexes = patternsFor(target);
     if (!regexes.length) continue;
     let count = 0;
     let lastSeen = null;
     const lists = new Set();
-    for (const block of blocks) {
-      const hits = countMatches(block.text, regexes);
-      if (!hits) continue;
-      count += hits;
-      lists.add(block.list);
-      if (block.date && (!lastSeen || block.date > lastSeen)) lastSeen = block.date;
+    for (const post of posts) {
+      if (!hits(post.text, regexes)) continue;
+      count += 1;
+      post.lists.forEach(list => lists.add(list));
+      if (post.date && (!lastSeen || post.date > lastSeen)) lastSeen = post.date;
     }
     if (count > 0) {
-      rows.push({
-        name: protocol.name,
-        slug: protocol.slug,
-        count,
-        lastSeen,
-        lists: [...lists].sort((a, b) => a.localeCompare(b)),
-      });
+      rows.push({ id: target.id, name: target.name, count, lastSeen, lists: [...lists].sort() });
     }
   }
   rows.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-  return rows;
+  const dates = posts.map(post => post.date).filter(Boolean).sort();
+  const listNames = new Set();
+  posts.forEach(post => post.lists.forEach(list => listNames.add(list)));
+  return {
+    rows,
+    corpus: {
+      posts: posts.length,
+      from: dates[0] || null,
+      to: dates[dates.length - 1] || null,
+      lists: [...listNames].sort(),
+    },
+  };
 }
 
-/** Public file shape: no slug, no post text. */
-function toPublicMentions(rows, generatedAt) {
+/** Public file shape: no post text. */
+function toPublicMentions(result, generatedAt) {
   return {
     generatedAt,
-    protocols: rows.map(row => ({
+    corpus: result.corpus,
+    protocols: result.rows.map(row => ({
+      id: row.id,
       name: row.name,
       count: row.count,
       lastSeen: row.lastSeen,
@@ -286,18 +327,26 @@ function toPublicMentions(rows, generatedAt) {
 function loadPublicMentions(file) {
   const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
   const protocols = Array.isArray(parsed) ? parsed : parsed.protocols || [];
-  return protocols
-    .filter(row => row && row.name && row.count > 0)
-    .map(row => ({
-      name: row.name,
-      count: row.count,
-      lastSeen: row.lastSeen || null,
-      lists: Array.isArray(row.lists) ? row.lists : [],
-    }));
+  return {
+    corpus: (parsed && parsed.corpus) || null,
+    rows: protocols
+      .filter(row => row && row.name && row.count > 0)
+      .map(row => ({
+        id: row.id || null,
+        name: row.name,
+        count: row.count,
+        lastSeen: row.lastSeen || null,
+        lists: Array.isArray(row.lists) ? row.lists : [],
+      })),
+  };
 }
 
 module.exports = {
   MENTION_ALIASES,
+  COMMON_WORDS,
+  compilePatterns,
+  patternsFor,
+  readPosts,
   countProtocolMentions,
   toPublicMentions,
   loadPublicMentions,

@@ -3,10 +3,10 @@
  * (`CATEGORIES` + `BOARD_GROUPS`) so a protocol filed in the catalog stays in
  * the same bucket here.
  *
- * DefiLlama's category string maps through `LLAMA_TO_CATEGORY`. `SLUG_OVERRIDES`
- * wins over that label. An exact script-slug or exact-name catalog link also
- * uses the catalog category. Alias links keep the Llama category unless the
- * slug is overridden (they still inherit that protocol's npm scripts).
+ * DefiLlama's own category decides, through `LLAMA_TO_CATEGORY`. `SLUG_OVERRIDES`
+ * is the short, commented exception list. The catalog card's category is only
+ * a fallback for a Llama category this map does not know yet. Catalog links
+ * (slug, name, alias) attach npm scripts; they do not move a row.
  * The last two categories are not Llama protocols; the ranking script fills
  * them from catalog boards.
  */
@@ -33,6 +33,8 @@ const LLAMA_TO_CATEGORY = {
   "NFT Lending": "lending",
   "CDP Manager": "lending",
   "Leveraged Farming": "lending",
+  "Collateral Management": "lending",
+  "Collateral Markets": "lending",
 
   "Risk Curators": "vaults",
   "Onchain Capital Allocator": "vaults",
@@ -84,29 +86,45 @@ const LLAMA_TO_CATEGORY = {
   "Trading App": "other",
   MEV: "other",
   Wallets: "other",
+  CeDeFi: "other",
+  "Crypto Card Issuer": "other",
+  "Governance Incentives": "other",
+  "AI Agents": "other",
+  "Decentralized AI": "other",
+  "OTC Marketplace": "other",
+  DOR: "other",
+  "Block Builders": "other",
+  "DAO Service Provider": "other",
+  "DCA Tools": "other",
+  DePIN: "other",
+  "Developer Tools": "other",
+  Meme: "other",
+  "NFT Automated Strategies": "other",
+  NftFi: "other",
+  Oracle: "other",
+  "Telegram Bot": "other",
 };
 
 /**
- * Slug exceptions. These disagree with a naive reading of Llama's category
- * and follow the catalog instead.
+ * Slug exceptions to DefiLlama's own category. Keep each one justified; every
+ * other row follows `LLAMA_TO_CATEGORY`.
  */
 const SLUG_OVERRIDES = {
-  "ethena-usde": "stable-rwa",
-  "ethena-usdtb": "stable-rwa",
+  // Llama files Sky's products as CDP / Lending. They are the USDS/DAI
+  // stablecoin issuer.
   "sky-lending": "stable-rwa",
   "sky-money": "stable-rwa",
   "sky-rwa": "stable-rwa",
+  // Llama: Bridge. It is a cross-chain intents venue.
   "near-intents": "aggregator",
+  // Llama: Liquid Staking. eETH/weETH is a liquid restaking token.
+  // (ether.fi Liquid stays with vaults, as Llama files it.)
   "ether.fi-stake": "restaking",
-  "ether.fi-liquid": "restaking",
-  "polymarket-international": "other",
-  "polymarket-us": "other",
-  "pump.fun": "other",
-  // Self-repaying loans. Llama files them under Synthetics, which otherwise maps to perps.
+  // Llama: Collateral Markets. Symbiotic is a restaking protocol.
+  symbiotic: "restaking",
+  // Llama: Synthetics (maps to perps). Self-repaying loans.
   "alchemix-v3": "lending",
   alchemix: "lending",
-  // Same catalog card as Jupiter Lend (the AMM is not a separate aggregator).
-  "jupiter-lend-dex": "lending",
 };
 
 /**
@@ -134,7 +152,6 @@ const CATALOG_ALIASES = {
   aerodrome: ["aerodrome-v1", "aerodrome-slipstream"],
   velodrome: ["velodrome-v1", "velodrome-v2", "velodrome-v3"],
   lighter: ["lighter-perps", "lighter-robinhood-perps"],
-  drift: ["drift-trade"],
   stargate: ["stargate-v1", "stargate-v2"],
   swell: ["swell-liquid-staking", "swell-liquid-restaking"],
   puffer: ["puffer-stake"],
@@ -145,7 +162,6 @@ const CATALOG_ALIASES = {
   thena: ["thena-v1", "thena-fusion", "thena-integral"],
   thruster: ["thruster-v2", "thruster-v3"],
   maverick: ["maverick-v1", "maverick-v2"],
-  kyberswap: ["kyberswap-classic", "kyberswap-elastic"],
   nostra: ["nostra-money-market"],
   aevo: ["aevo-perps"],
   mux: ["mux-perps"],
@@ -159,10 +175,31 @@ const CATALOG_ALIASES = {
   robinhood: ["robinhood-chain-bridge"],
   derive: ["derive-v3-options"],
   eigenlayer: ["eigencloud"],
+  keyrock: ["keyrock"],
+  stakestone: ["stakestone-stone"],
+  polynomial: ["polynomial-trade"],
+  drift: ["drift-trade", "drift-amm"],
+  synthetix: ["synthetix-v4", "synthetix-v3", "synthetix-v1+v2"],
+  kyberswap: ["kyberswap-classic", "kyberswap-elastic", "kyberswap-aggregator"],
 };
 
-/** Not DeFi venues. Omitted from the scored ranking (catalog extras can still list them). */
-const EXCLUDED_LLAMA_CATEGORIES = new Set(["CEX", "Ponzi"]);
+/**
+ * Omitted from the scored ranking (catalog extras can still list them):
+ * centralized exchanges, Ponzi rows, token lockers (team tokens parked in a
+ * vesting contract are not DeFi usage), and a few non-DeFi fee earners.
+ */
+const EXCLUDED_LLAMA_CATEGORIES = new Set([
+  "CEX",
+  "Ponzi",
+  "Token Locker",
+  // Fee-earning but not DeFi venues; they would otherwise enter on the fees floor.
+  "Coins Tracker",
+  "Domains",
+  "Foundation",
+  "Physical TCG",
+  "Luck Games",
+  "Gamified Mining",
+]);
 
 const CATEGORY_BY_ID = new Map();
 for (const cat of CATEGORIES) {
@@ -183,9 +220,11 @@ function categoryMeta(id) {
 function resolveCategory(protocol, catalogLink) {
   const slug = protocol && protocol.slug;
   if (slug && SLUG_OVERRIDES[slug]) return SLUG_OVERRIDES[slug];
-  if (catalogLink && catalogLink.category && catalogLink.linkKind !== "alias") return catalogLink.category;
   const mapped = protocol && LLAMA_TO_CATEGORY[protocol.category];
-  return mapped || "other";
+  if (mapped) return mapped;
+  // Unknown Llama category: fall back to the catalog card, then the catch-all.
+  if (catalogLink && catalogLink.category && catalogLink.linkKind !== "alias") return catalogLink.category;
+  return "other";
 }
 
 module.exports = {
