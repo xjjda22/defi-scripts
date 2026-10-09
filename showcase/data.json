@@ -88,7 +88,7 @@
      },
      {
       "name": "Base docs",
-      "url": "https://docs.base.org/base-chain/tools/network-faucets"
+      "url": "https://docs.base.org/get-started/get-funds"
      },
      {
       "name": "Alchemy",
@@ -398,6 +398,7 @@
    },
    "testing": {
     "mode": "fork",
+    "label": null,
     "note": "SparkLend is an Aave V3 fork. The same supply, borrow, repay and withdraw flow runs against the Spark pool.",
     "appUrl": "https://app.spark.fi",
     "chain": "ethereum",
@@ -896,6 +897,7 @@
    },
    "testing": {
     "mode": "fork",
+    "label": null,
     "note": null,
     "appUrl": "https://app.uniswap.org",
     "chain": "ethereum",
@@ -957,6 +959,18 @@
       "chain": "ethereum",
       "label": "V4 pool manager",
       "address": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+      "doc": "https://docs.uniswap.org/contracts/v4/deployments"
+     },
+     {
+      "chain": "ethereum",
+      "label": "V4 quoter",
+      "address": "0x52F0E24D1c21C8A0cB1e5a5dD6198556BD9E1203",
+      "doc": "https://docs.uniswap.org/contracts/v4/deployments"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Universal Router (V4)",
+      "address": "0x66a9893cC07D91D95644AEDD05D03f95e1dBA8Af",
       "doc": "https://docs.uniswap.org/contracts/v4/deployments"
      }
     ],
@@ -1252,6 +1266,7 @@
    },
    "testing": {
     "mode": "fork",
+    "label": null,
     "note": "Supply and borrow on the deepest listed WETH/USDC Morpho Blue market (or MORPHO_MARKET_ID).",
     "appUrl": "https://app.morpho.org",
     "chain": "ethereum",
@@ -1978,6 +1993,7 @@
    },
    "testing": {
     "mode": "fork",
+    "label": "Reference swap (Uniswap V3 on Base)",
     "note": "Slipstream quoters revert in this stack. The fork script swaps Uniswap V3 on Base as the liquid reference, same as simulate:dex:aerodrome:v3.",
     "appUrl": "https://aerodrome.finance",
     "chain": "base",
@@ -2081,6 +2097,7 @@
    },
    "testing": {
     "mode": "fork",
+    "label": null,
     "note": null,
     "appUrl": "https://stake.lido.fi",
     "chain": "ethereum",
@@ -2744,6 +2761,7 @@
    },
    "testing": {
     "mode": "fork",
+    "label": null,
     "note": "cbETH is minted by Coinbase. There is no public mint, so the fork script only reads exchangeRate().",
     "appUrl": "https://www.coinbase.com/cbeth",
     "chain": "ethereum",
@@ -8135,6 +8153,7 @@
    },
    "testing": {
     "mode": "fork",
+    "label": null,
     "note": null,
     "appUrl": "https://app.compound.finance",
     "chain": "ethereum",
@@ -8531,6 +8550,7 @@
    },
    "testing": {
     "mode": "fork",
+    "label": null,
     "note": "PancakeSwap V3 on Ethereum (same router addresses as BSC). Set CHAIN=bsc to run it on BSC instead.",
     "appUrl": "https://pancakeswap.finance",
     "chain": "ethereum",
@@ -15087,6 +15107,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": null,
      "appUrl": "https://app.uniswap.org",
      "chain": "ethereum",
@@ -15148,6 +15169,18 @@
        "chain": "ethereum",
        "label": "V4 pool manager",
        "address": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+       "doc": "https://docs.uniswap.org/contracts/v4/deployments"
+      },
+      {
+       "chain": "ethereum",
+       "label": "V4 quoter",
+       "address": "0x52F0E24D1c21C8A0cB1e5a5dD6198556BD9E1203",
+       "doc": "https://docs.uniswap.org/contracts/v4/deployments"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Universal Router (V4)",
+       "address": "0x66a9893cC07D91D95644AEDD05D03f95e1dBA8Af",
        "doc": "https://docs.uniswap.org/contracts/v4/deployments"
       }
      ],
@@ -15248,6 +15281,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": "Reference swap (Uniswap V3 on Base)",
      "note": "Slipstream quoters revert in this stack. The fork script swaps Uniswap V3 on Base as the liquid reference, same as simulate:dex:aerodrome:v3.",
      "appUrl": "https://aerodrome.finance",
      "chain": "base",
@@ -15675,6 +15709,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": "PancakeSwap V3 on Ethereum (same router addresses as BSC). Set CHAIN=bsc to run it on BSC instead.",
      "appUrl": "https://pancakeswap.finance",
      "chain": "ethereum",
@@ -21785,6 +21820,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": "Reference swap (Uniswap V3 on Optimism)",
      "note": "Slipstream quoters revert in this stack. The fork script swaps Uniswap V3 on Optimism as the liquid reference.",
      "appUrl": "https://velodrome.finance",
      "chain": "optimism",
@@ -22277,6 +22313,7 @@
     "catalogOnly": true,
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": "Uniswap V3 on Monad from chains.js. Skipped when MONAD_RPC_URL is unset.",
      "appUrl": "https://www.monad.xyz",
      "chain": "monad",
@@ -30427,6 +30464,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": "SparkLend is an Aave V3 fork. The same supply, borrow, repay and withdraw flow runs against the Spark pool.",
      "appUrl": "https://app.spark.fi",
      "chain": "ethereum",
@@ -30677,6 +30715,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": "Supply and borrow on the deepest listed WETH/USDC Morpho Blue market (or MORPHO_MARKET_ID).",
      "appUrl": "https://app.morpho.org",
      "chain": "ethereum",
@@ -31657,6 +31696,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": null,
      "appUrl": "https://app.compound.finance",
      "chain": "ethereum",
@@ -33920,6 +33960,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": null,
      "appUrl": "https://app.aave.com",
      "chain": "ethereum",
@@ -37735,6 +37776,7 @@
     "catalogOnly": true,
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": null,
      "appUrl": "https://app.compound.finance",
      "chain": "ethereum",
@@ -42332,16 +42374,6 @@
       "name": "simulate:etherfi:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
-     },
-     {
-      "name": "fork:etherfi:deposit",
-      "file": "src/simulation/fork/run.js",
-      "kind": "fork"
-     },
-     {
-      "name": "fork:etherfi:wrap",
-      "file": "src/simulation/fork/run.js",
-      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -42355,32 +42387,13 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "fork",
-     "note": null,
+     "mode": "api-only",
+     "note": "No fork test for this protocol.",
      "appUrl": "https://www.ether.fi",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
-     ],
-     "tests": [
-      {
-       "script": "fork:etherfi:deposit",
-       "action": "deposit",
-       "chain": "ethereum",
-       "rpcEnv": "ETHEREUM_RPC_URL",
-       "note": null
-      },
-      {
-       "script": "fork:etherfi:wrap",
-       "action": "wrap",
-       "chain": "ethereum",
-       "rpcEnv": "ETHEREUM_RPC_URL",
-       "note": null
-      }
-     ],
+     "commands": [],
+     "tests": [],
      "contracts": [
       {
        "chain": "ethereum",
@@ -42401,7 +42414,14 @@
        "doc": "https://etherfi.gitbook.io/etherfi/contracts-and-integrations/ethereum-mainnet"
       }
      ],
-     "recipe": null
+     "recipe": {
+      "title": "Generic vault check",
+      "chain": "ethereum",
+      "commands": [
+       "npm run simulate:morpho:smoke"
+      ],
+      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     }
     }
    },
    {
@@ -45353,6 +45373,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": null,
      "appUrl": "https://stake.lido.fi",
      "chain": "ethereum",
@@ -45569,6 +45590,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": "cbETH is minted by Coinbase. There is no public mint, so the fork script only reads exchangeRate().",
      "appUrl": "https://www.coinbase.com/cbeth",
      "chain": "ethereum",
@@ -48042,6 +48064,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": null,
      "appUrl": "https://stake.rocketpool.net",
      "chain": "ethereum",
@@ -51971,6 +51994,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": null,
      "appUrl": "https://www.ether.fi",
      "chain": "ethereum",
@@ -52477,6 +52501,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": null,
      "appUrl": "https://kelpdao.xyz",
      "chain": "ethereum",
@@ -52735,6 +52760,7 @@
     },
     "testing": {
      "mode": "fork",
+     "label": null,
      "note": null,
      "appUrl": "https://app.renzoprotocol.com",
      "chain": "ethereum",

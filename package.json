@@ -334,7 +334,7 @@
     "swap:uniswapx": "node src/examples/uniswapxSwapExample.js",
     "fork:uniswap:v2": "CHAIN=ethereum DEX_VARIANT=uniswap-v2 FORK_TARGET=dex FORK_PROTOCOL=uniswap FORK_ACTION=v2 node src/simulation/fork/run.js",
     "fork:uniswap:v3": "CHAIN=ethereum DEX_VARIANT=uniswap-v3 FORK_TARGET=dex FORK_PROTOCOL=uniswap FORK_ACTION=v3 node src/simulation/fork/run.js",
-    "fork:uniswap:v4": "CHAIN=ethereum DEX_VARIANT=uniswap-v4 SIMULATE_V4=1 FORK_TARGET=dex FORK_PROTOCOL=uniswap FORK_ACTION=v4 node src/simulation/fork/run.js",
+    "fork:uniswap:v4": "CHAIN=ethereum FORK_TARGET=uniswapv4 FORK_PROTOCOL=uniswap FORK_ACTION=v4 node src/simulation/fork/run.js",
     "fork:sushiswap:v2": "CHAIN=ethereum DEX_VARIANT=sushiswap-v2 FORK_TARGET=dex FORK_PROTOCOL=sushiswap FORK_ACTION=v2 node src/simulation/fork/run.js",
     "fork:sushiswap:v3": "CHAIN=ethereum DEX_VARIANT=sushiswap-v3 FORK_TARGET=dex FORK_PROTOCOL=sushiswap FORK_ACTION=v3 node src/simulation/fork/run.js",
     "fork:balancer:swap": "CHAIN=ethereum DEX_VARIANT=balancer-v2 FORK_TARGET=dex FORK_PROTOCOL=balancer FORK_ACTION=swap node src/simulation/fork/run.js",
