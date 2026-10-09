@@ -14,7 +14,7 @@ Where is the best USDC borrow rate right now, across Aave and Morpho, on five ch
 $ npm run analytics:lending:rates
 
 Cross-chain — best supply & borrow per asset (all chains scanned)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Asset   Best supply                 Best borrow                 Notes
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 USDC    Morpho 5.95% @ Arbitrum     Aave 3.83% @ Optimism
@@ -111,18 +111,17 @@ DefiLlama, Dune and protocol dashboards are great for looking. This is for **scr
 
 ## Trending showcase
 
-A static top-200 board: six-month TVL growth, 30-day fees and volume momentum, and a small bonus for protocols named in the X-list notes. Each of the twelve catalog categories has its own tab. Protocols the repo already monitors are badged; the rest are ranking-only.
+A static top-200 board of DeFi protocols trending over the last six months, with one tab for each of the twelve catalog categories. The score blends size, six-month TVL growth (in percent and in dollars), 30-day fees and volume momentum, and a small bonus for distinct posts on the tracked X lists. Versions of one protocol are combined (Aave V2/V3/V4 is one row), protocols listed in the last six months carry a **New** badge, and rows the repo already monitors link straight to their scripts.
 
 ```bash
-npm run showcase:build     # rewrite showcase/data.json
+npm run showcase:build     # rebuild showcase/data.json from DefiLlama (~800 history pulls)
+node scripts/showcaseCheck.js   # offline sanity check of showcase/data.json (also runs in CI)
 npm run showcase:serve     # http://127.0.0.1:4173
 ```
 
-![Trending DeFi top 200](showcase/preview.png)
+Live page: <https://xjjda22.github.io/defi-scripts/> (deep links work, for example `#tab=perps` or `#q=morpho`). Methodology, the category map and the refresh routine are in [docs/03-showcase-ranking.md](docs/03-showcase-ranking.md).
 
-Methodology, the Llama category map, and the Monday / Wednesday / Friday refresh are in [docs/03-showcase-ranking.md](docs/03-showcase-ranking.md).
-
-GitHub Pages publishes the `showcase/` folder from [`.github/workflows/pages.yml`](.github/workflows/pages.yml) on every push to `main`. Enable Pages on the repository with **Source** set to **GitHub Actions** (the workflow will not run as a Pages deploy until that source is selected).
+GitHub Pages publishes the `showcase/` folder from [`.github/workflows/pages.yml`](.github/workflows/pages.yml). Each deploy rebuilds the ranking from DefiLlama first (on a push that touches the showcase, Monday/Wednesday/Friday at 05:30 Malaysia time, or a manual run) and falls back to the committed `showcase/data.json` if DefiLlama is down. Pages must be enabled on the repository with **Source** set to **GitHub Actions**. The **Showcase refresh** workflow rebuilds and commits `showcase/data.json` on a feature branch that changes the ranking code, or on demand.
 
 ## What you need
 

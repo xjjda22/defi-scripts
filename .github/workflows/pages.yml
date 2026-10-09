@@ -40,6 +40,8 @@ jobs:
       - name: Rebuild the ranking
         id: rebuild
         continue-on-error: true
+        # A slow DefiLlama day must not hold the deploy; past this, publish the committed data.
+        timeout-minutes: 25
         run: node src/analytics/ranking/top200Trending.js && node scripts/showcaseCheck.js
       - name: Fall back to the committed data
         if: steps.rebuild.outcome != 'success'
