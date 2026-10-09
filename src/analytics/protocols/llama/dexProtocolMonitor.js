@@ -4,6 +4,8 @@
  * Optional: DEFILLAMA_FEES=1 adds fees + revenue (24h / 7d / 30d) from /summary/fees/{slug},
  * for protocols whose claim is about fees/revenue rather than TVL (e.g. pump.fun, $0 TVL).
  * Optional: DEFILLAMA_OI=1 adds open interest (`total24h`) from /summary/open-interest/{slug}.
+ * Optional: DEFILLAMA_OI_HIGH=1 (with DEFILLAMA_OI=1) also prints the year-to-date open-interest high
+ * and its date from the same endpoint's daily chart, for "OI at a yearly high" claims.
  * Off unless set to "1", so existing scripts are unchanged. Do not use /summary/derivatives (paywalled).
  */
 
@@ -14,6 +16,7 @@ const {
   fetchDefiLlamaProtocol,
   fetchFeesSummary,
   fetchOpenInterestSummary,
+  fetchOpenInterestChart,
   lastTvlUsdFromSeries,
 } = require("../../utils/defiLlamaProtocol");
 const { createTable, formatCurrency } = require("../../utils/displayHelpers");
@@ -60,6 +63,41 @@ async function printOpenInterest(slug) {
   }
 }
 
+/**
+ * @param {Array<[number, number]>|undefined} chart - [unixSeconds, usd][]
+ * @param {number} [nowMs]
+ * @returns {{ high: [number, number]|null, latest: [number, number]|null }}
+ */
+function yearToDateHigh(chart, nowMs = Date.now()) {
+  const pts = Array.isArray(chart)
+    ? chart.filter(p => Array.isArray(p) && Number.isFinite(p[0]) && Number.isFinite(p[1]))
+    : [];
+  const yearStart = Date.UTC(new Date(nowMs).getUTCFullYear(), 0, 1) / 1000;
+  const ytd = pts.filter(p => p[0] >= yearStart);
+  const high = ytd.reduce((a, b) => (a == null || b[1] > a[1] ? b : a), null);
+  return { high, latest: pts.length ? pts[pts.length - 1] : null };
+}
+
+async function printOpenInterestHigh(slug) {
+  let d;
+  try {
+    d = await fetchOpenInterestChart(slug);
+  } catch (e) {
+    console.log(chalk.gray(`  open interest history unavailable: ${e.message || e}`));
+    return;
+  }
+  const { high, latest } = yearToDateHigh(d && d.totalDataChart);
+  const day = p => new Date(p[0] * 1000).toISOString().slice(0, 10);
+  const t = createTable(["Field", "Value"], { colAligns: ["left", "right"] });
+  t.push(["Year-to-date high", high ? `${formatCurrency(high[1])} (${day(high)})` : "n/a"]);
+  t.push(["Latest daily point", latest ? `${formatCurrency(latest[1])} (${day(latest)})` : "n/a"]);
+  if (high && latest && high[1] > 0) {
+    t.push(["Latest vs YTD high", `${(((latest[1] - high[1]) / high[1]) * 100).toFixed(1)}%`]);
+  }
+  console.log(chalk.yellow("\nOpen interest year-to-date high (daily chart)\n"));
+  console.log(t.toString());
+}
+
 async function main() {
   installCliSafeStdout();
   const slug = (process.env.DEFILLAMA_SLUG || "").trim();
@@ -94,6 +132,9 @@ async function main() {
     }
     if (process.env.DEFILLAMA_OI === "1") {
       await printOpenInterest(slug);
+      if (process.env.DEFILLAMA_OI_HIGH === "1") {
+        await printOpenInterestHigh(slug);
+      }
     }
   } catch (e) {
     console.error(chalk.red((e && e.response?.status === 404 && "Protocol not found on DefiLlama") || e.message));
@@ -104,3 +145,5 @@ async function main() {
 if (require.main === module) {
   main();
 }
+
+module.exports = { yearToDateHigh };
