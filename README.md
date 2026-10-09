@@ -14,7 +14,7 @@ Where is the best USDC borrow rate right now, across Aave and Morpho, on five ch
 $ npm run analytics:lending:rates
 
 Cross-chain — best supply & borrow per asset (all chains scanned)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Asset   Best supply                 Best borrow                 Notes
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 USDC    Morpho 5.95% @ Arbitrum     Aave 3.83% @ Optimism
