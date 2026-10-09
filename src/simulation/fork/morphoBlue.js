@@ -25,7 +25,7 @@ async function fetchMarketId(chainId, loan, collateral) {
   const query = `
     query Q($w: MarketFilters) {
       markets(first: 1, orderBy: SupplyAssetsUsd, orderDirection: Desc, where: $w) {
-        items { uniqueKey marketId }
+        items { marketId }
       }
     }
   `;
@@ -46,7 +46,7 @@ async function fetchMarketId(chainId, loan, collateral) {
   );
   if (data.errors?.length) throw new Error(data.errors.map(error => error.message).join("; "));
   const item = data.data?.markets?.items?.[0];
-  const id = item?.uniqueKey || item?.marketId;
+  const id = item?.marketId;
   if (!id) throw new Error("Morpho API returned no WETH/USDC market");
   return id.startsWith("0x") ? id : `0x${id}`;
 }

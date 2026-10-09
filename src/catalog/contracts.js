@@ -96,7 +96,11 @@ function contractBook() {
 
   push(book.lido, eth, "stETH", COMMON_TOKENS.stETH.ethereum, DOCS.lido);
   push(book.lido, eth, "wstETH", COMMON_TOKENS.wstETH.ethereum, "https://docs.lido.fi/contracts/wsteth");
-  push(book.rocketpool, eth, "Deposit pool", "0xDD3f50F8A6CafbE9b31a427582963f465E745AF8", DOCS.rocket);
+  // Current proxy from RocketStorage.getAddress(keccak256("contract.addressrocketDepositPool")).
+  // The integrations page still lists the previous proxy 0xDD3f50F8A6CafbE9b31a427582963f465E745AF8,
+  // which reverts "Invalid or outdated contract".
+  // RocketStorage: 0x1d8f8f00cfa6758d7bE78336684788Fb0ee0Fa46
+  push(book.rocketpool, eth, "Deposit pool", "0xCE15294273CFb9D9b628F4D61636623decDF4fdC", DOCS.rocket);
   push(book.rocketpool, eth, "rETH", COMMON_TOKENS.rETH.ethereum, DOCS.rocket);
   book["rocket-pool"] = book.rocketpool;
   // https://docs.cdp.coinbase.com/staking/docs/wrapped-eth — cbETH has no public mint; exchangeRate() is the read
@@ -152,7 +156,7 @@ module.exports = {
   SPARK_POOL: "0xC13e21B648A5Ee794902342038FF3aDAB66BE987",
   COMPOUND_CUSDC_V3: "0xc3d688B66703497DAA19211EEdff47f25384cdc3",
   MORPHO_BLUE: "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
-  ROCKET_DEPOSIT_POOL: "0xDD3f50F8A6CafbE9b31a427582963f465E745AF8",
+  ROCKET_DEPOSIT_POOL: "0xCE15294273CFb9D9b628F4D61636623decDF4fdC",
   CBETH: "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
   ETHERFI: {
     liquidityPool: "0x308861A430be4cce5502d0A12724771Fc6DaF216",

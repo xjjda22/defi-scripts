@@ -356,12 +356,14 @@ function attachTesting(row) {
   return row;
 }
 
+const NOT_A_CHAIN = new Set(["borrowed", "staking", "pool2", "vesting"]);
+
 function cleanChainTvl(chainTvls) {
   const out = {};
   if (!chainTvls || typeof chainTvls !== "object") return out;
   for (const [name, value] of Object.entries(chainTvls)) {
     if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) continue;
-    if (name === "borrowed" || name.includes("-")) continue;
+    if (NOT_A_CHAIN.has(name) || name.includes("-")) continue;
     out[name] = value;
   }
   return out;
@@ -389,7 +391,6 @@ function applyProtocolMeta(data, protocols) {
     }
   }
   const visit = row => {
-    if (row.chainTvls && row.chainTvls.length) return;
     let map = null;
     if (row.members && row.members.length) {
       map = {};

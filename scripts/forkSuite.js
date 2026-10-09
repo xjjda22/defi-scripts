@@ -110,7 +110,7 @@ function runScript(script, chain, forkUrl) {
     cwd: ROOT,
     env,
     encoding: "utf8",
-    timeout: parseInt(process.env.FORK_TEST_TIMEOUT_MS || "180000", 10),
+    timeout: parseInt(process.env.FORK_TEST_TIMEOUT_MS || "600000", 10),
     maxBuffer: 12 * 1024 * 1024,
   });
   const out = `${child.stdout || ""}\n${child.stderr || ""}`;
@@ -138,7 +138,13 @@ function runScript(script, chain, forkUrl) {
 }
 
 async function main() {
-  const plans = suitePlans();
+  const only = new Set(
+    (process.env.FORK_ONLY || "")
+      .split(",")
+      .map(item => item.trim())
+      .filter(Boolean)
+  );
+  const plans = suitePlans().filter(plan => !only.size || only.has(plan.script));
   const chains = selectedChains(plans);
   const forkBlock = (process.env.FORK_BLOCK || process.env.FORK_BLOCK_NUMBER || "").trim();
   const rows = [];

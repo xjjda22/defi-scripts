@@ -28,7 +28,17 @@ const ERC20_ABI = require("../abis/IERC20.json");
  * @param {string} recipient - Recipient address (default: wallet address)
  * @returns {Promise<{hash: string, amountOut: string}>}
  */
-async function swapV2(chainKey, wallet, poolId, tokenIn, tokenOut, amountIn, slippageBps = 50, recipient = null) {
+async function swapV2(
+  chainKey,
+  wallet,
+  poolId,
+  tokenIn,
+  tokenOut,
+  amountIn,
+  slippageBps = 50,
+  recipient = null,
+  quotedAmountOut = null
+) {
   validateChainKey(chainKey);
   validateWallet(wallet);
   validateAddress(tokenIn, "tokenIn");
@@ -55,7 +65,10 @@ async function swapV2(chainKey, wallet, poolId, tokenIn, tokenOut, amountIn, sli
     await approveTx.wait();
   }
 
-  const minAmountOut = (BigInt(amountIn) * BigInt(10000 - slippageBps)) / BigInt(10000);
+  // A quoted output is in the output token's decimals. Falling back to amountIn only
+  // works when both tokens use the same decimals (the old limit was far too high for WETH→USDC).
+  const limitBase = quotedAmountOut != null ? BigInt(quotedAmountOut) : BigInt(amountIn);
+  const minAmountOut = (limitBase * BigInt(10000 - slippageBps)) / 10000n;
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
   const to = recipient || wallet.address;
 

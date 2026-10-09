@@ -34,7 +34,8 @@ const CHAINS = {
           type: "StableSwap",
           address: "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7",
           lpToken: "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",
-          coins: ["USDC", "USDT", "DAI"],
+          // On-chain coins(i): DAI, USDC, USDT. https://curve.fi/dex/ethereum/pools/3pool
+          coins: ["DAI", "USDC", "USDT"],
         },
         tricrypto2: {
           name: "TriCrypto2 (USDT/WBTC/WETH)",

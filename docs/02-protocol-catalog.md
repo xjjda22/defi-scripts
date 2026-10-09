@@ -1426,7 +1426,7 @@ rETH. Fork test deposits ETH through the Rocket deposit pool.
 
 > **Context**
 >
-> Deposit pool `0xDD3f50F8A6CafbE9b31a427582963f465E745AF8` from the Rocket Pool integrations page. Skipped when the deposit cap is below the test size.
+> Deposit pool is the address RocketStorage currently registers (`0xCE15294273CFb9D9b628F4D61636623decDF4fdC`). The integrations page still lists the previous proxy, which reverts as outdated. Skipped when the deposit cap is below the test size.
 
 | Command | Kind | What it does |
 |---|---|---|
