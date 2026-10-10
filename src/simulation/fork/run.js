@@ -32,6 +32,17 @@ const TARGETS = {
   optimism: () => require("./bridgeFlows").run(),
   across: () => require("./bridgeFlows").run(),
   stargate: () => require("./bridgeFlows").run(),
+  steakhouse: () => require("./vaultFlows").run(),
+  gauntlet: () => require("./vaultFlows").run(),
+  sentora: () => require("./vaultFlows").run(),
+  veda: () => require("./vaultFlows").run(),
+  upshift: () => require("./vaultFlows").run(),
+  yearn: () => require("./vaultFlows").run(),
+  euler: () => require("./vaultFlows").run(),
+  eigenlayer: () => require("./restakeFlows").run(),
+  symbiotic: () => require("./restakeFlows").run(),
+  swell: () => require("./restakeFlows").run(),
+  puffer: () => require("./restakeFlows").run(),
 };
 
 // Every fork test has a hard deadline so a stuck RPC call cannot hang the suite.

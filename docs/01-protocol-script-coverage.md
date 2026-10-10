@@ -31,7 +31,7 @@ Slipstream **on-chain quoters** at the published addresses do not return success
 
 ## Aggregate rows without their own scripts
 
-- **Curvance, Resolv, Compound V3, Venus, Euler V2** — rows in `analytics:lending:aggregate` (`LENDING_PROTOCOLS` in `src/analytics/aggregators/allLendingAggregator.js`), checked by `simulate:lending:aggregate:smoke`.
+- **Curvance, Resolv, Compound V3, Venus** — rows in `analytics:lending:aggregate` (`LENDING_PROTOCOLS` in `src/analytics/aggregators/allLendingAggregator.js`), checked by `simulate:lending:aggregate:smoke`. Euler V2 stays in that aggregate. `fork:euler:deposit` is a separate ERC-4626 round trip of one Ethereum Euler Earn vault.
 - **AMM families** — rows in `analytics:amm:aggregate` (`AMM_PROTOCOLS` in `src/analytics/aggregators/allAmmDexAggregator.js`), reused by `simulate:amm:aggregate:smoke`.
 - **Landscape boards** (L2, ETH, BTC, RWA, NFT, airdrop) are read-only DefiLlama / calendar views: not claimers, not MEV submit.
 

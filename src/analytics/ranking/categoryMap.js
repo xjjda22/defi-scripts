@@ -175,6 +175,7 @@ const CATALOG_ALIASES = {
   robinhood: ["robinhood-chain-bridge"],
   derive: ["derive-v3-options"],
   eigenlayer: ["eigencloud"],
+  euler: ["euler-v2"],
   keyrock: ["keyrock"],
   stakestone: ["stakestone-stone"],
   polynomial: ["polynomial-trade"],

@@ -79,7 +79,9 @@ async function getForkBlockNumber(chainKey) {
   try {
     if (forkType === "hardhat") {
       const metadata = await provider.send("hardhat_metadata", []);
-      return metadata.forkedNetwork?.blockNumber || null;
+      // Hardhat reports blockNumber. Anvil 1.8 answers hardhat_metadata and reports forkBlockNumber.
+      const net = metadata.forkedNetwork || {};
+      return net.forkBlockNumber || net.blockNumber || null;
     }
 
     if (forkType === "anvil") {

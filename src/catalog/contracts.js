@@ -36,6 +36,21 @@ const DOCS = {
   optimism: "https://docs.optimism.io/chain/addresses",
   across: "https://docs.across.to/chains-and-contracts",
   stargate: "https://docs.stargate.finance/resources/contracts/mainnet-contracts",
+  // Curator vault pages on the official Morpho app. MetaMorpho is ERC-4626.
+  steakhouse: "https://app.morpho.org/ethereum/vault/0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB/steakhouse-usdc",
+  gauntlet: "https://app.morpho.org/ethereum/vault/0xdd0f28e19C1780eb6396170735D45153D261490d/gauntlet-usdc-prime",
+  sentora: "https://app.morpho.org/ethereum/vault/0x6dC58a0FdfC8D694e571DC59B9A52EEEa780E6bf/sentora-rlusd-main",
+  rlusd: "https://docs.ripple.com/products/stablecoin/overview/token-addresses",
+  yearn: "https://yearn.fi/api/vault/markdown?address=0xBe53A109B494E5c9f97b9Cd39Fe969BE68BF6204&chainId=1",
+  euler: "https://github.com/euler-xyz/euler-labels/blob/master/1/earn-vaults.json",
+  veda: "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault",
+  upshift: "https://docs.upshift.finance/contracts/fee-sharing",
+  eigenlayer: "https://github.com/Layr-Labs/eigenlayer-contracts/blob/main/README.md",
+  symbiotic: "https://docs.symbiotic.fi/get-started/resources/addresses",
+  // Address is the mainnet deployment recorded in Balancer's review of Swell's rate provider.
+  // deposit() is RswETH.sol in the Swell repo.
+  swell: "https://github.com/balancer/code-review/blob/main/rate-providers/rswethRateProvider.md",
+  puffer: "https://github.com/PufferFinance/pufETH",
 };
 
 function push(list, chain, label, address, doc) {
@@ -97,6 +112,24 @@ function contractBook() {
     across: [],
     stargate: [],
     "stargate-finance": [],
+    steakhouse: [],
+    "steakhouse-financial": [],
+    gauntlet: [],
+    sentora: [],
+    "sentora-curator": [],
+    yearn: [],
+    "yearn-finance": [],
+    euler: [],
+    "euler-v2": [],
+    veda: [],
+    upshift: [],
+    eigenlayer: [],
+    eigencloud: [],
+    symbiotic: [],
+    swell: [],
+    "swell-liquid-restaking": [],
+    puffer: [],
+    "puffer-stake": [],
   };
 
   push(book.uniswap, eth, "V2 router", uni.v2.router, DOCS.uniswap);
@@ -224,6 +257,66 @@ function contractBook() {
     push(book[key], eth, "USDC", COMMON_TOKENS.USDC.ethereum, DOCS.usdc);
   }
 
+  // Steakhouse USDC, MetaMorpho V1. https://app.morpho.org/ethereum/vault/0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB/steakhouse-usdc
+  for (const key of ["steakhouse", "steakhouse-financial"]) {
+    push(book[key], eth, "Steakhouse USDC", "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB", DOCS.steakhouse);
+    push(book[key], eth, "USDC", COMMON_TOKENS.USDC.ethereum, DOCS.usdc);
+  }
+  // Gauntlet USDC Prime, MetaMorpho V1. The V2 vault 0x8c106EED…A3D0 has maxDeposit 0.
+  // https://app.morpho.org/ethereum/vault/0xdd0f28e19C1780eb6396170735D45153D261490d/gauntlet-usdc-prime
+  for (const key of ["gauntlet"]) {
+    push(book[key], eth, "Gauntlet USDC Prime", "0xdd0f28e19C1780eb6396170735D45153D261490d", DOCS.gauntlet);
+    push(book[key], eth, "USDC", COMMON_TOKENS.USDC.ethereum, DOCS.usdc);
+  }
+  // Sentora RLUSD Main is Morpho Vault V2 on Ethereum. maxDeposit was 0 when checked.
+  // https://app.morpho.org/ethereum/vault/0x6dC58a0FdfC8D694e571DC59B9A52EEEa780E6bf/sentora-rlusd-main
+  for (const key of ["sentora", "sentora-curator"]) {
+    push(book[key], eth, "Sentora RLUSD Main", "0x6dC58a0FdfC8D694e571DC59B9A52EEEa780E6bf", DOCS.sentora);
+    push(book[key], eth, "RLUSD", "0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD", DOCS.rlusd);
+  }
+  // Yearn V3 USDC-1. https://yearn.fi/v3/1/0xBe53A109B494E5c9f97b9Cd39Fe969BE68BF6204
+  for (const key of ["yearn", "yearn-finance"]) {
+    push(book[key], eth, "USDC-1 yVault", "0xBe53A109B494E5c9f97b9Cd39Fe969BE68BF6204", DOCS.yearn);
+    push(book[key], eth, "USDC", COMMON_TOKENS.USDC.ethereum, DOCS.usdc);
+  }
+  // First non-deprecated Ethereum Earn vault in euler-labels 1/earn-vaults.json.
+  // https://docs.euler.finance/developers/euler-earn/
+  for (const key of ["euler", "euler-v2"]) {
+    push(book[key], eth, "K3 Capital Earn USDC", "0x3B4802FDb0E5d74aA37d58FD77d63e93d4f9A4AF", DOCS.euler);
+    push(book[key], eth, "USDC", COMMON_TOKENS.USDC.ethereum, DOCS.usdc);
+  }
+  // ether.fi Liquid ETH is a Veda BoringVault. Teller.deposit is a public capability; bulkWithdraw is not.
+  for (const key of ["veda"]) {
+    push(book[key], eth, "Liquid ETH BoringVault", "0xf0bb20865277aBd641a307eCe5Ee04E79073416C", DOCS.veda);
+    push(book[key], eth, "Teller", "0x9AA79C84b79816ab920bBcE20f8f74557B514734", DOCS.veda);
+    push(book[key], eth, "WETH", COMMON_TOKENS.WETH.ethereum, "https://docs.veda.tech/integrations/deposits-and-withdrawals-overview");
+  }
+  // Vault address is the Ethereum example in the Upshift fee-sharing docs. Receipt token is sentUSD.
+  for (const key of ["upshift"]) {
+    push(book[key], eth, "Sentora USD vault", "0x74aD2F789Ed583DBd141bbdafC673fE1F033718b", DOCS.upshift);
+    push(book[key], eth, "sentUSD", "0xe8aA1A9eC6b9BC455D8f33E4BDC685dedFf82407", DOCS.upshift);
+    push(book[key], eth, "USDC", COMMON_TOKENS.USDC.ethereum, DOCS.usdc);
+  }
+  // https://github.com/Layr-Labs/eigenlayer-contracts/blob/main/README.md — mainnet StrategyManager, DelegationManager, stETH strategy
+  for (const key of ["eigenlayer", "eigencloud"]) {
+    push(book[key], eth, "StrategyManager", "0x858646372CC42E1A627fcE94aa7A7033e7CF075A", DOCS.eigenlayer);
+    push(book[key], eth, "DelegationManager", "0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A", DOCS.eigenlayer);
+    push(book[key], eth, "stETH strategy", "0x93c4b944D05dfe6df7645A86cd2206016c51564D", DOCS.eigenlayer);
+    push(book[key], eth, "stETH", COMMON_TOKENS.stETH.ethereum, DOCS.lido);
+  }
+  // Docs list the factory. They do not publish one permissionless vault.
+  for (const key of ["symbiotic"]) {
+    push(book[key], eth, "VaultFactory", "0xAEb6bdd95c502390db8f52c8909F703E9Af6a346", DOCS.symbiotic);
+  }
+  // https://github.com/SwellNetwork/v3-core-public/blob/master/contracts/lrt/contracts/implementations/RswETH.sol
+  for (const key of ["swell", "swell-liquid-restaking"]) {
+    push(book[key], eth, "rswETH", "0xFAe103DC9cf190eD75350761e95403b7b8aFa6c0", DOCS.swell);
+  }
+  // PufferVault (pufETH). depositETH(address) is the public ETH path.
+  for (const key of ["puffer", "puffer-stake"]) {
+    push(book[key], eth, "pufETH", "0xD9A442856C234a39a81a089C06451EBAa4306a72", DOCS.puffer);
+  }
+
   return book;
 }
 
@@ -301,6 +394,73 @@ module.exports = {
     ondoOracle: "0x9Cad45a8BF0Ed41Ff33074449B357C7a1fAb4094",
     ustb: "0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e",
     ustbOracle: "0xe4fa682f94610ccd170680cc3b045d77d9e528a8",
+  },
+  VAULTS: {
+    steakhouse: {
+      vault: "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
+      asset: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      symbol: "USDC",
+      decimals: 6,
+      defaultAmount: "100",
+      label: "steakUSDC",
+    },
+    gauntlet: {
+      vault: "0xdd0f28e19C1780eb6396170735D45153D261490d",
+      asset: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      symbol: "USDC",
+      decimals: 6,
+      defaultAmount: "100",
+      label: "gtUSDC",
+    },
+    sentora: {
+      vault: "0x6dC58a0FdfC8D694e571DC59B9A52EEEa780E6bf",
+      asset: "0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD",
+      symbol: "RLUSD",
+      decimals: 18,
+      defaultAmount: "100",
+      label: "senRLUSDv2",
+    },
+    yearn: {
+      vault: "0xBe53A109B494E5c9f97b9Cd39Fe969BE68BF6204",
+      asset: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      symbol: "USDC",
+      decimals: 6,
+      defaultAmount: "100",
+      label: "yvUSDC-1",
+    },
+    euler: {
+      vault: "0x3B4802FDb0E5d74aA37d58FD77d63e93d4f9A4AF",
+      asset: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      symbol: "USDC",
+      decimals: 6,
+      defaultAmount: "100",
+      label: "k3USDC",
+    },
+  },
+  VEDA: {
+    vault: "0xf0bb20865277aBd641a307eCe5Ee04E79073416C",
+    teller: "0x9AA79C84b79816ab920bBcE20f8f74557B514734",
+    weth: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+  },
+  UPSHIFT: {
+    vault: "0x74aD2F789Ed583DBd141bbdafC673fE1F033718b",
+    receipt: "0xe8aA1A9eC6b9BC455D8f33E4BDC685dedFf82407",
+    usdc: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  },
+  EIGENLAYER: {
+    strategyManager: "0x858646372CC42E1A627fcE94aa7A7033e7CF075A",
+    delegationManager: "0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A",
+    stethStrategy: "0x93c4b944D05dfe6df7645A86cd2206016c51564D",
+    steth: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+  },
+  SYMBIOTIC: {
+    vaultFactory: "0xAEb6bdd95c502390db8f52c8909F703E9Af6a346",
+  },
+  SWELL: {
+    rswETH: "0xFAe103DC9cf190eD75350761e95403b7b8aFa6c0",
+  },
+  PUFFER: {
+    pufETH: "0xD9A442856C234a39a81a089C06451EBAa4306a72",
   },
   BRIDGES: {
     arbitrumInbox: "0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f",
