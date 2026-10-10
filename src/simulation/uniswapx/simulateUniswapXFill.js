@@ -8,6 +8,7 @@ const { ethers } = require("ethers");
 const chalk = require("chalk");
 const { CHAINS } = require("../../config/chains");
 const { getProvider } = require("../../utils/web3");
+const { getLogsChunked } = require("../../utils/logs");
 
 const FILL_ABI = [
   "event Fill(bytes32 indexed orderHash, address indexed filler, address indexed swapper, uint256 nonce)",
@@ -51,21 +52,10 @@ async function main() {
     const head = await provider.getBlockNumber();
     const span = Math.min(Math.max(parseInt(process.env.UNISWAPX_MAX_BLOCKS || "200", 10) || 200, 10), 50_000);
     const fromBlock = Math.max(0, head - span);
-    const chunk = Math.min(
-      Math.max(parseInt(process.env.UNISWAPX_LOG_CHUNK || "10", 10) || 10, 1),
-      2000
-    );
-    const logs = [];
-    for (let start = fromBlock; start <= head; start += chunk) {
-      const end = Math.min(start + chunk - 1, head);
-      const part = await provider.getLogs({
-        address: reactor,
-        topics: [FILL_TOPIC],
-        fromBlock: start,
-        toBlock: end,
-      });
-      logs.push(...part);
-    }
+    const chunk = Math.min(Math.max(parseInt(process.env.UNISWAPX_LOG_CHUNK || "2000", 10) || 2000, 1), 2000);
+    const { logs } = await getLogsChunked(provider, { address: reactor, topics: [FILL_TOPIC] }, fromBlock, head, {
+      chunk,
+    });
     if (!logs.length) {
       console.log(
         chalk.yellow(

@@ -7,7 +7,7 @@ const { CHAINS, COMMON_TOKENS } = require("../../../config/chains");
 const { getPairGroup, hasPair, getPair } = require("../../../config/pairs");
 const v2Swap = require("../../../swaps/v2Swap");
 const v3Swap = require("../../../swaps/v3Swap");
-const v4Swap = require("../../../swaps/v4Swap");
+const { getProvider } = require("../../../utils/web3");
 const {
   printHeader,
   printSection,
@@ -21,6 +21,20 @@ const { getTokenInfo, formatTokenAmount, calculatePercentageDiff, isValidPrice }
 
 // Configuration
 const DEFAULT_CHAIN = process.env.CHAIN || "ethereum";
+// Quotes more than this far below the best quote are treated as too thin for the trade size.
+const MAX_DEVIATION_PCT = parseFloat(process.env.PRICE_MAX_DEVIATION_PCT || "3");
+
+const V4_POOL_KEY = "tuple(address currency0, address currency1, uint24 fee, int24 tickSpacing, address hooks)";
+const V4_QUOTER_ABI = [
+  `function quoteExactInputSingle(tuple(${V4_POOL_KEY} poolKey, bool zeroForOne, uint128 exactAmount, bytes hookData) params) returns (uint256 amountOut, uint256 gasEstimate)`,
+];
+// Hookless pools at the V4 default fee / tick-spacing pairs.
+const V4_CANDIDATES = [
+  { fee: 100, tickSpacing: 1 },
+  { fee: 500, tickSpacing: 10 },
+  { fee: 3000, tickSpacing: 60 },
+  { fee: 10000, tickSpacing: 200 },
+];
 
 /**
  * Get Uniswap V2 price
@@ -91,42 +105,66 @@ async function getV3Price(chainKey, tokenIn, tokenOut, fee, amountIn, decimalsIn
 }
 
 /**
- * Get Uniswap V4 price
+ * Best Uniswap V4 quote across hookless fee tiers, via the V4Quoter.
+ * V4's deep ETH pools use native ETH (address 0), not WETH, so WETH is quoted as ETH.
  * @param {string} chainKey - Chain key
  * @param {string} tokenIn - Input token address
  * @param {string} tokenOut - Output token address
- * @param {number} fee - Fee tier
  * @param {string} amountIn - Amount in (formatted)
  * @param {number} decimalsIn - Input token decimals
- * @returns {Promise<Object>} Price info
+ * @param {number} decimalsOut - Output token decimals
+ * @returns {Promise<Object|null>} Price info
  */
-async function getV4Price(chainKey, tokenIn, tokenOut, fee, amountIn, decimalsIn, decimalsOut) {
-  try {
-    const chain = CHAINS[chainKey];
-    if (!chain?.uniswap?.v4?.poolManager) {
-      return null;
-    }
+async function getV4Price(chainKey, tokenIn, tokenOut, amountIn, decimalsIn, decimalsOut) {
+  const quoterAddress = CHAINS[chainKey]?.uniswap?.v4?.quoter;
+  if (!quoterAddress) return null;
+  const weth = (COMMON_TOKENS.WETH?.[chainKey] || "").toLowerCase();
+  const toCurrency = addr => (addr.toLowerCase() === weth ? ethers.ZeroAddress : addr);
+  const currencyIn = toCurrency(tokenIn);
+  const currencyOut = toCurrency(tokenOut);
+  const zeroForOne = BigInt(currencyIn) < BigInt(currencyOut);
+  const [currency0, currency1] = zeroForOne ? [currencyIn, currencyOut] : [currencyOut, currencyIn];
 
-    const amountInWei = ethers.parseUnits(amountIn, decimalsIn);
-    const estimate = await v4Swap.estimateSwapOutput(chainKey, tokenIn, tokenOut, fee, amountInWei.toString());
+  const quoter = new ethers.Contract(quoterAddress, V4_QUOTER_ABI, getProvider(chainKey));
+  const amountInWei = ethers.parseUnits(amountIn, decimalsIn);
+  const quotes = await Promise.all(
+    V4_CANDIDATES.map(async ({ fee, tickSpacing }) => {
+      try {
+        const key = [currency0, currency1, fee, tickSpacing, ethers.ZeroAddress];
+        const [out] = await quoter.quoteExactInputSingle.staticCall([key, zeroForOne, amountInWei, "0x"]);
+        return { fee, out };
+      } catch {
+        return null;
+      }
+    })
+  );
+  const best = quotes.filter(Boolean).reduce((a, q) => (a == null || q.out > a.out ? q : a), null);
+  if (!best) return null;
 
-    if (!estimate || !estimate.amountOut) {
-      return null;
-    }
+  const amountOut = formatTokenAmount(best.out, decimalsOut);
+  return {
+    version: `V4 (${(best.fee / 10000).toFixed(2)}%)`,
+    fee: best.fee,
+    price: parseFloat(amountOut),
+    amountOut,
+    available: true,
+  };
+}
 
-    const amountOut = formatTokenAmount(estimate.amountOut, decimalsOut);
-    const price = parseFloat(amountOut);
-
-    return {
-      version: "V4",
-      fee,
-      price,
-      amountOut,
-      available: true,
-    };
-  } catch (error) {
-    return null;
+/**
+ * Splits quotes into those within maxDeviationPct of the best quote and those further below it.
+ * Quoter results are executable outputs, so a high quote is real; drained pools only ever quote low.
+ * @param {Array<{ price: number }>} quotes
+ * @param {number} maxDeviationPct
+ */
+function splitByLiquidity(quotes, maxDeviationPct) {
+  const best = Math.max(...quotes.map(q => q.price));
+  const kept = [];
+  const thin = [];
+  for (const q of quotes) {
+    (((best - q.price) / best) * 100 <= maxDeviationPct ? kept : thin).push(q);
   }
+  return { kept, thin };
 }
 
 /**
@@ -166,7 +204,6 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
 
   // Fetch all prices in parallel
   const V3_FEE_TIERS = [100, 500, 3000, 10000]; // 0.01%, 0.05%, 0.3%, 1%
-  const V4_FEE_TIER = 3000; // Default to 0.3% for V4
 
   const pricePromises = [
     // V2
@@ -178,7 +215,9 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
     ),
 
     // V4
-    getV4Price(chainKey, tokenInAddress, tokenOutAddress, V4_FEE_TIER, amountIn, tokenIn.decimals, tokenOut.decimals),
+    getV4Price(chainKey, tokenInAddress, tokenOutAddress, amountIn, tokenIn.decimals, tokenOut.decimals).catch(
+      () => null
+    ),
   ];
 
   const results = await Promise.all(pricePromises);
@@ -195,9 +234,9 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
     });
   }
 
-  const prices = results.filter(p => p !== null && isValidPrice(p.price));
+  const quoted = results.filter(p => p !== null && isValidPrice(p.price));
 
-  if (prices.length === 0) {
+  if (quoted.length === 0) {
     console.error("\n❌ No prices available for this pair on this chain");
     console.log("This could mean:");
     console.log("  1. No liquidity pools exist for this pair");
@@ -209,6 +248,8 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
     }
     return;
   }
+
+  const { kept: prices, thin } = splitByLiquidity(quoted, MAX_DEVIATION_PCT);
 
   // Sort by price (descending - best price first)
   prices.sort((a, b) => b.price - a.price);
@@ -233,6 +274,13 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
   });
 
   console.log(table.toString());
+
+  if (thin.length) {
+    const list = thin.map(p => `${p.version} ${parseFloat(p.amountOut).toFixed(6)} ${tokenOut.symbol}`).join(", ");
+    console.log(
+      `\nExcluded as too thin for ${amountIn} ${tokenIn.symbol} (>${MAX_DEVIATION_PCT}% below best): ${list}`
+    );
+  }
 
   // Calculate statistics
   const worstPrice = prices[prices.length - 1].price;
@@ -275,7 +323,7 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
   }
 
   // V4 availability
-  const v4Price = prices.find(p => p.version === "V4");
+  const v4Price = prices.find(p => p.version.startsWith("V4"));
   if (v4Price) {
     const v4VsBest = calculatePercentageDiff(v4Price.price, bestPrice);
     if (Math.abs(v4VsBest) < 0.5) {
@@ -286,17 +334,16 @@ async function monitorUniswapPrices(chainKey, tokenInAddress, tokenOutAddress, a
     }
   } else {
     insights.push({
-      message: "V4 not available for this pair",
+      message: "No usable hookless V4 pool for this pair at this size",
       type: "info",
     });
   }
 
-  // Arbitrage opportunity
-  if (spreadPercent > 0.5) {
-    const arbProfit = spread * parseFloat(amountIn);
+  // Routing: prices are total output for amountIn, so the spread is already the routing gain.
+  if (prices.length > 1 && spreadPercent > 0.5) {
     insights.push({
-      message: `Potential arb: Buy ${prices[prices.length - 1].version} → Sell ${prices[0].version} = ${formatPrice(arbProfit, 4)} profit`,
-      type: "fire",
+      message: `Routing: ${prices[0].version} returns ${formatPrice(spread, 4)} more ${tokenOut.symbol} than ${prices[prices.length - 1].version} for this size (fees + price impact, not an arb)`,
+      type: "info",
     });
   }
 

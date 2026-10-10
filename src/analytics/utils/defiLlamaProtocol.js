@@ -164,6 +164,35 @@ function fetchLlamaProtocols(timeoutMs) {
 }
 
 /**
+ * Current USD prices from the free coins API.
+ * @param {string[]} keys - `chain:address`, e.g. "ethereum:0x7712...2AEc"
+ * @param {number} [timeoutMs]
+ * @returns {Promise<Record<string, { price: number, symbol: string, decimals: number, timestamp: number }>>}
+ */
+async function fetchCoinPrices(keys, timeoutMs) {
+  const data = await fetchLlamaJson(`https://coins.llama.fi/prices/current/${keys.join(",")}`, timeoutMs);
+  return data?.coins || {};
+}
+
+/**
+ * Volume summary for one protocol. `kind` is "dexs" or "aggregators".
+ * @param {string} slug
+ * @param {"dexs"|"aggregators"} kind
+ * @param {number} [timeoutMs]
+ */
+function fetchVolumeSummary(slug, kind, timeoutMs) {
+  const q = "excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true";
+  return fetchLlamaJson(`/summary/${kind}/${encodeURIComponent(slug)}?${q}`, timeoutMs);
+}
+
+/** Dead-from date, or "deprecated", when DefiLlama marks the listing retired; otherwise null. */
+function llamaDeadLabel(protocol) {
+  if (protocol?.deadFrom) return `dead since ${protocol.deadFrom}`;
+  if (protocol?.deprecated) return "deprecated";
+  return null;
+}
+
+/**
  * Current TVL and the sample on or just before `days` earlier.
  * `partial` is true when the series starts after that cutoff (baseline is the first sample).
  * @param {Array<{ date: number, totalLiquidityUSD: number }>|undefined} series
@@ -220,6 +249,9 @@ module.exports = {
   fetchOpenInterestChart,
   fetchLlamaHacks,
   fetchLlamaProtocols,
+  fetchCoinPrices,
+  fetchVolumeSummary,
+  llamaDeadLabel,
   fetchHistoricalChainTvl,
   tvlBaseline,
   DEFILLAMA_API,

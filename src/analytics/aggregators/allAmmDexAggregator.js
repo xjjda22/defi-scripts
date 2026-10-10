@@ -29,7 +29,6 @@ const AMM_PROTOCOLS = [
   ["CoW Protocol", "cowswap"],
   ["KyberSwap", "kyberswap"],
   ["Matcha", "matcha"],
-  ["Odos", "odos"],
   ["ParaSwap", "paraswap"],
 ];
 

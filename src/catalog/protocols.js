@@ -128,7 +128,8 @@ const PROTOCOLS = [
     name: "HumidiFi",
     category: "dex",
     url: "https://humidifi.xyz",
-    about: "Solana prop AMM. No swap path: Solana needs a non-ethers client.",
+    about:
+      "Solana prop AMM. Holds no TVL on DefiLlama, so it is checked on 30d DEX volume. No swap path: Solana needs a non-ethers client.",
   },
   {
     id: "monad",
@@ -136,7 +137,7 @@ const PROTOCOLS = [
     category: "dex",
     url: "https://monad.xyz",
     about:
-      "Monad L1. The Llama row is often chain-level; `simulate:dex:monad:v3` quotes Uniswap V3 on Monad (`MONAD_RPC_URL`, WMON as WETH).",
+      "Monad L1. Analytics reads chain TVL and DEX volume (`LLAMA_CHAIN_NAME=Monad`); the `monad` protocol slug is an empty chain stub. `simulate:dex:monad:v3` quotes Uniswap V3 on Monad (`MONAD_RPC_URL`, WMON as WETH).",
     data: "DefiLlama, on-chain RPC",
     notes: ["Pool liquidity can be thin, so quotes may fail sanity filters."],
   },
@@ -149,6 +150,13 @@ const PROTOCOLS = [
     notes: [
       "Raydium TVL $1.26B; handled $1.713B (64%) of StonkFun's $2.67B volume ([KuCoin](https://www.kucoin.com/news/flash/ray-gains-10-as-raydium-captures-64-of-stonkfun-volume), 2026-09-22).",
     ],
+  },
+  {
+    id: "orca",
+    name: "Orca DEX",
+    category: "dex",
+    url: "https://www.orca.so",
+    about: "Solana concentrated-liquidity AMM (Whirlpools). Analytics adds DEX volume and fees; the smoke checks 30d volume.",
   },
   {
     id: "pumpswap",
@@ -206,7 +214,9 @@ const PROTOCOLS = [
     category: "dex",
     url: "https://astroport.fi",
     about: "Cosmos DEX (Terra2, Injective, Osmosis, Neutron).",
-    notes: ["Neutron Prop 9 governance exploit on 2026-09-22; sibling `drop` is tracked separately."],
+    notes: [
+      "Neutron Prop 9 governance exploit on 2026-09-22 also emptied the Drop liquid-staking contracts (~$9.4M across both); DefiLlama marked Drop dead from 2026-09-15.",
+    ],
   },
   {
     id: "thorchain",
@@ -257,7 +267,7 @@ const PROTOCOLS = [
     name: "CoW Swap",
     category: "aggregator",
     url: "https://swap.cow.fi",
-    about: "Batch-auction intents.",
+    about: "Batch-auction intents. Checked on 30d volume (aggregators hold no TVL).",
   },
   {
     id: "kyberswap",
@@ -266,9 +276,20 @@ const PROTOCOLS = [
     url: "https://kyberswap.com",
     about: "Aggregator + AMM.",
   },
-  { id: "matcha", name: "Matcha", category: "aggregator", url: "https://matcha.xyz", about: "0x-powered aggregator." },
-  { id: "odos", name: "Odos", category: "aggregator", url: "https://odos.xyz", about: "Multi-path aggregator." },
-  { id: "paraswap", name: "ParaSwap", category: "aggregator", url: "https://paraswap.io", about: "DEX aggregator." },
+  {
+    id: "matcha",
+    name: "Matcha",
+    category: "aggregator",
+    url: "https://matcha.xyz",
+    about: "0x-powered aggregator. Volume is read from the `0x-aggregator` listing; Matcha's own row has no volume.",
+  },
+  {
+    id: "paraswap",
+    name: "ParaSwap",
+    category: "aggregator",
+    url: "https://paraswap.io",
+    about: "DEX aggregator, listed as Velora on DefiLlama. Checked on 30d volume (aggregators hold no TVL).",
+  },
   { id: "hashflow", name: "Hashflow", category: "aggregator", url: "https://hashflow.com", about: "RFQ venue." },
   {
     id: "uniswapx",
@@ -292,14 +313,6 @@ const PROTOCOLS = [
       "Exploited for ~$3.8M in USDT on BNB Chain (Sep 30 to Oct 1) through the Omni deposit/withdrawal layer; funds returned in full on 2026-10-02 ([Cointelegraph](https://cointelegraph.com/news/near-intents-recovers-entire-stolen-38m-after-ultimatum-to-exploiter), 2026-10-03; [Decrypt](https://decrypt.co/380014/near-intents-recovers-3-8-million-after-48-hour-ultimatum), 2026-10-04; [X](https://x.com/zacodil/status/2108480859942555933), 2026-10-09). `analytics:near:exploit` reads the incident from DefiLlama `/hacks` (id 6225); DefiLlama does not record the returned funds.",
     ],
   },
-  {
-    id: "curvy",
-    name: "Curvy v2",
-    category: "aggregator",
-    url: "https://curvy.finance",
-    about: "ZK stealth aggregator. The Llama slug defaults to `curves-protocol` (override with `CURVY_LLAMA_SLUG`).",
-  },
-
   // Perps & derivatives
   {
     id: "hyperliquid",
@@ -349,17 +362,6 @@ const PROTOCOLS = [
     category: "perps",
     url: "https://drake.exchange",
     about: "Monad CLOB-AMM perp DEX. Points / MON campaign row lives in `analytics:airdrop:watch`.",
-  },
-  { id: "kwenta", name: "Kwenta", category: "perps", url: "https://kwenta.io", about: "Synthetix-powered perps." },
-  { id: "perennial", name: "Perennial", category: "perps", url: "https://perennial.finance", about: "Perps protocol." },
-  { id: "polynomial", name: "Polynomial", category: "perps", url: "https://polynomial.fi", about: "Perps chain." },
-  { id: "rabbitx", name: "RabbitX", category: "perps", url: "https://rabbitx.io", about: "Perp order book." },
-  {
-    id: "vertex",
-    name: "Vertex Perps",
-    category: "perps",
-    url: "https://vertexprotocol.com",
-    about: "Hybrid order book.",
   },
   {
     id: "synthetix",
@@ -412,6 +414,13 @@ const PROTOCOLS = [
   },
 
   // Lending & money markets
+  {
+    id: "maple",
+    name: "Maple",
+    category: "lending",
+    url: "https://maple.finance",
+    about: "Institutional overcollateralized credit (syrupUSDC / syrupUSDT). Analytics adds fees and revenue.",
+  },
   {
     id: "aave",
     name: "Aave",
@@ -615,6 +624,13 @@ const PROTOCOLS = [
     data: "Lido API, DefiLlama, on-chain RPC",
   },
   {
+    id: "ssv",
+    name: "SSV Network",
+    category: "staking",
+    url: "https://ssv.network",
+    about: "Distributed validator technology. TVL is the ETH staked through SSV validators; analytics adds fees and revenue.",
+  },
+  {
     id: "rocketpool",
     name: "Rocket Pool",
     category: "staking",
@@ -678,16 +694,6 @@ const PROTOCOLS = [
     about: "Treasury-company staked SOL.",
     notes: [
       "Added 101,381 SOL in a week to ~2,490,304 SOL ([KuCoin](https://www.kucoin.com/news/flash/dfdv-adds-101-381-sol-to-treasury-as-sol-price-surpasses-116), 2026-09-22).",
-    ],
-  },
-  {
-    id: "drop",
-    name: "Drop",
-    category: "staking",
-    url: "https://drop.money",
-    about: "Neutron liquid staking. Llama TVL is $0 after the drain; the smoke allows $0.",
-    notes: [
-      "Neutron Prop 9 governance attack emptied Astroport and Drop contracts (~$9.4M) on 2026-09-22 ([Altcoin Buzz](https://www.altcoinbuzz.io/cosmos-hub-moves-2-1m-of-stolen-atom-after-25-hour-halt), 2026-09-23).",
     ],
   },
   {
@@ -807,15 +813,18 @@ const PROTOCOLS = [
     name: "Ondo Finance",
     category: "stable-rwa",
     url: "https://ondo.finance",
-    about: "Tokenized treasuries. Mint is KYC-gated. The fork test reads the USDY and OUSG oracles.",
+    about:
+      "Tokenized treasuries. Mint is KYC-gated. DefiLlama's protocol TVL for RWA listings is empty, so analytics reads USDY + OUSG Ethereum supply x coins price. The fork test reads the USDY and OUSG oracles.",
+    data: "On-chain RPC, DefiLlama coins",
   },
   {
     id: "buidl",
     name: "BlackRock BUIDL",
     category: "stable-rwa",
     url: "https://www.blackrock.com",
-    about: "Tokenized fund. Mint is KYC-gated. The fork test reads totalSupply of the rebasing BUIDL token.",
-    data: "DefiLlama, on-chain RPC",
+    about:
+      "Tokenized fund. Mint is KYC-gated. Analytics reads BUIDL Ethereum supply x coins price (DefiLlama's protocol TVL is empty). The fork test reads totalSupply of the rebasing BUIDL token.",
+    data: "On-chain RPC, DefiLlama coins",
   },
   {
     id: "usdai",
@@ -913,6 +922,36 @@ const PROTOCOLS = [
     data: "On-chain RPC",
   },
   {
+    id: "layerzero",
+    name: "LayerZero V2",
+    category: "bridge-chain",
+    url: "https://layerzero.network",
+    about: "Omnichain messaging. TVL is the value locked in OFT adapters and endpoints across chains.",
+  },
+  {
+    id: "wbtc",
+    name: "WBTC",
+    category: "bridge-chain",
+    url: "https://wbtc.network",
+    about: "Custodial Bitcoin wrap on Ethereum and other chains. Also a row in `analytics:btc:wraps`.",
+  },
+  {
+    id: "megaeth",
+    name: "MegaETH",
+    category: "bridge-chain",
+    url: "https://megaeth.com",
+    about: "Real-time Ethereum L2. Chain TVL and DEX volume (`LLAMA_CHAIN_NAME=MegaETH`); no AMM-specific slug yet.",
+    data: "DefiLlama chains",
+  },
+  {
+    id: "soneium",
+    name: "Soneium",
+    category: "bridge-chain",
+    url: "https://soneium.org",
+    about: "Sony's OP Stack L2. Chain TVL and DEX volume (`LLAMA_CHAIN_NAME=Soneium`); no DEX-specific slug yet.",
+    data: "DefiLlama chains",
+  },
+  {
     id: "arc",
     name: "Arc Chain",
     category: "bridge-chain",
@@ -1001,18 +1040,19 @@ const PROTOCOLS = [
     ],
   },
   {
+    id: "kalshi",
+    name: "Kalshi",
+    category: "other",
+    url: "https://kalshi.com",
+    about:
+      "CFTC-regulated prediction market. No TVL on DefiLlama, so the smoke checks 30d volume; analytics adds volume, fees and revenue.",
+  },
+  {
     id: "zama",
     name: "Zama",
     category: "other",
     url: "https://zama.ai",
     about: "Confidential DeFi via FHEVM. No swap path (toolchain-specific).",
-  },
-  {
-    id: "aztec",
-    name: "Aztec",
-    category: "other",
-    url: "https://aztec.network",
-    about: "Privacy L2. Llama currently surfaces Aztec Connect under `aztec`, which may differ from Ignition branding.",
   },
   {
     id: "bitget",
@@ -1095,7 +1135,15 @@ const SCRIPT_DESCRIPTIONS = {
   "analytics:kintsu:staking": "TVL and yields-chart APY, compared to Lido and StakeStone",
   "analytics:sky:rates": "DSR from the Maker Pot plus Maker and Sky TVL rows",
   "analytics:ethena:monitor": "TVL, mint/redeem pairs and USDe / sUSDe `totalSupply`",
-  "analytics:buidl:supply": "ERC-20 `totalSupply` when `BUIDL_TOKEN_ADDRESS` is set",
+  "analytics:buidl:markets": "BUIDL Ethereum `totalSupply` x DefiLlama coins price",
+  "analytics:ondo:markets": "USDY + OUSG Ethereum `totalSupply` x DefiLlama coins price",
+  "simulate:buidl:smoke": "Fails unless BUIDL Ethereum supply x price is positive",
+  "simulate:ondo:smoke": "Fails unless USDY and OUSG Ethereum supply x price are positive",
+  "analytics:monad:dex": "Monad chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Monad`), 7d/30d change, and DEX volume",
+  "analytics:megaeth:chain":
+    "MegaETH chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=MegaETH`), 7d/30d change, and DEX volume",
+  "analytics:soneium:chain":
+    "Soneium chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Soneium`), 7d/30d change, and DEX volume",
   "analytics:payy:bridge": "USDC `balanceOf` the Payy Ethereum bridge",
   "analytics:arc:chain":
     "Arc chain TVL from DefiLlama `/v2/chains`, plus 7d/30d change (`LLAMA_CHAIN_NAME` defaults to Arc)",
@@ -1113,8 +1161,6 @@ const SCRIPT_DESCRIPTIONS = {
   "simulate:derive:smoke": "Fails unless Derive 30d options notional is > 0 (`/summary/options/derive-options`)",
   "analytics:reya:dex": "DefiLlama TVL + TVL by chain (`REYA_LLAMA_SLUG`, default `reya-perps`)",
   "analytics:ammalgam:hybrid": "DefiLlama summary when `AMMALGAM_LLAMA_SLUG` is set",
-  "analytics:curvy:aggregator": "DefiLlama summary (`CURVY_LLAMA_SLUG`, default `curves-protocol`)",
-
   "analytics:eth:dex-share": "Ethereum venue volume: Uniswap V4 vs V3 vs 1inch Aqua vs long-tail",
   "analytics:eth:lending-movers": "Ethereum lending/CDP 7d TVL change (Aave V4, Spark, Morpho)",
   "analytics:eth:yield": "Pendle V2 DEX volume plus Ethereum yield TVL movers",
