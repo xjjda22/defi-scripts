@@ -178,7 +178,6 @@ const CATALOG_ALIASES = {
   euler: ["euler-v2"],
   keyrock: ["keyrock"],
   stakestone: ["stakestone-stone"],
-  polynomial: ["polynomial-trade"],
   drift: ["drift-trade", "drift-amm"],
   synthetix: ["synthetix-v4", "synthetix-v3", "synthetix-v1+v2"],
   kyberswap: ["kyberswap-classic", "kyberswap-elastic", "kyberswap-aggregator"],

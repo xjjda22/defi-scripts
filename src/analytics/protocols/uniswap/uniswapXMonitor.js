@@ -8,6 +8,7 @@ const { ethers } = require("ethers");
 const chalk = require("chalk");
 const { CHAINS } = require("../../../config/chains");
 const { getProvider } = require("../../../utils/web3");
+const { getLogsChunked } = require("../../../utils/logs");
 const { installCliSafeStdout } = require("../../utils/cliSafeOutput");
 const { createTable } = require("../../utils/displayHelpers");
 
@@ -60,12 +61,10 @@ async function main() {
   const head = await provider.getBlockNumber();
   const fromBlock = Math.max(0, head - maxBlocks);
 
-  const logs = await provider.getLogs({
-    address: reactor,
-    topics: [FILL_TOPIC],
-    fromBlock,
-    toBlock: head,
+  const { logs, chunk } = await getLogsChunked(provider, { address: reactor, topics: [FILL_TOPIC] }, fromBlock, head, {
+    chunk: parseInt(process.env.UNISWAPX_LOG_CHUNK || "2000", 10) || 2000,
   });
+  if (chunk < maxBlocks) console.log(chalk.gray(`RPC caps eth_getLogs; scanned in ${chunk}-block chunks.\n`));
 
   console.log(chalk.yellow(`Fill count: ${logs.length}\n`));
   if (!logs.length) {

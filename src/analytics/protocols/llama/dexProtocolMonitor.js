@@ -6,7 +6,9 @@
  * Optional: DEFILLAMA_OI=1 adds open interest (`total24h`) from /summary/open-interest/{slug}.
  * Optional: DEFILLAMA_OI_HIGH=1 (with DEFILLAMA_OI=1) also prints the year-to-date open-interest high
  * and its date from the same endpoint's daily chart, for "OI at a yearly high" claims.
- * Off unless set to "1", so existing scripts are unchanged. Do not use /summary/derivatives (paywalled).
+ * Optional: DEFILLAMA_VOLUME=dexs|aggregators adds 24h / 7d / 30d volume from /summary/{kind}/{slug},
+ * for venues that hold no TVL (aggregators, prop AMMs).
+ * Off unless set, so existing scripts are unchanged. Do not use /summary/derivatives (paywalled).
  */
 
 require("dotenv").config();
@@ -17,7 +19,9 @@ const {
   fetchFeesSummary,
   fetchOpenInterestSummary,
   fetchOpenInterestChart,
+  fetchVolumeSummary,
   lastTvlUsdFromSeries,
+  llamaDeadLabel,
 } = require("../../utils/defiLlamaProtocol");
 const { createTable, formatCurrency } = require("../../utils/displayHelpers");
 
@@ -61,6 +65,26 @@ async function printOpenInterest(slug) {
   if (oi?.error) {
     console.log(chalk.gray(`  open interest unavailable: ${oi.error.message || oi.error}`));
   }
+}
+
+async function printVolume(slug, kind) {
+  let v;
+  try {
+    v = await fetchVolumeSummary(slug, kind);
+  } catch (e) {
+    console.log(chalk.gray(`\n  volume unavailable on /summary/${kind}/${slug}: ${e.message || e}`));
+    return;
+  }
+  const cell = k => {
+    const n = numOrNull(v?.[k]);
+    return n != null ? formatCurrency(n) : "—";
+  };
+  const t = createTable(["Window", "Volume"], { colAligns: ["left", "right"] });
+  t.push(["24h", cell("total24h")]);
+  t.push(["7d", cell("total7d")]);
+  t.push(["30d", cell("total30d")]);
+  console.log(chalk.yellow(`\nVolume (DefiLlama /summary/${kind})\n`));
+  console.log(t.toString());
 }
 
 /**
@@ -118,6 +142,8 @@ async function main() {
     t.push(["Category", d.category || "—"]);
     t.push(["URL", d.url || "—"]);
     console.log(t.toString());
+    const dead = llamaDeadLabel(d);
+    if (dead) console.log(chalk.red(`\nDefiLlama marks this listing ${dead}.`));
     if (d.currentChainTvls && typeof d.currentChainTvls === "object") {
       const rows = Object.entries(d.currentChainTvls).filter(([, v]) => typeof v === "number" && v > 0);
       if (rows.length) {
@@ -126,6 +152,10 @@ async function main() {
         console.log(chalk.yellow("\nTVL by chain\n"));
         console.log(ct.toString());
       }
+    }
+    const volumeKind = (process.env.DEFILLAMA_VOLUME || "").trim();
+    if (volumeKind === "dexs" || volumeKind === "aggregators") {
+      await printVolume(slug, volumeKind);
     }
     if (process.env.DEFILLAMA_FEES === "1") {
       await printFeesAndRevenue(slug);

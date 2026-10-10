@@ -21,6 +21,8 @@ const CHAINS = {
       v4: {
         // V4 launched January 31, 2025 - uses singleton PoolManager architecture
         poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
+        // https://docs.uniswap.org/contracts/v4/deployments
+        quoter: "0x52F0E24D1c21C8A0cB1e5a5dD6198556BD9E1203",
       },
     },
     curve: {

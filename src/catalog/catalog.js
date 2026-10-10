@@ -28,16 +28,24 @@ function describeLlamaMonitor(command) {
   if (!slug) return null;
   const fees = envValue(command, "DEFILLAMA_FEES") === "1" ? " + fees/revenue (24h/7d/30d)" : "";
   const oi = envValue(command, "DEFILLAMA_OI") === "1" ? " + open interest (total24h)" : "";
-  return `DefiLlama TVL + TVL by chain${fees}${oi} (\`${slug}\`)`;
+  const volumeKind = envValue(command, "DEFILLAMA_VOLUME");
+  const volume = volumeKind ? ` + ${volumeKind} volume (24h/7d/30d)` : "";
+  return `DefiLlama TVL + TVL by chain${fees}${oi}${volume} (\`${slug}\`)`;
 }
 
 function describeLlamaSmoke(command) {
   const slug = envValue(command, "SMOKE_SLUG");
   if (!slug) return null;
-  const checks = ["TVL"];
-  if (envValue(command, "SMOKE_FEES") === "1") checks.push("positive 24h revenue");
+  const fees = envValue(command, "SMOKE_FEES") === "1";
+  const oi = envValue(command, "SMOKE_OI") === "1";
+  const volumeKind = envValue(command, "SMOKE_VOLUME");
+  const allowZero = envValue(command, "SMOKE_MIN_TVL_USD") === "0";
+  const checks = [allowZero || fees || oi || volumeKind ? "a listing" : "positive TVL"];
+  if (fees) checks.push("positive 24h revenue");
+  if (oi) checks.push("positive open interest");
+  if (volumeKind) checks.push(`positive 30d ${volumeKind} volume`);
   const extras = [];
-  if (envValue(command, "SMOKE_MIN_TVL_USD") === "0") extras.push("$0 TVL allowed");
+  if (allowZero) extras.push("$0 TVL allowed");
   if (envValue(command, "SMOKE_ALLOW_NOT_LISTED") === "1") extras.push("404 tolerated");
   const tail = extras.length ? `; ${extras.join(", ")}` : "";
   return `Fails unless DefiLlama \`${slug}\` returns ${checks.join(" and ")}${tail}`;
