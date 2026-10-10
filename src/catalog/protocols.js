@@ -522,7 +522,8 @@ const PROTOCOLS = [
     name: "Sentora Curator",
     category: "vaults",
     url: "https://sentora.com",
-    about: "Morpho vault curator. Llama reports all Sentora vaults, not a single vault.",
+    about:
+      "Morpho vault curator. Llama reports all Sentora vaults, not a single vault. Sentora RLUSD Main is on Ethereum; its maxDeposit is 0, so the fork test only reads it.",
     notes: [
       `Morpho Sentora RLUSD Main (Vault V2) on Ethereum at $424.20M TVL and 5.67% APY (${PORTALS_W4}).`,
       "The single vault is readable via Morpho's API (`vaultV2s`, `0x6dC58a0FdfC8D694e571DC59B9A52EEEa780E6bf`). Distinct from Upshift Sentora USD Earn (`analytics:upshift:allocator`).",
@@ -533,7 +534,7 @@ const PROTOCOLS = [
     name: "Steakhouse Financial",
     category: "vaults",
     url: "https://www.steakhouse.financial",
-    about: "Morpho vault curator, TVL by chain.",
+    about: "Morpho vault curator, TVL by chain. The fork test deposits and redeems USDC on the Ethereum MetaMorpho Steakhouse USDC vault.",
     notes: [`Steakhouse Prime Instant (Morpho USDC vault) on Base at $444.37M TVL (${PORTALS_W4}).`],
   },
   {
@@ -541,7 +542,7 @@ const PROTOCOLS = [
     name: "Upshift",
     category: "vaults",
     url: "https://www.upshift.finance",
-    about: "Vault allocator.",
+    about: "Vault allocator. The fork test deposits USDC into Upshift Sentora USD on Ethereum and redeems or requests the withdrawal.",
     notes: [`Upshift Sentora USD Earn on Ethereum at $94.41M TVL (${PORTALS_W4}).`],
   },
   {
@@ -564,6 +565,43 @@ const PROTOCOLS = [
     about: "Onchain capital allocator, mostly Ethereum. Analytics adds fees/revenue.",
     notes: [
       "CT token TGE on 2026-09-30; >$1.2B deposits, >$23B cumulative volume, 54,000+ depositors; fixed 1B CT supply ([TokenPost](https://www.tokenpost.com/news/technology/25663), 2026-09-30; [BSC News](https://bsc.news/news/concrete-ct-token-tge-governance), 2026-09-30).",
+    ],
+  },
+  {
+    id: "gauntlet",
+    name: "Gauntlet",
+    category: "vaults",
+    url: "https://www.gauntlet.xyz",
+    about: "Morpho vault curator. The fork test deposits and redeems USDC on MetaMorpho Gauntlet USDC Prime.",
+    data: "On-chain RPC",
+    notes: ["Gauntlet USDC Prime V2 maxDeposit is 0, so the fork uses the V1 MetaMorpho vault."],
+  },
+  {
+    id: "veda",
+    name: "Veda",
+    category: "vaults",
+    url: "https://veda.tech",
+    about:
+      "BoringVault allocator. The fork test deposits WETH into ether.fi Liquid ETH through its Teller. Withdrawals are not a public teller call.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "yearn",
+    name: "Yearn",
+    category: "vaults",
+    url: "https://yearn.fi",
+    about: "Yearn V3 yVaults are ERC-4626. The fork test deposits and redeems USDC on USDC-1.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "euler",
+    name: "Euler Earn",
+    category: "vaults",
+    url: "https://www.euler.finance",
+    about: "Euler Earn is an ERC-4626 meta-vault. The fork test deposits and redeems USDC on K3 Capital Earn USDC.",
+    data: "On-chain RPC",
+    notes: [
+      "The vault address is the first non-deprecated entry in euler-labels `1/earn-vaults.json`, which the Euler docs name as the source of verified Earn vaults.",
     ],
   },
 
@@ -669,7 +707,17 @@ const PROTOCOLS = [
     name: "EigenLayer (EigenCloud)",
     category: "restaking",
     url: "https://www.eigenlayer.xyz",
-    about: "Ethereum restaking. Slug `eigencloud`; `eigenlayer` resolves to the same entry.",
+    about:
+      "Ethereum restaking. Slug `eigencloud`; `eigenlayer` resolves to the same entry. Fork tests deposit stETH into the stETH strategy and queue a withdrawal.",
+  },
+  {
+    id: "symbiotic",
+    name: "Symbiotic",
+    category: "restaking",
+    url: "https://symbiotic.fi",
+    about:
+      "Shared-security restaking. Docs publish VaultFactory, not a permissionless vault, so the fork test only checks the factory.",
+    data: "On-chain RPC",
   },
   {
     id: "etherfi",
@@ -707,7 +755,7 @@ const PROTOCOLS = [
     name: "Swell",
     category: "restaking",
     url: "https://www.swellnetwork.io",
-    about: "Liquid restaking. Smoke is TVL-only (Llama daily revenue is often $0).",
+    about: "Liquid restaking. Smoke is TVL-only (Llama daily revenue is often $0). The fork test deposits ETH into rswETH.",
     notes: [`Swell recorded $22,370 gross profit in Q2'26. ${LRT_COMBINED}`, FEES_NOTE],
   },
   {
@@ -723,7 +771,7 @@ const PROTOCOLS = [
     name: "Puffer Finance",
     category: "restaking",
     url: "https://www.puffer.fi",
-    about: "Liquid restaking. Smoke is TVL-only (revenue is lumpy).",
+    about: "Liquid restaking. Smoke is TVL-only (revenue is lumpy). The fork test deposits ETH into pufETH.",
     notes: [`Puffer Finance (raised $23M) recorded $21,590 gross profit in Q2'26. ${LRT_COMBINED}`, FEES_NOTE],
   },
 
@@ -1155,6 +1203,18 @@ const SCRIPT_DESCRIPTIONS = {
   "fork:etherfi:wrap": "Deposit ETH to ether.fi and wrap eETH to weETH",
   "fork:kelp:deposit": "Deposit ETH to Kelp and assert rsETH increased. Skipped when deposits are paused",
   "fork:renzo:deposit": "Deposit ETH to Renzo and assert ezETH increased. Skipped when deposits are capped",
+  "fork:steakhouse:deposit": "Deposit USDC into MetaMorpho Steakhouse USDC and redeem it on an Ethereum fork",
+  "fork:gauntlet:deposit": "Deposit USDC into MetaMorpho Gauntlet USDC Prime and redeem it. V2 maxDeposit is 0",
+  "fork:sentora:deposit": "Read Sentora RLUSD Main when maxDeposit is 0. Deposits and redeems only if maxDeposit is open",
+  "fork:veda:deposit": "Deposit WETH into the ether.fi Liquid ETH BoringVault through its Teller. Does not redeem",
+  "fork:upshift:deposit": "Deposit USDC into Upshift Sentora USD and instant-redeem, or request the withdrawal",
+  "fork:yearn:deposit": "Deposit USDC into Yearn V3 USDC-1 and redeem it",
+  "fork:euler:deposit": "Deposit USDC into Euler Earn K3 Capital Earn USDC and redeem it",
+  "fork:eigenlayer:deposit": "Deposit stETH into the EigenLayer stETH strategy and assert deposit shares increased",
+  "fork:eigenlayer:queue": "Deposit stETH and queueWithdrawals. The completion delay is not advanced",
+  "fork:symbiotic:read": "Read the Symbiotic VaultFactory. Docs do not publish a permissionless vault",
+  "fork:swell:deposit": "Deposit ETH into rswETH. Read-only when the whitelist is enabled",
+  "fork:puffer:deposit": "Deposit ETH into pufETH via depositETH. Read-only when maxDeposit is 0",
   "fork:sky:convert": "Convert DAI to USDS and back on the Sky DaiUsds converter and assert a 1:1 round trip",
   "fork:sky:susds": "Deposit USDS into sUSDS and redeem it on an Ethereum fork",
   "fork:sky:sdai": "Deposit DAI into sDAI and redeem it on an Ethereum fork",

@@ -605,12 +605,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -1041,7 +1042,13 @@
      "tvl": 1675745
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:veda:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.8636,
    "components": {
@@ -1053,22 +1060,47 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": null,
+    "note": "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false.",
     "appUrl": "https://veda.tech",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault check",
-     "chain": "ethereum",
-     "commands": [
-      "npm run simulate:morpho:smoke"
-     ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:veda:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:veda:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Liquid ETH BoringVault",
+      "address": "0xf0bb20865277aBd641a307eCe5Ee04E79073416C",
+      "doc": "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Teller",
+      "address": "0x9AA79C84b79816ab920bBcE20f8f74557B514734",
+      "doc": "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault"
+     },
+     {
+      "chain": "ethereum",
+      "label": "WETH",
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "doc": "https://docs.veda.tech/integrations/deposits-and-withdrawals-overview"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -1880,7 +1912,13 @@
      "tvl": 1968398
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:gauntlet:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.8441,
    "components": {
@@ -1892,22 +1930,41 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": null,
+    "note": "ERC-4626 deposit and redeem on MetaMorpho Gauntlet USDC Prime. Gauntlet USDC Prime V2 maxDeposit is 0, so it is not the vault under test.",
     "appUrl": "https://www.gauntlet.xyz",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault check",
-     "chain": "ethereum",
-     "commands": [
-      "npm run simulate:morpho:smoke"
-     ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:gauntlet:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:gauntlet:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Gauntlet USDC Prime",
+      "address": "0xdd0f28e19C1780eb6396170735D45153D261490d",
+      "doc": "https://app.morpho.org/ethereum/vault/0xdd0f28e19C1780eb6396170735D45153D261490d/gauntlet-usdc-prime"
+     },
+     {
+      "chain": "ethereum",
+      "label": "USDC",
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -2929,12 +2986,13 @@
      }
     ],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -3126,6 +3184,11 @@
      "name": "simulate:sentora:smoke",
      "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
      "kind": "smoke"
+    },
+    {
+     "name": "fork:sentora:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
     }
    ],
    "coverage": "covered by a dedicated monitor",
@@ -3139,22 +3202,41 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://sentora.com/",
+    "mode": "fork",
+    "label": "Read-only",
+    "note": "Sentora RLUSD Main is a Morpho Vault V2 on Ethereum. maxDeposit is 0, so the fork test reads totalAssets and convertToAssets and does not deposit.",
+    "appUrl": "https://sentora.com",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault check",
-     "chain": "ethereum",
-     "commands": [
-      "npm run simulate:morpho:smoke"
-     ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sentora:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:sentora:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Sentora RLUSD Main",
+      "address": "0x6dC58a0FdfC8D694e571DC59B9A52EEEa780E6bf",
+      "doc": "https://app.morpho.org/ethereum/vault/0x6dC58a0FdfC8D694e571DC59B9A52EEEa780E6bf/sentora-rlusd-main"
+     },
+     {
+      "chain": "ethereum",
+      "label": "RLUSD",
+      "address": "0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD",
+      "doc": "https://docs.ripple.com/products/stablecoin/overview/token-addresses"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -3226,6 +3308,11 @@
      "name": "simulate:steakhouse:smoke",
      "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
      "kind": "smoke"
+    },
+    {
+     "name": "fork:steakhouse:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
     }
    ],
    "coverage": "covered by a dedicated monitor",
@@ -3239,22 +3326,41 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://www.steakhouse.financial/",
+    "mode": "fork",
+    "label": null,
+    "note": "ERC-4626 deposit and redeem on the Ethereum MetaMorpho Steakhouse USDC vault.",
+    "appUrl": "https://www.steakhouse.financial",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault check",
-     "chain": "ethereum",
-     "commands": [
-      "npm run simulate:morpho:smoke"
-     ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:steakhouse:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Steakhouse USDC",
+      "address": "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
+      "doc": "https://app.morpho.org/ethereum/vault/0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB/steakhouse-usdc"
+     },
+     {
+      "chain": "ethereum",
+      "label": "USDC",
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -4790,12 +4896,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -4929,12 +5036,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -5357,12 +5465,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -5910,7 +6019,7 @@
       "CHAIN=ethereum node scripts/startFork.js",
       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
      ],
-     "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+     "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
     }
    }
   },
@@ -5994,12 +6103,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -6145,12 +6255,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -6233,12 +6344,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -6313,12 +6425,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -6386,12 +6499,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -6836,12 +6950,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -7302,6 +7417,11 @@
      "name": "simulate:upshift:smoke",
      "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
      "kind": "smoke"
+    },
+    {
+     "name": "fork:upshift:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
     }
    ],
    "coverage": "covered by a dedicated monitor",
@@ -7315,22 +7435,47 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": null,
+    "note": "Upshift Sentora USD on Ethereum. Deposit USDC, then instantRedeem. The instant redemption fee (basis points) is taken out of the assets returned. If instant redeem is closed, requestRedeem is asserted instead of a completed withdrawal.",
     "appUrl": "https://app.upshift.finance",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault check",
-     "chain": "ethereum",
-     "commands": [
-      "npm run simulate:morpho:smoke"
-     ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:upshift:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:upshift:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Sentora USD vault",
+      "address": "0x74aD2F789Ed583DBd141bbdafC673fE1F033718b",
+      "doc": "https://docs.upshift.finance/contracts/fee-sharing"
+     },
+     {
+      "chain": "ethereum",
+      "label": "sentUSD",
+      "address": "0xe8aA1A9eC6b9BC455D8f33E4BDC685dedFf82407",
+      "doc": "https://docs.upshift.finance/contracts/fee-sharing"
+     },
+     {
+      "chain": "ethereum",
+      "label": "USDC",
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -7695,12 +7840,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -7768,12 +7914,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -8097,7 +8244,7 @@
       "CHAIN=ethereum node scripts/startFork.js",
       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
      ],
-     "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+     "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
     }
    }
   },
@@ -8913,12 +9060,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -9282,12 +9430,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -9624,12 +9773,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -9685,12 +9835,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -10111,12 +10262,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -10786,12 +10938,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -11890,12 +12043,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -12358,12 +12512,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -13077,12 +13232,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -13453,12 +13609,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -13917,12 +14074,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -14875,12 +15033,13 @@
     "tests": [],
     "contracts": [],
     "recipe": {
-     "title": "Generic vault check",
+     "title": "Generic vault fork",
      "chain": "ethereum",
      "commands": [
-      "npm run simulate:morpho:smoke"
+      "CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
      ],
-     "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
     }
    }
   },
@@ -35141,7 +35300,13 @@
       "tvl": 1940875
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:euler:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.4759,
     "components": {
@@ -35153,23 +35318,41 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": null,
+     "note": "Euler Earn is ERC-4626. Deposit and redeem USDC on the first non-deprecated Ethereum vault in euler-labels (K3 Capital Earn USDC).",
      "appUrl": "https://www.euler.finance",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic lending fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-      ],
-      "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:euler:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:euler:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "K3 Capital Earn USDC",
+       "address": "0x3B4802FDb0E5d74aA37d58FD77d63e93d4f9A4AF",
+       "doc": "https://github.com/euler-xyz/euler-labels/blob/master/1/earn-vaults.json"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDC",
+       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+       "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -38052,12 +38235,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -38120,7 +38304,13 @@
       "tvl": 1675745
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:veda:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.8636,
     "components": {
@@ -38132,22 +38322,47 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": null,
+     "note": "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false.",
      "appUrl": "https://veda.tech",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:morpho:smoke"
-      ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:veda:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:veda:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Liquid ETH BoringVault",
+       "address": "0xf0bb20865277aBd641a307eCe5Ee04E79073416C",
+       "doc": "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Teller",
+       "address": "0x9AA79C84b79816ab920bBcE20f8f74557B514734",
+       "doc": "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault"
+      },
+      {
+       "chain": "ethereum",
+       "label": "WETH",
+       "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+       "doc": "https://docs.veda.tech/integrations/deposits-and-withdrawals-overview"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -38209,7 +38424,13 @@
       "tvl": 1968398
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:gauntlet:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.8441,
     "components": {
@@ -38221,22 +38442,41 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": null,
+     "note": "ERC-4626 deposit and redeem on MetaMorpho Gauntlet USDC Prime. Gauntlet USDC Prime V2 maxDeposit is 0, so it is not the vault under test.",
      "appUrl": "https://www.gauntlet.xyz",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:morpho:smoke"
-      ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:gauntlet:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:gauntlet:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Gauntlet USDC Prime",
+       "address": "0xdd0f28e19C1780eb6396170735D45153D261490d",
+       "doc": "https://app.morpho.org/ethereum/vault/0xdd0f28e19C1780eb6396170735D45153D261490d/gauntlet-usdc-prime"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDC",
+       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+       "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -38338,12 +38578,13 @@
       }
      ],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -38400,6 +38641,11 @@
       "name": "simulate:sentora:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:sentora:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -38413,22 +38659,41 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://sentora.com/",
+     "mode": "fork",
+     "label": "Read-only",
+     "note": "Sentora RLUSD Main is a Morpho Vault V2 on Ethereum. maxDeposit is 0, so the fork test reads totalAssets and convertToAssets and does not deposit.",
+     "appUrl": "https://sentora.com",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:morpho:smoke"
-      ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sentora:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:sentora:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Sentora RLUSD Main",
+       "address": "0x6dC58a0FdfC8D694e571DC59B9A52EEEa780E6bf",
+       "doc": "https://app.morpho.org/ethereum/vault/0x6dC58a0FdfC8D694e571DC59B9A52EEEa780E6bf/sentora-rlusd-main"
+      },
+      {
+       "chain": "ethereum",
+       "label": "RLUSD",
+       "address": "0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD",
+       "doc": "https://docs.ripple.com/products/stablecoin/overview/token-addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -38500,6 +38765,11 @@
       "name": "simulate:steakhouse:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:steakhouse:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -38513,22 +38783,41 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.steakhouse.financial/",
+     "mode": "fork",
+     "label": null,
+     "note": "ERC-4626 deposit and redeem on the Ethereum MetaMorpho Steakhouse USDC vault.",
+     "appUrl": "https://www.steakhouse.financial",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:morpho:smoke"
-      ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:steakhouse:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Steakhouse USDC",
+       "address": "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
+       "doc": "https://app.morpho.org/ethereum/vault/0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB/steakhouse-usdc"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDC",
+       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+       "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -38587,12 +38876,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -38664,12 +38954,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -38753,12 +39044,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -38842,12 +39134,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -38931,12 +39224,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -39019,12 +39313,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -39099,12 +39394,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -39172,12 +39468,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -39261,12 +39558,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -39339,6 +39637,11 @@
       "name": "simulate:upshift:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:upshift:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -39352,22 +39655,47 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": null,
+     "note": "Upshift Sentora USD on Ethereum. Deposit USDC, then instantRedeem. The instant redemption fee (basis points) is taken out of the assets returned. If instant redeem is closed, requestRedeem is asserted instead of a completed withdrawal.",
      "appUrl": "https://app.upshift.finance",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:morpho:smoke"
-      ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:upshift:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:upshift:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Sentora USD vault",
+       "address": "0x74aD2F789Ed583DBd141bbdafC673fE1F033718b",
+       "doc": "https://docs.upshift.finance/contracts/fee-sharing"
+      },
+      {
+       "chain": "ethereum",
+       "label": "sentUSD",
+       "address": "0xe8aA1A9eC6b9BC455D8f33E4BDC685dedFf82407",
+       "doc": "https://docs.upshift.finance/contracts/fee-sharing"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDC",
+       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+       "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -39422,12 +39750,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -39495,12 +39824,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -39564,12 +39894,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -39656,12 +39987,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -39745,12 +40077,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -39806,12 +40139,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -39867,12 +40201,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -39936,12 +40271,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40025,12 +40361,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40094,12 +40431,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40179,12 +40517,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40240,12 +40579,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40321,12 +40661,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40394,12 +40735,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40455,12 +40797,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40516,12 +40859,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40572,12 +40916,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40645,12 +40990,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40706,12 +41052,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40762,12 +41109,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40835,12 +41183,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40900,12 +41249,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -40985,12 +41335,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41046,12 +41397,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41107,12 +41459,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41184,12 +41537,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41245,12 +41599,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41330,12 +41685,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41407,12 +41763,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41480,12 +41837,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41541,12 +41899,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41606,12 +41965,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41671,12 +42031,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41727,12 +42088,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41792,12 +42154,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41861,12 +42224,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41930,12 +42294,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -41999,12 +42364,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -42060,12 +42426,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -42125,12 +42492,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -42181,12 +42549,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -42262,12 +42631,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -42335,12 +42705,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -42404,12 +42775,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -42481,12 +42853,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -42572,12 +42945,13 @@
       }
      ],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -42661,12 +43035,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -42741,7 +43116,13 @@
       "tvl": 734
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:yearn:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.5135,
     "components": {
@@ -42753,22 +43134,41 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://yearn.fi/",
+     "mode": "fork",
+     "label": null,
+     "note": "Yearn V3 USDC-1 (yvUSDC-1) is ERC-4626. Deposit USDC and redeem.",
+     "appUrl": "https://yearn.fi",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:morpho:smoke"
-      ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:yearn:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:yearn:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "USDC-1 yVault",
+       "address": "0xBe53A109B494E5c9f97b9Cd39Fe969BE68BF6204",
+       "doc": "https://yearn.fi/api/vault/markdown?address=0xBe53A109B494E5c9f97b9Cd39Fe969BE68BF6204&chainId=1"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDC",
+       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+       "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -42839,12 +43239,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -42904,12 +43305,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -42969,12 +43371,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43030,12 +43433,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43095,12 +43499,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43184,12 +43589,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43240,12 +43646,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43301,12 +43708,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43366,12 +43774,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43439,12 +43848,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43530,12 +43940,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43619,12 +44030,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43688,12 +44100,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43757,12 +44170,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43834,12 +44248,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43923,12 +44338,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -43984,12 +44400,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44040,12 +44457,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44101,12 +44519,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44162,12 +44581,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44227,12 +44647,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44320,12 +44741,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44389,12 +44811,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44478,12 +44901,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44539,12 +44963,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44595,12 +45020,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44656,12 +45082,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44717,12 +45144,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44794,12 +45222,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44855,12 +45284,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -44944,12 +45374,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -45005,12 +45436,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -45070,12 +45502,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -45151,12 +45584,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -45212,12 +45646,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    },
@@ -45293,12 +45728,13 @@
      "tests": [],
      "contracts": [],
      "recipe": {
-      "title": "Generic vault check",
+      "title": "Generic vault fork",
       "chain": "ethereum",
       "commands": [
-       "npm run simulate:morpho:smoke"
+       "CHAIN=ethereum node scripts/startFork.js",
+       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
       ],
-      "note": "Vault curators are API-only. Morpho’s GraphQL smoke is the closest read."
+      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
      }
     }
    }
@@ -51877,7 +52313,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    },
@@ -51947,7 +52383,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    },
@@ -51982,7 +52418,13 @@
       "tvl": 456222409
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:symbiotic:read",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.6211,
     "components": {
@@ -51994,23 +52436,35 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Read-only",
+     "note": "Official docs publish VaultFactory, not a permissionless vault. Curator vaults set their own deposit whitelist. The fork test reads the factory and does not deposit.",
      "appUrl": "https://symbiotic.fi",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic restaking fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
-      ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:symbiotic:read"
+     ],
+     "tests": [
+      {
+       "script": "fork:symbiotic:read",
+       "action": "read",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "VaultFactory",
+       "address": "0xAEb6bdd95c502390db8f52c8909F703E9Af6a346",
+       "doc": "https://docs.symbiotic.fi/get-started/resources/addresses"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -52071,7 +52525,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    },
@@ -52260,7 +52714,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    },
@@ -52322,7 +52776,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    },
@@ -52388,7 +52842,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    },
@@ -52450,7 +52904,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    },
@@ -52523,7 +52977,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    },
@@ -52568,6 +53022,11 @@
       "name": "simulate:swell:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:swell:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -52581,23 +53040,35 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://app.swellnetwork.io/restake",
+     "mode": "fork",
+     "label": null,
+     "note": "rswETH deposit(). Skipped as a read when whitelistEnabled() is true.",
+     "appUrl": "https://www.swellnetwork.io",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic restaking fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
-      ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:swell:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:swell:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "rswETH",
+       "address": "0xFAe103DC9cf190eD75350761e95403b7b8aFa6c0",
+       "doc": "https://github.com/balancer/code-review/blob/main/rate-providers/rswethRateProvider.md"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -52737,6 +53208,16 @@
       "name": "simulate:eigenlayer:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:eigenlayer:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     },
+     {
+      "name": "fork:eigenlayer:queue",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -52750,23 +53231,61 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.eigencloud.xyz",
+     "mode": "fork",
+     "label": null,
+     "note": "StrategyManager.depositIntoStrategy on the stETH strategy, then DelegationManager.queueWithdrawals. The withdrawal delay is not advanced, so completion is not asserted.",
+     "appUrl": "https://www.eigenlayer.xyz",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic restaking fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
-      ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:eigenlayer:deposit",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:eigenlayer:queue"
+     ],
+     "tests": [
+      {
+       "script": "fork:eigenlayer:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      },
+      {
+       "script": "fork:eigenlayer:queue",
+       "action": "queue",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "StrategyManager",
+       "address": "0x858646372CC42E1A627fcE94aa7A7033e7CF075A",
+       "doc": "https://github.com/Layr-Labs/eigenlayer-contracts/blob/main/README.md"
+      },
+      {
+       "chain": "ethereum",
+       "label": "DelegationManager",
+       "address": "0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A",
+       "doc": "https://github.com/Layr-Labs/eigenlayer-contracts/blob/main/README.md"
+      },
+      {
+       "chain": "ethereum",
+       "label": "stETH strategy",
+       "address": "0x93c4b944D05dfe6df7645A86cd2206016c51564D",
+       "doc": "https://github.com/Layr-Labs/eigenlayer-contracts/blob/main/README.md"
+      },
+      {
+       "chain": "ethereum",
+       "label": "stETH",
+       "address": "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+       "doc": "https://docs.lido.fi/contracts/lido"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -52827,7 +53346,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    },
@@ -52996,6 +53515,11 @@
       "name": "simulate:puffer:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:puffer:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -53009,23 +53533,35 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.puffer.fi/restake",
+     "mode": "fork",
+     "label": null,
+     "note": "pufETH depositETH. Read-only when maxDeposit is 0.",
+     "appUrl": "https://www.puffer.fi",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic restaking fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
-      ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:puffer:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:puffer:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "pufETH",
+       "address": "0xD9A442856C234a39a81a089C06451EBAa4306a72",
+       "doc": "https://github.com/PufferFinance/pufETH"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -53098,7 +53634,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    },
@@ -53160,7 +53696,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    },
@@ -53222,7 +53758,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    },
@@ -53308,7 +53844,7 @@
        "CHAIN=ethereum node scripts/startFork.js",
        "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi:deposit"
       ],
-      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe."
+      "note": "No dedicated fork script. ether.fi deposit on an Ethereum fork is the restaking recipe. EigenLayer deposit and queue are the direct restaking path when a row has them."
      }
     }
    }
@@ -74230,7 +74766,7 @@
    "Domains": 14,
    "Coins Tracker": 2
   },
-  "forkInTop200": 12,
-  "apiOnlyInTop200": 188
+  "forkInTop200": 17,
+  "apiOnlyInTop200": 183
  }
 }
