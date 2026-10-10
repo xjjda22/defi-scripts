@@ -104,13 +104,14 @@ async function eigenQueue(base) {
     user,
     EIGENLAYER.stethStrategy
   );
-  const ok = queuedAfter > queuedBefore;
+  // The queued shares leave the staker's deposit shares straight away, so they must be back to `before`.
+  const ok = queuedAfter === queuedBefore + 1n && sharesAfter === before;
   return finish({
     ...base,
     ok,
     key: `queued=${queuedBefore.toString()}->${queuedAfter.toString()} sharesLeft=${formatUnits(sharesAfter, 18)}`,
     detail: `deposited ${formatUnits(amount, 18)} stETH (shares ${formatUnits(before, 18)} -> ${formatUnits(after, 18)}) then queueWithdrawals\ncumulativeWithdrawalsQueued ${queuedBefore} -> ${queuedAfter}\ndeposit shares left ${formatUnits(sharesAfter, 18)}\nThe withdrawal delay is not advanced. Completion is not asserted.\ntx ${receipt.hash}`,
-    error: ok ? null : "queueWithdrawals did not increment cumulativeWithdrawalsQueued",
+    error: ok ? null : "queueWithdrawals did not queue exactly one withdrawal of the deposited shares",
   });
 }
 
@@ -204,15 +205,8 @@ async function run() {
     return finish({ ...base, ok: false, error: `Unknown restaking action ${protocol}:${action}` });
   } catch (err) {
     const message = explain(err);
-    if ((protocol === "swell" || protocol === "puffer") && gated(message)) {
-      return finish({
-        ...base,
-        ok: true,
-        key: `readOnly=${message.slice(0, 80)}`,
-        detail: message,
-      });
-    }
-    return finish({ ...base, ok: false, error: message });
+    // A revert is a FAIL, even when it looks like a whitelist or cap.
+    return finish({ ...base, ok: false, error: gated(message) ? `gated: ${message}` : message });
   }
 }
 

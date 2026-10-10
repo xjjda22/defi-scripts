@@ -117,18 +117,28 @@ async function erc4626(base, spec) {
   const assetsBefore = await asset.balanceOf(user);
   await approve(spec.asset, signer, spec.vault, amount);
   await (await vault.deposit(amount, user, GAS)).wait();
+  const assetsMid = await asset.balanceOf(user);
   const shares = (await vault.balanceOf(user)) - sharesBefore;
   const redeemed = await vault.redeem(shares, user, user, GAS);
   const receipt = await redeemed.wait();
   const assetsAfter = await asset.balanceOf(user);
+  const sharesAfter = await vault.balanceOf(user);
   const dust = amount / 1000n + 2n;
-  const ok = shares > 0n && assetsAfter + dust >= assetsBefore;
+  // A real round trip: the deposit pulled `amount`, minted shares, the redeem burned all of
+  // them and returned the assets (within rounding). Equal before/after balances alone could be a no-op.
+  const pulled = assetsBefore - assetsMid === amount;
+  const burned = sharesAfter === sharesBefore;
+  const returned = assetsAfter + dust >= assetsBefore && assetsAfter > assetsMid;
+  const ok = shares > 0n && pulled && burned && returned;
+  const mid = formatUnits(assetsMid, spec.decimals);
   return finish({
     ...base,
     ok,
-    key: `${spec.label}Shares=${formatUnits(shares, shareDecimals)} ${spec.symbol}=${formatUnits(assetsBefore, spec.decimals)}->${formatUnits(assetsAfter, spec.decimals)}`,
-    detail: `deposited ${formatUnits(amount, spec.decimals)} ${spec.symbol} into ${spec.label}\nshares ${formatUnits(shares, shareDecimals)}\n${spec.symbol} ${formatUnits(assetsBefore, spec.decimals)} -> ${formatUnits(assetsAfter, spec.decimals)}\ntx ${receipt.hash}`,
-    error: ok ? null : `${spec.label} deposit/redeem did not return assets within rounding`,
+    key: `${spec.label}Shares=0->${formatUnits(shares, shareDecimals)}->${formatUnits(sharesAfter - sharesBefore, shareDecimals)} ${spec.symbol}=${formatUnits(assetsBefore, spec.decimals)}->${mid}->${formatUnits(assetsAfter, spec.decimals)}`,
+    detail: `deposited ${formatUnits(amount, spec.decimals)} ${spec.symbol} into ${spec.label}\nshares minted ${formatUnits(shares, shareDecimals)}, left after redeem ${formatUnits(sharesAfter - sharesBefore, shareDecimals)}\n${spec.symbol} ${formatUnits(assetsBefore, spec.decimals)} -> ${mid} (after deposit) -> ${formatUnits(assetsAfter, spec.decimals)} (after redeem)\ntx ${receipt.hash}`,
+    error: ok
+      ? null
+      : `${spec.label} round trip failed: pulled=${pulled} burned=${burned} returned=${returned}`,
   });
 }
 
@@ -200,8 +210,12 @@ async function upshiftDeposit(base) {
   const assetsBefore = await usdc.balanceOf(user);
   await approve(UPSHIFT.usdc, signer, UPSHIFT.vault, depositAmount);
   await (await vault.deposit(UPSHIFT.usdc, depositAmount, user, GAS)).wait();
+  const assetsMid = await usdc.balanceOf(user);
   const shares = (await sent.balanceOf(user)) - sharesBefore;
   if (shares === 0n) return finish({ ...base, ok: false, error: "sentUSD shares were not minted" });
+  if (assetsBefore - assetsMid !== depositAmount) {
+    return finish({ ...base, ok: false, error: "Upshift deposit did not pull the USDC" });
+  }
   // instantRedemptionFee() is in basis points. A same-block round trip returns assets minus that fee.
   const feeBps = await reader.instantRedemptionFee();
   let redeemed = false;
@@ -216,12 +230,13 @@ async function upshiftDeposit(base) {
   }
   const assetsAfter = await usdc.balanceOf(user);
   const fee = redeemed ? (depositAmount * feeBps) / 10_000n : 0n;
-  const ok = redeemed ? assetsAfter + fee + 2n >= assetsBefore : shares > 0n;
+  const sharesLeft = (await sent.balanceOf(user)) - sharesBefore;
+  const ok = sharesLeft === 0n && (redeemed ? assetsAfter + fee + 2n >= assetsBefore : true);
   const mode = redeemed ? "instantRedeem" : "requestRedeem";
   return finish({
     ...base,
     ok,
-    key: `sentUSD=${formatUnits(shares, 6)} USDC=${formatUnits(assetsBefore, 6)}->${formatUnits(assetsAfter, 6)} feeBps=${feeBps.toString()} ${mode}`,
+    key: `sentUSD=0->${formatUnits(shares, 6)}->${formatUnits(sharesLeft, 6)} USDC=${formatUnits(assetsBefore, 6)}->${formatUnits(assetsMid, 6)}->${formatUnits(assetsAfter, 6)} feeBps=${feeBps.toString()} ${mode}`,
     detail: `deposited ${formatUnits(depositAmount, 6)} USDC into Sentora USD\nsentUSD ${formatUnits(shares, 6)}\nUSDC ${formatUnits(assetsBefore, 6)} -> ${formatUnits(assetsAfter, 6)}\ninstant redemption fee ${feeBps.toString()} bps\n${mode}\ntx ${receipt.hash}`,
     error: ok ? null : "Upshift deposit did not return USDC within the instant redemption fee",
   });
@@ -243,17 +258,9 @@ async function run() {
     return finish({ ...base, ok: false, error: `Unknown vault action ${protocol}:${action}` });
   } catch (err) {
     const message = explain(err);
-    const spec = VAULTS[protocol];
-    if (spec && gated(message)) return readVault(base, spec, message.slice(0, 120));
-    if (protocol === "upshift" && gated(message)) return upshiftRead(base, message.slice(0, 120));
-    if (protocol === "veda" && gated(message)) {
-      return finish({
-        ...base,
-        ok: false,
-        error: message,
-      });
-    }
-    return finish({ ...base, ok: false, error: message });
+    // A revert is a FAIL, even when it looks like a gate. Only explicit pre-checks
+    // (maxDeposit 0, deposits paused or closed) turn a test into a labelled read.
+    return finish({ ...base, ok: false, error: gated(message) ? `gated: ${message}` : message });
   }
 }
 

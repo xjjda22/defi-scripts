@@ -63,7 +63,7 @@ Every action starts from the block Anvil forked (latest, or `FORK_BLOCK`). Whale
 | `fork:kelp:deposit` | Ethereum | `depositETH` | rsETH increases, or skip when paused |
 | `fork:renzo:deposit` | Ethereum | `depositETH` | ezETH increases, or skip when capped |
 | `fork:eigenlayer:deposit` | Ethereum | `depositIntoStrategy` on the stETH strategy | deposit shares increase |
-| `fork:eigenlayer:queue` | Ethereum | deposit, then `queueWithdrawals` | queued count increases. The delay is not advanced |
+| `fork:eigenlayer:queue` | Ethereum | deposit, then `queueWithdrawals` | exactly one withdrawal queued and the deposited shares leave the staker (`sharesLeft` back to the starting 0). The delay is not advanced, completion is not asserted |
 | `fork:symbiotic:read` | Ethereum | VaultFactory code | **Read-only.** Docs do not publish a permissionless vault |
 | `fork:swell:deposit` | Ethereum | rswETH `deposit()` | rswETH increases, or read-only when the whitelist is on |
 | `fork:puffer:deposit` | Ethereum | pufETH `depositETH` | pufETH increases, or read-only when `maxDeposit` is 0 |
@@ -72,14 +72,14 @@ Raydium is Solana. The suite does not fork it. The showcase marks that row API-o
 
 ## Vault curators and allocators
 
-Same rules. A vault whose `maxDeposit` is 0, or whose deposit reverts as allowlisted or paused, is not deposited into. The script prints `readOnly=` and the panel says **Read-only** when that is the known state.
+Same rules. A vault whose `maxDeposit` is 0 (or whose deposits are paused or closed, checked before any transaction) is not deposited into. The script prints `readOnly=` and the panel says **Read-only** when that is the known state. A deposit that reverts is a FAIL, even if the revert looks like an allowlist or cap.
 
 | Script | What it asserts |
 | --- | --- |
-| `fork:steakhouse:deposit` | USDC into MetaMorpho Steakhouse USDC, then redeem. Shares minted and assets back within rounding |
+| `fork:steakhouse:deposit` | USDC into MetaMorpho Steakhouse USDC, then redeem. Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding (the key prints USDC before → after deposit → after redeem) |
 | `fork:gauntlet:deposit` | Same on MetaMorpho Gauntlet USDC Prime (V1). V2 `maxDeposit` is 0, so V2 is not deposited into |
 | `fork:sentora:deposit` | Sentora RLUSD Main is on Ethereum and is Morpho Vault V2. `maxDeposit` is 0, so this reads `totalAssets` and `convertToAssets`. **Read-only** |
-| `fork:veda:deposit` | WETH into the ether.fi Liquid ETH BoringVault through its Teller. Shares minted. `bulkWithdraw` is not a public capability, and WETH `allowWithdraws` was false, so there is no redeem |
+| `fork:veda:deposit` | **Deposit only.** WETH into the ether.fi Liquid ETH BoringVault through its Teller. Shares minted. `bulkWithdraw` is not a public capability, and WETH `allowWithdraws` was false, so there is no redeem |
 | `fork:upshift:deposit` | USDC into Upshift Sentora USD, then `instantRedeem`. Assets come back minus `instantRedemptionFee` (basis points). If instant redeem is closed, `requestRedeem` is asserted and the withdrawal is not waited out |
 | `fork:yearn:deposit` | USDC into Yearn V3 USDC-1, then redeem |
 | `fork:euler:deposit` | USDC into Euler Earn K3 Capital Earn USDC (first non-deprecated Ethereum vault in euler-labels), then redeem |
