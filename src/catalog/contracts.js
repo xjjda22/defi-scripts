@@ -274,7 +274,7 @@ function contractBook() {
     push(book[key], eth, "Sentora RLUSD Main", "0x6dC58a0FdfC8D694e571DC59B9A52EEEa780E6bf", DOCS.sentora);
     push(book[key], eth, "RLUSD", "0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD", DOCS.rlusd);
   }
-  // Yearn V3 USDC-1. https://docs.yearn.fi/getting-started/products/yvaults/vault-tokens
+  // Yearn V3 USDC-1. https://yearn.fi/v3/1/0xBe53A109B494E5c9f97b9Cd39Fe969BE68BF6204
   for (const key of ["yearn", "yearn-finance"]) {
     push(book[key], eth, "USDC-1 yVault", "0xBe53A109B494E5c9f97b9Cd39Fe969BE68BF6204", DOCS.yearn);
     push(book[key], eth, "USDC", COMMON_TOKENS.USDC.ethereum, DOCS.usdc);

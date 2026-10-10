@@ -185,6 +185,7 @@ const FORK_RECIPES = [
   recipe({
     keys: ["veda"],
     category: "vaults",
+    label: "Deposit only",
     appUrl: "https://veda.tech",
     chain: "ethereum",
     contractKeys: ["veda"],
@@ -211,6 +212,7 @@ const FORK_RECIPES = [
   }),
   recipe({
     keys: ["euler", "euler-v2"],
+    label: "Euler Earn vault only",
     appUrl: "https://www.euler.finance",
     chain: "ethereum",
     contractKeys: ["euler"],
