@@ -7,12 +7,13 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 
 A session in four parts: repair the perps fork tests, record the BAND decision,
 make the protocol page describe what its tests actually do, then add a local
-runner so those tests can be run from the page.
+runner so those tests can be run from the page. A follow-up the same evening
+closed the two known issues it carried forward (`anvil_deal`, `308faf0`).
 
 ### Fixed
 
 - **Fabricated contract addresses removed from the showcase contract book**
-  ([#20](https://github.com/xjjda22/defi/defi-scripts/pull/20)). Three GMX V1
+  ([#20](https://github.com/xjjda22/defi-scripts/pull/20)). Three GMX V1
   entries had **no contract code** on Arbitrum, and one did not even pass EIP-55
   checksum validation. They shared a prefix with the real deployments and then
   diverged, so they read as legitimate:
@@ -36,6 +37,20 @@ runner so those tests can be run from the page.
   and `:queue` into one table row swallowed the queue action's assertion. A run
   now only merges while every non-script column is identical, so grouping can no
   longer hide a differing action or assertion.
+- **The fork top-up works again** (follow-up PR). `dealErc20` in
+  `src/simulation/fork/runtime.js` only called `anvil_deal`, which anvil 1.3.0
+  answers with `Method not found`, so it always returned `false`. It now tries
+  `anvil_dealERC20` / `anvil_deal` first, then writes the balance itself with
+  `anvil_setStorageAt`: the slots `balanceOf` reads (from `eth_createAccessList`),
+  then the balances mapping at slots 0–100 in Solidity and Vyper layouts. Every
+  write is confirmed with `balanceOf`; rebasing tokens are scaled to land on the
+  amount. Same API and return value.
+- **A short whale no longer fails a test.** `impersonateFunded` now writes the
+  amount into the fresh test account when no whale holds enough (not into the
+  whale, which can be a contract such as wstETH). `simulate:aave:v3:fork` and the
+  `dexForkRunner` execution path (`simulate:dex:*` with `SIMULATE_ONLY=false`),
+  which exited when the whale was short, top up instead.
+- **Broken PR links in this file** pointed at `xjjda22/defi/defi-scripts`; fixed.
 
 ### Changed
 
@@ -53,7 +68,7 @@ runner so those tests can be run from the page.
 
 ### Added
 
-- **Fork feature registry** ([#22](https://github.com/xjjda22/defi/defi-scripts/pull/22)).
+- **Fork feature registry** ([#22](https://github.com/xjjda22/defi-scripts/pull/22)).
   `src/catalog/forkFeatures.js` is the single source of truth for what each
   `fork:*` script does, what makes it PASS, and the dials a reader can set.
   **All 61 fork scripts** are covered: actions 36, perps 1, vaults 7, stables 17.
@@ -102,7 +117,7 @@ it is narrow by construction. Verified rather than assumed:
 
 ### Decisions
 
-- **BAND is now in research scope** ([#21](https://github.com/xjjda22/defi/defi-scripts/pull/21)).
+- **BAND is now in research scope** ([#21](https://github.com/xjjda22/defi-scripts/pull/21)).
   Earlier reads skipped it. When its posts are first read, add its file-name stem
   to `LIST_NAMES` in `src/analytics/ranking/mentions.js`.
 - **Perps fork coverage is closed.** GMX V1 is sunset and Hyperliquid matches
@@ -111,6 +126,15 @@ it is narrow by construction. Verified rather than assumed:
   rows, **101 sit on a chain the repo can fork**; the other 99 get contracts,
   explorer links and a stated reason rather than a blank panel.
   Larger blockers: Solana 26, Bitcoin 12, Hyperliquid L1 5, Sui 5, Near 4.
+- **`308faf0` dropped, not merged.** It is a `github-actions[bot]` refresh that
+  `showcase-refresh.yml` pushed to `fix/gap-audit-2026-10-10` eight minutes
+  *after* that branch merged as #19, so it never had a PR. It is the only commit
+  on the branch not in `main`, and it holds nothing but `showcase/data.json`.
+  Merging it would undo #22: its rows predate the registry, so all 200 lose
+  `testing.features` and `explorerUrl`. Its ranking is two hours newer than
+  `main`'s (`12:22Z` vs `10:36Z`, 2026-10-10), which the Mon/Wed/Fri 05:30
+  Pages rebuild already supersedes on the live page. The branch is left in place
+  because the GitHub connector cannot delete branches; it is safe to delete.
 
 ### Verified
 
@@ -122,6 +146,15 @@ Live fork runs, not mocks:
 | `fork:cbeth:rate` | Ethereum @ 26168262 | PASS `exchangeRate=1.141372229011236917` |
 | `fork:aave:supply` | Ethereum @ 26168264 | PASS `aToken=0.0->999.999999` |
 
+Follow-up, Ethereum fork via `ethereum-rpc.publicnode.com`, anvil 1.8.5: `dealErc20`
+gave 12,345 of USDC, USDT, DAI, WETH, WBTC, stETH, wstETH, USDe, crvUSD, USDS, sUSDS
+and aEthUSDC to fresh accounts, each spendable by `transfer`, in all three modes:
+native (`anvil_dealERC20`), access list, and slot scan (USDC slot 9, WETH 3,
+crvUSD Vyper slot 1, aEthUSDC 52). With every configured USDC, WETH and DAI whale
+zeroed on the fork, `fork:aave:supply`, `fork:aave:borrow`, `fork:sky:sdai`,
+`fork:compound:borrow` and `simulate:aave:v3:fork` PASS by topping up; on `main`
+the same fork fails `fork:aave:supply` and `fork:aave:borrow`.
+
 `fork:aave:supply` was run by clicking **Run** on the protocol page; output
 streamed into the card. `npm run lint`, `scripts/catalog.js --check` and
 `scripts/showcaseCheck.js` all pass, and `showcase/data.json` was confirmed
@@ -130,12 +163,8 @@ are byte-identical, with only `features` and `explorerUrl` added.
 
 ### Known issues carried forward
 
-- **`anvil_deal` is `Method not found` on anvil 1.3.0**, so `dealErc20` in
-  `src/simulation/fork/runtime.js` always returns `false` and the whale top-up
-  path is dead code. A test needing more than its whale holds hard-fails instead
-  of topping up. Found while building `fork:gmx:glp`; not fixed.
-- **`308faf0` "Refresh showcase/data.json"** is committed on
-  `fix/gap-audit-2026-10-10` but never merged. It is a large ranking refresh and
-  was deliberately kept out of #20 so that fix stayed reviewable.
 - **Playground batches 2+ are not built.** The runner exists, but coverage is
   still 20 of 200 rows with fork tests and 21 with contract addresses.
+
+Resolved in the follow-up: the dead `anvil_deal` top-up (see Fixed) and the
+unmerged `308faf0` refresh (see Decisions).

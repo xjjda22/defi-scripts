@@ -39,7 +39,16 @@ Every test has a hard deadline, `FORK_TEST_TIMEOUT_MS` (default 180000). The scr
 
 ## What each recipe does
 
-Every action starts from the block Anvil forked (latest, or `FORK_BLOCK`). Whales come from `src/utils/impersonate.js`. If that balance is short, the test calls `anvil_deal` on the fork. The whale then sends the test amount to a brand-new impersonated account, and the test runs from that account, so positions from earlier tests on the same fork (an Aave borrow, a Spark supply) do not leak into later ones. `FORK_SHARED_WHALE=1` runs from the whale directly. Nothing signs with a private key.
+Every action starts from the block Anvil forked (latest, or `FORK_BLOCK`). Whales come from `src/utils/impersonate.js`. The whale sends the test amount to a brand-new impersonated account, and the test runs from that account, so positions from earlier tests on the same fork (an Aave borrow, a Spark supply) do not leak into later ones. `FORK_SHARED_WHALE=1` runs from the whale directly. Nothing signs with a private key.
+
+If no whale holds enough, `dealErc20` (`src/simulation/fork/runtime.js`) writes the balance straight into the fresh account instead, and the test runs as before. It tries, in order: `anvil_dealERC20` or `anvil_deal` when the node answers them (anvil 1.3.0 returns `Method not found` for `anvil_deal`); the storage slots `balanceOf` reads, from `eth_createAccessList`; then the balances mapping at slots 0–100 in both Solidity (`keccak(holder, slot)`) and Vyper (`keccak(slot, holder)`) layouts. Each write goes in with `anvil_setStorageAt` and only counts once `balanceOf` confirms it. Proxies work because storage sits at the proxy (USDC's FiatTokenV2 balances are slot 9). Rebasing tokens (stETH shares, Aave aTokens) are scaled so `balanceOf` lands on the amount. Verified on USDC, USDT, DAI, WETH, WBTC, stETH, wstETH, USDe, crvUSD (Vyper), USDS, sUSDS and aEthUSDC.
+
+| Env | Effect |
+| --- | --- |
+| `FORK_DEAL_MODE=storage` | Skip the node's own deal methods, so the storage path runs (what anvil 1.3.0 gets) |
+| `FORK_DEAL_MODE=probe` | Also skip the access list, so only the slot scan runs |
+| `FORK_DEAL_MAX_SLOT` | Highest slot the scan tries (default 100) |
+| `FORK_DEAL_DEBUG=1` | Print which method found the balance |
 
 The tables below, and the "Test it" panel on each protocol page, are both generated from `src/catalog/forkFeatures.js`. Edit that file, then run `npm run catalog:docs`. `npm run catalog:check` fails when a `fork:*` script has no entry there, so a new fork test cannot ship undocumented. Each entry also carries the `FORK_AMOUNT`-style dials a reader can set, which the panel renders.
 
@@ -111,7 +120,7 @@ Same rules. A vault whose `maxDeposit` is 0 (or whose deposits are paused or clo
 
 ## Stablecoins, RWA, and bridges
 
-Same rules: pinned block via `FORK_BLOCK`, whale impersonation or `anvil_deal`, no `PRIVATE_KEY`. Addresses are in `src/catalog/contracts.js` with the doc link.
+Same rules: pinned block via `FORK_BLOCK`, whale impersonation, or `dealErc20` when the whale is short, no `PRIVATE_KEY`. Addresses are in `src/catalog/contracts.js` with the doc link.
 
 <!-- features:stables -->
 | Script | What it asserts |
