@@ -372,6 +372,7 @@
     "fork:symbiotic:read": "CHAIN=ethereum FORK_TARGET=symbiotic FORK_PROTOCOL=symbiotic FORK_ACTION=read node src/simulation/fork/run.js",
     "fork:swell:deposit": "CHAIN=ethereum FORK_TARGET=swell FORK_PROTOCOL=swell FORK_ACTION=deposit node src/simulation/fork/run.js",
     "fork:puffer:deposit": "CHAIN=ethereum FORK_TARGET=puffer FORK_PROTOCOL=puffer FORK_ACTION=deposit node src/simulation/fork/run.js",
+    "fork:gmx:read": "CHAIN=arbitrum FORK_TARGET=gmx FORK_PROTOCOL=gmx FORK_ACTION=read node src/simulation/fork/run.js",
     "fork:sky:convert": "CHAIN=ethereum FORK_TARGET=sky FORK_PROTOCOL=sky FORK_ACTION=convert node src/simulation/fork/run.js",
     "fork:sky:susds": "CHAIN=ethereum FORK_TARGET=sky FORK_PROTOCOL=sky FORK_ACTION=susds node src/simulation/fork/run.js",
     "fork:sky:sdai": "CHAIN=ethereum FORK_TARGET=sky FORK_PROTOCOL=sky FORK_ACTION=sdai node src/simulation/fork/run.js",

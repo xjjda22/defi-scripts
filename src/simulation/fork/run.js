@@ -43,6 +43,7 @@ const TARGETS = {
   symbiotic: () => require("./restakeFlows").run(),
   swell: () => require("./restakeFlows").run(),
   puffer: () => require("./restakeFlows").run(),
+  gmx: () => require("./perpFlows").run(),
 };
 
 // Every fork test has a hard deadline so a stuck RPC call cannot hang the suite.
