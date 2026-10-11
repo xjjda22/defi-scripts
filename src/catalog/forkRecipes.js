@@ -115,6 +115,16 @@ const FORK_RECIPES = [
     tests: [test("fork:monad:v3", "swap", "monad")],
   }),
   recipe({
+    keys: ["gmx"],
+    appUrl: "https://gmx.io",
+    chain: "arbitrum",
+    contractKeys: ["gmx"],
+    category: "perps",
+    label: "Read-only (V1 vault, sunset)",
+    note: "GMX V1 is sunset: the docs say trading and providing liquidity are no longer supported, Vault.isSwapEnabled()/isLeverageEnabled() are false and GLP minting reverts. The script reads the V1 vault, GLP supply and GLP price. The V2 perp order pipeline is not exercised on a local fork; analytics:gmx:perps covers OI and fees.",
+    tests: [test("fork:gmx:read", "read", "arbitrum")],
+  }),
+  recipe({
     keys: ["aave", "aave-v2", "aave-v3", "aave-v4"],
     appUrl: "https://app.aave.com",
     chain: "ethereum",

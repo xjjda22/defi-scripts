@@ -36,6 +36,8 @@ const DOCS = {
   optimism: "https://docs.optimism.io/chain/addresses",
   across: "https://docs.across.to/chains-and-contracts",
   stargate: "https://docs.stargate.finance/resources/contracts/mainnet-contracts",
+  // V1 is sunset; this is the archived address list.
+  gmx: "https://docs.gmx.io/docs/archived/contracts-v1",
   // Curator vault pages on the official Morpho app. MetaMorpho is ERC-4626.
   steakhouse: "https://app.morpho.org/ethereum/vault/0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB/steakhouse-usdc",
   gauntlet: "https://app.morpho.org/ethereum/vault/0xdd0f28e19C1780eb6396170735D45153D261490d/gauntlet-usdc-prime",
@@ -112,6 +114,9 @@ function contractBook() {
     across: [],
     stargate: [],
     "stargate-finance": [],
+    gmx: [],
+    hyperliquid: [],
+    "hyperliquid-bridge": [],
     steakhouse: [],
     "steakhouse-financial": [],
     gauntlet: [],
@@ -249,6 +254,11 @@ function contractBook() {
     push(book[key], eth, "L1StandardBridge", "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1", DOCS.optimism);
     push(book[key], eth, "OptimismPortal", "0xbEb5Fc579115071764c7423A4f12eDde41f106Ed", DOCS.optimism);
   }
+  // GMX V1 on Arbitrum, sunset and read-only. Addresses from the archived official list.
+  push(book.gmx, "arbitrum", "Vault", "0x489ee077994B6658eAfA855C308275EAd8097C4A", DOCS.gmx);
+  push(book.gmx, "arbitrum", "GlpManager", "0x3963FfC9dff443c2A94f21b129D429891E32ec18", DOCS.gmx);
+  push(book.gmx, "arbitrum", "GlpRewardRouter", "0xB95DB5B167D75e6d04227CfFFA61069348d271F5", DOCS.gmx);
+  push(book.gmx, "arbitrum", "GLP", "0x4277f8F2c384827B5273592FF7CeBd9f2C1ac258", DOCS.gmx);
   // https://docs.across.to/chains-and-contracts — Ethereum SpokePool 0x5c7B…35C5
   push(book.across, eth, "SpokePool", "0x5c7BCd6E7De5423a257D81B442095A1a6ced35C5", DOCS.across);
   // https://docs.stargate.finance/resources/contracts/mainnet-contracts
@@ -474,5 +484,21 @@ module.exports = {
     acrossSpoke: "0x5c7BCd6E7De5423a257D81B442095A1a6ced35C5",
     stargateUsdcPool: "0xc026395860Db2d07ee33e05fE50ed7bD583189C7",
     stargateArbEid: 30110,
+  },
+  // GMX V1 on Arbitrum. The official docs state V1 is sunset and that trading and
+  // providing liquidity are no longer supported, so the fork coverage is read-only.
+  // https://docs.gmx.io/docs/archived/contracts-v1
+  // GLP/fsGLP come from the interface config that page links to:
+  // https://github.com/gmx-io/gmx-interface/blob/master/sdk/src/configs/contracts.ts
+  GMX: {
+    gmx: "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a",
+    vault: "0x489ee077994B6658eAfA855C308275EAd8097C4A",
+    router: "0xaBBc5F99639c9B6bCb58544ddf04EFA6802F4064",
+    reader: "0x22199a49A999c351eF7927602CFB187ec3cae489",
+    glpManager: "0x3963FfC9dff443c2A94f21b129D429891E32ec18",
+    glpRewardRouter: "0xB95DB5B167D75e6d04227CfFFA61069348d271F5",
+    rewardRouter: "0x5E4766F932ce00aA4a1A82d3Da85adf15C5694A1",
+    glp: "0x4277f8F2c384827B5273592FF7CeBd9f2C1ac258",
+    fsGlp: "0x1aDDD80E6039594eE970E5872D247bf0414C8903",
   },
 };

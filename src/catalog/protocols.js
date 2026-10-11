@@ -1261,6 +1261,7 @@ const SCRIPT_DESCRIPTIONS = {
   "fork:symbiotic:read": "Read the Symbiotic VaultFactory. Docs do not publish a permissionless vault",
   "fork:swell:deposit": "Deposit ETH into rswETH. Read-only when the whitelist is enabled",
   "fork:puffer:deposit": "Deposit ETH into pufETH via depositETH. Read-only when maxDeposit is 0",
+  "fork:gmx:read": "Read the sunset GMX V1 vault, GLP supply and GLP price. V1 liquidity is closed, so nothing is minted",
   "fork:sky:convert": "Convert DAI to USDS and back on the Sky DaiUsds converter and assert a 1:1 round trip",
   "fork:sky:susds": "Deposit USDS into sUSDS and redeem it on an Ethereum fork",
   "fork:sky:sdai": "Deposit DAI into sDAI and redeem it on an Ethereum fork",
