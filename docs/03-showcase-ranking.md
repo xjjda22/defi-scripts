@@ -79,6 +79,8 @@ The X bonus caps at **+0.072**, about a quarter of the spread between a median a
 
 `data/x-mentions.json` keeps the corpus summary (post count, date range, list names) and, per row, `id`, `name`, `count`, `lastSeen` and `lists`. No post text.
 
+The **BAND** list is in research scope. Earlier reads skipped it; it is now read and counted like the other lists. When its posts are first read, add its file-name stem to `LIST_NAMES` in `src/analytics/ranking/mentions.js` so the corpus records the display name rather than the raw stem.
+
 ## Categories
 
 DefiLlama's own category decides, through `LLAMA_TO_CATEGORY` in `src/analytics/ranking/categoryMap.js`. `SLUG_OVERRIDES` is a short, commented exception list:
