@@ -41,6 +41,9 @@ Every test has a hard deadline, `FORK_TEST_TIMEOUT_MS` (default 180000). The scr
 
 Every action starts from the block Anvil forked (latest, or `FORK_BLOCK`). Whales come from `src/utils/impersonate.js`. If that balance is short, the test calls `anvil_deal` on the fork. The whale then sends the test amount to a brand-new impersonated account, and the test runs from that account, so positions from earlier tests on the same fork (an Aave borrow, a Spark supply) do not leak into later ones. `FORK_SHARED_WHALE=1` runs from the whale directly. Nothing signs with a private key.
 
+The tables below, and the "Test it" panel on each protocol page, are both generated from `src/catalog/forkFeatures.js`. Edit that file, then run `npm run catalog:docs`. `npm run catalog:check` fails when a `fork:*` script has no entry there, so a new fork test cannot ship undocumented. Each entry also carries the `FORK_AMOUNT`-style dials a reader can set, which the panel renders.
+
+<!-- features:actions -->
 | Script | Chain | Action | Assertion |
 | --- | --- | --- | --- |
 | `fork:uniswap:v2` / `:v3` | Ethereum | WETH→USDC through the existing DEX runner | USDC balance increases |
@@ -50,10 +53,10 @@ Every action starts from the block Anvil forked (latest, or `FORK_BLOCK`). Whale
 | `fork:curve:swap` | Ethereum | USDC→USDT on 3pool | USDT balance increases |
 | `fork:aerodrome:swap` | Base | **Reference swap only:** Uniswap V3 (SwapRouter02) on Base, because the Slipstream quoter reverts here. Aerodrome contracts are not exercised | USDC balance increases |
 | `fork:velodrome:swap` | Optimism | **Reference swap only:** Uniswap V3 on Optimism. Velodrome contracts are not exercised | USDC balance increases |
-| `fork:pancakeswap:v3` | Ethereum (`CHAIN=bsc` for BSC) | WETH→USDC on PancakeSwap V3 | USDC balance increases |
-| `fork:monad:v3` | Monad | Uniswap V3 | skipped when `MONAD_RPC_URL` is unset |
+| `fork:pancakeswap:v3` | Ethereum | WETH→USDC on PancakeSwap V3. `CHAIN=bsc` runs it on BSC instead | USDC balance increases |
+| `fork:monad:v3` | Monad | Uniswap V3 | Skipped when `MONAD_RPC_URL` is unset |
 | `fork:aave:supply` / `:borrow` / `:repay` / `:withdraw` | Ethereum | Aave V3 pool from `chains.js` | aToken, debt, or wallet balance moves the right way |
-| `fork:spark:*` | Ethereum | Same four actions on the SparkLend pool | Spark is an Aave V3 fork |
+| `fork:spark:supply` / `:borrow` / `:repay` / `:withdraw` | Ethereum | Same four actions on the SparkLend pool | Spark is an Aave V3 fork |
 | `fork:compound:supply` / `:borrow` | Ethereum | Compound III cUSDCv3 | base balance or borrow balance increases |
 | `fork:morpho:supply` / `:borrow` | Ethereum | One listed WETH/USDC Morpho Blue market | supply shares or borrow shares increase |
 | `fork:lido:submit` / `:wrap` | Ethereum | `submit` then optional `wrap` | stETH, then wstETH, increases |
@@ -67,14 +70,17 @@ Every action starts from the block Anvil forked (latest, or `FORK_BLOCK`). Whale
 | `fork:symbiotic:read` | Ethereum | VaultFactory code | **Read-only.** Docs do not publish a permissionless vault |
 | `fork:swell:deposit` | Ethereum | rswETH `deposit()` | rswETH increases, or read-only when the whitelist is on |
 | `fork:puffer:deposit` | Ethereum | pufETH `depositETH` | pufETH increases, or read-only when `maxDeposit` is 0 |
+<!-- /features:actions -->
 
 ## Perps
 
 Perp books are not Uniswap-style routers. GMX V2 runs an order pipeline and Hyperliquid matches off-chain on its own L1, so neither is reachable from a plain EVM fork. The rest of the perps tab stays API-only (`analytics:<name>:perps` + smoke), same rule as Solana venues.
 
+<!-- features:perps -->
 | Script | Chain | Action | Assertion |
 | --- | --- | --- | --- |
 | `fork:gmx:read` | Arbitrum | Read-only: GMX V1 vault, GLP supply and GLP price | USDC in the V1 vault and GLP supply both above 0 |
+<!-- /features:perps -->
 
 **GMX V1 is sunset, so there is no mint test.** [Contracts for V1](https://docs.gmx.io/docs/archived/contracts-v1) says trading and providing liquidity are no longer supported, and the live chain agrees:
 
@@ -91,6 +97,7 @@ Raydium is Solana. The suite does not fork it. The showcase marks that row API-o
 
 Same rules. A vault whose `maxDeposit` is 0 (or whose deposits are paused or closed, checked before any transaction) is not deposited into. The script prints `readOnly=` and the panel says **Read-only** when that is the known state. A deposit that reverts is a FAIL, even if the revert looks like an allowlist or cap.
 
+<!-- features:vaults -->
 | Script | What it asserts |
 | --- | --- |
 | `fork:steakhouse:deposit` | USDC into MetaMorpho Steakhouse USDC, then redeem. Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding (the key prints USDC before → after deposit → after redeem) |
@@ -100,11 +107,13 @@ Same rules. A vault whose `maxDeposit` is 0 (or whose deposits are paused or clo
 | `fork:upshift:deposit` | USDC into Upshift Sentora USD, then `instantRedeem`. Assets come back minus `instantRedemptionFee` (basis points). If instant redeem is closed, `requestRedeem` is asserted and the withdrawal is not waited out |
 | `fork:yearn:deposit` | USDC into Yearn V3 USDC-1, then redeem |
 | `fork:euler:deposit` | USDC into Euler Earn K3 Capital Earn USDC (first non-deprecated Ethereum vault in euler-labels), then redeem |
+<!-- /features:vaults -->
 
 ## Stablecoins, RWA, and bridges
 
 Same rules: pinned block via `FORK_BLOCK`, whale impersonation or `anvil_deal`, no `PRIVATE_KEY`. Addresses are in `src/catalog/contracts.js` with the doc link.
 
+<!-- features:stables -->
 | Script | What it asserts |
 | --- | --- |
 | `fork:sky:convert` | DAI→USDS→DAI on the Sky converter, 1:1 |
@@ -121,6 +130,7 @@ Same rules: pinned block via `FORK_BLOCK`, whale impersonation or `anvil_deal`, 
 | `fork:base:deposit` / `fork:optimism:deposit` | `L1StandardBridge.depositETH`. ETH held by the bridge + portal (+ the `ETHLockbox` that `OptimismPortal.ethLockbox()` returns; OP Mainnet holds its ETH there, Base returned none on 2026-10-10) increases by the deposit and `ETHDepositInitiated` is emitted |
 | `fork:across:deposit` | `SpokePool.depositV3` locks USDC on Ethereum toward Base |
 | `fork:stargate:quote` / `:deposit` | `quoteOFT` + `quoteSend`, then `send` locks USDC toward Arbitrum |
+<!-- /features:stables -->
 
 Bridge panels are labeled **Source chain only**. A single fork cannot see the destination credit. Rollup derivation, Across fillers, and LayerZero relayers are off this machine.
 

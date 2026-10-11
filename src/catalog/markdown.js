@@ -1,4 +1,5 @@
 const { KINDS } = require("./catalog");
+const { SECTIONS, featuresForSection } = require("./forkFeatures");
 
 const DOC_PATH = "docs/02-protocol-catalog.md";
 const README_START = "<!-- catalog:start -->";
@@ -113,4 +114,89 @@ function replaceReadmeSection(readme, catalog) {
   return readme.slice(0, start) + renderReadmeSection(catalog) + readme.slice(end + README_END.length);
 }
 
-module.exports = { DOC_PATH, renderDoc, replaceReadmeSection };
+// --- Fork feature tables in docs/04-fork-testing.md -------------------------
+// Generated from src/catalog/forkFeatures.js so the doc and the showcase panel
+// cannot describe different behaviour.
+
+const FORK_DOC_PATH = "docs/04-fork-testing.md";
+const FEATURE_START = id => `<!-- features:${id} -->`;
+const FEATURE_END = id => `<!-- /features:${id} -->`;
+const COLUMN_HEADERS = { script: "Script", chain: "Chain", action: "Action", assertion: "Assertion" };
+
+/**
+ * One docs row per `group`, fanned back out into the individual scripts.
+ * `fork:aave:supply` / `:borrow` when the whole group shares a protocol,
+ * otherwise every name in full (`fork:base:deposit` / `fork:optimism:deposit`).
+ */
+function scriptCell(rows) {
+  const protocol = script => script.split(":")[1];
+  const shared = rows.every(row => protocol(row.script) === protocol(rows[0].script));
+  return rows
+    .map((row, index) => {
+      if (index === 0) return `\`${row.script}\``;
+      return shared ? `\`:${row.script.split(":").slice(2).join(":")}\`` : `\`${row.script}\``;
+    })
+    .join(" / ");
+}
+
+/**
+ * Merge consecutive registry entries that share a `group` into one docs row.
+ * A run is only merged while every non-script cell is identical, so grouping can
+ * never hide a differing action or assertion the way a naive merge would.
+ */
+function groupRuns(rows, columns) {
+  const shared = row => columns.filter(col => col !== "script").map(col => String(row[col] == null ? "" : row[col])).join("\u0000");
+  const runs = [];
+  for (const row of rows) {
+    const last = runs[runs.length - 1];
+    if (row.group && last && last.group === row.group && last.shared === shared(row)) {
+      last.rows.push(row);
+      continue;
+    }
+    runs.push({ group: row.group || null, shared: shared(row), rows: [row] });
+  }
+  return runs;
+}
+
+const chainLabel = chain => (chain ? chain.charAt(0).toUpperCase() + chain.slice(1) : "");
+
+function renderFeatureTable(section) {
+  const header = section.columns.map(col =>
+    col === "assertion" && section.assertionHeader ? section.assertionHeader : COLUMN_HEADERS[col]
+  );
+  const lines = [`| ${header.join(" | ")} |`, `| ${header.map(() => "---").join(" | ")} |`];
+  for (const run of groupRuns(featuresForSection(section.id), section.columns)) {
+    const first = run.rows[0];
+    const cells = section.columns.map(col => {
+      if (col === "script") return scriptCell(run.rows);
+      if (col === "chain") return chainLabel(first[col]);
+      return cell(first[col] == null ? "" : first[col]);
+    });
+    lines.push(`| ${cells.join(" | ")} |`);
+  }
+  return lines.join("\n");
+}
+
+/** Replace every marked feature table block in docs/04 with generated content. */
+function replaceForkFeatureTables(doc) {
+  let out = doc;
+  for (const section of SECTIONS) {
+    const start = out.indexOf(FEATURE_START(section.id));
+    const end = out.indexOf(FEATURE_END(section.id));
+    if (start === -1 || end === -1) {
+      throw new Error(`${FORK_DOC_PATH} is missing ${FEATURE_START(section.id)} / ${FEATURE_END(section.id)} markers`);
+    }
+    const block = `${FEATURE_START(section.id)}\n${renderFeatureTable(section)}\n`;
+    out = out.slice(0, start) + block + out.slice(end);
+  }
+  return out;
+}
+
+module.exports = {
+  DOC_PATH,
+  FORK_DOC_PATH,
+  renderDoc,
+  replaceReadmeSection,
+  renderFeatureTable,
+  replaceForkFeatureTables,
+};

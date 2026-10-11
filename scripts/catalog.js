@@ -13,7 +13,7 @@ const path = require("path");
 const chalk = require("chalk");
 const { createTable } = require("../src/analytics/utils/displayHelpers");
 const { KINDS, buildCatalog, findEntries } = require("../src/catalog/catalog");
-const { DOC_PATH, renderDoc, replaceReadmeSection } = require("../src/catalog/markdown");
+const { DOC_PATH, FORK_DOC_PATH, renderDoc, replaceReadmeSection, replaceForkFeatureTables } = require("../src/catalog/markdown");
 
 const ROOT = path.resolve(__dirname, "..");
 const README_PATH = path.join(ROOT, "README.md");
@@ -62,7 +62,9 @@ function printCard(entry) {
 function writeDocs(catalog) {
   fs.writeFileSync(path.join(ROOT, DOC_PATH), renderDoc(catalog));
   fs.writeFileSync(README_PATH, replaceReadmeSection(fs.readFileSync(README_PATH, "utf8"), catalog));
-  console.log(chalk.green(`Wrote ${DOC_PATH} and the README catalog index.`));
+  const forkPath = path.join(ROOT, FORK_DOC_PATH);
+  fs.writeFileSync(forkPath, replaceForkFeatureTables(fs.readFileSync(forkPath, "utf8")));
+  console.log(chalk.green(`Wrote ${DOC_PATH}, ${FORK_DOC_PATH} and the README catalog index.`));
 }
 
 function check(catalog) {
@@ -70,6 +72,15 @@ function check(catalog) {
   const docPath = path.join(ROOT, DOC_PATH);
   if (!fs.existsSync(docPath) || fs.readFileSync(docPath, "utf8") !== renderDoc(catalog)) {
     problems.push(`${DOC_PATH} is stale (run npm run catalog:docs)`);
+  }
+  const forkPath = path.join(ROOT, FORK_DOC_PATH);
+  try {
+    const forkDoc = fs.readFileSync(forkPath, "utf8");
+    if (replaceForkFeatureTables(forkDoc) !== forkDoc) {
+      problems.push(`${FORK_DOC_PATH} feature tables are stale (run npm run catalog:docs)`);
+    }
+  } catch (e) {
+    problems.push(e.message);
   }
   const readme = fs.readFileSync(README_PATH, "utf8");
   try {
