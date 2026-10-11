@@ -656,7 +656,13 @@
      "tvl": 47826
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:rockawayx:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.8801,
    "components": {
@@ -668,24 +674,60 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://rockawayx.com/",
+    "mode": "fork",
+    "label": null,
+    "note": "RockawayX USDC Yield is a Morpho Vault V2 on Ethereum. V2 maxDeposit always returns 0, so the test checks that all four gates are unset, then deposits USDC and redeems every share.",
+    "appUrl": "https://app.morpho.org/ethereum/vault/0xE0181090c22579B6A217f1522cbf8c9f1F0C1965/rockawayx-usdc-yield",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:rockawayx:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:rockawayx:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:rockawayx:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit and redeem (RockawayX USDC Yield)",
+      "assertion": "USDC into RockawayX USDC Yield, a Morpho Vault V2, then redeem. V2 `maxDeposit` is always 0, so the pre-check is that all four gates are unset (a set gate makes it a labelled read). Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "RockawayX USDC Yield (Vault V2)",
+      "address": "0xE0181090c22579B6A217f1522cbf8c9f1F0C1965",
+      "doc": "https://app.morpho.org/ethereum/vault/0xE0181090c22579B6A217f1522cbf8c9f1F0C1965/rockawayx-usdc-yield",
+      "explorerUrl": "https://etherscan.io/address/0xE0181090c22579B6A217f1522cbf8c9f1F0C1965"
+     },
+     {
+      "chain": "ethereum",
+      "label": "USDC",
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -783,7 +825,7 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "note": "No fork test: NEAR Intents settles on NEAR. Balances live in the intents.near Verifier contract's internal ledger and solvers fill signed intents off-chain (docs.near-intents.org). EVM chains only hold bridged deposits, so there is no EVM contract with a permissionless action to assert on a fork. analytics:near:intents covers TVL and volume.",
     "appUrl": "https://near.com/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
@@ -1277,7 +1319,13 @@
      "tvl": 91862
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:llamalend:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.8566,
    "components": {
@@ -1289,24 +1337,75 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Llamalend lend vault",
+    "note": "Lends crvUSD into the Llamalend V1 wstETH-long vault (OneWayLendingFactory.vaults(13), ERC-4626) and redeems it. Borrowing against collateral through the market controller is not exercised.",
     "appUrl": "https://www.curve.finance/crvusd/ethereum/markets/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic lending fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-     ],
-     "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:llamalend:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:llamalend:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:llamalend:deposit",
+      "section": "actions",
+      "chain": "ethereum",
+      "title": "Lend crvUSD on Curve Llamalend",
+      "action": "crvUSD into the Llamalend V1 wstETH-long vault (`OneWayLendingFactory.vaults(13)`, ERC-4626), then redeem",
+      "assertion": "the factory still lists the vault, the deposit pulled the full amount, shares were minted, the redeem burned every share and crvUSD came back within rounding",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "crvUSD"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Llamalend V1 OneWayLendingFactory",
+      "address": "0xeA6876DDE9e3467564acBeE1Ed5bac88783205E0",
+      "doc": "https://docs.curve.finance/developer/deployments",
+      "explorerUrl": "https://etherscan.io/address/0xeA6876DDE9e3467564acBeE1Ed5bac88783205E0"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Llamalend V2 LendFactory",
+      "address": "0x8f6B56EC5ddF1F2691a1059f1D3cd97Ac9EaB0bd",
+      "doc": "https://docs.curve.finance/developer/deployments",
+      "explorerUrl": "https://etherscan.io/address/0x8f6B56EC5ddF1F2691a1059f1D3cd97Ac9EaB0bd"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Llamalend wstETH-long vault (factory vaults(13))",
+      "address": "0x21CF1c5Dc48C603b89907FE6a7AE83EA5e3709aF",
+      "doc": "https://docs.curve.finance/developer/deployments",
+      "explorerUrl": "https://etherscan.io/address/0x21CF1c5Dc48C603b89907FE6a7AE83EA5e3709aF"
+     },
+     {
+      "chain": "ethereum",
+      "label": "crvUSD",
+      "address": "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+      "doc": "https://docs.curve.finance/developer/deployments",
+      "explorerUrl": "https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -1444,14 +1543,43 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "note": "KYC-gated: no fork test. Re requires KYC/KYB for every mint and redemption of reUSD and reUSDe (docs.re.xyz/minting-and-redemptions/minting), so there is no permissionless action to run on a fork. The contracts listed are the Ethereum tokens and NAV oracles from the official contract page.",
     "appUrl": "https://app.re.xyz",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
     "tests": [],
     "features": [],
-    "contracts": [],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "reUSD",
+      "address": "0x5086bf358635B81D8C47C66d1C8b9E567Db70c72",
+      "doc": "https://docs.re.xyz/products/smart-contracts",
+      "explorerUrl": "https://etherscan.io/address/0x5086bf358635B81D8C47C66d1C8b9E567Db70c72"
+     },
+     {
+      "chain": "ethereum",
+      "label": "reUSDe",
+      "address": "0xdDC0f880ff6e4e22E4B74632fBb43Ce4DF6cCC5a",
+      "doc": "https://docs.re.xyz/products/smart-contracts",
+      "explorerUrl": "https://etherscan.io/address/0xdDC0f880ff6e4e22E4B74632fBb43Ce4DF6cCC5a"
+     },
+     {
+      "chain": "ethereum",
+      "label": "reUSD NAV oracle",
+      "address": "0xb45AC37Cc7fF7ec317e7D8C308781ECe431639f6",
+      "doc": "https://docs.re.xyz/products/smart-contracts",
+      "explorerUrl": "https://etherscan.io/address/0xb45AC37Cc7fF7ec317e7D8C308781ECe431639f6"
+     },
+     {
+      "chain": "ethereum",
+      "label": "reUSDe NAV oracle",
+      "address": "0x7844441f13C61CBD3d297F5d2D7fcaBf17f0b843",
+      "doc": "https://docs.re.xyz/products/smart-contracts",
+      "explorerUrl": "https://etherscan.io/address/0x7844441f13C61CBD3d297F5d2D7fcaBf17f0b843"
+     }
+    ],
     "recipe": {
      "title": "Generic stablecoin check",
      "chain": "ethereum",
@@ -2113,14 +2241,43 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "note": "Compliance-gated: no fork test. Nest (Plume Vaults) deposits go through a ComplianceProxy or the legacy NestVaultPredicateProxy, and each deposit needs a fresh Predicate attestation issued by the Nest API (docs.nest.credit integration guides), so a local fork cannot mint shares permissionlessly. Most TVL sits on Plume Mainnet, which the repo does not fork.",
     "appUrl": "https://app.plume.org/vaults",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
     "tests": [],
     "features": [],
-    "contracts": [],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "nALPHA share token",
+      "address": "0x593cCcA4c4bf58b7526a4C164cEEf4003C6388db",
+      "doc": "https://docs.nest.credit/developers/integration-guides/nalpha/",
+      "explorerUrl": "https://etherscan.io/address/0x593cCcA4c4bf58b7526a4C164cEEf4003C6388db"
+     },
+     {
+      "chain": "ethereum",
+      "label": "nALPHA USDC NestVault",
+      "address": "0x0342EE795e7864319fB8D48651b47feBf1163C34",
+      "doc": "https://docs.nest.credit/developers/integration-guides/nalpha/",
+      "explorerUrl": "https://etherscan.io/address/0x0342EE795e7864319fB8D48651b47feBf1163C34"
+     },
+     {
+      "chain": "ethereum",
+      "label": "nBASIS share token",
+      "address": "0x11113Ff3a60C2450F4b22515cB760417259eE94B",
+      "doc": "https://docs.nest.credit/developers/integration-guides/nbasis/",
+      "explorerUrl": "https://etherscan.io/address/0x11113Ff3a60C2450F4b22515cB760417259eE94B"
+     },
+     {
+      "chain": "ethereum",
+      "label": "nBASIS USDC NestVault",
+      "address": "0x5F35D1cef957467F4c7b35B36371355170A0DbB1",
+      "doc": "https://docs.nest.credit/developers/integration-guides/nbasis/",
+      "explorerUrl": "https://etherscan.io/address/0x5F35D1cef957467F4c7b35B36371355170A0DbB1"
+     }
+    ],
     "recipe": {
      "title": "Generic stablecoin check",
      "chain": "ethereum",
@@ -2312,7 +2469,13 @@
      "tvl": 949
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:dolomite:supply",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.8371,
    "components": {
@@ -2324,24 +2487,75 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://dolomite.io",
+    "mode": "fork",
+    "label": null,
+    "note": "Supplies USDC to DolomiteMargin through the official DepositWithdrawalRouter (account 0) and withdraws the full balance with BalanceCheckFlag.From. Borrowing and isolation-mode vaults are not exercised.",
+    "appUrl": "https://app.dolomite.io",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic lending fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-     ],
-     "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:dolomite:supply"
+    ],
+    "tests": [
+     {
+      "script": "fork:dolomite:supply",
+      "action": "supply",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:dolomite:supply",
+      "section": "actions",
+      "chain": "ethereum",
+      "title": "Supply and withdraw USDC on Dolomite",
+      "action": "`DepositWithdrawalRouter.depositWei` into account 0, then `withdrawWei` of the full balance with `BalanceCheckFlag.From`",
+      "assertion": "the deposit pulled the full amount, `DolomiteMargin.getAccountWei` rose by it, the withdraw left the account at 0 and the USDC came back",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "DolomiteMargin",
+      "address": "0x003Ca23Fd5F0ca87D01F6eC6CD14A8AE60c2b97D",
+      "doc": "https://docs.dolomite.io/smart-contract-addresses/core-immutable",
+      "explorerUrl": "https://etherscan.io/address/0x003Ca23Fd5F0ca87D01F6eC6CD14A8AE60c2b97D"
+     },
+     {
+      "chain": "ethereum",
+      "label": "DepositWithdrawalRouter",
+      "address": "0xf8b2c637A68cF6A17b1DF9F8992EeBeFf63d2dFf",
+      "doc": "https://docs.dolomite.io/smart-contract-addresses/core-routers",
+      "explorerUrl": "https://etherscan.io/address/0xf8b2c637A68cF6A17b1DF9F8992EeBeFf63d2dFf"
+     },
+     {
+      "chain": "ethereum",
+      "label": "BorrowPositionRouter",
+      "address": "0xF579b345cdA0860668b857De10ABD62442133D0F",
+      "doc": "https://docs.dolomite.io/smart-contract-addresses/core-routers",
+      "explorerUrl": "https://etherscan.io/address/0xF579b345cdA0860668b857De10ABD62442133D0F"
+     },
+     {
+      "chain": "ethereum",
+      "label": "USDC",
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -2416,7 +2630,7 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "note": "No fork test: Unit is run by a Guardian network that signs with MPC/TSS. Deposits go to Guardian-generated addresses and are credited on Hyperliquid L1, and the Ethereum treasury (0xBEa9f7FD27f4EE20066F18DEF0bc586eC221055A per docs.hyperunit.xyz key addresses) is an MPC account with no contract code. There is no EVM contract to exercise on a fork.",
     "appUrl": "https://hyperunit.xyz/deposit",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
@@ -2490,14 +2704,50 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "note": "Permissioned: no fork test. syrupUSDC and syrupUSDT deposits must go through SyrupRouter, which enforces PoolPermissionManager \"P:deposit\"; a first deposit needs an authorization signature from Maple, and withdrawals are a queued requestRedeem that Maple processes (docs.maple.finance smart-contract integration). analytics:maple:lending covers TVL and fees.",
     "appUrl": "https://www.maple.finance",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
     "tests": [],
     "features": [],
-    "contracts": [],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "syrupUSDC (PoolV2)",
+      "address": "0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b",
+      "doc": "https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration",
+      "explorerUrl": "https://etherscan.io/address/0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b"
+     },
+     {
+      "chain": "ethereum",
+      "label": "syrupUSDC SyrupRouter",
+      "address": "0x134cCaaA4F1e4552eC8aEcb9E4A2360dDcF8df76",
+      "doc": "https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration",
+      "explorerUrl": "https://etherscan.io/address/0x134cCaaA4F1e4552eC8aEcb9E4A2360dDcF8df76"
+     },
+     {
+      "chain": "ethereum",
+      "label": "syrupUSDC WithdrawalManagerQueue",
+      "address": "0x1bc47a0Dd0FdaB96E9eF982fdf1F34DC6207cfE3",
+      "doc": "https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration",
+      "explorerUrl": "https://etherscan.io/address/0x1bc47a0Dd0FdaB96E9eF982fdf1F34DC6207cfE3"
+     },
+     {
+      "chain": "ethereum",
+      "label": "syrupUSDT (PoolV2)",
+      "address": "0x356B8d89c1e1239Cbbb9dE4815c39A1474d5BA7D",
+      "doc": "https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration",
+      "explorerUrl": "https://etherscan.io/address/0x356B8d89c1e1239Cbbb9dE4815c39A1474d5BA7D"
+     },
+     {
+      "chain": "ethereum",
+      "label": "PoolPermissionManager",
+      "address": "0xBe10aDcE8B6E3E02Db384E7FaDA5395DD113D8b3",
+      "doc": "https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration",
+      "explorerUrl": "https://etherscan.io/address/0xBe10aDcE8B6E3E02Db384E7FaDA5395DD113D8b3"
+     }
+    ],
     "recipe": {
      "title": "Generic lending fork",
      "chain": "ethereum",
@@ -23883,7 +24133,7 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "note": "No fork test: NEAR Intents settles on NEAR. Balances live in the intents.near Verifier contract's internal ledger and solvers fill signed intents off-chain (docs.near-intents.org). EVM chains only hold bridged deposits, so there is no EVM contract with a permissionless action to assert on a fork. analytics:near:intents covers TVL and volume.",
      "appUrl": "https://near.com/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
@@ -32043,7 +32293,13 @@
       "tvl": 91862
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:llamalend:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.8566,
     "components": {
@@ -32055,24 +32311,75 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Llamalend lend vault",
+     "note": "Lends crvUSD into the Llamalend V1 wstETH-long vault (OneWayLendingFactory.vaults(13), ERC-4626) and redeems it. Borrowing against collateral through the market controller is not exercised.",
      "appUrl": "https://www.curve.finance/crvusd/ethereum/markets/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic lending fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-      ],
-      "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:llamalend:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:llamalend:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:llamalend:deposit",
+       "section": "actions",
+       "chain": "ethereum",
+       "title": "Lend crvUSD on Curve Llamalend",
+       "action": "crvUSD into the Llamalend V1 wstETH-long vault (`OneWayLendingFactory.vaults(13)`, ERC-4626), then redeem",
+       "assertion": "the factory still lists the vault, the deposit pulled the full amount, shares were minted, the redeem burned every share and crvUSD came back within rounding",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "crvUSD"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Llamalend V1 OneWayLendingFactory",
+       "address": "0xeA6876DDE9e3467564acBeE1Ed5bac88783205E0",
+       "doc": "https://docs.curve.finance/developer/deployments",
+       "explorerUrl": "https://etherscan.io/address/0xeA6876DDE9e3467564acBeE1Ed5bac88783205E0"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Llamalend V2 LendFactory",
+       "address": "0x8f6B56EC5ddF1F2691a1059f1D3cd97Ac9EaB0bd",
+       "doc": "https://docs.curve.finance/developer/deployments",
+       "explorerUrl": "https://etherscan.io/address/0x8f6B56EC5ddF1F2691a1059f1D3cd97Ac9EaB0bd"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Llamalend wstETH-long vault (factory vaults(13))",
+       "address": "0x21CF1c5Dc48C603b89907FE6a7AE83EA5e3709aF",
+       "doc": "https://docs.curve.finance/developer/deployments",
+       "explorerUrl": "https://etherscan.io/address/0x21CF1c5Dc48C603b89907FE6a7AE83EA5e3709aF"
+      },
+      {
+       "chain": "ethereum",
+       "label": "crvUSD",
+       "address": "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+       "doc": "https://docs.curve.finance/developer/deployments",
+       "explorerUrl": "https://etherscan.io/address/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -32122,7 +32429,13 @@
       "tvl": 949
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:dolomite:supply",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.8371,
     "components": {
@@ -32134,24 +32447,75 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://dolomite.io",
+     "mode": "fork",
+     "label": null,
+     "note": "Supplies USDC to DolomiteMargin through the official DepositWithdrawalRouter (account 0) and withdraws the full balance with BalanceCheckFlag.From. Borrowing and isolation-mode vaults are not exercised.",
+     "appUrl": "https://app.dolomite.io",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic lending fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-      ],
-      "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:dolomite:supply"
+     ],
+     "tests": [
+      {
+       "script": "fork:dolomite:supply",
+       "action": "supply",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:dolomite:supply",
+       "section": "actions",
+       "chain": "ethereum",
+       "title": "Supply and withdraw USDC on Dolomite",
+       "action": "`DepositWithdrawalRouter.depositWei` into account 0, then `withdrawWei` of the full balance with `BalanceCheckFlag.From`",
+       "assertion": "the deposit pulled the full amount, `DolomiteMargin.getAccountWei` rose by it, the withdraw left the account at 0 and the USDC came back",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "DolomiteMargin",
+       "address": "0x003Ca23Fd5F0ca87D01F6eC6CD14A8AE60c2b97D",
+       "doc": "https://docs.dolomite.io/smart-contract-addresses/core-immutable",
+       "explorerUrl": "https://etherscan.io/address/0x003Ca23Fd5F0ca87D01F6eC6CD14A8AE60c2b97D"
+      },
+      {
+       "chain": "ethereum",
+       "label": "DepositWithdrawalRouter",
+       "address": "0xf8b2c637A68cF6A17b1DF9F8992EeBeFf63d2dFf",
+       "doc": "https://docs.dolomite.io/smart-contract-addresses/core-routers",
+       "explorerUrl": "https://etherscan.io/address/0xf8b2c637A68cF6A17b1DF9F8992EeBeFf63d2dFf"
+      },
+      {
+       "chain": "ethereum",
+       "label": "BorrowPositionRouter",
+       "address": "0xF579b345cdA0860668b857De10ABD62442133D0F",
+       "doc": "https://docs.dolomite.io/smart-contract-addresses/core-routers",
+       "explorerUrl": "https://etherscan.io/address/0xF579b345cdA0860668b857De10ABD62442133D0F"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDC",
+       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+       "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -32209,14 +32573,50 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "note": "Permissioned: no fork test. syrupUSDC and syrupUSDT deposits must go through SyrupRouter, which enforces PoolPermissionManager \"P:deposit\"; a first deposit needs an authorization signature from Maple, and withdrawals are a queued requestRedeem that Maple processes (docs.maple.finance smart-contract integration). analytics:maple:lending covers TVL and fees.",
      "appUrl": "https://www.maple.finance",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
      "features": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "syrupUSDC (PoolV2)",
+       "address": "0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b",
+       "doc": "https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration",
+       "explorerUrl": "https://etherscan.io/address/0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b"
+      },
+      {
+       "chain": "ethereum",
+       "label": "syrupUSDC SyrupRouter",
+       "address": "0x134cCaaA4F1e4552eC8aEcb9E4A2360dDcF8df76",
+       "doc": "https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration",
+       "explorerUrl": "https://etherscan.io/address/0x134cCaaA4F1e4552eC8aEcb9E4A2360dDcF8df76"
+      },
+      {
+       "chain": "ethereum",
+       "label": "syrupUSDC WithdrawalManagerQueue",
+       "address": "0x1bc47a0Dd0FdaB96E9eF982fdf1F34DC6207cfE3",
+       "doc": "https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration",
+       "explorerUrl": "https://etherscan.io/address/0x1bc47a0Dd0FdaB96E9eF982fdf1F34DC6207cfE3"
+      },
+      {
+       "chain": "ethereum",
+       "label": "syrupUSDT (PoolV2)",
+       "address": "0x356B8d89c1e1239Cbbb9dE4815c39A1474d5BA7D",
+       "doc": "https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration",
+       "explorerUrl": "https://etherscan.io/address/0x356B8d89c1e1239Cbbb9dE4815c39A1474d5BA7D"
+      },
+      {
+       "chain": "ethereum",
+       "label": "PoolPermissionManager",
+       "address": "0xBe10aDcE8B6E3E02Db384E7FaDA5395DD113D8b3",
+       "doc": "https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration",
+       "explorerUrl": "https://etherscan.io/address/0xBe10aDcE8B6E3E02Db384E7FaDA5395DD113D8b3"
+      }
+     ],
      "recipe": {
       "title": "Generic lending fork",
       "chain": "ethereum",
@@ -39492,7 +39892,13 @@
       "tvl": 47826
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:rockawayx:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.8801,
     "components": {
@@ -39504,24 +39910,60 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://rockawayx.com/",
+     "mode": "fork",
+     "label": null,
+     "note": "RockawayX USDC Yield is a Morpho Vault V2 on Ethereum. V2 maxDeposit always returns 0, so the test checks that all four gates are unset, then deposits USDC and redeems every share.",
+     "appUrl": "https://app.morpho.org/ethereum/vault/0xE0181090c22579B6A217f1522cbf8c9f1F0C1965/rockawayx-usdc-yield",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:rockawayx:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:rockawayx:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:rockawayx:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit and redeem (RockawayX USDC Yield)",
+       "assertion": "USDC into RockawayX USDC Yield, a Morpho Vault V2, then redeem. V2 `maxDeposit` is always 0, so the pre-check is that all four gates are unset (a set gate makes it a labelled read). Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "RockawayX USDC Yield (Vault V2)",
+       "address": "0xE0181090c22579B6A217f1522cbf8c9f1F0C1965",
+       "doc": "https://app.morpho.org/ethereum/vault/0xE0181090c22579B6A217f1522cbf8c9f1F0C1965/rockawayx-usdc-yield",
+       "explorerUrl": "https://etherscan.io/address/0xE0181090c22579B6A217f1522cbf8c9f1F0C1965"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDC",
+       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+       "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -55785,14 +56227,43 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "note": "KYC-gated: no fork test. Re requires KYC/KYB for every mint and redemption of reUSD and reUSDe (docs.re.xyz/minting-and-redemptions/minting), so there is no permissionless action to run on a fork. The contracts listed are the Ethereum tokens and NAV oracles from the official contract page.",
      "appUrl": "https://app.re.xyz",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
      "features": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "reUSD",
+       "address": "0x5086bf358635B81D8C47C66d1C8b9E567Db70c72",
+       "doc": "https://docs.re.xyz/products/smart-contracts",
+       "explorerUrl": "https://etherscan.io/address/0x5086bf358635B81D8C47C66d1C8b9E567Db70c72"
+      },
+      {
+       "chain": "ethereum",
+       "label": "reUSDe",
+       "address": "0xdDC0f880ff6e4e22E4B74632fBb43Ce4DF6cCC5a",
+       "doc": "https://docs.re.xyz/products/smart-contracts",
+       "explorerUrl": "https://etherscan.io/address/0xdDC0f880ff6e4e22E4B74632fBb43Ce4DF6cCC5a"
+      },
+      {
+       "chain": "ethereum",
+       "label": "reUSD NAV oracle",
+       "address": "0xb45AC37Cc7fF7ec317e7D8C308781ECe431639f6",
+       "doc": "https://docs.re.xyz/products/smart-contracts",
+       "explorerUrl": "https://etherscan.io/address/0xb45AC37Cc7fF7ec317e7D8C308781ECe431639f6"
+      },
+      {
+       "chain": "ethereum",
+       "label": "reUSDe NAV oracle",
+       "address": "0x7844441f13C61CBD3d297F5d2D7fcaBf17f0b843",
+       "doc": "https://docs.re.xyz/products/smart-contracts",
+       "explorerUrl": "https://etherscan.io/address/0x7844441f13C61CBD3d297F5d2D7fcaBf17f0b843"
+      }
+     ],
      "recipe": {
       "title": "Generic stablecoin check",
       "chain": "ethereum",
@@ -55866,14 +56337,43 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "note": "Compliance-gated: no fork test. Nest (Plume Vaults) deposits go through a ComplianceProxy or the legacy NestVaultPredicateProxy, and each deposit needs a fresh Predicate attestation issued by the Nest API (docs.nest.credit integration guides), so a local fork cannot mint shares permissionlessly. Most TVL sits on Plume Mainnet, which the repo does not fork.",
      "appUrl": "https://app.plume.org/vaults",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
      "features": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "nALPHA share token",
+       "address": "0x593cCcA4c4bf58b7526a4C164cEEf4003C6388db",
+       "doc": "https://docs.nest.credit/developers/integration-guides/nalpha/",
+       "explorerUrl": "https://etherscan.io/address/0x593cCcA4c4bf58b7526a4C164cEEf4003C6388db"
+      },
+      {
+       "chain": "ethereum",
+       "label": "nALPHA USDC NestVault",
+       "address": "0x0342EE795e7864319fB8D48651b47feBf1163C34",
+       "doc": "https://docs.nest.credit/developers/integration-guides/nalpha/",
+       "explorerUrl": "https://etherscan.io/address/0x0342EE795e7864319fB8D48651b47feBf1163C34"
+      },
+      {
+       "chain": "ethereum",
+       "label": "nBASIS share token",
+       "address": "0x11113Ff3a60C2450F4b22515cB760417259eE94B",
+       "doc": "https://docs.nest.credit/developers/integration-guides/nbasis/",
+       "explorerUrl": "https://etherscan.io/address/0x11113Ff3a60C2450F4b22515cB760417259eE94B"
+      },
+      {
+       "chain": "ethereum",
+       "label": "nBASIS USDC NestVault",
+       "address": "0x5F35D1cef957467F4c7b35B36371355170A0DbB1",
+       "doc": "https://docs.nest.credit/developers/integration-guides/nbasis/",
+       "explorerUrl": "https://etherscan.io/address/0x5F35D1cef957467F4c7b35B36371355170A0DbB1"
+      }
+     ],
      "recipe": {
       "title": "Generic stablecoin check",
       "chain": "ethereum",
@@ -62417,7 +62917,7 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "note": "No fork test: Unit is run by a Guardian network that signs with MPC/TSS. Deposits go to Guardian-generated addresses and are credited on Hyperliquid L1, and the Ethereum treasury (0xBEa9f7FD27f4EE20066F18DEF0bc586eC221055A per docs.hyperunit.xyz key addresses) is an MPC account with no contract code. There is no EVM contract to exercise on a fork.",
      "appUrl": "https://hyperunit.xyz/deposit",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
