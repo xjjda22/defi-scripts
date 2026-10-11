@@ -55,9 +55,19 @@ const DOCS = {
   puffer: "https://github.com/PufferFinance/pufETH",
 };
 
+/**
+ * Explorer link for one address, from the chain map. The showcase renders this
+ * so a reader can confirm the contract exists instead of trusting the address.
+ */
+function explorerFor(chain, address) {
+  const base = CHAINS[chain] && CHAINS[chain].explorer;
+  if (!base || !/^0x[a-fA-F0-9]{40}$/.test(String(address || ""))) return null;
+  return `${base}/address/${address}`;
+}
+
 function push(list, chain, label, address, doc) {
   if (!address) return;
-  list.push({ chain, label, address, doc });
+  list.push({ chain, label, address, doc, explorerUrl: explorerFor(chain, address) });
 }
 
 /**

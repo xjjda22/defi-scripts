@@ -297,6 +297,50 @@ button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visibl
 .links { display: flex; flex-wrap: wrap; gap: 14px; margin: 8px 0 18px; }
 .chain-list { margin: 0; padding-left: 18px; color: var(--muted); }
 .chain-list li { margin: 4px 0; }
+.muted { color: var(--muted); }
+
+/* Fork feature cards: what each test does, what makes it pass, and its dials. */
+.features { list-style: none; margin: 0; padding: 0; counter-reset: feature; }
+.feature {
+  counter-increment: feature;
+  position: relative;
+  background: var(--chip);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px 10px 46px;
+  margin: 10px 0;
+}
+.feature::before {
+  content: counter(feature);
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.feature-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.feature-head b { font-size: 15px; }
+.feature p { margin: 6px 0 0; font-size: 13px; }
+.feature .assert { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
+.feature .pass {
+  color: var(--accent);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.feature .params { margin-top: 8px; font-size: 12px; color: var(--muted); }
+.feature .params span { margin-right: 6px; text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; }
+.feature .params code { margin-right: 4px; }
+.feature .cmd { margin: 10px 0 4px; }
 
 .method, footer {
   max-width: 1280px;

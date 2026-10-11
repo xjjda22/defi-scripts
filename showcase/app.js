@@ -170,10 +170,52 @@ function contractsHtml(contracts) {
     .map(
       item =>
         `<li>${esc(item.chain)} ${esc(item.label)} <code>${esc(item.address)}</code>${
-          item.doc ? ` <a href="${esc(item.doc)}" target="_blank" rel="noreferrer">docs</a>` : ""
-        }</li>`
+          item.explorerUrl ? ` <a href="${esc(item.explorerUrl)}" target="_blank" rel="noreferrer">explorer</a>` : ""
+        }${item.doc ? ` <a href="${esc(item.doc)}" target="_blank" rel="noreferrer">docs</a>` : ""}</li>`
     )
     .join("")}</ul>`;
+}
+
+/** Escape first, then allow the small amount of inline markdown the registry uses. */
+function inline(value) {
+  return esc(value)
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+}
+
+/**
+ * What each fork test on this protocol does, what makes it PASS, and the dials
+ * a player can set. Fed from src/catalog/forkFeatures.js via data.json.
+ */
+function featuresHtml(features) {
+  if (!features || !features.length) return "";
+  return `<ol class="features">${features
+    .map(feature => {
+      const badges = [
+        feature.readOnly ? `<span class="badge api">read-only</span>` : "",
+        feature.gated ? `<span class="badge">can skip</span>` : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+      const params = (feature.params || []).length
+        ? `<div class="params"><span>Set</span>${feature.params
+            .map(
+              param =>
+                `<code>${esc(param.env)}</code>${param.label ? ` ${esc(param.label)}` : ""}${
+                  param.default ? ` <b>${esc(param.default)}</b>` : ""
+                }${param.unit ? ` ${esc(param.unit)}` : ""}`
+            )
+            .join("")}</div>`
+        : "";
+      return `<li class="feature">
+        <div class="feature-head"><b>${esc(feature.title || feature.script)}</b> ${badges}</div>
+        <p class="what">${inline(feature.action || "")}</p>
+        <p class="assert"><span class="pass">PASS when</span> ${inline(feature.assertion || "")}</p>
+        ${params}
+        ${commandRow(`npm run ${feature.script}`)}
+      </li>`;
+    })
+    .join("")}</ol>`;
 }
 
 function detailHtml(row) {
@@ -186,6 +228,12 @@ function detailHtml(row) {
     ? `<a class="back" href="index.html">← Back to the board</a>`
     : `<a class="back" href="#${state.tab === "overall" ? "" : `tab=${encodeURIComponent(state.tab)}`}">← Back to the board</a>`;
   const app = testing.appUrl || row.appUrl;
+  // The feature cards above already list every fork test, so keep them out of the
+  // generic script list to avoid printing the same command twice.
+  const listed =
+    fork && testing.features && testing.features.length
+      ? row.scripts.filter(script => scriptKind(scriptName(script)) !== "fork")
+      : row.scripts;
   const links = [
     app ? `<a href="${esc(app)}" target="_blank" rel="noreferrer">Official app</a>` : "",
     row.llamaUrl ? `<a href="${esc(row.llamaUrl)}" target="_blank" rel="noreferrer">DefiLlama</a>` : "",
@@ -218,7 +266,12 @@ function detailHtml(row) {
     <h3>TVL by chain</h3>
     ${chainTvlHtml(row)}
     <h3>Test it</h3>
-    ${scriptGroups(row.scripts)}
+    ${
+      fork
+        ? featuresHtml(testing.features)
+        : `<p class="muted">No fork test is configured for this protocol, so there is nothing to run against a local fork here. The API recipes below are the closest check the repo has.</p>`
+    }
+    ${scriptGroups(listed)}
     ${commands}
     <h3>Contracts</h3>
     ${contractsHtml(testing.contracts)}

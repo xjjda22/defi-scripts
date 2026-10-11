@@ -5,6 +5,7 @@
  */
 
 const { contractsForKeys } = require("./contracts");
+const { featuresByScript } = require("./forkFeatures");
 const { TESTNETS, CHAINLINK } = require("./faucets");
 
 const LOCAL = "http://127.0.0.1:8545";
@@ -586,6 +587,9 @@ function attachTesting(row) {
     }
   }
   row.scripts = scripts;
+  // What each attached fork test does and asserts. Derived from the tests that
+  // are actually on this row, so the panel cannot describe a test that is not here.
+  const features = fork ? fork.tests.map(item => featuresByScript().get(item.script)).filter(Boolean) : [];
   row.testing = fork
     ? {
         mode: "fork",
@@ -596,6 +600,7 @@ function attachTesting(row) {
         rpcEnv: fork.rpcEnv,
         commands: fork.commands,
         tests: fork.tests,
+        features,
         contracts: fork.contracts,
         recipe: null,
       }
@@ -607,6 +612,7 @@ function attachTesting(row) {
         rpcEnv: RPC_ENV[categoryRecipe.chain] || null,
         commands: [],
         tests: [],
+        features: [],
         contracts: contractsForKeys(keys),
         recipe: categoryRecipe,
       };

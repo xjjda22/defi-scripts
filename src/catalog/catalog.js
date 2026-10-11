@@ -1,5 +1,6 @@
 const pkg = require("../../package.json");
 const { CATEGORIES, BOARD_GROUPS, PROTOCOLS, BOARDS, SCRIPT_DESCRIPTIONS } = require("./protocols");
+const { featuresByScript } = require("./forkFeatures");
 
 const KINDS = ["Analytics", "Smoke", "Simulate", "Swap", "Cross-chain", "Fork"];
 const FAMILIES = new Set(["analytics", "simulate", "swap", "crosschain", "fork"]);
@@ -131,6 +132,16 @@ function buildCatalog(scriptMap) {
   }
   for (const s of scripts) {
     if (!s.description) problems.push(`no description for "${s.name}" (add it to SCRIPT_DESCRIPTIONS)`);
+  }
+  // Every fork action must describe itself in the feature registry, which feeds
+  // both the docs tables and the showcase playground panel.
+  const features = featuresByScript();
+  for (const s of scripts) {
+    if (!s.name.startsWith("fork:") || s.name === "fork:all") continue;
+    if (!features.has(s.name)) problems.push(`no fork feature for "${s.name}" (add it to src/catalog/forkFeatures.js)`);
+  }
+  for (const name of features.keys()) {
+    if (!scripts.some(s => s.name === name)) problems.push(`fork feature "${name}" has no npm script`);
   }
 
   return { protocols, boards, categories: CATEGORIES, boardGroups: BOARD_GROUPS, problems };
