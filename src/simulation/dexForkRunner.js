@@ -3,6 +3,7 @@ const chalk = require("chalk");
 const { getProvider } = require("../utils/web3");
 const { detectFork, getForkBlockNumber } = require("../utils/forkDetection");
 const { impersonateWhale, getTokenBalance } = require("../utils/impersonate");
+const { dealErc20 } = require("./fork/runtime");
 const { CHAINS, COMMON_TOKENS } = require("../config/chains");
 const { getPair } = require("../config/pairs");
 
@@ -583,7 +584,11 @@ async function runDexForkSimulation(options = {}) {
 
     console.log(`  Impersonated Whale: ${chalk.cyan(whaleAddress)}`);
 
-    const tokenInBalance = await getTokenBalance(tokenIn, whaleAddress, CHAIN);
+    let tokenInBalance = await getTokenBalance(tokenIn, whaleAddress, CHAIN);
+    if (tokenInBalance < amountIn && (await dealErc20(CHAIN, tokenIn, whaleAddress, amountIn))) {
+      console.log(chalk.gray(`  Whale was short of ${tokenInSymbol}; topped up on the fork`));
+      tokenInBalance = await getTokenBalance(tokenIn, whaleAddress, CHAIN);
+    }
     const ethBalance = await getProvider(CHAIN).getBalance(whaleAddress);
     console.log(
       `  ${tokenInSymbol} Balance: ${chalk.green(formatAmount(tokenInBalance, tokenInDecimals, tokenInSymbol))}`

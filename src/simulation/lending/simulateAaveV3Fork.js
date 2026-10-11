@@ -4,6 +4,7 @@ const chalk = require("chalk");
 const { CHAINS, COMMON_TOKENS } = require("../../config/chains");
 const { getProvider } = require("../../utils/web3");
 const { impersonateWhale, getTokenBalance } = require("../../utils/impersonate");
+const { dealErc20 } = require("../fork/runtime");
 const { getForkContext, printForkContext, exitUnlessFork } = require("../lib/forkSimEnv");
 const AaveV3PoolABI = require("../../abis/aave/AaveV3Pool.json");
 
@@ -54,7 +55,11 @@ async function main() {
   const decimals = ASSET === "USDC" || ASSET === "USDT" ? 6 : 18;
   const amountIn = ethers.parseUnits(SUPPLY_UNITS, decimals);
 
-  const bal = await getTokenBalance(assetAddr, user, CHAIN);
+  let bal = await getTokenBalance(assetAddr, user, CHAIN);
+  if (bal < amountIn && (await dealErc20(CHAIN, assetAddr, user, amountIn))) {
+    console.log(chalk.gray(`  Whale was short of ${SUPPLY_UNITS} ${ASSET}; topped up on the fork`));
+    bal = await getTokenBalance(assetAddr, user, CHAIN);
+  }
   if (bal < amountIn) {
     console.error(chalk.red(`Whale ${ASSET} balance too low for ${SUPPLY_UNITS}`));
     process.exit(1);

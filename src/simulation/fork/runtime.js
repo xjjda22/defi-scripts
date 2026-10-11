@@ -1,7 +1,8 @@
 /**
  * Shared fork-test helpers: require an Anvil/Hardhat fork, fund a whale, print PASS/FAIL.
- * No PRIVATE_KEY. Impersonation uses src/utils/impersonate.js; anvil_deal tops up if the
- * configured whale is short.
+ * No PRIVATE_KEY. Impersonation uses src/utils/impersonate.js; dealErc20 tops up if the
+ * configured whale is short (anvil_dealERC20 / anvil_deal when present, else it writes the
+ * balance slot with anvil_setStorageAt).
  */
 
 const { ethers } = require("ethers");
@@ -56,14 +57,147 @@ async function requireFork(chainKey) {
   return ctx;
 }
 
-async function dealErc20(chainKey, token, account, amount) {
-  const provider = getProvider(chainKey);
+const BALANCE_ABI = ["function balanceOf(address) view returns (uint256)"];
+const MAX_PROBE_SLOT = parseInt(process.env.FORK_DEAL_MAX_SLOT || "100", 10);
+// token(lowercase) -> storage key builder that worked, so later deals skip the probe
+const dealSlotCache = new Map();
+
+function mappingKey(holder, slot, vyper) {
+  const coder = ethers.AbiCoder.defaultAbiCoder();
+  // Solidity: keccak(abi.encode(key, slot)). Vyper: keccak(abi.encode(slot, key)).
+  return vyper
+    ? ethers.keccak256(coder.encode(["uint256", "address"], [slot, holder]))
+    : ethers.keccak256(coder.encode(["address", "uint256"], [holder, slot]));
+}
+
+function word(value) {
+  return typeof value === "string" ? ethers.zeroPadValue(value, 32) : ethers.zeroPadValue(ethers.toBeHex(value), 32);
+}
+
+function dealVia(token, via) {
+  if (process.env.FORK_DEAL_DEBUG === "1") console.log(`dealErc20 ${token}: ${via}`);
+  return true;
+}
+
+async function setStorage(provider, token, key, value) {
   try {
-    await provider.send("anvil_deal", [token, account, ethers.toBeHex(amount)]);
-    return true;
+    await provider.send("anvil_setStorageAt", [token, key, word(value)]);
   } catch {
+    await provider.send("hardhat_setStorageAt", [token, key, word(value)]);
+  }
+}
+
+async function readBalance(contract, account) {
+  try {
+    return await contract.balanceOf(account);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Write `amount` into one storage key and confirm with balanceOf.
+ * Returns true when balanceOf >= amount. Rebasing tokens (stETH stores shares) are
+ * handled by scaling: write once, measure what balanceOf reports, then write the
+ * proportional value. A key that does not move balanceOf is restored.
+ */
+async function tryKey(provider, contract, token, account, key, amount, before) {
+  const original = await provider.send("eth_getStorageAt", [token, key, "latest"]);
+  await setStorage(provider, token, key, amount);
+  const got = await readBalance(contract, account);
+  if (got === null || got === before) {
+    await setStorage(provider, token, key, original).catch(() => {});
     return false;
   }
+  if (got >= amount && got - amount <= amount / 1000n) return true;
+  if (got > 0n) {
+    // Rebasing token: balanceOf is stored value x rate. Write the value that lands on `amount`.
+    const scaled = (amount * amount) / got + 2n;
+    await setStorage(provider, token, key, scaled);
+    const again = await readBalance(contract, account);
+    if (again !== null && again >= amount) return true;
+    if (got >= amount) {
+      await setStorage(provider, token, key, amount);
+      return true;
+    }
+  }
+  await setStorage(provider, token, key, original).catch(() => {});
+  return false;
+}
+
+async function storageKeysRead(provider, token, account) {
+  // eth_createAccessList reports every slot balanceOf touched, which finds
+  // unstructured layouts (and proxy storage) without brute force.
+  try {
+    const data = new ethers.Interface(BALANCE_ABI).encodeFunctionData("balanceOf", [account]);
+    const res = await provider.send("eth_createAccessList", [{ to: token, data }, "latest"]);
+    const entry = (res?.accessList || []).find(e => e.address.toLowerCase() === token.toLowerCase());
+    return entry?.storageKeys || [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Give `account` at least `amount` of `token` on a local fork. Order:
+ *   1. anvil_dealERC20 or anvil_deal, when the node has them (anvil 1.3.0 answers anvil_deal
+ *      with Method not found; FORK_DEAL_MODE=storage skips this step)
+ *   2. the slot that worked last time for this token
+ *   3. slots balanceOf reads, from eth_createAccessList (FORK_DEAL_MODE=probe skips this)
+ *   4. brute force: balances mapping at slot 0..FORK_DEAL_MAX_SLOT, Solidity and Vyper layouts
+ *      (covers proxies such as USDC FiatTokenV2, balances at slot 9, because storage lives at the proxy)
+ * Every path is confirmed with balanceOf. Returns true on success, false otherwise.
+ */
+async function dealErc20(chainKey, token, account, amount) {
+  const provider = getProvider(chainKey);
+  const contract = new ethers.Contract(token, BALANCE_ABI, provider);
+  amount = BigInt(amount);
+  const before = await readBalance(contract, account);
+  if (before === null) return false;
+  if (before >= amount) return true;
+
+  // FORK_DEAL_MODE=storage skips the node's own deal methods; =probe also skips the access
+  // list, so only the slot brute force runs. Both exist to exercise the fallbacks.
+  const mode = process.env.FORK_DEAL_MODE || "auto";
+  const native =
+    mode !== "auto"
+      ? []
+      : [
+          ["anvil_dealERC20", [account, token, ethers.toBeHex(amount)]],
+          ["anvil_deal", [token, account, ethers.toBeHex(amount)]],
+        ];
+  for (const [method, params] of native) {
+    try {
+      await provider.send(method, params);
+      const got = await readBalance(contract, account);
+      if (got !== null && got >= amount) return dealVia(token, method);
+    } catch {
+      // method missing on this node, or it could not find the slot
+    }
+  }
+
+  const cached = dealSlotCache.get(token.toLowerCase());
+  if (cached) {
+    const key = mappingKey(account, cached.slot, cached.vyper);
+    if (await tryKey(provider, contract, token, account, key, amount, before)) return dealVia(token, "cached slot");
+  }
+
+  const listed = mode === "probe" ? [] : await storageKeysRead(provider, token, account);
+  for (const key of listed) {
+    if (await tryKey(provider, contract, token, account, key, amount, before))
+      return dealVia(token, `access-list key ${key}`);
+  }
+
+  for (let slot = 0; slot <= MAX_PROBE_SLOT; slot++) {
+    for (const vyper of [false, true]) {
+      const key = mappingKey(account, slot, vyper);
+      if (await tryKey(provider, contract, token, account, key, amount, before)) {
+        dealSlotCache.set(token.toLowerCase(), { slot, vyper });
+        return dealVia(token, `${vyper ? "vyper" : "solidity"} mapping slot ${slot}`);
+      }
+    }
+  }
+  return false;
 }
 
 async function impersonateFunded(chainKey, symbol, token, minimum) {
@@ -72,12 +206,6 @@ async function impersonateFunded(chainKey, symbol, token, minimum) {
   if (configured) candidates.push(configured);
   for (const extra of EXTRA_WHALES[chainKey]?.[symbol] || []) {
     if (!candidates.map(a => a.toLowerCase()).includes(extra.toLowerCase())) candidates.push(extra);
-  }
-  if (!candidates.length) {
-    const signer = await impersonateAccount(ethers.Wallet.createRandom().address, chainKey);
-    const funded = await dealErc20(chainKey, token, await signer.getAddress(), minimum);
-    if (!funded) throw new Error(`No ${symbol} whale on ${chainKey} and anvil_deal is unavailable`);
-    return signer;
   }
 
   let best = null;
@@ -90,15 +218,25 @@ async function impersonateFunded(chainKey, symbol, token, minimum) {
     }
     if (bal >= minimum) break;
   }
-  const signer = await impersonateAccount(best, chainKey);
-  const user = await signer.getAddress();
-  let bal = await getTokenBalance(token, user, chainKey);
-  if (bal < minimum) {
+
+  if (!best || bestBal < minimum) {
+    // No whale holds enough. Write the balance straight into a brand-new account rather
+    // than into the whale: some whales are contracts (wstETH holds stETH, WETH holds WETH),
+    // and editing their balances would break their own accounting for later tests.
+    const fresh = await impersonateAccount(ethers.Wallet.createRandom().address, chainKey);
+    const user = await fresh.getAddress();
     const dealt = await dealErc20(chainKey, token, user, minimum);
-    if (!dealt) throw new Error(`${symbol} whale ${user} has ${bal.toString()} and anvil_deal failed`);
-    bal = await getTokenBalance(token, user, chainKey);
-    if (bal < minimum) throw new Error(`${symbol} balance still ${bal.toString()} after anvil_deal`);
+    const why = candidates.length
+      ? `best ${symbol} whale holds ${bestBal.toString()}`
+      : `no ${symbol} whale on ${chainKey}`;
+    if (!dealt) throw new Error(`${why}, need ${minimum.toString()}, and dealErc20 could not write a balance`);
+    const bal = await getTokenBalance(token, user, chainKey);
+    if (bal < minimum) throw new Error(`${symbol} balance still ${bal.toString()} after dealErc20`);
+    if (process.env.FORK_DEAL_DEBUG === "1") console.log(`${why}; dealt ${minimum.toString()} to fresh ${user}`);
+    return fresh;
   }
+
+  const signer = await impersonateAccount(best, chainKey);
   if (process.env.FORK_SHARED_WHALE === "1") return signer;
   return freshFrom(chainKey, signer, token, minimum);
 }
