@@ -986,6 +986,18 @@ const PROTOCOLS = [
     ],
   },
   {
+    id: "liquid",
+    name: "Liquid Network",
+    category: "bridge-chain",
+    url: "https://liquid.net",
+    about:
+      "Blockstream's federated Bitcoin sidechain. L-BTC supply (net pegged in) vs the federation's BTC reserve from the public liquid.network audit API, the shortfall in BTC and USD, coverage, and month-end coverage. Not a DefiLlama slug.",
+    data: "liquid.network audit API",
+    notes: [
+      "Peg-outs (L-BTC to BTC redemptions) stay frozen 35 days after the 2026-09-06 Elements exploit: the reserve is ~603 BTC short of circulating L-BTC (85.8% coverage), and Liquid says redemptions need full 1:1 backing plus completed security reviews before restarting ([The Defiant](https://thedefiant.io/news/security/liquid-bitcoin-redemptions-remain-frozen-with-85-8-reserve-coverage), 2026-10-11; [TokenPost](https://www.tokenpost.com/news/technology/29859), 2026-10-11; [Crypto Briefing](https://cryptobriefing.com/liquid-network-halts-bitcoin-redemptions-reserve-gap/), 2026-10-11). The exploit minted ~4,000 unbacked L-BTC (~$320M); ~3,400 BTC was returned and ~598.5 BTC kept ([Rekt](https://rekt.news/liquid-network-rekt), 2026-09-16; DefiLlama `/hacks` \"Liquid Network\", 2026-09-06, $320M). `analytics:liquid:reserves` prints the live supply, reserve and coverage; peg-out status is not exposed by the API.",
+    ],
+  },
+  {
     id: "abstract",
     name: "Abstract",
     category: "bridge-chain",
@@ -1156,6 +1168,9 @@ const SCRIPT_DESCRIPTIONS = {
   "analytics:near:exploit":
     "NEAR Intents exploit amount, chain, and technique from DefiLlama `/hacks` (`LLAMA_HACK_ID=6225`, since 2026-09-30)",
   "simulate:near:exploit:smoke": "Fails unless DefiLlama `/hacks` lists a NEAR Intents incident since 2026-09-30 with a positive amount",
+  "analytics:liquid:reserves":
+    "Liquid Network L-BTC supply vs federation BTC reserve (liquid.network audit API): shortfall in BTC and USD, coverage, and month-end coverage",
+  "simulate:liquid:smoke": "Fails unless the liquid.network audit API returns a positive L-BTC supply and BTC reserve; prints the gap and coverage",
   "analytics:derive:options":
     "Derive options notional and premium (24h/7d/30d), TVL, share vs Paradex and the rest, plus Hypercall TVL",
   "simulate:derive:smoke": "Fails unless Derive 30d options notional is > 0 (`/summary/options/derive-options`)",
