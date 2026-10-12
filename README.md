@@ -147,7 +147,7 @@ On-chain quotes and simulations cover 10 EVM chains: Ethereum, Arbitrum, Optimis
 
 <!-- catalog:start -->
 
-**128 protocols**, **21 cross-protocol boards/tools**, **389 commands** (not counting repo tooling such as lint and reports). Each name links to its card in the [protocol catalog](docs/02-protocol-catalog.md): every command, what it prints, and what it needs.
+**129 protocols**, **21 cross-protocol boards/tools**, **391 commands** (not counting repo tooling such as lint and reports). Each name links to its card in the [protocol catalog](docs/02-protocol-catalog.md): every command, what it prints, and what it needs.
 
 | Category | Count | Entries |
 |---|---:|---|
@@ -159,12 +159,20 @@ On-chain quotes and simulations cover 10 EVM chains: Ethereum, Arbitrum, Optimis
 | [Liquid staking](docs/02-protocol-catalog.md#c-staking) | 10 | [Lido](docs/02-protocol-catalog.md#p-lido) · [SSV Network](docs/02-protocol-catalog.md#p-ssv) · [Rocket Pool](docs/02-protocol-catalog.md#p-rocketpool) · [Coinbase Wrapped Staked ETH](docs/02-protocol-catalog.md#p-cbeth) · [StakeStone](docs/02-protocol-catalog.md#p-stakestone) · [Kintsu](docs/02-protocol-catalog.md#p-kintsu) · [+4 more](docs/02-protocol-catalog.md#c-staking) |
 | [Restaking](docs/02-protocol-catalog.md#c-restaking) | 8 | [EigenLayer (EigenCloud)](docs/02-protocol-catalog.md#p-eigenlayer) · [Symbiotic](docs/02-protocol-catalog.md#p-symbiotic) · [ether.fi](docs/02-protocol-catalog.md#p-etherfi) · [Kelp](docs/02-protocol-catalog.md#p-kelp) · [Bedrock](docs/02-protocol-catalog.md#p-bedrock) · [Swell](docs/02-protocol-catalog.md#p-swell) · [+2 more](docs/02-protocol-catalog.md#c-restaking) |
 | [Stablecoins & RWA](docs/02-protocol-catalog.md#c-stable-rwa) | 9 | [Sky (ex-Maker)](docs/02-protocol-catalog.md#p-sky) · [Ethena](docs/02-protocol-catalog.md#p-ethena) · [Circle](docs/02-protocol-catalog.md#p-circle) · [Ondo Finance](docs/02-protocol-catalog.md#p-ondo) · [BlackRock BUIDL](docs/02-protocol-catalog.md#p-buidl) · [USD AI](docs/02-protocol-catalog.md#p-usdai) · [+3 more](docs/02-protocol-catalog.md#c-stable-rwa) |
-| [Bridges & chains](docs/02-protocol-catalog.md#c-bridge-chain) | 18 | [Stargate Finance](docs/02-protocol-catalog.md#p-stargate) · [Arbitrum Bridge](docs/02-protocol-catalog.md#p-arbitrum) · [Base Bridge](docs/02-protocol-catalog.md#p-base) · [Optimism Bridge](docs/02-protocol-catalog.md#p-optimism) · [Across](docs/02-protocol-catalog.md#p-across) · [Meter Passport](docs/02-protocol-catalog.md#p-meter) · [+12 more](docs/02-protocol-catalog.md#c-bridge-chain) |
+| [Bridges & chains](docs/02-protocol-catalog.md#c-bridge-chain) | 19 | [Stargate Finance](docs/02-protocol-catalog.md#p-stargate) · [Arbitrum Bridge](docs/02-protocol-catalog.md#p-arbitrum) · [Base Bridge](docs/02-protocol-catalog.md#p-base) · [Optimism Bridge](docs/02-protocol-catalog.md#p-optimism) · [Across](docs/02-protocol-catalog.md#p-across) · [Meter Passport](docs/02-protocol-catalog.md#p-meter) · [+13 more](docs/02-protocol-catalog.md#c-bridge-chain) |
 | [Launchpads, prediction & other](docs/02-protocol-catalog.md#c-other) | 5 | [pump.fun](docs/02-protocol-catalog.md#p-pumpfun) · [Polymarket](docs/02-protocol-catalog.md#p-polymarket) · [Kalshi](docs/02-protocol-catalog.md#p-kalshi) · [Zama](docs/02-protocol-catalog.md#p-zama) · [Bitget](docs/02-protocol-catalog.md#p-bitget) |
 | [Market boards (cross-protocol)](docs/02-protocol-catalog.md#c-boards) | 12 | [Ethereum boards](docs/02-protocol-catalog.md#p-eth) · [ETH vs BTC](docs/02-protocol-catalog.md#p-ethbtc) · [Bitcoin wraps](docs/02-protocol-catalog.md#p-btc) · [L2 overview](docs/02-protocol-catalog.md#p-l2) · [RWA overview](docs/02-protocol-catalog.md#p-rwa) · [NFT markets](docs/02-protocol-catalog.md#p-nft) · [+6 more](docs/02-protocol-catalog.md#c-boards) |
 | [Swap & simulation tooling](docs/02-protocol-catalog.md#c-tooling) | 9 | [Quote](docs/02-protocol-catalog.md#p-quote) · [Swap simulation](docs/02-protocol-catalog.md#p-swap) · [Multi-protocol](docs/02-protocol-catalog.md#p-multi) · [Pair sweep](docs/02-protocol-catalog.md#p-pairs) · [Fork validator](docs/02-protocol-catalog.md#p-validate) · [Auto-route swap](docs/02-protocol-catalog.md#p-autoroute) · [+3 more](docs/02-protocol-catalog.md#c-tooling) |
 
 <!-- catalog:end -->
+
+## Claim monitors (2026-10-12)
+
+Live values, not the snapshot in the source. Cards and commands are in the [protocol catalog](docs/02-protocol-catalog.md).
+
+| Monitor | Claim | Sources |
+| --- | --- | --- |
+| `analytics:liquid:reserves`, `simulate:liquid:smoke` | Liquid Network peg-outs stay frozen 35 days after the 2026-09-06 Elements exploit; the federation reserve is ~603 BTC short of circulating L-BTC (85.8% coverage), and redemptions need full 1:1 backing plus security reviews. Reads the public liquid.network audit API (`/pegs`, `/reserves`, monthly series); peg-out status itself is not exposed. | [The Defiant](https://thedefiant.io/news/security/liquid-bitcoin-redemptions-remain-frozen-with-85-8-reserve-coverage) (2026-10-11); [TokenPost](https://www.tokenpost.com/news/technology/29859) (2026-10-11); [Crypto Briefing](https://cryptobriefing.com/liquid-network-halts-bitcoin-redemptions-reserve-gap/) (2026-10-11) |
 
 ## Claim monitors (2026-10-09)
 
