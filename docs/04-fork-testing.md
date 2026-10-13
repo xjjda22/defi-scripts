@@ -59,6 +59,8 @@ The tables below, and the "Test it" panel on each protocol page, are both genera
 | `fork:spark:supply` / `:borrow` / `:repay` / `:withdraw` | Ethereum | Same four actions on the SparkLend pool | Spark is an Aave V3 fork |
 | `fork:compound:supply` / `:borrow` | Ethereum | Compound III cUSDCv3 | base balance or borrow balance increases |
 | `fork:morpho:supply` / `:borrow` | Ethereum | One listed WETH/USDC Morpho Blue market | supply shares or borrow shares increase |
+| `fork:llamalend:deposit` | Ethereum | crvUSD into the Llamalend V1 wstETH-long vault (`OneWayLendingFactory.vaults(13)`, ERC-4626), then redeem | the factory still lists the vault, the deposit pulled the full amount, shares were minted, the redeem burned every share and crvUSD came back within rounding |
+| `fork:dolomite:supply` | Ethereum | `DepositWithdrawalRouter.depositWei` into account 0, then `withdrawWei` of the full balance with `BalanceCheckFlag.From` | the deposit pulled the full amount, `DolomiteMargin.getAccountWei` rose by it, the withdraw left the account at 0 and the USDC came back |
 | `fork:lido:submit` / `:wrap` | Ethereum | `submit` then optional `wrap` | stETH, then wstETH, increases |
 | `fork:rocketpool:deposit` | Ethereum | `deposit()` on the Rocket deposit pool | rETH increases, or skip when the cap is too small |
 | `fork:cbeth:rate` | Ethereum | `exchangeRate()` | rate above 1. No public mint |
@@ -107,6 +109,7 @@ Same rules. A vault whose `maxDeposit` is 0 (or whose deposits are paused or clo
 | `fork:upshift:deposit` | USDC into Upshift Sentora USD, then `instantRedeem`. Assets come back minus `instantRedemptionFee` (basis points). If instant redeem is closed, `requestRedeem` is asserted and the withdrawal is not waited out |
 | `fork:yearn:deposit` | USDC into Yearn V3 USDC-1, then redeem |
 | `fork:euler:deposit` | USDC into Euler Earn K3 Capital Earn USDC (first non-deprecated Ethereum vault in euler-labels), then redeem |
+| `fork:rockawayx:deposit` | USDC into RockawayX USDC Yield, a Morpho Vault V2, then redeem. V2 `maxDeposit` is always 0, so the pre-check is that all four gates are unset (a set gate makes it a labelled read). Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding |
 <!-- /features:vaults -->
 
 ## Stablecoins, RWA, and bridges
@@ -159,6 +162,18 @@ The showcase reads this list from `src/catalog/faucets.js`. These URLs returned 
 | zkSync Sepolia | [Alchemy](https://www.alchemy.com/faucets/zksync-sepolia) |
 
 [Chainlink faucets](https://faucets.chain.link/) cover several of the same networks. The fork suite itself runs against mainnet forks, not these testnets. The faucets are there when you want to try a protocol UI with test coins.
+
+## Rows with a documented reason instead of a test
+
+Some top-200 rows sit on a chain the repo can fork but expose no permissionless action, so a fork test could only revert. Their reason lives in `API_ONLY` in `src/catalog/forkRecipes.js` and the protocol page prints it in place of an empty panel. Contracts, where they exist, are still listed from `src/catalog/contracts.js`.
+
+| Row | Why there is no fork test |
+| --- | --- |
+| NEAR Intents | Balances live in the `intents.near` Verifier on NEAR; solvers fill signed intents off-chain |
+| Re | Mint and redeem of reUSD / reUSDe require KYC/KYB |
+| Plume Vaults (Nest) | Each deposit needs a fresh Predicate compliance attestation from the Nest API |
+| Unit | Guardian MPC network; the Ethereum treasury is an MPC account with no contract code |
+| Maple | SyrupRouter enforces `PoolPermissionManager` `P:deposit`; a first deposit needs a Maple signature |
 
 ## Showcase panel
 
