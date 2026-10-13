@@ -6,7 +6,7 @@
 
 const { ethers } = require("ethers");
 const { getProvider } = require("../../utils/web3");
-const { VAULTS, VEDA, UPSHIFT } = require("../../catalog/contracts");
+const { VAULTS, VEDA, UPSHIFT, ROCKAWAYX, LLAMALEND } = require("../../catalog/contracts");
 const { requireFork, impersonateFunded, formatUnits, finish } = require("./runtime");
 
 const ERC = [
@@ -39,6 +39,15 @@ const UPSHIFT_ABI = [
   "function getSharePrice() view returns (uint256)",
   "function previewDeposit(address asset, uint256 amount) view returns (uint256)",
 ];
+
+// Morpho Vault V2 gates. A non-zero gate can refuse a depositor or receiver.
+const VAULT_V2_GATES = [
+  "function receiveSharesGate() view returns (address)",
+  "function sendSharesGate() view returns (address)",
+  "function receiveAssetsGate() view returns (address)",
+  "function sendAssetsGate() view returns (address)",
+];
+const LLAMALEND_FACTORY_ABI = ["function vaults(uint256) view returns (address)"];
 
 const GAS = { gasLimit: 1_500_000n };
 
@@ -99,14 +108,18 @@ async function readVault(base, spec, reason) {
   });
 }
 
-async function erc4626(base, spec) {
+async function erc4626(base, spec, options = {}) {
   const provider = getProvider(base.chain);
   const reader = new ethers.Contract(spec.vault, VAULT_ABI, provider);
-  const probe = ethers.Wallet.createRandom().address;
-  const max = await reader.maxDeposit(probe);
-  if (max === 0n) return readVault(base, spec, "maxDeposit=0");
   const wanted = ethers.parseUnits(process.env.FORK_AMOUNT || spec.defaultAmount, spec.decimals);
-  const amount = wanted < max ? wanted : max;
+  let amount = wanted;
+  // Morpho Vault V2 returns maxDeposit 0 by design, so the caller pre-checks its gates instead.
+  if (!options.skipMaxDeposit) {
+    const probe = ethers.Wallet.createRandom().address;
+    const max = await reader.maxDeposit(probe);
+    if (max === 0n) return readVault(base, spec, "maxDeposit=0");
+    amount = wanted < max ? wanted : max;
+  }
   if (amount === 0n) return readVault(base, spec, "maxDeposit=0");
   const signer = await impersonateFunded(base.chain, spec.symbol, spec.asset, amount);
   const user = await signer.getAddress();
@@ -140,6 +153,37 @@ async function erc4626(base, spec) {
       ? null
       : `${spec.label} round trip failed: pulled=${pulled} burned=${burned} returned=${returned}`,
   });
+}
+
+/**
+ * RockawayX USDC Yield is a Morpho Vault V2. V2 has no usable maxDeposit (it always returns 0);
+ * access is controlled by four gates. All four unset means anyone can deposit and redeem, so the
+ * test runs the full ERC-4626 round trip. A set gate is a labelled read, checked before any tx.
+ */
+async function rockawayxDeposit(base) {
+  const provider = getProvider(base.chain);
+  const gates = new ethers.Contract(ROCKAWAYX.vault, VAULT_V2_GATES, provider);
+  const set = [];
+  for (const name of ["receiveSharesGate", "sendSharesGate", "receiveAssetsGate", "sendAssetsGate"]) {
+    const gate = await gates[name]();
+    if (gate !== ethers.ZeroAddress) set.push(`${name}=${gate}`);
+  }
+  if (set.length) return readVault(base, ROCKAWAYX, `gated(${set.join(",")})`);
+  return erc4626(base, ROCKAWAYX, { skipMaxDeposit: true });
+}
+
+/**
+ * Curve Llamalend V1 lend vault (ERC-4626 over crvUSD). The vault address must still be
+ * OneWayLendingFactory.vaults(index), so a stale address fails instead of testing the wrong contract.
+ */
+async function llamalendDeposit(base) {
+  const provider = getProvider(base.chain);
+  const factory = new ethers.Contract(LLAMALEND.factory, LLAMALEND_FACTORY_ABI, provider);
+  const listed = await factory.vaults(LLAMALEND.marketIndex);
+  if (listed.toLowerCase() !== LLAMALEND.vault.toLowerCase()) {
+    return finish({ ...base, ok: false, error: `factory vaults(${LLAMALEND.marketIndex}) is ${listed}, not ${LLAMALEND.vault}` });
+  }
+  return erc4626(base, LLAMALEND);
 }
 
 async function vedaDeposit(base) {
@@ -255,6 +299,8 @@ async function run() {
     if (protocol === "euler") return await erc4626(base, VAULTS.euler);
     if (protocol === "veda") return await vedaDeposit(base);
     if (protocol === "upshift") return await upshiftDeposit(base);
+    if (protocol === "rockawayx") return await rockawayxDeposit(base);
+    if (protocol === "llamalend") return await llamalendDeposit(base);
     return finish({ ...base, ok: false, error: `Unknown vault action ${protocol}:${action}` });
   } catch (err) {
     const message = explain(err);
