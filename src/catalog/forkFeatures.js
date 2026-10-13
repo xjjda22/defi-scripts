@@ -267,6 +267,26 @@ const FEATURES = [
     ],
     group: "morpho",
   },
+  {
+    script: "fork:llamalend:deposit",
+    section: "actions",
+    chain: "ethereum",
+    title: "Lend crvUSD on Curve Llamalend",
+    action: "crvUSD into the Llamalend V1 wstETH-long vault (`OneWayLendingFactory.vaults(13)`, ERC-4626), then redeem",
+    assertion:
+      "the factory still lists the vault, the deposit pulled the full amount, shares were minted, the redeem burned every share and crvUSD came back within rounding",
+    params: amount("100", "crvUSD"),
+  },
+  {
+    script: "fork:dolomite:supply",
+    section: "actions",
+    chain: "ethereum",
+    title: "Supply and withdraw USDC on Dolomite",
+    action: "`DepositWithdrawalRouter.depositWei` into account 0, then `withdrawWei` of the full balance with `BalanceCheckFlag.From`",
+    assertion:
+      "the deposit pulled the full amount, `DolomiteMargin.getAccountWei` rose by it, the withdraw left the account at 0 and the USDC came back",
+    params: amount("100", "USDC"),
+  },
 
   // ---- Liquid staking / restaking ---------------------------------------
   {
@@ -472,6 +492,15 @@ const FEATURES = [
     assertion:
       "USDC into Euler Earn K3 Capital Earn USDC (first non-deprecated Ethereum vault in euler-labels), then redeem",
     params: amount("1000", "USDC"),
+  },
+  {
+    script: "fork:rockawayx:deposit",
+    section: "vaults",
+    chain: "ethereum",
+    title: "Deposit and redeem (RockawayX USDC Yield)",
+    assertion:
+      "USDC into RockawayX USDC Yield, a Morpho Vault V2, then redeem. V2 `maxDeposit` is always 0, so the pre-check is that all four gates are unset (a set gate makes it a labelled read). Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding",
+    params: amount("100", "USDC"),
   },
 
   // ---- Stablecoins, RWA, bridges ----------------------------------------

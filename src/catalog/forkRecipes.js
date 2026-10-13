@@ -231,6 +231,34 @@ const FORK_RECIPES = [
     tests: [test("fork:euler:deposit", "deposit", "ethereum")],
   }),
   recipe({
+    keys: ["rockawayx"],
+    category: "vaults",
+    appUrl: "https://app.morpho.org/ethereum/vault/0xE0181090c22579B6A217f1522cbf8c9f1F0C1965/rockawayx-usdc-yield",
+    chain: "ethereum",
+    contractKeys: ["rockawayx"],
+    note: "RockawayX USDC Yield is a Morpho Vault V2 on Ethereum. V2 maxDeposit always returns 0, so the test checks that all four gates are unset, then deposits USDC and redeems every share.",
+    tests: [test("fork:rockawayx:deposit", "deposit", "ethereum")],
+  }),
+  recipe({
+    keys: ["curve-llamalend", "curve-llamalend-v2", "llamalend"],
+    category: "lending",
+    label: "Llamalend lend vault",
+    appUrl: "https://www.curve.finance/crvusd/ethereum/markets/",
+    chain: "ethereum",
+    contractKeys: ["llamalend"],
+    note: "Lends crvUSD into the Llamalend V1 wstETH-long vault (OneWayLendingFactory.vaults(13), ERC-4626) and redeems it. Borrowing against collateral through the market controller is not exercised.",
+    tests: [test("fork:llamalend:deposit", "deposit", "ethereum")],
+  }),
+  recipe({
+    keys: ["dolomite"],
+    category: "lending",
+    appUrl: "https://app.dolomite.io",
+    chain: "ethereum",
+    contractKeys: ["dolomite"],
+    note: "Supplies USDC to DolomiteMargin through the official DepositWithdrawalRouter (account 0) and withdraws the full balance with BalanceCheckFlag.From. Borrowing and isolation-mode vaults are not exercised.",
+    tests: [test("fork:dolomite:supply", "supply", "ethereum")],
+  }),
+  recipe({
     keys: ["lido"],
     appUrl: "https://stake.lido.fi",
     chain: "ethereum",
@@ -454,6 +482,37 @@ const API_ONLY = [
     keys: ["raydium-amm", "raydium", "raydium-amm-v3"],
     appUrl: "https://raydium.io",
     note: "Raydium is a Solana AMM. The fork suite is EVM-only, so this row stays API-only.",
+  },
+  // Documented reasons for forkable top-200 rows that have no permissionless action to test.
+  {
+    keys: ["near-intents"],
+    category: "aggregator",
+    appUrl: "https://near.com/",
+    note: "No fork test: NEAR Intents settles on NEAR. Balances live in the intents.near Verifier contract's internal ledger and solvers fill signed intents off-chain (docs.near-intents.org). EVM chains only hold bridged deposits, so there is no EVM contract with a permissionless action to assert on a fork. analytics:near:intents covers TVL and volume.",
+  },
+  {
+    keys: ["re"],
+    category: "stable-rwa",
+    appUrl: "https://app.re.xyz",
+    note: "KYC-gated: no fork test. Re requires KYC/KYB for every mint and redemption of reUSD and reUSDe (docs.re.xyz/minting-and-redemptions/minting), so there is no permissionless action to run on a fork. The contracts listed are the Ethereum tokens and NAV oracles from the official contract page.",
+  },
+  {
+    keys: ["plume-vaults"],
+    category: "stable-rwa",
+    appUrl: "https://app.plume.org/vaults",
+    note: "Compliance-gated: no fork test. Nest (Plume Vaults) deposits go through a ComplianceProxy or the legacy NestVaultPredicateProxy, and each deposit needs a fresh Predicate attestation issued by the Nest API (docs.nest.credit integration guides), so a local fork cannot mint shares permissionlessly. Most TVL sits on Plume Mainnet, which the repo does not fork.",
+  },
+  {
+    keys: ["unit"],
+    category: "bridge-chain",
+    appUrl: "https://hyperunit.xyz/deposit",
+    note: "No fork test: Unit is run by a Guardian network that signs with MPC/TSS. Deposits go to Guardian-generated addresses and are credited on Hyperliquid L1, and the Ethereum treasury (0xBEa9f7FD27f4EE20066F18DEF0bc586eC221055A per docs.hyperunit.xyz key addresses) is an MPC account with no contract code. There is no EVM contract to exercise on a fork.",
+  },
+  {
+    keys: ["maple"],
+    category: "lending",
+    appUrl: "https://www.maple.finance",
+    note: "Permissioned: no fork test. syrupUSDC and syrupUSDT deposits must go through SyrupRouter, which enforces PoolPermissionManager \"P:deposit\"; a first deposit needs an authorization signature from Maple, and withdrawals are a queued requestRedeem that Maple processes (docs.maple.finance smart-contract integration). analytics:maple:lending covers TVL and fees.",
   },
 ];
 
