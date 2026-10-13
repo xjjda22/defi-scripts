@@ -3,6 +3,17 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-10-14]
+
+### Added
+
+- **Aave V4 DefiLlama monitor** — `analytics:aave:v4` / `simulate:aave:v4:smoke` (slug `aave-v4`) for the claim that Arc deposits surpassed $300M (TokenPost 2026-10-12). Prints per-chain TVL and borrowed rows.
+- **Morpho Arc cirBTC markets monitor** — `src/analytics/protocols/morpho/morphoMarketsMonitor.js` with `analytics:morpho:cirbtc` / `simulate:morpho:cirbtc:smoke` (Morpho GraphQL, chainId 5042) for the ~$190M borrowed / 97.4% utilization claim (Crypto Briefing / The Defiant 2026-10-13).
+
+### Changed
+
+- **THORChain and Papertrade analytics** now set `DEFILLAMA_FEES=1` so fee/revenue windows print alongside TVL (THORChain fees claim 2026-10-12; Papertrade post-launch revenue).
+
 ## [2026-10-11]
 
 A session in four parts: repair the perps fork tests, record the BAND decision,
