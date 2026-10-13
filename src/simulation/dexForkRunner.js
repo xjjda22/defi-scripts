@@ -17,9 +17,13 @@ const FEE_TIERS_V3 = [100, 500, 3000, 10000];
 
 const MIN_WETH_USDC_RAW = 50n * 10n ** 6n;
 const MAX_WETH_USDC_RAW = 20_000_000n * 10n ** 6n;
+// Chains whose COMMON_TOKENS.WETH entry is the wrapped native gas token, not ETH
+// (Monad: WMON). The ETH-priced sanity band above would drop every honest quote there.
+const WETH_SLOT_NOT_ETH = new Set(["monad"]);
 
-function isSaneWethUsdcQuote(tokenInSymbol, tokenOutSymbol, amountOutRaw) {
+function isSaneWethUsdcQuote(chainKey, tokenInSymbol, tokenOutSymbol, amountOutRaw) {
   if (tokenInSymbol.toUpperCase() !== "WETH" || tokenOutSymbol.toUpperCase() !== "USDC") return true;
+  if (WETH_SLOT_NOT_ETH.has(chainKey)) return true;
   try {
     const v = BigInt(amountOutRaw);
     return v >= MIN_WETH_USDC_RAW && v <= MAX_WETH_USDC_RAW;
@@ -366,7 +370,7 @@ async function aggregateQuotes(chainKey, tokenInSymbol, tokenOutSymbol, amountIn
     }
   }
 
-  const filtered = quotes.filter(q => isSaneWethUsdcQuote(tokenInSymbol, tokenOutSymbol, q.amountOut));
+  const filtered = quotes.filter(q => isSaneWethUsdcQuote(chainKey, tokenInSymbol, tokenOutSymbol, q.amountOut));
   if (filtered.length < quotes.length) {
     console.log(
       chalk.yellow(`\n  Dropped ${quotes.length - filtered.length} implausible WETH→USDC quote(s) (sanity band).`)
