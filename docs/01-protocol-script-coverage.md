@@ -62,6 +62,15 @@ Removed on 2026-10-10 because DefiLlama marks the listing dead or the venue hold
 10. **Register it** in `PROTOCOLS` in `src/catalog/protocols.js` (id = second segment of the script name, category, url, one-line `about`, optional sourced `notes`). Scripts that are not DefiLlama one-liners also need a line in `SCRIPT_DESCRIPTIONS`. Ids may start with a digit (`3jane`).
 11. Run `npm run catalog:docs`, then `npm run catalog:check` (fails on unregistered or undescribed scripts and on stale docs).
 
+## Claim monitors (2026-10-14)
+
+Live numbers move. These scripts print the current values, not the snapshot in the source.
+
+| Monitor | Claim | Sources |
+|---|---|---|
+| `analytics:aave:v4`, `simulate:aave:v4:smoke` | Aave V4 deposits on Circle's Arc surpassed $300M on 2026-10-12 (from $181M in September). Prints DefiLlama `aave-v4` chain TVL and borrowed rows; Arc deposits ≈ Arc + Arc-borrowed. | [TokenPost](https://www.tokenpost.com/news/technology/30418) (2026-10-12) |
+| `analytics:morpho:cirbtc`, `simulate:morpho:cirbtc:smoke` | Arc cirBTC/USDC Morpho market ~$190M borrowed / ~$195M supplied (97.4% utilization) as of 2026-10-13. Reads Morpho GraphQL markets on chainId 5042 filtered to cirBTC. | [Crypto Briefing](https://cryptobriefing.com/cirbtc-borrowing-morpho-190-million-liquidity/) (2026-10-13); [The Defiant](https://thedefiant.io/news/defi/cirbtc-borrowing-on-morpho-tops-190-million-as-arc-liquidity-tightens) (2026-10-13) |
+
 ## Claim monitors (2026-10-12)
 
 Live numbers move. These scripts print the current values, not the snapshot in the source.
