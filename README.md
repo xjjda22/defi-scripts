@@ -147,7 +147,7 @@ On-chain quotes and simulations cover 10 EVM chains: Ethereum, Arbitrum, Optimis
 
 <!-- catalog:start -->
 
-**132 protocols**, **21 cross-protocol boards/tools**, **394 commands** (not counting repo tooling such as lint and reports). Each name links to its card in the [protocol catalog](docs/02-protocol-catalog.md): every command, what it prints, and what it needs.
+**132 protocols**, **21 cross-protocol boards/tools**, **398 commands** (not counting repo tooling such as lint and reports). Each name links to its card in the [protocol catalog](docs/02-protocol-catalog.md): every command, what it prints, and what it needs.
 
 | Category | Count | Entries |
 |---|---:|---|

@@ -3,6 +3,40 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-10-14]
+
+### Added
+
+- **Aave V4 DefiLlama monitor** — `analytics:aave:v4` / `simulate:aave:v4:smoke` (slug `aave-v4`) for the claim that Arc deposits surpassed $300M (TokenPost 2026-10-12). Prints per-chain TVL and borrowed rows.
+- **Morpho Arc cirBTC markets monitor** — `src/analytics/protocols/morpho/morphoMarketsMonitor.js` with `analytics:morpho:cirbtc` / `simulate:morpho:cirbtc:smoke` (Morpho GraphQL, chainId 5042) for the ~$190M borrowed / 97.4% utilization claim (Crypto Briefing / The Defiant 2026-10-13).
+
+### Changed
+
+- **THORChain and Papertrade analytics** now set `DEFILLAMA_FEES=1` so fee/revenue windows print alongside TVL (THORChain fees claim 2026-10-12; Papertrade post-launch revenue).
+
+### Fixed
+
+- **Monad `fork:monad:v3` sanity band** ([#27](https://github.com/xjjda22/defi-scripts/pull/27)) — `COMMON_TOKENS.WETH` on Monad is WMON, so the ETH-priced WETH→USDC band rejected every honest quote; Monad's Uniswap router (`0xfE31F71C1b106EAc32F1A19239c9a9A72ddfb900`) is now treated as SwapRouter02.
+- **Catalog docs drift after #24** ([#25](https://github.com/xjjda22/defi-scripts/pull/25)) — regenerated `docs/02-protocol-catalog.md`; CI on main was red.
+
+### Added (playground)
+
+- **Playground batch** ([#26](https://github.com/xjjda22/defi-scripts/pull/26)) — `fork:rockawayx:deposit`, `fork:llamalend:deposit`, `fork:dolomite:supply`; verified contracts plus documented no-fork reasons for Re, Plume Vaults, Maple and Unit. Fork-tested top-200 rows 20 → 23; rows with contracts 27, of 101 forkable.
+
+### Verified
+
+- Smokes 129/129 exit 0 (2026-10-14 ~05:09 MYT). Claim smokes re-run 16:58 MYT: Aave V4 TVL $669.26M; Morpho Arc cirBTC top borrow $190.05M (3 markets); THORChain TVL $66.30M.
+- Fork suite 05:53 MYT: 56 PASS, 2 FAIL (sushiswap v3 timeout, monad v3 pre-fix). Re-run on ethereum block 26189729 (~17:10 MYT): aave borrow, rockawayx, llamalend, dolomite, sky convert, ethena stake PASS.
+- `npm run lint`, `catalog:check`, `showcaseCheck` pass.
+
+### Known issues carried forward
+
+- **`fork:sushiswap:v3` times out** (180 s) on two consecutive runs while quoting SushiSwap V3; not yet diagnosed.
+- **`fix/fork-deal-erc20` is still unmerged** — no PR exists yet, and merged on top of current main `fork:dolomite:supply` fails with `missing revert data` (passes on main). Needs a look before merging. The `anvil_deal` / `308faf0` lines in the 2026-10-11 entry describe that branch, not main.
+- **`fork:monad:v3` not re-verified** after #27 — no `MONAD_RPC_URL` in the box.
+- **X lists:** only 1 of 11 lists was captured this run (no new claims); the other 10 were not read.
+- **Runs interrupted** on 10-12 and 10-14 mid-way; the run is likely too long for one session.
+
 ## [2026-10-11]
 
 A session in four parts: repair the perps fork tests, record the BAND decision,
