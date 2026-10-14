@@ -438,6 +438,27 @@ const PROTOCOLS = [
     data: "Morpho GraphQL, on-chain RPC",
   },
   {
+    id: "llamalend",
+    name: "Curve Llamalend",
+    category: "lending",
+    url: "https://www.curve.finance/crvusd/ethereum/markets/",
+    about:
+      "Curve's one-way lending markets: lenders supply crvUSD into an ERC-4626 vault per collateral. The fork test lends crvUSD into the Ethereum wstETH-long vault and redeems it.",
+    data: "On-chain RPC",
+    notes: [
+      "The vault is `OneWayLendingFactory.vaults(13)` on the Llamalend V1 factory listed in [Curve's deployment directory](https://docs.curve.finance/developer/deployments). The test checks the factory still returns it.",
+    ],
+  },
+  {
+    id: "dolomite",
+    name: "Dolomite",
+    category: "lending",
+    url: "https://dolomite.io",
+    about:
+      "Money market and margin protocol on one `DolomiteMargin` contract per chain. The fork test supplies USDC through the official DepositWithdrawalRouter and withdraws it.",
+    data: "On-chain RPC",
+  },
+  {
     id: "spark",
     name: "Spark",
     category: "lending",
@@ -545,6 +566,18 @@ const PROTOCOLS = [
     url: "https://www.steakhouse.financial",
     about: "Morpho vault curator, TVL by chain. The fork test deposits and redeems USDC on the Ethereum MetaMorpho Steakhouse USDC vault.",
     notes: [`Steakhouse Prime Instant (Morpho USDC vault) on Base at $444.37M TVL (${PORTALS_W4}).`],
+  },
+  {
+    id: "rockawayx",
+    name: "RockawayX",
+    category: "vaults",
+    url: "https://rockawayx.com",
+    about:
+      "Risk curator on Morpho and Kamino. The fork test deposits and redeems USDC on RockawayX USDC Yield, its largest open Ethereum Morpho Vault V2.",
+    data: "On-chain RPC",
+    notes: [
+      "Morpho Vault V2 `maxDeposit` always returns 0, so the test checks the four V2 gates instead. All four were unset on 2026-10-12.",
+    ],
   },
   {
     id: "upshift",
@@ -1271,6 +1304,9 @@ const SCRIPT_DESCRIPTIONS = {
   "fork:upshift:deposit": "Deposit USDC into Upshift Sentora USD and instant-redeem, or request the withdrawal",
   "fork:yearn:deposit": "Deposit USDC into Yearn V3 USDC-1 and redeem it",
   "fork:euler:deposit": "Deposit USDC into Euler Earn K3 Capital Earn USDC and redeem it",
+  "fork:rockawayx:deposit": "Deposit USDC into RockawayX USDC Yield (Morpho Vault V2) and redeem it on an Ethereum fork",
+  "fork:llamalend:deposit": "Lend crvUSD into the Curve Llamalend wstETH-long vault and redeem it on an Ethereum fork",
+  "fork:dolomite:supply": "Supply USDC to Dolomite through the DepositWithdrawalRouter and withdraw it on an Ethereum fork",
   "fork:eigenlayer:deposit": "Deposit stETH into the EigenLayer stETH strategy and assert deposit shares increased",
   "fork:eigenlayer:queue": "Deposit stETH and queueWithdrawals. The completion delay is not advanced",
   "fork:symbiotic:read": "Read the Symbiotic VaultFactory. Docs do not publish a permissionless vault",

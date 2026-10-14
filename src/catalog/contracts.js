@@ -53,6 +53,19 @@ const DOCS = {
   // deposit() is RswETH.sol in the Swell repo.
   swell: "https://github.com/balancer/code-review/blob/main/rate-providers/rswethRateProvider.md",
   puffer: "https://github.com/PufferFinance/pufETH",
+  // Curator vault page on the official Morpho app. RockawayX vaults on Ethereum are Morpho Vault V2.
+  rockawayx: "https://app.morpho.org/ethereum/vault/0xE0181090c22579B6A217f1522cbf8c9f1F0C1965/rockawayx-usdc-yield",
+  // Searchable directory of every Curve deployment (Llamalend V1/V2 factories, crvUSD, Savings crvUSD).
+  curve: "https://docs.curve.finance/developer/deployments",
+  dolomite: "https://docs.dolomite.io/smart-contract-addresses/core-immutable",
+  dolomiteRouters: "https://docs.dolomite.io/smart-contract-addresses/core-routers",
+  re: "https://docs.re.xyz/products/smart-contracts",
+  // Nest is the Plume Vaults product. Ethereum (chainId 1) deployments come from the vault's
+  // record in the official Nest API that the docs page renders from.
+  nest: "https://docs.nest.credit/developers/smart-contracts/",
+  nestAlpha: "https://docs.nest.credit/developers/integration-guides/nalpha/",
+  nestBasis: "https://docs.nest.credit/developers/integration-guides/nbasis/",
+  maple: "https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration",
 };
 
 /**
@@ -145,6 +158,13 @@ function contractBook() {
     "swell-liquid-restaking": [],
     puffer: [],
     "puffer-stake": [],
+    rockawayx: [],
+    llamalend: [],
+    "curve-llamalend": [],
+    dolomite: [],
+    re: [],
+    "plume-vaults": [],
+    maple: [],
   };
 
   push(book.uniswap, eth, "V2 router", uni.v2.router, DOCS.uniswap);
@@ -336,6 +356,42 @@ function contractBook() {
   for (const key of ["puffer", "puffer-stake"]) {
     push(book[key], eth, "pufETH", "0xD9A442856C234a39a81a089C06451EBAa4306a72", DOCS.puffer);
   }
+  // RockawayX USDC Yield, Morpho Vault V2 curated by RockawayX. All four gates are unset.
+  // https://app.morpho.org/ethereum/vault/0xE0181090c22579B6A217f1522cbf8c9f1F0C1965/rockawayx-usdc-yield
+  push(book.rockawayx, eth, "RockawayX USDC Yield (Vault V2)", "0xE0181090c22579B6A217f1522cbf8c9f1F0C1965", DOCS.rockawayx);
+  push(book.rockawayx, eth, "USDC", COMMON_TOKENS.USDC.ethereum, DOCS.usdc);
+  // https://docs.curve.finance/developer/deployments — Ethereum: Llamalend V1 one-way-lending-factory,
+  // Llamalend V2 lending-factory, crvUSD (Tokens). The wstETH-long vault is OneWayLendingFactory.vaults(13)
+  // on that factory; its borrowed token is crvUSD and its collateral is wstETH.
+  for (const key of ["llamalend", "curve-llamalend"]) {
+    push(book[key], eth, "Llamalend V1 OneWayLendingFactory", "0xeA6876DDE9e3467564acBeE1Ed5bac88783205E0", DOCS.curve);
+    push(book[key], eth, "Llamalend V2 LendFactory", "0x8f6B56EC5ddF1F2691a1059f1D3cd97Ac9EaB0bd", DOCS.curve);
+    push(book[key], eth, "Llamalend wstETH-long vault (factory vaults(13))", "0x21CF1c5Dc48C603b89907FE6a7AE83EA5e3709aF", DOCS.curve);
+    push(book[key], eth, "crvUSD", "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E", DOCS.curve);
+  }
+  // https://docs.dolomite.io/smart-contract-addresses/core-immutable and /core-routers — Ethereum Mainnet
+  push(book.dolomite, eth, "DolomiteMargin", "0x003Ca23Fd5F0ca87D01F6eC6CD14A8AE60c2b97D", DOCS.dolomite);
+  push(book.dolomite, eth, "DepositWithdrawalRouter", "0xf8b2c637A68cF6A17b1DF9F8992EeBeFf63d2dFf", DOCS.dolomiteRouters);
+  push(book.dolomite, eth, "BorrowPositionRouter", "0xF579b345cdA0860668b857De10ABD62442133D0F", DOCS.dolomiteRouters);
+  push(book.dolomite, eth, "USDC", COMMON_TOKENS.USDC.ethereum, DOCS.usdc);
+  // https://docs.re.xyz/products/smart-contracts — Ethereum tokens and NAV oracles. Mint is KYC-gated.
+  push(book.re, eth, "reUSD", "0x5086bf358635B81D8C47C66d1C8b9E567Db70c72", DOCS.re);
+  push(book.re, eth, "reUSDe", "0xdDC0f880ff6e4e22E4B74632fBb43Ce4DF6cCC5a", DOCS.re);
+  push(book.re, eth, "reUSD NAV oracle", "0xb45AC37Cc7fF7ec317e7D8C308781ECe431639f6", DOCS.re);
+  push(book.re, eth, "reUSDe NAV oracle", "0x7844441f13C61CBD3d297F5d2D7fcaBf17f0b843", DOCS.re);
+  // Nest (Plume Vaults) share tokens and USDC NestVaults. The Nest API lists chainId 1 for these
+  // NestVaults (https://api.nest.credit/v1/vaults/nest-alpha-vault). Deposits need a Predicate attestation.
+  push(book["plume-vaults"], eth, "nALPHA share token", "0x593cCcA4c4bf58b7526a4C164cEEf4003C6388db", DOCS.nestAlpha);
+  push(book["plume-vaults"], eth, "nALPHA USDC NestVault", "0x0342EE795e7864319fB8D48651b47feBf1163C34", DOCS.nestAlpha);
+  push(book["plume-vaults"], eth, "nBASIS share token", "0x11113Ff3a60C2450F4b22515cB760417259eE94B", DOCS.nestBasis);
+  push(book["plume-vaults"], eth, "nBASIS USDC NestVault", "0x5F35D1cef957467F4c7b35B36371355170A0DbB1", DOCS.nestBasis);
+  // https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration — deposits are
+  // permissioned through SyrupRouter + PoolPermissionManager.
+  push(book.maple, eth, "syrupUSDC (PoolV2)", "0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b", DOCS.maple);
+  push(book.maple, eth, "syrupUSDC SyrupRouter", "0x134cCaaA4F1e4552eC8aEcb9E4A2360dDcF8df76", DOCS.maple);
+  push(book.maple, eth, "syrupUSDC WithdrawalManagerQueue", "0x1bc47a0Dd0FdaB96E9eF982fdf1F34DC6207cfE3", DOCS.maple);
+  push(book.maple, eth, "syrupUSDT (PoolV2)", "0x356B8d89c1e1239Cbbb9dE4815c39A1474d5BA7D", DOCS.maple);
+  push(book.maple, eth, "PoolPermissionManager", "0xBe10aDcE8B6E3E02Db384E7FaDA5395DD113D8b3", DOCS.maple);
 
   return book;
 }
@@ -481,6 +537,31 @@ module.exports = {
   },
   PUFFER: {
     pufETH: "0xD9A442856C234a39a81a089C06451EBAa4306a72",
+  },
+  // Morpho Vault V2. maxDeposit() returns 0 by design in V2, so gates are the pre-check.
+  ROCKAWAYX: {
+    vault: "0xE0181090c22579B6A217f1522cbf8c9f1F0C1965",
+    asset: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    symbol: "USDC",
+    decimals: 6,
+    defaultAmount: "100",
+    label: "roxUSDCy",
+  },
+  // Curve Llamalend V1 wstETH-long vault (ERC-4626, lends crvUSD). OneWayLendingFactory.vaults(13).
+  LLAMALEND: {
+    factory: "0xeA6876DDE9e3467564acBeE1Ed5bac88783205E0",
+    marketIndex: 13,
+    vault: "0x21CF1c5Dc48C603b89907FE6a7AE83EA5e3709aF",
+    asset: "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+    symbol: "crvUSD",
+    decimals: 18,
+    defaultAmount: "100",
+    label: "cvcrvUSD",
+  },
+  DOLOMITE: {
+    margin: "0x003Ca23Fd5F0ca87D01F6eC6CD14A8AE60c2b97D",
+    router: "0xf8b2c637A68cF6A17b1DF9F8992EeBeFf63d2dFf",
+    usdc: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   },
   BRIDGES: {
     arbitrumInbox: "0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f",
