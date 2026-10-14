@@ -226,6 +226,7 @@ const PROTOCOLS = [
     about: "Native cross-chain swaps.",
     notes: [
       "~500k stolen ATOM swapped through THORChain; 168,990.9 ATOM refunded to the attacker after the Hub restart ([CryptoSlate](https://cryptoslate.com/cosmos-restarted-to-seize-2-2-million-in-stolen-atom-but-169000-tokens-still-escaped/), 2026-09-24).",
+      "Gross swap fees rebounded but remained ~84% below September's $3.01M system-income peak (Bitget-exploit flows); DefiLlama 30d fees were cited near $635K mid-October ([Crypto Briefing](https://cryptobriefing.com/thorchain-fees-rebound-below-september-surge/), 2026-10-12). `analytics:thorchain:dex` now prints fees/revenue (`DEFILLAMA_FEES=1`).",
     ],
   },
   {
@@ -347,6 +348,7 @@ const PROTOCOLS = [
     about: "Synthetic BTC/ETH perps on HyperEVM against a protocol-owned pool (DefiLlama slug `papertrade`).",
     notes: [
       "Pre-deposits opened 2026-10-08; live trading expected ~1h after the 2026-10-10 HyperEVM upgrade (may slip to 2026-10-11) ([DeFi Prime](https://defiprime.com/papertrade-opens-predeposits-before-hyperevm-launch), 2026-10-09; [SignalPlus](https://t.signalplus.com/crypto-news/detail/papertrade-opens-predeposits-ahead-october-trading-launch?lang=en-US), 2026-10-08). ~$25M in user deposits ahead of launch is a single X post ([X](https://x.com/zoomerfied/status/2108565430499717403), 2026-10-09); analytics prints live DefiLlama TVL.",
+      "Trading went live 2026-10-10 with ~$137M of pre-deposits; TVL ~$102M and BTC open interest above $3B shortly after launch ([Crypto Briefing](https://cryptobriefing.com/papertrade-oracle-manipulation-allegation-pool/), 2026-10-10). Open interest then fell ~60% in 12 hours to ~$1.3B ([TokenPost](https://www.tokenpost.com/news/investing/29834), 2026-10-11), and again to ~$693M (−93.7% from an $11B peak) with TVL $118M → $70M ([TokenPost](https://www.tokenpost.com/news/investing/29933), 2026-10-11). A first-day ETH BBO attack withdrew ~$1.28M from the LP pool ([TokenPost](https://www.tokenpost.com/news/technology/29990), 2026-10-11; DefiLlama `/hacks` Papertrade $1.28M, 2026-10-10). Trader losses reached $32.4M in two days with house pool ~$4.27M ([TokenPost](https://www.tokenpost.com/news/investing/30235), 2026-10-12). `/summary/open-interest/papertrade` still 404; fees now resolve — `analytics:papertrade:perps` prints `DEFILLAMA_FEES=1`. House pool is not separately readable.",
     ],
   },
   {
@@ -426,16 +428,24 @@ const PROTOCOLS = [
     name: "Aave",
     category: "lending",
     url: "https://aave.com",
-    about: "V2/V3 lending: live rates, version comparison, liquidations, and fork reads.",
-    data: "On-chain RPC",
+    about:
+      "V2/V3 on-chain rates, liquidations and forks; V4 TVL from DefiLlama slug `aave-v4` (Ethereum, Avalanche, Arc).",
+    data: "On-chain RPC, DefiLlama",
+    notes: [
+      "Aave V4 deposits on Circle's Arc exceeded $300M on 2026-10-12 (from $181M in September); V4 is also on Ethereum and Avalanche with ~$1.2B deposits and >$400M active loans ([TokenPost](https://www.tokenpost.com/news/technology/30418), 2026-10-12). `analytics:aave:v4` prints DefiLlama chain TVL and `*-borrowed` rows — Arc deposits ≈ Arc + Arc-borrowed (~$294–$303M around the article date). Coinbase tokenized stocks added $4.9M collateral to the Base Equities Hub over 17 days ([TokenPost](https://www.tokenpost.com/news/technology/30311), 2026-10-12); that hub is not broken out on DefiLlama.",
+    ],
   },
   {
     id: "morpho",
     name: "Morpho",
     category: "lending",
     url: "https://morpho.org",
-    about: "Morpho Blue isolated markets. Also a row in `analytics:lending:aggregate`. No swap script by design.",
+    about:
+      "Morpho Blue isolated markets and Vault V2. Also a row in `analytics:lending:aggregate`. No swap script by design.",
     data: "Morpho GraphQL, on-chain RPC",
+    notes: [
+      "As of 2026-10-13 the flagship Arc cirBTC/USDC Morpho market held ~$195M supplied USDC with ~$190M borrowed (97.4% utilization, up from 8.1% on Sept. 21); >$304M cirBTC collateral; borrow APY ~2.8–2.9%; LLTV 86% ([Crypto Briefing](https://cryptobriefing.com/cirbtc-borrowing-morpho-190-million-liquidity/), 2026-10-13; [The Defiant](https://thedefiant.io/news/defi/cirbtc-borrowing-on-morpho-tops-190-million-as-arc-liquidity-tightens), 2026-10-13). `analytics:morpho:cirbtc` reads Morpho GraphQL markets on chainId 5042 filtered to cirBTC collateral.",
+    ],
   },
   {
     id: "llamalend",
@@ -1173,7 +1183,11 @@ const SCRIPT_DESCRIPTIONS = {
   "analytics:aave:markets": "Aave V3 supply/borrow rates and utilization on every configured chain",
   "analytics:aave:versions": "Aave V2 vs V3 rates across L1 and L2s",
   "analytics:aave:liquidations": "Recent `LiquidationCall` logs; health factors for `AAVE_WATCH_ADDRESSES`",
+  "analytics:aave:v4": "Aave V4 DefiLlama TVL by chain (Ethereum, Avalanche, Arc) including borrowed rows",
+  "simulate:aave:v4:smoke": "Fails unless DefiLlama `aave-v4` TVL is positive",
   "analytics:morpho:optimizer": "Best Morpho Blue markets per loan asset vs Aave V3 rates",
+  "analytics:morpho:cirbtc": "Arc cirBTC Morpho Blue markets: borrow, supply, utilization and borrow APY",
+  "simulate:morpho:cirbtc:smoke": "Fails unless the top Arc cirBTC market has borrow above $100M",
   "analytics:keyrock:vault": "Total assets, liquidity, net APY and curators for the Morpho vault",
   "analytics:lido:staking": "stETH APR, TVL and stETH/wstETH peg (L2 peg needs RPCs)",
   "analytics:stakestone:staking": "TVL and optional chart APY, compared to Lido",
