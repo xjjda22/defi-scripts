@@ -487,6 +487,24 @@ const PROTOCOLS = [
     ],
   },
   {
+    id: "venus",
+    name: "Venus Core Pool",
+    category: "lending",
+    url: "https://app.venus.io",
+    about:
+      "BNB Chain money market. The fork test mints and redeems vUSDC on the BSC Core Pool (Compound V2-style).",
+    data: "On-chain RPC",
+  },
+  {
+    id: "lista-dao",
+    name: "Lista DAO Lending",
+    category: "lending",
+    url: "https://lista.org",
+    about:
+      "Lista Moolah lending on BSC. The fork test deposits and redeems USDT on the MoolahVault (USDT) ERC-4626 vault.",
+    data: "On-chain RPC",
+  },
+  {
     id: "spark",
     name: "Spark",
     category: "lending",
@@ -606,6 +624,15 @@ const PROTOCOLS = [
     notes: [
       "Morpho Vault V2 `maxDeposit` always returns 0, so the test checks the four V2 gates instead. All four were unset on 2026-10-12.",
     ],
+  },
+  {
+    id: "spark-vaults",
+    name: "Spark Savings Vaults",
+    category: "vaults",
+    url: "https://app.spark.fi",
+    about:
+      "Spark Savings Vaults V2 (spUSDC and siblings). The fork test deposits and redeems USDC on the Ethereum spUSDC ERC-4626 vault.",
+    data: "On-chain RPC",
   },
   {
     id: "upshift",
@@ -799,6 +826,15 @@ const PROTOCOLS = [
     data: "On-chain RPC",
   },
   {
+    id: "lista",
+    name: "Lista Liquid Staking",
+    category: "staking",
+    url: "https://lista.org",
+    about:
+      "BNB liquid staking (slisBNB). The fork test calls ListaStakeManager.deposit() with native BNB on a BSC Anvil fork.",
+    data: "On-chain RPC",
+  },
+  {
     id: "etherfi",
     name: "ether.fi",
     category: "restaking",
@@ -904,7 +940,9 @@ const PROTOCOLS = [
     name: "USD AI",
     category: "stable-rwa",
     url: "https://usdai.money",
-    about: "GPU-loan backed stablecoin.",
+    about:
+      "GPU-loan backed stablecoin (USDai / sUSDai). Protocol mint is whitelisted. The fork stakes USDai into sUSDai on Arbitrum; redeem is a 30-day queue and is not exercised.",
+    data: "On-chain RPC",
     notes: [
       "$128.9M GPU financing facility, its largest to date ([PR Newswire](https://www.prnewswire.com/news-releases/usdai-announces-128-9m-gpu-financing-facility-its-largest-to-date-302888224.html), 2026-09-23).",
     ],
@@ -1360,6 +1398,11 @@ const SCRIPT_DESCRIPTIONS = {
   "fork:rockawayx:deposit": "Deposit USDC into RockawayX USDC Yield (Morpho Vault V2) and redeem it on an Ethereum fork",
   "fork:llamalend:deposit": "Lend crvUSD into the Curve Llamalend wstETH-long vault and redeem it on an Ethereum fork",
   "fork:dolomite:supply": "Supply USDC to Dolomite through the DepositWithdrawalRouter and withdraw it on an Ethereum fork",
+  "fork:lista:stake": "Stake BNB via ListaStakeManager.deposit() and assert slisBNB is minted on a BSC fork",
+  "fork:venus:supply": "Mint and redeem vUSDC on the Venus Core Pool on a BSC fork",
+  "fork:usdai:stake": "Stake USDai into sUSDai on an Arbitrum fork (protocol mint is whitelisted; redeem is queued)",
+  "fork:spark-vaults:deposit": "Deposit USDC into Spark Savings spUSDC and redeem it on an Ethereum fork",
+  "fork:lista-dao:deposit": "Deposit USDT into the Lista MoolahVault (USDT) and redeem it on a BSC fork",
   "fork:eigenlayer:deposit": "Deposit stETH into the EigenLayer stETH strategy and assert deposit shares increased",
   "fork:eigenlayer:queue": "Deposit stETH and queueWithdrawals. The completion delay is not advanced",
   "fork:symbiotic:read": "Read the Symbiotic VaultFactory. Docs do not publish a permissionless vault",

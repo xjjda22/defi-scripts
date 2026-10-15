@@ -419,7 +419,12 @@
     "analytics:balancer:protocol": "DEFILLAMA_FEES=1 DEFILLAMA_SLUG=balancer DEFILLAMA_LABEL=Balancer node src/analytics/protocols/llama/dexProtocolMonitor.js",
     "simulate:balancer:protocol:smoke": "SMOKE_SLUG=balancer node src/simulation/api/smokeDefiLlamaProtocol.js",
     "analytics:alchemix:base": "DEFILLAMA_SLUG=alchemix DEFILLAMA_LABEL='Alchemix' node src/analytics/protocols/llama/dexProtocolMonitor.js",
-    "simulate:alchemix:base:smoke": "SMOKE_SLUG=alchemix node src/simulation/api/smokeDefiLlamaProtocol.js"
+    "simulate:alchemix:base:smoke": "SMOKE_SLUG=alchemix node src/simulation/api/smokeDefiLlamaProtocol.js",
+    "fork:lista:stake": "CHAIN=bsc FORK_TARGET=lista FORK_PROTOCOL=lista FORK_ACTION=stake node src/simulation/fork/run.js",
+    "fork:venus:supply": "CHAIN=bsc FORK_TARGET=venus FORK_PROTOCOL=venus FORK_ACTION=supply node src/simulation/fork/run.js",
+    "fork:usdai:stake": "CHAIN=arbitrum FORK_TARGET=usdai FORK_PROTOCOL=usdai FORK_ACTION=stake node src/simulation/fork/run.js",
+    "fork:spark-vaults:deposit": "CHAIN=ethereum FORK_TARGET=spark-vaults FORK_PROTOCOL=spark-vaults FORK_ACTION=deposit node src/simulation/fork/run.js",
+    "fork:lista-dao:deposit": "CHAIN=bsc FORK_TARGET=lista-dao FORK_PROTOCOL=lista-dao FORK_ACTION=deposit node src/simulation/fork/run.js"
   },
   "keywords": [
     "defi",
