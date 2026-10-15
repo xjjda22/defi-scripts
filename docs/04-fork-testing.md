@@ -61,6 +61,9 @@ The tables below, and the "Test it" panel on each protocol page, are both genera
 | `fork:morpho:supply` / `:borrow` | Ethereum | One listed WETH/USDC Morpho Blue market | supply shares or borrow shares increase |
 | `fork:llamalend:deposit` | Ethereum | crvUSD into the Llamalend V1 wstETH-long vault (`OneWayLendingFactory.vaults(13)`, ERC-4626), then redeem | the factory still lists the vault, the deposit pulled the full amount, shares were minted, the redeem burned every share and crvUSD came back within rounding |
 | `fork:dolomite:supply` | Ethereum | `DepositWithdrawalRouter.depositWei` into account 0, then `withdrawWei` of the full balance with `BalanceCheckFlag.From` | the deposit pulled the full amount, `DolomiteMargin.getAccountWei` rose by it, the withdraw left the account at 0 and the USDC came back |
+| `fork:lista:stake` | Bsc | `ListaStakeManager.deposit()` with native BNB | slisBNB balance increases |
+| `fork:venus:supply` | Bsc | `vUSDC.mint` then `redeem` on the BSC Core Pool | the mint pulled the full USDC, vUSDC shares were minted, the redeem burned every share and USDC came back within rounding |
+| `fork:lista-dao:deposit` | Bsc | USDT into the Lista MoolahVault (USDT) (ERC-4626), then redeem | the deposit pulled the full amount, shares were minted, the redeem burned every share and USDT came back within rounding |
 | `fork:lido:submit` / `:wrap` | Ethereum | `submit` then optional `wrap` | stETH, then wstETH, increases |
 | `fork:rocketpool:deposit` | Ethereum | `deposit()` on the Rocket deposit pool | rETH increases, or skip when the cap is too small |
 | `fork:cbeth:rate` | Ethereum | `exchangeRate()` | rate above 1. No public mint |
@@ -110,6 +113,7 @@ Same rules. A vault whose `maxDeposit` is 0 (or whose deposits are paused or clo
 | `fork:yearn:deposit` | USDC into Yearn V3 USDC-1, then redeem |
 | `fork:euler:deposit` | USDC into Euler Earn K3 Capital Earn USDC (first non-deprecated Ethereum vault in euler-labels), then redeem |
 | `fork:rockawayx:deposit` | USDC into RockawayX USDC Yield, a Morpho Vault V2, then redeem. V2 `maxDeposit` is always 0, so the pre-check is that all four gates are unset (a set gate makes it a labelled read). Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding |
+| `fork:spark-vaults:deposit` | USDC into Spark Savings spUSDC (ERC-4626), then redeem. Idle liquidity caps redeem; the round trip asserts within idle balance |
 <!-- /features:vaults -->
 
 ## Stablecoins, RWA, and bridges
@@ -123,6 +127,7 @@ Same rules: pinned block via `FORK_BLOCK`, whale impersonation or `anvil_deal`, 
 | `fork:sky:susds` | Deposit USDS into sUSDS and redeem |
 | `fork:sky:sdai` | Deposit DAI into sDAI and redeem |
 | `fork:ethena:stake` | USDe→sUSDe. Mint is whitelisted and is not called |
+| `fork:usdai:stake` | USDai→sUSDai via ERC-4626 deposit. Protocol mint of USDai is whitelisted and is not called. Redeem is a 30-day queue, so this does not redeem |
 | `fork:ethena:cooldown` | Start the sUSDe cooldown. Completing the unstake waits out `cooldownDuration` |
 | `fork:circle:transfer` / `fork:tether:transfer` | Transfer only. Mint and redeem are off-chain or KYC'd. The panel says **Transfer / read-only** |
 | `fork:frax:rate` | `sfrxUSD.convertToAssets`. Ethereum `maxDeposit` is 0, so there is no local deposit. The panel says **Read-only** (not KYC; there is just no Ethereum deposit path) |
