@@ -3,6 +3,28 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-10-16]
+
+Claims monitors from the 2026-10-14…16 window (public news + Inner Circle CT Alchemix Base).
+
+### Added
+
+- **`analytics:uncx:exploit` / `simulate:uncx:exploit:smoke`** — DefiLlama `/hacks` id 1765 (since 2026-10-14). Catalog note: Llama shows ~$86K while Blockaid/news cite ~$1.49M later.
+- **`analytics:pendle:hy-vault` / `simulate:pendle:hy-vault:smoke`** — Morpho Vault V2 `0xcf609F8327E68b42AF54F9D529b9f65d68038435` on Ethereum (chainId 1); EIP-55 + on-chain code verified.
+- **`analytics:curve:lending` / `simulate:curve:lending:smoke`** — sums `curve-llamalend` + `curve-llamalend-v2` borrowed+TVL without double-counting.
+- **`analytics:balancer:protocol` / `simulate:balancer:protocol:smoke`** — DefiLlama parent `balancer` with `DEFILLAMA_FEES=1`; catalog note on withdrawals-only from 2026-10-30.
+- **`analytics:alchemix:base` / `simulate:alchemix:base:smoke`** — DefiLlama `alchemix` TVL by chain (Base ~$2.38M claim).
+- **`llamaBorrowedSumMonitor.js`** — multi-slug borrowed+TVL helper for lending-style claims.
+- **BAND** stem in `LIST_NAMES` (`band` / `10-band` → `"BAND"`).
+
+### Sources
+
+- UNCX: The Defiant, TokenPost, Crypto Times (2026-10-14/15)
+- Pendle HY vault: Crypto Briefing (2026-10-15)
+- Curve LlamaLend: crypto.news (2026-10-15)
+- Balancer shutdown: rekt.news (2026-10-14)
+- Alchemix Base: [X @scupytrooples](https://x.com/scupytrooples/status/2110721103853400532) (2026-10-15)
+
 ## [2026-10-11]
 
 A session in four parts: repair the perps fork tests, record the BAND decision,
