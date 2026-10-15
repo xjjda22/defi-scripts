@@ -409,7 +409,17 @@
     "report:analytics": "bash scripts/healthCheckReport.sh analytics",
     "report:simulation": "bash scripts/healthCheckReport.sh simulation",
     "report:swap": "bash scripts/healthCheckReport.sh swap",
-    "lint": "eslint . --ignore-path .eslintignore --ext .js --quiet"
+    "lint": "eslint . --ignore-path .eslintignore --ext .js --quiet",
+    "analytics:uncx:exploit": "LLAMA_HACK_ID=1765 LLAMA_HACK_SINCE=2026-10-14 node src/analytics/protocols/llama/llamaHacksMonitor.js",
+    "simulate:uncx:exploit:smoke": "LLAMA_HACK_ID=1765 LLAMA_HACK_SINCE=2026-10-14 node src/simulation/api/smokeLlamaHacks.js",
+    "analytics:pendle:hy-vault": "MORPHO_VAULT_CHAIN_ID=1 MORPHO_VAULT_ADDRESS=0xcf609F8327E68b42AF54F9D529b9f65d68038435 MORPHO_VAULT_LABEL='Pendle Ecosystem High Yield USDC (Ethereum)' node src/analytics/protocols/morpho/morphoVaultV2Monitor.js",
+    "simulate:pendle:hy-vault:smoke": "MORPHO_VAULT_SMOKE=1 MORPHO_VAULT_MIN_USD=1000000 MORPHO_VAULT_CHAIN_ID=1 MORPHO_VAULT_ADDRESS=0xcf609F8327E68b42AF54F9D529b9f65d68038435 MORPHO_VAULT_LABEL='Pendle Ecosystem High Yield USDC (Ethereum)' node src/analytics/protocols/morpho/morphoVaultV2Monitor.js",
+    "analytics:curve:lending": "DEFILLAMA_SLUGS=curve-llamalend,curve-llamalend-v2 DEFILLAMA_LABEL='Curve LlamaLend' node src/analytics/protocols/llama/llamaBorrowedSumMonitor.js",
+    "simulate:curve:lending:smoke": "DEFILLAMA_SMOKE=1 DEFILLAMA_SLUGS=curve-llamalend,curve-llamalend-v2 DEFILLAMA_LABEL='Curve LlamaLend' node src/analytics/protocols/llama/llamaBorrowedSumMonitor.js",
+    "analytics:balancer:protocol": "DEFILLAMA_FEES=1 DEFILLAMA_SLUG=balancer DEFILLAMA_LABEL=Balancer node src/analytics/protocols/llama/dexProtocolMonitor.js",
+    "simulate:balancer:protocol:smoke": "SMOKE_SLUG=balancer node src/simulation/api/smokeDefiLlamaProtocol.js",
+    "analytics:alchemix:base": "DEFILLAMA_SLUG=alchemix DEFILLAMA_LABEL='Alchemix' node src/analytics/protocols/llama/dexProtocolMonitor.js",
+    "simulate:alchemix:base:smoke": "SMOKE_SLUG=alchemix node src/simulation/api/smokeDefiLlamaProtocol.js"
   },
   "keywords": [
     "defi",

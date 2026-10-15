@@ -121,6 +121,8 @@ const LIST_NAMES = {
   "08-privacy-web3": "Privacy x web3 projects",
   "smart-contract-security": "Smart Contract Security",
   "09-smart-contract-security": "Smart Contract Security",
+  band: "BAND",
+  "10-band": "BAND",
 };
 
 const LIST_ALIASES = {
