@@ -287,6 +287,33 @@ const FEATURES = [
       "the deposit pulled the full amount, `DolomiteMargin.getAccountWei` rose by it, the withdraw left the account at 0 and the USDC came back",
     params: amount("100", "USDC"),
   },
+  {
+    script: "fork:lista:stake",
+    section: "actions",
+    chain: "bsc",
+    title: "Stake BNB for slisBNB",
+    action: "`ListaStakeManager.deposit()` with native BNB",
+    assertion: "slisBNB balance increases",
+    params: amount("0.1", "BNB"),
+  },
+  {
+    script: "fork:venus:supply",
+    section: "actions",
+    chain: "bsc",
+    title: "Supply USDC to Venus Core Pool",
+    action: "`vUSDC.mint` then `redeem` on the BSC Core Pool",
+    assertion: "the mint pulled the full USDC, vUSDC shares were minted, the redeem burned every share and USDC came back within rounding",
+    params: amount("100", "USDC"),
+  },
+  {
+    script: "fork:lista-dao:deposit",
+    section: "actions",
+    chain: "bsc",
+    title: "Deposit USDT into Lista Moolah vault",
+    action: "USDT into the Lista MoolahVault (USDT) (ERC-4626), then redeem",
+    assertion: "the deposit pulled the full amount, shares were minted, the redeem burned every share and USDT came back within rounding",
+    params: amount("100", "USDT"),
+  },
 
   // ---- Liquid staking / restaking ---------------------------------------
   {
@@ -502,6 +529,14 @@ const FEATURES = [
       "USDC into RockawayX USDC Yield, a Morpho Vault V2, then redeem. V2 `maxDeposit` is always 0, so the pre-check is that all four gates are unset (a set gate makes it a labelled read). Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding",
     params: amount("100", "USDC"),
   },
+  {
+    script: "fork:spark-vaults:deposit",
+    section: "vaults",
+    chain: "ethereum",
+    title: "Deposit and redeem (Spark Savings USDC)",
+    assertion: "USDC into Spark Savings spUSDC (ERC-4626), then redeem. Idle liquidity caps redeem; the round trip asserts within idle balance",
+    params: amount("100", "USDC"),
+  },
 
   // ---- Stablecoins, RWA, bridges ----------------------------------------
   {
@@ -535,6 +570,15 @@ const FEATURES = [
     title: "Stake USDe → sUSDe",
     assertion: "USDe→sUSDe. Mint is whitelisted and is not called",
     params: amount("1000", "USDe"),
+    gated: true,
+  },
+  {
+    script: "fork:usdai:stake",
+    section: "stables",
+    chain: "arbitrum",
+    title: "Stake USDai → sUSDai",
+    assertion: "USDai→sUSDai via ERC-4626 deposit. Protocol mint of USDai is whitelisted and is not called. Redeem is a 30-day queue, so this does not redeem",
+    params: amount("100", "USDai"),
     gated: true,
   },
   {

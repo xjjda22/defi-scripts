@@ -475,6 +475,47 @@ const FORK_RECIPES = [
     note: "Stargate V2 quoteSend and send lock USDC on Ethereum toward Arbitrum. LayerZero relayers deliver the destination; this fork does not.",
     tests: [test("fork:stargate:quote", "quote", "ethereum"), test("fork:stargate:deposit", "deposit", "ethereum")],
   }),
+  recipe({
+    keys: ["lista-liquid-staking", "lista"],
+    appUrl: "https://lista.org",
+    chain: "bsc",
+    contractKeys: ["lista-liquid-staking"],
+    note: "ListaStakeManager.deposit() stakes native BNB and mints slisBNB. Withdrawal is a 7-day unbond queue, so the fork test only stakes.",
+    tests: [test("fork:lista:stake", "stake", "bsc")],
+  }),
+  recipe({
+    keys: ["venus-core-pool", "venus"],
+    appUrl: "https://app.venus.io",
+    chain: "bsc",
+    contractKeys: ["venus-core-pool"],
+    note: "Venus Core Pool vUSDC mint and redeem on BSC (Compound V2-style). Borrow is not exercised.",
+    tests: [test("fork:venus:supply", "supply", "bsc")],
+  }),
+  recipe({
+    keys: ["usd-ai", "usdai"],
+    appUrl: "https://app.usd.ai",
+    chain: "arbitrum",
+    contractKeys: ["usd-ai"],
+    note: "Protocol mint/redeem of USDai is whitelisted (docs.usd.ai). The fork stakes USDai into sUSDai (ERC-4626). Redeem is a 30-day queue, so the test does not redeem.",
+    tests: [test("fork:usdai:stake", "stake", "arbitrum")],
+  }),
+  recipe({
+    keys: ["spark"],
+    category: "vaults",
+    appUrl: "https://app.spark.fi",
+    chain: "ethereum",
+    contractKeys: ["spark-vaults"],
+    note: "Spark Savings Vaults V2 spUSDC is an ERC-4626 vault. Deposit and redeem on Ethereum. Idle liquidity caps redeem (SparkVault/insufficient-liquidity when the taker has deployed funds).",
+    tests: [test("fork:spark-vaults:deposit", "deposit", "ethereum")],
+  }),
+  recipe({
+    keys: ["lista-dao"],
+    appUrl: "https://lista.org",
+    chain: "bsc",
+    contractKeys: ["lista-dao"],
+    note: "Lista MoolahVault (USDT) is ERC-4626. Deposit USDT and redeem on a BSC fork.",
+    tests: [test("fork:lista-dao:deposit", "deposit", "bsc")],
+  }),
 ];
 
 const API_ONLY = [
@@ -513,6 +554,24 @@ const API_ONLY = [
     category: "lending",
     appUrl: "https://www.maple.finance",
     note: "Permissioned: no fork test. syrupUSDC and syrupUSDT deposits must go through SyrupRouter, which enforces PoolPermissionManager \"P:deposit\"; a first deposit needs an authorization signature from Maple, and withdrawals are a queued requestRedeem that Maple processes (docs.maple.finance smart-contract integration). analytics:maple:lending covers TVL and fees.",
+  },
+  {
+    keys: ["fx-protocol", "fx"],
+    category: "stable-rwa",
+    appUrl: "https://fx.aladdin.club",
+    note: "No fork deposit test: f(x) leveraged mint markets need a collateral deposit path with oracle-priced debt (docs.aladdin.club/f-x-protocol/contracts), and the arUSD ERC-4626 vault is over rUSD, a protocol-native stable with no liquid whale the Anvil suite can fund (anvil_deal is unavailable on this Foundry build). Contracts for fxUSD, rUSD, arUSD and the stETH Market are listed for verification.",
+  },
+  {
+    keys: ["fusion-by-ipor"],
+    category: "vaults",
+    appUrl: "https://app.ipor.io/fusion",
+    note: "No fork test: IPOR Fusion publishes the IporFusionFactoryProxy per chain (docs.ipor.io addresses), not a single permissionless vault. Curator vaults are cloned from the factory with their own fuses and deposit rules, so there is no one ERC-4626 address to assert on a fork. The factory address is listed for verification.",
+  },
+  {
+    keys: ["avalon-superearn"],
+    category: "vaults",
+    appUrl: "https://app.avalonfinance.xyz/earn",
+    note: "No fork test on Ethereum: Avalon SuperEarn user deposits go through SuperEarnRouter on Kaia (chain 8217). Ethereum holds remote aggregation and cooldown vaults that receive bridged assets (docs.superearn.io smart contracts). The repo does not fork Kaia, and the Ethereum remote vaults are not the permissionless user deposit path.",
   },
 ];
 

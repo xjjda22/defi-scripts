@@ -66,6 +66,15 @@ const DOCS = {
   nestAlpha: "https://docs.nest.credit/developers/integration-guides/nalpha/",
   nestBasis: "https://docs.nest.credit/developers/integration-guides/nbasis/",
   maple: "https://docs.maple.finance/integrate/ethereum-mainnet/smart-contract-integration",
+  listaStake: "https://docs.bsc.lista.org/for-developer/liquid-staking-slisbnb/smart-contract",
+  listaLending: "https://docs.bsc.lista.org/for-developer/lista-lending/smart-contract/smart-contract-bsc-core",
+  venus: "https://docs-v4.venus.io/deployed-contracts/markets",
+  usdai: "https://docs.usd.ai/technical-overview/contract-addresses",
+  sparkVaults: "https://docs.spark.fi/dev/savings/spark-vaults-v2",
+  fx: "https://docs.aladdin.club/f-x-protocol/contracts",
+  iporFusion: "https://docs.ipor.io/build-on-fusion/developer-guide/addresses",
+  // Avalon SuperEarn product docs (Kaia primary; Ethereum remote vaults).
+  avalon: "https://docs.superearn.io/en/developers/smart-contracts",
 };
 
 /**
@@ -165,6 +174,18 @@ function contractBook() {
     re: [],
     "plume-vaults": [],
     maple: [],
+    "lista-liquid-staking": [],
+    lista: [],
+    "lista-dao": [],
+    "venus-core-pool": [],
+    venus: [],
+    "usd-ai": [],
+    usdai: [],
+    "spark-vaults": [],
+    "fx-protocol": [],
+    fx: [],
+    "fusion-by-ipor": [],
+    "avalon-superearn": [],
   };
 
   push(book.uniswap, eth, "V2 router", uni.v2.router, DOCS.uniswap);
@@ -393,6 +414,56 @@ function contractBook() {
   push(book.maple, eth, "syrupUSDT (PoolV2)", "0x356B8d89c1e1239Cbbb9dE4815c39A1474d5BA7D", DOCS.maple);
   push(book.maple, eth, "PoolPermissionManager", "0xBe10aDcE8B6E3E02Db384E7FaDA5395DD113D8b3", DOCS.maple);
 
+
+  // Lista liquid staking (slisBNB) on BSC.
+  // https://docs.bsc.lista.org/for-developer/liquid-staking-slisbnb/smart-contract
+  for (const key of ["lista-liquid-staking", "lista"]) {
+    push(book[key], "bsc", "ListaStakeManager", "0x1adB950d8bB3dA4bE104211D5AB038628e477fE6", DOCS.listaStake);
+    push(book[key], "bsc", "slisBNB", "0xB0b84D294e0C75A6abe60171b70edEb2EFd14A1B", DOCS.listaStake);
+  }
+  // Lista DAO lending (Moolah) on BSC.
+  // https://docs.bsc.lista.org/for-developer/lista-lending/smart-contract/smart-contract-bsc-core
+  for (const key of ["lista-dao"]) {
+    push(book[key], "bsc", "Moolah", "0x8F73b65B4caAf64FBA2aF91cC5D4a2A1318E5D8C", DOCS.listaLending);
+    push(book[key], "bsc", "MoolahVault (USDT)", "0x6d6783C146F2B0B2774C1725297f1845dc502525", DOCS.listaLending);
+    push(book[key], "bsc", "USDT", COMMON_TOKENS.USDT.bsc, DOCS.listaLending);
+  }
+  // Venus Core Pool on BSC.
+  // https://docs-v4.venus.io/deployed-contracts/markets
+  for (const key of ["venus-core-pool", "venus"]) {
+    push(book[key], "bsc", "Comptroller (Unitroller)", "0xfD36E2c2a6789Db23113685031d7F16329158384", DOCS.venus);
+    push(book[key], "bsc", "vUSDC", "0xecA88125a5ADbe82614ffC12D0DB554E2e2867C8", DOCS.venus);
+    push(book[key], "bsc", "vUSDT", "0xfD5840Cd36d94D7229439859C0112a4185BC0255", DOCS.venus);
+    push(book[key], "bsc", "USDC", COMMON_TOKENS.USDC.bsc, DOCS.venus);
+  }
+  // USD.AI on Arbitrum hub. Protocol mint/redeem is whitelisted; staking USDai→sUSDai is open.
+  // https://docs.usd.ai/technical-overview/contract-addresses
+  for (const key of ["usd-ai", "usdai"]) {
+    push(book[key], "arbitrum", "USDai", "0x0A1a1A107E45b7Ced86833863f482BC5f4ed82EF", DOCS.usdai);
+    push(book[key], "arbitrum", "sUSDai", "0x0B2b2B2076d95dda7817e785989fE353fe955ef9", DOCS.usdai);
+  }
+  // Spark Savings Vaults V2 (spUSDC etc). Separate from SparkLend (book.spark).
+  // https://docs.spark.fi/dev/savings/spark-vaults-v2
+  push(book["spark-vaults"], eth, "Spark Savings USDC (spUSDC)", "0x28B3a8fb53B741A8Fd78c0fb9A6B2393d896a43d", DOCS.sparkVaults);
+  push(book["spark-vaults"], eth, "Spark Savings USDT (spUSDT)", "0xe2e7a17dFf93280dec073C995595155283e3C372", DOCS.sparkVaults);
+  push(book["spark-vaults"], eth, "USDC", COMMON_TOKENS.USDC.ethereum, DOCS.usdc);
+  // f(x) Protocol: fxUSD + arUSD (ERC-4626 over rUSD).
+  // https://docs.aladdin.club/f-x-protocol/contracts
+  for (const key of ["fx-protocol", "fx"]) {
+    push(book[key], eth, "fxUSD", "0x085780639CC2cACd35E474e71f4d000e2405d8f6", DOCS.fx);
+    push(book[key], eth, "rUSD", "0x65D72AA8DA931F047169112fcf34f52DbaAE7D18", DOCS.fx);
+    push(book[key], eth, "arUSD (4626)", "0x07D1718fF05a8C53C8F05aDAEd57C0d672945f9a", DOCS.fx);
+    push(book[key], eth, "Market (stETH beta=0.1)", "0xe7b9c7c9cA85340b8c06fb805f7775e3015108dB", DOCS.fx);
+  }
+  // IPOR Fusion factory only — curator vaults are cloned per deployment.
+  // https://docs.ipor.io/build-on-fusion/developer-guide/addresses
+  push(book["fusion-by-ipor"], eth, "IporFusionFactoryProxy", "0xcd05909C4A1F8E501e4ED554cEF4Ed5E48D9b852", DOCS.iporFusion);
+  // Avalon SuperEarn: user deposits are on Kaia via SuperEarnRouter; Ethereum holds remote vaults.
+  // https://docs.superearn.io/en/developers/smart-contracts
+  push(book["avalon-superearn"], eth, "Super Vault (USDC remote)", "0x9E3E70f4d09bcfe08F456C426EB90f7aA6F70dF2", DOCS.avalon);
+  push(book["avalon-superearn"], eth, "CooldownVault (USDC)", "0x8E53CdAa89381c203a074fB3388f65936358f200", DOCS.avalon);
+  push(book["avalon-superearn"], eth, "Super Vault (USDT remote)", "0x7Eec57beB20576Cb35c500aE5826e16960aA878b", DOCS.avalon);
+
   return book;
 }
 
@@ -562,6 +633,34 @@ module.exports = {
     margin: "0x003Ca23Fd5F0ca87D01F6eC6CD14A8AE60c2b97D",
     router: "0xf8b2c637A68cF6A17b1DF9F8992EeBeFf63d2dFf",
     usdc: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  },
+  LISTA_STAKE: {
+    manager: "0x1adB950d8bB3dA4bE104211D5AB038628e477fE6",
+    slisBNB: "0xB0b84D294e0C75A6abe60171b70edEb2EFd14A1B",
+  },
+  LISTA_LENDING: {
+    vault: "0x6d6783C146F2B0B2774C1725297f1845dc502525",
+    asset: "0x55d398326f99059fF775485246999027B3197955",
+    symbol: "USDT",
+    decimals: 18,
+    defaultAmount: "100",
+    label: "vGauntletUSDT",
+  },
+  VENUS: {
+    vUSDC: "0xecA88125a5ADbe82614ffC12D0DB554E2e2867C8",
+    usdc: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+  },
+  USDAI: {
+    usdai: "0x0A1a1A107E45b7Ced86833863f482BC5f4ed82EF",
+    susdai: "0x0B2b2B2076d95dda7817e785989fE353fe955ef9",
+  },
+  SPARK_VAULTS: {
+    vault: "0x28B3a8fb53B741A8Fd78c0fb9A6B2393d896a43d",
+    asset: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    symbol: "USDC",
+    decimals: 6,
+    defaultAmount: "100",
+    label: "spUSDC",
   },
   BRIDGES: {
     arbitrumInbox: "0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f",
