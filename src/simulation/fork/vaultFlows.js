@@ -6,7 +6,7 @@
 
 const { ethers } = require("ethers");
 const { getProvider } = require("../../utils/web3");
-const { VAULTS, VEDA, UPSHIFT, ROCKAWAYX, LLAMALEND } = require("../../catalog/contracts");
+const { VAULTS, VEDA, UPSHIFT, ROCKAWAYX, LLAMALEND, SPARK_VAULTS, LISTA_LENDING } = require("../../catalog/contracts");
 const { requireFork, impersonateFunded, formatUnits, finish } = require("./runtime");
 
 const ERC = [
@@ -71,7 +71,7 @@ function gated(message) {
 }
 
 async function forkOrFail(protocol, action) {
-  const chain = "ethereum";
+  const chain = process.env.CHAIN || "ethereum";
   try {
     const ctx = await requireFork(chain);
     return { chain, block: ctx.forkBlock, protocol, action };
@@ -301,6 +301,8 @@ async function run() {
     if (protocol === "upshift") return await upshiftDeposit(base);
     if (protocol === "rockawayx") return await rockawayxDeposit(base);
     if (protocol === "llamalend") return await llamalendDeposit(base);
+    if (protocol === "spark-vaults") return await erc4626(base, SPARK_VAULTS);
+    if (protocol === "lista-dao") return await erc4626(base, LISTA_LENDING);
     return finish({ ...base, ok: false, error: `Unknown vault action ${protocol}:${action}` });
   } catch (err) {
     const message = explain(err);

@@ -25,6 +25,8 @@ const EXTRA_WHALES = {
     stETH: ["0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0"],
     // Savings crvUSD (scrvUSD) holds idle crvUSD. https://docs.curve.finance/developer/deployments
     crvUSD: ["0x0655977FEb2f289A4aB78af67BAB0d17aAb84367"],
+    // arUSD vault holds rUSD. https://docs.aladdin.club/f-x-protocol/contracts
+    rUSD: ["0x07D1718fF05a8C53C8F05aDAEd57C0d672945f9a"],
   },
   base: {
     WETH: ["0x46e6b214b524310239732D51387075E0e70970bf", "0x4200000000000000000000000000000000000006"],
@@ -37,6 +39,12 @@ const EXTRA_WHALES = {
   bsc: {
     WETH: ["0x8894E0a0c962CB723c1976a4421c95949bE2D4E3"],
     USDC: ["0x8894E0a0c962CB723c1976a4421c95949bE2D4E3"],
+    USDT: ["0x8894E0a0c962CB723c1976a4421c95949bE2D4E3"],
+  },
+  arbitrum: {
+    USDC: ["0xf89d7b9c864f589bbf53a82105107622b35eaa40"],
+    // sUSDai vault holds the staked USDai float (docs.usd.ai contract addresses).
+    USDai: ["0x0B2b2B2076d95dda7817e785989fE353fe955ef9"],
   },
 };
 
@@ -92,6 +100,8 @@ async function impersonateFunded(chainKey, symbol, token, minimum) {
     }
     if (bal >= minimum) break;
   }
+  // Whales can be dry; still pick one and anvil_deal below.
+  if (!best) best = candidates[0];
   const signer = await impersonateAccount(best, chainKey);
   const user = await signer.getAddress();
   let bal = await getTokenBalance(token, user, chainKey);

@@ -5,25 +5,62 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 
 ## [2026-10-16]
 
-Claims monitors from the 2026-10-14…16 window (public news + Inner Circle CT Alchemix Base).
+Mon/Wed/Fri pass: claims monitors, playground batch, and a clean health check. Squash-merged as [#28](https://github.com/xjjda22/defi-scripts/pull/28) (claims) and [#29](https://github.com/xjjda22/defi-scripts/pull/29) (playground).
+
+### Fixed
+
+- Nothing broken on health: all sampled `simulate:*:smoke` and a five-fork Anvil subset PASS. No slug/RPC repair PR.
+
+### Changed
+
+- Showcase `testing` stamp for five newly forked rows (`mode` api-only → fork). Ranking scores, order, and `generatedAt` unchanged. Stats only: `forkInTop200` 23→28, `apiOnlyInTop200` 177→172.
 
 ### Added
 
+**Claims**
 - **`analytics:uncx:exploit` / `simulate:uncx:exploit:smoke`** — DefiLlama `/hacks` id 1765 (since 2026-10-14). Catalog note: Llama shows ~$86K while Blockaid/news cite ~$1.49M later.
-- **`analytics:pendle:hy-vault` / `simulate:pendle:hy-vault:smoke`** — Morpho Vault V2 `0xcf609F8327E68b42AF54F9D529b9f65d68038435` on Ethereum (chainId 1); EIP-55 + on-chain code verified.
-- **`analytics:curve:lending` / `simulate:curve:lending:smoke`** — sums `curve-llamalend` + `curve-llamalend-v2` borrowed+TVL without double-counting.
-- **`analytics:balancer:protocol` / `simulate:balancer:protocol:smoke`** — DefiLlama parent `balancer` with `DEFILLAMA_FEES=1`; catalog note on withdrawals-only from 2026-10-30.
-- **`analytics:alchemix:base` / `simulate:alchemix:base:smoke`** — DefiLlama `alchemix` TVL by chain (Base ~$2.38M claim).
-- **`llamaBorrowedSumMonitor.js`** — multi-slug borrowed+TVL helper for lending-style claims.
-- **BAND** stem in `LIST_NAMES` (`band` / `10-band` → `"BAND"`).
+- **`analytics:pendle:hy-vault` / `simulate:pendle:hy-vault:smoke`** — Morpho Vault V2 `0xcf609F8327E68b42AF54F9D529b9f65d68038435` on Ethereum; EIP-55 + on-chain code verified. Live ~$17.14M.
+- **`analytics:curve:lending` / `simulate:curve:lending:smoke`** — sums `curve-llamalend` + `curve-llamalend-v2` borrowed+TVL without double-counting. Live borrowed ~$75.03M.
+- **`analytics:balancer:protocol` / `simulate:balancer:protocol:smoke`** — DefiLlama `balancer` + `DEFILLAMA_FEES=1`; catalog note on withdrawals-only from 2026-10-30. Live TVL ~$44.20M.
+- **`analytics:alchemix:base` / `simulate:alchemix:base:smoke`** — DefiLlama `alchemix` by chain (Base ~$2.38M). Inner Circle CT source.
+- **`llamaBorrowedSumMonitor.js`** — multi-slug borrowed+TVL helper.
+- **BAND** stem in `LIST_NAMES` (`band` / `10-band` → `"BAND"`). List was read; 0 DeFi claims (music-band list).
 
-### Sources
+**Playground**
+- Contracts + fork tests: Lista Liquid Staking (`fork:lista:stake`), USD AI (`fork:usdai:stake`), Venus Core Pool (`fork:venus:supply`), Spark Vaults (`fork:spark-vaults:deposit`), Lista DAO Lending (`fork:lista-dao:deposit`).
+- Contracts only (documented reason, no fork): fx Protocol, Avalon SuperEarn, Fusion by IPOR.
+- Coverage among ~101 forkable top-200 rows: fork features **23→28**, contracts **27→34**.
 
-- UNCX: The Defiant, TokenPost, Crypto Times (2026-10-14/15)
-- Pendle HY vault: Crypto Briefing (2026-10-15)
-- Curve LlamaLend: crypto.news (2026-10-15)
-- Balancer shutdown: rekt.news (2026-10-14)
-- Alchemix Base: [X @scupytrooples](https://x.com/scupytrooples/status/2110721103853400532) (2026-10-15)
+### Decisions
+
+- Perps fork coverage stays closed (GMX V1 sunset / Hyperliquid L1). Hyperliquid Bridge and Tornado Cash left untouched this batch.
+- Pure bridges without a permissionless assertable action get contracts/notes, not fabricated fork tests.
+- Cloud agents unavailable (Cursor usage exhausted); claims and playground built locally.
+
+### Verified
+
+| Feature / smoke | Result |
+| --- | --- |
+| `simulate:uncx:exploit:smoke` | PASS $86,000 (2026-10-14) |
+| `simulate:pendle:hy-vault:smoke` | PASS TVL $17.14M |
+| `simulate:curve:lending:smoke` | PASS borrowed $75.03M |
+| `simulate:balancer:protocol:smoke` | PASS TVL $44.20M |
+| `simulate:alchemix:base:smoke` | PASS Base $2.38M |
+| `fork:lista:stake` | PASS |
+| `fork:venus:supply` | PASS |
+| `fork:lista-dao:deposit` | PASS |
+| `fork:usdai:stake` | PASS |
+| `fork:spark-vaults:deposit` | PASS |
+| Health smokes (thorchain, papertrade, liquid, monad, etherfi, morpho, aave-mix, keyrock, maple, …) | PASS |
+| Prior forks (aave:supply, cbeth:rate, rockawayx, llamalend, dolomite) | PASS |
+
+### Known issues carried forward
+
+- **`anvil_deal` is `Method not found` on anvil 1.3.0**, so whale top-up via deal is dead; tests that need more than the whale holds hard-fail (blocked fx Protocol fork this batch).
+- **`308faf0` showcase ranking refresh** still unmerged on `fix/gap-audit-2026-10-10`.
+- **Playground depth remains open** — still ~73 of 101 forkable rows without fork tests after this batch.
+- **Busy X lists (Airdrop?, Inner Circle CT)** could not be scrolled fully to Oct 14; list-scoped search + built-in X search were used for the gap and remain imperfect.
+- **Anvil not on default PATH** in the automation box (`~/.foundry/bin` must be prepended for `fork:*`).
 
 ## [2026-10-11]
 
