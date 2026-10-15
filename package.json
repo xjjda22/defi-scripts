@@ -409,7 +409,12 @@
     "report:analytics": "bash scripts/healthCheckReport.sh analytics",
     "report:simulation": "bash scripts/healthCheckReport.sh simulation",
     "report:swap": "bash scripts/healthCheckReport.sh swap",
-    "lint": "eslint . --ignore-path .eslintignore --ext .js --quiet"
+    "lint": "eslint . --ignore-path .eslintignore --ext .js --quiet",
+    "fork:lista:stake": "CHAIN=bsc FORK_TARGET=lista FORK_PROTOCOL=lista FORK_ACTION=stake node src/simulation/fork/run.js",
+    "fork:venus:supply": "CHAIN=bsc FORK_TARGET=venus FORK_PROTOCOL=venus FORK_ACTION=supply node src/simulation/fork/run.js",
+    "fork:usdai:stake": "CHAIN=arbitrum FORK_TARGET=usdai FORK_PROTOCOL=usdai FORK_ACTION=stake node src/simulation/fork/run.js",
+    "fork:spark-vaults:deposit": "CHAIN=ethereum FORK_TARGET=spark-vaults FORK_PROTOCOL=spark-vaults FORK_ACTION=deposit node src/simulation/fork/run.js",
+    "fork:lista-dao:deposit": "CHAIN=bsc FORK_TARGET=lista-dao FORK_PROTOCOL=lista-dao FORK_ACTION=deposit node src/simulation/fork/run.js"
   },
   "keywords": [
     "defi",
