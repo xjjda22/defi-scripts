@@ -49,16 +49,22 @@ const PROTOCOLS = [
     name: "Curve Finance",
     category: "dex",
     url: "https://curve.fi",
-    about: "Stablecoin-focused AMM.",
-    data: "Subgraphs, on-chain RPC",
+    about: "Stablecoin-focused AMM; LlamaLend V1/V2 borrowed + TVL via `analytics:curve:lending`.",
+    data: "Subgraphs, on-chain RPC, DefiLlama",
+    notes: [
+      "Curve LlamaLend active loans rose from $42.18M (2026-06-30) to $70.9M (2026-09-30), above the $69M end-2025 level; LlamaLend v2 drove ~84% of the net increase ([crypto.news](https://crypto.news/curve-finance-loans-climb-68-in-q3-as-defi-lending/), 2026-10-15). `analytics:curve:lending` sums DefiLlama `curve-llamalend` + `curve-llamalend-v2` borrowed (aggregate `borrowed` key, not double-counted with `*-borrowed`) and TVL.",
+    ],
   },
   {
     id: "balancer",
     name: "Balancer",
     category: "dex",
     url: "https://balancer.fi",
-    about: "Weighted / composable pools behind a single Vault.",
-    data: "Subgraphs, on-chain RPC",
+    about: "Weighted / composable pools behind a single Vault. DefiLlama parent slug `balancer` for TVL + fees.",
+    data: "Subgraphs, on-chain RPC, DefiLlama",
+    notes: [
+      "BAL holders voted 99.2% (42 votes, 17.2M BAL) to shut Balancer down; pools go withdrawals-only on 2026-10-30 (some v3 pools to 11-30), bug bounty ends 10-30, BAL burn redemptions open May 2027 at ~$0.158/BAL. TVL cited ~$58.5M (from $157M in March); August protocol revenue ~$30K vs ~$150K/month spend ([rekt.news](https://www.rekt.news/out-of-balance), 2026-10-14). `analytics:balancer:protocol` prints DefiLlama TVL by chain and fees/revenue (`DEFILLAMA_FEES=1`). The Snapshot vote result itself is not readable here.",
+    ],
   },
   {
     id: "sushiswap",
@@ -313,6 +319,17 @@ const PROTOCOLS = [
       "Exploited for ~$3.8M in USDT on BNB Chain (Sep 30 to Oct 1) through the Omni deposit/withdrawal layer; funds returned in full on 2026-10-02 ([Cointelegraph](https://cointelegraph.com/news/near-intents-recovers-entire-stolen-38m-after-ultimatum-to-exploiter), 2026-10-03; [Decrypt](https://decrypt.co/380014/near-intents-recovers-3-8-million-after-48-hour-ultimatum), 2026-10-04; [X](https://x.com/zacodil/status/2108480859942555933), 2026-10-09). `analytics:near:exploit` reads the incident from DefiLlama `/hacks` (id 6225); DefiLlama does not record the returned funds.",
     ],
   },
+  {
+    id: "uncx",
+    name: "UNCX Network",
+    category: "other",
+    url: "https://uncx.network",
+    about: "Token lockers and vesting (DefiLlama `uncx-network-v2`).",
+    data: "DefiLlama /hacks",
+    notes: [
+      "Vesting V2 share-accounting bug exploited 2026-10-14: DefiLlama `/hacks` id 1765 records ~$86K, while Blockaid/news put later losses at ~$1.49M across 11 txs on BSC (~$969K), Ethereum (~$242K), Robinhood Chain (~$169K) and Base (~$114K) by 2026-10-15; ~$3.25M left in the affected Ethereum contract; LP lockers unaffected ([The Defiant](https://thedefiant.io/news/hacks/uncx-vesting-pool-exploited-for-about-86-000-blockaid-says), 2026-10-14; [TokenPost](https://www.tokenpost.com/news/technology/31955), 2026-10-14; [Crypto Times](https://www.cryptotimes.io/2026/10/15/uncx-exploit-escalates-vesting-v2-bug-drains-1-5m-across-4-chains-as-copycats-join-in/), 2026-10-15). `analytics:uncx:exploit` reads DefiLlama `/hacks` (id 1765); cite the Blockaid $1.49M figure alongside Llama's $86K.",
+    ],
+  },
   // Perps & derivatives
   {
     id: "hyperliquid",
@@ -459,6 +476,17 @@ const PROTOCOLS = [
     data: "On-chain RPC",
   },
   {
+    id: "alchemix",
+    name: "Alchemix",
+    category: "lending",
+    url: "https://alchemix.fi",
+    about: "Self-repaying loans; DefiLlama parent slug `alchemix` (includes Base).",
+    data: "DefiLlama",
+    notes: [
+      "Alchemix Base TVL ~$2.38M matches an Inner Circle CT claim ([X](https://x.com/scupytrooples/status/2110721103853400532) by @scupytrooples, 2026-10-15). `analytics:alchemix:base` prints DefiLlama TVL by chain (Base row at minimum).",
+    ],
+  },
+  {
     id: "spark",
     name: "Spark",
     category: "lending",
@@ -586,6 +614,18 @@ const PROTOCOLS = [
     url: "https://www.upshift.finance",
     about: "Vault allocator. The fork test deposits USDC into Upshift Sentora USD on Ethereum and redeems or requests the withdrawal.",
     notes: [`Upshift Sentora USD Earn on Ethereum at $94.41M TVL (${PORTALS_W4}).`],
+  },
+  {
+    id: "pendle",
+    name: "Pendle Ecosystem HY USDC",
+    category: "vaults",
+    url: "https://www.pendle.finance/",
+    about:
+      "Pendle Ecosystem High Yield USDC Morpho Vault V2 on Ethereum (`0xcf609F8327E68b42AF54F9D529b9f65d68038435`). Sibling 'Pendle Ecosystem USDC' vault `0x55C1B6e461a6334B567bAF0FEb5D728715446f05`. No RPC needed.",
+    data: "Morpho GraphQL",
+    notes: [
+      "Launched 2026-10-14 on Ethereum; ~$15.76M deposits by 2026-10-15, 8.31% net APY (1.76% PENDLE rewards after 10% perf fee), ~98.6% / $15.54M in the PT-reUSD market, co-curated by Pendle and Armitage (Wintermute) ([Crypto Briefing](https://cryptobriefing.com/pendle-high-yield-usdc-vault-morpho/), 2026-10-15). `analytics:pendle:hy-vault` reads Morpho GraphQL Vault V2 on chainId 1. Market allocation is not printed by the current monitor. Address verified EIP-55 with on-chain code.",
+    ],
   },
   {
     id: "keyrock",
@@ -1175,6 +1215,19 @@ const SCRIPT_DESCRIPTIONS = {
   "analytics:aave:liquidations": "Recent `LiquidationCall` logs; health factors for `AAVE_WATCH_ADDRESSES`",
   "analytics:morpho:optimizer": "Best Morpho Blue markets per loan asset vs Aave V3 rates",
   "analytics:keyrock:vault": "Total assets, liquidity, net APY and curators for the Morpho vault",
+  "analytics:pendle:hy-vault": "Total assets, liquidity, net APY and curators for the Pendle Ecosystem High Yield USDC Morpho vault on Ethereum",
+  "simulate:pendle:hy-vault:smoke": "Fails unless the Pendle HY USDC vault totalAssetsUsd is above $1M",
+  "analytics:uncx:exploit":
+    "UNCX Vesting V2 exploit amount, chains, and technique from DefiLlama `/hacks` (`LLAMA_HACK_ID=1765`, since 2026-10-14)",
+  "simulate:uncx:exploit:smoke":
+    "Fails unless DefiLlama `/hacks` lists a UNCX incident since 2026-10-14 with a positive amount",
+  "analytics:curve:lending":
+    "Sums Curve LlamaLend V1+V2 DefiLlama TVL and borrowed (`curve-llamalend` + `curve-llamalend-v2`) without double-counting",
+  "simulate:curve:lending:smoke": "Fails unless both LlamaLend slugs report positive borrowed",
+  "analytics:balancer:protocol": "Balancer DefiLlama TVL by chain plus fees/revenue (wind-down / withdrawals-only note in catalog)",
+  "simulate:balancer:protocol:smoke": "Fails unless DefiLlama `balancer` TVL is positive",
+  "analytics:alchemix:base": "Alchemix DefiLlama TVL by chain (Base row answers the Inner Circle CT claim)",
+  "simulate:alchemix:base:smoke": "Fails unless DefiLlama `alchemix` TVL is positive",
   "analytics:lido:staking": "stETH APR, TVL and stETH/wstETH peg (L2 peg needs RPCs)",
   "analytics:stakestone:staking": "TVL and optional chart APY, compared to Lido",
   "analytics:kintsu:staking": "TVL and yields-chart APY, compared to Lido and StakeStone",
