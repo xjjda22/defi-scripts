@@ -445,6 +445,24 @@ const FEATURES = [
     params: amount("0.05", "ETH"),
     gated: true,
   },
+  {
+    script: "fork:wbeth:deposit",
+    section: "actions",
+    chain: "ethereum",
+    title: "Mint wBETH with ETH",
+    action: "wBETH `deposit(referral)` with native ETH",
+    assertion: "wBETH minted equals `value × 1e18 / exchangeRate()` (1 wei rounding) and the contract holds exactly the deposited ETH. Unwrap goes through Binance, so there is no redeem",
+    params: amount("0.1", "ETH"),
+  },
+  {
+    script: "fork:meta-pool:deposit",
+    section: "actions",
+    chain: "ethereum",
+    title: "Stake ETH for Meta Pool spETH",
+    action: "spETH `depositETH(receiver)` (ERC-4626). The Staking contract may fill from the Liquid Unstake Pool instead of minting",
+    assertion: "spETH + Liquid Unstake Pool hold exactly the deposited ETH more, the ERC-4626 `Deposit` event reports assets = deposit and shares = the user's gain, and shares are within 1 bp of the pre-tx `previewDeposit`. Unstake is a pool swap or a 2-9 day queue, so there is no redeem",
+    params: amount("0.1", "ETH"),
+  },
 
   // ---- Perps -------------------------------------------------------------
   {
@@ -697,6 +715,50 @@ const FEATURES = [
     assertion: "`quoteOFT` + `quoteSend`, then `send` locks USDC toward Arbitrum",
     params: amount("10", "USDC"),
     group: "stargate",
+  },
+  {
+    script: "fork:world-chain:deposit",
+    section: "stables",
+    chain: "ethereum",
+    title: "Bridge ETH to World Chain",
+    assertion:
+      "World Chain `L1StandardBridge.depositETH`. ETH held by the bridge + portal (+ an `ETHLockbox` when the portal reports one; none on 2026-10-19) increases by exactly the deposit and `ETHDepositInitiated` is emitted",
+    params: amount("0.05", "ETH"),
+  },
+  {
+    script: "fork:robinhood:deposit",
+    section: "stables",
+    chain: "ethereum",
+    title: "Bridge ETH to Robinhood Chain",
+    assertion:
+      "Robinhood Chain Delayed Inbox `depositEth`. `Inbox.bridge()` is the documented Bridge, the Bridge holds exactly the deposit more ETH, and `InboxMessageDelivered` is emitted",
+    params: amount("0.05", "ETH"),
+  },
+  {
+    script: "fork:starknet:deposit",
+    section: "stables",
+    chain: "ethereum",
+    title: "Bridge ETH to Starknet",
+    assertion:
+      "StarkGate `deposit(ETH, amount, l2Recipient)` with `amount + estimateDepositFeeWei()`. The bridge keeps exactly `amount`, emits `Deposit`, and the Starknet core contract emits `LogMessageToL2`",
+    params: amount("0.05", "ETH"),
+  },
+  {
+    script: "fork:polygon:deposit",
+    section: "stables",
+    chain: "ethereum",
+    title: "Bridge ETH to Polygon PoS",
+    assertion: "`RootChainManager.depositEtherFor`. The EtherPredicate holds exactly the deposit more ETH and emits `LockedEther`",
+    params: amount("0.05", "ETH"),
+  },
+  {
+    script: "fork:lighter-bridge:deposit",
+    section: "stables",
+    chain: "ethereum",
+    title: "Deposit USDC to Lighter",
+    assertion:
+      "Lighter `deposit(to, 3, 0, amount)` (USDC, perps route). The user's USDC drops by exactly the amount, the Lighter contract's USDC rises by it, and the contract logs the deposit. L2 crediting is off this machine",
+    params: amount("20", "USDC"),
   },
 ];
 
