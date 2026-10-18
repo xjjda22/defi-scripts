@@ -76,6 +76,24 @@ async function dealErc20(chainKey, token, account, amount) {
   }
 }
 
+/**
+ * Wrapped native tokens (WETH, WMON) can be minted by anyone through deposit(), so a fresh
+ * account funded with anvil_setBalance can wrap what it needs. Used when a chain has no
+ * configured whale and anvil_deal is missing (Monad: WETH maps to WMON).
+ */
+async function wrapNative(chainKey, token, signer, amount) {
+  try {
+    const provider = getProvider(chainKey);
+    const user = await signer.getAddress();
+    await provider.send("anvil_setBalance", [user, ethers.toQuantity(amount + ethers.parseEther("1"))]);
+    const wrapped = new ethers.Contract(token, ["function deposit() payable"], signer);
+    await (await wrapped.deposit({ value: amount })).wait();
+    return (await getTokenBalance(token, user, chainKey)) >= amount;
+  } catch {
+    return false;
+  }
+}
+
 async function impersonateFunded(chainKey, symbol, token, minimum) {
   const candidates = [];
   const configured = getWhaleAddress(symbol, chainKey);
@@ -85,8 +103,9 @@ async function impersonateFunded(chainKey, symbol, token, minimum) {
   }
   if (!candidates.length) {
     const signer = await impersonateAccount(ethers.Wallet.createRandom().address, chainKey);
-    const funded = await dealErc20(chainKey, token, await signer.getAddress(), minimum);
-    if (!funded) throw new Error(`No ${symbol} whale on ${chainKey} and anvil_deal is unavailable`);
+    let funded = await dealErc20(chainKey, token, await signer.getAddress(), minimum);
+    if (!funded && /^W(ETH|MON)$/.test(symbol)) funded = await wrapNative(chainKey, token, signer, minimum);
+    if (!funded) throw new Error(`No ${symbol} whale on ${chainKey}, anvil_deal is unavailable and wrapping failed`);
     return signer;
   }
 
