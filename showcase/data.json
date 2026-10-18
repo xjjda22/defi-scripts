@@ -3180,14 +3180,43 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "note": "No fork test: LayerZero V2 is a messaging layer. EndpointV2 holds no user funds (it shows 0 ETH); value sits in each OApp or OFT adapter, and delivery needs DVNs and an Executor off this machine. fork:stargate:deposit already runs a real LayerZero V2 send through Stargate on Ethereum. The endpoint and message libraries are listed for verification.",
     "appUrl": "https://layerzero.network/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
     "tests": [],
     "features": [],
-    "contracts": [],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "EndpointV2",
+      "address": "0x1a44076050125825900e736c501f859c50fE728c",
+      "doc": "https://docs.layerzero.network/v2/deployments/chains/ethereum",
+      "explorerUrl": "https://etherscan.io/address/0x1a44076050125825900e736c501f859c50fE728c"
+     },
+     {
+      "chain": "ethereum",
+      "label": "SendUln302",
+      "address": "0xbB2Ea70C9E858123480642Cf96acbcCE1372dCe1",
+      "doc": "https://docs.layerzero.network/v2/deployments/chains/ethereum",
+      "explorerUrl": "https://etherscan.io/address/0xbB2Ea70C9E858123480642Cf96acbcCE1372dCe1"
+     },
+     {
+      "chain": "ethereum",
+      "label": "ReceiveUln302",
+      "address": "0xc02Ab410f0734EFa3F14628780e6e695156024C2",
+      "doc": "https://docs.layerzero.network/v2/deployments/chains/ethereum",
+      "explorerUrl": "https://etherscan.io/address/0xc02Ab410f0734EFa3F14628780e6e695156024C2"
+     },
+     {
+      "chain": "ethereum",
+      "label": "LZ Executor",
+      "address": "0x173272739Bd7Aa6e4e214714048a9fE699453059",
+      "doc": "https://docs.layerzero.network/v2/deployments/chains/ethereum",
+      "explorerUrl": "https://etherscan.io/address/0x173272739Bd7Aa6e4e214714048a9fE699453059"
+     }
+    ],
     "recipe": {
      "title": "Generic bridge check",
      "chain": "ethereum",
@@ -3322,7 +3351,13 @@
      "tvl": 440350924
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:world-chain:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.8186,
    "components": {
@@ -3334,24 +3369,67 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Source chain only",
+    "note": "World Chain is an OP Stack chain. L1StandardBridge.depositETH locks ETH in the OptimismPortal and emits ETHDepositInitiated. Delivery on World Chain needs the rollup; a single Ethereum fork cannot verify it.",
     "appUrl": "https://world.org/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-     ],
-     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:world-chain:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:world-chain:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:world-chain:deposit",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Bridge ETH to World Chain",
+      "assertion": "World Chain `L1StandardBridge.depositETH`. ETH held by the bridge + portal (+ an `ETHLockbox` when the portal reports one; none on 2026-10-19) increases by exactly the deposit and `ETHDepositInitiated` is emitted",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.05",
+        "unit": "ETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "L1StandardBridgeProxy",
+      "address": "0x470458C91978D2d929704489Ad730DC3E3001113",
+      "doc": "https://docs.world.org/world-chain/developers/world-chain-contracts",
+      "explorerUrl": "https://etherscan.io/address/0x470458C91978D2d929704489Ad730DC3E3001113"
+     },
+     {
+      "chain": "ethereum",
+      "label": "OptimismPortalProxy",
+      "address": "0xd5ec14a83B7d95BE1E2Ac12523e2dEE12Cbeea6C",
+      "doc": "https://docs.world.org/world-chain/developers/world-chain-contracts",
+      "explorerUrl": "https://etherscan.io/address/0xd5ec14a83B7d95BE1E2Ac12523e2dEE12Cbeea6C"
+     },
+     {
+      "chain": "ethereum",
+      "label": "SystemConfigProxy",
+      "address": "0x6ab0777fD0e609CE58F939a7F70Fe41F5Aa6300A",
+      "doc": "https://docs.world.org/world-chain/developers/world-chain-contracts",
+      "explorerUrl": "https://etherscan.io/address/0x6ab0777fD0e609CE58F939a7F70Fe41F5Aa6300A"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -4010,7 +4088,13 @@
      "tvl": 431145174
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:starknet:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.8115,
    "components": {
@@ -4022,24 +4106,67 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Source chain only",
+    "note": "StarkGate locks ETH in the L1 bridge and the Starknet core contract emits LogMessageToL2. The sequencer consumes that message on Starknet; a single Ethereum fork cannot verify the L2 credit.",
     "appUrl": "https://starkgate.starknet.io",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-     ],
-     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:starknet:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:starknet:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:starknet:deposit",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Bridge ETH to Starknet",
+      "assertion": "StarkGate `deposit(ETH, amount, l2Recipient)` with `amount + estimateDepositFeeWei()`. The bridge keeps exactly `amount`, emits `Deposit`, and the Starknet core contract emits `LogMessageToL2`",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.05",
+        "unit": "ETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "StarkGate ETH bridge",
+      "address": "0xae0Ee0A63A2cE6BaeEFFE56e7714FB4EFE48D419",
+      "doc": "https://github.com/starknet-io/starknet-addresses/blob/master/bridged_tokens/mainnet.json",
+      "explorerUrl": "https://etherscan.io/address/0xae0Ee0A63A2cE6BaeEFFE56e7714FB4EFE48D419"
+     },
+     {
+      "chain": "ethereum",
+      "label": "StarkGate USDC bridge",
+      "address": "0xF6080D9fbEEbcd44D89aFfBFd42F098cbFf92816",
+      "doc": "https://github.com/starknet-io/starknet-addresses/blob/master/bridged_tokens/mainnet.json",
+      "explorerUrl": "https://etherscan.io/address/0xF6080D9fbEEbcd44D89aFfBFd42F098cbFf92816"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Starknet core contract",
+      "address": "0xc662c410C0ECf747543f5bA90660f6ABeBD9C8c4",
+      "doc": "https://docs.starknet.io/learn/cheatsheets/chain-info",
+      "explorerUrl": "https://etherscan.io/address/0xc662c410C0ECf747543f5bA90660f6ABeBD9C8c4"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -4520,7 +4647,13 @@
      "tvl": 519815637
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:wbeth:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.8011,
    "components": {
@@ -4532,24 +4665,54 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": null,
+    "note": "wBETH mints on Ethereum for anyone who sends ETH to deposit(referral). Redemption runs through a Binance account, so the fork test only mints.",
     "appUrl": "https://www.binance.com/en/wbeth",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic liquid-staking fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
-     ],
-     "note": "No dedicated fork script. Lido submit on an Ethereum fork is the staking recipe."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:wbeth:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:wbeth:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:wbeth:deposit",
+      "section": "actions",
+      "chain": "ethereum",
+      "title": "Mint wBETH with ETH",
+      "action": "wBETH `deposit(referral)` with native ETH",
+      "assertion": "wBETH minted equals `value × 1e18 / exchangeRate()` (1 wei rounding) and the contract holds exactly the deposited ETH. Unwrap goes through Binance, so there is no redeem",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.1",
+        "unit": "ETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "wBETH",
+      "address": "0xa2E3356610840701BDf5611a53974510Ae27E2e1",
+      "doc": "https://www.binance.com/en/support/faq/what-is-wbeth-e252366155174ba6887f6b32e3798273",
+      "explorerUrl": "https://etherscan.io/address/0xa2E3356610840701BDf5611a53974510Ae27E2e1"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -6017,7 +6180,13 @@
      "tvl": 2029
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:lighter-bridge:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7874,
    "components": {
@@ -6029,24 +6198,60 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Source chain only",
+    "note": "Lighter's Ethereum contract takes a direct USDC deposit (asset index 3, perps route) and queues it for the Lighter zk rollup. Crediting the Lighter account happens off this machine.",
     "appUrl": "https://app.lighter.xyz",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-     ],
-     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lighter-bridge:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:lighter-bridge:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:lighter-bridge:deposit",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Deposit USDC to Lighter",
+      "assertion": "Lighter `deposit(to, 3, 0, amount)` (USDC, perps route). The user's USDC drops by exactly the amount, the Lighter contract's USDC rises by it, and the contract logs the deposit. L2 crediting is off this machine",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "20",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Lighter (ZkLighter proxy)",
+      "address": "0x3B4D794a66304F130a4Db8F2551B0070dfCf5ca7",
+      "doc": "https://apidocs.lighter.xyz/docs/environments",
+      "explorerUrl": "https://etherscan.io/address/0x3B4D794a66304F130a4Db8F2551B0070dfCf5ca7"
+     },
+     {
+      "chain": "ethereum",
+      "label": "USDC",
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -6381,7 +6586,13 @@
      "tvl": 23
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:meta-pool:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7831,
    "components": {
@@ -6393,24 +6604,61 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": null,
+    "note": "Meta Pool spETH (Ethereum) is ERC-4626; depositETH may be filled from the Liquid Unstake Pool. Most of this row's TVL is NEAR staking (stNEAR), which the repo cannot fork. The older mpETH contract is paused.",
     "appUrl": "https://metapool.app",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic liquid-staking fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
-     ],
-     "note": "No dedicated fork script. Lido submit on an Ethereum fork is the staking recipe."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:meta-pool:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:meta-pool:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:meta-pool:deposit",
+      "section": "actions",
+      "chain": "ethereum",
+      "title": "Stake ETH for Meta Pool spETH",
+      "action": "spETH `depositETH(receiver)` (ERC-4626). The Staking contract may fill from the Liquid Unstake Pool instead of minting",
+      "assertion": "spETH + Liquid Unstake Pool hold exactly the deposited ETH more, the ERC-4626 `Deposit` event reports assets = deposit and shares = the user's gain, and shares are within 1 bp of the pre-tx `previewDeposit`. Unstake is a pool swap or a 2-9 day queue, so there is no redeem",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.1",
+        "unit": "ETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "spETH (ERC-4626 staking)",
+      "address": "0xD06f6a56c5f599cB375B616DF306f32B7F6f4A0E",
+      "doc": "https://docs.metapool.app/master/for-developers/meta-pool-contracts/ethereum-network-and-l2s",
+      "explorerUrl": "https://etherscan.io/address/0xD06f6a56c5f599cB375B616DF306f32B7F6f4A0E"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Liquid Unstake Pool",
+      "address": "0xdF261F967E87B2aa44e18a22f4aCE5d7f74f03Cc",
+      "doc": "https://docs.metapool.app/master/for-developers/meta-pool-contracts/ethereum-network-and-l2s",
+      "explorerUrl": "https://etherscan.io/address/0xdF261F967E87B2aa44e18a22f4aCE5d7f74f03Cc"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -6719,7 +6967,13 @@
      "tvl": 2715807806
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:polygon:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7776,
    "components": {
@@ -6731,24 +6985,67 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Source chain only",
+    "note": "Polygon PoS RootChainManager.depositEtherFor locks ETH in the EtherPredicate. The StateSender sync is picked up by Polygon validators; this fork does not see the WETH minted on Polygon.",
     "appUrl": "https://polygon.technology/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-     ],
-     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:polygon:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:polygon:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:polygon:deposit",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Bridge ETH to Polygon PoS",
+      "assertion": "`RootChainManager.depositEtherFor`. The EtherPredicate holds exactly the deposit more ETH and emits `LockedEther`",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.05",
+        "unit": "ETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "RootChainManagerProxy",
+      "address": "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77",
+      "doc": "https://static.polygon.technology/network/mainnet/v1/index.json",
+      "explorerUrl": "https://etherscan.io/address/0xA0c68C638235ee32657e8f720a23ceC1bFc77C77"
+     },
+     {
+      "chain": "ethereum",
+      "label": "EtherPredicateProxy",
+      "address": "0x8484Ef722627bf18ca5Ae6BcF031c23E6e922B30",
+      "doc": "https://static.polygon.technology/network/mainnet/v1/index.json",
+      "explorerUrl": "https://etherscan.io/address/0x8484Ef722627bf18ca5Ae6BcF031c23E6e922B30"
+     },
+     {
+      "chain": "ethereum",
+      "label": "ERC20PredicateProxy",
+      "address": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+      "doc": "https://static.polygon.technology/network/mainnet/v1/index.json",
+      "explorerUrl": "https://etherscan.io/address/0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -6967,6 +7264,11 @@
      "name": "simulate:robinhood:smoke",
      "file": "src/simulation/api/smokeArcChain.js",
      "kind": "smoke"
+    },
+    {
+     "name": "fork:robinhood:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
     }
    ],
    "coverage": "covered by a dedicated monitor",
@@ -6980,24 +7282,74 @@
     "mentions": 0.036
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Source chain only",
+    "note": "Robinhood Chain is an Arbitrum Orbit chain. Delayed Inbox depositEth locks ETH in the Bridge and emits InboxMessageDelivered for the retryable. The L2 credit needs the chain's sequencer; this fork does not see it.",
     "appUrl": "https://robinhood.com/us/en/chain/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-     ],
-     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:robinhood:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:robinhood:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:robinhood:deposit",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Bridge ETH to Robinhood Chain",
+      "assertion": "Robinhood Chain Delayed Inbox `depositEth`. `Inbox.bridge()` is the documented Bridge, the Bridge holds exactly the deposit more ETH, and `InboxMessageDelivered` is emitted",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.05",
+        "unit": "ETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Delayed Inbox",
+      "address": "0x1A07cc4BD17E0118BdB54D70990D2158AbAD7a2D",
+      "doc": "https://docs.robinhood.com/chain/protocol-contracts/",
+      "explorerUrl": "https://etherscan.io/address/0x1A07cc4BD17E0118BdB54D70990D2158AbAD7a2D"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Bridge",
+      "address": "0xDf8755334ce7A73cCF6b581C02eA649AE3E864b3",
+      "doc": "https://docs.robinhood.com/chain/protocol-contracts/",
+      "explorerUrl": "https://etherscan.io/address/0xDf8755334ce7A73cCF6b581C02eA649AE3E864b3"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Outbox",
+      "address": "0xf0ce991ea4A0d2400A4AB49b20ae333f6Dce3DE9",
+      "doc": "https://docs.robinhood.com/chain/protocol-contracts/",
+      "explorerUrl": "https://etherscan.io/address/0xf0ce991ea4A0d2400A4AB49b20ae333f6Dce3DE9"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Rollup",
+      "address": "0x23A19d23e89166adedbDcB432518AB01e4272D94",
+      "doc": "https://docs.robinhood.com/chain/protocol-contracts/",
+      "explorerUrl": "https://etherscan.io/address/0x23A19d23e89166adedbDcB432518AB01e4272D94"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -49081,7 +49433,13 @@
       "tvl": 519815637
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:wbeth:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.8011,
     "components": {
@@ -49093,24 +49451,54 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": null,
+     "note": "wBETH mints on Ethereum for anyone who sends ETH to deposit(referral). Redemption runs through a Binance account, so the fork test only mints.",
      "appUrl": "https://www.binance.com/en/wbeth",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic liquid-staking fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
-      ],
-      "note": "No dedicated fork script. Lido submit on an Ethereum fork is the staking recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:wbeth:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:wbeth:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:wbeth:deposit",
+       "section": "actions",
+       "chain": "ethereum",
+       "title": "Mint wBETH with ETH",
+       "action": "wBETH `deposit(referral)` with native ETH",
+       "assertion": "wBETH minted equals `value × 1e18 / exchangeRate()` (1 wei rounding) and the contract holds exactly the deposited ETH. Unwrap goes through Binance, so there is no redeem",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.1",
+         "unit": "ETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "wBETH",
+       "address": "0xa2E3356610840701BDf5611a53974510Ae27E2e1",
+       "doc": "https://www.binance.com/en/support/faq/what-is-wbeth-e252366155174ba6887f6b32e3798273",
+       "explorerUrl": "https://etherscan.io/address/0xa2E3356610840701BDf5611a53974510Ae27E2e1"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -49552,7 +49940,13 @@
       "tvl": 23
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:meta-pool:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7831,
     "components": {
@@ -49564,24 +49958,61 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": null,
+     "note": "Meta Pool spETH (Ethereum) is ERC-4626; depositETH may be filled from the Liquid Unstake Pool. Most of this row's TVL is NEAR staking (stNEAR), which the repo cannot fork. The older mpETH contract is paused.",
      "appUrl": "https://metapool.app",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic liquid-staking fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
-      ],
-      "note": "No dedicated fork script. Lido submit on an Ethereum fork is the staking recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:meta-pool:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:meta-pool:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:meta-pool:deposit",
+       "section": "actions",
+       "chain": "ethereum",
+       "title": "Stake ETH for Meta Pool spETH",
+       "action": "spETH `depositETH(receiver)` (ERC-4626). The Staking contract may fill from the Liquid Unstake Pool instead of minting",
+       "assertion": "spETH + Liquid Unstake Pool hold exactly the deposited ETH more, the ERC-4626 `Deposit` event reports assets = deposit and shares = the user's gain, and shares are within 1 bp of the pre-tx `previewDeposit`. Unstake is a pool swap or a 2-9 day queue, so there is no redeem",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.1",
+         "unit": "ETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "spETH (ERC-4626 staking)",
+       "address": "0xD06f6a56c5f599cB375B616DF306f32B7F6f4A0E",
+       "doc": "https://docs.metapool.app/master/for-developers/meta-pool-contracts/ethereum-network-and-l2s",
+       "explorerUrl": "https://etherscan.io/address/0xD06f6a56c5f599cB375B616DF306f32B7F6f4A0E"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Liquid Unstake Pool",
+       "address": "0xdF261F967E87B2aa44e18a22f4aCE5d7f74f03Cc",
+       "doc": "https://docs.metapool.app/master/for-developers/meta-pool-contracts/ethereum-network-and-l2s",
+       "explorerUrl": "https://etherscan.io/address/0xdF261F967E87B2aa44e18a22f4aCE5d7f74f03Cc"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -63763,14 +64194,43 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "note": "No fork test: LayerZero V2 is a messaging layer. EndpointV2 holds no user funds (it shows 0 ETH); value sits in each OApp or OFT adapter, and delivery needs DVNs and an Executor off this machine. fork:stargate:deposit already runs a real LayerZero V2 send through Stargate on Ethereum. The endpoint and message libraries are listed for verification.",
      "appUrl": "https://layerzero.network/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
      "features": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "EndpointV2",
+       "address": "0x1a44076050125825900e736c501f859c50fE728c",
+       "doc": "https://docs.layerzero.network/v2/deployments/chains/ethereum",
+       "explorerUrl": "https://etherscan.io/address/0x1a44076050125825900e736c501f859c50fE728c"
+      },
+      {
+       "chain": "ethereum",
+       "label": "SendUln302",
+       "address": "0xbB2Ea70C9E858123480642Cf96acbcCE1372dCe1",
+       "doc": "https://docs.layerzero.network/v2/deployments/chains/ethereum",
+       "explorerUrl": "https://etherscan.io/address/0xbB2Ea70C9E858123480642Cf96acbcCE1372dCe1"
+      },
+      {
+       "chain": "ethereum",
+       "label": "ReceiveUln302",
+       "address": "0xc02Ab410f0734EFa3F14628780e6e695156024C2",
+       "doc": "https://docs.layerzero.network/v2/deployments/chains/ethereum",
+       "explorerUrl": "https://etherscan.io/address/0xc02Ab410f0734EFa3F14628780e6e695156024C2"
+      },
+      {
+       "chain": "ethereum",
+       "label": "LZ Executor",
+       "address": "0x173272739Bd7Aa6e4e214714048a9fE699453059",
+       "doc": "https://docs.layerzero.network/v2/deployments/chains/ethereum",
+       "explorerUrl": "https://etherscan.io/address/0x173272739Bd7Aa6e4e214714048a9fE699453059"
+      }
+     ],
      "recipe": {
       "title": "Generic bridge check",
       "chain": "ethereum",
@@ -63813,7 +64273,13 @@
       "tvl": 440350924
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:world-chain:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.8186,
     "components": {
@@ -63825,24 +64291,67 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "World Chain is an OP Stack chain. L1StandardBridge.depositETH locks ETH in the OptimismPortal and emits ETHDepositInitiated. Delivery on World Chain needs the rollup; a single Ethereum fork cannot verify it.",
      "appUrl": "https://world.org/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-      ],
-      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:world-chain:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:world-chain:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:world-chain:deposit",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Bridge ETH to World Chain",
+       "assertion": "World Chain `L1StandardBridge.depositETH`. ETH held by the bridge + portal (+ an `ETHLockbox` when the portal reports one; none on 2026-10-19) increases by exactly the deposit and `ETHDepositInitiated` is emitted",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.05",
+         "unit": "ETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "L1StandardBridgeProxy",
+       "address": "0x470458C91978D2d929704489Ad730DC3E3001113",
+       "doc": "https://docs.world.org/world-chain/developers/world-chain-contracts",
+       "explorerUrl": "https://etherscan.io/address/0x470458C91978D2d929704489Ad730DC3E3001113"
+      },
+      {
+       "chain": "ethereum",
+       "label": "OptimismPortalProxy",
+       "address": "0xd5ec14a83B7d95BE1E2Ac12523e2dEE12Cbeea6C",
+       "doc": "https://docs.world.org/world-chain/developers/world-chain-contracts",
+       "explorerUrl": "https://etherscan.io/address/0xd5ec14a83B7d95BE1E2Ac12523e2dEE12Cbeea6C"
+      },
+      {
+       "chain": "ethereum",
+       "label": "SystemConfigProxy",
+       "address": "0x6ab0777fD0e609CE58F939a7F70Fe41F5Aa6300A",
+       "doc": "https://docs.world.org/world-chain/developers/world-chain-contracts",
+       "explorerUrl": "https://etherscan.io/address/0x6ab0777fD0e609CE58F939a7F70Fe41F5Aa6300A"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -64013,7 +64522,13 @@
       "tvl": 431145174
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:starknet:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.8115,
     "components": {
@@ -64025,24 +64540,67 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "StarkGate locks ETH in the L1 bridge and the Starknet core contract emits LogMessageToL2. The sequencer consumes that message on Starknet; a single Ethereum fork cannot verify the L2 credit.",
      "appUrl": "https://starkgate.starknet.io",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-      ],
-      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:starknet:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:starknet:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:starknet:deposit",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Bridge ETH to Starknet",
+       "assertion": "StarkGate `deposit(ETH, amount, l2Recipient)` with `amount + estimateDepositFeeWei()`. The bridge keeps exactly `amount`, emits `Deposit`, and the Starknet core contract emits `LogMessageToL2`",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.05",
+         "unit": "ETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "StarkGate ETH bridge",
+       "address": "0xae0Ee0A63A2cE6BaeEFFE56e7714FB4EFE48D419",
+       "doc": "https://github.com/starknet-io/starknet-addresses/blob/master/bridged_tokens/mainnet.json",
+       "explorerUrl": "https://etherscan.io/address/0xae0Ee0A63A2cE6BaeEFFE56e7714FB4EFE48D419"
+      },
+      {
+       "chain": "ethereum",
+       "label": "StarkGate USDC bridge",
+       "address": "0xF6080D9fbEEbcd44D89aFfBFd42F098cbFf92816",
+       "doc": "https://github.com/starknet-io/starknet-addresses/blob/master/bridged_tokens/mainnet.json",
+       "explorerUrl": "https://etherscan.io/address/0xF6080D9fbEEbcd44D89aFfBFd42F098cbFf92816"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Starknet core contract",
+       "address": "0xc662c410C0ECf747543f5bA90660f6ABeBD9C8c4",
+       "doc": "https://docs.starknet.io/learn/cheatsheets/chain-info",
+       "explorerUrl": "https://etherscan.io/address/0xc662c410C0ECf747543f5bA90660f6ABeBD9C8c4"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -64399,7 +64957,13 @@
       "tvl": 2029
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:lighter-bridge:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7874,
     "components": {
@@ -64411,24 +64975,60 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "Lighter's Ethereum contract takes a direct USDC deposit (asset index 3, perps route) and queues it for the Lighter zk rollup. Crediting the Lighter account happens off this machine.",
      "appUrl": "https://app.lighter.xyz",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-      ],
-      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lighter-bridge:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:lighter-bridge:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:lighter-bridge:deposit",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Deposit USDC to Lighter",
+       "assertion": "Lighter `deposit(to, 3, 0, amount)` (USDC, perps route). The user's USDC drops by exactly the amount, the Lighter contract's USDC rises by it, and the contract logs the deposit. L2 crediting is off this machine",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "20",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Lighter (ZkLighter proxy)",
+       "address": "0x3B4D794a66304F130a4Db8F2551B0070dfCf5ca7",
+       "doc": "https://apidocs.lighter.xyz/docs/environments",
+       "explorerUrl": "https://etherscan.io/address/0x3B4D794a66304F130a4Db8F2551B0070dfCf5ca7"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDC",
+       "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+       "doc": "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -64638,7 +65238,13 @@
       "tvl": 2715807806
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:polygon:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7776,
     "components": {
@@ -64650,24 +65256,67 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "Polygon PoS RootChainManager.depositEtherFor locks ETH in the EtherPredicate. The StateSender sync is picked up by Polygon validators; this fork does not see the WETH minted on Polygon.",
      "appUrl": "https://polygon.technology/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-      ],
-      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:polygon:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:polygon:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:polygon:deposit",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Bridge ETH to Polygon PoS",
+       "assertion": "`RootChainManager.depositEtherFor`. The EtherPredicate holds exactly the deposit more ETH and emits `LockedEther`",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.05",
+         "unit": "ETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "RootChainManagerProxy",
+       "address": "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77",
+       "doc": "https://static.polygon.technology/network/mainnet/v1/index.json",
+       "explorerUrl": "https://etherscan.io/address/0xA0c68C638235ee32657e8f720a23ceC1bFc77C77"
+      },
+      {
+       "chain": "ethereum",
+       "label": "EtherPredicateProxy",
+       "address": "0x8484Ef722627bf18ca5Ae6BcF031c23E6e922B30",
+       "doc": "https://static.polygon.technology/network/mainnet/v1/index.json",
+       "explorerUrl": "https://etherscan.io/address/0x8484Ef722627bf18ca5Ae6BcF031c23E6e922B30"
+      },
+      {
+       "chain": "ethereum",
+       "label": "ERC20PredicateProxy",
+       "address": "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+       "doc": "https://static.polygon.technology/network/mainnet/v1/index.json",
+       "explorerUrl": "https://etherscan.io/address/0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -64715,6 +65364,11 @@
       "name": "simulate:robinhood:smoke",
       "file": "src/simulation/api/smokeArcChain.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:robinhood:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -64728,24 +65382,74 @@
      "mentions": 0.036
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "Robinhood Chain is an Arbitrum Orbit chain. Delayed Inbox depositEth locks ETH in the Bridge and emits InboxMessageDelivered for the retryable. The L2 credit needs the chain's sequencer; this fork does not see it.",
      "appUrl": "https://robinhood.com/us/en/chain/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-      ],
-      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:robinhood:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:robinhood:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:robinhood:deposit",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Bridge ETH to Robinhood Chain",
+       "assertion": "Robinhood Chain Delayed Inbox `depositEth`. `Inbox.bridge()` is the documented Bridge, the Bridge holds exactly the deposit more ETH, and `InboxMessageDelivered` is emitted",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.05",
+         "unit": "ETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Delayed Inbox",
+       "address": "0x1A07cc4BD17E0118BdB54D70990D2158AbAD7a2D",
+       "doc": "https://docs.robinhood.com/chain/protocol-contracts/",
+       "explorerUrl": "https://etherscan.io/address/0x1A07cc4BD17E0118BdB54D70990D2158AbAD7a2D"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Bridge",
+       "address": "0xDf8755334ce7A73cCF6b581C02eA649AE3E864b3",
+       "doc": "https://docs.robinhood.com/chain/protocol-contracts/",
+       "explorerUrl": "https://etherscan.io/address/0xDf8755334ce7A73cCF6b581C02eA649AE3E864b3"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Outbox",
+       "address": "0xf0ce991ea4A0d2400A4AB49b20ae333f6Dce3DE9",
+       "doc": "https://docs.robinhood.com/chain/protocol-contracts/",
+       "explorerUrl": "https://etherscan.io/address/0xf0ce991ea4A0d2400A4AB49b20ae333f6Dce3DE9"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Rollup",
+       "address": "0x23A19d23e89166adedbDcB432518AB01e4272D94",
+       "doc": "https://docs.robinhood.com/chain/protocol-contracts/",
+       "explorerUrl": "https://etherscan.io/address/0x23A19d23e89166adedbDcB432518AB01e4272D94"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -78481,7 +79185,7 @@
    "Domains": 14,
    "Coins Tracker": 2
   },
-  "forkInTop200": 28,
-  "apiOnlyInTop200": 172
+  "forkInTop200": 35,
+  "apiOnlyInTop200": 165
  }
 }

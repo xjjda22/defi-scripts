@@ -25,7 +25,10 @@ const PUF_ABI = [
   "function depositETH(address receiver) payable returns (uint256)",
   "function balanceOf(address) view returns (uint256)",
   "function maxDeposit(address) view returns (uint256)",
+  "function authority() view returns (address)",
 ];
+
+const ACCESS_MANAGER_ABI = ["function isTargetClosed(address) view returns (bool)"];
 
 const GAS = { gasLimit: 1_500_000n };
 
@@ -164,6 +167,20 @@ async function pufferDeposit(base) {
   const value = ethers.parseEther(process.env.FORK_AMOUNT || "0.05");
   const provider = getProvider(base.chain);
   const reader = new ethers.Contract(PUFFER.pufETH, PUF_ABI, provider);
+  // pufETH is an OpenZeppelin AccessManaged vault. When its AccessManager closes the target,
+  // every restricted call (depositETH included) reverts with AccessManagedUnauthorized.
+  // Report that as a FAIL with the reason instead of sending a tx that is known to revert.
+  const authority = await reader.authority();
+  const manager = new ethers.Contract(authority, ACCESS_MANAGER_ABI, provider);
+  if (await manager.isTargetClosed(PUFFER.pufETH)) {
+    return finish({
+      ...base,
+      ok: false,
+      key: "targetClosed=true",
+      detail: `AccessManager ${authority} has closed the pufETH vault. depositETH reverts with AccessManagedUnauthorized.`,
+      error: "pufETH vault is closed by its AccessManager (isTargetClosed=true)",
+    });
+  }
   const max = await reader.maxDeposit(ethers.ZeroAddress);
   if (max === 0n) {
     const supply = await reader.balanceOf(PUFFER.pufETH);
