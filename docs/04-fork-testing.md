@@ -35,6 +35,8 @@ ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply
 
 `npm run fork:all` (also `npm run simulate:fork:suite`) starts **one Anvil per chain**, runs every action for that chain, then shuts Anvil down. `CHAINS=ethereum` limits the suite. A chain with no RPC URL is skipped. `SKIP` does not fail the process. `FAIL` does. CI runs this job only when the `ETHEREUM_RPC_URL` secret is set; a missing secret skips its steps, and the job is `continue-on-error`, so it never fails CI.
 
+`src/simulation/fork/run.js` adjusts two ethers defaults for Anvil 1.8. Anvil can return the transaction hash before the block is mined, and `TransactionResponse.wait()` could then miss the block and hang until the watchdog. The runner now polls for the receipt first. Anvil's `eth_estimateGas` can also come back tight enough that a nested call runs out of gas (seen on the Aave borrow), so estimates for transactions without their own `gasLimit` are padded by 30%. `anvil_deal` is still `Method not found` on Anvil 1.8.5. The new `anvil_dealERC20` exists but answers "no slot found" for forked tokens such as USDC, so whale balances still cap a test. While a transaction is unmined, Anvil forwards the receipt lookup to the upstream RPC, and a public endpoint can answer with an archive error that ethers reports as "could not coalesce error". The receipt poll treats those errors as "not mined yet". Fork Arbitrum from an endpoint that keeps recent state (`https://arb1.arbitrum.io/rpc`); `arbitrum-one-rpc.publicnode.com` prunes it within minutes and the fork then fails with "historical state is not available". Chains with no configured WETH whale (Monad, where WETH is WMON) fund the fresh account by wrapping native gas token through `deposit()`.
+
 Every test has a hard deadline, `FORK_TEST_TIMEOUT_MS` (default 180000). The script's own watchdog prints `FORK_RESULT status=FAIL ... key=timeout=<ms>` and exits 1. The suite also runs each script in its own process group and kills the whole group 15 s after that, so a stuck RPC call cannot hang `fork:all`. Anvil processes are killed when the suite exits.
 
 ## What each recipe does
@@ -75,6 +77,8 @@ The tables below, and the "Test it" panel on each protocol page, are both genera
 | `fork:symbiotic:read` | Ethereum | VaultFactory code | **Read-only.** Docs do not publish a permissionless vault |
 | `fork:swell:deposit` | Ethereum | rswETH `deposit()` | rswETH increases, or read-only when the whitelist is on |
 | `fork:puffer:deposit` | Ethereum | pufETH `depositETH` | pufETH increases, or read-only when `maxDeposit` is 0 |
+| `fork:wbeth:deposit` | Ethereum | wBETH `deposit(referral)` with native ETH | wBETH minted equals `value × 1e18 / exchangeRate()` (1 wei rounding) and the contract holds exactly the deposited ETH. Unwrap goes through Binance, so there is no redeem |
+| `fork:meta-pool:deposit` | Ethereum | spETH `depositETH(receiver)` (ERC-4626). The Staking contract may fill from the Liquid Unstake Pool instead of minting | spETH + Liquid Unstake Pool hold exactly the deposited ETH more, the ERC-4626 `Deposit` event reports assets = deposit and shares = the user's gain, and shares are within 1 bp of the pre-tx `previewDeposit`. Unstake is a pool swap or a 2-9 day queue, so there is no redeem |
 <!-- /features:actions -->
 
 ## Perps
@@ -138,6 +142,11 @@ Same rules: pinned block via `FORK_BLOCK`, whale impersonation or `anvil_deal`, 
 | `fork:base:deposit` / `fork:optimism:deposit` | `L1StandardBridge.depositETH`. ETH held by the bridge + portal (+ the `ETHLockbox` that `OptimismPortal.ethLockbox()` returns; OP Mainnet holds its ETH there, Base returned none on 2026-10-10) increases by the deposit and `ETHDepositInitiated` is emitted |
 | `fork:across:deposit` | `SpokePool.depositV3` locks USDC on Ethereum toward Base |
 | `fork:stargate:quote` / `:deposit` | `quoteOFT` + `quoteSend`, then `send` locks USDC toward Arbitrum |
+| `fork:world-chain:deposit` | World Chain `L1StandardBridge.depositETH`. ETH held by the bridge + portal (+ an `ETHLockbox` when the portal reports one; none on 2026-10-19) increases by exactly the deposit and `ETHDepositInitiated` is emitted |
+| `fork:robinhood:deposit` | Robinhood Chain Delayed Inbox `depositEth`. `Inbox.bridge()` is the documented Bridge, the Bridge holds exactly the deposit more ETH, and `InboxMessageDelivered` is emitted |
+| `fork:starknet:deposit` | StarkGate `deposit(ETH, amount, l2Recipient)` with `amount + estimateDepositFeeWei()`. The bridge keeps exactly `amount`, emits `Deposit`, and the Starknet core contract emits `LogMessageToL2` |
+| `fork:polygon:deposit` | `RootChainManager.depositEtherFor`. The EtherPredicate holds exactly the deposit more ETH and emits `LockedEther` |
+| `fork:lighter-bridge:deposit` | Lighter `deposit(to, 3, 0, amount)` (USDC, perps route). The user's USDC drops by exactly the amount, the Lighter contract's USDC rises by it, and the contract logs the deposit. L2 crediting is off this machine |
 <!-- /features:stables -->
 
 Bridge panels are labeled **Source chain only**. A single fork cannot see the destination credit. Rollup derivation, Across fillers, and LayerZero relayers are off this machine.
@@ -179,6 +188,7 @@ Some top-200 rows sit on a chain the repo can fork but expose no permissionless 
 | Plume Vaults (Nest) | Each deposit needs a fresh Predicate compliance attestation from the Nest API |
 | Unit | Guardian MPC network; the Ethereum treasury is an MPC account with no contract code |
 | Maple | SyrupRouter enforces `PoolPermissionManager` `P:deposit`; a first deposit needs a Maple signature |
+| LayerZero V2 | Messaging layer: EndpointV2 holds no user funds, value sits in each OApp/OFT, and delivery needs DVNs and an Executor. `fork:stargate:deposit` already runs a LayerZero V2 send |
 
 ## Showcase panel
 

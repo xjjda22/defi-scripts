@@ -424,7 +424,14 @@
     "fork:venus:supply": "CHAIN=bsc FORK_TARGET=venus FORK_PROTOCOL=venus FORK_ACTION=supply node src/simulation/fork/run.js",
     "fork:usdai:stake": "CHAIN=arbitrum FORK_TARGET=usdai FORK_PROTOCOL=usdai FORK_ACTION=stake node src/simulation/fork/run.js",
     "fork:spark-vaults:deposit": "CHAIN=ethereum FORK_TARGET=spark-vaults FORK_PROTOCOL=spark-vaults FORK_ACTION=deposit node src/simulation/fork/run.js",
-    "fork:lista-dao:deposit": "CHAIN=bsc FORK_TARGET=lista-dao FORK_PROTOCOL=lista-dao FORK_ACTION=deposit node src/simulation/fork/run.js"
+    "fork:lista-dao:deposit": "CHAIN=bsc FORK_TARGET=lista-dao FORK_PROTOCOL=lista-dao FORK_ACTION=deposit node src/simulation/fork/run.js",
+    "fork:world-chain:deposit": "CHAIN=ethereum FORK_TARGET=world-chain FORK_PROTOCOL=world-chain FORK_ACTION=deposit node src/simulation/fork/run.js",
+    "fork:starknet:deposit": "CHAIN=ethereum FORK_TARGET=starknet FORK_PROTOCOL=starknet FORK_ACTION=deposit node src/simulation/fork/run.js",
+    "fork:wbeth:deposit": "CHAIN=ethereum FORK_TARGET=wbeth FORK_PROTOCOL=wbeth FORK_ACTION=deposit node src/simulation/fork/run.js",
+    "fork:lighter-bridge:deposit": "CHAIN=ethereum FORK_TARGET=lighter-bridge FORK_PROTOCOL=lighter-bridge FORK_ACTION=deposit node src/simulation/fork/run.js",
+    "fork:meta-pool:deposit": "CHAIN=ethereum FORK_TARGET=meta-pool FORK_PROTOCOL=meta-pool FORK_ACTION=deposit node src/simulation/fork/run.js",
+    "fork:polygon:deposit": "CHAIN=ethereum FORK_TARGET=polygon FORK_PROTOCOL=polygon FORK_ACTION=deposit node src/simulation/fork/run.js",
+    "fork:robinhood:deposit": "CHAIN=ethereum FORK_TARGET=robinhood FORK_PROTOCOL=robinhood FORK_ACTION=deposit node src/simulation/fork/run.js"
   },
   "keywords": [
     "defi",
