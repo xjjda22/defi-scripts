@@ -3,6 +3,47 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-10-21]
+
+Playground batch built on 2026-10-19 (that run stopped before opening a PR), reviewed and re-verified on 2026-10-21. No merge yet.
+
+### Added
+
+**Playground**
+- Fork tests + contracts: World Chain (`fork:world-chain:deposit`), Robinhood Chain (`fork:robinhood:deposit`), Starknet / StarkGate (`fork:starknet:deposit`), Polygon PoS (`fork:polygon:deposit`), Lighter (`fork:lighter-bridge:deposit`), Binance wBETH (`fork:wbeth:deposit`), Meta Pool spETH (`fork:meta-pool:deposit`).
+- Contracts only (documented reason, no fork): LayerZero V2 (messaging layer; the endpoint holds no user funds, and `fork:stargate:deposit` already runs a real V2 send).
+- `src/simulation/fork/lstDepositFlows.js` (wBETH, spETH) and new Orbit / OP / StarkGate / Polygon / Lighter flows in `bridgeFlows.js`.
+- Coverage among ~101 forkable top-200 rows: fork features **28→35**, contracts **34→42**.
+
+### Changed
+
+- `run.js`: receipt polling before `wait()` and a 30% gas pad on estimates (Anvil 1.8). `runtime.js`: a fresh account wraps native gas token when a chain has no WETH whale (Monad).
+- `fork:puffer:deposit` checks the pufETH AccessManager first and FAILs with `targetClosed=true` instead of sending a tx that will revert.
+- After-reads in the bridge flows are pinned to the receipt block (ethers caches `getBalance("latest")`).
+- Showcase: additive `testing` stamps for the new rows and the Puffer note. Ranking, scores, order and `generatedAt` unchanged. Stats: `forkInTop200` 28→35, `apiOnlyInTop200` 172→165.
+
+### Verified (2026-10-21, live Anvil 1.8.5 forks, public RPCs)
+
+| Feature | Result |
+| --- | --- |
+| `fork:world-chain:deposit` | PASS locked ETH +0.05, `ETHDepositInitiated` |
+| `fork:robinhood:deposit` | PASS Bridge ETH +0.05, `InboxMessageDelivered` |
+| `fork:starknet:deposit` | PASS bridge ETH +0.05, fee 0.0001, `Deposit` + `LogMessageToL2` |
+| `fork:polygon:deposit` | PASS EtherPredicate ETH +0.05, `LockedEther` |
+| `fork:lighter-bridge:deposit` | PASS 20 USDC moved into Lighter, contract log |
+| `fork:wbeth:deposit` | PASS 0.090184 wBETH for 0.1 ETH = `exchangeRate()` 1.10884 exactly |
+| `fork:meta-pool:deposit` | PASS 0.087268 spETH, custody ETH +0.1, `Deposit` event matches |
+| Full `fork:all` on this branch | 74 PASS, 2 FAIL (Puffer vault closed on-chain; Velodrome timed out on `mainnet.optimism.io`, PASS from publicnode) |
+| Full `fork:all` on main (same day) | 63 PASS, 6 FAIL. The branch's `run.js`/`runtime.js` changes fix Monad (no WETH whale) and Lista / Venus / Lista DAO ("could not coalesce error") |
+
+Every new address is EIP-55, has code on Ethereum, and matches the linked official source (World docs, Robinhood docs, StarkGate registry, Starknet docs, Polygon `index.json`, Lighter API docs, Meta Pool docs, LayerZero deployments API). wBETH was confirmed on-chain (`symbol()` = wBETH).
+
+### Known issues carried forward
+
+- **Puffer**: pufETH `isTargetClosed` is true (2026-10-19 and 2026-10-21), so `fork:puffer:deposit` FAILs until the vault reopens.
+- **`anvil_deal` is still `Method not found` on Anvil 1.8.5**, and `anvil_dealERC20` finds no slot for USDC.
+- Perps fork coverage stays closed.
+
 ## [2026-10-16]
 
 Mon/Wed/Fri pass: claims monitors, playground batch, and a clean health check. Squash-merged as [#28](https://github.com/xjjda22/defi-scripts/pull/28) (claims) and [#29](https://github.com/xjjda22/defi-scripts/pull/29) (playground).
