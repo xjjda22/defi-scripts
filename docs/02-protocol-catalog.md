@@ -289,8 +289,8 @@ Base ve(3,3) DEX (Slipstream concentrated liquidity).
 
 | Command | Kind | What it does |
 |---|---|---|
-| `npm run analytics:aerodrome:dex` | Analytics | DefiLlama TVL + TVL by chain (`aerodrome`) |
-| `npm run simulate:aerodrome:smoke` | Smoke | Fails unless DefiLlama `aerodrome` returns positive TVL |
+| `npm run analytics:aerodrome:dex` | Analytics | DefiLlama TVL + TVL by chain (`aerodrome-slipstream`) |
+| `npm run simulate:aerodrome:smoke` | Smoke | Fails unless DefiLlama `aerodrome-slipstream` returns positive TVL |
 | `npm run simulate:dex:aerodrome:v3` | Simulate | Quote-only `uniswap-v3` pool simulation on base (Slipstream reference) |
 | `npm run swap:aerodrome` | Swap | Uniswap V3 reference quote on Base (Slipstream quoter limitation) |
 | `npm run fork:aerodrome:swap` | Fork | Uniswap V3 reference swap on Base (Aerodrome Slipstream quoter reverts in this stack) |
@@ -309,8 +309,8 @@ Optimism ve(3,3) DEX (Slipstream concentrated liquidity).
 
 | Command | Kind | What it does |
 |---|---|---|
-| `npm run analytics:velodrome:dex` | Analytics | DefiLlama TVL + TVL by chain (`velodrome`) |
-| `npm run simulate:velodrome:smoke` | Smoke | Fails unless DefiLlama `velodrome` returns positive TVL |
+| `npm run analytics:velodrome:dex` | Analytics | DefiLlama TVL + TVL by chain (`velodrome-v3`) |
+| `npm run simulate:velodrome:smoke` | Smoke | Fails unless DefiLlama `velodrome-v3` returns positive TVL |
 | `npm run simulate:dex:velodrome:v3` | Simulate | Quote-only `uniswap-v3` pool simulation on optimism (Slipstream reference) |
 | `npm run swap:velodrome` | Swap | Uniswap V3 reference quote on Optimism (Slipstream quoter limitation) |
 | `npm run fork:velodrome:swap` | Fork | Uniswap V3 reference swap on Optimism (Velodrome Slipstream quoter reverts in this stack) |

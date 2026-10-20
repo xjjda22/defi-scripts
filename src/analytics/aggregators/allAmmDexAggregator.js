@@ -13,8 +13,12 @@ const AMM_PROTOCOLS = [
   ["Curve DEX", "curve-dex"],
   ["Balancer", "balancer"],
   ["SushiSwap", "sushiswap"],
-  ["Aerodrome", "aerodrome"],
-  ["Velodrome", "velodrome"],
+  // DefiLlama retired the `aerodrome` / `velodrome` parents (2026-10, now one "Aero Protocol"
+  // parent spanning both), so the children are listed directly.
+  ["Aerodrome Slipstream", "aerodrome-slipstream"],
+  ["Aerodrome V1", "aerodrome-v1"],
+  ["Velodrome V3", "velodrome-v3"],
+  ["Velodrome V2", "velodrome-v2"],
   ["PancakeSwap AMM v3", "pancakeswap-amm-v3"],
   ["Ambient", "ambient"],
   ["Camelot", "camelot"],
