@@ -75,6 +75,17 @@ const DOCS = {
   iporFusion: "https://docs.ipor.io/build-on-fusion/developer-guide/addresses",
   // Avalon SuperEarn product docs (Kaia primary; Ethereum remote vaults).
   avalon: "https://docs.superearn.io/en/developers/smart-contracts",
+  layerzero: "https://docs.layerzero.network/v2/deployments/chains/ethereum",
+  worldChain: "https://docs.world.org/world-chain/developers/world-chain-contracts",
+  // Official StarkGate token registry (StarkWare), linked from docs.starknet.io/learn/protocol/starkgate.
+  starkgate: "https://github.com/starknet-io/starknet-addresses/blob/master/bridged_tokens/mainnet.json",
+  starknetCore: "https://docs.starknet.io/learn/cheatsheets/chain-info",
+  wbeth: "https://www.binance.com/en/support/faq/what-is-wbeth-e252366155174ba6887f6b32e3798273",
+  lighter: "https://apidocs.lighter.xyz/docs/environments",
+  metaPool: "https://docs.metapool.app/master/for-developers/meta-pool-contracts/ethereum-network-and-l2s",
+  // Polygon's own contract registry for mainnet (POSContracts section).
+  polygonPos: "https://static.polygon.technology/network/mainnet/v1/index.json",
+  robinhoodChain: "https://docs.robinhood.com/chain/protocol-contracts/",
 };
 
 /**
@@ -186,6 +197,15 @@ function contractBook() {
     fx: [],
     "fusion-by-ipor": [],
     "avalon-superearn": [],
+    "layerzero-v2": [],
+    "world-chain": [],
+    "starknet-bridge": [],
+    "binance-staked-eth": [],
+    "lighter-bridge": [],
+    "meta-pool": [],
+    "meta-pool-eth": [],
+    "polygon-bridge": [],
+    "robinhood-chain-bridge": [],
   };
 
   push(book.uniswap, eth, "V2 router", uni.v2.router, DOCS.uniswap);
@@ -464,6 +484,41 @@ function contractBook() {
   push(book["avalon-superearn"], eth, "CooldownVault (USDC)", "0x8E53CdAa89381c203a074fB3388f65936358f200", DOCS.avalon);
   push(book["avalon-superearn"], eth, "Super Vault (USDT remote)", "0x7Eec57beB20576Cb35c500aE5826e16960aA878b", DOCS.avalon);
 
+  // LayerZero V2 messaging on Ethereum (eid 30101). Value sits in each OApp/OFT, not the endpoint.
+  // https://docs.layerzero.network/v2/deployments/chains/ethereum
+  push(book["layerzero-v2"], eth, "EndpointV2", "0x1a44076050125825900e736c501f859c50fE728c", DOCS.layerzero);
+  push(book["layerzero-v2"], eth, "SendUln302", "0xbB2Ea70C9E858123480642Cf96acbcCE1372dCe1", DOCS.layerzero);
+  push(book["layerzero-v2"], eth, "ReceiveUln302", "0xc02Ab410f0734EFa3F14628780e6e695156024C2", DOCS.layerzero);
+  push(book["layerzero-v2"], eth, "LZ Executor", "0x173272739Bd7Aa6e4e214714048a9fE699453059", DOCS.layerzero);
+  // World Chain (OP Stack) L1 contracts.
+  // https://docs.world.org/world-chain/developers/world-chain-contracts
+  push(book["world-chain"], eth, "L1StandardBridgeProxy", "0x470458C91978D2d929704489Ad730DC3E3001113", DOCS.worldChain);
+  push(book["world-chain"], eth, "OptimismPortalProxy", "0xd5ec14a83B7d95BE1E2Ac12523e2dEE12Cbeea6C", DOCS.worldChain);
+  push(book["world-chain"], eth, "SystemConfigProxy", "0x6ab0777fD0e609CE58F939a7F70Fe41F5Aa6300A", DOCS.worldChain);
+  // StarkGate ETH bridge on Ethereum and the Starknet core contract that relays L1→L2 messages.
+  push(book["starknet-bridge"], eth, "StarkGate ETH bridge", "0xae0Ee0A63A2cE6BaeEFFE56e7714FB4EFE48D419", DOCS.starkgate);
+  push(book["starknet-bridge"], eth, "StarkGate USDC bridge", "0xF6080D9fbEEbcd44D89aFfBFd42F098cbFf92816", DOCS.starkgate);
+  push(book["starknet-bridge"], eth, "Starknet core contract", "0xc662c410C0ECf747543f5bA90660f6ABeBD9C8c4", DOCS.starknetCore);
+  // Binance wBETH. The same address is used on Ethereum and BNB Chain.
+  push(book["binance-staked-eth"], eth, "wBETH", "0xa2E3356610840701BDf5611a53974510Ae27E2e1", DOCS.wbeth);
+  // Lighter's main Ethereum contract: collateral, deposits, secure withdrawals.
+  push(book["lighter-bridge"], eth, "Lighter (ZkLighter proxy)", "0x3B4D794a66304F130a4Db8F2551B0070dfCf5ca7", DOCS.lighter);
+  push(book["lighter-bridge"], eth, "USDC", COMMON_TOKENS.USDC.ethereum, DOCS.usdc);
+  // Meta Pool on Ethereum. The docs list spETH; the older mpETH contract returns "contract is paused".
+  for (const key of ["meta-pool", "meta-pool-eth"]) {
+    push(book[key], eth, "spETH (ERC-4626 staking)", "0xD06f6a56c5f599cB375B616DF306f32B7F6f4A0E", DOCS.metaPool);
+    push(book[key], eth, "Liquid Unstake Pool", "0xdF261F967E87B2aa44e18a22f4aCE5d7f74f03Cc", DOCS.metaPool);
+  }
+  // Polygon PoS bridge on Ethereum.
+  push(book["polygon-bridge"], eth, "RootChainManagerProxy", "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77", DOCS.polygonPos);
+  push(book["polygon-bridge"], eth, "EtherPredicateProxy", "0x8484Ef722627bf18ca5Ae6BcF031c23E6e922B30", DOCS.polygonPos);
+  push(book["polygon-bridge"], eth, "ERC20PredicateProxy", "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf", DOCS.polygonPos);
+  // Robinhood Chain (Arbitrum Orbit) L1 contracts.
+  push(book["robinhood-chain-bridge"], eth, "Delayed Inbox", "0x1A07cc4BD17E0118BdB54D70990D2158AbAD7a2D", DOCS.robinhoodChain);
+  push(book["robinhood-chain-bridge"], eth, "Bridge", "0xDf8755334ce7A73cCF6b581C02eA649AE3E864b3", DOCS.robinhoodChain);
+  push(book["robinhood-chain-bridge"], eth, "Outbox", "0xf0ce991ea4A0d2400A4AB49b20ae333f6Dce3DE9", DOCS.robinhoodChain);
+  push(book["robinhood-chain-bridge"], eth, "Rollup", "0x23A19d23e89166adedbDcB432518AB01e4272D94", DOCS.robinhoodChain);
+
   return book;
 }
 
@@ -674,6 +729,31 @@ module.exports = {
     acrossSpoke: "0x5c7BCd6E7De5423a257D81B442095A1a6ced35C5",
     stargateUsdcPool: "0xc026395860Db2d07ee33e05fE50ed7bD583189C7",
     stargateArbEid: 30110,
+    // https://docs.world.org/world-chain/developers/world-chain-contracts
+    worldL1Bridge: "0x470458C91978D2d929704489Ad730DC3E3001113",
+    worldPortal: "0xd5ec14a83B7d95BE1E2Ac12523e2dEE12Cbeea6C",
+    // https://docs.robinhood.com/chain/protocol-contracts/
+    robinhoodInbox: "0x1A07cc4BD17E0118BdB54D70990D2158AbAD7a2D",
+    robinhoodBridge: "0xDf8755334ce7A73cCF6b581C02eA649AE3E864b3",
+    // https://github.com/starknet-io/starknet-addresses/blob/master/bridged_tokens/mainnet.json
+    starkgateEthBridge: "0xae0Ee0A63A2cE6BaeEFFE56e7714FB4EFE48D419",
+    // StarkGate's l1_token_address for native ETH (the registry's sentinel, not a contract).
+    starkgateEthToken: "0x0000000000000000000000000000000000455448",
+    // https://docs.starknet.io/learn/cheatsheets/chain-info
+    starknetCore: "0xc662c410C0ECf747543f5bA90660f6ABeBD9C8c4",
+    // https://static.polygon.technology/network/mainnet/v1/index.json (POSContracts)
+    polygonRootChainManager: "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77",
+    polygonEtherPredicate: "0x8484Ef722627bf18ca5Ae6BcF031c23E6e922B30",
+    // https://apidocs.lighter.xyz/docs/environments; USDC asset index 3 from /api/v1/assetDetails
+    lighter: "0x3B4D794a66304F130a4Db8F2551B0070dfCf5ca7",
+    lighterUsdcAssetIndex: 3,
+  },
+  // https://www.binance.com/en/support/faq/what-is-wbeth-e252366155174ba6887f6b32e3798273
+  WBETH: "0xa2E3356610840701BDf5611a53974510Ae27E2e1",
+  // https://docs.metapool.app/master/for-developers/meta-pool-contracts/ethereum-network-and-l2s
+  META_POOL: {
+    speth: "0xD06f6a56c5f599cB375B616DF306f32B7F6f4A0E",
+    liquidPool: "0xdF261F967E87B2aa44e18a22f4aCE5d7f74f03Cc",
   },
   // GMX V1 on Arbitrum. The official docs state V1 is sunset and that trading and
   // providing liquidity are no longer supported, so the fork coverage is read-only.

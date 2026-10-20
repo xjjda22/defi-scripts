@@ -41,6 +41,11 @@ async function run() {
   const base = { protocol, action, chain, block: ctx.forkBlock };
   try {
     if (protocol === "arbitrum") return await arbitrumDeposit(base);
+    if (protocol === "robinhood") return await orbitDeposit(base, "Robinhood Chain", BRIDGES.robinhoodInbox, BRIDGES.robinhoodBridge);
+    if (protocol === "world-chain") return await opDeposit(base, "World Chain", BRIDGES.worldL1Bridge, BRIDGES.worldPortal);
+    if (protocol === "starknet") return await starkgateDeposit(base);
+    if (protocol === "polygon") return await polygonDeposit(base);
+    if (protocol === "lighter-bridge") return await lighterDeposit(base);
     if (protocol === "base") return await opDeposit(base, "Base", BRIDGES.baseL1Bridge, BRIDGES.basePortal);
     if (protocol === "optimism") return await opDeposit(base, "Optimism", BRIDGES.optimismL1Bridge, BRIDGES.optimismPortal);
     if (protocol === "across") return await acrossDeposit(base);
@@ -62,7 +67,7 @@ async function arbitrumDeposit(base) {
   const before = await provider.getBalance(bridgeAddr);
   const tx = await inbox.depositEth({ value });
   const receipt = await tx.wait();
-  const after = await provider.getBalance(bridgeAddr);
+  const after = await provider.getBalance(bridgeAddr, receipt.blockNumber);
   const event = logged(receipt, BRIDGES.arbitrumInbox, "InboxMessageDelivered(uint256,bytes)");
   const ok = after === before + value && event;
   const message = receipt.logs.find(log => log.topics[0] === topicOf("InboxMessageDelivered(uint256,bytes)"));
@@ -76,9 +81,138 @@ async function arbitrumDeposit(base) {
   });
 }
 
-async function lockedEth(provider, addresses) {
+/**
+ * Arbitrum Orbit chain (Robinhood Chain): Delayed Inbox depositEth. The Inbox must report the
+ * documented Bridge, the Bridge must hold exactly `value` more ETH, and the Inbox must emit
+ * InboxMessageDelivered for the retryable.
+ */
+async function orbitDeposit(base, name, inboxAddr, bridgeAddr) {
+  const value = ethers.parseEther(process.env.FORK_AMOUNT || "0.05");
+  const signer = await impersonateAccount(ethers.Wallet.createRandom().address, base.chain);
+  const user = await signer.getAddress();
+  const provider = getProvider(base.chain);
+  const inbox = new ethers.Contract(inboxAddr, ["function depositEth() payable returns (uint256)", "function bridge() view returns (address)"], signer);
+  const reported = await inbox.bridge();
+  if (reported.toLowerCase() !== bridgeAddr.toLowerCase()) {
+    return finish({ ...base, ok: false, error: `${name} Inbox.bridge() is ${reported}, not ${bridgeAddr}` });
+  }
+  const before = await provider.getBalance(bridgeAddr);
+  const receipt = await (await inbox.depositEth({ value })).wait();
+  const after = await provider.getBalance(bridgeAddr, receipt.blockNumber);
+  const message = receipt.logs.find(
+    log => log.address.toLowerCase() === inboxAddr.toLowerCase() && log.topics[0] === topicOf("InboxMessageDelivered(uint256,bytes)")
+  );
+  const ok = after === before + value && Boolean(message);
+  const nonce = message ? BigInt(message.topics[1]).toString() : "-";
+  return finish({
+    ...base,
+    ok,
+    key: `bridgeEth=${formatUnits(before, 18)}->${formatUnits(after, 18)} message=${nonce}`,
+    detail: `${name} Delayed Inbox depositEth ${formatUnits(value, 18)} from ${user}\nbridge ETH ${formatUnits(before, 18)} -> ${formatUnits(after, 18)}\nInboxMessageDelivered nonce ${nonce}\n${DEST_NOTE}\ntx ${receipt.hash}`,
+    error: ok ? null : `${name} inbox did not lock ETH in the bridge and emit InboxMessageDelivered`,
+  });
+}
+
+/**
+ * StarkGate 2.0 multi-bridge deposit of native ETH. msg.value is amount + the L1→L2 message fee
+ * (estimateDepositFeeWei). The bridge keeps exactly `amount`, it emits Deposit, and the Starknet
+ * core contract emits LogMessageToL2 for the L2 bridge.
+ */
+async function starkgateDeposit(base) {
+  const amount = ethers.parseEther(process.env.FORK_AMOUNT || "0.05");
+  const signer = await impersonateAccount(ethers.Wallet.createRandom().address, base.chain);
+  const user = await signer.getAddress();
+  const provider = getProvider(base.chain);
+  const bridgeAddr = BRIDGES.starkgateEthBridge;
+  const bridge = new ethers.Contract(
+    bridgeAddr,
+    [
+      "function deposit(address token, uint256 amount, uint256 l2Recipient) payable",
+      "function estimateDepositFeeWei() view returns (uint256)",
+    ],
+    signer
+  );
+  const fee = await bridge.estimateDepositFeeWei();
+  // Any Starknet felt works as a recipient; the destination credit is not checked on this fork.
+  const l2Recipient = BigInt(user);
+  const before = await provider.getBalance(bridgeAddr);
+  const receipt = await (await bridge.deposit(BRIDGES.starkgateEthToken, amount, l2Recipient, { value: amount + fee })).wait();
+  const after = await provider.getBalance(bridgeAddr, receipt.blockNumber);
+  const deposit = logged(receipt, bridgeAddr, "Deposit(address,address,uint256,uint256,uint256,uint256)");
+  const message = logged(receipt, BRIDGES.starknetCore, "LogMessageToL2(address,uint256,uint256,uint256[],uint256,uint256)");
+  const ok = after === before + amount && deposit && message;
+  return finish({
+    ...base,
+    ok,
+    key: `bridgeEth=${formatUnits(before, 18)}->${formatUnits(after, 18)} fee=${formatUnits(fee, 18)} deposit=${deposit} l2Message=${message}`,
+    detail: `StarkGate ETH deposit ${formatUnits(amount, 18)} + message fee ${formatUnits(fee, 18)} from ${user}\nbridge ETH ${formatUnits(before, 18)} -> ${formatUnits(after, 18)}\nDeposit ${deposit}, core LogMessageToL2 ${message}\n${DEST_NOTE}\ntx ${receipt.hash}`,
+    error: ok ? null : "StarkGate did not lock the ETH, emit Deposit and send the L1→L2 message",
+  });
+}
+
+/**
+ * Polygon PoS: RootChainManager.depositEtherFor locks ETH in the EtherPredicate, which emits
+ * LockedEther. The predicate must hold exactly `value` more ETH.
+ */
+async function polygonDeposit(base) {
+  const value = ethers.parseEther(process.env.FORK_AMOUNT || "0.05");
+  const signer = await impersonateAccount(ethers.Wallet.createRandom().address, base.chain);
+  const user = await signer.getAddress();
+  const provider = getProvider(base.chain);
+  const predicate = BRIDGES.polygonEtherPredicate;
+  const manager = new ethers.Contract(BRIDGES.polygonRootChainManager, ["function depositEtherFor(address user) payable"], signer);
+  const before = await provider.getBalance(predicate);
+  const receipt = await (await manager.depositEtherFor(user, { value })).wait();
+  const after = await provider.getBalance(predicate, receipt.blockNumber);
+  const locked = logged(receipt, predicate, "LockedEther(address,address,uint256)");
+  const ok = after === before + value && locked;
+  return finish({
+    ...base,
+    ok,
+    key: `predicateEth=${formatUnits(before, 18)}->${formatUnits(after, 18)} lockedEther=${locked}`,
+    detail: `RootChainManager depositEtherFor ${formatUnits(value, 18)} from ${user}\nEtherPredicate ETH ${formatUnits(before, 18)} -> ${formatUnits(after, 18)}\nLockedEther ${locked}\n${DEST_NOTE}\ntx ${receipt.hash}`,
+    error: ok ? null : "Polygon PoS bridge did not lock ETH in the EtherPredicate and emit LockedEther",
+  });
+}
+
+/**
+ * Lighter: deposit USDC (asset index 3, perps route 0) into the Ethereum contract. The user's
+ * USDC must drop by exactly the amount, the contract's USDC must rise by it, and the contract
+ * must log the deposit. Crediting on the Lighter L2 is off this machine.
+ */
+async function lighterDeposit(base) {
+  const amount = ethers.parseUnits(process.env.FORK_AMOUNT || "20", 6);
+  const usdc = COMMON_TOKENS.USDC.ethereum;
+  const signer = await impersonateFunded(base.chain, "USDC", usdc, amount);
+  const user = await signer.getAddress();
+  const lighterAddr = BRIDGES.lighter;
+  const token = new ethers.Contract(usdc, ["function balanceOf(address) view returns (uint256)", "function approve(address,uint256) returns (bool)"], signer);
+  const lighter = new ethers.Contract(
+    lighterAddr,
+    ["function deposit(address _to, uint16 _assetIndex, uint8 _routeType, uint256 _amount) payable"],
+    signer
+  );
+  const userBefore = await token.balanceOf(user);
+  const poolBefore = await token.balanceOf(lighterAddr);
+  await (await token.approve(lighterAddr, amount)).wait();
+  const receipt = await (await lighter.deposit(user, BRIDGES.lighterUsdcAssetIndex, 0, amount)).wait();
+  const userAfter = await token.balanceOf(user, { blockTag: receipt.blockNumber });
+  const poolAfter = await token.balanceOf(lighterAddr, { blockTag: receipt.blockNumber });
+  const fromLighter = receipt.logs.some(log => log.address.toLowerCase() === lighterAddr.toLowerCase());
+  const ok = userBefore - userAfter === amount && poolAfter - poolBefore === amount && fromLighter;
+  return finish({
+    ...base,
+    ok,
+    key: `usdc=${formatUnits(userBefore, 6)}->${formatUnits(userAfter, 6)} lighterUsdc+=${formatUnits(poolAfter - poolBefore, 6)} log=${fromLighter}`,
+    detail: `Lighter deposit ${formatUnits(amount, 6)} USDC (asset 3, perps) from ${user}\nuser USDC ${formatUnits(userBefore, 6)} -> ${formatUnits(userAfter, 6)}\nLighter USDC ${formatUnits(poolBefore, 6)} -> ${formatUnits(poolAfter, 6)}\ncontract log ${fromLighter}\n${DEST_NOTE}\ntx ${receipt.hash}`,
+    error: ok ? null : "Lighter did not take the USDC deposit",
+  });
+}
+
+// ethers caches an identical getBalance("latest") for ~250 ms; after-reads pass the receipt block.
+async function lockedEth(provider, addresses, blockTag = "latest") {
   let total = 0n;
-  for (const address of addresses) total += await provider.getBalance(address);
+  for (const address of addresses) total += await provider.getBalance(address, blockTag);
   return total;
 }
 
@@ -106,7 +240,7 @@ async function opDeposit(base, name, bridgeAddr, portalAddr) {
   const before = await lockedEth(provider, locks);
   const tx = await bridge.depositETH(200000, "0x", { value });
   const receipt = await tx.wait();
-  const after = await lockedEth(provider, locks);
+  const after = await lockedEth(provider, locks, receipt.blockNumber);
   const event = logged(receipt, bridgeAddr, "ETHDepositInitiated(address,address,uint256,bytes)");
   const ok = after === before + value && event;
   return finish({
