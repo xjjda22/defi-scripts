@@ -339,7 +339,7 @@ const FORK_RECIPES = [
     appUrl: "https://www.puffer.fi",
     chain: "ethereum",
     contractKeys: ["puffer"],
-    note: "pufETH depositETH. Read-only when maxDeposit is 0.",
+    note: "pufETH depositETH. Read-only when maxDeposit is 0. The test FAILs with targetClosed=true when the pufETH AccessManager has closed the vault (isTargetClosed returned true on 2026-10-19 and 2026-10-21), since depositETH then reverts with AccessManagedUnauthorized.",
     tests: [test("fork:puffer:deposit", "deposit", "ethereum")],
   }),
   recipe({

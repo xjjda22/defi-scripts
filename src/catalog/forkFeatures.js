@@ -441,7 +441,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Deposit ETH to Puffer",
     action: "pufETH `depositETH`",
-    assertion: "pufETH increases, or read-only when `maxDeposit` is 0",
+    assertion:
+      "pufETH increases, or read-only when `maxDeposit` is 0. FAIL with `targetClosed=true` when the vault's AccessManager has closed pufETH (`isTargetClosed`; true on 2026-10-19 and 2026-10-21), because depositETH would revert",
     params: amount("0.05", "ETH"),
     gated: true,
   },

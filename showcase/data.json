@@ -56889,7 +56889,7 @@
     "testing": {
      "mode": "fork",
      "label": null,
-     "note": "pufETH depositETH. Read-only when maxDeposit is 0.",
+     "note": "pufETH depositETH. Read-only when maxDeposit is 0. The test FAILs with targetClosed=true when the pufETH AccessManager has closed the vault (isTargetClosed returned true on 2026-10-19 and 2026-10-21), since depositETH then reverts with AccessManagedUnauthorized.",
      "appUrl": "https://www.puffer.fi",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
@@ -56914,7 +56914,7 @@
        "chain": "ethereum",
        "title": "Deposit ETH to Puffer",
        "action": "pufETH `depositETH`",
-       "assertion": "pufETH increases, or read-only when `maxDeposit` is 0",
+       "assertion": "pufETH increases, or read-only when `maxDeposit` is 0. FAIL with `targetClosed=true` when the vault's AccessManager has closed pufETH (`isTargetClosed`; true on 2026-10-19 and 2026-10-21), because depositETH would revert",
        "params": [
         {
          "env": "FORK_AMOUNT",
