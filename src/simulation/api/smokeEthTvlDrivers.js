@@ -8,9 +8,12 @@ async function main() {
     console.error("eth tvl drivers inflow too small");
     process.exit(1);
   }
-  const names = board.inflow.map((r) => String(r.name || "").toLowerCase()).join(" ");
+  // The large Ethereum venues can sit on either side of the board in a given week (2026-10-21:
+  // Lido, Aave V3 and EigenCloud were all outflows), so look for them among inflow + outflow.
+  const movers = board.inflow.concat(board.outflow || []);
+  const names = movers.map((r) => String(r.name || "").toLowerCase()).join(" ");
   if (!/lido|aave|spark|eigen/.test(names)) {
-    console.error("expected Lido, Aave, Spark, or Eigen in TVL inflow");
+    console.error("expected Lido, Aave, Spark, or Eigen among the TVL movers (inflow or outflow)");
     process.exit(1);
   }
   const cex = (board.inflow || []).concat(board.outflow || []).some((r) => r.category === "CEX");
