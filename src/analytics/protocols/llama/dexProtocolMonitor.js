@@ -8,6 +8,9 @@
  * and its date from the same endpoint's daily chart, for "OI at a yearly high" claims.
  * Optional: DEFILLAMA_VOLUME=dexs|aggregators adds 24h / 7d / 30d volume from /summary/{kind}/{slug},
  * for venues that hold no TVL (aggregators, prop AMMs).
+ * Optional: DEFILLAMA_MONTHS=N (1-24) adds UTC calendar-month totals for the last N months from the
+ * daily charts: fees + revenue when DEFILLAMA_FEES=1, volume when DEFILLAMA_VOLUME is set. For
+ * "revenue in September" / "Q3 volume" / "12-month revenue" claims. The current month is partial.
  * Off unless set, so existing scripts are unchanged. Do not use /summary/derivatives (paywalled).
  */
 
@@ -20,6 +23,9 @@ const {
   fetchOpenInterestSummary,
   fetchOpenInterestChart,
   fetchVolumeSummary,
+  fetchFeesChart,
+  fetchVolumeChart,
+  monthlyTotals,
   lastTvlUsdFromSeries,
   llamaDeadLabel,
 } = require("../../utils/defiLlamaProtocol");
@@ -122,6 +128,53 @@ async function printOpenInterestHigh(slug) {
   console.log(t.toString());
 }
 
+function monthsFromEnv(env = process.env) {
+  const raw = (env.DEFILLAMA_MONTHS || "").trim();
+  if (!raw) return 0;
+  const n = parseInt(raw, 10);
+  return Number.isFinite(n) && n >= 1 && n <= 24 ? n : 0;
+}
+
+async function printMonthly(slug, months, { fees, volumeKind }) {
+  const loaders = [];
+  if (fees) {
+    loaders.push(["Fees", () => fetchFeesChart(slug)]);
+    loaders.push(["Revenue", () => fetchFeesChart(slug, "dailyRevenue")]);
+  }
+  if (volumeKind) loaders.push(["Volume", () => fetchVolumeChart(slug, volumeKind)]);
+  if (!loaders.length) return;
+  const series = await Promise.all(
+    loaders.map(async ([name, load]) => {
+      try {
+        const d = await load();
+        return [name, monthlyTotals(d && d.totalDataChart, months)];
+      } catch (e) {
+        console.log(chalk.gray(`  ${name.toLowerCase()} history unavailable: ${e.message || e}`));
+        return [name, []];
+      }
+    })
+  );
+  const monthKeys = [...new Set(series.flatMap(([, rows]) => rows.map(r => r.month)))].sort();
+  if (!monthKeys.length) return;
+  const t = createTable(["Month (UTC)", ...series.map(([n]) => n)], {
+    colAligns: ["left", ...series.map(() => "right")],
+  });
+  const totals = series.map(() => 0);
+  for (const m of monthKeys) {
+    const cells = series.map(([, rows], i) => {
+      const r = rows.find(x => x.month === m);
+      if (!r) return "—";
+      totals[i] += r.total;
+      return formatCurrency(r.total);
+    });
+    const partial = series.some(([, rows]) => rows.find(x => x.month === m && x.partial));
+    t.push([partial ? `${m} (to date)` : m, ...cells]);
+  }
+  t.push([`Total (${monthKeys.length} months)`, ...totals.map(v => formatCurrency(v))]);
+  console.log(chalk.yellow(`\nMonthly totals (DefiLlama daily charts, last ${months} months)\n`));
+  console.log(t.toString());
+}
+
 async function main() {
   installCliSafeStdout();
   const slug = (process.env.DEFILLAMA_SLUG || "").trim();
@@ -160,6 +213,13 @@ async function main() {
     if (process.env.DEFILLAMA_FEES === "1") {
       await printFeesAndRevenue(slug);
     }
+    const months = monthsFromEnv();
+    if (months) {
+      await printMonthly(slug, months, {
+        fees: process.env.DEFILLAMA_FEES === "1",
+        volumeKind: volumeKind === "dexs" || volumeKind === "aggregators" ? volumeKind : "",
+      });
+    }
     if (process.env.DEFILLAMA_OI === "1") {
       await printOpenInterest(slug);
       if (process.env.DEFILLAMA_OI_HIGH === "1") {
@@ -176,4 +236,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { yearToDateHigh };
+module.exports = { yearToDateHigh, monthsFromEnv };
