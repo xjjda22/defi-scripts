@@ -11,6 +11,8 @@
  * Optional: DEFILLAMA_MONTHS=N (1-24) adds UTC calendar-month totals for the last N months from the
  * daily charts: fees + revenue when DEFILLAMA_FEES=1, volume when DEFILLAMA_VOLUME is set. For
  * "revenue in September" / "Q3 volume" / "12-month revenue" claims. The current month is partial.
+ * Optional: DEFILLAMA_TVL_DATES=YYYY-MM-DD,YYYY-MM-DD[,...] prints TVL on each UTC date (last daily point on
+ * or before it) and the change from the first to the last date, for "TVL grew X% in Q3" claims.
  * Off unless set, so existing scripts are unchanged. Do not use /summary/derivatives (paywalled).
  */
 
@@ -128,6 +130,55 @@ async function printOpenInterestHigh(slug) {
   console.log(t.toString());
 }
 
+/**
+ * @param {string|undefined} raw - comma-separated YYYY-MM-DD dates
+ * @returns {string[]} valid dates in ascending order (max 12)
+ */
+function tvlDatesFromEnv(raw) {
+  return [...new Set(String(raw || "").split(","))]
+    .map(x => x.trim())
+    .filter(x => /^\d{4}-\d{2}-\d{2}$/.test(x) && !Number.isNaN(Date.parse(`${x}T00:00:00Z`)))
+    .sort()
+    .slice(0, 12);
+}
+
+/**
+ * Last TVL point on or before the end of a UTC day.
+ * @param {Array<{date:number,totalLiquidityUSD:number}>|undefined} series
+ * @param {string} day - YYYY-MM-DD
+ * @returns {{ date: number, usd: number }|null}
+ */
+function tvlOnOrBefore(series, day) {
+  const end = Date.parse(`${day}T23:59:59Z`) / 1000;
+  let best = null;
+  for (const p of Array.isArray(series) ? series : []) {
+    const t = Number(p && p.date);
+    const v = Number(p && p.totalLiquidityUSD);
+    if (!Number.isFinite(t) || !Number.isFinite(v) || t > end) continue;
+    if (!best || t >= best.date) best = { date: t, usd: v };
+  }
+  return best;
+}
+
+function printTvlOnDates(series, dates) {
+  const rows = dates.map(day => [day, tvlOnOrBefore(series, day)]);
+  const t = createTable(["Date (UTC)", "TVL", "Point used"], { colAligns: ["left", "right", "right"] });
+  for (const [day, p] of rows) {
+    t.push([day, p ? formatCurrency(p.usd) : "n/a", p ? new Date(p.date * 1000).toISOString().slice(0, 10) : "—"]);
+  }
+  const first = rows[0] && rows[0][1];
+  const last = rows.length > 1 ? rows[rows.length - 1][1] : null;
+  if (first && last && first.usd > 0) {
+    t.push([
+      `Change ${rows[0][0]} → ${rows[rows.length - 1][0]}`,
+      `${(((last.usd - first.usd) / first.usd) * 100).toFixed(1)}%`,
+      "",
+    ]);
+  }
+  console.log(chalk.yellow("\nTVL on dates (DefiLlama daily TVL series)\n"));
+  console.log(t.toString());
+}
+
 function monthsFromEnv(env = process.env) {
   const raw = (env.DEFILLAMA_MONTHS || "").trim();
   if (!raw) return 0;
@@ -206,6 +257,8 @@ async function main() {
         console.log(ct.toString());
       }
     }
+    const tvlDates = tvlDatesFromEnv(process.env.DEFILLAMA_TVL_DATES);
+    if (tvlDates.length) printTvlOnDates(d.tvl, tvlDates);
     const volumeKind = (process.env.DEFILLAMA_VOLUME || "").trim();
     if (volumeKind === "dexs" || volumeKind === "aggregators") {
       await printVolume(slug, volumeKind);
@@ -236,4 +289,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { yearToDateHigh, monthsFromEnv };
+module.exports = { yearToDateHigh, monthsFromEnv, tvlDatesFromEnv, tvlOnOrBefore };
