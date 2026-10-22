@@ -7,7 +7,7 @@
 const { ethers } = require("ethers");
 const { COMMON_TOKENS } = require("../../config/chains");
 const { getProvider } = require("../../utils/web3");
-const { BRIDGES } = require("../../catalog/contracts");
+const { BRIDGES, OMNI_BRIDGE, WORMHOLE, CCIP } = require("../../catalog/contracts");
 const { impersonateAccount } = require("../../utils/impersonate");
 const { requireFork, impersonateFunded, formatUnits, finish } = require("./runtime");
 
@@ -46,6 +46,9 @@ async function run() {
     if (protocol === "starknet") return await starkgateDeposit(base);
     if (protocol === "polygon") return await polygonDeposit(base);
     if (protocol === "lighter-bridge") return await lighterDeposit(base);
+    if (protocol === "near-bridge") return await omniBridgeDeposit(base);
+    if (protocol === "portal") return await portalTransfer(base);
+    if (protocol === "ccip") return await ccipSend(base);
     if (protocol === "base") return await opDeposit(base, "Base", BRIDGES.baseL1Bridge, BRIDGES.basePortal);
     if (protocol === "optimism") return await opDeposit(base, "Optimism", BRIDGES.optimismL1Bridge, BRIDGES.optimismPortal);
     if (protocol === "across") return await acrossDeposit(base);
@@ -206,6 +209,185 @@ async function lighterDeposit(base) {
     key: `usdc=${formatUnits(userBefore, 6)}->${formatUnits(userAfter, 6)} lighterUsdc+=${formatUnits(poolAfter - poolBefore, 6)} log=${fromLighter}`,
     detail: `Lighter deposit ${formatUnits(amount, 6)} USDC (asset 3, perps) from ${user}\nuser USDC ${formatUnits(userBefore, 6)} -> ${formatUnits(userAfter, 6)}\nLighter USDC ${formatUnits(poolBefore, 6)} -> ${formatUnits(poolAfter, 6)}\ncontract log ${fromLighter}\n${DEST_NOTE}\ntx ${receipt.hash}`,
     error: ok ? null : "Lighter did not take the USDC deposit",
+  });
+}
+
+const OMNI_INIT_TRANSFER =
+  "event InitTransfer(address indexed sender, address indexed tokenAddress, uint64 indexed originNonce, uint128 amount, uint128 fee, uint128 nativeFee, string recipient, string message)";
+
+/**
+ * NEAR Omni Bridge: initTransfer(address(0), amount, 0, 0, "near:<account>", "") with value = amount
+ * locks native ETH for NEAR. The bridge must hold exactly `amount` more ETH and emit InitTransfer
+ * with the same sender, token (zero address), amount, fees and recipient.
+ */
+async function omniBridgeDeposit(base) {
+  const amount = ethers.parseEther(process.env.FORK_AMOUNT || "0.05");
+  const recipient = process.env.FORK_NEAR_RECIPIENT || "near:defi-scripts-fork.near";
+  const signer = await impersonateAccount(ethers.Wallet.createRandom().address, base.chain);
+  const user = await signer.getAddress();
+  const provider = getProvider(base.chain);
+  const iface = new ethers.Interface([
+    "function initTransfer(address tokenAddress, uint128 amount, uint128 fee, uint128 nativeFee, string recipient, string message) payable",
+    OMNI_INIT_TRANSFER,
+  ]);
+  const bridge = new ethers.Contract(OMNI_BRIDGE, iface, signer);
+  const before = await provider.getBalance(OMNI_BRIDGE);
+  const receipt = await (await bridge.initTransfer(ethers.ZeroAddress, amount, 0, 0, recipient, "", { value: amount })).wait();
+  const after = await provider.getBalance(OMNI_BRIDGE, receipt.blockNumber);
+  const event = receipt.logs
+    .filter(log => log.address.toLowerCase() === OMNI_BRIDGE.toLowerCase())
+    .map(log => {
+      try {
+        return iface.parseLog(log);
+      } catch {
+        return null;
+      }
+    })
+    .find(parsed => parsed && parsed.name === "InitTransfer");
+  const eventOk =
+    Boolean(event) &&
+    event.args.sender === user &&
+    event.args.tokenAddress === ethers.ZeroAddress &&
+    event.args.amount === amount &&
+    event.args.fee === 0n &&
+    event.args.nativeFee === 0n &&
+    event.args.recipient === recipient;
+  const ok = after - before === amount && eventOk;
+  const nonce = event ? event.args.originNonce.toString() : "-";
+  return finish({
+    ...base,
+    ok,
+    key: `omniEth+=${formatUnits(after - before, 18)} initTransfer=${eventOk} nonce=${nonce}`,
+    detail: `Omni Bridge initTransfer ${formatUnits(amount, 18)} ETH to ${recipient} from ${user}\nbridge ETH ${formatUnits(before, 18)} -> ${formatUnits(after, 18)}\nInitTransfer matches ${eventOk} (originNonce ${nonce})\nThe NEAR side verifies the Ethereum proof through its light client; this fork only checks the source chain.\ntx ${receipt.hash}`,
+    error: ok ? null : "Omni Bridge did not lock the ETH and emit a matching InitTransfer",
+  });
+}
+
+const WORMHOLE_PUBLISHED = new ethers.Interface([
+  "event LogMessagePublished(address indexed sender, uint64 sequence, uint32 nonce, bytes payload, uint8 consistencyLevel)",
+]);
+
+/**
+ * Portal (Wormhole Token Bridge): wrapAndTransferETH wraps the ETH into WETH, which the bridge keeps,
+ * and the Core Contract publishes a transfer message. The bridge's WETH must rise by exactly `value`,
+ * and the published payload (type 1 transfer) must carry the amount normalised to 8 decimals, the
+ * WETH token on chain 2 (Ethereum) and the recipient chain.
+ */
+async function portalTransfer(base) {
+  const value = ethers.parseEther(process.env.FORK_AMOUNT || "0.05");
+  const signer = await impersonateAccount(ethers.Wallet.createRandom().address, base.chain);
+  const user = await signer.getAddress();
+  const weth = new ethers.Contract(WORMHOLE.weth, ["function balanceOf(address) view returns (uint256)"], signer);
+  const core = new ethers.Contract(WORMHOLE.core, ["function messageFee() view returns (uint256)"], signer);
+  const bridge = new ethers.Contract(
+    WORMHOLE.tokenBridge,
+    ["function wrapAndTransferETH(uint16 recipientChain, bytes32 recipient, uint256 arbiterFee, uint32 nonce) payable returns (uint64)"],
+    signer
+  );
+  const fee = await core.messageFee();
+  const recipient = ethers.zeroPadValue(user, 32);
+  const before = await weth.balanceOf(WORMHOLE.tokenBridge);
+  const receipt = await (await bridge.wrapAndTransferETH(WORMHOLE.arbitrumChainId, recipient, 0, 0, { value: value + fee })).wait();
+  const after = await weth.balanceOf(WORMHOLE.tokenBridge, { blockTag: receipt.blockNumber });
+  const published = receipt.logs
+    .filter(log => log.address.toLowerCase() === WORMHOLE.core.toLowerCase())
+    .map(log => {
+      try {
+        return WORMHOLE_PUBLISHED.parseLog(log);
+      } catch {
+        return null;
+      }
+    })
+    .find(parsed => parsed && parsed.args.sender.toLowerCase() === WORMHOLE.tokenBridge.toLowerCase());
+  let payloadOk = false;
+  let normalized = null;
+  if (published) {
+    // Transfer payload: u8 type(1) | u256 amount | bytes32 token | u16 tokenChain | bytes32 to | u16 toChain | u256 fee
+    const bytes = ethers.getBytes(published.args.payload);
+    const word = (start, len) => ethers.toBigInt(bytes.slice(start, start + len));
+    normalized = word(1, 32);
+    payloadOk =
+      bytes[0] === 1 &&
+      normalized === value / 10n ** 10n &&
+      ethers.zeroPadValue(WORMHOLE.weth, 32).toLowerCase() === ethers.hexlify(bytes.slice(33, 65)).toLowerCase() &&
+      Number(word(65, 2)) === 2 &&
+      ethers.hexlify(bytes.slice(67, 99)).toLowerCase() === recipient.toLowerCase() &&
+      Number(word(99, 2)) === WORMHOLE.arbitrumChainId;
+  }
+  const ok = after - before === value && payloadOk;
+  return finish({
+    ...base,
+    ok,
+    key: `bridgeWeth+=${formatUnits(after - before, 18)} payloadAmount=${normalized == null ? "-" : normalized.toString()} toChain=${WORMHOLE.arbitrumChainId} payload=${payloadOk}`,
+    detail: `Portal wrapAndTransferETH ${formatUnits(value, 18)} ETH toward Wormhole chain ${WORMHOLE.arbitrumChainId} (Arbitrum) from ${user}\nmessage fee ${formatUnits(fee, 18)}\nToken Bridge WETH ${formatUnits(before, 18)} -> ${formatUnits(after, 18)}\nLogMessagePublished transfer payload matches ${payloadOk} (8-decimal amount ${normalized == null ? "-" : normalized.toString()})\nGuardians sign the VAA and the destination redeems it; this fork only checks the source chain.\ntx ${receipt.hash}`,
+    error: ok ? null : "Portal did not keep the wrapped ETH and publish a matching transfer message",
+  });
+}
+
+const CCIP_MESSAGE =
+  "tuple(bytes receiver, bytes data, tuple(address token, uint256 amount)[] tokenAmounts, address feeToken, bytes extraArgs)";
+
+/**
+ * Chainlink CCIP: Router.ccipSend of LINK from Ethereum to Base, fee paid in ETH. LINK uses a
+ * LockReleaseTokenPool on Ethereum (the pool TokenAdminRegistry returns must be the documented one).
+ * The user's LINK must drop by exactly `amount`, the pool's LINK must rise by exactly `amount`,
+ * the Router must take exactly getFee() in ETH, and the lane's OnRamp must log the message.
+ */
+async function ccipSend(base) {
+  const amount = ethers.parseEther(process.env.FORK_AMOUNT || "1");
+  const provider = getProvider(base.chain);
+  const signer = await impersonateFunded(base.chain, "LINK", CCIP.link, amount);
+  const user = await signer.getAddress();
+  const registry = new ethers.Contract(CCIP.tokenAdminRegistry, ["function getPool(address) view returns (address)"], provider);
+  const pool = await registry.getPool(CCIP.link);
+  if (pool.toLowerCase() !== CCIP.linkPool.toLowerCase()) {
+    return finish({ ...base, ok: false, error: `TokenAdminRegistry pool for LINK is ${pool}, not ${CCIP.linkPool}` });
+  }
+  const router = new ethers.Contract(
+    CCIP.router,
+    [
+      `function getFee(uint64 destinationChainSelector, ${CCIP_MESSAGE} message) view returns (uint256)`,
+      `function ccipSend(uint64 destinationChainSelector, ${CCIP_MESSAGE} message) payable returns (bytes32)`,
+      "function getOnRamp(uint64 destChainSelector) view returns (address)",
+    ],
+    signer
+  );
+  const link = new ethers.Contract(
+    CCIP.link,
+    ["function balanceOf(address) view returns (uint256)", "function approve(address,uint256) returns (bool)"],
+    signer
+  );
+  const onRamp = await router.getOnRamp(CCIP.baseSelector);
+  // EVMExtraArgsV1 with gasLimit 0: a token-only transfer to an EOA runs no receiver code.
+  const extraArgs = ethers.concat(["0x97a657c9", ethers.AbiCoder.defaultAbiCoder().encode(["uint256"], [0])]);
+  const message = {
+    receiver: ethers.AbiCoder.defaultAbiCoder().encode(["address"], [user]),
+    data: "0x",
+    tokenAmounts: [{ token: CCIP.link, amount }],
+    feeToken: ethers.ZeroAddress,
+    extraArgs,
+  };
+  const fee = await router.getFee(CCIP.baseSelector, message);
+  await provider.send("anvil_setBalance", [user, ethers.toQuantity(fee + ethers.parseEther("1"))]);
+  await (await link.approve(CCIP.router, amount)).wait();
+  const userBefore = await link.balanceOf(user);
+  const poolBefore = await link.balanceOf(CCIP.linkPool);
+  const ethBefore = await provider.getBalance(user);
+  const receipt = await (await router.ccipSend(CCIP.baseSelector, message, { value: fee })).wait();
+  const tag = { blockTag: receipt.blockNumber };
+  const userAfter = await link.balanceOf(user, tag);
+  const poolAfter = await link.balanceOf(CCIP.linkPool, tag);
+  const ethAfter = await provider.getBalance(user, receipt.blockNumber);
+  const gasPaid = receipt.gasUsed * (receipt.gasPrice || receipt.effectiveGasPrice || 0n);
+  const feePaid = ethBefore - ethAfter - gasPaid;
+  const fromOnRamp = receipt.logs.some(log => log.address.toLowerCase() === onRamp.toLowerCase());
+  const ok = userBefore - userAfter === amount && poolAfter - poolBefore === amount && feePaid === fee && fromOnRamp;
+  return finish({
+    ...base,
+    ok,
+    key: `link=${formatUnits(userBefore, 18)}->${formatUnits(userAfter, 18)} poolLink+=${formatUnits(poolAfter - poolBefore, 18)} feeEth=${formatUnits(feePaid, 18)} quoted=${formatUnits(fee, 18)} onRampLog=${fromOnRamp}`,
+    detail: `CCIP ccipSend ${formatUnits(amount, 18)} LINK Ethereum → Base (selector ${CCIP.baseSelector}) from ${user}\nuser LINK ${formatUnits(userBefore, 18)} -> ${formatUnits(userAfter, 18)}\nLockReleaseTokenPool LINK ${formatUnits(poolBefore, 18)} -> ${formatUnits(poolAfter, 18)}\nfee ${formatUnits(feePaid, 18)} ETH (getFee ${formatUnits(fee, 18)})\nOnRamp ${onRamp} logged ${fromOnRamp}\nThe DON commits and executes on Base; this fork only checks the source chain.\ntx ${receipt.hash}`,
+    error: ok ? null : "CCIP did not lock exactly the LINK in the pool, charge getFee() and log on the OnRamp",
   });
 }
 
