@@ -86,6 +86,19 @@ const DOCS = {
   // Polygon's own contract registry for mainnet (POSContracts section).
   polygonPos: "https://static.polygon.technology/network/mainnet/v1/index.json",
   robinhoodChain: "https://docs.robinhood.com/chain/protocol-contracts/",
+  // Omni Bridge README, "Contract Addresses" (Mainnet). DefiLlama's near-bridge row runs the omni-bridge adapter.
+  omniBridge: "https://github.com/Near-One/omni-bridge#contract-addresses",
+  wormhole: "https://wormhole.com/docs/products/reference/contract-addresses/",
+  ccip: "https://docs.chain.link/ccip/directory/mainnet/chain/mainnet",
+  ccipLink: "https://docs.chain.link/ccip/directory/mainnet/token/LINK",
+  stakewise: "https://docs.stakewise.io/contracts/networks/Mainnet",
+  // Curator vault pages on the official Morpho app (both are Morpho Vault V2).
+  clearstar: "https://app.morpho.org/base/vault/0x91C056B6d4311a743614FBc03ac32d4E6A2d3a3c/clearstar-cbassets-vault",
+  clearstarEth: "https://app.morpho.org/ethereum/vault/0x69A238Ae7ebeb3c53ff3B544E48B96a2142fc284/clearstar-usdc-core",
+  hyperithm: "https://app.morpho.org/ethereum/vault/0x093272C07700d3cA5301C3Bf9B3A392624179E2F/hyperithm-usdc-apex",
+  hyperithmMonad: "https://app.morpho.org/monad/vault/0x78999cc96d2Ba0341588C60CcB0E91c6C33CF371/hyperithm-usdc-apex",
+  // Concrete's official vault API (the feed app.concrete.xyz and DefiLlama's concrete-xyz adapter read).
+  concrete: "https://apy.api.concrete.xyz/v1/vault:tvl/all",
 };
 
 /**
@@ -206,6 +219,15 @@ function contractBook() {
     "meta-pool-eth": [],
     "polygon-bridge": [],
     "robinhood-chain-bridge": [],
+    "near-bridge": [],
+    portal: [],
+    ccip: [],
+    "stakewise-v3": [],
+    stakewise: [],
+    clearstar: [],
+    hyperithm: [],
+    concrete: [],
+    "k3-capital": [],
   };
 
   push(book.uniswap, eth, "V2 router", uni.v2.router, DOCS.uniswap);
@@ -518,6 +540,34 @@ function contractBook() {
   push(book["robinhood-chain-bridge"], eth, "Bridge", "0xDf8755334ce7A73cCF6b581C02eA649AE3E864b3", DOCS.robinhoodChain);
   push(book["robinhood-chain-bridge"], eth, "Outbox", "0xf0ce991ea4A0d2400A4AB49b20ae333f6Dce3DE9", DOCS.robinhoodChain);
   push(book["robinhood-chain-bridge"], eth, "Rollup", "0x23A19d23e89166adedbDcB432518AB01e4272D94", DOCS.robinhoodChain);
+  // NEAR Omni Bridge on Ethereum (initTransfer locks ETH/ERC-20 for NEAR).
+  push(book["near-bridge"], eth, "Omni Bridge", "0xe00c629aFaCCb0510995A2B95560E446A24c85B9", DOCS.omniBridge);
+  // Portal = Wormhole Wrapped Token Transfers (Token Bridge) + the Core Contract that publishes its messages.
+  push(book.portal, eth, "Token Bridge (WTT)", "0x3ee18B2214AFF97000D974cf647E7C347E8fa585", DOCS.wormhole);
+  push(book.portal, eth, "Wormhole Core", "0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B", DOCS.wormhole);
+  // Chainlink CCIP on Ethereum (chain selector 5009297550715157269).
+  push(book.ccip, eth, "Router", "0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D", DOCS.ccip);
+  push(book.ccip, eth, "TokenAdminRegistry", "0xb22764f98dD05c789929716D677382Df22C05Cb6", DOCS.ccip);
+  push(book.ccip, eth, "OnRamp (Ethereum lanes incl. Base)", "0xc3423F3FB30857D9C14717b119884b1B63d250b7", DOCS.ccip);
+  push(book.ccip, eth, "LINK LockReleaseTokenPool", "0x1B7492C3bD23A4aDB448710e4275FF14A5288932", DOCS.ccipLink);
+  // StakeWise V3 on Ethereum.
+  for (const key of ["stakewise-v3", "stakewise"]) {
+    push(book[key], eth, "Genesis Vault", "0xAC0F906E433d58FA868F936E8A43230473652885", DOCS.stakewise);
+    push(book[key], eth, "osETH (OsToken)", "0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38", DOCS.stakewise);
+    push(book[key], eth, "OsTokenVaultController", "0x2A261e60FB14586B474C208b1B7AC6D0f5000306", DOCS.stakewise);
+    push(book[key], eth, "VaultsRegistry", "0x3a0008a588772446f6e656133C2D5029CC4FC20E", DOCS.stakewise);
+  }
+  // Clearstar Morpho Vault V2s. The Base cbAssets vault is the largest.
+  push(book.clearstar, "base", "Clearstar cbAssets Vault (USDC, Vault V2)", "0x91C056B6d4311a743614FBc03ac32d4E6A2d3a3c", DOCS.clearstar);
+  push(book.clearstar, eth, "Clearstar USDC Core (Vault V2)", "0x69A238Ae7ebeb3c53ff3B544E48B96a2142fc284", DOCS.clearstarEth);
+  // Hyperithm Morpho Vault V2s. Monad holds most of the row; the fork test runs the Ethereum vault.
+  push(book.hyperithm, eth, "Hyperithm USDC Apex (Vault V2)", "0x093272C07700d3cA5301C3Bf9B3A392624179E2F", DOCS.hyperithm);
+  push(book.hyperithm, "monad", "Hyperithm USDC Apex (Vault V2)", "0x78999cc96d2Ba0341588C60CcB0E91c6C33CF371", DOCS.hyperithmMonad);
+  // Concrete Earn V2 async vaults on Ethereum.
+  push(book.concrete, eth, "Concrete Decentralized Finance USDT (ctDefiUSDT)", "0x0E609b710da5e0AA476224b6c0e5445cCc21251E", DOCS.concrete);
+  push(book.concrete, eth, "Concrete Delta WeETH (ctDeltaWeETH)", "0xB9DC54c8261745CB97070CeFBE3D3d815aee8f20", DOCS.concrete);
+  // K3 Capital curates the Euler Earn vault that fork:euler:deposit runs.
+  push(book["k3-capital"], eth, "K3 Capital Earn USDC (Euler Earn)", "0x3B4802FDb0E5d74aA37d58FD77d63e93d4f9A4AF", DOCS.euler);
 
   return book;
 }
@@ -747,6 +797,56 @@ module.exports = {
     // https://apidocs.lighter.xyz/docs/environments; USDC asset index 3 from /api/v1/assetDetails
     lighter: "0x3B4D794a66304F130a4Db8F2551B0070dfCf5ca7",
     lighterUsdcAssetIndex: 3,
+  },
+  // https://github.com/Near-One/omni-bridge#contract-addresses
+  OMNI_BRIDGE: "0xe00c629aFaCCb0510995A2B95560E446A24c85B9",
+  // https://wormhole.com/docs/products/reference/contract-addresses/ (Wormhole chain id 23 = Arbitrum)
+  WORMHOLE: {
+    tokenBridge: "0x3ee18B2214AFF97000D974cf647E7C347E8fa585",
+    core: "0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B",
+    weth: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    arbitrumChainId: 23,
+  },
+  // https://docs.chain.link/ccip/directory/mainnet/chain/mainnet and /token/LINK
+  CCIP: {
+    router: "0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D",
+    tokenAdminRegistry: "0xb22764f98dD05c789929716D677382Df22C05Cb6",
+    link: "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+    linkPool: "0x1B7492C3bD23A4aDB448710e4275FF14A5288932",
+    // Base. LINK's Ethereum pool does not list Arbitrum (ChainNotAllowed on 2026-10-23).
+    baseSelector: "15971525489660198786",
+  },
+  // https://docs.stakewise.io/contracts/networks/Mainnet
+  STAKEWISE: {
+    genesisVault: "0xAC0F906E433d58FA868F936E8A43230473652885",
+    osETH: "0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38",
+    controller: "0x2A261e60FB14586B474C208b1B7AC6D0f5000306",
+  },
+  // Morpho Vault V2s (gates are the pre-check, as for RockawayX).
+  CLEARSTAR: {
+    vault: "0x91C056B6d4311a743614FBc03ac32d4E6A2d3a3c",
+    asset: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    symbol: "USDC",
+    decimals: 6,
+    defaultAmount: "100",
+    label: "CSCBUSDC",
+  },
+  HYPERITHM: {
+    vault: "0x093272C07700d3cA5301C3Bf9B3A392624179E2F",
+    asset: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    symbol: "USDC",
+    decimals: 6,
+    defaultAmount: "100",
+    label: "hyperUSDCa",
+  },
+  // Concrete Earn V2 async vault: ERC-4626 deposit, epoch-queued withdrawal.
+  CONCRETE: {
+    vault: "0x0E609b710da5e0AA476224b6c0e5445cCc21251E",
+    asset: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    symbol: "USDT",
+    decimals: 6,
+    defaultAmount: "200",
+    label: "ctDefiUSDT",
   },
   // https://www.binance.com/en/support/faq/what-is-wbeth-e252366155174ba6887f6b32e3798273
   WBETH: "0xa2E3356610840701BDf5611a53974510Ae27E2e1",

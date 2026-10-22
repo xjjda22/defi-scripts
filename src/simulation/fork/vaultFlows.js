@@ -6,7 +6,18 @@
 
 const { ethers } = require("ethers");
 const { getProvider } = require("../../utils/web3");
-const { VAULTS, VEDA, UPSHIFT, ROCKAWAYX, LLAMALEND, SPARK_VAULTS, LISTA_LENDING } = require("../../catalog/contracts");
+const {
+  VAULTS,
+  VEDA,
+  UPSHIFT,
+  ROCKAWAYX,
+  LLAMALEND,
+  SPARK_VAULTS,
+  LISTA_LENDING,
+  CLEARSTAR,
+  HYPERITHM,
+  CONCRETE,
+} = require("../../catalog/contracts");
 const { requireFork, impersonateFunded, formatUnits, finish } = require("./runtime");
 
 const ERC = [
@@ -160,16 +171,80 @@ async function erc4626(base, spec, options = {}) {
  * access is controlled by four gates. All four unset means anyone can deposit and redeem, so the
  * test runs the full ERC-4626 round trip. A set gate is a labelled read, checked before any tx.
  */
-async function rockawayxDeposit(base) {
+async function morphoV2Deposit(base, spec) {
   const provider = getProvider(base.chain);
-  const gates = new ethers.Contract(ROCKAWAYX.vault, VAULT_V2_GATES, provider);
+  const gates = new ethers.Contract(spec.vault, VAULT_V2_GATES, provider);
   const set = [];
   for (const name of ["receiveSharesGate", "sendSharesGate", "receiveAssetsGate", "sendAssetsGate"]) {
     const gate = await gates[name]();
     if (gate !== ethers.ZeroAddress) set.push(`${name}=${gate}`);
   }
-  if (set.length) return readVault(base, ROCKAWAYX, `gated(${set.join(",")})`);
-  return erc4626(base, ROCKAWAYX, { skipMaxDeposit: true });
+  if (set.length) return readVault(base, spec, `gated(${set.join(",")})`);
+  return erc4626(base, spec, { skipMaxDeposit: true });
+}
+
+async function rockawayxDeposit(base) {
+  return morphoV2Deposit(base, ROCKAWAYX);
+}
+
+const CONCRETE_ABI = [
+  ...VAULT_ABI,
+  "function previewDeposit(uint256 assets) view returns (uint256)",
+  "function getDepositLimits() view returns (uint256 maxDepositAmount, uint256 minDepositAmount)",
+  "event Deposit(address indexed sender, address indexed owner, uint256 assets, uint256 shares)",
+];
+
+/**
+ * Concrete Earn V2 async vault (ctDefiUSDT). Deposit is ERC-4626 and open; withdrawal goes into an
+ * epoch queue that Concrete processes off-chain about weekly, so this deposits only. The vault's own
+ * deposit limits are the pre-check (an amount outside them is a labelled read, not a revert). Asserts
+ * the deposit pulled exactly `amount`, the user's share gain equals the pre-tx previewDeposit, and the
+ * ERC-4626 Deposit event reports the same assets and shares.
+ */
+async function concreteDeposit(base) {
+  const spec = CONCRETE;
+  const provider = getProvider(base.chain);
+  const reader = new ethers.Contract(spec.vault, CONCRETE_ABI, provider);
+  const amount = ethers.parseUnits(process.env.FORK_AMOUNT || spec.defaultAmount, spec.decimals);
+  const [maxAmount, minAmount] = await reader.getDepositLimits();
+  if (amount < minAmount || amount > maxAmount) {
+    return readVault(base, spec, `depositLimits(min=${formatUnits(minAmount, spec.decimals)},max=${formatUnits(maxAmount, spec.decimals)})`);
+  }
+  const signer = await impersonateFunded(base.chain, spec.symbol, spec.asset, amount);
+  const user = await signer.getAddress();
+  const asset = new ethers.Contract(spec.asset, ERC, provider);
+  const vault = new ethers.Contract(spec.vault, CONCRETE_ABI, signer);
+  const shareDecimals = Number(await reader.decimals());
+  await approve(spec.asset, signer, spec.vault, amount);
+  const assetsBefore = await asset.balanceOf(user);
+  const sharesBefore = await reader.balanceOf(user);
+  const vaultAssetsBefore = await reader.totalAssets();
+  const preview = await reader.previewDeposit(amount);
+  const receipt = await (await vault.deposit(amount, user, GAS)).wait();
+  const tag = { blockTag: receipt.blockNumber };
+  const assetsAfter = await asset.balanceOf(user, tag);
+  const shares = (await reader.balanceOf(user, tag)) - sharesBefore;
+  const vaultAssetsAfter = await reader.totalAssets(tag);
+  const event = receipt.logs
+    .filter(log => log.address.toLowerCase() === spec.vault.toLowerCase())
+    .map(log => {
+      try {
+        return reader.interface.parseLog(log);
+      } catch {
+        return null;
+      }
+    })
+    .find(parsed => parsed && parsed.name === "Deposit");
+  const eventOk = Boolean(event) && event.args.assets === amount && event.args.shares === shares && event.args.owner === user;
+  const pulled = assetsBefore - assetsAfter === amount;
+  const ok = shares > 0n && pulled && shares === preview && eventOk;
+  return finish({
+    ...base,
+    ok,
+    key: `${spec.label}=0->${formatUnits(shares, shareDecimals)} preview=${formatUnits(preview, shareDecimals)} ${spec.symbol}=${formatUnits(assetsBefore, spec.decimals)}->${formatUnits(assetsAfter, spec.decimals)} event=${eventOk}`,
+    detail: `deposited ${formatUnits(amount, spec.decimals)} ${spec.symbol} into ${spec.label}\nshares ${formatUnits(shares, shareDecimals)} (previewDeposit before the tx ${formatUnits(preview, shareDecimals)})\nvault totalAssets ${formatUnits(vaultAssetsBefore, spec.decimals)} -> ${formatUnits(vaultAssetsAfter, spec.decimals)}\nDeposit event matches ${eventOk}\nWithdrawal is an epoch queue processed about weekly, so this does not redeem.\ntx ${receipt.hash}`,
+    error: ok ? null : `${spec.label} deposit failed: pulled=${pulled} sharesMatchPreview=${shares === preview} event=${eventOk}`,
+  });
 }
 
 /**
@@ -303,6 +378,9 @@ async function run() {
     if (protocol === "llamalend") return await llamalendDeposit(base);
     if (protocol === "spark-vaults") return await erc4626(base, SPARK_VAULTS);
     if (protocol === "lista-dao") return await erc4626(base, LISTA_LENDING);
+    if (protocol === "clearstar") return await morphoV2Deposit(base, CLEARSTAR);
+    if (protocol === "hyperithm") return await morphoV2Deposit(base, HYPERITHM);
+    if (protocol === "concrete") return await concreteDeposit(base);
     return finish({ ...base, ok: false, error: `Unknown vault action ${protocol}:${action}` });
   } catch (err) {
     const message = explain(err);

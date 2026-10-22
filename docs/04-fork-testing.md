@@ -79,6 +79,7 @@ The tables below, and the "Test it" panel on each protocol page, are both genera
 | `fork:puffer:deposit` | Ethereum | pufETH `depositETH` | pufETH increases, or read-only when `maxDeposit` is 0. FAIL with `targetClosed=true` when the vault's AccessManager has closed pufETH (`isTargetClosed`; true on 2026-10-19 and 2026-10-21), because depositETH would revert |
 | `fork:wbeth:deposit` | Ethereum | wBETH `deposit(referral)` with native ETH | wBETH minted equals `value × 1e18 / exchangeRate()` (1 wei rounding) and the contract holds exactly the deposited ETH. Unwrap goes through Binance, so there is no redeem |
 | `fork:meta-pool:deposit` | Ethereum | spETH `depositETH(receiver)` (ERC-4626). The Staking contract may fill from the Liquid Unstake Pool instead of minting | spETH + Liquid Unstake Pool hold exactly the deposited ETH more, the ERC-4626 `Deposit` event reports assets = deposit and shares = the user's gain, and shares are within 1 bp of the pre-tx `previewDeposit`. Unstake is a pool swap or a 2-9 day queue, so there is no redeem |
+| `fork:stakewise:deposit` | Ethereum | Genesis Vault `depositAndMintOsToken` with native ETH, minting osETH worth half the deposit. Pre-checks: no pending keeper state update and room under `capacity()` | vault `totalAssets` rises by exactly the deposit, the `Deposited` event reports assets = deposit and shares = the user's gain (within 1 wei of the pre-tx `convertToShares`), and the user holds exactly the requested osETH, which equals the vault's osToken position. Exits use the validator exit queue, so there is no redeem |
 <!-- /features:actions -->
 
 ## Perps
@@ -118,6 +119,9 @@ Same rules. A vault whose `maxDeposit` is 0 (or whose deposits are paused or clo
 | `fork:euler:deposit` | USDC into Euler Earn K3 Capital Earn USDC (first non-deprecated Ethereum vault in euler-labels), then redeem |
 | `fork:rockawayx:deposit` | USDC into RockawayX USDC Yield, a Morpho Vault V2, then redeem. V2 `maxDeposit` is always 0, so the pre-check is that all four gates are unset (a set gate makes it a labelled read). Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding |
 | `fork:spark-vaults:deposit` | USDC into Spark Savings spUSDC (ERC-4626), then redeem. Idle liquidity caps redeem; the round trip asserts within idle balance |
+| `fork:clearstar:deposit` | USDC into Clearstar cbAssets Vault on Base, a Morpho Vault V2, then redeem. Pre-check: all four V2 gates unset (a set gate makes it a labelled read). Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding |
+| `fork:hyperithm:deposit` | USDC into Hyperithm USDC Apex on Ethereum, a Morpho Vault V2, then redeem. Same gate pre-check and round-trip assertions as RockawayX. Most of the row's TVL is the Monad vault of the same name |
+| `fork:concrete:deposit` | **Deposit only.** USDT into Concrete ctDefiUSDT (Earn V2 async vault, ERC-4626 deposit). Pre-check: the amount sits inside `getDepositLimits()` (outside is a labelled read). Asserts the vault pulled exactly the amount, the shares equal the pre-tx `previewDeposit`, and the `Deposit` event reports the same assets and shares. Withdrawal is an epoch queue processed about weekly, so there is no redeem |
 <!-- /features:vaults -->
 
 ## Stablecoins, RWA, and bridges
@@ -147,6 +151,9 @@ Same rules: pinned block via `FORK_BLOCK`, whale impersonation or `anvil_deal`, 
 | `fork:starknet:deposit` | StarkGate `deposit(ETH, amount, l2Recipient)` with `amount + estimateDepositFeeWei()`. The bridge keeps exactly `amount`, emits `Deposit`, and the Starknet core contract emits `LogMessageToL2` |
 | `fork:polygon:deposit` | `RootChainManager.depositEtherFor`. The EtherPredicate holds exactly the deposit more ETH and emits `LockedEther` |
 | `fork:lighter-bridge:deposit` | Lighter `deposit(to, 3, 0, amount)` (USDC, perps route). The user's USDC drops by exactly the amount, the Lighter contract's USDC rises by it, and the contract logs the deposit. L2 crediting is off this machine |
+| `fork:near-bridge:deposit` | Omni Bridge `initTransfer(address(0), amount, 0, 0, "near:…", "")` with native ETH. The bridge holds exactly the deposit more ETH and emits `InitTransfer` with the same sender, token, amount, zero fees and recipient. The NEAR light client side is off this machine |
+| `fork:portal:transfer` | Token Bridge `wrapAndTransferETH` toward Wormhole chain 23 (Arbitrum). The bridge's WETH rises by exactly the amount and the Core Contract's `LogMessagePublished` carries a type-1 transfer payload with the amount at 8 decimals, WETH on chain 2 and the recipient. Guardian signing and redemption are off this machine |
+| `fork:ccip:send` | Router `ccipSend` of LINK to Base, fee in ETH. `TokenAdminRegistry.getPool(LINK)` must be the documented LockReleaseTokenPool. The user's LINK drops and the pool's LINK rises by exactly the amount, the user pays exactly `getFee()` in ETH, and the lane's OnRamp logs the message. DON execution on Base is off this machine |
 <!-- /features:stables -->
 
 Bridge panels are labeled **Source chain only**. A single fork cannot see the destination credit. Rollup derivation, Across fillers, and LayerZero relayers are off this machine.

@@ -23,6 +23,7 @@ const EXTRA_WHALES = {
     USDT: ["0xF977814e90dA44bFA03b6295A0616a897441aceC"],
     USDe: ["0xF977814e90dA44bFA03b6295A0616a897441aceC", "0x28C6c06298d514Db089934071355E5743bf21d60"],
     stETH: ["0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0"],
+    LINK: ["0xF977814e90dA44bFA03b6295A0616a897441aceC"],
     // Savings crvUSD (scrvUSD) holds idle crvUSD. https://docs.curve.finance/developer/deployments
     crvUSD: ["0x0655977FEb2f289A4aB78af67BAB0d17aAb84367"],
     // arUSD vault holds rUSD. https://docs.aladdin.club/f-x-protocol/contracts

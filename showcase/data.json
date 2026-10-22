@@ -4770,7 +4770,13 @@
      "tvl": 22
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:near-bridge:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.8008,
    "components": {
@@ -4782,24 +4788,53 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Source chain only",
+    "note": "DefiLlama's NEAR Bridge row is the Omni Bridge. initTransfer locks ETH on Ethereum and emits InitTransfer; NEAR verifies it through its Ethereum light client, which a single Ethereum fork cannot run.",
     "appUrl": "https://near.org/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-     ],
-     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:near-bridge:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:near-bridge:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:near-bridge:deposit",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Bridge ETH to NEAR (Omni Bridge)",
+      "assertion": "Omni Bridge `initTransfer(address(0), amount, 0, 0, \"near:…\", \"\")` with native ETH. The bridge holds exactly the deposit more ETH and emits `InitTransfer` with the same sender, token, amount, zero fees and recipient. The NEAR light client side is off this machine",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.05",
+        "unit": "ETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Omni Bridge",
+      "address": "0xe00c629aFaCCb0510995A2B95560E446A24c85B9",
+      "doc": "https://github.com/Near-One/omni-bridge#contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0xe00c629aFaCCb0510995A2B95560E446A24c85B9"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -5867,6 +5902,11 @@
      "name": "simulate:concrete:smoke",
      "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
      "kind": "smoke"
+    },
+    {
+     "name": "fork:concrete:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
     }
    ],
    "coverage": "covered by a dedicated monitor",
@@ -5880,24 +5920,60 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Deposit only",
+    "note": "Concrete Earn V2 vaults are async: deposit is ERC-4626, withdrawal is an epoch queue processed about weekly, so the fork test deposits only. It uses ctDefiUSDT; the largest vault, ctDeltaWeETH, had getDepositLimits() of 0 on 2026-10-23 (deposits revert AssetAmountOutOfBounds).",
     "appUrl": "https://app.concrete.xyz",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:concrete:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:concrete:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:concrete:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit USDT (Concrete ctDefiUSDT)",
+      "assertion": "**Deposit only.** USDT into Concrete ctDefiUSDT (Earn V2 async vault, ERC-4626 deposit). Pre-check: the amount sits inside `getDepositLimits()` (outside is a labelled read). Asserts the vault pulled exactly the amount, the shares equal the pre-tx `previewDeposit`, and the `Deposit` event reports the same assets and shares. Withdrawal is an epoch queue processed about weekly, so there is no redeem",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "200",
+        "unit": "USDT"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Concrete Decentralized Finance USDT (ctDefiUSDT)",
+      "address": "0x0E609b710da5e0AA476224b6c0e5445cCc21251E",
+      "doc": "https://apy.api.concrete.xyz/v1/vault:tvl/all",
+      "explorerUrl": "https://etherscan.io/address/0x0E609b710da5e0AA476224b6c0e5445cCc21251E"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Concrete Delta WeETH (ctDeltaWeETH)",
+      "address": "0xB9DC54c8261745CB97070CeFBE3D3d815aee8f20",
+      "doc": "https://apy.api.concrete.xyz/v1/vault:tvl/all",
+      "explorerUrl": "https://etherscan.io/address/0xB9DC54c8261745CB97070CeFBE3D3d815aee8f20"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -7474,7 +7550,13 @@
      "tvl": 2717
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:clearstar:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7729,
    "components": {
@@ -7486,24 +7568,60 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://clearstar.xyz",
-    "chain": "ethereum",
-    "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "mode": "fork",
+    "label": null,
+    "note": "Clearstar cbAssets Vault (Morpho Vault V2) on Base, Clearstar's largest vault. V2 maxDeposit is 0 by design, so the pre-check is that all four gates are unset.",
+    "appUrl": "https://app.morpho.org/base/vault/0x91C056B6d4311a743614FBc03ac32d4E6A2d3a3c/clearstar-cbassets-vault",
+    "chain": "base",
+    "rpcEnv": "BASE_RPC_URL",
+    "commands": [
+     "CHAIN=base node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=base node scripts/startFork.js",
+     "BASE_RPC_URL=http://127.0.0.1:8545 npm run fork:clearstar:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:clearstar:deposit",
+      "action": "deposit",
+      "chain": "base",
+      "rpcEnv": "BASE_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:clearstar:deposit",
+      "section": "vaults",
+      "chain": "base",
+      "title": "Deposit and redeem (Clearstar cbAssets, Base)",
+      "assertion": "USDC into Clearstar cbAssets Vault on Base, a Morpho Vault V2, then redeem. Pre-check: all four V2 gates unset (a set gate makes it a labelled read). Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "base",
+      "label": "Clearstar cbAssets Vault (USDC, Vault V2)",
+      "address": "0x91C056B6d4311a743614FBc03ac32d4E6A2d3a3c",
+      "doc": "https://app.morpho.org/base/vault/0x91C056B6d4311a743614FBc03ac32d4E6A2d3a3c/clearstar-cbassets-vault",
+      "explorerUrl": "https://basescan.org/address/0x91C056B6d4311a743614FBc03ac32d4E6A2d3a3c"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Clearstar USDC Core (Vault V2)",
+      "address": "0x69A238Ae7ebeb3c53ff3B544E48B96a2142fc284",
+      "doc": "https://app.morpho.org/ethereum/vault/0x69A238Ae7ebeb3c53ff3B544E48B96a2142fc284/clearstar-usdc-core",
+      "explorerUrl": "https://etherscan.io/address/0x69A238Ae7ebeb3c53ff3B544E48B96a2142fc284"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -7628,7 +7746,13 @@
      "tvl": 1
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:hyperithm:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7696,
    "components": {
@@ -7640,24 +7764,60 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://www.hyperithm.com",
+    "mode": "fork",
+    "label": null,
+    "note": "Hyperithm USDC Apex (Morpho Vault V2) on Ethereum. Most of the row's TVL is the Monad vault of the same name, listed for verification; the Ethereum vault runs the same V2 code.",
+    "appUrl": "https://app.morpho.org/ethereum/vault/0x093272C07700d3cA5301C3Bf9B3A392624179E2F/hyperithm-usdc-apex",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:hyperithm:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:hyperithm:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:hyperithm:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit and redeem (Hyperithm USDC Apex)",
+      "assertion": "USDC into Hyperithm USDC Apex on Ethereum, a Morpho Vault V2, then redeem. Same gate pre-check and round-trip assertions as RockawayX. Most of the row's TVL is the Monad vault of the same name",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Hyperithm USDC Apex (Vault V2)",
+      "address": "0x093272C07700d3cA5301C3Bf9B3A392624179E2F",
+      "doc": "https://app.morpho.org/ethereum/vault/0x093272C07700d3cA5301C3Bf9B3A392624179E2F/hyperithm-usdc-apex",
+      "explorerUrl": "https://etherscan.io/address/0x093272C07700d3cA5301C3Bf9B3A392624179E2F"
+     },
+     {
+      "chain": "monad",
+      "label": "Hyperithm USDC Apex (Vault V2)",
+      "address": "0x78999cc96d2Ba0341588C60CcB0E91c6C33CF371",
+      "doc": "https://app.morpho.org/monad/vault/0x78999cc96d2Ba0341588C60CcB0E91c6C33CF371/hyperithm-usdc-apex",
+      "explorerUrl": "https://monadvision.com/address/0x78999cc96d2Ba0341588C60CcB0E91c6C33CF371"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -7782,7 +7942,13 @@
      "tvl": 1983719
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:portal:transfer",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7656,
    "components": {
@@ -7794,24 +7960,60 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Source chain only",
+    "note": "Portal is the Wormhole Token Bridge (Wrapped Token Transfers). wrapAndTransferETH keeps WETH in the bridge and the Core Contract publishes the transfer; the Guardians sign it and the destination redeems it off this machine.",
     "appUrl": "https://portalbridge.com",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-     ],
-     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:portal:transfer"
+    ],
+    "tests": [
+     {
+      "script": "fork:portal:transfer",
+      "action": "transfer",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:portal:transfer",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Bridge ETH via Portal (Wormhole)",
+      "assertion": "Token Bridge `wrapAndTransferETH` toward Wormhole chain 23 (Arbitrum). The bridge's WETH rises by exactly the amount and the Core Contract's `LogMessagePublished` carries a type-1 transfer payload with the amount at 8 decimals, WETH on chain 2 and the recipient. Guardian signing and redemption are off this machine",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.05",
+        "unit": "ETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Token Bridge (WTT)",
+      "address": "0x3ee18B2214AFF97000D974cf647E7C347E8fa585",
+      "doc": "https://wormhole.com/docs/products/reference/contract-addresses/",
+      "explorerUrl": "https://etherscan.io/address/0x3ee18B2214AFF97000D974cf647E7C347E8fa585"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Wormhole Core",
+      "address": "0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B",
+      "doc": "https://wormhole.com/docs/products/reference/contract-addresses/",
+      "explorerUrl": "https://etherscan.io/address/0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -8242,7 +8444,13 @@
      "tvl": 3365778
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:ccip:send",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.762,
    "components": {
@@ -8254,24 +8462,74 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Source chain only",
+    "note": "CCIP Router ccipSend of LINK to Base. LINK uses a LockReleaseTokenPool on Ethereum; the DON commits and executes on Base, which a single Ethereum fork cannot verify. LINK's Ethereum pool does not list Arbitrum (ChainNotAllowed on 2026-10-23).",
     "appUrl": "https://chain.link/cross-chain",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-     ],
-     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:ccip:send"
+    ],
+    "tests": [
+     {
+      "script": "fork:ccip:send",
+      "action": "send",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:ccip:send",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Send LINK via Chainlink CCIP",
+      "assertion": "Router `ccipSend` of LINK to Base, fee in ETH. `TokenAdminRegistry.getPool(LINK)` must be the documented LockReleaseTokenPool. The user's LINK drops and the pool's LINK rises by exactly the amount, the user pays exactly `getFee()` in ETH, and the lane's OnRamp logs the message. DON execution on Base is off this machine",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "1",
+        "unit": "LINK"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Router",
+      "address": "0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D",
+      "doc": "https://docs.chain.link/ccip/directory/mainnet/chain/mainnet",
+      "explorerUrl": "https://etherscan.io/address/0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D"
+     },
+     {
+      "chain": "ethereum",
+      "label": "TokenAdminRegistry",
+      "address": "0xb22764f98dD05c789929716D677382Df22C05Cb6",
+      "doc": "https://docs.chain.link/ccip/directory/mainnet/chain/mainnet",
+      "explorerUrl": "https://etherscan.io/address/0xb22764f98dD05c789929716D677382Df22C05Cb6"
+     },
+     {
+      "chain": "ethereum",
+      "label": "OnRamp (Ethereum lanes incl. Base)",
+      "address": "0xc3423F3FB30857D9C14717b119884b1B63d250b7",
+      "doc": "https://docs.chain.link/ccip/directory/mainnet/chain/mainnet",
+      "explorerUrl": "https://etherscan.io/address/0xc3423F3FB30857D9C14717b119884b1B63d250b7"
+     },
+     {
+      "chain": "ethereum",
+      "label": "LINK LockReleaseTokenPool",
+      "address": "0x1B7492C3bD23A4aDB448710e4275FF14A5288932",
+      "doc": "https://docs.chain.link/ccip/directory/mainnet/token/LINK",
+      "explorerUrl": "https://etherscan.io/address/0x1B7492C3bD23A4aDB448710e4275FF14A5288932"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -8333,7 +8591,13 @@
      "tvl": 19197
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:euler:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7611,
    "components": {
@@ -8345,24 +8609,53 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Euler Earn vault (Ethereum)",
+    "note": "K3 Capital curates K3 Capital Earn USDC, the Euler Earn vault that fork:euler:deposit deposits into and redeems from. Most of the row's TVL is on Monad, which this test does not cover.",
     "appUrl": "https://k3.capital",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:euler:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:euler:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:euler:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit and redeem (Euler Earn)",
+      "assertion": "USDC into Euler Earn K3 Capital Earn USDC (first non-deprecated Ethereum vault in euler-labels), then redeem",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "1000",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "K3 Capital Earn USDC (Euler Earn)",
+      "address": "0x3B4802FDb0E5d74aA37d58FD77d63e93d4f9A4AF",
+      "doc": "https://github.com/euler-xyz/euler-labels/blob/master/1/earn-vaults.json",
+      "explorerUrl": "https://etherscan.io/address/0x3B4802FDb0E5d74aA37d58FD77d63e93d4f9A4AF"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -9047,7 +9340,13 @@
      "tvl": 1217113
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:stakewise:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7533,
    "components": {
@@ -9059,24 +9358,75 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": null,
+    "note": "StakeWise V3 Genesis Vault. depositAndMintOsToken stakes ETH and mints osETH in one call; exits go through the validator exit queue, so the fork test does not redeem.",
     "appUrl": "https://stakewise.io/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic liquid-staking fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
-     ],
-     "note": "No dedicated fork script. Lido submit on an Ethereum fork is the staking recipe."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:stakewise:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:stakewise:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:stakewise:deposit",
+      "section": "actions",
+      "chain": "ethereum",
+      "title": "Stake ETH and mint osETH (StakeWise V3)",
+      "action": "Genesis Vault `depositAndMintOsToken` with native ETH, minting osETH worth half the deposit. Pre-checks: no pending keeper state update and room under `capacity()`",
+      "assertion": "vault `totalAssets` rises by exactly the deposit, the `Deposited` event reports assets = deposit and shares = the user's gain (within 1 wei of the pre-tx `convertToShares`), and the user holds exactly the requested osETH, which equals the vault's osToken position. Exits use the validator exit queue, so there is no redeem",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.1",
+        "unit": "ETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Genesis Vault",
+      "address": "0xAC0F906E433d58FA868F936E8A43230473652885",
+      "doc": "https://docs.stakewise.io/contracts/networks/Mainnet",
+      "explorerUrl": "https://etherscan.io/address/0xAC0F906E433d58FA868F936E8A43230473652885"
+     },
+     {
+      "chain": "ethereum",
+      "label": "osETH (OsToken)",
+      "address": "0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38",
+      "doc": "https://docs.stakewise.io/contracts/networks/Mainnet",
+      "explorerUrl": "https://etherscan.io/address/0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38"
+     },
+     {
+      "chain": "ethereum",
+      "label": "OsTokenVaultController",
+      "address": "0x2A261e60FB14586B474C208b1B7AC6D0f5000306",
+      "doc": "https://docs.stakewise.io/contracts/networks/Mainnet",
+      "explorerUrl": "https://etherscan.io/address/0x2A261e60FB14586B474C208b1B7AC6D0f5000306"
+     },
+     {
+      "chain": "ethereum",
+      "label": "VaultsRegistry",
+      "address": "0x3a0008a588772446f6e656133C2D5029CC4FC20E",
+      "doc": "https://docs.stakewise.io/contracts/networks/Mainnet",
+      "explorerUrl": "https://etherscan.io/address/0x3a0008a588772446f6e656133C2D5029CC4FC20E"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -41529,6 +41879,11 @@
       "name": "simulate:concrete:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:concrete:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -41542,24 +41897,60 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Deposit only",
+     "note": "Concrete Earn V2 vaults are async: deposit is ERC-4626, withdrawal is an epoch queue processed about weekly, so the fork test deposits only. It uses ctDefiUSDT; the largest vault, ctDeltaWeETH, had getDepositLimits() of 0 on 2026-10-23 (deposits revert AssetAmountOutOfBounds).",
      "appUrl": "https://app.concrete.xyz",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:concrete:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:concrete:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:concrete:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit USDT (Concrete ctDefiUSDT)",
+       "assertion": "**Deposit only.** USDT into Concrete ctDefiUSDT (Earn V2 async vault, ERC-4626 deposit). Pre-check: the amount sits inside `getDepositLimits()` (outside is a labelled read). Asserts the vault pulled exactly the amount, the shares equal the pre-tx `previewDeposit`, and the `Deposit` event reports the same assets and shares. Withdrawal is an epoch queue processed about weekly, so there is no redeem",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "200",
+         "unit": "USDT"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Concrete Decentralized Finance USDT (ctDefiUSDT)",
+       "address": "0x0E609b710da5e0AA476224b6c0e5445cCc21251E",
+       "doc": "https://apy.api.concrete.xyz/v1/vault:tvl/all",
+       "explorerUrl": "https://etherscan.io/address/0x0E609b710da5e0AA476224b6c0e5445cCc21251E"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Concrete Delta WeETH (ctDeltaWeETH)",
+       "address": "0xB9DC54c8261745CB97070CeFBE3D3d815aee8f20",
+       "doc": "https://apy.api.concrete.xyz/v1/vault:tvl/all",
+       "explorerUrl": "https://etherscan.io/address/0xB9DC54c8261745CB97070CeFBE3D3d815aee8f20"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -41892,7 +42283,13 @@
       "tvl": 2717
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:clearstar:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7729,
     "components": {
@@ -41904,24 +42301,60 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://clearstar.xyz",
-     "chain": "ethereum",
-     "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "mode": "fork",
+     "label": null,
+     "note": "Clearstar cbAssets Vault (Morpho Vault V2) on Base, Clearstar's largest vault. V2 maxDeposit is 0 by design, so the pre-check is that all four gates are unset.",
+     "appUrl": "https://app.morpho.org/base/vault/0x91C056B6d4311a743614FBc03ac32d4E6A2d3a3c/clearstar-cbassets-vault",
+     "chain": "base",
+     "rpcEnv": "BASE_RPC_URL",
+     "commands": [
+      "CHAIN=base node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=base node scripts/startFork.js",
+      "BASE_RPC_URL=http://127.0.0.1:8545 npm run fork:clearstar:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:clearstar:deposit",
+       "action": "deposit",
+       "chain": "base",
+       "rpcEnv": "BASE_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:clearstar:deposit",
+       "section": "vaults",
+       "chain": "base",
+       "title": "Deposit and redeem (Clearstar cbAssets, Base)",
+       "assertion": "USDC into Clearstar cbAssets Vault on Base, a Morpho Vault V2, then redeem. Pre-check: all four V2 gates unset (a set gate makes it a labelled read). Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "base",
+       "label": "Clearstar cbAssets Vault (USDC, Vault V2)",
+       "address": "0x91C056B6d4311a743614FBc03ac32d4E6A2d3a3c",
+       "doc": "https://app.morpho.org/base/vault/0x91C056B6d4311a743614FBc03ac32d4E6A2d3a3c/clearstar-cbassets-vault",
+       "explorerUrl": "https://basescan.org/address/0x91C056B6d4311a743614FBc03ac32d4E6A2d3a3c"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Clearstar USDC Core (Vault V2)",
+       "address": "0x69A238Ae7ebeb3c53ff3B544E48B96a2142fc284",
+       "doc": "https://app.morpho.org/ethereum/vault/0x69A238Ae7ebeb3c53ff3B544E48B96a2142fc284/clearstar-usdc-core",
+       "explorerUrl": "https://etherscan.io/address/0x69A238Ae7ebeb3c53ff3B544E48B96a2142fc284"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -41983,7 +42416,13 @@
       "tvl": 1
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:hyperithm:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7696,
     "components": {
@@ -41995,24 +42434,60 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.hyperithm.com",
+     "mode": "fork",
+     "label": null,
+     "note": "Hyperithm USDC Apex (Morpho Vault V2) on Ethereum. Most of the row's TVL is the Monad vault of the same name, listed for verification; the Ethereum vault runs the same V2 code.",
+     "appUrl": "https://app.morpho.org/ethereum/vault/0x093272C07700d3cA5301C3Bf9B3A392624179E2F/hyperithm-usdc-apex",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:hyperithm:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:hyperithm:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:hyperithm:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit and redeem (Hyperithm USDC Apex)",
+       "assertion": "USDC into Hyperithm USDC Apex on Ethereum, a Morpho Vault V2, then redeem. Same gate pre-check and round-trip assertions as RockawayX. Most of the row's TVL is the Monad vault of the same name",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Hyperithm USDC Apex (Vault V2)",
+       "address": "0x093272C07700d3cA5301C3Bf9B3A392624179E2F",
+       "doc": "https://app.morpho.org/ethereum/vault/0x093272C07700d3cA5301C3Bf9B3A392624179E2F/hyperithm-usdc-apex",
+       "explorerUrl": "https://etherscan.io/address/0x093272C07700d3cA5301C3Bf9B3A392624179E2F"
+      },
+      {
+       "chain": "monad",
+       "label": "Hyperithm USDC Apex (Vault V2)",
+       "address": "0x78999cc96d2Ba0341588C60CcB0E91c6C33CF371",
+       "doc": "https://app.morpho.org/monad/vault/0x78999cc96d2Ba0341588C60CcB0E91c6C33CF371/hyperithm-usdc-apex",
+       "explorerUrl": "https://monadvision.com/address/0x78999cc96d2Ba0341588C60CcB0E91c6C33CF371"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -42156,7 +42631,13 @@
       "tvl": 19197
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:euler:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7611,
     "components": {
@@ -42168,24 +42649,53 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Euler Earn vault (Ethereum)",
+     "note": "K3 Capital curates K3 Capital Earn USDC, the Euler Earn vault that fork:euler:deposit deposits into and redeems from. Most of the row's TVL is on Monad, which this test does not cover.",
      "appUrl": "https://k3.capital",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:euler:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:euler:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:euler:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit and redeem (Euler Earn)",
+       "assertion": "USDC into Euler Earn K3 Capital Earn USDC (first non-deprecated Ethereum vault in euler-labels), then redeem",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "1000",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "K3 Capital Earn USDC (Euler Earn)",
+       "address": "0x3B4802FDb0E5d74aA37d58FD77d63e93d4f9A4AF",
+       "doc": "https://github.com/euler-xyz/euler-labels/blob/master/1/earn-vaults.json",
+       "explorerUrl": "https://etherscan.io/address/0x3B4802FDb0E5d74aA37d58FD77d63e93d4f9A4AF"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -50394,7 +50904,13 @@
       "tvl": 1217113
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:stakewise:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7533,
     "components": {
@@ -50406,24 +50922,75 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": null,
+     "note": "StakeWise V3 Genesis Vault. depositAndMintOsToken stakes ETH and mints osETH in one call; exits go through the validator exit queue, so the fork test does not redeem.",
      "appUrl": "https://stakewise.io/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic liquid-staking fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
-      ],
-      "note": "No dedicated fork script. Lido submit on an Ethereum fork is the staking recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:stakewise:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:stakewise:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:stakewise:deposit",
+       "section": "actions",
+       "chain": "ethereum",
+       "title": "Stake ETH and mint osETH (StakeWise V3)",
+       "action": "Genesis Vault `depositAndMintOsToken` with native ETH, minting osETH worth half the deposit. Pre-checks: no pending keeper state update and room under `capacity()`",
+       "assertion": "vault `totalAssets` rises by exactly the deposit, the `Deposited` event reports assets = deposit and shares = the user's gain (within 1 wei of the pre-tx `convertToShares`), and the user holds exactly the requested osETH, which equals the vault's osToken position. Exits use the validator exit queue, so there is no redeem",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.1",
+         "unit": "ETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Genesis Vault",
+       "address": "0xAC0F906E433d58FA868F936E8A43230473652885",
+       "doc": "https://docs.stakewise.io/contracts/networks/Mainnet",
+       "explorerUrl": "https://etherscan.io/address/0xAC0F906E433d58FA868F936E8A43230473652885"
+      },
+      {
+       "chain": "ethereum",
+       "label": "osETH (OsToken)",
+       "address": "0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38",
+       "doc": "https://docs.stakewise.io/contracts/networks/Mainnet",
+       "explorerUrl": "https://etherscan.io/address/0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38"
+      },
+      {
+       "chain": "ethereum",
+       "label": "OsTokenVaultController",
+       "address": "0x2A261e60FB14586B474C208b1B7AC6D0f5000306",
+       "doc": "https://docs.stakewise.io/contracts/networks/Mainnet",
+       "explorerUrl": "https://etherscan.io/address/0x2A261e60FB14586B474C208b1B7AC6D0f5000306"
+      },
+      {
+       "chain": "ethereum",
+       "label": "VaultsRegistry",
+       "address": "0x3a0008a588772446f6e656133C2D5029CC4FC20E",
+       "doc": "https://docs.stakewise.io/contracts/networks/Mainnet",
+       "explorerUrl": "https://etherscan.io/address/0x3a0008a588772446f6e656133C2D5029CC4FC20E"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -64658,7 +65225,13 @@
       "tvl": 22
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:near-bridge:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.8008,
     "components": {
@@ -64670,24 +65243,53 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "DefiLlama's NEAR Bridge row is the Omni Bridge. initTransfer locks ETH on Ethereum and emits InitTransfer; NEAR verifies it through its Ethereum light client, which a single Ethereum fork cannot run.",
      "appUrl": "https://near.org/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-      ],
-      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:near-bridge:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:near-bridge:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:near-bridge:deposit",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Bridge ETH to NEAR (Omni Bridge)",
+       "assertion": "Omni Bridge `initTransfer(address(0), amount, 0, 0, \"near:…\", \"\")` with native ETH. The bridge holds exactly the deposit more ETH and emits `InitTransfer` with the same sender, token, amount, zero fees and recipient. The NEAR light client side is off this machine",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.05",
+         "unit": "ETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Omni Bridge",
+       "address": "0xe00c629aFaCCb0510995A2B95560E446A24c85B9",
+       "doc": "https://github.com/Near-One/omni-bridge#contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0xe00c629aFaCCb0510995A2B95560E446A24c85B9"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -65511,7 +66113,13 @@
       "tvl": 1983719
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:portal:transfer",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7656,
     "components": {
@@ -65523,24 +66131,60 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "Portal is the Wormhole Token Bridge (Wrapped Token Transfers). wrapAndTransferETH keeps WETH in the bridge and the Core Contract publishes the transfer; the Guardians sign it and the destination redeems it off this machine.",
      "appUrl": "https://portalbridge.com",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-      ],
-      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:portal:transfer"
+     ],
+     "tests": [
+      {
+       "script": "fork:portal:transfer",
+       "action": "transfer",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:portal:transfer",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Bridge ETH via Portal (Wormhole)",
+       "assertion": "Token Bridge `wrapAndTransferETH` toward Wormhole chain 23 (Arbitrum). The bridge's WETH rises by exactly the amount and the Core Contract's `LogMessagePublished` carries a type-1 transfer payload with the amount at 8 decimals, WETH on chain 2 and the recipient. Guardian signing and redemption are off this machine",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.05",
+         "unit": "ETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Token Bridge (WTT)",
+       "address": "0x3ee18B2214AFF97000D974cf647E7C347E8fa585",
+       "doc": "https://wormhole.com/docs/products/reference/contract-addresses/",
+       "explorerUrl": "https://etherscan.io/address/0x3ee18B2214AFF97000D974cf647E7C347E8fa585"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Wormhole Core",
+       "address": "0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B",
+       "doc": "https://wormhole.com/docs/products/reference/contract-addresses/",
+       "explorerUrl": "https://etherscan.io/address/0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -65602,7 +66246,13 @@
       "tvl": 3365778
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:ccip:send",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.762,
     "components": {
@@ -65614,24 +66264,74 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "CCIP Router ccipSend of LINK to Base. LINK uses a LockReleaseTokenPool on Ethereum; the DON commits and executes on Base, which a single Ethereum fork cannot verify. LINK's Ethereum pool does not list Arbitrum (ChainNotAllowed on 2026-10-23).",
      "appUrl": "https://chain.link/cross-chain",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-      ],
-      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:ccip:send"
+     ],
+     "tests": [
+      {
+       "script": "fork:ccip:send",
+       "action": "send",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:ccip:send",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Send LINK via Chainlink CCIP",
+       "assertion": "Router `ccipSend` of LINK to Base, fee in ETH. `TokenAdminRegistry.getPool(LINK)` must be the documented LockReleaseTokenPool. The user's LINK drops and the pool's LINK rises by exactly the amount, the user pays exactly `getFee()` in ETH, and the lane's OnRamp logs the message. DON execution on Base is off this machine",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "1",
+         "unit": "LINK"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Router",
+       "address": "0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D",
+       "doc": "https://docs.chain.link/ccip/directory/mainnet/chain/mainnet",
+       "explorerUrl": "https://etherscan.io/address/0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D"
+      },
+      {
+       "chain": "ethereum",
+       "label": "TokenAdminRegistry",
+       "address": "0xb22764f98dD05c789929716D677382Df22C05Cb6",
+       "doc": "https://docs.chain.link/ccip/directory/mainnet/chain/mainnet",
+       "explorerUrl": "https://etherscan.io/address/0xb22764f98dD05c789929716D677382Df22C05Cb6"
+      },
+      {
+       "chain": "ethereum",
+       "label": "OnRamp (Ethereum lanes incl. Base)",
+       "address": "0xc3423F3FB30857D9C14717b119884b1B63d250b7",
+       "doc": "https://docs.chain.link/ccip/directory/mainnet/chain/mainnet",
+       "explorerUrl": "https://etherscan.io/address/0xc3423F3FB30857D9C14717b119884b1B63d250b7"
+      },
+      {
+       "chain": "ethereum",
+       "label": "LINK LockReleaseTokenPool",
+       "address": "0x1B7492C3bD23A4aDB448710e4275FF14A5288932",
+       "doc": "https://docs.chain.link/ccip/directory/mainnet/token/LINK",
+       "explorerUrl": "https://etherscan.io/address/0x1B7492C3bD23A4aDB448710e4275FF14A5288932"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -79185,7 +79885,7 @@
    "Domains": 14,
    "Coins Tracker": 2
   },
-  "forkInTop200": 35,
-  "apiOnlyInTop200": 165
+  "forkInTop200": 43,
+  "apiOnlyInTop200": 157
  }
 }
