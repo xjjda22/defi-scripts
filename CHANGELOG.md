@@ -5,9 +5,32 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 
 ## [2026-10-21]
 
-Playground batch built on 2026-10-19 (that run stopped before opening a PR), reviewed and re-verified on 2026-10-21. No merge yet.
+Mon/Wed/Fri pass: health fixes, the playground batch built on 2026-10-19, and claims from 2026-10-15 21:00Z to 2026-10-20 ~21:00Z. Squash-merged on 2026-10-21 as [#31](https://github.com/xjjda22/defi-scripts/pull/31) (health) and [#32](https://github.com/xjjda22/defi-scripts/pull/32) (playground). The claims batch stopped before its PR that day; it was re-audited and shipped on 2026-10-23 as [#33](https://github.com/xjjda22/defi-scripts/pull/33) (claims).
+
+### Fixed
+
+- **Aerodrome / Velodrome smokes**: DefiLlama retired the `aerodrome` and `velodrome` parent slugs (both are now children of `aero-protocol`). `analytics:aerodrome:dex` / `simulate:aerodrome:smoke` read `aerodrome-slipstream`, `analytics:velodrome:dex` / `simulate:velodrome:smoke` read `velodrome-v3`, and `analytics:amm:aggregate` lists the four `aero-protocol` children.
+- **`simulate:eth:tvl-drivers:smoke`** looks for Lido / Aave / Spark / Eigen among inflows *and* outflows; on 2026-10-21 all of them were outflows and the inflow-only check failed.
+- Health baseline: 134 smokes, 131 PASS on main before the fix, 3 fixed. All 95 DefiLlama slugs in `package.json` return 200.
+
+### Changed
+
+- `run.js`: receipt polling before `wait()` and a 30% gas pad on estimates (Anvil 1.8). `runtime.js`: a fresh account wraps the native gas token when a chain has no WETH whale (Monad).
+- `fork:puffer:deposit` checks the pufETH AccessManager first and FAILs with `targetClosed=true` instead of sending a tx that will revert.
+- After-reads in the bridge flows are pinned to the receipt block (ethers caches `getBalance("latest")`).
+- Showcase: additive `testing` stamps for the new fork rows and the Puffer note. Ranking, scores, order and `generatedAt` unchanged. Stats: `forkInTop200` 28→35, `apiOnlyInTop200` 172→165.
+- `dexProtocolMonitor.js`: optional `DEFILLAMA_MONTHS=N` prints UTC calendar-month totals of fees/revenue and/or volume from the daily charts (for "September revenue", "Q3 volume", "12-month revenue" claims). Off unless set; existing scripts unchanged.
+- `smokeDefiLlamaProtocol.js`: optional `SMOKE_FEES_DATATYPE=dailyFees` checks 24h fees instead of 24h revenue (Propr's daily net revenue can be negative). Default unchanged.
 
 ### Added
+
+**Claims** (26 claim monitors incl. the `chains` board, 52 scripts; sources and live numbers in the catalog cards and `docs/01`)
+- Fees / revenue: `analytics:papertrade:revenue`, `analytics:propr:revenue`, `analytics:stonkfun:revenue`, `analytics:collector-crypt:revenue`, `analytics:pons:revenue`, `analytics:pumpfun:app`, `analytics:tether:revenue`, `analytics:tron:revenue`, `analytics:uniswap:revenue`, `analytics:hyperliquid:fees`, `analytics:fluid:lending`, plus the `analytics:chains:fees` board (Ethereum, Tron, ICP, Celestia, Algorand).
+- TVL / volume: `analytics:popdex:tvl`, `analytics:plume:vaults`, `analytics:metric:dex`, `analytics:hypercall:perps`, `analytics:umia:launchpad`, `analytics:near:intents-volume`, `analytics:solana:chain`, `analytics:starknet:chain`, `analytics:usdsui:supply`.
+- Morpho: `analytics:morpho:base-btc` (BTC-collateral borrows on Base) and `analytics:fx:morpho-vault` (RockawayX f(x) Ecosystem USDC Vault V2 `0x2cA22cb25558fa2018ecb1CE4eD8AF92Ee7ea423`, EIP-55, on-chain code, `asset()` = USDC).
+- Exploits from DefiLlama `/hacks` dated in window: `analytics:qubic:exploit`, `analytics:affluent:exploit`, `analytics:alpscon:exploit`.
+- Each has a `simulate:<name>:smoke`. New helpers: `chainFeesBoard.js`, `morphoCollateralBorrowMonitor.js`, `llamaStablecoinMonitor.js`; `fetchFeesChart` / `fetchVolumeChart` / `monthlyTotals` / `trailingWindowTotals` in `defiLlamaProtocol.js`.
+- New registry ids: propr, popdex, hypercall, metric, affluent, fx, plume, usdsui, tron, solana, qubic, stonkfun, collector-crypt, umia, pons, alpscon, and the `chains` board. Notes added to papertrade, fluid, near, tether, uniswap, hyperliquid, morpho, pumpfun, starknet.
 
 **Playground**
 - Fork tests + contracts: World Chain (`fork:world-chain:deposit`), Robinhood Chain (`fork:robinhood:deposit`), Starknet / StarkGate (`fork:starknet:deposit`), Polygon PoS (`fork:polygon:deposit`), Lighter (`fork:lighter-bridge:deposit`), Binance wBETH (`fork:wbeth:deposit`), Meta Pool spETH (`fork:meta-pool:deposit`).
@@ -15,33 +38,47 @@ Playground batch built on 2026-10-19 (that run stopped before opening a PR), rev
 - `src/simulation/fork/lstDepositFlows.js` (wBETH, spETH) and new Orbit / OP / StarkGate / Polygon / Lighter flows in `bridgeFlows.js`.
 - Coverage among ~101 forkable top-200 rows: fork features **28→35**, contracts **34→42**.
 
-### Changed
+### Decisions
 
-- `run.js`: receipt polling before `wait()` and a 30% gas pad on estimates (Anvil 1.8). `runtime.js`: a fresh account wraps native gas token when a chain has no WETH whale (Monad).
-- `fork:puffer:deposit` checks the pufETH AccessManager first and FAILs with `targetClosed=true` instead of sending a tx that will revert.
-- After-reads in the bridge flows are pinned to the receipt block (ethers caches `getBalance("latest")`).
-- Showcase: additive `testing` stamps for the new rows and the Puffer note. Ranking, scores, order and `generatedAt` unchanged. Stats: `forkInTop200` 28→35, `apiOnlyInTop200` 172→165.
+- Claims are counted against the list each X post was read in (`x-list-claims-2026-10-19-browser.md`, `x-list-claims-2026-10-21-browser.md`); X posts were re-opened through the public tweet endpoint and each states its claim inside the window.
+- Covered already, no new script: Robinhood Chain TVL ATH / DEX volume / app revenue (`analytics:robinhood:chain`), Monad ~$1B TVL (`analytics:monad:dex`), Zama $100M+ on Morpho (`analytics:zama:privacy`), Papertrade TVL (`analytics:papertrade:perps`), Meteora MET-staker fees (`analytics:meteora:dex`).
+- Skipped: Drift ($295M, 2026-04-01), Kelp ($293M, 2026-04-18) and Balancer ($128M, 2025-11-03) exploit figures are historical recaps; Aave V4 tokenized-stock deposits on Base (DefiLlama `aave-v4` has no Base row and the per-asset Spoke split is not readable here); LI.FI Intents (not broken out on DefiLlama); Injective "$24M since 2024" (no since-2024 window); JTX TWAP, Standard buybacks, ether.fi card spend, Pendle RWA share, Optimum TVB (not in public data the repo reads); DefiLlama top lists, macro stablecoin / DeFi TVL moves, token burns, launches without a number, hardware-wallet theft, Pirate Chain (no amount) and Coffer ($0.70).
+- Fluid's "$1.77B active loans" is ~$672M on DefiLlama `fluid-lending`; the catalog note says the claim likely counts Jupiter Lend. Collector Crypt's "$24.3M gross revenue" is DefiLlama 24h *volume*; fees are ~$2.1M. Umia's "$300k/day" is ~$130K/day on DefiLlama. These are recorded, not hidden.
 
-### Verified (2026-10-21, live Anvil 1.8.5 forks, public RPCs)
+### Verified (2026-10-21, live)
 
-| Feature | Result |
+| Check | Result |
 | --- | --- |
-| `fork:world-chain:deposit` | PASS locked ETH +0.05, `ETHDepositInitiated` |
-| `fork:robinhood:deposit` | PASS Bridge ETH +0.05, `InboxMessageDelivered` |
-| `fork:starknet:deposit` | PASS bridge ETH +0.05, fee 0.0001, `Deposit` + `LogMessageToL2` |
-| `fork:polygon:deposit` | PASS EtherPredicate ETH +0.05, `LockedEther` |
-| `fork:lighter-bridge:deposit` | PASS 20 USDC moved into Lighter, contract log |
-| `fork:wbeth:deposit` | PASS 0.090184 wBETH for 0.1 ETH = `exchangeRate()` 1.10884 exactly |
-| `fork:meta-pool:deposit` | PASS 0.087268 spETH, custody ETH +0.1, `Deposit` event matches |
-| Full `fork:all` on this branch | 74 PASS, 2 FAIL (Puffer vault closed on-chain; Velodrome timed out on `mainnet.optimism.io`, PASS from publicnode) |
-| Full `fork:all` on main (same day) | 63 PASS, 6 FAIL. The branch's `run.js`/`runtime.js` changes fix Monad (no WETH whale) and Lista / Venus / Lista DAO ("could not coalesce error") |
-
-Every new address is EIP-55, has code on Ethereum, and matches the linked official source (World docs, Robinhood docs, StarkGate registry, Starknet docs, Polygon `index.json`, Lighter API docs, Meta Pool docs, LayerZero deployments API). wBETH was confirmed on-chain (`symbol()` = wBETH).
+| Health smokes `simulate:aerodrome:smoke`, `simulate:velodrome:smoke`, `simulate:eth:tvl-drivers:smoke` | PASS: Aerodrome Slipstream $219.70M, Velodrome V3 $20.11M, TVL drivers OK |
+| Playground forks (Anvil 1.8.5, Ethereum publicnode, block 26236523) | 7/7 new PASS: World Chain, Robinhood, Starknet, Polygon, Lighter, wBETH (0.090184 for 0.1 ETH), Meta Pool (0.087268 spETH); Puffer FAIL `targetClosed=true` (known) |
+| Fork regression on the playground branch (Ethereum + BSC) | 6/6 PASS: uniswap v3, aave supply, morpho supply, kelp deposit, venus supply, lista-dao deposit |
+| 26 claim monitors + 26 smokes | 52/52 exit 0 |
+| Papertrade revenue | 7d $28.54M, all-time $61.80M (launched 2026-10-10) |
+| Propr fees May–Oct | $5.03M (revenue $1.55M) |
+| PopDEX / Plume Vaults TVL | $71.80M / $226.99M |
+| Metric V1 volume | 30d $2.97B, all-time $4.37B |
+| Hypercall Perps volume | 30d $5.91M |
+| Fluid Lending | borrowed $672.02M, 24h revenue $18.3K |
+| StonkFun / Collector Crypt / Pons | 30d revenue $17.94M / 24h fees $2.12M, 24h volume $24.36M / 24h revenue $67.95K |
+| NEAR Intents volume | Jul $2.21B, Aug $2.78B, Sep $4.80B |
+| Tether 12-month fees | $5.75B |
+| Tron / Uniswap / Hyperliquid | Tron 30d $23.66M; Uniswap Sep revenue $15.49M; Hyperliquid Sep fees $91.33M |
+| Chain fees board | ETH 30d +48.74%; ICP 30d $183.84K; Celestia 24h $95; Algorand 24h $15 |
+| Morpho Base BTC-collateral borrows | $1.61B (cbBTC/USDC $1.60B at 5.19%) |
+| f(x) Ecosystem USDC vault | $13.97M, 6.81% net APY |
+| pump.fun App fees Aug–Oct | $20.20M |
+| Solana / Starknet chain TVL | $5.97B / $157.90M |
+| USDsui supply | $78.59M (ATH $80.06M on 2026-10-15) |
+| Exploits (`/hacks`) | Qubic $1.30M (10-17), Affluent $1.05M (10-16), AlpsCon $152.8K (10-19) |
+| Claims re-audit (2026-10-23, before merge) | all 31 X posts open via the public tweet endpoint, dated 10-16..10-20 UTC; `/hacks` rows unchanged; 52/52 claim scripts exit 0 again; 186 existing scripts on the touched helpers (`dexProtocolMonitor.js`, `smokeDefiLlamaProtocol.js`, `defiLlamaProtocol.js`) exit 0. Starknet chain TVL fell to $42.31M on DefiLlama on 2026-10-22 (was $158.0M on 10-21, inside the claim window); smoke floor $10M still holds |
+| Gates | lint, `catalog:check`, `showcaseCheck`, `node --check`, package.json duplicate-key scan; CI `check` + `fork-suite` green on each PR |
 
 ### Known issues carried forward
 
 - **Puffer**: pufETH `isTargetClosed` is true (2026-10-19 and 2026-10-21), so `fork:puffer:deposit` FAILs until the vault reopens.
+- **Velodrome fork on Optimism**: `fork:velodrome:swap` times out on the public `mainnet.optimism.io` RPC; it PASSes against publicnode.
 - **`anvil_deal` is still `Method not found` on Anvil 1.8.5**, and `anvil_dealERC20` finds no slot for USDC.
+- **`308faf0` showcase ranking refresh** still unmerged on `fix/gap-audit-2026-10-10`.
 - Perps fork coverage stays closed.
 
 ## [2026-10-16]
