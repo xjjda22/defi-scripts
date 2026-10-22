@@ -30,10 +30,12 @@ function describeLlamaMonitor(command) {
   const fees = envValue(command, "DEFILLAMA_FEES") === "1" ? " + fees/revenue (24h/7d/30d)" : "";
   const monthsRaw = envValue(command, "DEFILLAMA_MONTHS");
   const months = monthsRaw ? ` + monthly totals (last ${monthsRaw} months)` : "";
+  const datesRaw = envValue(command, "DEFILLAMA_TVL_DATES");
+  const dates = datesRaw ? ` + TVL on ${datesRaw.split(",").join(" / ")}` : "";
   const oi = envValue(command, "DEFILLAMA_OI") === "1" ? " + open interest (total24h)" : "";
   const volumeKind = envValue(command, "DEFILLAMA_VOLUME");
   const volume = volumeKind ? ` + ${volumeKind} volume (24h/7d/30d)` : "";
-  return `DefiLlama TVL + TVL by chain${fees}${oi}${volume}${months} (\`${slug}\`)`;
+  return `DefiLlama TVL + TVL by chain${dates}${fees}${oi}${volume}${months} (\`${slug}\`)`;
 }
 
 function describeLlamaSmoke(command) {

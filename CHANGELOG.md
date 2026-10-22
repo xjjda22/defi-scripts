@@ -3,6 +3,81 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-10-23]
+
+Mon/Wed/Fri pass: the 2026-10-21 claims backlog, the playground batch, a clean health check, and claims from 2026-10-20 21:00Z to 2026-10-22 ~21:00Z. Squash-merged on 2026-10-23 as [#33](https://github.com/xjjda22/defi-scripts/pull/33) (2026-10-21 claims, `9af21a2`), [#34](https://github.com/xjjda22/defi-scripts/pull/34) (playground, `ec16e2f`) and [#35](https://github.com/xjjda22/defi-scripts/pull/35) (claims).
+
+### Fixed
+
+- **README `## Claim monitors (2026-10-21)` restored.** The playground squash (#34) was cut before #33 landed and dropped that section from `README.md`; #35 puts the 26-row table back under the new 2026-10-23 section. `docs/01` and this changelog were not affected.
+- Nothing broken on health: no slug/RPC repair PR.
+
+### Changed
+
+- `dexProtocolMonitor.js`: optional `DEFILLAMA_TVL_DATES=YYYY-MM-DD,...` prints the last daily TVL point on or before each UTC date and the first-to-last change (for "TVL grew X% in Q3" claims). Off unless set; existing scripts unchanged.
+- Playground: new shared Morpho Vault V2 helper (RockawayX folded into it) and a LINK whale in `runtime.js`.
+- Showcase: additive `testing` stamps for the new fork rows only. Ranking, scores, order and `generatedAt` unchanged. Stats: `forkInTop200` 35→43, `apiOnlyInTop200` 165→157.
+
+### Added
+
+**Claims** (11 monitors, 22 scripts; sources and live numbers in the README table, the catalog cards and `docs/01`)
+- Incidents: `analytics:swell:incident` (swETH / rswETH rates on-chain vs pre-incident 1.133254 / 1.082464, plus the `/hacks` row), `analytics:wax:exploit` (DefiLlama `/hacks`, 2026-10-22).
+- Perps OI / TVL: `analytics:grvt:perps`, `analytics:ondo:perps` (OI + YTD high), `analytics:extended:perps` (TVL by chain).
+- Volume / revenue: `analytics:pancakeswap:aggregator`, `analytics:lighter:revenue` (monthly since April), `analytics:metaplex:revenue`.
+- TVL: `analytics:pendle:tvl` (`DEFILLAMA_TVL_DATES=2026-06-30,2026-09-30`), `analytics:berachain:chain`, `analytics:rnt:lending` (TVL + borrowed).
+- Each has a `simulate:<name>:smoke`. New contract constant `SWELL.swETH` `0xf951E335afb289353dc249e82926178EaC7DEd78` (EIP-55, on-chain code, `symbol()` = swETH). New registry ids: wax, grvt, extended, metaplex, berachain, rnt; notes added to swell, ondo, pancakeswap, pendle, lighter.
+
+**Playground**
+- Fork tests + contracts: NEAR Bridge (`fork:near-bridge:deposit`), Concrete (`fork:concrete:deposit`), Clearstar on Base (`fork:clearstar:deposit`), Hyperithm (`fork:hyperithm:deposit`), Portal (`fork:portal:transfer`), Chainlink CCIP (`fork:ccip:send`), StakeWise V3 (`fork:stakewise:deposit`).
+- Contracts only (documented reason, no fork): K3 Capital (its Ethereum vaults are covered by the existing `fork:euler:deposit`; most K3 TVL is on Monad and not covered).
+- Coverage among ~101 forkable top-200 rows (the build's own count was 104): fork features **35→43**, contracts **42→50**.
+
+### Decisions
+
+- **2026-10-21 claims backlog shipped** as #33: all 52 scripts reran live on 2026-10-23 before merge, none dropped.
+- Claims are counted against the list each X post was read in (`x-list-claims-2026-10-23-browser.md`); X posts were re-opened through the public tweet endpoint and each states its claim inside the window.
+- Covered already, no new script: Papertrade TVL / revenue drops, metric.xyz TVL and volume, Hyperliquid TVL and fees, pump.fun revenue and app traders, Robinhood vs Solana DEX volume, Starknet TVL, Derive V3 notional, Collector Crypt / StonkFun revenue, Plume nOPAL (aggregate in `analytics:plume:vaults`), Algorand fees.
+- Skipped: 79thVault drain (2026-10-07), Sophon (historical); Jupiter YOLO, Grvt / Ondo perp volume (DefiLlama derivatives volume is paywalled, so OI was built instead); Katana, Boros, Paradex RFQ, Exfil, Optimum TVB, Aave V4 tokenized stocks on Base, Aster fee share (no repo-readable number); DefiLlama top lists, macro / CEX / non-DeFi hacks, memes, wallet PnL and token posts.
+- Lighter's Q3 revenue is $9.85M on DefiLlama vs $8.55M in the post (Q2 matches at $7.24M); RNT Lend's "$30M+ market size" is TVL $21.39M + borrowed $9.29M. Recorded, not hidden.
+- Playground skips: Tornado Cash #54 (decision), Ember #68 (mostly Sui / Pharos; out of time), Lombard Vaults #86 (Teller address only from a third-party repo). CCIP sends to Base: the LINK pool does not allow Arbitrum. Concrete uses `ctDefiUSDT` because the `ctDeltaWeETH` deposit limit is 0.
+- Perps fork coverage stays closed. No cloud agent used; claims built locally.
+
+### Verified (2026-10-23, live)
+
+| Check | Result |
+| --- | --- |
+| 2026-10-21 claims (#33) before merge | 52/52 exit 0. Starknet chain TVL $158.0M (10-21) → $42.3M (10-22): Extended moved ~$117M to Arc (now `analytics:extended:perps`) |
+| Health on main `9af21a2` | lint, `catalog:check`, `showcaseCheck` pass; 160/160 `simulate:*:smoke` exit 0; all 116 DefiLlama slugs in `package.json` return 200 |
+| Ethereum forks on main (Anvil 1.8.5) | 12/12 PASS: uniswap v3, aave supply, morpho supply, kelp, world-chain, robinhood, starknet, polygon, lighter-bridge, wbeth, meta-pool, puffer (0.046 pufETH; vault reopened) |
+| Playground forks (#34) | NEAR Bridge: bridge ETH +0.05, `InitTransfer` matches. Concrete: 200 USDT → 187.076647 shares = `previewDeposit`. Clearstar (Base): 100 USDC round trip. Hyperithm: 100 USDC → 93.85 shares → redeemed. Portal: WETH +0.05, message amount matches. CCIP: 1 LINK to Base, fee = `getFee` 0.000214364218448937 ETH. StakeWise V3: vault assets +0.1 ETH, 0.0462323 osETH minted |
+| Fork regression on the playground branch | 6/6 PASS: rockawayx, steakhouse, arbitrum, lighter-bridge, wbeth, meta-pool |
+| 11 claim monitors + 11 smokes | 22/22 exit 0 |
+| Swell incident | swETH 1.202970 (+6.15% vs 1.133254), rswETH 1.137680 (+5.10% vs 1.082464); `/hacks` row 2026-10-21, no amount |
+| WAX bridge exploit (`/hacks`) | $90.5K (2026-10-22) |
+| Grvt / Ondo Perps OI | $451.02M (TVL $33.65M) / $110.81M (YTD high 10-22) |
+| Extended TVL | $114.26M: Arc $114.10M, Starknet ~$128 |
+| PancakeSwap Aggregator | 30d volume $1.22B |
+| Pendle V2 TVL | $942.01M (06-30) → $1.26B (09-30), +33.3%; now $1.05B |
+| Lighter revenue | Q2 $7.24M, Q3 $9.85M (+36%) |
+| Metaplex | 30d revenue $181.63K ≈ $2.21M/yr |
+| Berachain / RNT Lend | chain TVL $33.77M (-6.1% 30d) / TVL $21.39M + borrowed $9.29M |
+| Gates | lint, `catalog:check`, `showcaseCheck`, `node --check`, package.json duplicate-key scan; CI `check` green on each PR |
+
+### Known issues carried forward
+
+- **CI `fork-suite` skips the forks**: the repo has no RPC secret, so fork tests are only run locally on Anvil.
+- **X search broke mid-run** ("Something went wrong") on 2026-10-23; Inner Circle CT and Airdrop? were filled in by connector list searches (keyword-only).
+- **Busy-list coverage is keyword-only** (Airdrop?, Inner Circle CT); posts without a keyword are not scanned.
+- **Swell rates still rising** after the incident, and DefiLlama `/hacks` records no amount.
+- **Pendle +43% Q3 claim** (Alea Research) vs DefiLlama +33.3%.
+- **Playground depth**: ~58 forkable top-200 rows still have no fork test.
+- **`anvil_deal` is still `Method not found` on Anvil 1.8.5**, and `anvil_dealERC20` finds no slot for USDC.
+- **Anvil is not on the default `PATH`** on the box; fork runs need the Foundry bin dir added.
+- **Velodrome fork on Optimism**: `fork:velodrome:swap` times out on the public `mainnet.optimism.io` RPC; it PASSes against publicnode.
+- **`308faf0` showcase ranking refresh** still unmerged on `fix/gap-audit-2026-10-10`.
+- Perps fork coverage stays closed.
+- Resolved: **Puffer** `fork:puffer:deposit` PASSes again (vault reopened), removed from this list.
+
 ## [2026-10-21]
 
 Mon/Wed/Fri pass: health fixes, the playground batch built on 2026-10-19, and claims from 2026-10-15 21:00Z to 2026-10-20 ~21:00Z. Squash-merged on 2026-10-21 as [#31](https://github.com/xjjda22/defi-scripts/pull/31) (health) and [#32](https://github.com/xjjda22/defi-scripts/pull/32) (playground). The claims batch stopped before its PR that day; it was re-audited and shipped on 2026-10-23 as [#33](https://github.com/xjjda22/defi-scripts/pull/33) (claims).

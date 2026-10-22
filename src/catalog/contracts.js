@@ -710,6 +710,8 @@ module.exports = {
   },
   SWELL: {
     rswETH: "0xFAe103DC9cf190eD75350761e95403b7b8aFa6c0",
+    // swETH LST on Ethereum (Etherscan "Swell Network: swETH Token"; DefiLlama dimension-adapters fees/swell.ts).
+    swETH: "0xf951E335afb289353dc249e82926178EaC7DEd78",
   },
   PUFFER: {
     pufETH: "0xD9A442856C234a39a81a089C06451EBAa4306a72",
