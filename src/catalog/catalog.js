@@ -28,10 +28,12 @@ function describeLlamaMonitor(command) {
   const slug = envValue(command, "DEFILLAMA_SLUG");
   if (!slug) return null;
   const fees = envValue(command, "DEFILLAMA_FEES") === "1" ? " + fees/revenue (24h/7d/30d)" : "";
+  const monthsRaw = envValue(command, "DEFILLAMA_MONTHS");
+  const months = monthsRaw ? ` + monthly totals (last ${monthsRaw} months)` : "";
   const oi = envValue(command, "DEFILLAMA_OI") === "1" ? " + open interest (total24h)" : "";
   const volumeKind = envValue(command, "DEFILLAMA_VOLUME");
   const volume = volumeKind ? ` + ${volumeKind} volume (24h/7d/30d)` : "";
-  return `DefiLlama TVL + TVL by chain${fees}${oi}${volume} (\`${slug}\`)`;
+  return `DefiLlama TVL + TVL by chain${fees}${oi}${volume}${months} (\`${slug}\`)`;
 }
 
 function describeLlamaSmoke(command) {
@@ -42,7 +44,7 @@ function describeLlamaSmoke(command) {
   const volumeKind = envValue(command, "SMOKE_VOLUME");
   const allowZero = envValue(command, "SMOKE_MIN_TVL_USD") === "0";
   const checks = [allowZero || fees || oi || volumeKind ? "a listing" : "positive TVL"];
-  if (fees) checks.push("positive 24h revenue");
+  if (fees) checks.push(envValue(command, "SMOKE_FEES_DATATYPE") === "dailyFees" ? "positive 24h fees" : "positive 24h revenue");
   if (oi) checks.push("positive open interest");
   if (volumeKind) checks.push(`positive 30d ${volumeKind} volume`);
   const extras = [];
