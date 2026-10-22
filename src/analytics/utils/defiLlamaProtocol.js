@@ -185,6 +185,71 @@ function fetchVolumeSummary(slug, kind, timeoutMs) {
   return fetchLlamaJson(`/summary/${kind}/${encodeURIComponent(slug)}?${q}`, timeoutMs);
 }
 
+/**
+ * Daily fees (or `dataType`, e.g. "dailyRevenue") series for one protocol, chart kept:
+ * `totalDataChart` is `[unixSeconds, usd][]`.
+ * @param {string} slug
+ * @param {string} [dataType]
+ * @param {number} [timeoutMs]
+ */
+function fetchFeesChart(slug, dataType, timeoutMs) {
+  let q = "excludeTotalDataChartBreakdown=true";
+  if (dataType) q += `&dataType=${encodeURIComponent(dataType)}`;
+  return fetchLlamaJson(`/summary/fees/${encodeURIComponent(slug)}?${q}`, timeoutMs);
+}
+
+/**
+ * Daily volume series for one protocol (`kind` "dexs" or "aggregators"), chart kept.
+ * @param {string} slug
+ * @param {"dexs"|"aggregators"} kind
+ * @param {number} [timeoutMs]
+ */
+function fetchVolumeChart(slug, kind, timeoutMs) {
+  const q = "excludeTotalDataChartBreakdown=true";
+  return fetchLlamaJson(`/summary/${kind}/${encodeURIComponent(slug)}?${q}`, timeoutMs);
+}
+
+/**
+ * Sum a daily `[unixSeconds, usd][]` chart by UTC calendar month, newest month last.
+ * Returns the last `months` months (the current month is partial and flagged).
+ * @param {Array<[number, number]>|undefined} chart
+ * @param {number} months
+ * @param {number} [nowMs]
+ * @returns {Array<{ month: string, total: number, days: number, partial: boolean }>}
+ */
+function monthlyTotals(chart, months, nowMs = Date.now()) {
+  if (!Array.isArray(chart) || !Number.isFinite(months) || months <= 0) return [];
+  const byMonth = new Map();
+  for (const p of chart) {
+    if (!Array.isArray(p) || !Number.isFinite(p[0]) || !Number.isFinite(Number(p[1]))) continue;
+    const month = new Date(p[0] * 1000).toISOString().slice(0, 7);
+    const row = byMonth.get(month) || { month, total: 0, days: 0, partial: false };
+    row.total += Number(p[1]);
+    row.days += 1;
+    byMonth.set(month, row);
+  }
+  const current = new Date(nowMs).toISOString().slice(0, 7);
+  const rows = [...byMonth.values()].sort((a, b) => (a.month < b.month ? -1 : 1));
+  for (const r of rows) r.partial = r.month === current;
+  return rows.slice(-months);
+}
+
+/**
+ * Sum the last `days` points of a daily chart and the `days` before that.
+ * @param {Array<[number, number]>|undefined} chart
+ * @param {number} days
+ * @returns {{ last: number, prior: number|null }|null}
+ */
+function trailingWindowTotals(chart, days) {
+  if (!Array.isArray(chart) || !chart.length) return null;
+  const pts = chart.filter(p => Array.isArray(p) && Number.isFinite(p[0]) && Number.isFinite(Number(p[1])));
+  if (!pts.length) return null;
+  const sum = arr => arr.reduce((a, p) => a + Number(p[1]), 0);
+  const last = sum(pts.slice(-days));
+  const priorPts = pts.slice(-2 * days, -days);
+  return { last, prior: priorPts.length === days ? sum(priorPts) : null };
+}
+
 /** Dead-from date, or "deprecated", when DefiLlama marks the listing retired; otherwise null. */
 function llamaDeadLabel(protocol) {
   if (protocol?.deadFrom) return `dead since ${protocol.deadFrom}`;
@@ -251,6 +316,10 @@ module.exports = {
   fetchLlamaProtocols,
   fetchCoinPrices,
   fetchVolumeSummary,
+  fetchFeesChart,
+  fetchVolumeChart,
+  monthlyTotals,
+  trailingWindowTotals,
   llamaDeadLabel,
   fetchHistoricalChainTvl,
   tvlBaseline,

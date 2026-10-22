@@ -15,6 +15,10 @@ const allowZeroTvl = process.env.SMOKE_MIN_TVL_USD === "0";
 const minTvl = parseFloat(process.env.SMOKE_MIN_TVL_USD || "0") || 0;
 // SMOKE_FEES=1: also require a positive 24h revenue from /summary/fees/{slug}?dataType=dailyRevenue
 const checkFees = process.env.SMOKE_FEES === "1";
+// SMOKE_FEES_DATATYPE=dailyFees checks 24h fees instead, for venues whose net revenue can go negative
+// on a given day (e.g. prop firms paying out traders). Default stays dailyRevenue.
+const feesDataType = (process.env.SMOKE_FEES_DATATYPE || "dailyRevenue").trim();
+const feesLabel = feesDataType === "dailyFees" ? "fees" : "revenue";
 // SMOKE_OI=1: also require a positive open interest (`total24h`) from /summary/open-interest/{slug}
 const checkOi = process.env.SMOKE_OI === "1";
 // SMOKE_VOLUME=dexs|aggregators: also require a positive 30d volume from /summary/{kind}/{slug}
@@ -48,10 +52,10 @@ async function main() {
       fail(`TVL ${tvl != null ? `$${tvl.toFixed(0)}` : "missing"} is not above $${minTvl}`);
     }
     if (checkFees) {
-      const r = await fetchFeesSummary(slug, undefined, "dailyRevenue");
+      const r = await fetchFeesSummary(slug, undefined, feesDataType);
       const rev24h = positive(r?.total24h);
-      if (rev24h == null) fail(`No positive 24h revenue on /summary/fees/${slug}`);
-      console.log(chalk.green(`OK: ${name} | 24h revenue $${rev24h.toFixed(0)}`));
+      if (rev24h == null) fail(`No positive 24h ${feesLabel} on /summary/fees/${slug}`);
+      console.log(chalk.green(`OK: ${name} | 24h ${feesLabel} $${rev24h.toFixed(0)}`));
     }
     if (checkOi) {
       const r = await fetchOpenInterestSummary(slug);
