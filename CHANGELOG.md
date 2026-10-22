@@ -5,7 +5,7 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 
 ## [2026-10-21]
 
-Mon/Wed/Fri pass: health fixes, the playground batch built on 2026-10-19, and claims from 2026-10-15 21:00Z to 2026-10-20 ~21:00Z. Squash-merged on 2026-10-21 as [#31](https://github.com/xjjda22/defi-scripts/pull/31) (health) and [#32](https://github.com/xjjda22/defi-scripts/pull/32) (playground). The claims batch stopped before its PR that day; it was re-audited and shipped on 2026-10-23 as [#__CLAIMS_PR__](https://github.com/xjjda22/defi-scripts/pull/__CLAIMS_PR__) (claims).
+Mon/Wed/Fri pass: health fixes, the playground batch built on 2026-10-19, and claims from 2026-10-15 21:00Z to 2026-10-20 ~21:00Z. Squash-merged on 2026-10-21 as [#31](https://github.com/xjjda22/defi-scripts/pull/31) (health) and [#32](https://github.com/xjjda22/defi-scripts/pull/32) (playground). The claims batch stopped before its PR that day; it was re-audited and shipped on 2026-10-23 as [#33](https://github.com/xjjda22/defi-scripts/pull/33) (claims).
 
 ### Fixed
 
