@@ -624,7 +624,26 @@ const PROTOCOLS = [
     notes: [
       "Morpho Vault V2 `maxDeposit` always returns 0, so the test checks the four V2 gates instead. All four were unset on 2026-10-12.",
     ],
+  },  {
+    id: "clearstar",
+    name: "Clearstar",
+    category: "vaults",
+    url: "https://clearstar.xyz",
+    about:
+      "Risk curator on Morpho. The fork test deposits and redeems USDC on Clearstar cbAssets Vault, its largest Morpho Vault V2, on a Base fork.",
+    data: "On-chain RPC",
+    notes: ["All four Morpho Vault V2 gates were unset on 2026-10-23, so the vault is open to any depositor."],
   },
+  {
+    id: "hyperithm",
+    name: "Hyperithm",
+    category: "vaults",
+    url: "https://www.hyperithm.com",
+    about:
+      "Risk curator on Morpho (Monad, Ethereum, Arbitrum). The fork test deposits and redeems USDC on Hyperithm USDC Apex, a Morpho Vault V2 on Ethereum. The larger Monad vault of the same name is listed for verification.",
+    data: "On-chain RPC",
+  },
+
   {
     id: "spark-vaults",
     name: "Spark Savings Vaults",
@@ -671,7 +690,8 @@ const PROTOCOLS = [
     name: "Concrete",
     category: "vaults",
     url: "https://app.concrete.xyz",
-    about: "Onchain capital allocator, mostly Ethereum. Analytics adds fees/revenue.",
+    about:
+      "Onchain capital allocator, mostly Ethereum. Analytics adds fees/revenue. The fork test deposits USDT into ctDefiUSDT (Earn V2 async vault); withdrawals are an epoch queue.",
     notes: [
       "CT token TGE on 2026-09-30; >$1.2B deposits, >$23B cumulative volume, 54,000+ depositors; fixed 1B CT supply ([TokenPost](https://www.tokenpost.com/news/technology/25663), 2026-09-30; [BSC News](https://bsc.news/news/concrete-ct-token-tge-governance), 2026-09-30).",
     ],
@@ -849,7 +869,16 @@ const PROTOCOLS = [
     url: "https://metapool.app",
     about: "Meta Pool spETH on Ethereum (ERC-4626). The fork test calls depositETH and follows the ETH into spETH and the Liquid Unstake Pool. The row's NEAR staking is not forkable here.",
     data: "On-chain RPC",
+  },  {
+    id: "stakewise",
+    name: "StakeWise V3",
+    category: "staking",
+    url: "https://stakewise.io/",
+    about:
+      "StakeWise V3 vaults and osETH. The fork test stakes ETH in the Genesis Vault with depositAndMintOsToken and checks the shares, the osETH mint and the vault's assets.",
+    data: "On-chain RPC",
   },
+
   {
     id: "etherfi",
     name: "ether.fi",
@@ -1046,7 +1075,34 @@ const PROTOCOLS = [
     url: "https://app.lighter.xyz",
     about: "Lighter's Ethereum contract (collateral, deposits, secure withdrawals). Fork test makes a direct USDC deposit and checks the token movement and the contract log.",
     data: "On-chain RPC",
+  },  {
+    id: "near-bridge",
+    name: "NEAR Bridge",
+    category: "bridge-chain",
+    url: "https://near.org/",
+    about:
+      "NEAR Omni Bridge on Ethereum (DefiLlama's near-bridge row runs the omni-bridge adapter). Fork test calls initTransfer with native ETH and checks the lock and the InitTransfer event.",
+    data: "On-chain RPC",
   },
+  {
+    id: "portal",
+    name: "Portal (Wormhole)",
+    category: "bridge-chain",
+    url: "https://portalbridge.com",
+    about:
+      "Wormhole Token Bridge (Wrapped Token Transfers). Fork test calls wrapAndTransferETH and checks the WETH the bridge keeps and the transfer payload the Core Contract publishes.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "ccip",
+    name: "Chainlink CCIP",
+    category: "bridge-chain",
+    url: "https://chain.link/cross-chain",
+    about:
+      "Chainlink CCIP Router on Ethereum. Fork test sends LINK to Base with ccipSend and checks the LockReleaseTokenPool, the ETH fee against getFee and the OnRamp log.",
+    data: "On-chain RPC",
+  },
+
   {
     id: "across",
     name: "Across",
@@ -1450,6 +1506,9 @@ const SCRIPT_DESCRIPTIONS = {
   "fork:venus:supply": "Mint and redeem vUSDC on the Venus Core Pool on a BSC fork",
   "fork:usdai:stake": "Stake USDai into sUSDai on an Arbitrum fork (protocol mint is whitelisted; redeem is queued)",
   "fork:spark-vaults:deposit": "Deposit USDC into Spark Savings spUSDC and redeem it on an Ethereum fork",
+  "fork:clearstar:deposit": "Deposit USDC into Clearstar cbAssets Vault (Morpho Vault V2) and redeem it on a Base fork",
+  "fork:hyperithm:deposit": "Deposit USDC into Hyperithm USDC Apex (Morpho Vault V2) and redeem it on an Ethereum fork",
+  "fork:concrete:deposit": "Deposit USDT into Concrete ctDefiUSDT (async vault). Withdrawal is an epoch queue, so no redeem",
   "fork:lista-dao:deposit": "Deposit USDT into the Lista MoolahVault (USDT) and redeem it on a BSC fork",
   "fork:eigenlayer:deposit": "Deposit stETH into the EigenLayer stETH strategy and assert deposit shares increased",
   "fork:eigenlayer:queue": "Deposit stETH and queueWithdrawals. The completion delay is not advanced",
@@ -1458,6 +1517,7 @@ const SCRIPT_DESCRIPTIONS = {
   "fork:puffer:deposit": "Deposit ETH into pufETH via depositETH. Read-only when maxDeposit is 0",
   "fork:wbeth:deposit": "Mint wBETH with ETH via deposit(referral) and assert the amount matches exchangeRate()",
   "fork:meta-pool:deposit": "Stake ETH into Meta Pool spETH via depositETH and assert the ETH and shares line up",
+  "fork:stakewise:deposit": "Stake ETH in the StakeWise Genesis Vault and mint osETH via depositAndMintOsToken",
   "fork:gmx:read": "Read the sunset GMX V1 vault, GLP supply and GLP price. V1 liquidity is closed, so nothing is minted",
   "fork:sky:convert": "Convert DAI to USDS and back on the Sky DaiUsds converter and assert a 1:1 round trip",
   "fork:sky:susds": "Deposit USDS into sUSDS and redeem it on an Ethereum fork",
@@ -1481,6 +1541,9 @@ const SCRIPT_DESCRIPTIONS = {
   "fork:starknet:deposit": "StarkGate ETH deposit on an Ethereum fork. Checks the bridge lock, Deposit and LogMessageToL2 only",
   "fork:polygon:deposit": "Polygon PoS depositEtherFor on an Ethereum fork. Checks the EtherPredicate lock and LockedEther only",
   "fork:lighter-bridge:deposit": "Direct USDC deposit into Lighter's Ethereum contract. L2 crediting is not checked",
+  "fork:near-bridge:deposit": "NEAR Omni Bridge initTransfer of ETH on an Ethereum fork. Checks the lock and InitTransfer only",
+  "fork:portal:transfer": "Portal (Wormhole) wrapAndTransferETH on an Ethereum fork. Checks the WETH lock and the published transfer payload",
+  "fork:ccip:send": "Chainlink CCIP ccipSend of LINK to Base on an Ethereum fork. Checks the pool lock, fee and OnRamp log",
   "fork:all": "Start one Anvil fork per chain and run every fork:<protocol>:<action> test",
   "simulate:fork:suite": "Same as fork:all",
 };
