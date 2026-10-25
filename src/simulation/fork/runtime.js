@@ -28,6 +28,14 @@ const EXTRA_WHALES = {
     crvUSD: ["0x0655977FEb2f289A4aB78af67BAB0d17aAb84367"],
     // arUSD vault holds rUSD. https://docs.aladdin.club/f-x-protocol/contracts
     rUSD: ["0x07D1718fF05a8C53C8F05aDAEd57C0d672945f9a"],
+    // USDC <> USDat Curve pool. https://saturncredit.gitbook.io/saturn-docs/operations-and-governance/key-addresses
+    USDat: ["0xF4d0CF32908b2C7f1021339c43Df0F77f06896d7"],
+    // Convex cvxCRV staking rewards pool. https://docs.convexfinance.com/convexfinance/faq/contract-addresses
+    cvxCRV: ["0x3Fe65692bfCD0e6CF84cB1E7d24108E434A7587e"],
+    // Olympus DLGTE module holds Cooler V2's undelegated gOHM. https://docs.olympusdao.finance/main/contracts/addresses
+    gOHM: ["0xD3204Ae00d6599Ba6e182c6D640A79d76CdAad74"],
+    // sUSDS holds the savings USDS. https://developers.sky.money/
+    USDS: ["0xa3931d71877C0E7a3148CB7Eb4463524FEc27fbD"],
   },
   base: {
     WETH: ["0x46e6b214b524310239732D51387075E0e70970bf", "0x4200000000000000000000000000000000000006"],
