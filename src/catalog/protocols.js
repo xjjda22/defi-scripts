@@ -1566,6 +1566,59 @@ const PROTOCOLS = [
       "Exploited 2026-10-19 on BSC for ~$152.8K USDC: a whitelisted Hardhat default test wallet (public key) was used via EIP-7702 and a 1.03M USDC flash loan claimed historical V7–V9 rewards ([Tozvan](https://tozvan.com/hacks/alpscon-ai-trade-hub-exploit), 2026-10-19; [telem.news](https://telem.news/security/alpscon-ai-exploited-152k-bnb-chain-whitelisted-hardhat-test-7ef99ce4), 2026-10-19). `analytics:alpscon:exploit` reads DefiLlama `/hacks` ($152,809, Incorrect Share Accounting).",
     ],
   },
+  {
+    id: "concentrator",
+    name: "Concentrator",
+    category: "vaults",
+    url: "https://concentrator.aladdin.club/",
+    about:
+      "AladdinDAO's auto-compounders for Curve and Convex positions. The fork test deposits cvxCRV into aCRV (AladdinCRV) and redeems it on an Ethereum fork.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "fluid-lite",
+    name: "Fluid Lite",
+    category: "vaults",
+    url: "https://www.fluid.io/",
+    about:
+      "Fluid Lite (formerly Instadapp Lite) leveraged staking vaults. The fork test deposits stETH into iETHv2 and redeems it, net of the vault's withdrawal fee.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "curvance",
+    name: "Curvance",
+    category: "lending",
+    url: "https://app.curvance.com",
+    about: "Lending markets on Monad. The fork test lends WMON into cWMON of the WMON | USDC market and redeems it on a Monad fork.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "cooler",
+    name: "Cooler Loans (Olympus)",
+    category: "lending",
+    url: "https://app.olympusdao.finance/#/lending/cooler",
+    about:
+      "Olympus Cooler V2 (MonoCooler): fixed-rate USDS loans against gOHM. The fork test posts gOHM, borrows USDS, repays in full and withdraws the collateral.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "stakelink",
+    name: "stake.link",
+    category: "staking",
+    url: "https://stake.link/staking-pools",
+    about:
+      "Liquid staking for Chainlink (stLINK). The fork test deposits LINK through the Priority Pool, checks the staked / queued split and unqueues the queued part.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "saturn",
+    name: "Saturn",
+    category: "stable-rwa",
+    url: "https://app.saturn.credit/",
+    about:
+      "USDat stablecoin and sUSDat, an ERC-4626 vault with STRC (Strategy preferred stock) exposure through Ondo STRCon. The fork test stakes USDat into sUSDat; unstaking is a processed queue.",
+    data: "On-chain RPC",
+  },
 ];
 
 /** Script families that span protocols. Same id rule as PROTOCOLS. */
@@ -1822,6 +1875,12 @@ const SCRIPT_DESCRIPTIONS = {
   "fork:clearstar:deposit": "Deposit USDC into Clearstar cbAssets Vault (Morpho Vault V2) and redeem it on a Base fork",
   "fork:hyperithm:deposit": "Deposit USDC into Hyperithm USDC Apex (Morpho Vault V2) and redeem it on an Ethereum fork",
   "fork:concrete:deposit": "Deposit USDT into Concrete ctDefiUSDT (async vault). Withdrawal is an epoch queue, so no redeem",
+  "fork:concentrator:deposit": "Deposit cvxCRV into Concentrator aCRV and redeem it on an Ethereum fork",
+  "fork:fluid-lite:deposit": "Deposit stETH into Fluid Lite iETHv2 and redeem it net of the withdrawal fee on an Ethereum fork",
+  "fork:curvance:deposit": "Lend WMON into Curvance cWMON (WMON | USDC market) and redeem it on a Monad fork",
+  "fork:cooler:borrow": "Olympus Cooler V2: post gOHM, borrow USDS, repay in full and withdraw the collateral on an Ethereum fork",
+  "fork:stakelink:deposit": "Deposit LINK into the stake.link Priority Pool (staked or queued) and unqueue the queued part on an Ethereum fork",
+  "fork:saturn:stake": "Stake USDat into Saturn sUSDat (ERC-4626). Unstaking is a processed queue, so no redeem",
   "fork:lista-dao:deposit": "Deposit USDT into the Lista MoolahVault (USDT) and redeem it on a BSC fork",
   "fork:eigenlayer:deposit": "Deposit stETH into the EigenLayer stETH strategy and assert deposit shares increased",
   "fork:eigenlayer:queue": "Deposit stETH and queueWithdrawals. The completion delay is not advanced",
