@@ -6993,14 +6993,36 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "note": "No fork test: almost all of this row is BTC locked in the Rootstock Powpeg on Bitcoin, which an EVM fork cannot run. The only EVM leg is the Ethereum side of the Rootstock Token Bridge (about $1M), which Rootstock sunset at the end of March 2026 (rootstock.io blog: bridging between Ethereum and Rootstock is no longer supported; use Stargate). A deposit test would lock tokens in a retired bridge. Its Ethereum contracts are listed for verification.",
     "appUrl": "https://rootstock.io/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
     "tests": [],
     "features": [],
-    "contracts": [],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Token Bridge (Ethereum, sunset)",
+      "address": "0x12eD69359919Fc775bC2674860E8Fe2d2b6a7B5D",
+      "doc": "https://github.com/rsksmart/tokenbridge/blob/master/docs/ContractAddresses.md",
+      "explorerUrl": "https://etherscan.io/address/0x12eD69359919Fc775bC2674860E8Fe2d2b6a7B5D"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Federation (Ethereum)",
+      "address": "0x5e29C223d99648C88610519f96E85E627b3ABe17",
+      "doc": "https://github.com/rsksmart/tokenbridge/blob/master/docs/ContractAddresses.md",
+      "explorerUrl": "https://etherscan.io/address/0x5e29C223d99648C88610519f96E85E627b3ABe17"
+     },
+     {
+      "chain": "ethereum",
+      "label": "AllowTokens (Ethereum)",
+      "address": "0xA3FC98e0a7a979677BC14d541Be770b2cb0A15F3",
+      "doc": "https://github.com/rsksmart/tokenbridge/blob/master/docs/ContractAddresses.md",
+      "explorerUrl": "https://etherscan.io/address/0xA3FC98e0a7a979677BC14d541Be770b2cb0A15F3"
+     }
+    ],
     "recipe": {
      "title": "Generic bridge check",
      "chain": "ethereum",
@@ -8366,14 +8388,22 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "note": "No fork test: PST is minted and redeemed by the Huma program on Solana (docs.huma.finance smart contracts). On Ethereum PST is a Chainlink CCIP cross-chain token used on Fluid, with no Huma deposit or redeem contract to call, so the only on-chain action is an ERC-20 transfer. The Ethereum PST token is listed for verification.",
     "appUrl": "https://app.huma.finance",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
     "tests": [],
     "features": [],
-    "contracts": [],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "PST (Ethereum)",
+      "address": "0x22aE3D9a738471f405169Af055d31c687087d4c7",
+      "doc": "https://blog.huma.finance/pst-now-live-on-fluid-powered-by-chain-link",
+      "explorerUrl": "https://etherscan.io/address/0x22aE3D9a738471f405169Af055d31c687087d4c7"
+     }
+    ],
     "recipe": {
      "title": "Generic stablecoin check",
      "chain": "ethereum",
@@ -9765,7 +9795,13 @@
      "tvl": 101284990
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:curvance:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7474,
    "components": {
@@ -9777,24 +9813,68 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": null,
+    "note": "Curvance on Monad: lends WMON into cWMON of the WMON | USDC market and redeems it. cTokens are ERC-4626 in spirit; a collateral position would add a cooldown, so the test only lends. Needs MONAD_RPC_URL (the suite skips Monad without it).",
     "appUrl": "https://app.curvance.com",
-    "chain": "ethereum",
-    "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic lending fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-     ],
-     "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-    }
+    "chain": "monad",
+    "rpcEnv": "MONAD_RPC_URL",
+    "commands": [
+     "CHAIN=monad node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=monad node scripts/startFork.js",
+     "MONAD_RPC_URL=http://127.0.0.1:8545 npm run fork:curvance:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:curvance:deposit",
+      "action": "deposit",
+      "chain": "monad",
+      "rpcEnv": "MONAD_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:curvance:deposit",
+      "section": "actions",
+      "chain": "monad",
+      "title": "Lend WMON on Curvance (Monad)",
+      "action": "WMON into cWMON of the WMON | USDC market (ERC-4626 style `deposit`), then `redeem` every share. `marketManager()` must be the documented MarketManager. WMON is wrapped from native MON on the fork",
+      "assertion": "the deposit pulled the full amount, shares were minted, the redeem burned every share and the WMON came back within rounding (plus a little interest)",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "WMON"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "monad",
+      "label": "MarketManager (WMON | USDC)",
+      "address": "0xa6A2A92F126b79Ee0804845ee6B52899b4491093",
+      "doc": "https://docs.curvance.com/app/protocol-overview/monad-contract-addresses",
+      "explorerUrl": "https://monadvision.com/address/0xa6A2A92F126b79Ee0804845ee6B52899b4491093"
+     },
+     {
+      "chain": "monad",
+      "label": "cWMON (WMON | USDC)",
+      "address": "0x1e240E30E51491546deC3aF16B0b4EAC8Dd110D4",
+      "doc": "https://docs.curvance.com/app/protocol-overview/monad-contract-addresses",
+      "explorerUrl": "https://monadvision.com/address/0x1e240E30E51491546deC3aF16B0b4EAC8Dd110D4"
+     },
+     {
+      "chain": "monad",
+      "label": "cUSDC (WMON | USDC)",
+      "address": "0x8EE9FC28B8Da872c38A496e9dDB9700bb7261774",
+      "doc": "https://docs.curvance.com/app/protocol-overview/monad-contract-addresses",
+      "explorerUrl": "https://monadvision.com/address/0x8EE9FC28B8Da872c38A496e9dDB9700bb7261774"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -10060,7 +10140,13 @@
      "tvl": 145746895
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:saturn:stake",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7442,
    "components": {
@@ -10072,24 +10158,67 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Deposit only",
+    "note": "Saturn sUSDat (StakedUSDat, ERC-4626 over USDat). Staking is open with a deposit fee (25 bps on 2026-10-26) that previewDeposit prices in. Unstaking is request, processing and claim through WithdrawalQueueERC721, run by Saturn's processor, so the fork test deposits only. Minting USDat itself goes through Saturn's swap facility and is not tested.",
     "appUrl": "https://app.saturn.credit/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic stablecoin check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
-     ],
-     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:saturn:stake"
+    ],
+    "tests": [
+     {
+      "script": "fork:saturn:stake",
+      "action": "stake",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:saturn:stake",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Stake USDat into sUSDat (Saturn)",
+      "assertion": "**Deposit only.** USDat into sUSDat (StakedUSDat, ERC-4626). Pre-checks: not `paused()` and `maxDeposit` covers the amount. Asserts the vault pulled exactly the amount, the shares equal the pre-tx `previewDeposit` (which prices in the deposit fee), and the `Deposit` event reports the same assets, shares and owner. Unstaking is a request / process / claim queue, so there is no redeem",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDat"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "USDat",
+      "address": "0x23238f20b894f29041f48D88eE91131C395Aaa71",
+      "doc": "https://saturncredit.gitbook.io/saturn-docs/operations-and-governance/key-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x23238f20b894f29041f48D88eE91131C395Aaa71"
+     },
+     {
+      "chain": "ethereum",
+      "label": "sUSDat (StakedUSDat, ERC-4626)",
+      "address": "0xD166337499E176bbC38a1FBd113Ab144e5bd2Df7",
+      "doc": "https://saturncredit.gitbook.io/saturn-docs/operations-and-governance/key-addresses",
+      "explorerUrl": "https://etherscan.io/address/0xD166337499E176bbC38a1FBd113Ab144e5bd2Df7"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Withdraw contract (WithdrawalQueueERC721)",
+      "address": "0x4Bc9FEC04F0F95e9b42a3EF18F3C96fB57923D2e",
+      "doc": "https://saturncredit.gitbook.io/saturn-docs/operations-and-governance/key-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x4Bc9FEC04F0F95e9b42a3EF18F3C96fB57923D2e"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -10123,7 +10252,13 @@
      "tvl": 92635587
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:concentrator:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7407,
    "components": {
@@ -10135,24 +10270,74 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": null,
+    "note": "Concentrator aCRV (AladdinCRV), the cvxCRV auto-compounder. The test deposits cvxCRV and redeems it. Other Concentrator vaults (asdCRV, aCVX, arUSD) are listed for verification; arUSD is also on the f(x) Protocol row.",
     "appUrl": "https://concentrator.aladdin.club/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:concentrator:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:concentrator:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:concentrator:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit and redeem (Concentrator aCRV)",
+      "assertion": "cvxCRV into Concentrator aCRV (AladdinCRV, ERC-4626 compounder), then redeem. Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the cvxCRV came back within rounding (`withdrawFeePercentage()` was 0 on 2026-10-26)",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "cvxCRV"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "AladdinCRV (aCRV)",
+      "address": "0x2b95A1Dcc3D405535f9ed33c219ab38E8d7e0884",
+      "doc": "https://docs.aladdin.club/concentrator/contracts",
+      "explorerUrl": "https://etherscan.io/address/0x2b95A1Dcc3D405535f9ed33c219ab38E8d7e0884"
+     },
+     {
+      "chain": "ethereum",
+      "label": "CvxCrvStakingWrapperStrategy",
+      "address": "0x94cC627Db80253056B2130aAC39abB252A75F345",
+      "doc": "https://docs.aladdin.club/concentrator/contracts",
+      "explorerUrl": "https://etherscan.io/address/0x94cC627Db80253056B2130aAC39abB252A75F345"
+     },
+     {
+      "chain": "ethereum",
+      "label": "AladdinSdCRV (asdCRV)",
+      "address": "0x43E54C2E7b3e294De3A155785F52AB49d87B9922",
+      "doc": "https://docs.aladdin.club/concentrator/contracts",
+      "explorerUrl": "https://etherscan.io/address/0x43E54C2E7b3e294De3A155785F52AB49d87B9922"
+     },
+     {
+      "chain": "ethereum",
+      "label": "CvxCompounder (aCVX)",
+      "address": "0xb0903Ab70a7467eE5756074b31ac88aEBb8fB777",
+      "doc": "https://docs.aladdin.club/concentrator/contracts",
+      "explorerUrl": "https://etherscan.io/address/0xb0903Ab70a7467eE5756074b31ac88aEBb8fB777"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -10186,7 +10371,13 @@
      "tvl": 233740196
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:cooler:borrow",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7396,
    "components": {
@@ -10198,24 +10389,81 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": null,
+    "note": "Olympus Cooler V2 (MonoCooler): gOHM collateral, USDS debt at a fixed rate. The test posts gOHM, borrows USDS, repays in full and withdraws the collateral. gOHM comes from the DLGTE module listed in the Olympus docs, because anvil_deal is unavailable.",
     "appUrl": "https://app.olympusdao.finance/#/lending/cooler",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic lending fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-     ],
-     "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:cooler:borrow"
+    ],
+    "tests": [
+     {
+      "script": "fork:cooler:borrow",
+      "action": "borrow",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:cooler:borrow",
+      "section": "actions",
+      "chain": "ethereum",
+      "title": "Borrow USDS against gOHM (Olympus Cooler V2)",
+      "action": "MonoCooler `addCollateral` (gOHM), `borrow` USDS, `repay(type(uint128).max)`, then `withdrawCollateral(type(uint128).max)`. Pre-checks: the documented gOHM / USDS tokens, `borrowsPaused()` false, and the borrow sits between `minDebtRequired()` and the origination LTV",
+      "assertion": "`accountCollateral` and the wallet move by exactly the gOHM posted, the wallet receives exactly the USDS borrowed and `accountDebt` equals it, the full repay leaves `accountDebt` at 0 (paying the borrow plus per-second interest), and every gOHM comes back",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Collateral",
+        "default": "1",
+        "unit": "gOHM"
+       },
+       {
+        "env": "FORK_BORROW",
+        "label": "Borrow",
+        "default": "1500",
+        "unit": "USDS"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Cooler V2 (MonoCooler)",
+      "address": "0xdb591Ea2e5Db886dA872654D58f6cc584b68e7cC",
+      "doc": "https://docs.olympusdao.finance/main/contracts/addresses",
+      "explorerUrl": "https://etherscan.io/address/0xdb591Ea2e5Db886dA872654D58f6cc584b68e7cC"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Cooler V2 LTV Oracle",
+      "address": "0x9ee9f0c2e91E4f6B195B988a9e6e19efcf91e8dc",
+      "doc": "https://docs.olympusdao.finance/main/contracts/addresses",
+      "explorerUrl": "https://etherscan.io/address/0x9ee9f0c2e91E4f6B195B988a9e6e19efcf91e8dc"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Cooler V2 Treasury Borrower",
+      "address": "0xD58d7406E9CE34c90cf849Fc3eed3764EB3779B0",
+      "doc": "https://docs.olympusdao.finance/main/contracts/addresses",
+      "explorerUrl": "https://etherscan.io/address/0xD58d7406E9CE34c90cf849Fc3eed3764EB3779B0"
+     },
+     {
+      "chain": "ethereum",
+      "label": "gOHM",
+      "address": "0x0ab87046fBb341D058F17CBC4c1133F25a20a52f",
+      "doc": "https://docs.olympusdao.finance/main/contracts/addresses",
+      "explorerUrl": "https://etherscan.io/address/0x0ab87046fBb341D058F17CBC4c1133F25a20a52f"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -10386,7 +10634,13 @@
      "tvl": 91206547
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:stakelink:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7388,
    "components": {
@@ -10398,24 +10652,75 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": null,
+    "note": "stake.link LINK staking through the Priority Pool. When Chainlink staking has no room (canDeposit() was 0 on 2026-10-26) the deposit is queued; the test then unqueues it. Queued LINK turns into stLINK through an off-chain merkle distribution, which a fork cannot run.",
     "appUrl": "https://stake.link/staking-pools",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic liquid-staking fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
-     ],
-     "note": "No dedicated fork script. Lido submit on an Ethereum fork is the staking recipe."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:stakelink:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:stakelink:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:stakelink:deposit",
+      "section": "actions",
+      "chain": "ethereum",
+      "title": "Stake or queue LINK (stake.link Priority Pool)",
+      "action": "Priority Pool `deposit(amount, true, [])`: stakes what the Staking Pool can take now (stLINK) and queues the rest, then `unqueueTokens` the queued part. Pre-checks: the documented LINK / Staking Pool wiring, `poolStatus()` OPEN and not paused",
+      "assertion": "the user's LINK drops by exactly the amount, the `Deposit` event's staked + queued equals it, stLINK rises by the staked part (2 wei share rounding), the account queue and `totalQueued` rise by the queued part, and the unqueue returns exactly that LINK and restores both",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "10",
+        "unit": "LINK"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "LINK Priority Pool",
+      "address": "0xDdC796a66E8b83d0BcCD97dF33A6CcFBA8fd60eA",
+      "doc": "https://docs.stake.link/resources/contracts-and-integrations",
+      "explorerUrl": "https://etherscan.io/address/0xDdC796a66E8b83d0BcCD97dF33A6CcFBA8fd60eA"
+     },
+     {
+      "chain": "ethereum",
+      "label": "LINK Staking Pool (stLINK)",
+      "address": "0xb8b295df2cd735b15BE5Eb419517Aa626fc43cD5",
+      "doc": "https://docs.stake.link/resources/contracts-and-integrations",
+      "explorerUrl": "https://etherscan.io/address/0xb8b295df2cd735b15BE5Eb419517Aa626fc43cD5"
+     },
+     {
+      "chain": "ethereum",
+      "label": "LINK Withdrawal Pool",
+      "address": "0xa60B5146E44ff755e32BD51532842ceB41D0C248",
+      "doc": "https://docs.stake.link/resources/contracts-and-integrations",
+      "explorerUrl": "https://etherscan.io/address/0xa60B5146E44ff755e32BD51532842ceB41D0C248"
+     },
+     {
+      "chain": "ethereum",
+      "label": "wstLINK",
+      "address": "0x911D86C72155c33993d594B0Ec7E6206B4C803da",
+      "doc": "https://docs.stake.link/resources/contracts-and-integrations",
+      "explorerUrl": "https://etherscan.io/address/0x911D86C72155c33993d594B0Ec7E6206B4C803da"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -10850,7 +11155,13 @@
      "tvl": 212387108
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:fluid-lite:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7297,
    "components": {
@@ -10862,24 +11173,60 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": null,
+    "note": "Fluid Lite (Instadapp Lite) iETHv2, the stETH vault that holds most of the row. The test deposits stETH and redeems it net of the vault's withdrawal fee. fLiteUSD (USDC) is listed for verification.",
     "appUrl": "https://www.fluid.io/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:fluid-lite:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:fluid-lite:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:fluid-lite:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit and redeem (Fluid Lite iETHv2)",
+      "assertion": "stETH into Fluid Lite iETHv2 (ERC-4626), then redeem every share. Asserts the shares equal the pre-tx `previewDeposit`, the deposit pulled the amount (stETH 1-2 wei rounding), the redeem burned every share, and the stETH returned equals `previewRedeem` minus `withdrawalFeePercentage()` (ppm; 500 = 0.05% on 2026-10-26) within 2 wei",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "1",
+        "unit": "stETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "iETHv2 (stETH vault)",
+      "address": "0xA0D3707c569ff8C87FA923d3823eC5D81c98Be78",
+      "doc": "https://lite.guides.instadapp.io/getting-started/vault-receipt-tokens",
+      "explorerUrl": "https://etherscan.io/address/0xA0D3707c569ff8C87FA923d3823eC5D81c98Be78"
+     },
+     {
+      "chain": "ethereum",
+      "label": "fLiteUSD (USDC vault)",
+      "address": "0x273DA948ACa9261043fbdb2a857BC255ECC29012",
+      "doc": "https://lite.guides.instadapp.io/getting-started/vault-receipt-tokens",
+      "explorerUrl": "https://etherscan.io/address/0x273DA948ACa9261043fbdb2a857BC255ECC29012"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -34372,7 +34719,13 @@
       "tvl": 101284990
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:curvance:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7474,
     "components": {
@@ -34384,24 +34737,68 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": null,
+     "note": "Curvance on Monad: lends WMON into cWMON of the WMON | USDC market and redeems it. cTokens are ERC-4626 in spirit; a collateral position would add a cooldown, so the test only lends. Needs MONAD_RPC_URL (the suite skips Monad without it).",
      "appUrl": "https://app.curvance.com",
-     "chain": "ethereum",
-     "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic lending fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-      ],
-      "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-     }
+     "chain": "monad",
+     "rpcEnv": "MONAD_RPC_URL",
+     "commands": [
+      "CHAIN=monad node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=monad node scripts/startFork.js",
+      "MONAD_RPC_URL=http://127.0.0.1:8545 npm run fork:curvance:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:curvance:deposit",
+       "action": "deposit",
+       "chain": "monad",
+       "rpcEnv": "MONAD_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:curvance:deposit",
+       "section": "actions",
+       "chain": "monad",
+       "title": "Lend WMON on Curvance (Monad)",
+       "action": "WMON into cWMON of the WMON | USDC market (ERC-4626 style `deposit`), then `redeem` every share. `marketManager()` must be the documented MarketManager. WMON is wrapped from native MON on the fork",
+       "assertion": "the deposit pulled the full amount, shares were minted, the redeem burned every share and the WMON came back within rounding (plus a little interest)",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "WMON"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "monad",
+       "label": "MarketManager (WMON | USDC)",
+       "address": "0xa6A2A92F126b79Ee0804845ee6B52899b4491093",
+       "doc": "https://docs.curvance.com/app/protocol-overview/monad-contract-addresses",
+       "explorerUrl": "https://monadvision.com/address/0xa6A2A92F126b79Ee0804845ee6B52899b4491093"
+      },
+      {
+       "chain": "monad",
+       "label": "cWMON (WMON | USDC)",
+       "address": "0x1e240E30E51491546deC3aF16B0b4EAC8Dd110D4",
+       "doc": "https://docs.curvance.com/app/protocol-overview/monad-contract-addresses",
+       "explorerUrl": "https://monadvision.com/address/0x1e240E30E51491546deC3aF16B0b4EAC8Dd110D4"
+      },
+      {
+       "chain": "monad",
+       "label": "cUSDC (WMON | USDC)",
+       "address": "0x8EE9FC28B8Da872c38A496e9dDB9700bb7261774",
+       "doc": "https://docs.curvance.com/app/protocol-overview/monad-contract-addresses",
+       "explorerUrl": "https://monadvision.com/address/0x8EE9FC28B8Da872c38A496e9dDB9700bb7261774"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -34604,7 +35001,13 @@
       "tvl": 233740196
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:cooler:borrow",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7396,
     "components": {
@@ -34616,24 +35019,81 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": null,
+     "note": "Olympus Cooler V2 (MonoCooler): gOHM collateral, USDS debt at a fixed rate. The test posts gOHM, borrows USDS, repays in full and withdraws the collateral. gOHM comes from the DLGTE module listed in the Olympus docs, because anvil_deal is unavailable.",
      "appUrl": "https://app.olympusdao.finance/#/lending/cooler",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic lending fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-      ],
-      "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:cooler:borrow"
+     ],
+     "tests": [
+      {
+       "script": "fork:cooler:borrow",
+       "action": "borrow",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:cooler:borrow",
+       "section": "actions",
+       "chain": "ethereum",
+       "title": "Borrow USDS against gOHM (Olympus Cooler V2)",
+       "action": "MonoCooler `addCollateral` (gOHM), `borrow` USDS, `repay(type(uint128).max)`, then `withdrawCollateral(type(uint128).max)`. Pre-checks: the documented gOHM / USDS tokens, `borrowsPaused()` false, and the borrow sits between `minDebtRequired()` and the origination LTV",
+       "assertion": "`accountCollateral` and the wallet move by exactly the gOHM posted, the wallet receives exactly the USDS borrowed and `accountDebt` equals it, the full repay leaves `accountDebt` at 0 (paying the borrow plus per-second interest), and every gOHM comes back",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Collateral",
+         "default": "1",
+         "unit": "gOHM"
+        },
+        {
+         "env": "FORK_BORROW",
+         "label": "Borrow",
+         "default": "1500",
+         "unit": "USDS"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Cooler V2 (MonoCooler)",
+       "address": "0xdb591Ea2e5Db886dA872654D58f6cc584b68e7cC",
+       "doc": "https://docs.olympusdao.finance/main/contracts/addresses",
+       "explorerUrl": "https://etherscan.io/address/0xdb591Ea2e5Db886dA872654D58f6cc584b68e7cC"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Cooler V2 LTV Oracle",
+       "address": "0x9ee9f0c2e91E4f6B195B988a9e6e19efcf91e8dc",
+       "doc": "https://docs.olympusdao.finance/main/contracts/addresses",
+       "explorerUrl": "https://etherscan.io/address/0x9ee9f0c2e91E4f6B195B988a9e6e19efcf91e8dc"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Cooler V2 Treasury Borrower",
+       "address": "0xD58d7406E9CE34c90cf849Fc3eed3764EB3779B0",
+       "doc": "https://docs.olympusdao.finance/main/contracts/addresses",
+       "explorerUrl": "https://etherscan.io/address/0xD58d7406E9CE34c90cf849Fc3eed3764EB3779B0"
+      },
+      {
+       "chain": "ethereum",
+       "label": "gOHM",
+       "address": "0x0ab87046fBb341D058F17CBC4c1133F25a20a52f",
+       "doc": "https://docs.olympusdao.finance/main/contracts/addresses",
+       "explorerUrl": "https://etherscan.io/address/0x0ab87046fBb341D058F17CBC4c1133F25a20a52f"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -42954,7 +43414,13 @@
       "tvl": 92635587
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:concentrator:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7407,
     "components": {
@@ -42966,24 +43432,74 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": null,
+     "note": "Concentrator aCRV (AladdinCRV), the cvxCRV auto-compounder. The test deposits cvxCRV and redeems it. Other Concentrator vaults (asdCRV, aCVX, arUSD) are listed for verification; arUSD is also on the f(x) Protocol row.",
      "appUrl": "https://concentrator.aladdin.club/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:concentrator:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:concentrator:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:concentrator:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit and redeem (Concentrator aCRV)",
+       "assertion": "cvxCRV into Concentrator aCRV (AladdinCRV, ERC-4626 compounder), then redeem. Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the cvxCRV came back within rounding (`withdrawFeePercentage()` was 0 on 2026-10-26)",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "cvxCRV"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "AladdinCRV (aCRV)",
+       "address": "0x2b95A1Dcc3D405535f9ed33c219ab38E8d7e0884",
+       "doc": "https://docs.aladdin.club/concentrator/contracts",
+       "explorerUrl": "https://etherscan.io/address/0x2b95A1Dcc3D405535f9ed33c219ab38E8d7e0884"
+      },
+      {
+       "chain": "ethereum",
+       "label": "CvxCrvStakingWrapperStrategy",
+       "address": "0x94cC627Db80253056B2130aAC39abB252A75F345",
+       "doc": "https://docs.aladdin.club/concentrator/contracts",
+       "explorerUrl": "https://etherscan.io/address/0x94cC627Db80253056B2130aAC39abB252A75F345"
+      },
+      {
+       "chain": "ethereum",
+       "label": "AladdinSdCRV (asdCRV)",
+       "address": "0x43E54C2E7b3e294De3A155785F52AB49d87B9922",
+       "doc": "https://docs.aladdin.club/concentrator/contracts",
+       "explorerUrl": "https://etherscan.io/address/0x43E54C2E7b3e294De3A155785F52AB49d87B9922"
+      },
+      {
+       "chain": "ethereum",
+       "label": "CvxCompounder (aCVX)",
+       "address": "0xb0903Ab70a7467eE5756074b31ac88aEBb8fB777",
+       "doc": "https://docs.aladdin.club/concentrator/contracts",
+       "explorerUrl": "https://etherscan.io/address/0xb0903Ab70a7467eE5756074b31ac88aEBb8fB777"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -43092,7 +43608,13 @@
       "tvl": 212387108
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:fluid-lite:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7297,
     "components": {
@@ -43104,24 +43626,60 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": null,
+     "note": "Fluid Lite (Instadapp Lite) iETHv2, the stETH vault that holds most of the row. The test deposits stETH and redeems it net of the vault's withdrawal fee. fLiteUSD (USDC) is listed for verification.",
      "appUrl": "https://www.fluid.io/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:fluid-lite:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:fluid-lite:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:fluid-lite:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit and redeem (Fluid Lite iETHv2)",
+       "assertion": "stETH into Fluid Lite iETHv2 (ERC-4626), then redeem every share. Asserts the shares equal the pre-tx `previewDeposit`, the deposit pulled the amount (stETH 1-2 wei rounding), the redeem burned every share, and the stETH returned equals `previewRedeem` minus `withdrawalFeePercentage()` (ppm; 500 = 0.05% on 2026-10-26) within 2 wei",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "1",
+         "unit": "stETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "iETHv2 (stETH vault)",
+       "address": "0xA0D3707c569ff8C87FA923d3823eC5D81c98Be78",
+       "doc": "https://lite.guides.instadapp.io/getting-started/vault-receipt-tokens",
+       "explorerUrl": "https://etherscan.io/address/0xA0D3707c569ff8C87FA923d3823eC5D81c98Be78"
+      },
+      {
+       "chain": "ethereum",
+       "label": "fLiteUSD (USDC vault)",
+       "address": "0x273DA948ACa9261043fbdb2a857BC255ECC29012",
+       "doc": "https://lite.guides.instadapp.io/getting-started/vault-receipt-tokens",
+       "explorerUrl": "https://etherscan.io/address/0x273DA948ACa9261043fbdb2a857BC255ECC29012"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -51087,7 +51645,13 @@
       "tvl": 91206547
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:stakelink:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7388,
     "components": {
@@ -51099,24 +51663,75 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": null,
+     "note": "stake.link LINK staking through the Priority Pool. When Chainlink staking has no room (canDeposit() was 0 on 2026-10-26) the deposit is queued; the test then unqueues it. Queued LINK turns into stLINK through an off-chain merkle distribution, which a fork cannot run.",
      "appUrl": "https://stake.link/staking-pools",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic liquid-staking fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
-      ],
-      "note": "No dedicated fork script. Lido submit on an Ethereum fork is the staking recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:stakelink:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:stakelink:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:stakelink:deposit",
+       "section": "actions",
+       "chain": "ethereum",
+       "title": "Stake or queue LINK (stake.link Priority Pool)",
+       "action": "Priority Pool `deposit(amount, true, [])`: stakes what the Staking Pool can take now (stLINK) and queues the rest, then `unqueueTokens` the queued part. Pre-checks: the documented LINK / Staking Pool wiring, `poolStatus()` OPEN and not paused",
+       "assertion": "the user's LINK drops by exactly the amount, the `Deposit` event's staked + queued equals it, stLINK rises by the staked part (2 wei share rounding), the account queue and `totalQueued` rise by the queued part, and the unqueue returns exactly that LINK and restores both",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "10",
+         "unit": "LINK"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "LINK Priority Pool",
+       "address": "0xDdC796a66E8b83d0BcCD97dF33A6CcFBA8fd60eA",
+       "doc": "https://docs.stake.link/resources/contracts-and-integrations",
+       "explorerUrl": "https://etherscan.io/address/0xDdC796a66E8b83d0BcCD97dF33A6CcFBA8fd60eA"
+      },
+      {
+       "chain": "ethereum",
+       "label": "LINK Staking Pool (stLINK)",
+       "address": "0xb8b295df2cd735b15BE5Eb419517Aa626fc43cD5",
+       "doc": "https://docs.stake.link/resources/contracts-and-integrations",
+       "explorerUrl": "https://etherscan.io/address/0xb8b295df2cd735b15BE5Eb419517Aa626fc43cD5"
+      },
+      {
+       "chain": "ethereum",
+       "label": "LINK Withdrawal Pool",
+       "address": "0xa60B5146E44ff755e32BD51532842ceB41D0C248",
+       "doc": "https://docs.stake.link/resources/contracts-and-integrations",
+       "explorerUrl": "https://etherscan.io/address/0xa60B5146E44ff755e32BD51532842ceB41D0C248"
+      },
+      {
+       "chain": "ethereum",
+       "label": "wstLINK",
+       "address": "0x911D86C72155c33993d594B0Ec7E6206B4C803da",
+       "doc": "https://docs.stake.link/resources/contracts-and-integrations",
+       "explorerUrl": "https://etherscan.io/address/0x911D86C72155c33993d594B0Ec7E6206B4C803da"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -58544,14 +59159,22 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "note": "No fork test: PST is minted and redeemed by the Huma program on Solana (docs.huma.finance smart contracts). On Ethereum PST is a Chainlink CCIP cross-chain token used on Fluid, with no Huma deposit or redeem contract to call, so the only on-chain action is an ERC-20 transfer. The Ethereum PST token is listed for verification.",
      "appUrl": "https://app.huma.finance",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
      "features": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "PST (Ethereum)",
+       "address": "0x22aE3D9a738471f405169Af055d31c687087d4c7",
+       "doc": "https://blog.huma.finance/pst-now-live-on-fluid-powered-by-chain-link",
+       "explorerUrl": "https://etherscan.io/address/0x22aE3D9a738471f405169Af055d31c687087d4c7"
+      }
+     ],
      "recipe": {
       "title": "Generic stablecoin check",
       "chain": "ethereum",
@@ -58594,7 +59217,13 @@
       "tvl": 145746895
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:saturn:stake",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7442,
     "components": {
@@ -58606,24 +59235,67 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Deposit only",
+     "note": "Saturn sUSDat (StakedUSDat, ERC-4626 over USDat). Staking is open with a deposit fee (25 bps on 2026-10-26) that previewDeposit prices in. Unstaking is request, processing and claim through WithdrawalQueueERC721, run by Saturn's processor, so the fork test deposits only. Minting USDat itself goes through Saturn's swap facility and is not tested.",
      "appUrl": "https://app.saturn.credit/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic stablecoin check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
-      ],
-      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:saturn:stake"
+     ],
+     "tests": [
+      {
+       "script": "fork:saturn:stake",
+       "action": "stake",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:saturn:stake",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Stake USDat into sUSDat (Saturn)",
+       "assertion": "**Deposit only.** USDat into sUSDat (StakedUSDat, ERC-4626). Pre-checks: not `paused()` and `maxDeposit` covers the amount. Asserts the vault pulled exactly the amount, the shares equal the pre-tx `previewDeposit` (which prices in the deposit fee), and the `Deposit` event reports the same assets, shares and owner. Unstaking is a request / process / claim queue, so there is no redeem",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDat"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "USDat",
+       "address": "0x23238f20b894f29041f48D88eE91131C395Aaa71",
+       "doc": "https://saturncredit.gitbook.io/saturn-docs/operations-and-governance/key-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x23238f20b894f29041f48D88eE91131C395Aaa71"
+      },
+      {
+       "chain": "ethereum",
+       "label": "sUSDat (StakedUSDat, ERC-4626)",
+       "address": "0xD166337499E176bbC38a1FBd113Ab144e5bd2Df7",
+       "doc": "https://saturncredit.gitbook.io/saturn-docs/operations-and-governance/key-addresses",
+       "explorerUrl": "https://etherscan.io/address/0xD166337499E176bbC38a1FBd113Ab144e5bd2Df7"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Withdraw contract (WithdrawalQueueERC721)",
+       "address": "0x4Bc9FEC04F0F95e9b42a3EF18F3C96fB57923D2e",
+       "doc": "https://saturncredit.gitbook.io/saturn-docs/operations-and-governance/key-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x4Bc9FEC04F0F95e9b42a3EF18F3C96fB57923D2e"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -65790,14 +66462,36 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "note": "No fork test: almost all of this row is BTC locked in the Rootstock Powpeg on Bitcoin, which an EVM fork cannot run. The only EVM leg is the Ethereum side of the Rootstock Token Bridge (about $1M), which Rootstock sunset at the end of March 2026 (rootstock.io blog: bridging between Ethereum and Rootstock is no longer supported; use Stargate). A deposit test would lock tokens in a retired bridge. Its Ethereum contracts are listed for verification.",
      "appUrl": "https://rootstock.io/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
      "features": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Token Bridge (Ethereum, sunset)",
+       "address": "0x12eD69359919Fc775bC2674860E8Fe2d2b6a7B5D",
+       "doc": "https://github.com/rsksmart/tokenbridge/blob/master/docs/ContractAddresses.md",
+       "explorerUrl": "https://etherscan.io/address/0x12eD69359919Fc775bC2674860E8Fe2d2b6a7B5D"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Federation (Ethereum)",
+       "address": "0x5e29C223d99648C88610519f96E85E627b3ABe17",
+       "doc": "https://github.com/rsksmart/tokenbridge/blob/master/docs/ContractAddresses.md",
+       "explorerUrl": "https://etherscan.io/address/0x5e29C223d99648C88610519f96E85E627b3ABe17"
+      },
+      {
+       "chain": "ethereum",
+       "label": "AllowTokens (Ethereum)",
+       "address": "0xA3FC98e0a7a979677BC14d541Be770b2cb0A15F3",
+       "doc": "https://github.com/rsksmart/tokenbridge/blob/master/docs/ContractAddresses.md",
+       "explorerUrl": "https://etherscan.io/address/0xA3FC98e0a7a979677BC14d541Be770b2cb0A15F3"
+      }
+     ],
      "recipe": {
       "title": "Generic bridge check",
       "chain": "ethereum",
@@ -79885,7 +80579,7 @@
    "Domains": 14,
    "Coins Tracker": 2
   },
-  "forkInTop200": 43,
-  "apiOnlyInTop200": 157
+  "forkInTop200": 49,
+  "apiOnlyInTop200": 151
  }
 }
