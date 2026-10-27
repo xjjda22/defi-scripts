@@ -467,7 +467,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Deposit ETH to Swell",
     action: "rswETH `deposit()`",
-    assertion: "rswETH increases, or read-only when the whitelist is on",
+    assertion:
+      "rswETH increases, or read-only when the whitelist is on. FAIL with `coreMethodsPaused=true` when Swell's AccessControlManager has paused core methods (true since the 2026-10-21 incident, checked 2026-10-28), because deposit() would revert",
     params: amount("0.05", "ETH"),
     gated: true,
   },
@@ -574,7 +575,7 @@ const FEATURES = [
     chain: "ethereum",
     title: "Deposit and instant-redeem (Upshift)",
     assertion:
-      "USDC into Upshift Sentora USD, then `instantRedeem`. Assets come back minus `instantRedemptionFee` (basis points). If instant redeem is closed, `requestRedeem` is asserted and the withdrawal is not waited out",
+      "USDC into Upshift Sentora USD, then `instantRedeem`. The USDC paid equals the pre-tx `previewRedemption(shares, true)` after-fee amount, that amount is the gross minus `instantRedemptionFee` (basis points), and the gross is within 1 bp of the deposit. If instant redeem is closed, `requestRedeem` is asserted and the withdrawal is not waited out",
     params: amount("1000", "USDC"),
   },
   {
@@ -912,7 +913,7 @@ const FEATURES = [
     chain: "ethereum",
     title: "Mint USDv, stake sUSDv, request unstake (Vesper USD)",
     assertion:
-      "Gateway `deposit` of USDC mints exactly the pre-tx `previewDeposit` in USDv (fixed-price adapter at 1.0) and pulls exactly the USDC. Staking all of it into sUSDv (ERC-4626) spends exactly that USDv, the `Deposit` event reports those assets and the user's shares, and shares are within 1 bp of the preview (sUSDv vests yield per second). `requestRedeem` burns every share, opens one pending request and reserves exactly the pre-tx `previewRedeem` in `totalAssetsInCooldown`. The 7-day cooldown and the USDv -> USDC redemption are not waited out",
+      "Gateway `deposit` of USDC mints exactly the pre-tx `previewDeposit` in USDv (fixed-price adapter at 1.0) and pulls exactly the USDC. Staking all of it into sUSDv (ERC-4626) spends exactly that USDv, the `Deposit` event reports those assets and the user's shares, and shares are within 1 bp of the preview (sUSDv vests yield per second). `requestRedeem` burns every share, opens one pending request whose assets equal the rise in `totalAssetsInCooldown`, and that amount is at least the pre-tx `previewRedeem` and within 1 bp of it (vesting can add a second of yield). The 7-day cooldown and the USDv -> USDC redemption are not waited out",
     params: amount("100", "USDC"),
   },
 ];

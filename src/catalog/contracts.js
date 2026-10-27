@@ -367,7 +367,7 @@ function contractBook() {
   // https://docs.superstate.com/investors/smart-contracts
   for (const key of ["superstate", "ustb"]) {
     push(book[key], eth, "USTB", "0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e", DOCS.superstate);
-    push(book[key], eth, "USTB price oracle", "0xe4fa682f94610ccd170680cc3b045d77d9e528a8", DOCS.superstate);
+    push(book[key], eth, "USTB price oracle", "0xE4fA682f94610cCd170680cc3B045d77D9E528a8", DOCS.superstate);
   }
   // https://docs.arbitrum.io/build-decentralized-apps/reference/contract-addresses
   for (const key of ["arbitrum", "arbitrum-bridge"]) {
@@ -747,7 +747,7 @@ module.exports = {
     ousg: "0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92",
     ondoOracle: "0x9Cad45a8BF0Ed41Ff33074449B357C7a1fAb4094",
     ustb: "0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e",
-    ustbOracle: "0xe4fa682f94610ccd170680cc3b045d77d9e528a8",
+    ustbOracle: "0xE4fA682f94610cCd170680cc3B045d77D9E528a8",
   },
   VAULTS: {
     steakhouse: {
