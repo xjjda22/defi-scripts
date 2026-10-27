@@ -53,6 +53,7 @@ const UPSHIFT_ABI = [
   "function maxDepositAmount() view returns (uint256)",
   "function getSharePrice() view returns (uint256)",
   "function previewDeposit(address asset, uint256 amount) view returns (uint256)",
+  "function previewRedemption(uint256 shares, bool isInstant) view returns (uint256 assetsAmount, uint256 assetsAfterFee)",
 ];
 
 // Morpho Vault V2 gates. A non-zero gate can refuse a depositor or receiver.
@@ -350,8 +351,11 @@ async function upshiftDeposit(base) {
   if (assetsBefore - assetsMid !== depositAmount) {
     return finish({ ...base, ok: false, error: "Upshift deposit did not pull the USDC" });
   }
-  // instantRedemptionFee() is in basis points. A same-block round trip returns assets minus that fee.
+  // instantRedemptionFee() is in basis points. previewRedemption(shares, true) prices the instant exit:
+  // gross assets for the shares and the amount after that fee. The share price used for the exit can sit
+  // a fraction of a bp below the deposit price (seen 2026-10-28), so the fee is checked on the gross amount.
   const feeBps = await reader.instantRedemptionFee();
+  const [grossPreview, netPreview] = await reader.previewRedemption(shares, true);
   let redeemed = false;
   let receipt;
   try {
@@ -363,16 +367,20 @@ async function upshiftDeposit(base) {
     receipt = await (await vault.requestRedeem(shares, user, GAS)).wait();
   }
   const assetsAfter = await usdc.balanceOf(user);
-  const fee = redeemed ? (depositAmount * feeBps) / 10_000n : 0n;
   const sharesLeft = (await sent.balanceOf(user)) - sharesBefore;
-  const ok = sharesLeft === 0n && (redeemed ? assetsAfter + fee + 2n >= assetsBefore : true);
+  const spread = depositAmount > grossPreview ? depositAmount - grossPreview : grossPreview - depositAmount;
+  const instantOk =
+    assetsAfter - assetsMid === netPreview &&
+    netPreview === grossPreview - (grossPreview * feeBps) / 10_000n &&
+    spread * 10_000n <= depositAmount;
+  const ok = sharesLeft === 0n && (redeemed ? instantOk : true);
   const mode = redeemed ? "instantRedeem" : "requestRedeem";
   return finish({
     ...base,
     ok,
-    key: `sentUSD=0->${formatUnits(shares, 6)}->${formatUnits(sharesLeft, 6)} USDC=${formatUnits(assetsBefore, 6)}->${formatUnits(assetsMid, 6)}->${formatUnits(assetsAfter, 6)} feeBps=${feeBps.toString()} ${mode}`,
-    detail: `deposited ${formatUnits(depositAmount, 6)} USDC into Sentora USD\nsentUSD ${formatUnits(shares, 6)}\nUSDC ${formatUnits(assetsBefore, 6)} -> ${formatUnits(assetsAfter, 6)}\ninstant redemption fee ${feeBps.toString()} bps\n${mode}\ntx ${receipt.hash}`,
-    error: ok ? null : "Upshift deposit did not return USDC within the instant redemption fee",
+    key: `sentUSD=0->${formatUnits(shares, 6)}->${formatUnits(sharesLeft, 6)} USDC=${formatUnits(assetsBefore, 6)}->${formatUnits(assetsMid, 6)}->${formatUnits(assetsAfter, 6)} feeBps=${feeBps.toString()} preview=${formatUnits(grossPreview, 6)}/${formatUnits(netPreview, 6)} ${mode}`,
+    detail: `deposited ${formatUnits(depositAmount, 6)} USDC into Sentora USD\nsentUSD ${formatUnits(shares, 6)}\nUSDC ${formatUnits(assetsBefore, 6)} -> ${formatUnits(assetsAfter, 6)}\ninstant redemption fee ${feeBps.toString()} bps\npreviewRedemption(shares, true) ${formatUnits(grossPreview, 6)} gross / ${formatUnits(netPreview, 6)} after fee\n${mode}\ntx ${receipt.hash}`,
+    error: ok ? null : "Upshift instantRedeem did not pay previewRedemption(shares, true) after the instant redemption fee",
   });
 }
 

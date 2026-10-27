@@ -204,7 +204,16 @@ async function vesperDeposit(base) {
   const pending = await stakingReader.getPendingRequests(user);
   const pendingIds = pending[0];
   const reserved = reservedAfter - reservedBefore;
-  const requestOk = cooldown && sharesAfter === 0n && pendingIds.length === 1 && reserved === redeemPreview;
+  // sUSDv vests per second, so a request mined a second after the preview reserves slightly more.
+  // The pending request records the exact amount; the preview bounds it from below, within 1 bp.
+  const pendingAssets = pendingIds.length === 1 ? pending[1][0] : 0n;
+  const requestOk =
+    cooldown &&
+    sharesAfter === 0n &&
+    pendingIds.length === 1 &&
+    pendingAssets === reserved &&
+    reserved >= redeemPreview &&
+    (reserved - redeemPreview) * 10_000n <= redeemPreview;
 
   const ok = mintOk && stakeOk && requestOk;
   const d = spec.decimals;
@@ -212,7 +221,7 @@ async function vesperDeposit(base) {
     ...base,
     ok,
     key: `USDC=${formatUnits(usdcBefore, d)}->${formatUnits(usdcMid, d)} USDv=+${formatUnits(usdvGot, 18)} sUSDv=0->${formatUnits(shares, 18)}->${formatUnits(sharesAfter, 18)} cooldownReserved=+${formatUnits(reserved, 18)}`,
-    detail: `Gateway deposit ${formatUnits(amount, d)} USDC -> ${formatUnits(usdvGot, 18)} USDv (previewDeposit ${formatUnits(usdvPreview, 18)})\nstaked into sUSDv: ${formatUnits(shares, 18)} shares = Deposit event shares, ${formatUnits(sharesPreview, 18)} previewed a block earlier (drift ${formatUnits(drift, 18)}); totalAssets +${formatUnits(assetsAfter - assetsBefore, 18)} (deposit plus vested yield)\nrequestRedeem: shares left ${formatUnits(sharesAfter, 18)}, ${pendingIds.length} pending request, ${formatUnits(reserved, 18)} USDv reserved (previewRedeem ${formatUnits(redeemPreview, 18)}); the cooldown is not waited out\ntx ${receipt.hash}`,
+    detail: `Gateway deposit ${formatUnits(amount, d)} USDC -> ${formatUnits(usdvGot, 18)} USDv (previewDeposit ${formatUnits(usdvPreview, 18)})\nstaked into sUSDv: ${formatUnits(shares, 18)} shares = Deposit event shares, ${formatUnits(sharesPreview, 18)} previewed a block earlier (drift ${formatUnits(drift, 18)}); totalAssets +${formatUnits(assetsAfter - assetsBefore, 18)} (deposit plus vested yield)\nrequestRedeem: shares left ${formatUnits(sharesAfter, 18)}, ${pendingIds.length} pending request, ${formatUnits(reserved, 18)} USDv reserved = pending request ${formatUnits(pendingAssets, 18)} (previewRedeem ${formatUnits(redeemPreview, 18)}); the cooldown is not waited out\ntx ${receipt.hash}`,
     error: ok
       ? null
       : `Vesper USD failed: mint=${mintOk} stake=${stakeOk} request=${requestOk} (cooldownEnabled=${cooldown}, pending=${pendingIds.length}, reserved=${reserved}, previewRedeem=${redeemPreview})`,
