@@ -1746,6 +1746,32 @@ const PROTOCOLS = [
     about:
       "USDat stablecoin and sUSDat, an ERC-4626 vault with STRC (Strategy preferred stock) exposure through Ondo STRCon. The fork test stakes USDat into sUSDat; unstaking is a processed queue.",
     data: "On-chain RPC",
+  },  {
+    id: "ember",
+    name: "Ember Protocol",
+    category: "vaults",
+    url: "https://ember.so/",
+    about:
+      "Curated yield vaults on Sui, Ethereum and Pharos. The fork test deposits USDC into Ember Earn (eEARN) on Ethereum and files a queued redeemShares request.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "vesper",
+    name: "Vesper",
+    category: "vaults",
+    url: "https://vesper.finance/",
+    about:
+      "Vesper 2: USDv / ETHv pegged tokens minted 1:1 through a Gateway and staked into sUSDv / sETHv (ERC-4626) for yield. The fork test mints USDv from USDC, stakes it and opens a cooldown unstake request.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "etherfi-cash",
+    name: "ether.fi Cash lending",
+    category: "lending",
+    url: "https://www.ether.fi/cash",
+    about:
+      "The ether.fi-managed Aave V4 market on OP Mainnet behind ether.fi Cash borrowing. Borrowing is limited to ether.fi Safes; the fork test supplies USDC to the Spoke and withdraws it.",
+    data: "On-chain RPC",
   },
 ];
 
@@ -2031,6 +2057,9 @@ const SCRIPT_DESCRIPTIONS = {
   "fork:concrete:deposit": "Deposit USDT into Concrete ctDefiUSDT (async vault). Withdrawal is an epoch queue, so no redeem",
   "fork:concentrator:deposit": "Deposit cvxCRV into Concentrator aCRV and redeem it on an Ethereum fork",
   "fork:fluid-lite:deposit": "Deposit stETH into Fluid Lite iETHv2 and redeem it net of the withdrawal fee on an Ethereum fork",
+  "fork:ember:deposit": "Deposit USDC into Ember Earn and queue a redeemShares withdrawal on an Ethereum fork",
+  "fork:vesper:deposit": "Mint USDv from USDC through the Vesper Gateway, stake it into sUSDv and request a cooldown unstake on an Ethereum fork",
+  "fork:etherfi-cash:supply": "Supply USDC to the ether.fi Cash Aave V4 Spoke and withdraw it on an OP Mainnet fork",
   "fork:curvance:deposit": "Lend WMON into Curvance cWMON (WMON | USDC market) and redeem it on a Monad fork",
   "fork:cooler:borrow": "Olympus Cooler V2: post gOHM, borrow USDS, repay in full and withdraw the collateral on an Ethereum fork",
   "fork:stakelink:deposit": "Deposit LINK into the stake.link Priority Pool (staked or queued) and unqueue the queued part on an Ethereum fork",
