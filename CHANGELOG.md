@@ -3,6 +3,96 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-10-28]
+
+Mon/Wed/Fri pass: claims from 2026-10-22 21:00Z to 2026-10-27 ~21:00Z (this window also covers the 2026-10-26 claims run, which failed before building), the playground batch and the health check. Squash-merged on 2026-10-28 as [#37](https://github.com/xjjda22/defi-scripts/pull/37) (claims, `7fcf486`), [#38](https://github.com/xjjda22/defi-scripts/pull/38) (playground, `2326851`) and [#39](https://github.com/xjjda22/defi-scripts/pull/39) (health, `1c12e46`). This entry also records the 2026-10-26 playground batch, [#36](https://github.com/xjjda22/defi-scripts/pull/36) (`78c9954`, merged 2026-10-27), which had no changelog entry.
+
+### Fixed
+
+- `fork:upshift:deposit` (test bug): the 2-wei round-trip tolerance did not allow for the instant-exit price sitting 0.44 ppm below the deposit price. It now asserts the USDC paid equals the pre-tx `previewRedemption(shares, true)` after-fee amount, the fee is taken on the gross amount, and the gross is within 1 bp of the deposit.
+- `fork:vesper:deposit` (timing flake, new in #38): sUSDv vests per second, so `requestRedeem` only matched the pre-tx `previewRedeem` when mined in the same second. It now asserts the pending request equals the rise in `totalAssetsInCooldown`, is at least the preview, and is within 1 bp.
+- `fork:swell:deposit`: rswETH `deposit()` reverts `CoreMethodsPaused` (Swell's AccessControlManager has core methods, bot methods and withdrawals paused after the 2026-10-21 incident). A Puffer-style pre-check now FAILs early with `coreMethodsPaused=true` and sends no tx. It stays FAIL until Swell unpauses.
+- Superstate USTB continuous price oracle stored lowercase; now EIP-55 `0xE4fA682f94610cCd170680cc3B045d77D9E528a8` (matches docs.superstate.com, has code, `fork:superstate:nav` PASS).
+- `llamaStablecoinMonitor.js`: a gap of more than 3 days in a series no longer skews the 30d change (USDD's series has a 07-07 to 09-28 gap). Non-USD pegs now print in their own currency.
+- Generated README and docs sections checked after the three squashes: all claim-monitor sections (2026-10-07 to 2026-10-28) are in `README.md`, and nothing was dropped.
+
+### Changed
+
+- `dexProtocolMonitor.js`: new opt-in `DEFILLAMA_TVL_DATES_BORROWED` and `DEFILLAMA_CHAIN`; `smokeDefiLlamaProtocol.js` gets `SMOKE_CHAIN`.
+- `arcChainMonitor.js`: new `LLAMA_CHAIN_FEES_SLUG`, `LLAMA_CHAIN_MONTHS` and `LLAMA_CHAIN_STABLES` (matching options in `smokeArcChain.js`).
+- New `llamaYieldPoolMonitor.js` (DefiLlama yields pool APY and TVL). `catalog.js` describes the new options. Before/after output of `pendle:tvl`, `usdsui` and `eurc` is byte-identical.
+- Playground: new shared flows `src/simulation/fork/queuedExitFlows.js` (Ember, Vesper), `etherfiCashFlow.js` and (#36) `stakeLinkFlow.js`; `vaultFlows.js` gains a shared `depositOnly()` helper (Concrete, Saturn). New whales in `runtime.js`: Aave aOptUSDCn on OP for USDC (the ether.fi Hub breaks its own accounting as a whale), plus the USDat Curve pool, cvxCRV, gOHM and USDS from #36.
+- Showcase: additive `testing` stamps only. Ranking, scores, order and `generatedAt` unchanged. Stats: `forkInTop200` 43 → 49 (#36) → 53 (#38), `apiOnlyInTop200` 157 → 151 → 147. `docs/04` regenerated with `npm run catalog:docs`.
+
+### Added
+
+**Claims** (17 monitors, 34 scripts: each `analytics:<name>:<kind>` plus `simulate:<name>:smoke`; sources and live numbers in the README table, the catalog cards and `docs/01`)
+- Exploits (DefiLlama `/hacks`): `analytics:initia:exploit`, `analytics:x100:exploit`, `analytics:yapeswap:exploit`.
+- Revenue: `analytics:ore:revenue`, `analytics:sky:revenue`, `analytics:pendle:revenue`.
+- Perps / chains: `analytics:bulk:perps`, `analytics:bnb:chain`.
+- Stablecoins: `analytics:eurc:supply`, `analytics:ousd:supply`, `analytics:arc:stablecoins`, `analytics:usdd:supply`.
+- Lending / vaults: `analytics:aerie:morpho-vault`, `analytics:morpho:tvl`, `analytics:aave:mantle`, `analytics:aave:v4`, `analytics:sentora:usd-vault`.
+- New contract: Aerie x Plume USDC Core vault `0x5E2339BCb89B42782CEE454B46C7C6f88c0E4f83` (EIP-55, has code, asset USDC).
+
+**Playground** (#36, 2026-10-26)
+- Fork tests + contracts: Curvance on Monad (`fork:curvance:deposit`), Saturn (`fork:saturn:stake`), Concentrator (`fork:concentrator:deposit`), Cooler Loans V2 (`fork:cooler:borrow`), stake.link (`fork:stakelink:deposit`), Fluid Lite (`fork:fluid-lite:deposit`).
+- Contracts only (documented reason): RSK Bridge (TVL is in Powpeg on Bitcoin; the Ethereum Token Bridge was sunset in March 2026), Huma (PST is minted on Solana; the Ethereum token is a CCIP representation).
+
+**Playground** (#38, 2026-10-28)
+- Fork tests + contracts: Ember (`fork:ember:deposit`), Vesper (`fork:vesper:deposit`), ether.fi Borrowing Market + Cash Liquid on OP (`fork:etherfi-cash:supply`).
+- Contracts only (documented reason): Lombard Vaults (the LBTCv Teller is only in a third-party repo), DeFi Saver Asset Management (positions sit in users' own smart wallets), Enzyme (each vault is manager-deployed with its own policies).
+- Coverage, recounted at 102 forkable top-200 rows (earlier entries used ~101): fork tests **48 → 52**, contracts **57 → 64**. #36 reported 43 → 49 fork features and 50 → 58 contracts on its ~101 count.
+
+### Decisions
+
+- Claims are counted against the X list each post was read in (`x-list-claims-2026-10-28-browser.md`); every one of the 19 X sources was re-opened through the public tweet endpoint and states its claim inside the window.
+- Mismatches are recorded, not hidden: Sky September revenue fell 4.8% (claim +50%); EURC is EUR 444.55M with an ATH of EUR 445.76M (claim EUR 450M); OUSD +$379.49M since its series began 09-30 (claim +$794M 30d); USDD 7d +0.46% (claim fastest-growing); Aave V4 deposits $1.20B (claim $1.5B; loans match); Morpho's $9.3B start matches neither TVL nor TVL + borrowed; BNB Q3 levels differ by definition (DefiLlama vs Blockworks), growth directions match.
+- Covered already, no new script: Pons revenue, GRVT OI/TVL, Robinhood Chain TVL/revenue/volume, Collector Crypt and Stonk revenue, Zama TVL, Starknet TVL drop, NEAR Intents volume, Meteora/Jupiter revenue, Hyperliquid OI, pump.fun revenue, Swell pause, monthly L1 fee board.
+- Skipped: Bloom Trading drain (trading bot, not on `/hacks`), CoinDCX (CEX), UXLINK wallet long, predict.fun drains (no amount), "230 hacks YTD" (not one protocol), Immunefi fee collector (truncated address, not DeFi), HIP-3/HIP-4, Outcome.xyz, Variational, Jito BAM and EQX (not repo-readable), Aave V4 Coinbase stock deposits and BNB Q3 lending/RWA (no per-asset split), NEST TVL (different DefiLlama listing), tokenterminal stablecoins-in-DeFi totals (no public source), macro/price/governance posts.
+- Playground skips: Benqi sAVAX #110 (Avalanche is not a configured fork chain), Hyperliquid Bridge #14 (perps fork coverage stays closed), Tornado Cash #54. Next batch starts at #122 Aera.
+- The Swell deposit test is left FAILing on purpose while the protocol is paused, same rule as Puffer.
+
+### Verified (2026-10-28, live)
+
+| Check | Result |
+| --- | --- |
+| 17 claim monitors + 17 smokes (#37) | 34/34 exit 0 |
+| Initia / X100 / Yapeswap (`/hacks`) | $2.60M (10-23) / $4.75M (10-24) / $21.9K (10-25) |
+| ORE revenue | 30d $3.91M, 7d $972.1K, 24h $138.7K |
+| Sky revenue | Aug $14.12M, Sep $13.44M (-4.8%) |
+| BULK OI | $1.39M (09-09) → $14.40M (10-24), $15.78M now; volume paywalled |
+| EURC / OUSD / Arc / USDD | EUR 444.55M / $830.75M / $993.86M (+$524.97M 30d) / $1.74B (+0.46% 7d) |
+| BNB Chain Q2 → Q3 | gas fees $31.17M → $49.17M (+57.7%), DEX volume $74.97B → $102.62B (+36.9%) |
+| Pendle 30d revenue | $452.39K |
+| Aerie x Plume USDC Core | 13.25% net APY on $5.77M |
+| Morpho | TVL + borrowed $12.20B → $17.20B in a year; Robinhood Chain $615.10M of $1.13B (54.3%) |
+| Aave on Mantle / Aave V4 | $71.29M (+45.2% 30d, 62.3% of Mantle) / TVL $742.1M + borrowed $462.4M |
+| Sentora USD vault | $116.56M, 30d APY 7.59% |
+| Playground forks (#38) | Ember: 100 USDC → 94.782369 eEARN = `previewDeposit`, redeem queued. Vesper: 100 USDC → 100 USDv → 98.577679 sUSDv, `requestRedeem` reserved 99.999999 USDv. ether.fi Cash (OP): 100 USDC supplied, 99.999999 withdrawn, 0 shares left |
+| Playground forks (#36) | Curvance 100 WMON round trip; Saturn 100 USDat → 95.2556 sUSDat; Concentrator 100 cvxCRV round trip; Cooler V2 1 gOHM in, 1500 USDS borrowed and repaid; stake.link 10 LINK queued and unqueued; Fluid Lite 1 stETH → 0.8167 iETHv2 → 0.9995 stETH |
+| `simulate:*:smoke` on main `2326851` | 188/188 exit 0 |
+| DefiLlama endpoints | 152/152 return 200 with data (125 protocol slugs, 3 crosschain slugs, 5 chain-fee slugs, 12 chain TVL names, 4 stablecoin ids, 1 yield pool) |
+| Contract book | 210/210 addresses have code; 1 checksum fix (Superstate oracle) |
+| Fork suite on main `2326851` (Anvil 1.8.5) | 89 PASS / 3 FAIL / 0 SKIP of 92 (Ethereum 78/3 at block 26287126; Base, Optimism, Monad, Arbitrum, BSC 11/11) |
+| Fork suite after #39 (Ethereum) | 80 PASS / 1 FAIL (Swell, protocol paused) |
+| Gates | lint, `catalog:check`, `showcaseCheck` (200 rows, fork 53 / API-only 147), `node --check`, package.json duplicate-key scan; CI `check` and `fork-suite` green on #37, #38, #39 |
+
+### Known issues carried forward
+
+- **CI `fork-suite` skips the forks**: the repo has no RPC secret, so fork tests are only run locally on Anvil.
+- **Busy-list coverage is keyword-only** (Airdrop?, Inner Circle CT, ON CHAIN); posts without a keyword are not scanned.
+- **Swell is paused** (core methods, bot methods and withdrawals): rates frozen at swETH 1.202970 / rswETH 1.137680, `fork:swell:deposit` FAILs until it unpauses, and DefiLlama `/hacks` still has no amount.
+- **`fork:etherfi-cash:supply` flakes on slow RPCs**: on `mainnet.optimism.io` it FAILed with `sharesLeft=1` (interest accruing between the read and the full withdraw); PASS on publicnode.
+- **Pendle +43% Q3 claim** (Alea Research) vs DefiLlama +33.3%.
+- **Playground depth**: 50 of 102 forkable top-200 rows still have no fork test.
+- **`anvil_deal` is still `Method not found` on Anvil 1.8.5**; `anvil_dealERC20` now works for USDC on a mainnet fork, but the code still uses whales.
+- **Anvil is not on the default `PATH`** on the box; fork runs need the Foundry bin dir added.
+- **Velodrome fork on Optimism**: `fork:velodrome:swap` times out on `mainnet.optimism.io`; it PASSes against publicnode.
+- **publicnode Optimism archive limit**: a cast call a few minutes after forking returned "Archive requests require a personal token"; a fresh fork worked.
+- **`308faf0` showcase ranking refresh** still unmerged on `fix/gap-audit-2026-10-10`.
+- Perps fork coverage stays closed.
+- Resolved: **X search breaking mid-run** (2026-10-23) did not happen in the 2026-10-28 browser read (no login wall, captcha or "Something went wrong"), removed from this list.
+
 ## [2026-10-23]
 
 Mon/Wed/Fri pass: the 2026-10-21 claims backlog, the playground batch, a clean health check, and claims from 2026-10-20 21:00Z to 2026-10-22 ~21:00Z. Squash-merged on 2026-10-23 as [#33](https://github.com/xjjda22/defi-scripts/pull/33) (2026-10-21 claims, `9af21a2`), [#34](https://github.com/xjjda22/defi-scripts/pull/34) (playground, `ec16e2f`) and [#35](https://github.com/xjjda22/defi-scripts/pull/35) (claims).
