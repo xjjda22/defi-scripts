@@ -43,7 +43,12 @@ const EXTRA_WHALES = {
   },
   optimism: {
     WETH: ["0x4200000000000000000000000000000000000006"],
-    USDC: ["0xacD03D601e5bB1B275Bb94076fF46ED9D753435A"],
+    USDC: [
+      "0xacD03D601e5bB1B275Bb94076fF46ED9D753435A",
+      // Aave V3 aOptUSDCn holds the pool's native USDC. https://aave.com/docs/resources/addresses
+      // (Not the ether.fi Hub: pulling from the Hub breaks its balance accounting.)
+      "0x38d693cE1dF5AaDF7bC62595A37D667aD57922e5",
+    ],
   },
   bsc: {
     WETH: ["0x8894E0a0c962CB723c1976a4421c95949bE2D4E3"],
