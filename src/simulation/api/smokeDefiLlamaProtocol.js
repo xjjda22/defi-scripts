@@ -7,6 +7,7 @@ const {
   fetchVolumeSummary,
   lastTvlUsdFromSeries,
   llamaDeadLabel,
+  decodeLlamaToken,
 } = require("../../analytics/utils/defiLlamaProtocol");
 
 const slug = (process.env.SMOKE_SLUG || "").trim();
@@ -23,6 +24,9 @@ const feesLabel = feesDataType === "dailyFees" ? "fees" : "revenue";
 const checkOi = process.env.SMOKE_OI === "1";
 // SMOKE_VOLUME=dexs|aggregators: also require a positive 30d volume from /summary/{kind}/{slug}
 const volumeKind = (process.env.SMOKE_VOLUME || "").trim();
+// SMOKE_CHAIN=<DefiLlama chain name> (percent-encoded): also require positive protocol TVL on that chain
+// (`currentChainTvls[<chain>]`), for per-chain claims such as `analytics:aave:mantle`.
+const smokeChain = decodeLlamaToken(process.env.SMOKE_CHAIN);
 // A venue whose liveness is proven by fees, OI or volume may legitimately hold $0 TVL (aggregators, launchpads).
 const tvlOptional = allowZeroTvl || checkFees || checkOi || Boolean(volumeKind);
 
@@ -50,6 +54,11 @@ async function main() {
     console.log(chalk.green(`OK: ${name} | TVL ${tvl != null ? `$${tvl.toFixed(0)}` : "—"}`));
     if (!tvlOptional && !(tvl != null && tvl > minTvl)) {
       fail(`TVL ${tvl != null ? `$${tvl.toFixed(0)}` : "missing"} is not above $${minTvl}`);
+    }
+    if (smokeChain) {
+      const onChain = positive(d.currentChainTvls && d.currentChainTvls[smokeChain]);
+      if (onChain == null) fail(`No positive ${name} TVL on ${smokeChain} (currentChainTvls)`);
+      console.log(chalk.green(`OK: ${name} | ${smokeChain} TVL $${onChain.toFixed(0)}`));
     }
     if (checkFees) {
       const r = await fetchFeesSummary(slug, undefined, feesDataType);

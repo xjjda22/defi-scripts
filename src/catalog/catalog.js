@@ -31,11 +31,14 @@ function describeLlamaMonitor(command) {
   const monthsRaw = envValue(command, "DEFILLAMA_MONTHS");
   const months = monthsRaw ? ` + monthly totals (last ${monthsRaw} months)` : "";
   const datesRaw = envValue(command, "DEFILLAMA_TVL_DATES");
-  const dates = datesRaw ? ` + TVL on ${datesRaw.split(",").join(" / ")}` : "";
+  const borrowed = envValue(command, "DEFILLAMA_TVL_DATES_BORROWED") === "1" ? " (with borrowed)" : "";
+  const dates = datesRaw ? ` + TVL${borrowed} on ${datesRaw.split(",").join(" / ")}` : "";
+  const chainRaw = envValue(command, "DEFILLAMA_CHAIN");
+  const chain = chainRaw ? ` + TVL, 7d/30d change and share of chain TVL on ${decodeURIComponent(chainRaw)}` : "";
   const oi = envValue(command, "DEFILLAMA_OI") === "1" ? " + open interest (total24h)" : "";
   const volumeKind = envValue(command, "DEFILLAMA_VOLUME");
   const volume = volumeKind ? ` + ${volumeKind} volume (24h/7d/30d)` : "";
-  return `DefiLlama TVL + TVL by chain${dates}${fees}${oi}${volume}${months} (\`${slug}\`)`;
+  return `DefiLlama TVL + TVL by chain${dates}${chain}${fees}${oi}${volume}${months} (\`${slug}\`)`;
 }
 
 function describeLlamaSmoke(command) {
@@ -49,6 +52,8 @@ function describeLlamaSmoke(command) {
   if (fees) checks.push(envValue(command, "SMOKE_FEES_DATATYPE") === "dailyFees" ? "positive 24h fees" : "positive 24h revenue");
   if (oi) checks.push("positive open interest");
   if (volumeKind) checks.push(`positive 30d ${volumeKind} volume`);
+  const chainRaw = envValue(command, "SMOKE_CHAIN");
+  if (chainRaw) checks.push(`positive TVL on ${decodeURIComponent(chainRaw)}`);
   const extras = [];
   if (allowZero) extras.push("$0 TVL allowed");
   if (envValue(command, "SMOKE_ALLOW_NOT_LISTED") === "1") extras.push("404 tolerated");
