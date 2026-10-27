@@ -710,6 +710,34 @@ const FORK_RECIPES = [
     note: "Fluid Lite (Instadapp Lite) iETHv2, the stETH vault that holds most of the row. The test deposits stETH and redeems it net of the vault's withdrawal fee. fLiteUSD (USDC) is listed for verification.",
     tests: [test("fork:fluid-lite:deposit", "deposit", "ethereum")],
   }),
+  recipe({
+    keys: ["ember-protocol"],
+    category: "vaults",
+    label: "Deposit + queued exit",
+    appUrl: "https://ember.so/",
+    chain: "ethereum",
+    contractKeys: ["ember-protocol"],
+    note: "Ember Earn (eEARN), the largest public USDC vault Ember lists on Ethereum. The test deposits USDC and files redeemShares, which joins the FIFO withdrawal queue Ember's operator processes. Ember's Sui and Pharos vaults (about half the row) are not forkable here. Two other large Ethereum vaults are listed for verification.",
+    tests: [test("fork:ember:deposit", "deposit", "ethereum")],
+  }),
+  recipe({
+    keys: ["vesper"],
+    category: "vaults",
+    label: "Deposit + cooldown request",
+    appUrl: "https://vesper.finance/",
+    chain: "ethereum",
+    contractKeys: ["vesper"],
+    note: "Vesper 2 (Vesper USD): USDC -> USDv through the Gateway, USDv -> sUSDv staking, then a cooldown unstake request. The cooldown (7 days by default) and the Gateway redemption back to USDC are not waited out. Vesper ETH (ETHv / sETHv) is listed for verification; older Vesper Grow pools are not covered.",
+    tests: [test("fork:vesper:deposit", "deposit", "ethereum")],
+  }),
+  recipe({
+    keys: ["etherfi-borrowing-market", "etherfi-cash-liquid"],
+    appUrl: "https://www.ether.fi/cash",
+    chain: "optimism",
+    contractKeys: ["etherfi-borrowing-market"],
+    note: "ether.fi Cash lending is an ether.fi-managed Aave V4 instance on OP Mainnet (one Liquidity Hub, one Spoke). Borrowing is permissioned to ether.fi Safes, but anyone can supply, so the test supplies USDC and withdraws it. The Cash Liquid row is the collateral users hold in their ether.fi Safes on the same market; the Safes themselves are created by ether.fi for account holders and are not exercised here.",
+    tests: [test("fork:etherfi-cash:supply", "supply", "optimism")],
+  }),
 ];
 
 const API_ONLY = [
@@ -784,6 +812,24 @@ const API_ONLY = [
     category: "stable-rwa",
     appUrl: "https://app.huma.finance",
     note: "No fork test: PST is minted and redeemed by the Huma program on Solana (docs.huma.finance smart contracts). On Ethereum PST is a Chainlink CCIP cross-chain token used on Fluid, with no Huma deposit or redeem contract to call, so the only on-chain action is an ERC-20 transfer. The Ethereum PST token is listed for verification.",
+  },
+  {
+    keys: ["lombard-vaults"],
+    category: "vaults",
+    appUrl: "https://www.lombard.finance/app/",
+    note: "No fork test: the Lombard DeFi Vault (LBTCv) is a Veda BoringVault entered through a Teller, and Lombard's contract page (docs.lombard.finance smart contracts) does not publish that Teller; the only source for it is a third-party repo, which this repo does not take addresses from. Withdrawals are a queue of up to 14 days. LBTCv, BTCe and LBTC from the official page are listed for verification.",
+  },
+  {
+    keys: ["defi-saver-asset-management"],
+    category: "lending",
+    appUrl: "https://defisaver.com/",
+    note: "No fork test: this row is positions held in users' own DeFi Saver smart wallets (Safe or DSProxy) on Aave, Spark, Maker/Sky, Compound and others. There is no pooled DeFi Saver contract to deposit into; recipes run through RecipeExecutor from the user's wallet, and the underlying markets already have their own fork tests (fork:aave:*, fork:spark:*, fork:compound:*). The core registry and executor are listed for verification.",
+  },
+  {
+    keys: ["enzyme-finance"],
+    category: "vaults",
+    appUrl: "https://app.enzyme.finance/",
+    note: "No fork test: Enzyme Blue vaults are each deployed by their manager from the FundDeployer with their own deposit policies (allowed-depositor lists, minimums, share-action timelocks), so there is no single permissionless vault behind this row to assert on a fork. The Sulu FundDeployer, DepositWrapper and ValueInterpreter from Enzyme's SDK deployment file are listed for verification.",
   },
 ];
 

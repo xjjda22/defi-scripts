@@ -7285,7 +7285,13 @@
      "tvl": 999597
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:ember:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.777,
    "components": {
@@ -7297,24 +7303,67 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Deposit + queued exit",
+    "note": "Ember Earn (eEARN), the largest public USDC vault Ember lists on Ethereum. The test deposits USDC and files redeemShares, which joins the FIFO withdrawal queue Ember's operator processes. Ember's Sui and Pharos vaults (about half the row) are not forkable here. Two other large Ethereum vaults are listed for verification.",
     "appUrl": "https://ember.so/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:ember:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:ember:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:ember:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit and queue a withdrawal (Ember Earn)",
+      "assertion": "USDC into Ember Earn (eEARN, ERC-4626 deposit), then `redeemShares`. Pre-checks: `asset()` is USDC and `maxDeposit` covers the amount (below it is a labelled read). Asserts the vault pulled exactly the amount, the shares equal the pre-tx `previewDeposit`, and `redeemShares` moved every share into the vault and appended one queue entry for the user with those shares and `estimatedWithdrawAmount` = `convertToAssets(shares)`. Ember's operator processes the queue (3-day period), so the payout is not waited out",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Ember Earn (eEARN)",
+      "address": "0x9be9294722f8AAd37b11a9792Be2C782182caFA2",
+      "doc": "https://vaults.api.sui-prod.bluefin.io/api/v2/vaults?chain=ethereum",
+      "explorerUrl": "https://etherscan.io/address/0x9be9294722f8AAd37b11a9792Be2C782182caFA2"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Bitwise Premium+ RWA (PPLUS)",
+      "address": "0xbc5d3722376d44f3bC316C6EA61C9Bd553Be8CBe",
+      "doc": "https://vaults.api.sui-prod.bluefin.io/api/v2/vaults?chain=ethereum",
+      "explorerUrl": "https://etherscan.io/address/0xbc5d3722376d44f3bC316C6EA61C9Bd553Be8CBe"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Pharos Alpha (pALPHA)",
+      "address": "0xC3AaCb558aFB635307B66FDb405188138576fc4c",
+      "doc": "https://vaults.api.sui-prod.bluefin.io/api/v2/vaults?chain=ethereum",
+      "explorerUrl": "https://etherscan.io/address/0xC3AaCb558aFB635307B66FDb405188138576fc4c"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -9053,14 +9102,36 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://www.lombard.finance/app/stake/?referrer=ssybnl",
+    "note": "No fork test: the Lombard DeFi Vault (LBTCv) is a Veda BoringVault entered through a Teller, and Lombard's contract page (docs.lombard.finance smart contracts) does not publish that Teller; the only source for it is a third-party repo, which this repo does not take addresses from. Withdrawals are a queue of up to 14 days. LBTCv, BTCe and LBTC from the official page are listed for verification.",
+    "appUrl": "https://www.lombard.finance/app/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
     "tests": [],
     "features": [],
-    "contracts": [],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "LBTCv (Lombard DeFi Vault)",
+      "address": "0x5401b8620E5FB570064CA9114fd1e135fd77D57c",
+      "doc": "https://docs.lombard.finance/learn/transparency/smart-contracts",
+      "explorerUrl": "https://etherscan.io/address/0x5401b8620E5FB570064CA9114fd1e135fd77D57c"
+     },
+     {
+      "chain": "ethereum",
+      "label": "BTCe",
+      "address": "0x3a4baaBf4DC9910596821615e848f0e6545762F3",
+      "doc": "https://docs.lombard.finance/learn/transparency/smart-contracts",
+      "explorerUrl": "https://etherscan.io/address/0x3a4baaBf4DC9910596821615e848f0e6545762F3"
+     },
+     {
+      "chain": "ethereum",
+      "label": "LBTC",
+      "address": "0x8236a87084f8B84306f72007F36F2618A5634494",
+      "doc": "https://docs.lombard.finance/learn/transparency/smart-contracts",
+      "explorerUrl": "https://etherscan.io/address/0x8236a87084f8B84306f72007F36F2618A5634494"
+     }
+    ],
     "recipe": {
      "title": "Generic vault fork",
      "chain": "ethereum",
@@ -10509,7 +10580,13 @@
      "tvl": 27960
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:vesper:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7392,
    "components": {
@@ -10521,24 +10598,102 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Deposit + cooldown request",
+    "note": "Vesper 2 (Vesper USD): USDC -> USDv through the Gateway, USDv -> sUSDv staking, then a cooldown unstake request. The cooldown (7 days by default) and the Gateway redemption back to USDC are not waited out. Vesper ETH (ETHv / sETHv) is listed for verification; older Vesper Grow pools are not covered.",
     "appUrl": "https://vesper.finance/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:vesper:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:vesper:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:vesper:deposit",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Mint USDv, stake sUSDv, request unstake (Vesper USD)",
+      "assertion": "Gateway `deposit` of USDC mints exactly the pre-tx `previewDeposit` in USDv (fixed-price adapter at 1.0) and pulls exactly the USDC. Staking all of it into sUSDv (ERC-4626) spends exactly that USDv, the `Deposit` event reports those assets and the user's shares, and shares are within 1 bp of the preview (sUSDv vests yield per second). `requestRedeem` burns every share, opens one pending request and reserves exactly the pre-tx `previewRedeem` in `totalAssetsInCooldown`. The 7-day cooldown and the USDv -> USDC redemption are not waited out",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "USDv (PeggedToken)",
+      "address": "0xC9aD6eD9f522e8Ac2dE8FFc8B081005CCE50c8AB",
+      "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0xC9aD6eD9f522e8Ac2dE8FFc8B081005CCE50c8AB"
+     },
+     {
+      "chain": "ethereum",
+      "label": "sUSDv (StakingVault, ERC-4626)",
+      "address": "0x7473Da16F17abA0D920605e1F9560A99a6F6314A",
+      "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x7473Da16F17abA0D920605e1F9560A99a6F6314A"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Vesper USD Gateway",
+      "address": "0x9a1800B63d40a19539017a8C6F0D005F9c9F8A00",
+      "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x9a1800B63d40a19539017a8C6F0D005F9c9F8A00"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Vesper USD Treasury",
+      "address": "0xd4765523Fd844eddF9e6EFe136a48012BCd5503a",
+      "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0xd4765523Fd844eddF9e6EFe136a48012BCd5503a"
+     },
+     {
+      "chain": "ethereum",
+      "label": "USDC YieldVault",
+      "address": "0x3aEd4dd0b5ba616156Fa352274670c18D2Ec2A81",
+      "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x3aEd4dd0b5ba616156Fa352274670c18D2Ec2A81"
+     },
+     {
+      "chain": "ethereum",
+      "label": "ETHv (PeggedToken)",
+      "address": "0x2D376B65dCd18F67E596C4cF815Ecadb960E0dEa",
+      "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x2D376B65dCd18F67E596C4cF815Ecadb960E0dEa"
+     },
+     {
+      "chain": "ethereum",
+      "label": "sETHv (StakingVault)",
+      "address": "0x1E0cFbFA5BD27beC4e26b7fE6F4b55E83C2b4a2c",
+      "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x1E0cFbFA5BD27beC4e26b7fE6F4b55E83C2b4a2c"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Vesper ETH Gateway",
+      "address": "0xE2976cf9749BE7b6ADdA6707d066ef1D2319A0b4",
+      "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0xE2976cf9749BE7b6ADdA6707d066ef1D2319A0b4"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -10829,7 +10984,13 @@
      "tvl": 31969
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:etherfi-cash:supply",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7361,
    "components": {
@@ -10841,24 +11002,68 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://www.ether.fi",
-    "chain": "ethereum",
-    "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic lending fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-     ],
-     "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-    }
+    "mode": "fork",
+    "label": null,
+    "note": "ether.fi Cash lending is an ether.fi-managed Aave V4 instance on OP Mainnet (one Liquidity Hub, one Spoke). Borrowing is permissioned to ether.fi Safes, but anyone can supply, so the test supplies USDC and withdraws it. The Cash Liquid row is the collateral users hold in their ether.fi Safes on the same market; the Safes themselves are created by ether.fi for account holders and are not exercised here.",
+    "appUrl": "https://www.ether.fi/cash",
+    "chain": "optimism",
+    "rpcEnv": "OPTIMISM_RPC_URL",
+    "commands": [
+     "CHAIN=optimism node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=optimism node scripts/startFork.js",
+     "OPTIMISM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi-cash:supply"
+    ],
+    "tests": [
+     {
+      "script": "fork:etherfi-cash:supply",
+      "action": "supply",
+      "chain": "optimism",
+      "rpcEnv": "OPTIMISM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:etherfi-cash:supply",
+      "section": "actions",
+      "chain": "optimism",
+      "title": "Supply and withdraw USDC (ether.fi Cash lending)",
+      "action": "USDC `supply` into reserve 0 of the ether.fi Cash Spoke (ether.fi-managed Aave V4 on OP Mainnet), then `withdraw` the full supplied balance. Pre-checks: reserve 0 is native USDC on the documented Liquidity Hub and is neither paused nor frozen",
+      "assertion": "the user's USDC and the Hub's USDC move by exactly the amount, supply shares are minted and `getUserSuppliedAssets` is the amount within 1 wei; the withdraw returns exactly the supplied assets from the Hub and leaves 0 shares. Borrowing is limited to ether.fi Safes and is not called",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "optimism",
+      "label": "Liquidity Hub (Aave V4)",
+      "address": "0x66753c4e3fC84f1eD0e3C267C927284E9d90C572",
+      "doc": "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+      "explorerUrl": "https://optimistic.etherscan.io/address/0x66753c4e3fC84f1eD0e3C267C927284E9d90C572"
+     },
+     {
+      "chain": "optimism",
+      "label": "Spoke (Aave V4)",
+      "address": "0xdffcC3536D932eb51Df51a7F5FA407c4270d5308",
+      "doc": "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+      "explorerUrl": "https://optimistic.etherscan.io/address/0xdffcC3536D932eb51Df51a7F5FA407c4270d5308"
+     },
+     {
+      "chain": "optimism",
+      "label": "AaveV4Lens",
+      "address": "0x35Ba1a778359421F2757154a35BD4881AcE98C91",
+      "doc": "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+      "explorerUrl": "https://optimistic.etherscan.io/address/0x35Ba1a778359421F2757154a35BD4881AcE98C91"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -10913,14 +11118,36 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "note": "No fork test: this row is positions held in users' own DeFi Saver smart wallets (Safe or DSProxy) on Aave, Spark, Maker/Sky, Compound and others. There is no pooled DeFi Saver contract to deposit into; recipes run through RecipeExecutor from the user's wallet, and the underlying markets already have their own fork tests (fork:aave:*, fork:spark:*, fork:compound:*). The core registry and executor are listed for verification.",
     "appUrl": "https://defisaver.com/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
     "tests": [],
     "features": [],
-    "contracts": [],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "DFSRegistry",
+      "address": "0x287778F121F134C66212FB16c9b53eC991D32f5b",
+      "doc": "https://github.com/defisaver/defisaver-v3-contracts/blob/main/addresses/mainnet.json",
+      "explorerUrl": "https://etherscan.io/address/0x287778F121F134C66212FB16c9b53eC991D32f5b"
+     },
+     {
+      "chain": "ethereum",
+      "label": "RecipeExecutor",
+      "address": "0xbc3Fc959FeF3F12a41738f406c02198cdeE7481F",
+      "doc": "https://github.com/defisaver/defisaver-v3-contracts/blob/main/addresses/mainnet.json",
+      "explorerUrl": "https://etherscan.io/address/0xbc3Fc959FeF3F12a41738f406c02198cdeE7481F"
+     },
+     {
+      "chain": "ethereum",
+      "label": "SafeModuleAuth",
+      "address": "0x7407974DDBF539e552F1d051e44573090912CC3D",
+      "doc": "https://github.com/defisaver/defisaver-v3-contracts/blob/main/addresses/mainnet.json",
+      "explorerUrl": "https://etherscan.io/address/0x7407974DDBF539e552F1d051e44573090912CC3D"
+     }
+    ],
     "recipe": {
      "title": "Generic lending fork",
      "chain": "ethereum",
@@ -10967,7 +11194,13 @@
      "tvl": 22172
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:etherfi-cash:supply",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "score": 0.7345,
    "components": {
@@ -10979,23 +11212,68 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://www.ether.fi",
-    "chain": "ethereum",
-    "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic API check",
-     "chain": "ethereum",
-     "commands": [
-      "npm run simulate:polymarket:smoke"
-     ],
-     "note": "No fork script for this category. Use the protocol’s DefiLlama smoke when it has one."
-    }
+    "mode": "fork",
+    "label": null,
+    "note": "ether.fi Cash lending is an ether.fi-managed Aave V4 instance on OP Mainnet (one Liquidity Hub, one Spoke). Borrowing is permissioned to ether.fi Safes, but anyone can supply, so the test supplies USDC and withdraws it. The Cash Liquid row is the collateral users hold in their ether.fi Safes on the same market; the Safes themselves are created by ether.fi for account holders and are not exercised here.",
+    "appUrl": "https://www.ether.fi/cash",
+    "chain": "optimism",
+    "rpcEnv": "OPTIMISM_RPC_URL",
+    "commands": [
+     "CHAIN=optimism node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=optimism node scripts/startFork.js",
+     "OPTIMISM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi-cash:supply"
+    ],
+    "tests": [
+     {
+      "script": "fork:etherfi-cash:supply",
+      "action": "supply",
+      "chain": "optimism",
+      "rpcEnv": "OPTIMISM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:etherfi-cash:supply",
+      "section": "actions",
+      "chain": "optimism",
+      "title": "Supply and withdraw USDC (ether.fi Cash lending)",
+      "action": "USDC `supply` into reserve 0 of the ether.fi Cash Spoke (ether.fi-managed Aave V4 on OP Mainnet), then `withdraw` the full supplied balance. Pre-checks: reserve 0 is native USDC on the documented Liquidity Hub and is neither paused nor frozen",
+      "assertion": "the user's USDC and the Hub's USDC move by exactly the amount, supply shares are minted and `getUserSuppliedAssets` is the amount within 1 wei; the withdraw returns exactly the supplied assets from the Hub and leaves 0 shares. Borrowing is limited to ether.fi Safes and is not called",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "optimism",
+      "label": "Liquidity Hub (Aave V4)",
+      "address": "0x66753c4e3fC84f1eD0e3C267C927284E9d90C572",
+      "doc": "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+      "explorerUrl": "https://optimistic.etherscan.io/address/0x66753c4e3fC84f1eD0e3C267C927284E9d90C572"
+     },
+     {
+      "chain": "optimism",
+      "label": "Spoke (Aave V4)",
+      "address": "0xdffcC3536D932eb51Df51a7F5FA407c4270d5308",
+      "doc": "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+      "explorerUrl": "https://optimistic.etherscan.io/address/0xdffcC3536D932eb51Df51a7F5FA407c4270d5308"
+     },
+     {
+      "chain": "optimism",
+      "label": "AaveV4Lens",
+      "address": "0x35Ba1a778359421F2757154a35BD4881AcE98C91",
+      "doc": "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+      "explorerUrl": "https://optimistic.etherscan.io/address/0x35Ba1a778359421F2757154a35BD4881AcE98C91"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -11533,14 +11811,36 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://enzyme.finance/",
+    "note": "No fork test: Enzyme Blue vaults are each deployed by their manager from the FundDeployer with their own deposit policies (allowed-depositor lists, minimums, share-action timelocks), so there is no single permissionless vault behind this row to assert on a fork. The Sulu FundDeployer, DepositWrapper and ValueInterpreter from Enzyme's SDK deployment file are listed for verification.",
+    "appUrl": "https://app.enzyme.finance/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
     "tests": [],
     "features": [],
-    "contracts": [],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "FundDeployer (Sulu)",
+      "address": "0x4f1C53F096533C04d8157EFB6Bca3eb22ddC6360",
+      "doc": "https://github.com/enzymefinance/sdk/blob/main/packages/environment/src/deployments/ethereum.ts",
+      "explorerUrl": "https://etherscan.io/address/0x4f1C53F096533C04d8157EFB6Bca3eb22ddC6360"
+     },
+     {
+      "chain": "ethereum",
+      "label": "DepositWrapper",
+      "address": "0x65BbAD6545B7ac9C30Fb0f07e64e25106Bf05eEc",
+      "doc": "https://github.com/enzymefinance/sdk/blob/main/packages/environment/src/deployments/ethereum.ts",
+      "explorerUrl": "https://etherscan.io/address/0x65BbAD6545B7ac9C30Fb0f07e64e25106Bf05eEc"
+     },
+     {
+      "chain": "ethereum",
+      "label": "ValueInterpreter",
+      "address": "0xD7B0610dB501b15Bfb9B7DDad8b3869de262a327",
+      "doc": "https://github.com/enzymefinance/sdk/blob/main/packages/environment/src/deployments/ethereum.ts",
+      "explorerUrl": "https://etherscan.io/address/0xD7B0610dB501b15Bfb9B7DDad8b3869de262a327"
+     }
+    ],
     "recipe": {
      "title": "Generic vault fork",
      "chain": "ethereum",
@@ -35131,7 +35431,13 @@
       "tvl": 31969
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:etherfi-cash:supply",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7361,
     "components": {
@@ -35143,24 +35449,68 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.ether.fi",
-     "chain": "ethereum",
-     "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic lending fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-      ],
-      "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-     }
+     "mode": "fork",
+     "label": null,
+     "note": "ether.fi Cash lending is an ether.fi-managed Aave V4 instance on OP Mainnet (one Liquidity Hub, one Spoke). Borrowing is permissioned to ether.fi Safes, but anyone can supply, so the test supplies USDC and withdraws it. The Cash Liquid row is the collateral users hold in their ether.fi Safes on the same market; the Safes themselves are created by ether.fi for account holders and are not exercised here.",
+     "appUrl": "https://www.ether.fi/cash",
+     "chain": "optimism",
+     "rpcEnv": "OPTIMISM_RPC_URL",
+     "commands": [
+      "CHAIN=optimism node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=optimism node scripts/startFork.js",
+      "OPTIMISM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi-cash:supply"
+     ],
+     "tests": [
+      {
+       "script": "fork:etherfi-cash:supply",
+       "action": "supply",
+       "chain": "optimism",
+       "rpcEnv": "OPTIMISM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:etherfi-cash:supply",
+       "section": "actions",
+       "chain": "optimism",
+       "title": "Supply and withdraw USDC (ether.fi Cash lending)",
+       "action": "USDC `supply` into reserve 0 of the ether.fi Cash Spoke (ether.fi-managed Aave V4 on OP Mainnet), then `withdraw` the full supplied balance. Pre-checks: reserve 0 is native USDC on the documented Liquidity Hub and is neither paused nor frozen",
+       "assertion": "the user's USDC and the Hub's USDC move by exactly the amount, supply shares are minted and `getUserSuppliedAssets` is the amount within 1 wei; the withdraw returns exactly the supplied assets from the Hub and leaves 0 shares. Borrowing is limited to ether.fi Safes and is not called",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "optimism",
+       "label": "Liquidity Hub (Aave V4)",
+       "address": "0x66753c4e3fC84f1eD0e3C267C927284E9d90C572",
+       "doc": "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+       "explorerUrl": "https://optimistic.etherscan.io/address/0x66753c4e3fC84f1eD0e3C267C927284E9d90C572"
+      },
+      {
+       "chain": "optimism",
+       "label": "Spoke (Aave V4)",
+       "address": "0xdffcC3536D932eb51Df51a7F5FA407c4270d5308",
+       "doc": "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+       "explorerUrl": "https://optimistic.etherscan.io/address/0xdffcC3536D932eb51Df51a7F5FA407c4270d5308"
+      },
+      {
+       "chain": "optimism",
+       "label": "AaveV4Lens",
+       "address": "0x35Ba1a778359421F2757154a35BD4881AcE98C91",
+       "doc": "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+       "explorerUrl": "https://optimistic.etherscan.io/address/0x35Ba1a778359421F2757154a35BD4881AcE98C91"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -35215,14 +35565,36 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "note": "No fork test: this row is positions held in users' own DeFi Saver smart wallets (Safe or DSProxy) on Aave, Spark, Maker/Sky, Compound and others. There is no pooled DeFi Saver contract to deposit into; recipes run through RecipeExecutor from the user's wallet, and the underlying markets already have their own fork tests (fork:aave:*, fork:spark:*, fork:compound:*). The core registry and executor are listed for verification.",
      "appUrl": "https://defisaver.com/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
      "features": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "DFSRegistry",
+       "address": "0x287778F121F134C66212FB16c9b53eC991D32f5b",
+       "doc": "https://github.com/defisaver/defisaver-v3-contracts/blob/main/addresses/mainnet.json",
+       "explorerUrl": "https://etherscan.io/address/0x287778F121F134C66212FB16c9b53eC991D32f5b"
+      },
+      {
+       "chain": "ethereum",
+       "label": "RecipeExecutor",
+       "address": "0xbc3Fc959FeF3F12a41738f406c02198cdeE7481F",
+       "doc": "https://github.com/defisaver/defisaver-v3-contracts/blob/main/addresses/mainnet.json",
+       "explorerUrl": "https://etherscan.io/address/0xbc3Fc959FeF3F12a41738f406c02198cdeE7481F"
+      },
+      {
+       "chain": "ethereum",
+       "label": "SafeModuleAuth",
+       "address": "0x7407974DDBF539e552F1d051e44573090912CC3D",
+       "doc": "https://github.com/defisaver/defisaver-v3-contracts/blob/main/addresses/mainnet.json",
+       "explorerUrl": "https://etherscan.io/address/0x7407974DDBF539e552F1d051e44573090912CC3D"
+      }
+     ],
      "recipe": {
       "title": "Generic lending fork",
       "chain": "ethereum",
@@ -42652,7 +43024,13 @@
       "tvl": 999597
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:ember:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.777,
     "components": {
@@ -42664,24 +43042,67 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Deposit + queued exit",
+     "note": "Ember Earn (eEARN), the largest public USDC vault Ember lists on Ethereum. The test deposits USDC and files redeemShares, which joins the FIFO withdrawal queue Ember's operator processes. Ember's Sui and Pharos vaults (about half the row) are not forkable here. Two other large Ethereum vaults are listed for verification.",
      "appUrl": "https://ember.so/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:ember:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:ember:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:ember:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit and queue a withdrawal (Ember Earn)",
+       "assertion": "USDC into Ember Earn (eEARN, ERC-4626 deposit), then `redeemShares`. Pre-checks: `asset()` is USDC and `maxDeposit` covers the amount (below it is a labelled read). Asserts the vault pulled exactly the amount, the shares equal the pre-tx `previewDeposit`, and `redeemShares` moved every share into the vault and appended one queue entry for the user with those shares and `estimatedWithdrawAmount` = `convertToAssets(shares)`. Ember's operator processes the queue (3-day period), so the payout is not waited out",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Ember Earn (eEARN)",
+       "address": "0x9be9294722f8AAd37b11a9792Be2C782182caFA2",
+       "doc": "https://vaults.api.sui-prod.bluefin.io/api/v2/vaults?chain=ethereum",
+       "explorerUrl": "https://etherscan.io/address/0x9be9294722f8AAd37b11a9792Be2C782182caFA2"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Bitwise Premium+ RWA (PPLUS)",
+       "address": "0xbc5d3722376d44f3bC316C6EA61C9Bd553Be8CBe",
+       "doc": "https://vaults.api.sui-prod.bluefin.io/api/v2/vaults?chain=ethereum",
+       "explorerUrl": "https://etherscan.io/address/0xbc5d3722376d44f3bC316C6EA61C9Bd553Be8CBe"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Pharos Alpha (pALPHA)",
+       "address": "0xC3AaCb558aFB635307B66FDb405188138576fc4c",
+       "doc": "https://vaults.api.sui-prod.bluefin.io/api/v2/vaults?chain=ethereum",
+       "explorerUrl": "https://etherscan.io/address/0xC3AaCb558aFB635307B66FDb405188138576fc4c"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -43214,14 +43635,36 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.lombard.finance/app/stake/?referrer=ssybnl",
+     "note": "No fork test: the Lombard DeFi Vault (LBTCv) is a Veda BoringVault entered through a Teller, and Lombard's contract page (docs.lombard.finance smart contracts) does not publish that Teller; the only source for it is a third-party repo, which this repo does not take addresses from. Withdrawals are a queue of up to 14 days. LBTCv, BTCe and LBTC from the official page are listed for verification.",
+     "appUrl": "https://www.lombard.finance/app/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
      "features": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "LBTCv (Lombard DeFi Vault)",
+       "address": "0x5401b8620E5FB570064CA9114fd1e135fd77D57c",
+       "doc": "https://docs.lombard.finance/learn/transparency/smart-contracts",
+       "explorerUrl": "https://etherscan.io/address/0x5401b8620E5FB570064CA9114fd1e135fd77D57c"
+      },
+      {
+       "chain": "ethereum",
+       "label": "BTCe",
+       "address": "0x3a4baaBf4DC9910596821615e848f0e6545762F3",
+       "doc": "https://docs.lombard.finance/learn/transparency/smart-contracts",
+       "explorerUrl": "https://etherscan.io/address/0x3a4baaBf4DC9910596821615e848f0e6545762F3"
+      },
+      {
+       "chain": "ethereum",
+       "label": "LBTC",
+       "address": "0x8236a87084f8B84306f72007F36F2618A5634494",
+       "doc": "https://docs.lombard.finance/learn/transparency/smart-contracts",
+       "explorerUrl": "https://etherscan.io/address/0x8236a87084f8B84306f72007F36F2618A5634494"
+      }
+     ],
      "recipe": {
       "title": "Generic vault fork",
       "chain": "ethereum",
@@ -43545,7 +43988,13 @@
       "tvl": 27960
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:vesper:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7392,
     "components": {
@@ -43557,24 +44006,102 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Deposit + cooldown request",
+     "note": "Vesper 2 (Vesper USD): USDC -> USDv through the Gateway, USDv -> sUSDv staking, then a cooldown unstake request. The cooldown (7 days by default) and the Gateway redemption back to USDC are not waited out. Vesper ETH (ETHv / sETHv) is listed for verification; older Vesper Grow pools are not covered.",
      "appUrl": "https://vesper.finance/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:vesper:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:vesper:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:vesper:deposit",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Mint USDv, stake sUSDv, request unstake (Vesper USD)",
+       "assertion": "Gateway `deposit` of USDC mints exactly the pre-tx `previewDeposit` in USDv (fixed-price adapter at 1.0) and pulls exactly the USDC. Staking all of it into sUSDv (ERC-4626) spends exactly that USDv, the `Deposit` event reports those assets and the user's shares, and shares are within 1 bp of the preview (sUSDv vests yield per second). `requestRedeem` burns every share, opens one pending request and reserves exactly the pre-tx `previewRedeem` in `totalAssetsInCooldown`. The 7-day cooldown and the USDv -> USDC redemption are not waited out",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "USDv (PeggedToken)",
+       "address": "0xC9aD6eD9f522e8Ac2dE8FFc8B081005CCE50c8AB",
+       "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0xC9aD6eD9f522e8Ac2dE8FFc8B081005CCE50c8AB"
+      },
+      {
+       "chain": "ethereum",
+       "label": "sUSDv (StakingVault, ERC-4626)",
+       "address": "0x7473Da16F17abA0D920605e1F9560A99a6F6314A",
+       "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x7473Da16F17abA0D920605e1F9560A99a6F6314A"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Vesper USD Gateway",
+       "address": "0x9a1800B63d40a19539017a8C6F0D005F9c9F8A00",
+       "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x9a1800B63d40a19539017a8C6F0D005F9c9F8A00"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Vesper USD Treasury",
+       "address": "0xd4765523Fd844eddF9e6EFe136a48012BCd5503a",
+       "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0xd4765523Fd844eddF9e6EFe136a48012BCd5503a"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDC YieldVault",
+       "address": "0x3aEd4dd0b5ba616156Fa352274670c18D2Ec2A81",
+       "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x3aEd4dd0b5ba616156Fa352274670c18D2Ec2A81"
+      },
+      {
+       "chain": "ethereum",
+       "label": "ETHv (PeggedToken)",
+       "address": "0x2D376B65dCd18F67E596C4cF815Ecadb960E0dEa",
+       "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x2D376B65dCd18F67E596C4cF815Ecadb960E0dEa"
+      },
+      {
+       "chain": "ethereum",
+       "label": "sETHv (StakingVault)",
+       "address": "0x1E0cFbFA5BD27beC4e26b7fE6F4b55E83C2b4a2c",
+       "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x1E0cFbFA5BD27beC4e26b7fE6F4b55E83C2b4a2c"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Vesper ETH Gateway",
+       "address": "0xE2976cf9749BE7b6ADdA6707d066ef1D2319A0b4",
+       "doc": "https://docs.vesper.finance/vesper-2/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0xE2976cf9749BE7b6ADdA6707d066ef1D2319A0b4"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -43734,14 +44261,36 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://enzyme.finance/",
+     "note": "No fork test: Enzyme Blue vaults are each deployed by their manager from the FundDeployer with their own deposit policies (allowed-depositor lists, minimums, share-action timelocks), so there is no single permissionless vault behind this row to assert on a fork. The Sulu FundDeployer, DepositWrapper and ValueInterpreter from Enzyme's SDK deployment file are listed for verification.",
+     "appUrl": "https://app.enzyme.finance/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
      "features": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "FundDeployer (Sulu)",
+       "address": "0x4f1C53F096533C04d8157EFB6Bca3eb22ddC6360",
+       "doc": "https://github.com/enzymefinance/sdk/blob/main/packages/environment/src/deployments/ethereum.ts",
+       "explorerUrl": "https://etherscan.io/address/0x4f1C53F096533C04d8157EFB6Bca3eb22ddC6360"
+      },
+      {
+       "chain": "ethereum",
+       "label": "DepositWrapper",
+       "address": "0x65BbAD6545B7ac9C30Fb0f07e64e25106Bf05eEc",
+       "doc": "https://github.com/enzymefinance/sdk/blob/main/packages/environment/src/deployments/ethereum.ts",
+       "explorerUrl": "https://etherscan.io/address/0x65BbAD6545B7ac9C30Fb0f07e64e25106Bf05eEc"
+      },
+      {
+       "chain": "ethereum",
+       "label": "ValueInterpreter",
+       "address": "0xD7B0610dB501b15Bfb9B7DDad8b3869de262a327",
+       "doc": "https://github.com/enzymefinance/sdk/blob/main/packages/environment/src/deployments/ethereum.ts",
+       "explorerUrl": "https://etherscan.io/address/0xD7B0610dB501b15Bfb9B7DDad8b3869de262a327"
+      }
+     ],
      "recipe": {
       "title": "Generic vault fork",
       "chain": "ethereum",
@@ -73369,7 +73918,13 @@
       "tvl": 22172
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:etherfi-cash:supply",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "score": 0.7345,
     "components": {
@@ -73381,23 +73936,68 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.ether.fi",
-     "chain": "ethereum",
-     "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic API check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:polymarket:smoke"
-      ],
-      "note": "No fork script for this category. Use the protocol’s DefiLlama smoke when it has one."
-     }
+     "mode": "fork",
+     "label": null,
+     "note": "ether.fi Cash lending is an ether.fi-managed Aave V4 instance on OP Mainnet (one Liquidity Hub, one Spoke). Borrowing is permissioned to ether.fi Safes, but anyone can supply, so the test supplies USDC and withdraws it. The Cash Liquid row is the collateral users hold in their ether.fi Safes on the same market; the Safes themselves are created by ether.fi for account holders and are not exercised here.",
+     "appUrl": "https://www.ether.fi/cash",
+     "chain": "optimism",
+     "rpcEnv": "OPTIMISM_RPC_URL",
+     "commands": [
+      "CHAIN=optimism node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=optimism node scripts/startFork.js",
+      "OPTIMISM_RPC_URL=http://127.0.0.1:8545 npm run fork:etherfi-cash:supply"
+     ],
+     "tests": [
+      {
+       "script": "fork:etherfi-cash:supply",
+       "action": "supply",
+       "chain": "optimism",
+       "rpcEnv": "OPTIMISM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:etherfi-cash:supply",
+       "section": "actions",
+       "chain": "optimism",
+       "title": "Supply and withdraw USDC (ether.fi Cash lending)",
+       "action": "USDC `supply` into reserve 0 of the ether.fi Cash Spoke (ether.fi-managed Aave V4 on OP Mainnet), then `withdraw` the full supplied balance. Pre-checks: reserve 0 is native USDC on the documented Liquidity Hub and is neither paused nor frozen",
+       "assertion": "the user's USDC and the Hub's USDC move by exactly the amount, supply shares are minted and `getUserSuppliedAssets` is the amount within 1 wei; the withdraw returns exactly the supplied assets from the Hub and leaves 0 shares. Borrowing is limited to ether.fi Safes and is not called",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "optimism",
+       "label": "Liquidity Hub (Aave V4)",
+       "address": "0x66753c4e3fC84f1eD0e3C267C927284E9d90C572",
+       "doc": "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+       "explorerUrl": "https://optimistic.etherscan.io/address/0x66753c4e3fC84f1eD0e3C267C927284E9d90C572"
+      },
+      {
+       "chain": "optimism",
+       "label": "Spoke (Aave V4)",
+       "address": "0xdffcC3536D932eb51Df51a7F5FA407c4270d5308",
+       "doc": "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+       "explorerUrl": "https://optimistic.etherscan.io/address/0xdffcC3536D932eb51Df51a7F5FA407c4270d5308"
+      },
+      {
+       "chain": "optimism",
+       "label": "AaveV4Lens",
+       "address": "0x35Ba1a778359421F2757154a35BD4881AcE98C91",
+       "doc": "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+       "explorerUrl": "https://optimistic.etherscan.io/address/0x35Ba1a778359421F2757154a35BD4881AcE98C91"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -80579,7 +81179,7 @@
    "Domains": 14,
    "Coins Tracker": 2
   },
-  "forkInTop200": 49,
-  "apiOnlyInTop200": 151
+  "forkInTop200": 53,
+  "apiOnlyInTop200": 147
  }
 }

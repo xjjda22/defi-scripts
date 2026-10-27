@@ -110,6 +110,16 @@ const DOCS = {
   olympus: "https://docs.olympusdao.finance/main/contracts/addresses",
   stakeLink: "https://docs.stake.link/resources/contracts-and-integrations",
   fluidLite: "https://lite.guides.instadapp.io/getting-started/vault-receipt-tokens",
+  // Ember's vault API (OpenAPI spec linked from learn.ember.so/ember-protocol/api-docs); the ember.so app reads it.
+  ember: "https://vaults.api.sui-prod.bluefin.io/api/v2/vaults?chain=ethereum",
+  lombard: "https://docs.lombard.finance/learn/transparency/smart-contracts",
+  vesper: "https://docs.vesper.finance/vesper-2/contract-addresses",
+  // ether.fi Cash lending (ether.fi-managed Aave V4 on OP Mainnet).
+  etherfiCash: "https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters",
+  // DeFi Saver's "Deployed contracts" page links its own addresses/mainnet.json.
+  defisaver: "https://github.com/defisaver/defisaver-v3-contracts/blob/main/addresses/mainnet.json",
+  // Enzyme Blue (Sulu release) deployment file in Enzyme's SDK.
+  enzyme: "https://github.com/enzymefinance/sdk/blob/main/packages/environment/src/deployments/ethereum.ts",
 };
 
 /**
@@ -248,6 +258,13 @@ function contractBook() {
     "stake.link": [],
     "stake.link-liquid": [],
     "fluid-lite": [],
+    "ember-protocol": [],
+    "lombard-vaults": [],
+    vesper: [],
+    "etherfi-borrowing-market": [],
+    "etherfi-cash-liquid": [],
+    "defi-saver-asset-management": [],
+    "enzyme-finance": [],
   };
 
   push(book.uniswap, eth, "V2 router", uni.v2.router, DOCS.uniswap);
@@ -622,6 +639,37 @@ function contractBook() {
   // Fluid Lite (Instadapp Lite) vault receipt tokens on Ethereum (ERC-4626).
   push(book["fluid-lite"], eth, "iETHv2 (stETH vault)", "0xA0D3707c569ff8C87FA923d3823eC5D81c98Be78", DOCS.fluidLite);
   push(book["fluid-lite"], eth, "fLiteUSD (USDC vault)", "0x273DA948ACa9261043fbdb2a857BC255ECC29012", DOCS.fluidLite);
+  // Ember EVM vaults on Ethereum (ERC-4626 deposit, queued redeemShares). The largest public USDC vaults.
+  push(book["ember-protocol"], eth, "Ember Earn (eEARN)", "0x9be9294722f8AAd37b11a9792Be2C782182caFA2", DOCS.ember);
+  push(book["ember-protocol"], eth, "Bitwise Premium+ RWA (PPLUS)", "0xbc5d3722376d44f3bC316C6EA61C9Bd553Be8CBe", DOCS.ember);
+  push(book["ember-protocol"], eth, "Pharos Alpha (pALPHA)", "0xC3AaCb558aFB635307B66FDb405188138576fc4c", DOCS.ember);
+  // Lombard on Ethereum. The Veda Teller for LBTCv is not on Lombard's contract page, so it is not listed.
+  push(book["lombard-vaults"], eth, "LBTCv (Lombard DeFi Vault)", "0x5401b8620E5FB570064CA9114fd1e135fd77D57c", DOCS.lombard);
+  push(book["lombard-vaults"], eth, "BTCe", "0x3a4baaBf4DC9910596821615e848f0e6545762F3", DOCS.lombard);
+  push(book["lombard-vaults"], eth, "LBTC", "0x8236a87084f8B84306f72007F36F2618A5634494", DOCS.lombard);
+  // Vesper 2 (Vesper USD) on Ethereum.
+  push(book.vesper, eth, "USDv (PeggedToken)", "0xC9aD6eD9f522e8Ac2dE8FFc8B081005CCE50c8AB", DOCS.vesper);
+  push(book.vesper, eth, "sUSDv (StakingVault, ERC-4626)", "0x7473Da16F17abA0D920605e1F9560A99a6F6314A", DOCS.vesper);
+  push(book.vesper, eth, "Vesper USD Gateway", "0x9a1800B63d40a19539017a8C6F0D005F9c9F8A00", DOCS.vesper);
+  push(book.vesper, eth, "Vesper USD Treasury", "0xd4765523Fd844eddF9e6EFe136a48012BCd5503a", DOCS.vesper);
+  push(book.vesper, eth, "USDC YieldVault", "0x3aEd4dd0b5ba616156Fa352274670c18D2Ec2A81", DOCS.vesper);
+  push(book.vesper, eth, "ETHv (PeggedToken)", "0x2D376B65dCd18F67E596C4cF815Ecadb960E0dEa", DOCS.vesper);
+  push(book.vesper, eth, "sETHv (StakingVault)", "0x1E0cFbFA5BD27beC4e26b7fE6F4b55E83C2b4a2c", DOCS.vesper);
+  push(book.vesper, eth, "Vesper ETH Gateway", "0xE2976cf9749BE7b6ADdA6707d066ef1D2319A0b4", DOCS.vesper);
+  // ether.fi Cash lending protocol on OP Mainnet (both ether.fi Cash rows sit on it).
+  for (const key of ["etherfi-borrowing-market", "etherfi-cash-liquid"]) {
+    push(book[key], "optimism", "Liquidity Hub (Aave V4)", "0x66753c4e3fC84f1eD0e3C267C927284E9d90C572", DOCS.etherfiCash);
+    push(book[key], "optimism", "Spoke (Aave V4)", "0xdffcC3536D932eb51Df51a7F5FA407c4270d5308", DOCS.etherfiCash);
+    push(book[key], "optimism", "AaveV4Lens", "0x35Ba1a778359421F2757154a35BD4881AcE98C91", DOCS.etherfiCash);
+  }
+  // DeFi Saver v3 core on Ethereum.
+  push(book["defi-saver-asset-management"], eth, "DFSRegistry", "0x287778F121F134C66212FB16c9b53eC991D32f5b", DOCS.defisaver);
+  push(book["defi-saver-asset-management"], eth, "RecipeExecutor", "0xbc3Fc959FeF3F12a41738f406c02198cdeE7481F", DOCS.defisaver);
+  push(book["defi-saver-asset-management"], eth, "SafeModuleAuth", "0x7407974DDBF539e552F1d051e44573090912CC3D", DOCS.defisaver);
+  // Enzyme Blue (Sulu) on Ethereum.
+  push(book["enzyme-finance"], eth, "FundDeployer (Sulu)", "0x4f1C53F096533C04d8157EFB6Bca3eb22ddC6360", DOCS.enzyme);
+  push(book["enzyme-finance"], eth, "DepositWrapper", "0x65BbAD6545B7ac9C30Fb0f07e64e25106Bf05eEc", DOCS.enzyme);
+  push(book["enzyme-finance"], eth, "ValueInterpreter", "0xD7B0610dB501b15Bfb9B7DDad8b3869de262a327", DOCS.enzyme);
 
   return book;
 }
@@ -957,6 +1005,38 @@ module.exports = {
     decimals: 6,
     defaultAmount: "200",
     label: "ctDefiUSDT",
+  },
+  // Ember Earn on Ethereum (Ember vault API, see DOCS.ember). ERC-4626 deposit; exits use redeemShares (queued).
+  EMBER: {
+    vault: "0x9be9294722f8AAd37b11a9792Be2C782182caFA2",
+    asset: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    symbol: "USDC",
+    decimals: 6,
+    defaultAmount: "100",
+    label: "eEARN",
+  },
+  // https://etherfi.gitbook.io/etherfi/products/borrow/lending-market-parameters (OP Mainnet)
+  ETHERFI_CASH: {
+    hub: "0x66753c4e3fC84f1eD0e3C267C927284E9d90C572",
+    spoke: "0xdffcC3536D932eb51Df51a7F5FA407c4270d5308",
+    // Native USDC on OP Mainnet is reserve 0 of the Spoke (getReserve(0).underlying).
+    asset: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+    reserveId: 0,
+    symbol: "USDC",
+    decimals: 6,
+    defaultAmount: "100",
+  },
+  // https://docs.vesper.finance/vesper-2/contract-addresses (Vesper USD)
+  VESPER: {
+    gateway: "0x9a1800B63d40a19539017a8C6F0D005F9c9F8A00",
+    usdv: "0xC9aD6eD9f522e8Ac2dE8FFc8B081005CCE50c8AB",
+    vault: "0x7473Da16F17abA0D920605e1F9560A99a6F6314A",
+    treasury: "0xd4765523Fd844eddF9e6EFe136a48012BCd5503a",
+    asset: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    symbol: "USDC",
+    decimals: 6,
+    defaultAmount: "100",
+    label: "sUSDv",
   },
   // https://www.binance.com/en/support/faq/what-is-wbeth-e252366155174ba6887f6b32e3798273
   WBETH: "0xa2E3356610840701BDf5611a53974510Ae27E2e1",

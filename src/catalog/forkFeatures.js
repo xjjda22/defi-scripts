@@ -510,8 +510,17 @@ const FEATURES = [
       "vault `totalAssets` rises by exactly the deposit, the `Deposited` event reports assets = deposit and shares = the user's gain (within 1 wei of the pre-tx `convertToShares`), and the user holds exactly the requested osETH, which equals the vault's osToken position. Exits use the validator exit queue, so there is no redeem",
     params: amount("0.1", "ETH"),
   },
+  {
+    script: "fork:etherfi-cash:supply",
+    section: "actions",
+    chain: "optimism",
+    title: "Supply and withdraw USDC (ether.fi Cash lending)",
+    action: "USDC `supply` into reserve 0 of the ether.fi Cash Spoke (ether.fi-managed Aave V4 on OP Mainnet), then `withdraw` the full supplied balance. Pre-checks: reserve 0 is native USDC on the documented Liquidity Hub and is neither paused nor frozen",
+    assertion:
+      "the user's USDC and the Hub's USDC move by exactly the amount, supply shares are minted and `getUserSuppliedAssets` is the amount within 1 wei; the withdraw returns exactly the supplied assets from the Hub and leaves 0 shares. Borrowing is limited to ether.fi Safes and is not called",
+    params: amount("100", "USDC"),
+  },
 
-  // ---- Perps -------------------------------------------------------------
   {
     script: "fork:gmx:read",
     section: "perps",
@@ -648,6 +657,15 @@ const FEATURES = [
     params: amount("1", "stETH"),
   },
 
+  {
+    script: "fork:ember:deposit",
+    section: "vaults",
+    chain: "ethereum",
+    title: "Deposit and queue a withdrawal (Ember Earn)",
+    assertion:
+      "USDC into Ember Earn (eEARN, ERC-4626 deposit), then `redeemShares`. Pre-checks: `asset()` is USDC and `maxDeposit` covers the amount (below it is a labelled read). Asserts the vault pulled exactly the amount, the shares equal the pre-tx `previewDeposit`, and `redeemShares` moved every share into the vault and appended one queue entry for the user with those shares and `estimatedWithdrawAmount` = `convertToAssets(shares)`. Ember's operator processes the queue (3-day period), so the payout is not waited out",
+    params: amount("100", "USDC"),
+  },
   // ---- Stablecoins, RWA, bridges ----------------------------------------
   {
     script: "fork:sky:convert",
@@ -887,6 +905,15 @@ const FEATURES = [
     assertion:
       "**Deposit only.** USDat into sUSDat (StakedUSDat, ERC-4626). Pre-checks: not `paused()` and `maxDeposit` covers the amount. Asserts the vault pulled exactly the amount, the shares equal the pre-tx `previewDeposit` (which prices in the deposit fee), and the `Deposit` event reports the same assets, shares and owner. Unstaking is a request / process / claim queue, so there is no redeem",
     params: amount("100", "USDat"),
+  },
+  {
+    script: "fork:vesper:deposit",
+    section: "stables",
+    chain: "ethereum",
+    title: "Mint USDv, stake sUSDv, request unstake (Vesper USD)",
+    assertion:
+      "Gateway `deposit` of USDC mints exactly the pre-tx `previewDeposit` in USDv (fixed-price adapter at 1.0) and pulls exactly the USDC. Staking all of it into sUSDv (ERC-4626) spends exactly that USDv, the `Deposit` event reports those assets and the user's shares, and shares are within 1 bp of the preview (sUSDv vests yield per second). `requestRedeem` burns every share, opens one pending request and reserves exactly the pre-tx `previewRedeem` in `totalAssetsInCooldown`. The 7-day cooldown and the USDv -> USDC redemption are not waited out",
+    params: amount("100", "USDC"),
   },
 ];
 
