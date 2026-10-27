@@ -20,7 +20,14 @@ const EIGEN_ABI = [
   "function queueWithdrawals(tuple(address[] strategies, uint256[] depositShares, address withdrawer)[] params) returns (bytes32[])",
   "function cumulativeWithdrawalsQueued(address staker) view returns (uint256)",
 ];
-const RSW_ABI = ["function deposit() payable", "function balanceOf(address) view returns (uint256)", "function whitelistEnabled() view returns (bool)"];
+const RSW_ABI = [
+  "function deposit() payable",
+  "function balanceOf(address) view returns (uint256)",
+  "function whitelistEnabled() view returns (bool)",
+  "function AccessControlManager() view returns (address)",
+];
+// Swell's AccessControlManager gates deposit() behind coreMethodsPaused (reverts CoreMethodsPaused).
+const SWELL_ACM_ABI = ["function coreMethodsPaused() view returns (bool)"];
 const PUF_ABI = [
   "function depositETH(address receiver) payable returns (uint256)",
   "function balanceOf(address) view returns (uint256)",
@@ -144,6 +151,18 @@ async function swellDeposit(base) {
       ok: true,
       key: `readOnly=whitelistEnabled supplyHolder=${formatUnits(supply, 18)}`,
       detail: "rswETH whitelistEnabled() is true. A fresh account cannot deposit. No deposit.",
+    });
+  }
+  // After the 2026-10-21 incident Swell paused core methods, so deposit() reverts with CoreMethodsPaused.
+  // Report that as a FAIL with the reason instead of sending a tx that is known to revert (same rule as Puffer).
+  const acm = await reader.AccessControlManager();
+  if (await new ethers.Contract(acm, SWELL_ACM_ABI, provider).coreMethodsPaused()) {
+    return finish({
+      ...base,
+      ok: false,
+      key: "coreMethodsPaused=true",
+      detail: `AccessControlManager ${acm} has paused Swell core methods. rswETH deposit() reverts with CoreMethodsPaused.`,
+      error: "rswETH deposits are paused by Swell's AccessControlManager (coreMethodsPaused=true)",
     });
   }
   const signer = await freshEth(base.chain);
