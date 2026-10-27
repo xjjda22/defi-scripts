@@ -288,6 +288,42 @@ const FEATURES = [
     params: amount("100", "USDC"),
   },
   {
+    script: "fork:cooler:borrow",
+    section: "actions",
+    chain: "ethereum",
+    title: "Borrow USDS against gOHM (Olympus Cooler V2)",
+    action:
+      "MonoCooler `addCollateral` (gOHM), `borrow` USDS, `repay(type(uint128).max)`, then `withdrawCollateral(type(uint128).max)`. Pre-checks: the documented gOHM / USDS tokens, `borrowsPaused()` false, and the borrow sits between `minDebtRequired()` and the origination LTV",
+    assertion:
+      "`accountCollateral` and the wallet move by exactly the gOHM posted, the wallet receives exactly the USDS borrowed and `accountDebt` equals it, the full repay leaves `accountDebt` at 0 (paying the borrow plus per-second interest), and every gOHM comes back",
+    params: [
+      { env: "FORK_AMOUNT", label: "Collateral", default: "1", unit: "gOHM" },
+      { env: "FORK_BORROW", label: "Borrow", default: "1500", unit: "USDS" },
+    ],
+  },
+  {
+    script: "fork:curvance:deposit",
+    section: "actions",
+    chain: "monad",
+    title: "Lend WMON on Curvance (Monad)",
+    action:
+      "WMON into cWMON of the WMON | USDC market (ERC-4626 style `deposit`), then `redeem` every share. `marketManager()` must be the documented MarketManager. WMON is wrapped from native MON on the fork",
+    assertion:
+      "the deposit pulled the full amount, shares were minted, the redeem burned every share and the WMON came back within rounding (plus a little interest)",
+    params: amount("100", "WMON"),
+  },
+  {
+    script: "fork:stakelink:deposit",
+    section: "actions",
+    chain: "ethereum",
+    title: "Stake or queue LINK (stake.link Priority Pool)",
+    action:
+      "Priority Pool `deposit(amount, true, [])`: stakes what the Staking Pool can take now (stLINK) and queues the rest, then `unqueueTokens` the queued part. Pre-checks: the documented LINK / Staking Pool wiring, `poolStatus()` OPEN and not paused",
+    assertion:
+      "the user's LINK drops by exactly the amount, the `Deposit` event's staked + queued equals it, stLINK rises by the staked part (2 wei share rounding), the account queue and `totalQueued` rise by the queued part, and the unqueue returns exactly that LINK and restores both",
+    params: amount("10", "LINK"),
+  },
+  {
     script: "fork:lista:stake",
     section: "actions",
     chain: "bsc",
@@ -593,6 +629,24 @@ const FEATURES = [
       "**Deposit only.** USDT into Concrete ctDefiUSDT (Earn V2 async vault, ERC-4626 deposit). Pre-check: the amount sits inside `getDepositLimits()` (outside is a labelled read). Asserts the vault pulled exactly the amount, the shares equal the pre-tx `previewDeposit`, and the `Deposit` event reports the same assets and shares. Withdrawal is an epoch queue processed about weekly, so there is no redeem",
     params: amount("200", "USDT"),
   },
+  {
+    script: "fork:concentrator:deposit",
+    section: "vaults",
+    chain: "ethereum",
+    title: "Deposit and redeem (Concentrator aCRV)",
+    assertion:
+      "cvxCRV into Concentrator aCRV (AladdinCRV, ERC-4626 compounder), then redeem. Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the cvxCRV came back within rounding (`withdrawFeePercentage()` was 0 on 2026-10-26)",
+    params: amount("100", "cvxCRV"),
+  },
+  {
+    script: "fork:fluid-lite:deposit",
+    section: "vaults",
+    chain: "ethereum",
+    title: "Deposit and redeem (Fluid Lite iETHv2)",
+    assertion:
+      "stETH into Fluid Lite iETHv2 (ERC-4626), then redeem every share. Asserts the shares equal the pre-tx `previewDeposit`, the deposit pulled the amount (stETH 1-2 wei rounding), the redeem burned every share, and the stETH returned equals `previewRedeem` minus `withdrawalFeePercentage()` (ppm; 500 = 0.05% on 2026-10-26) within 2 wei",
+    params: amount("1", "stETH"),
+  },
 
   // ---- Stablecoins, RWA, bridges ----------------------------------------
   {
@@ -824,6 +878,15 @@ const FEATURES = [
     assertion:
       "Router `ccipSend` of LINK to Base, fee in ETH. `TokenAdminRegistry.getPool(LINK)` must be the documented LockReleaseTokenPool. The user's LINK drops and the pool's LINK rises by exactly the amount, the user pays exactly `getFee()` in ETH, and the lane's OnRamp logs the message. DON execution on Base is off this machine",
     params: amount("1", "LINK"),
+  },
+  {
+    script: "fork:saturn:stake",
+    section: "stables",
+    chain: "ethereum",
+    title: "Stake USDat into sUSDat (Saturn)",
+    assertion:
+      "**Deposit only.** USDat into sUSDat (StakedUSDat, ERC-4626). Pre-checks: not `paused()` and `maxDeposit` covers the amount. Asserts the vault pulled exactly the amount, the shares equal the pre-tx `previewDeposit` (which prices in the deposit fee), and the `Deposit` event reports the same assets, shares and owner. Unstaking is a request / process / claim queue, so there is no redeem",
+    params: amount("100", "USDat"),
   },
 ];
 

@@ -99,6 +99,17 @@ const DOCS = {
   hyperithmMonad: "https://app.morpho.org/monad/vault/0x78999cc96d2Ba0341588C60CcB0E91c6C33CF371/hyperithm-usdc-apex",
   // Concrete's official vault API (the feed app.concrete.xyz and DefiLlama's concrete-xyz adapter read).
   concrete: "https://apy.api.concrete.xyz/v1/vault:tvl/all",
+  // rsksmart/tokenbridge "MainNet Addresses" (On Ethereum). The Token Bridge was sunset at the end of March 2026:
+  // https://rootstock.io/blog/token-bridge-sunset-how-to-move-your-assets-and-bridge-to-rootstock-via-stargate/
+  rskTokenBridge: "https://github.com/rsksmart/tokenbridge/blob/master/docs/ContractAddresses.md",
+  // Huma's announcement of PST on Ethereum (Fluid, Chainlink CCIP). docs.huma.finance lists the Solana PST mint.
+  humaPst: "https://blog.huma.finance/pst-now-live-on-fluid-powered-by-chain-link",
+  curvanceMonad: "https://docs.curvance.com/app/protocol-overview/monad-contract-addresses",
+  saturn: "https://saturncredit.gitbook.io/saturn-docs/operations-and-governance/key-addresses",
+  concentrator: "https://docs.aladdin.club/concentrator/contracts",
+  olympus: "https://docs.olympusdao.finance/main/contracts/addresses",
+  stakeLink: "https://docs.stake.link/resources/contracts-and-integrations",
+  fluidLite: "https://lite.guides.instadapp.io/getting-started/vault-receipt-tokens",
 };
 
 /**
@@ -228,6 +239,15 @@ function contractBook() {
     hyperithm: [],
     concrete: [],
     "k3-capital": [],
+    "rsk-bridge": [],
+    huma: [],
+    curvance: [],
+    saturn: [],
+    concentrator: [],
+    "cooler-loans": [],
+    "stake.link": [],
+    "stake.link-liquid": [],
+    "fluid-lite": [],
   };
 
   push(book.uniswap, eth, "V2 router", uni.v2.router, DOCS.uniswap);
@@ -568,6 +588,40 @@ function contractBook() {
   push(book.concrete, eth, "Concrete Delta WeETH (ctDeltaWeETH)", "0xB9DC54c8261745CB97070CeFBE3D3d815aee8f20", DOCS.concrete);
   // K3 Capital curates the Euler Earn vault that fork:euler:deposit runs.
   push(book["k3-capital"], eth, "K3 Capital Earn USDC (Euler Earn)", "0x3B4802FDb0E5d74aA37d58FD77d63e93d4f9A4AF", DOCS.euler);
+  // Rootstock Token Bridge, Ethereum side (sunset end of March 2026). Most of the row is the Powpeg on Bitcoin.
+  push(book["rsk-bridge"], eth, "Token Bridge (Ethereum, sunset)", "0x12eD69359919Fc775bC2674860E8Fe2d2b6a7B5D", DOCS.rskTokenBridge);
+  push(book["rsk-bridge"], eth, "Federation (Ethereum)", "0x5e29C223d99648C88610519f96E85E627b3ABe17", DOCS.rskTokenBridge);
+  push(book["rsk-bridge"], eth, "AllowTokens (Ethereum)", "0xA3FC98e0a7a979677BC14d541Be770b2cb0A15F3", DOCS.rskTokenBridge);
+  // Huma PST on Ethereum (a CCIP cross-chain token; PST is minted on Solana).
+  push(book.huma, eth, "PST (Ethereum)", "0x22aE3D9a738471f405169Af055d31c687087d4c7", DOCS.humaPst);
+  // Curvance on Monad, WMON | USDC market (DeFi Bluechip).
+  push(book.curvance, "monad", "MarketManager (WMON | USDC)", "0xa6A2A92F126b79Ee0804845ee6B52899b4491093", DOCS.curvanceMonad);
+  push(book.curvance, "monad", "cWMON (WMON | USDC)", "0x1e240E30E51491546deC3aF16B0b4EAC8Dd110D4", DOCS.curvanceMonad);
+  push(book.curvance, "monad", "cUSDC (WMON | USDC)", "0x8EE9FC28B8Da872c38A496e9dDB9700bb7261774", DOCS.curvanceMonad);
+  // Saturn USDat / sUSDat on Ethereum.
+  push(book.saturn, eth, "USDat", "0x23238f20b894f29041f48D88eE91131C395Aaa71", DOCS.saturn);
+  push(book.saturn, eth, "sUSDat (StakedUSDat, ERC-4626)", "0xD166337499E176bbC38a1FBd113Ab144e5bd2Df7", DOCS.saturn);
+  push(book.saturn, eth, "Withdraw contract (WithdrawalQueueERC721)", "0x4Bc9FEC04F0F95e9b42a3EF18F3C96fB57923D2e", DOCS.saturn);
+  // Aladdin Concentrator on Ethereum.
+  push(book.concentrator, eth, "AladdinCRV (aCRV)", "0x2b95A1Dcc3D405535f9ed33c219ab38E8d7e0884", DOCS.concentrator);
+  push(book.concentrator, eth, "CvxCrvStakingWrapperStrategy", "0x94cC627Db80253056B2130aAC39abB252A75F345", DOCS.concentrator);
+  push(book.concentrator, eth, "AladdinSdCRV (asdCRV)", "0x43E54C2E7b3e294De3A155785F52AB49d87B9922", DOCS.concentrator);
+  push(book.concentrator, eth, "CvxCompounder (aCVX)", "0xb0903Ab70a7467eE5756074b31ac88aEBb8fB777", DOCS.concentrator);
+  // Olympus Cooler V2 (MonoCooler) on Ethereum.
+  push(book["cooler-loans"], eth, "Cooler V2 (MonoCooler)", "0xdb591Ea2e5Db886dA872654D58f6cc584b68e7cC", DOCS.olympus);
+  push(book["cooler-loans"], eth, "Cooler V2 LTV Oracle", "0x9ee9f0c2e91E4f6B195B988a9e6e19efcf91e8dc", DOCS.olympus);
+  push(book["cooler-loans"], eth, "Cooler V2 Treasury Borrower", "0xD58d7406E9CE34c90cf849Fc3eed3764EB3779B0", DOCS.olympus);
+  push(book["cooler-loans"], eth, "gOHM", "0x0ab87046fBb341D058F17CBC4c1133F25a20a52f", DOCS.olympus);
+  // stake.link LINK staking on Ethereum.
+  for (const key of ["stake.link", "stake.link-liquid"]) {
+    push(book[key], eth, "LINK Priority Pool", "0xDdC796a66E8b83d0BcCD97dF33A6CcFBA8fd60eA", DOCS.stakeLink);
+    push(book[key], eth, "LINK Staking Pool (stLINK)", "0xb8b295df2cd735b15BE5Eb419517Aa626fc43cD5", DOCS.stakeLink);
+    push(book[key], eth, "LINK Withdrawal Pool", "0xa60B5146E44ff755e32BD51532842ceB41D0C248", DOCS.stakeLink);
+    push(book[key], eth, "wstLINK", "0x911D86C72155c33993d594B0Ec7E6206B4C803da", DOCS.stakeLink);
+  }
+  // Fluid Lite (Instadapp Lite) vault receipt tokens on Ethereum (ERC-4626).
+  push(book["fluid-lite"], eth, "iETHv2 (stETH vault)", "0xA0D3707c569ff8C87FA923d3823eC5D81c98Be78", DOCS.fluidLite);
+  push(book["fluid-lite"], eth, "fLiteUSD (USDC vault)", "0x273DA948ACa9261043fbdb2a857BC255ECC29012", DOCS.fluidLite);
 
   return book;
 }
@@ -842,6 +896,60 @@ module.exports = {
     label: "hyperUSDCa",
   },
   // Concrete Earn V2 async vault: ERC-4626 deposit, epoch-queued withdrawal.
+  // https://docs.curvance.com/app/protocol-overview/monad-contract-addresses (WMON | USDC market)
+  CURVANCE: {
+    vault: "0x1e240E30E51491546deC3aF16B0b4EAC8Dd110D4",
+    marketManager: "0xa6A2A92F126b79Ee0804845ee6B52899b4491093",
+    asset: "0x3bd359C1119dA7Da1D913D1C4D2B7c461115433A",
+    symbol: "WMON",
+    decimals: 18,
+    defaultAmount: "100",
+    label: "cWMON",
+  },
+  // https://saturncredit.gitbook.io/saturn-docs/operations-and-governance/key-addresses
+  SATURN: {
+    vault: "0xD166337499E176bbC38a1FBd113Ab144e5bd2Df7",
+    asset: "0x23238f20b894f29041f48D88eE91131C395Aaa71",
+    // USDC <> USDat Curve pool from the same page; it is the USDat source on the fork.
+    curvePool: "0xF4d0CF32908b2C7f1021339c43Df0F77f06896d7",
+    symbol: "USDat",
+    decimals: 6,
+    defaultAmount: "100",
+    label: "sUSDat",
+  },
+  // https://docs.aladdin.club/concentrator/contracts (Concentrator for cvxCRV)
+  CONCENTRATOR: {
+    vault: "0x2b95A1Dcc3D405535f9ed33c219ab38E8d7e0884",
+    asset: "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
+    symbol: "cvxCRV",
+    decimals: 18,
+    defaultAmount: "100",
+    label: "aCRV",
+  },
+  // https://lite.guides.instadapp.io/getting-started/vault-receipt-tokens
+  FLUID_LITE: {
+    vault: "0xA0D3707c569ff8C87FA923d3823eC5D81c98Be78",
+    asset: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+    symbol: "stETH",
+    decimals: 18,
+    defaultAmount: "1",
+    label: "iETHv2",
+  },
+  // https://docs.olympusdao.finance/main/contracts/addresses (Cooler V2)
+  COOLER_V2: {
+    monoCooler: "0xdb591Ea2e5Db886dA872654D58f6cc584b68e7cC",
+    treasuryBorrower: "0xD58d7406E9CE34c90cf849Fc3eed3764EB3779B0",
+    gohm: "0x0ab87046fBb341D058F17CBC4c1133F25a20a52f",
+    usds: "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+    // DLGTE module (same page) holds Cooler V2's undelegated gOHM; it is the gOHM source on the fork.
+    dlgte: "0xD3204Ae00d6599Ba6e182c6D640A79d76CdAad74",
+  },
+  // https://docs.stake.link/resources/contracts-and-integrations (LINK Staking)
+  STAKE_LINK: {
+    priorityPool: "0xDdC796a66E8b83d0BcCD97dF33A6CcFBA8fd60eA",
+    stakingPool: "0xb8b295df2cd735b15BE5Eb419517Aa626fc43cD5",
+    link: "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+  },
   CONCRETE: {
     vault: "0x0E609b710da5e0AA476224b6c0e5445cCc21251E",
     asset: "0xdAC17F958D2ee523a2206206994597C13D831ec7",

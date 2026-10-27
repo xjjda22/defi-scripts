@@ -1,5 +1,5 @@
 /**
- * Vault curator and allocator fork actions on Ethereum.
+ * Vault curator and allocator fork actions (Ethereum, Base, Monad).
  * ERC-4626 deposit then redeem when maxDeposit is open. maxDeposit 0 is a read.
  * Addresses and doc links: src/catalog/contracts.js.
  */
@@ -17,6 +17,10 @@ const {
   CLEARSTAR,
   HYPERITHM,
   CONCRETE,
+  CURVANCE,
+  SATURN,
+  CONCENTRATOR,
+  FLUID_LITE,
 } = require("../../catalog/contracts");
 const { requireFork, impersonateFunded, formatUnits, finish } = require("./runtime");
 
@@ -210,6 +214,17 @@ async function concreteDeposit(base) {
   if (amount < minAmount || amount > maxAmount) {
     return readVault(base, spec, `depositLimits(min=${formatUnits(minAmount, spec.decimals)},max=${formatUnits(maxAmount, spec.decimals)})`);
   }
+  return depositOnly(base, spec, amount, "Withdrawal is an epoch queue processed about weekly, so this does not redeem.");
+}
+
+/**
+ * ERC-4626 deposit without a redeem (async or queued withdrawals). Asserts the deposit pulled exactly
+ * `amount`, the user's share gain equals the pre-tx previewDeposit, and the Deposit event reports the
+ * same assets, shares and owner.
+ */
+async function depositOnly(base, spec, amount, exitNote) {
+  const provider = getProvider(base.chain);
+  const reader = new ethers.Contract(spec.vault, CONCRETE_ABI, provider);
   const signer = await impersonateFunded(base.chain, spec.symbol, spec.asset, amount);
   const user = await signer.getAddress();
   const asset = new ethers.Contract(spec.asset, ERC, provider);
@@ -242,7 +257,7 @@ async function concreteDeposit(base) {
     ...base,
     ok,
     key: `${spec.label}=0->${formatUnits(shares, shareDecimals)} preview=${formatUnits(preview, shareDecimals)} ${spec.symbol}=${formatUnits(assetsBefore, spec.decimals)}->${formatUnits(assetsAfter, spec.decimals)} event=${eventOk}`,
-    detail: `deposited ${formatUnits(amount, spec.decimals)} ${spec.symbol} into ${spec.label}\nshares ${formatUnits(shares, shareDecimals)} (previewDeposit before the tx ${formatUnits(preview, shareDecimals)})\nvault totalAssets ${formatUnits(vaultAssetsBefore, spec.decimals)} -> ${formatUnits(vaultAssetsAfter, spec.decimals)}\nDeposit event matches ${eventOk}\nWithdrawal is an epoch queue processed about weekly, so this does not redeem.\ntx ${receipt.hash}`,
+    detail: `deposited ${formatUnits(amount, spec.decimals)} ${spec.symbol} into ${spec.label}\nshares ${formatUnits(shares, shareDecimals)} (previewDeposit before the tx ${formatUnits(preview, shareDecimals)})\nvault totalAssets ${formatUnits(vaultAssetsBefore, spec.decimals)} -> ${formatUnits(vaultAssetsAfter, spec.decimals)}\nDeposit event matches ${eventOk}\n${exitNote}\ntx ${receipt.hash}`,
     error: ok ? null : `${spec.label} deposit failed: pulled=${pulled} sharesMatchPreview=${shares === preview} event=${eventOk}`,
   });
 }
@@ -361,6 +376,91 @@ async function upshiftDeposit(base) {
   });
 }
 
+/**
+ * Curvance cWMON (WMON | USDC market on Monad). The cToken must still report the documented
+ * MarketManager, then the shared ERC-4626 round trip runs (deposit pulls the full amount, shares are
+ * minted, redeem burns every share, WMON comes back within rounding).
+ */
+async function curvanceDeposit(base) {
+  const provider = getProvider(base.chain);
+  const ctoken = new ethers.Contract(CURVANCE.vault, ["function marketManager() view returns (address)"], provider);
+  const manager = await ctoken.marketManager();
+  if (manager.toLowerCase() !== CURVANCE.marketManager.toLowerCase()) {
+    return finish({ ...base, ok: false, error: `cWMON marketManager() is ${manager}, not ${CURVANCE.marketManager}` });
+  }
+  return erc4626(base, CURVANCE);
+}
+
+/**
+ * Saturn sUSDat (StakedUSDat, ERC-4626 over USDat). Deposit is open with a deposit fee that
+ * previewDeposit already prices in; unstaking is a request / process / claim queue, so this deposits only.
+ */
+async function saturnDeposit(base) {
+  const spec = SATURN;
+  const provider = getProvider(base.chain);
+  const reader = new ethers.Contract(spec.vault, [...VAULT_ABI, "function paused() view returns (bool)"], provider);
+  const amount = ethers.parseUnits(process.env.FORK_AMOUNT || spec.defaultAmount, spec.decimals);
+  if (await reader.paused()) return readVault(base, spec, "paused");
+  const max = await reader.maxDeposit(ethers.Wallet.createRandom().address);
+  if (max < amount) return readVault(base, spec, `maxDeposit=${formatUnits(max, spec.decimals)}`);
+  return depositOnly(base, spec, amount, "Unstaking is a request, processing and claim queue (WithdrawalQueueERC721), so this does not redeem.");
+}
+
+const FEE_VAULT_ABI = [
+  ...VAULT_ABI,
+  "function previewDeposit(uint256 assets) view returns (uint256)",
+  "function previewRedeem(uint256 shares) view returns (uint256)",
+  "function withdrawalFeePercentage() view returns (uint256)",
+];
+
+/**
+ * Fluid Lite iETHv2 (ERC-4626 over stETH). Deposit, then redeem every share. The vault keeps
+ * withdrawalFeePercentage() (1e6 = 100%) of the redeemed assets; previewRedeem does not include it.
+ * Asserts the deposit pulled the amount (stETH transfers can be 1-2 wei short), the shares equal the
+ * pre-tx previewDeposit, the redeem burned every share, and the stETH returned equals previewRedeem
+ * minus the fee within 2 wei.
+ */
+async function fluidLiteDeposit(base) {
+  const spec = FLUID_LITE;
+  const provider = getProvider(base.chain);
+  const reader = new ethers.Contract(spec.vault, FEE_VAULT_ABI, provider);
+  const amount = ethers.parseUnits(process.env.FORK_AMOUNT || spec.defaultAmount, spec.decimals);
+  const max = await reader.maxDeposit(ethers.Wallet.createRandom().address);
+  if (max < amount) return readVault(base, spec, `maxDeposit=${formatUnits(max, spec.decimals)}`);
+  const signer = await impersonateFunded(base.chain, spec.symbol, spec.asset, amount);
+  const user = await signer.getAddress();
+  const asset = new ethers.Contract(spec.asset, ERC, provider);
+  const vault = new ethers.Contract(spec.vault, FEE_VAULT_ABI, signer);
+  await approve(spec.asset, signer, spec.vault, amount);
+  const assetsBefore = await asset.balanceOf(user);
+  const preview = await reader.previewDeposit(amount);
+  await (await vault.deposit(amount, user, GAS)).wait();
+  const assetsMid = await asset.balanceOf(user);
+  const shares = await reader.balanceOf(user);
+  const expected = await reader.previewRedeem(shares);
+  const feePpm = await reader.withdrawalFeePercentage();
+  const fee = (expected * feePpm) / 1_000_000n;
+  const receipt = await (await vault.redeem(shares, user, user, GAS)).wait();
+  const assetsAfter = await asset.balanceOf(user);
+  const sharesAfter = await reader.balanceOf(user);
+  const got = assetsAfter - assetsMid;
+  const pulled = assetsBefore - assetsMid;
+  const pulledOk = pulled <= amount && pulled + 2n >= amount;
+  const want = expected - fee;
+  const returned = got + 2n >= want && got <= want + 2n;
+  const ok = shares > 0n && shares === preview && pulledOk && sharesAfter === 0n && returned;
+  const d = spec.decimals;
+  return finish({
+    ...base,
+    ok,
+    key: `iETHv2=0->${formatUnits(shares, 18)}->${formatUnits(sharesAfter, 18)} stETH=${formatUnits(assetsBefore, d)}->${formatUnits(assetsMid, d)}->${formatUnits(assetsAfter, d)} feePpm=${feePpm}`,
+    detail: `deposited ${formatUnits(amount, d)} stETH into Fluid Lite iETHv2\nshares ${formatUnits(shares, 18)} (previewDeposit ${formatUnits(preview, 18)})\nredeemed ${formatUnits(got, d)} stETH = previewRedeem ${formatUnits(expected, d)} - withdrawal fee ${formatUnits(fee, d)} (${feePpm} ppm)\ntx ${receipt.hash}`,
+    error: ok
+      ? null
+      : `Fluid Lite round trip failed: sharesMatchPreview=${shares === preview} pulled=${pulledOk} burned=${sharesAfter === 0n} returned=${returned} (got ${got}, want ${want})`,
+  });
+}
+
 async function run() {
   const protocol = process.env.FORK_PROTOCOL;
   const action = process.env.FORK_ACTION;
@@ -381,6 +481,10 @@ async function run() {
     if (protocol === "clearstar") return await morphoV2Deposit(base, CLEARSTAR);
     if (protocol === "hyperithm") return await morphoV2Deposit(base, HYPERITHM);
     if (protocol === "concrete") return await concreteDeposit(base);
+    if (protocol === "curvance") return await curvanceDeposit(base);
+    if (protocol === "saturn") return await saturnDeposit(base);
+    if (protocol === "concentrator") return await erc4626(base, CONCENTRATOR);
+    if (protocol === "fluid-lite") return await fluidLiteDeposit(base);
     return finish({ ...base, ok: false, error: `Unknown vault action ${protocol}:${action}` });
   } catch (err) {
     const message = explain(err);
