@@ -62,6 +62,10 @@ SIGNALS_OFF=1                 # disable every external signal for one build
 SIGNALS_CACHE_DIR=            # default data/cache
 ```
 
+`npm run showcase:build` loads `.env` (the ranking script calls `dotenv` directly), so the keys can live
+there. Shell variables still win. CoinGecko works without a key on the shared public host — set
+`COINGECKO_API_KEY` when CI needs the higher limit.
+
 ## Checks
 
 ```bash

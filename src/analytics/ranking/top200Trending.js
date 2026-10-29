@@ -42,6 +42,8 @@
  * for 20 hours, so a re-run does not refetch ~800 histories.
  */
 
+require("dotenv").config();
+
 const fs = require("fs");
 const path = require("path");
 const chalk = require("chalk");
