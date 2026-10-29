@@ -1582,7 +1582,7 @@
    "testing": {
     "mode": "fork",
     "label": "Deposit only",
-    "note": "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false.",
+    "note": "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false. The ether.fi Liquid row and the Nonce Capital row (the curator of the ether.fi Liquid vaults, veda.tech/ecosystem/nonce-capital) share this vault; Liquid USD, Liquid BTC and Nonce's OP Mainnet Midas tokens are not exercised.",
     "appUrl": "https://veda.tech",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
@@ -3916,7 +3916,13 @@
      "tvl": 222836665
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:veda:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": null,
    "signals": null,
@@ -3931,24 +3937,67 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://nonce-capital.xyz/",
+    "mode": "fork",
+    "label": "Deposit only",
+    "note": "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false. The ether.fi Liquid row and the Nonce Capital row (the curator of the ether.fi Liquid vaults, veda.tech/ecosystem/nonce-capital) share this vault; Liquid USD, Liquid BTC and Nonce's OP Mainnet Midas tokens are not exercised.",
+    "appUrl": "https://veda.tech",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:veda:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:veda:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:veda:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit WETH (ether.fi Liquid ETH)",
+      "assertion": "**Deposit only.** WETH into the ether.fi Liquid ETH BoringVault through its Teller. Shares minted. `bulkWithdraw` is not a public capability, and WETH `allowWithdraws` was false, so there is no redeem",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.01",
+        "unit": "WETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Liquid ETH BoringVault",
+      "address": "0xf0bb20865277aBd641a307eCe5Ee04E79073416C",
+      "doc": "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault",
+      "explorerUrl": "https://etherscan.io/address/0xf0bb20865277aBd641a307eCe5Ee04E79073416C"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Teller",
+      "address": "0x9AA79C84b79816ab920bBcE20f8f74557B514734",
+      "doc": "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault",
+      "explorerUrl": "https://etherscan.io/address/0x9AA79C84b79816ab920bBcE20f8f74557B514734"
+     },
+     {
+      "chain": "ethereum",
+      "label": "WETH",
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "doc": "https://docs.veda.tech/integrations/deposits-and-withdrawals-overview",
+      "explorerUrl": "https://etherscan.io/address/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -4915,7 +4964,13 @@
      "tvl": 373008895
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:world-chain:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": null,
    "signals": null,
@@ -4930,24 +4985,67 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Source chain only",
+    "note": "World Chain is an OP Stack chain. L1StandardBridge.depositETH locks ETH in the OptimismPortal and emits ETHDepositInitiated. Delivery on World Chain needs the rollup; a single Ethereum fork cannot verify it.",
     "appUrl": "https://world.org/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-     ],
-     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:world-chain:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:world-chain:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:world-chain:deposit",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Bridge ETH to World Chain",
+      "assertion": "World Chain `L1StandardBridge.depositETH`. ETH held by the bridge + portal (+ an `ETHLockbox` when the portal reports one; none on 2026-10-19) increases by exactly the deposit and `ETHDepositInitiated` is emitted",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.05",
+        "unit": "ETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "L1StandardBridgeProxy",
+      "address": "0x470458C91978D2d929704489Ad730DC3E3001113",
+      "doc": "https://docs.world.org/world-chain/developers/world-chain-contracts",
+      "explorerUrl": "https://etherscan.io/address/0x470458C91978D2d929704489Ad730DC3E3001113"
+     },
+     {
+      "chain": "ethereum",
+      "label": "OptimismPortalProxy",
+      "address": "0xd5ec14a83B7d95BE1E2Ac12523e2dEE12Cbeea6C",
+      "doc": "https://docs.world.org/world-chain/developers/world-chain-contracts",
+      "explorerUrl": "https://etherscan.io/address/0xd5ec14a83B7d95BE1E2Ac12523e2dEE12Cbeea6C"
+     },
+     {
+      "chain": "ethereum",
+      "label": "SystemConfigProxy",
+      "address": "0x6ab0777fD0e609CE58F939a7F70Fe41F5Aa6300A",
+      "doc": "https://docs.world.org/world-chain/developers/world-chain-contracts",
+      "explorerUrl": "https://etherscan.io/address/0x6ab0777fD0e609CE58F939a7F70Fe41F5Aa6300A"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -9207,7 +9305,13 @@
      "tvl": 290
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:aera:request",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": null,
    "signals": null,
@@ -9222,24 +9326,67 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://www.aera.finance",
-    "chain": "ethereum",
-    "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "mode": "fork",
+    "label": "Async request + refund",
+    "note": "Aera V3 gtUSDa (Gauntlet USD Alpha) on Base, the multi-depositor vault Aera's integration guide documents. Entry is an async requestDeposit to the ProvisionerV2 that Aera's solver fills (usually within 6 hours); the test files one and, after its deadline, refunds it with refundRequest. Aera's Ethereum vaults and single-depositor vaults (treasury mandates) are not exercised.",
+    "appUrl": "https://app.gauntlet.xyz/vaults/gtusda",
+    "chain": "base",
+    "rpcEnv": "BASE_RPC_URL",
+    "commands": [
+     "CHAIN=base node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=base node scripts/startFork.js",
+     "BASE_RPC_URL=http://127.0.0.1:8545 npm run fork:aera:request"
+    ],
+    "tests": [
+     {
+      "script": "fork:aera:request",
+      "action": "request",
+      "chain": "base",
+      "rpcEnv": "BASE_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:aera:request",
+      "section": "vaults",
+      "chain": "base",
+      "title": "Request a deposit and refund it (Aera gtUSDa)",
+      "assertion": "USDC `requestDeposit` (auto price, no solver tip, 1-hour deadline, `minUnitsOut` = 97% of `convertTokenToUnits`) on the gtUSDa ProvisionerV2 on Base. Pre-checks: the vault's `provisioner()` and `feeCalculator()` are the documented ones, async USDC deposits are enabled and the vault is not paused. Asserts the user's USDC and the Provisioner's USDC move by exactly the amount and `asyncRequestHashes` holds `getRequestHash` of the request; after the deadline `refundRequest` returns exactly the USDC, clears the hash, and the user holds no units. Solving is done by Aera's solver off this machine",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "base",
+      "label": "gtUSDa (MultiDepositorVault)",
+      "address": "0x000000000001CdB57E58Fa75Fe420a0f4D6640D5",
+      "doc": "https://docs.aera.finance/integrating-with-gtusda",
+      "explorerUrl": "https://basescan.org/address/0x000000000001CdB57E58Fa75Fe420a0f4D6640D5"
+     },
+     {
+      "chain": "base",
+      "label": "ProvisionerV2 (gtUSDa.provisioner())",
+      "address": "0x128Afda4351deCE9d51Eb9d7e9C687C58cfff731",
+      "doc": "https://docs.aera.finance/integrating-with-gtusda",
+      "explorerUrl": "https://basescan.org/address/0x128Afda4351deCE9d51Eb9d7e9C687C58cfff731"
+     },
+     {
+      "chain": "base",
+      "label": "PriceAndFeeCalculator (gtUSDa.feeCalculator())",
+      "address": "0xa90fd5C2020DBf19c6c29609dF85F7e4DBAC30db",
+      "doc": "https://docs.aera.finance/integrating-with-gtusda",
+      "explorerUrl": "https://basescan.org/address/0xa90fd5C2020DBf19c6c29609dF85F7e4DBAC30db"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -9583,7 +9730,13 @@
      "tvl": 1719449217
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:falcon:stake",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": {
     "coingeckoId": "falcon-finance",
@@ -9606,24 +9759,74 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://app.falcon.finance",
+    "mode": "fork",
+    "label": "Stake + redeem",
+    "note": "Falcon Finance: the row is USDf supply on Ethereum. Minting USDf from collateral needs Falcon KYC, so the test stakes USDf (funded from the Curve USDC/USDf pool) into sUSDf, the ERC-4626 yield vault anyone can enter, and redeems it. Restaking sUSDf into fixed-term boosted positions (Falcon Position NFT) is not exercised.",
+    "appUrl": "https://app.falcon.finance/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic stablecoin check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
-     ],
-     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:falcon:stake"
+    ],
+    "tests": [
+     {
+      "script": "fork:falcon:stake",
+      "action": "stake",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:falcon:stake",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Stake USDf into sUSDf and redeem (Falcon Finance)",
+      "assertion": "USDf into sUSDf (ERC-4626), then `redeem` every share. Pre-checks: `asset()` is the documented USDf and `maxDeposit` covers the amount. Asserts the user's USDf and the vault's USDf move by exactly the amount, the `Deposit` event reports the amount and the user's shares, and the shares are within 1 bp of the pre-tx `previewDeposit` (sUSDf vests yield per second); the redeem burns every share, the `Withdraw` event matches the USDf received, and that is within 1 bp of both `previewRedeem` and the amount staked. Minting USDf from collateral is KYC-gated and is not called",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDf"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "USDf",
+      "address": "0xFa2B947eEc368f42195f24F36d2aF29f7c24CeC2",
+      "doc": "https://docs.falcon.finance/resources/smart-contracts",
+      "explorerUrl": "https://etherscan.io/address/0xFa2B947eEc368f42195f24F36d2aF29f7c24CeC2"
+     },
+     {
+      "chain": "ethereum",
+      "label": "sUSDf (ERC-4626 over USDf)",
+      "address": "0xc8CF6D7991f15525488b2A83Df53468D682Ba4B0",
+      "doc": "https://docs.falcon.finance/resources/smart-contracts",
+      "explorerUrl": "https://etherscan.io/address/0xc8CF6D7991f15525488b2A83Df53468D682Ba4B0"
+     },
+     {
+      "chain": "ethereum",
+      "label": "sUSDf Staking Rewards Distributor",
+      "address": "0x8AF2EFa47efB2095b80D82577c597186Ea2FFFea",
+      "doc": "https://docs.falcon.finance/resources/smart-contracts",
+      "explorerUrl": "https://etherscan.io/address/0x8AF2EFa47efB2095b80D82577c597186Ea2FFFea"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Falcon Position NFT",
+      "address": "0x8407e9864F42374Cb9DACfDEDe0e6962d634edCB",
+      "doc": "https://docs.falcon.finance/resources/smart-contracts",
+      "explorerUrl": "https://etherscan.io/address/0x8407e9864F42374Cb9DACfDEDe0e6962d634edCB"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -9727,6 +9930,11 @@
      "name": "simulate:etherfi:smoke",
      "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
      "kind": "smoke"
+    },
+    {
+     "name": "fork:veda:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
     }
    ],
    "coverage": "covered by a dedicated monitor",
@@ -9751,46 +9959,67 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://www.ether.fi",
+    "mode": "fork",
+    "label": "Deposit only",
+    "note": "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false. The ether.fi Liquid row and the Nonce Capital row (the curator of the ether.fi Liquid vaults, veda.tech/ecosystem/nonce-capital) share this vault; Liquid USD, Liquid BTC and Nonce's OP Mainnet Midas tokens are not exercised.",
+    "appUrl": "https://veda.tech",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:veda:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:veda:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:veda:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit WETH (ether.fi Liquid ETH)",
+      "assertion": "**Deposit only.** WETH into the ether.fi Liquid ETH BoringVault through its Teller. Shares minted. `bulkWithdraw` is not a public capability, and WETH `allowWithdraws` was false, so there is no redeem",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.01",
+        "unit": "WETH"
+       }
+      ]
+     }
+    ],
     "contracts": [
      {
       "chain": "ethereum",
-      "label": "Liquidity pool",
-      "address": "0x308861A430be4cce5502d0A12724771Fc6DaF216",
-      "doc": "https://etherfi.gitbook.io/etherfi/contracts-and-integrations/ethereum-mainnet",
-      "explorerUrl": "https://etherscan.io/address/0x308861A430be4cce5502d0A12724771Fc6DaF216"
+      "label": "Liquid ETH BoringVault",
+      "address": "0xf0bb20865277aBd641a307eCe5Ee04E79073416C",
+      "doc": "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault",
+      "explorerUrl": "https://etherscan.io/address/0xf0bb20865277aBd641a307eCe5Ee04E79073416C"
      },
      {
       "chain": "ethereum",
-      "label": "eETH",
-      "address": "0x35fA164735182de50811E8e2E824cFb9B6118ac2",
-      "doc": "https://etherfi.gitbook.io/etherfi/contracts-and-integrations/ethereum-mainnet",
-      "explorerUrl": "https://etherscan.io/address/0x35fA164735182de50811E8e2E824cFb9B6118ac2"
+      "label": "Teller",
+      "address": "0x9AA79C84b79816ab920bBcE20f8f74557B514734",
+      "doc": "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault",
+      "explorerUrl": "https://etherscan.io/address/0x9AA79C84b79816ab920bBcE20f8f74557B514734"
      },
      {
       "chain": "ethereum",
-      "label": "weETH",
-      "address": "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
-      "doc": "https://etherfi.gitbook.io/etherfi/contracts-and-integrations/ethereum-mainnet",
-      "explorerUrl": "https://etherscan.io/address/0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee"
+      "label": "WETH",
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "doc": "https://docs.veda.tech/integrations/deposits-and-withdrawals-overview",
+      "explorerUrl": "https://etherscan.io/address/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
      }
     ],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "recipe": null
    }
   },
   {
@@ -10367,14 +10596,43 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://www.opentrade.io",
+    "note": "KYC-gated: no fork test. OpenTrade vaults lend only to onboarded institutions and accredited users who pass KYC/KYB (docs.opentrade.io eligibility requirements), and investments and withdrawal requests come from whitelisted wallets, so there is no permissionless action to run on a fork. Most of the row sits on Avalanche and Plume, which the repo does not fork. The four Ethereum vault tokens from the official contract page are listed for verification.",
+    "appUrl": "https://app.opentrade.io/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
     "tests": [],
     "features": [],
-    "contracts": [],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Flexible Term USDC Vault (XTBT)",
+      "address": "0x0f8CbdC544dC1D4Bd1bDafE0039Be07B825aF82A",
+      "doc": "https://docs.opentrade.io/developers/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x0f8CbdC544dC1D4Bd1bDafE0039Be07B825aF82A"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Flexible Term EURC Vault (XEVT)",
+      "address": "0x3Ee320c9F73a84D1717557af00695A34b26d1F1d",
+      "doc": "https://docs.opentrade.io/developers/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x3Ee320c9F73a84D1717557af00695A34b26d1F1d"
+     },
+     {
+      "chain": "ethereum",
+      "label": "USD Money Market Fund Vault (XMMF)",
+      "address": "0x1e571c87556F216662fa8D25143b1b0618512Ef6",
+      "doc": "https://docs.opentrade.io/developers/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x1e571c87556F216662fa8D25143b1b0618512Ef6"
+     },
+     {
+      "chain": "ethereum",
+      "label": "USD Money Market Fund Vault USDT (XMMF-USDT)",
+      "address": "0xD06f235DF80D4981816F7fB0936973155CDe1f4C",
+      "doc": "https://docs.opentrade.io/developers/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0xD06f235DF80D4981816F7fB0936973155CDe1f4C"
+     }
+    ],
     "recipe": {
      "title": "Generic stablecoin check",
      "chain": "ethereum",
@@ -11439,7 +11697,13 @@
      "tvl": 2038874
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:galaxy:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": null,
    "signals": null,
@@ -11454,24 +11718,74 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://www.galaxy.com/",
+    "mode": "fork",
+    "label": null,
+    "note": "Galaxy USDC Quality (Morpho Vault V2) on Ethereum, from Galaxy Curation's deployed-vaults page. Most of the row's TVL is the Galaxy USDC vault on Arc, which the repo does not fork; the other Ethereum vaults are listed for verification.",
+    "appUrl": "https://app.curation.galaxy.com/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:galaxy:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:galaxy:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:galaxy:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit and redeem (Galaxy USDC Quality)",
+      "assertion": "USDC into Galaxy USDC Quality (gUSDCq) on Ethereum, a Morpho Vault V2 curated by Galaxy Curation, then redeem. Same gate pre-check and round-trip assertions as RockawayX. Most of the row's TVL is the Galaxy USDC vault on Arc, which the repo does not fork",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Galaxy USDC Quality (gUSDCq, Morpho Vault V2)",
+      "address": "0x91600E31fBeDc72433d4a57F16639cfe661Be7d8",
+      "doc": "https://docs.curation.galaxy.com/products/deployed-vaults",
+      "explorerUrl": "https://etherscan.io/address/0x91600E31fBeDc72433d4a57F16639cfe661Be7d8"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Galaxy USDT Quality (gUSDTq)",
+      "address": "0x71ffB6a81786eC285D429d531Cf655107B9D878d",
+      "doc": "https://docs.curation.galaxy.com/products/deployed-vaults",
+      "explorerUrl": "https://etherscan.io/address/0x71ffB6a81786eC285D429d531Cf655107B9D878d"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Galaxy WETH Quality (gWETHq)",
+      "address": "0x1878805799273d10aE96a58201A6f5254CF9824F",
+      "doc": "https://docs.curation.galaxy.com/products/deployed-vaults",
+      "explorerUrl": "https://etherscan.io/address/0x1878805799273d10aE96a58201A6f5254CF9824F"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Galaxy USDC Enhanced (gUSDCe)",
+      "address": "0xd95fE7adF5075fad9D6Bf853E0f9Fe53369E8D96",
+      "doc": "https://docs.curation.galaxy.com/products/deployed-vaults",
+      "explorerUrl": "https://etherscan.io/address/0xd95fE7adF5075fad9D6Bf853E0f9Fe53369E8D96"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -12360,7 +12674,13 @@
      "tvl": 5
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:kpk:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": null,
    "signals": null,
@@ -12375,24 +12695,67 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://kpk.io/",
+    "mode": "fork",
+    "label": null,
+    "note": "KPK USDC Prime (Morpho Vault V2) on Ethereum, one of the vaults KPK curates (docs.kpk.io). The row also counts KPK's Gearbox Earn Pools, a Symbiotic vault, kpk Funds and Safes KPK manages through Zodiac roles, which are not exercised. USDC Prime Core is listed for verification.",
+    "appUrl": "https://app.morpho.org/ethereum/vault/0x4Ef53d2cAa51C447fdFEEedee8F07FD1962C9ee6",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:kpk:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:kpk:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:kpk:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit and redeem (KPK USDC Prime)",
+      "assertion": "USDC into KPK USDC Prime on Ethereum, a Morpho Vault V2 curated by KPK, then redeem. Same gate pre-check and round-trip assertions as RockawayX. KPK's Gearbox pools, Symbiotic vault and managed Safes are not exercised",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "KPK USDC Prime (Morpho Vault V2)",
+      "address": "0x4Ef53d2cAa51C447fdFEEedee8F07FD1962C9ee6",
+      "doc": "https://docs.kpk.io/vaults/vaults/morpho/ethereum/usdc-prime",
+      "explorerUrl": "https://etherscan.io/address/0x4Ef53d2cAa51C447fdFEEedee8F07FD1962C9ee6"
+     },
+     {
+      "chain": "ethereum",
+      "label": "KPK USDC Prime Markets V1 Adapter",
+      "address": "0x1d511811ACA9d8817a3e50F29CadFf6243A02902",
+      "doc": "https://docs.kpk.io/vaults/vaults/morpho/ethereum/usdc-prime",
+      "explorerUrl": "https://etherscan.io/address/0x1d511811ACA9d8817a3e50F29CadFf6243A02902"
+     },
+     {
+      "chain": "ethereum",
+      "label": "KPK USDC Prime Core (Morpho Vault V2)",
+      "address": "0x1a1985F50352b58090eb36425AfdFacbaC7806F4",
+      "doc": "https://docs.kpk.io/vaults/vaults/morpho/ethereum/usdc-prime-core",
+      "explorerUrl": "https://etherscan.io/address/0x1a1985F50352b58090eb36425AfdFacbaC7806F4"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -12784,7 +13147,13 @@
      "tvl": 554469503
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:meth:stake",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": null,
    "signals": null,
@@ -12799,24 +13168,75 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://www.methprotocol.xyz/",
+    "mode": "fork",
+    "label": "Stake + unstake request",
+    "note": "mETH Protocol (Mantle LST) on Ethereum: stake ETH for mETH through the Staking contract, then file an unstake request that locks the mETH in the UnstakeRequestsManager. Request finalisation follows validator exits and is not waited out. cmETH restaking is not exercised.",
+    "appUrl": "https://www.mantle.xyz/meth",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic liquid-staking fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
-     ],
-     "note": "No dedicated fork script. Lido submit on an Ethereum fork is the staking recipe."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:meth:stake"
+    ],
+    "tests": [
+     {
+      "script": "fork:meth:stake",
+      "action": "stake",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:meth:stake",
+      "section": "actions",
+      "chain": "ethereum",
+      "title": "Stake ETH for mETH and request unstake (mETH Protocol)",
+      "action": "mETH `Staking.stake(minMETHAmount)` with native ETH, then `unstakeRequest` of every mETH minted. Pre-checks: `mETH()` and `unstakeRequestsManager()` are the documented contracts, staking and unstake requests are not paused, the staking allowlist is off, and the amount is above `minimumStakeBound()`",
+      "assertion": "mETH minted equals the pre-tx `ethToMETH(value)` exactly and the Staking contract holds exactly the ETH; `unstakeRequest` moves every mETH into the UnstakeRequestsManager and emits `UnstakeRequested` for the user with `mETHLocked` = the minted mETH and `ethAmount` = the pre-tx `mETHToETH`. Finalisation and the claim are not waited out",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "1",
+        "unit": "ETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Staking",
+      "address": "0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f",
+      "doc": "https://docs.mantle.xyz/meth/components/smart-contracts/staking-meth",
+      "explorerUrl": "https://etherscan.io/address/0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f"
+     },
+     {
+      "chain": "ethereum",
+      "label": "mETH (L1)",
+      "address": "0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa",
+      "doc": "https://docs.mantle.xyz/meth/components/smart-contracts/staking-meth",
+      "explorerUrl": "https://etherscan.io/address/0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa"
+     },
+     {
+      "chain": "ethereum",
+      "label": "UnstakeRequestsManager",
+      "address": "0x38fDF7b489316e03eD8754ad339cb5c4483FDcf9",
+      "doc": "https://docs.mantle.xyz/meth/components/smart-contracts/staking-meth",
+      "explorerUrl": "https://etherscan.io/address/0x38fDF7b489316e03eD8754ad339cb5c4483FDcf9"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Oracle",
+      "address": "0x8735049F496727f824Cc0f2B174d826f5c408192",
+      "doc": "https://docs.mantle.xyz/meth/components/smart-contracts/staking-meth",
+      "explorerUrl": "https://etherscan.io/address/0x8735049F496727f824Cc0f2B174d826f5c408192"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -32631,7 +33051,7 @@
     "testing": {
      "mode": "fork",
      "label": "Deposit only",
-     "note": "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false.",
+     "note": "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false. The ether.fi Liquid row and the Nonce Capital row (the curator of the ether.fi Liquid vaults, veda.tech/ecosystem/nonce-capital) share this vault; Liquid USD, Liquid BTC and Nonce's OP Mainnet Midas tokens are not exercised.",
      "appUrl": "https://veda.tech",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
@@ -33145,7 +33565,13 @@
       "tvl": 222836665
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:veda:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": null,
     "signals": null,
@@ -33160,24 +33586,67 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://nonce-capital.xyz/",
+     "mode": "fork",
+     "label": "Deposit only",
+     "note": "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false. The ether.fi Liquid row and the Nonce Capital row (the curator of the ether.fi Liquid vaults, veda.tech/ecosystem/nonce-capital) share this vault; Liquid USD, Liquid BTC and Nonce's OP Mainnet Midas tokens are not exercised.",
+     "appUrl": "https://veda.tech",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:veda:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:veda:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:veda:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit WETH (ether.fi Liquid ETH)",
+       "assertion": "**Deposit only.** WETH into the ether.fi Liquid ETH BoringVault through its Teller. Shares minted. `bulkWithdraw` is not a public capability, and WETH `allowWithdraws` was false, so there is no redeem",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.01",
+         "unit": "WETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Liquid ETH BoringVault",
+       "address": "0xf0bb20865277aBd641a307eCe5Ee04E79073416C",
+       "doc": "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault",
+       "explorerUrl": "https://etherscan.io/address/0xf0bb20865277aBd641a307eCe5Ee04E79073416C"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Teller",
+       "address": "0x9AA79C84b79816ab920bBcE20f8f74557B514734",
+       "doc": "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault",
+       "explorerUrl": "https://etherscan.io/address/0x9AA79C84b79816ab920bBcE20f8f74557B514734"
+      },
+      {
+       "chain": "ethereum",
+       "label": "WETH",
+       "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+       "doc": "https://docs.veda.tech/integrations/deposits-and-withdrawals-overview",
+       "explorerUrl": "https://etherscan.io/address/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -33801,7 +34270,13 @@
       "tvl": 290
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:aera:request",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": null,
     "signals": null,
@@ -33816,24 +34291,67 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.aera.finance",
-     "chain": "ethereum",
-     "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "mode": "fork",
+     "label": "Async request + refund",
+     "note": "Aera V3 gtUSDa (Gauntlet USD Alpha) on Base, the multi-depositor vault Aera's integration guide documents. Entry is an async requestDeposit to the ProvisionerV2 that Aera's solver fills (usually within 6 hours); the test files one and, after its deadline, refunds it with refundRequest. Aera's Ethereum vaults and single-depositor vaults (treasury mandates) are not exercised.",
+     "appUrl": "https://app.gauntlet.xyz/vaults/gtusda",
+     "chain": "base",
+     "rpcEnv": "BASE_RPC_URL",
+     "commands": [
+      "CHAIN=base node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=base node scripts/startFork.js",
+      "BASE_RPC_URL=http://127.0.0.1:8545 npm run fork:aera:request"
+     ],
+     "tests": [
+      {
+       "script": "fork:aera:request",
+       "action": "request",
+       "chain": "base",
+       "rpcEnv": "BASE_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:aera:request",
+       "section": "vaults",
+       "chain": "base",
+       "title": "Request a deposit and refund it (Aera gtUSDa)",
+       "assertion": "USDC `requestDeposit` (auto price, no solver tip, 1-hour deadline, `minUnitsOut` = 97% of `convertTokenToUnits`) on the gtUSDa ProvisionerV2 on Base. Pre-checks: the vault's `provisioner()` and `feeCalculator()` are the documented ones, async USDC deposits are enabled and the vault is not paused. Asserts the user's USDC and the Provisioner's USDC move by exactly the amount and `asyncRequestHashes` holds `getRequestHash` of the request; after the deadline `refundRequest` returns exactly the USDC, clears the hash, and the user holds no units. Solving is done by Aera's solver off this machine",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "base",
+       "label": "gtUSDa (MultiDepositorVault)",
+       "address": "0x000000000001CdB57E58Fa75Fe420a0f4D6640D5",
+       "doc": "https://docs.aera.finance/integrating-with-gtusda",
+       "explorerUrl": "https://basescan.org/address/0x000000000001CdB57E58Fa75Fe420a0f4D6640D5"
+      },
+      {
+       "chain": "base",
+       "label": "ProvisionerV2 (gtUSDa.provisioner())",
+       "address": "0x128Afda4351deCE9d51Eb9d7e9C687C58cfff731",
+       "doc": "https://docs.aera.finance/integrating-with-gtusda",
+       "explorerUrl": "https://basescan.org/address/0x128Afda4351deCE9d51Eb9d7e9C687C58cfff731"
+      },
+      {
+       "chain": "base",
+       "label": "PriceAndFeeCalculator (gtUSDa.feeCalculator())",
+       "address": "0xa90fd5C2020DBf19c6c29609dF85F7e4DBAC30db",
+       "doc": "https://docs.aera.finance/integrating-with-gtusda",
+       "explorerUrl": "https://basescan.org/address/0xa90fd5C2020DBf19c6c29609dF85F7e4DBAC30db"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -33877,6 +34395,11 @@
       "name": "simulate:etherfi:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:veda:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -33901,46 +34424,67 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.ether.fi",
+     "mode": "fork",
+     "label": "Deposit only",
+     "note": "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false. The ether.fi Liquid row and the Nonce Capital row (the curator of the ether.fi Liquid vaults, veda.tech/ecosystem/nonce-capital) share this vault; Liquid USD, Liquid BTC and Nonce's OP Mainnet Midas tokens are not exercised.",
+     "appUrl": "https://veda.tech",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:veda:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:veda:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:veda:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit WETH (ether.fi Liquid ETH)",
+       "assertion": "**Deposit only.** WETH into the ether.fi Liquid ETH BoringVault through its Teller. Shares minted. `bulkWithdraw` is not a public capability, and WETH `allowWithdraws` was false, so there is no redeem",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.01",
+         "unit": "WETH"
+        }
+       ]
+      }
+     ],
      "contracts": [
       {
        "chain": "ethereum",
-       "label": "Liquidity pool",
-       "address": "0x308861A430be4cce5502d0A12724771Fc6DaF216",
-       "doc": "https://etherfi.gitbook.io/etherfi/contracts-and-integrations/ethereum-mainnet",
-       "explorerUrl": "https://etherscan.io/address/0x308861A430be4cce5502d0A12724771Fc6DaF216"
+       "label": "Liquid ETH BoringVault",
+       "address": "0xf0bb20865277aBd641a307eCe5Ee04E79073416C",
+       "doc": "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault",
+       "explorerUrl": "https://etherscan.io/address/0xf0bb20865277aBd641a307eCe5Ee04E79073416C"
       },
       {
        "chain": "ethereum",
-       "label": "eETH",
-       "address": "0x35fA164735182de50811E8e2E824cFb9B6118ac2",
-       "doc": "https://etherfi.gitbook.io/etherfi/contracts-and-integrations/ethereum-mainnet",
-       "explorerUrl": "https://etherscan.io/address/0x35fA164735182de50811E8e2E824cFb9B6118ac2"
+       "label": "Teller",
+       "address": "0x9AA79C84b79816ab920bBcE20f8f74557B514734",
+       "doc": "https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault",
+       "explorerUrl": "https://etherscan.io/address/0x9AA79C84b79816ab920bBcE20f8f74557B514734"
       },
       {
        "chain": "ethereum",
-       "label": "weETH",
-       "address": "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
-       "doc": "https://etherfi.gitbook.io/etherfi/contracts-and-integrations/ethereum-mainnet",
-       "explorerUrl": "https://etherscan.io/address/0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee"
+       "label": "WETH",
+       "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+       "doc": "https://docs.veda.tech/integrations/deposits-and-withdrawals-overview",
+       "explorerUrl": "https://etherscan.io/address/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
       }
      ],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "recipe": null
     }
    },
    {
@@ -34241,7 +34785,13 @@
       "tvl": 2038874
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:galaxy:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": null,
     "signals": null,
@@ -34256,24 +34806,74 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.galaxy.com/",
+     "mode": "fork",
+     "label": null,
+     "note": "Galaxy USDC Quality (Morpho Vault V2) on Ethereum, from Galaxy Curation's deployed-vaults page. Most of the row's TVL is the Galaxy USDC vault on Arc, which the repo does not fork; the other Ethereum vaults are listed for verification.",
+     "appUrl": "https://app.curation.galaxy.com/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:galaxy:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:galaxy:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:galaxy:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit and redeem (Galaxy USDC Quality)",
+       "assertion": "USDC into Galaxy USDC Quality (gUSDCq) on Ethereum, a Morpho Vault V2 curated by Galaxy Curation, then redeem. Same gate pre-check and round-trip assertions as RockawayX. Most of the row's TVL is the Galaxy USDC vault on Arc, which the repo does not fork",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Galaxy USDC Quality (gUSDCq, Morpho Vault V2)",
+       "address": "0x91600E31fBeDc72433d4a57F16639cfe661Be7d8",
+       "doc": "https://docs.curation.galaxy.com/products/deployed-vaults",
+       "explorerUrl": "https://etherscan.io/address/0x91600E31fBeDc72433d4a57F16639cfe661Be7d8"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Galaxy USDT Quality (gUSDTq)",
+       "address": "0x71ffB6a81786eC285D429d531Cf655107B9D878d",
+       "doc": "https://docs.curation.galaxy.com/products/deployed-vaults",
+       "explorerUrl": "https://etherscan.io/address/0x71ffB6a81786eC285D429d531Cf655107B9D878d"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Galaxy WETH Quality (gWETHq)",
+       "address": "0x1878805799273d10aE96a58201A6f5254CF9824F",
+       "doc": "https://docs.curation.galaxy.com/products/deployed-vaults",
+       "explorerUrl": "https://etherscan.io/address/0x1878805799273d10aE96a58201A6f5254CF9824F"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Galaxy USDC Enhanced (gUSDCe)",
+       "address": "0xd95fE7adF5075fad9D6Bf853E0f9Fe53369E8D96",
+       "doc": "https://docs.curation.galaxy.com/products/deployed-vaults",
+       "explorerUrl": "https://etherscan.io/address/0xd95fE7adF5075fad9D6Bf853E0f9Fe53369E8D96"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -34335,7 +34935,13 @@
       "tvl": 5
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:kpk:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": null,
     "signals": null,
@@ -34350,24 +34956,67 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://kpk.io/",
+     "mode": "fork",
+     "label": null,
+     "note": "KPK USDC Prime (Morpho Vault V2) on Ethereum, one of the vaults KPK curates (docs.kpk.io). The row also counts KPK's Gearbox Earn Pools, a Symbiotic vault, kpk Funds and Safes KPK manages through Zodiac roles, which are not exercised. USDC Prime Core is listed for verification.",
+     "appUrl": "https://app.morpho.org/ethereum/vault/0x4Ef53d2cAa51C447fdFEEedee8F07FD1962C9ee6",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:kpk:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:kpk:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:kpk:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit and redeem (KPK USDC Prime)",
+       "assertion": "USDC into KPK USDC Prime on Ethereum, a Morpho Vault V2 curated by KPK, then redeem. Same gate pre-check and round-trip assertions as RockawayX. KPK's Gearbox pools, Symbiotic vault and managed Safes are not exercised",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "KPK USDC Prime (Morpho Vault V2)",
+       "address": "0x4Ef53d2cAa51C447fdFEEedee8F07FD1962C9ee6",
+       "doc": "https://docs.kpk.io/vaults/vaults/morpho/ethereum/usdc-prime",
+       "explorerUrl": "https://etherscan.io/address/0x4Ef53d2cAa51C447fdFEEedee8F07FD1962C9ee6"
+      },
+      {
+       "chain": "ethereum",
+       "label": "KPK USDC Prime Markets V1 Adapter",
+       "address": "0x1d511811ACA9d8817a3e50F29CadFf6243A02902",
+       "doc": "https://docs.kpk.io/vaults/vaults/morpho/ethereum/usdc-prime",
+       "explorerUrl": "https://etherscan.io/address/0x1d511811ACA9d8817a3e50F29CadFf6243A02902"
+      },
+      {
+       "chain": "ethereum",
+       "label": "KPK USDC Prime Core (Morpho Vault V2)",
+       "address": "0x1a1985F50352b58090eb36425AfdFacbaC7806F4",
+       "doc": "https://docs.kpk.io/vaults/vaults/morpho/ethereum/usdc-prime-core",
+       "explorerUrl": "https://etherscan.io/address/0x1a1985F50352b58090eb36425AfdFacbaC7806F4"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -38104,7 +38753,13 @@
       "tvl": 554469503
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:meth:stake",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": null,
     "signals": null,
@@ -38119,24 +38774,75 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.methprotocol.xyz/",
+     "mode": "fork",
+     "label": "Stake + unstake request",
+     "note": "mETH Protocol (Mantle LST) on Ethereum: stake ETH for mETH through the Staking contract, then file an unstake request that locks the mETH in the UnstakeRequestsManager. Request finalisation follows validator exits and is not waited out. cmETH restaking is not exercised.",
+     "appUrl": "https://www.mantle.xyz/meth",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic liquid-staking fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
-      ],
-      "note": "No dedicated fork script. Lido submit on an Ethereum fork is the staking recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:meth:stake"
+     ],
+     "tests": [
+      {
+       "script": "fork:meth:stake",
+       "action": "stake",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:meth:stake",
+       "section": "actions",
+       "chain": "ethereum",
+       "title": "Stake ETH for mETH and request unstake (mETH Protocol)",
+       "action": "mETH `Staking.stake(minMETHAmount)` with native ETH, then `unstakeRequest` of every mETH minted. Pre-checks: `mETH()` and `unstakeRequestsManager()` are the documented contracts, staking and unstake requests are not paused, the staking allowlist is off, and the amount is above `minimumStakeBound()`",
+       "assertion": "mETH minted equals the pre-tx `ethToMETH(value)` exactly and the Staking contract holds exactly the ETH; `unstakeRequest` moves every mETH into the UnstakeRequestsManager and emits `UnstakeRequested` for the user with `mETHLocked` = the minted mETH and `ethAmount` = the pre-tx `mETHToETH`. Finalisation and the claim are not waited out",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "1",
+         "unit": "ETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Staking",
+       "address": "0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f",
+       "doc": "https://docs.mantle.xyz/meth/components/smart-contracts/staking-meth",
+       "explorerUrl": "https://etherscan.io/address/0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f"
+      },
+      {
+       "chain": "ethereum",
+       "label": "mETH (L1)",
+       "address": "0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa",
+       "doc": "https://docs.mantle.xyz/meth/components/smart-contracts/staking-meth",
+       "explorerUrl": "https://etherscan.io/address/0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa"
+      },
+      {
+       "chain": "ethereum",
+       "label": "UnstakeRequestsManager",
+       "address": "0x38fDF7b489316e03eD8754ad339cb5c4483FDcf9",
+       "doc": "https://docs.mantle.xyz/meth/components/smart-contracts/staking-meth",
+       "explorerUrl": "https://etherscan.io/address/0x38fDF7b489316e03eD8754ad339cb5c4483FDcf9"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Oracle",
+       "address": "0x8735049F496727f824Cc0f2B174d826f5c408192",
+       "doc": "https://docs.mantle.xyz/meth/components/smart-contracts/staking-meth",
+       "explorerUrl": "https://etherscan.io/address/0x8735049F496727f824Cc0f2B174d826f5c408192"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -42584,7 +43290,13 @@
       "tvl": 1719449217
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:falcon:stake",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": {
      "coingeckoId": "falcon-finance",
@@ -42607,24 +43319,74 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://app.falcon.finance",
+     "mode": "fork",
+     "label": "Stake + redeem",
+     "note": "Falcon Finance: the row is USDf supply on Ethereum. Minting USDf from collateral needs Falcon KYC, so the test stakes USDf (funded from the Curve USDC/USDf pool) into sUSDf, the ERC-4626 yield vault anyone can enter, and redeems it. Restaking sUSDf into fixed-term boosted positions (Falcon Position NFT) is not exercised.",
+     "appUrl": "https://app.falcon.finance/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic stablecoin check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
-      ],
-      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:falcon:stake"
+     ],
+     "tests": [
+      {
+       "script": "fork:falcon:stake",
+       "action": "stake",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:falcon:stake",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Stake USDf into sUSDf and redeem (Falcon Finance)",
+       "assertion": "USDf into sUSDf (ERC-4626), then `redeem` every share. Pre-checks: `asset()` is the documented USDf and `maxDeposit` covers the amount. Asserts the user's USDf and the vault's USDf move by exactly the amount, the `Deposit` event reports the amount and the user's shares, and the shares are within 1 bp of the pre-tx `previewDeposit` (sUSDf vests yield per second); the redeem burns every share, the `Withdraw` event matches the USDf received, and that is within 1 bp of both `previewRedeem` and the amount staked. Minting USDf from collateral is KYC-gated and is not called",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDf"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "USDf",
+       "address": "0xFa2B947eEc368f42195f24F36d2aF29f7c24CeC2",
+       "doc": "https://docs.falcon.finance/resources/smart-contracts",
+       "explorerUrl": "https://etherscan.io/address/0xFa2B947eEc368f42195f24F36d2aF29f7c24CeC2"
+      },
+      {
+       "chain": "ethereum",
+       "label": "sUSDf (ERC-4626 over USDf)",
+       "address": "0xc8CF6D7991f15525488b2A83Df53468D682Ba4B0",
+       "doc": "https://docs.falcon.finance/resources/smart-contracts",
+       "explorerUrl": "https://etherscan.io/address/0xc8CF6D7991f15525488b2A83Df53468D682Ba4B0"
+      },
+      {
+       "chain": "ethereum",
+       "label": "sUSDf Staking Rewards Distributor",
+       "address": "0x8AF2EFa47efB2095b80D82577c597186Ea2FFFea",
+       "doc": "https://docs.falcon.finance/resources/smart-contracts",
+       "explorerUrl": "https://etherscan.io/address/0x8AF2EFa47efB2095b80D82577c597186Ea2FFFea"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Falcon Position NFT",
+       "address": "0x8407e9864F42374Cb9DACfDEDe0e6962d634edCB",
+       "doc": "https://docs.falcon.finance/resources/smart-contracts",
+       "explorerUrl": "https://etherscan.io/address/0x8407e9864F42374Cb9DACfDEDe0e6962d634edCB"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -42682,14 +43444,43 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://www.opentrade.io",
+     "note": "KYC-gated: no fork test. OpenTrade vaults lend only to onboarded institutions and accredited users who pass KYC/KYB (docs.opentrade.io eligibility requirements), and investments and withdrawal requests come from whitelisted wallets, so there is no permissionless action to run on a fork. Most of the row sits on Avalanche and Plume, which the repo does not fork. The four Ethereum vault tokens from the official contract page are listed for verification.",
+     "appUrl": "https://app.opentrade.io/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
      "features": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Flexible Term USDC Vault (XTBT)",
+       "address": "0x0f8CbdC544dC1D4Bd1bDafE0039Be07B825aF82A",
+       "doc": "https://docs.opentrade.io/developers/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x0f8CbdC544dC1D4Bd1bDafE0039Be07B825aF82A"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Flexible Term EURC Vault (XEVT)",
+       "address": "0x3Ee320c9F73a84D1717557af00695A34b26d1F1d",
+       "doc": "https://docs.opentrade.io/developers/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x3Ee320c9F73a84D1717557af00695A34b26d1F1d"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USD Money Market Fund Vault (XMMF)",
+       "address": "0x1e571c87556F216662fa8D25143b1b0618512Ef6",
+       "doc": "https://docs.opentrade.io/developers/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x1e571c87556F216662fa8D25143b1b0618512Ef6"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USD Money Market Fund Vault USDT (XMMF-USDT)",
+       "address": "0xD06f235DF80D4981816F7fB0936973155CDe1f4C",
+       "doc": "https://docs.opentrade.io/developers/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0xD06f235DF80D4981816F7fB0936973155CDe1f4C"
+      }
+     ],
      "recipe": {
       "title": "Generic stablecoin check",
       "chain": "ethereum",
@@ -45669,7 +46460,13 @@
       "tvl": 373008895
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:world-chain:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": null,
     "signals": null,
@@ -45684,24 +46481,67 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Source chain only",
+     "note": "World Chain is an OP Stack chain. L1StandardBridge.depositETH locks ETH in the OptimismPortal and emits ETHDepositInitiated. Delivery on World Chain needs the rollup; a single Ethereum fork cannot verify it.",
      "appUrl": "https://world.org/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-      ],
-      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:world-chain:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:world-chain:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:world-chain:deposit",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Bridge ETH to World Chain",
+       "assertion": "World Chain `L1StandardBridge.depositETH`. ETH held by the bridge + portal (+ an `ETHLockbox` when the portal reports one; none on 2026-10-19) increases by exactly the deposit and `ETHDepositInitiated` is emitted",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.05",
+         "unit": "ETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "L1StandardBridgeProxy",
+       "address": "0x470458C91978D2d929704489Ad730DC3E3001113",
+       "doc": "https://docs.world.org/world-chain/developers/world-chain-contracts",
+       "explorerUrl": "https://etherscan.io/address/0x470458C91978D2d929704489Ad730DC3E3001113"
+      },
+      {
+       "chain": "ethereum",
+       "label": "OptimismPortalProxy",
+       "address": "0xd5ec14a83B7d95BE1E2Ac12523e2dEE12Cbeea6C",
+       "doc": "https://docs.world.org/world-chain/developers/world-chain-contracts",
+       "explorerUrl": "https://etherscan.io/address/0xd5ec14a83B7d95BE1E2Ac12523e2dEE12Cbeea6C"
+      },
+      {
+       "chain": "ethereum",
+       "label": "SystemConfigProxy",
+       "address": "0x6ab0777fD0e609CE58F939a7F70Fe41F5Aa6300A",
+       "doc": "https://docs.world.org/world-chain/developers/world-chain-contracts",
+       "explorerUrl": "https://etherscan.io/address/0x6ab0777fD0e609CE58F939a7F70Fe41F5Aa6300A"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -53159,7 +53999,7 @@
    "Domains": 15,
    "Coins Tracker": 2
   },
-  "forkInTop200": 55,
-  "apiOnlyInTop200": 145
+  "forkInTop200": 63,
+  "apiOnlyInTop200": 137
  }
 }
