@@ -120,6 +120,15 @@ const DOCS = {
   defisaver: "https://github.com/defisaver/defisaver-v3-contracts/blob/main/addresses/mainnet.json",
   // Enzyme Blue (Sulu release) deployment file in Enzyme's SDK.
   enzyme: "https://github.com/enzymefinance/sdk/blob/main/packages/environment/src/deployments/ethereum.ts",
+  falcon: "https://docs.falcon.finance/resources/smart-contracts",
+  meth: "https://docs.mantle.xyz/meth/components/smart-contracts/staking-meth",
+  // Aera's gtUSDa integration guide (Base). The Provisioner and PriceAndFeeCalculator are read from the
+  // vault's provisioner() / feeCalculator(), as that page instructs.
+  aeraGtusda: "https://docs.aera.finance/integrating-with-gtusda",
+  opentrade: "https://docs.opentrade.io/developers/contract-addresses",
+  kpkUsdcPrime: "https://docs.kpk.io/vaults/vaults/morpho/ethereum/usdc-prime",
+  kpkUsdcPrimeCore: "https://docs.kpk.io/vaults/vaults/morpho/ethereum/usdc-prime-core",
+  galaxy: "https://docs.curation.galaxy.com/products/deployed-vaults",
 };
 
 /**
@@ -265,6 +274,12 @@ function contractBook() {
     "etherfi-cash-liquid": [],
     "defi-saver-asset-management": [],
     "enzyme-finance": [],
+    "falcon-finance": [],
+    "meth-protocol": [],
+    aera: [],
+    opentrade: [],
+    kpk: [],
+    "galaxy-curation": [],
   };
 
   push(book.uniswap, eth, "V2 router", uni.v2.router, DOCS.uniswap);
@@ -670,6 +685,34 @@ function contractBook() {
   push(book["enzyme-finance"], eth, "FundDeployer (Sulu)", "0x4f1C53F096533C04d8157EFB6Bca3eb22ddC6360", DOCS.enzyme);
   push(book["enzyme-finance"], eth, "DepositWrapper", "0x65BbAD6545B7ac9C30Fb0f07e64e25106Bf05eEc", DOCS.enzyme);
   push(book["enzyme-finance"], eth, "ValueInterpreter", "0xD7B0610dB501b15Bfb9B7DDad8b3869de262a327", DOCS.enzyme);
+  // Falcon Finance on Ethereum.
+  push(book["falcon-finance"], eth, "USDf", "0xFa2B947eEc368f42195f24F36d2aF29f7c24CeC2", DOCS.falcon);
+  push(book["falcon-finance"], eth, "sUSDf (ERC-4626 over USDf)", "0xc8CF6D7991f15525488b2A83Df53468D682Ba4B0", DOCS.falcon);
+  push(book["falcon-finance"], eth, "sUSDf Staking Rewards Distributor", "0x8AF2EFa47efB2095b80D82577c597186Ea2FFFea", DOCS.falcon);
+  push(book["falcon-finance"], eth, "Falcon Position NFT", "0x8407e9864F42374Cb9DACfDEDe0e6962d634edCB", DOCS.falcon);
+  // mETH Protocol (Mantle LST) on Ethereum.
+  push(book["meth-protocol"], eth, "Staking", "0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f", DOCS.meth);
+  push(book["meth-protocol"], eth, "mETH (L1)", "0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa", DOCS.meth);
+  push(book["meth-protocol"], eth, "UnstakeRequestsManager", "0x38fDF7b489316e03eD8754ad339cb5c4483FDcf9", DOCS.meth);
+  push(book["meth-protocol"], eth, "Oracle", "0x8735049F496727f824Cc0f2B174d826f5c408192", DOCS.meth);
+  // Aera V3 gtUSDa (Gauntlet USD Alpha) multi-depositor vault on Base.
+  push(book.aera, "base", "gtUSDa (MultiDepositorVault)", "0x000000000001CdB57E58Fa75Fe420a0f4D6640D5", DOCS.aeraGtusda);
+  push(book.aera, "base", "ProvisionerV2 (gtUSDa.provisioner())", "0x128Afda4351deCE9d51Eb9d7e9C687C58cfff731", DOCS.aeraGtusda);
+  push(book.aera, "base", "PriceAndFeeCalculator (gtUSDa.feeCalculator())", "0xa90fd5C2020DBf19c6c29609dF85F7e4DBAC30db", DOCS.aeraGtusda);
+  // KPK-curated Morpho Vault V2s on Ethereum.
+  push(book.kpk, eth, "KPK USDC Prime (Morpho Vault V2)", "0x4Ef53d2cAa51C447fdFEEedee8F07FD1962C9ee6", DOCS.kpkUsdcPrime);
+  push(book.kpk, eth, "KPK USDC Prime Markets V1 Adapter", "0x1d511811ACA9d8817a3e50F29CadFf6243A02902", DOCS.kpkUsdcPrime);
+  push(book.kpk, eth, "KPK USDC Prime Core (Morpho Vault V2)", "0x1a1985F50352b58090eb36425AfdFacbaC7806F4", DOCS.kpkUsdcPrimeCore);
+  // Galaxy Curation Morpho Vault V2s on Ethereum.
+  push(book["galaxy-curation"], eth, "Galaxy USDC Quality (gUSDCq, Morpho Vault V2)", "0x91600E31fBeDc72433d4a57F16639cfe661Be7d8", DOCS.galaxy);
+  push(book["galaxy-curation"], eth, "Galaxy USDT Quality (gUSDTq)", "0x71ffB6a81786eC285D429d531Cf655107B9D878d", DOCS.galaxy);
+  push(book["galaxy-curation"], eth, "Galaxy WETH Quality (gWETHq)", "0x1878805799273d10aE96a58201A6f5254CF9824F", DOCS.galaxy);
+  push(book["galaxy-curation"], eth, "Galaxy USDC Enhanced (gUSDCe)", "0xd95fE7adF5075fad9D6Bf853E0f9Fe53369E8D96", DOCS.galaxy);
+  // OpenTrade vaults on Ethereum (KYC-onboarded lenders only).
+  push(book.opentrade, eth, "Flexible Term USDC Vault (XTBT)", "0x0f8CbdC544dC1D4Bd1bDafE0039Be07B825aF82A", DOCS.opentrade);
+  push(book.opentrade, eth, "Flexible Term EURC Vault (XEVT)", "0x3Ee320c9F73a84D1717557af00695A34b26d1F1d", DOCS.opentrade);
+  push(book.opentrade, eth, "USD Money Market Fund Vault (XMMF)", "0x1e571c87556F216662fa8D25143b1b0618512Ef6", DOCS.opentrade);
+  push(book.opentrade, eth, "USD Money Market Fund Vault USDT (XMMF-USDT)", "0xD06f235DF80D4981816F7fB0936973155CDe1f4C", DOCS.opentrade);
 
   return book;
 }
@@ -943,6 +986,24 @@ module.exports = {
     defaultAmount: "100",
     label: "hyperUSDCa",
   },
+  // https://docs.kpk.io/vaults/vaults/morpho/ethereum/usdc-prime (Morpho Vault V2)
+  KPK: {
+    vault: "0x4Ef53d2cAa51C447fdFEEedee8F07FD1962C9ee6",
+    asset: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    symbol: "USDC",
+    decimals: 6,
+    defaultAmount: "100",
+    label: "KPK_USDC_Prime",
+  },
+  // https://docs.curation.galaxy.com/products/deployed-vaults (Morpho Vault V2)
+  GALAXY: {
+    vault: "0x91600E31fBeDc72433d4a57F16639cfe661Be7d8",
+    asset: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    symbol: "USDC",
+    decimals: 6,
+    defaultAmount: "100",
+    label: "gUSDCq",
+  },
   // Concrete Earn V2 async vault: ERC-4626 deposit, epoch-queued withdrawal.
   // https://docs.curvance.com/app/protocol-overview/monad-contract-addresses (WMON | USDC market)
   CURVANCE: {
@@ -1037,6 +1098,29 @@ module.exports = {
     decimals: 6,
     defaultAmount: "100",
     label: "sUSDv",
+  },
+  // https://docs.falcon.finance/resources/smart-contracts
+  FALCON: {
+    usdf: "0xFa2B947eEc368f42195f24F36d2aF29f7c24CeC2",
+    vault: "0xc8CF6D7991f15525488b2A83Df53468D682Ba4B0",
+    symbol: "USDf",
+    decimals: 18,
+    defaultAmount: "100",
+    label: "sUSDf",
+  },
+  // https://docs.mantle.xyz/meth/components/smart-contracts/staking-meth
+  METH: {
+    staking: "0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f",
+    meth: "0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa",
+    unstakeRequestsManager: "0x38fDF7b489316e03eD8754ad339cb5c4483FDcf9",
+  },
+  // https://docs.aera.finance/integrating-with-gtusda (Base). provisioner() / feeCalculator() are
+  // re-read from the vault at run time and must equal these.
+  AERA: {
+    vault: "0x000000000001CdB57E58Fa75Fe420a0f4D6640D5",
+    provisioner: "0x128Afda4351deCE9d51Eb9d7e9C687C58cfff731",
+    calculator: "0xa90fd5C2020DBf19c6c29609dF85F7e4DBAC30db",
+    usdc: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   },
   // https://www.binance.com/en/support/faq/what-is-wbeth-e252366155174ba6887f6b32e3798273
   WBETH: "0xa2E3356610840701BDf5611a53974510Ae27E2e1",

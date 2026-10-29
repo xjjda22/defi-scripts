@@ -194,13 +194,13 @@ const FORK_RECIPES = [
     tests: [test("fork:sentora:deposit", "deposit", "ethereum")],
   }),
   recipe({
-    keys: ["veda"],
+    keys: ["veda", "ether.fi-liquid", "nonce-capital"],
     category: "vaults",
     label: "Deposit only",
     appUrl: "https://veda.tech",
     chain: "ethereum",
     contractKeys: ["veda"],
-    note: "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false.",
+    note: "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false. The ether.fi Liquid row and the Nonce Capital row (the curator of the ether.fi Liquid vaults, veda.tech/ecosystem/nonce-capital) share this vault; Liquid USD, Liquid BTC and Nonce's OP Mainnet Midas tokens are not exercised.",
     tests: [test("fork:veda:deposit", "deposit", "ethereum")],
   }),
   recipe({
@@ -517,7 +517,7 @@ const FORK_RECIPES = [
     tests: [test("fork:lista-dao:deposit", "deposit", "bsc")],
   }),
   recipe({
-    keys: ["world-chain"],
+    keys: ["world-chain", "world-chain-bridge"],
     category: "bridge-chain",
     label: "Source chain only",
     appUrl: "https://world.org/",
@@ -738,6 +738,54 @@ const FORK_RECIPES = [
     note: "ether.fi Cash lending is an ether.fi-managed Aave V4 instance on OP Mainnet (one Liquidity Hub, one Spoke). Borrowing is permissioned to ether.fi Safes, but anyone can supply, so the test supplies USDC and withdraws it. The Cash Liquid row is the collateral users hold in their ether.fi Safes on the same market; the Safes themselves are created by ether.fi for account holders and are not exercised here.",
     tests: [test("fork:etherfi-cash:supply", "supply", "optimism")],
   }),
+  recipe({
+    keys: ["falcon-finance"],
+    category: "stable-rwa",
+    label: "Stake + redeem",
+    appUrl: "https://app.falcon.finance/",
+    chain: "ethereum",
+    contractKeys: ["falcon-finance"],
+    note: "Falcon Finance: the row is USDf supply on Ethereum. Minting USDf from collateral needs Falcon KYC, so the test stakes USDf (funded from the Curve USDC/USDf pool) into sUSDf, the ERC-4626 yield vault anyone can enter, and redeems it. Restaking sUSDf into fixed-term boosted positions (Falcon Position NFT) is not exercised.",
+    tests: [test("fork:falcon:stake", "stake", "ethereum")],
+  }),
+  recipe({
+    keys: ["meth-protocol"],
+    category: "staking",
+    label: "Stake + unstake request",
+    appUrl: "https://www.mantle.xyz/meth",
+    chain: "ethereum",
+    contractKeys: ["meth-protocol"],
+    note: "mETH Protocol (Mantle LST) on Ethereum: stake ETH for mETH through the Staking contract, then file an unstake request that locks the mETH in the UnstakeRequestsManager. Request finalisation follows validator exits and is not waited out. cmETH restaking is not exercised.",
+    tests: [test("fork:meth:stake", "stake", "ethereum")],
+  }),
+  recipe({
+    keys: ["kpk"],
+    category: "vaults",
+    appUrl: "https://app.morpho.org/ethereum/vault/0x4Ef53d2cAa51C447fdFEEedee8F07FD1962C9ee6",
+    chain: "ethereum",
+    contractKeys: ["kpk"],
+    note: "KPK USDC Prime (Morpho Vault V2) on Ethereum, one of the vaults KPK curates (docs.kpk.io). The row also counts KPK's Gearbox Earn Pools, a Symbiotic vault, kpk Funds and Safes KPK manages through Zodiac roles, which are not exercised. USDC Prime Core is listed for verification.",
+    tests: [test("fork:kpk:deposit", "deposit", "ethereum")],
+  }),
+  recipe({
+    keys: ["galaxy-curation"],
+    category: "vaults",
+    appUrl: "https://app.curation.galaxy.com/",
+    chain: "ethereum",
+    contractKeys: ["galaxy-curation"],
+    note: "Galaxy USDC Quality (Morpho Vault V2) on Ethereum, from Galaxy Curation's deployed-vaults page. Most of the row's TVL is the Galaxy USDC vault on Arc, which the repo does not fork; the other Ethereum vaults are listed for verification.",
+    tests: [test("fork:galaxy:deposit", "deposit", "ethereum")],
+  }),
+  recipe({
+    keys: ["aera"],
+    category: "vaults",
+    label: "Async request + refund",
+    appUrl: "https://app.gauntlet.xyz/vaults/gtusda",
+    chain: "base",
+    contractKeys: ["aera"],
+    note: "Aera V3 gtUSDa (Gauntlet USD Alpha) on Base, the multi-depositor vault Aera's integration guide documents. Entry is an async requestDeposit to the ProvisionerV2 that Aera's solver fills (usually within 6 hours); the test files one and, after its deadline, refunds it with refundRequest. Aera's Ethereum vaults and single-depositor vaults (treasury mandates) are not exercised.",
+    tests: [test("fork:aera:request", "request", "base")],
+  }),
 ];
 
 const API_ONLY = [
@@ -830,6 +878,12 @@ const API_ONLY = [
     category: "vaults",
     appUrl: "https://app.enzyme.finance/",
     note: "No fork test: Enzyme Blue vaults are each deployed by their manager from the FundDeployer with their own deposit policies (allowed-depositor lists, minimums, share-action timelocks), so there is no single permissionless vault behind this row to assert on a fork. The Sulu FundDeployer, DepositWrapper and ValueInterpreter from Enzyme's SDK deployment file are listed for verification.",
+  },
+  {
+    keys: ["opentrade"],
+    category: "stable-rwa",
+    appUrl: "https://app.opentrade.io/",
+    note: "KYC-gated: no fork test. OpenTrade vaults lend only to onboarded institutions and accredited users who pass KYC/KYB (docs.opentrade.io eligibility requirements), and investments and withdrawal requests come from whitelisted wallets, so there is no permissionless action to run on a fork. Most of the row sits on Avalanche and Plume, which the repo does not fork. The four Ethereum vault tokens from the official contract page are listed for verification.",
   },
 ];
 
