@@ -1857,6 +1857,51 @@ const PROTOCOLS = [
       "\"Fees are back to $4,200 per day\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2115486769030570206), 2026-10-28, Airdrop?). `analytics:avalanche:fees` on 2026-10-30: daily fees $3.61K (10-25), $5.18K (10-26), $4.51K (10-27), $5.97K (10-28), $8.16K (10-29); 7d $36.53K (about $5.2K a day), 30d $345.62K. No day around 10-28 reads $4.2K (mismatch); the 10-25 to 10-27 levels are in that range.",
     ],
   },
+  {
+    id: "falcon",
+    name: "Falcon Finance",
+    category: "stable-rwa",
+    url: "https://falcon.finance/",
+    about:
+      "USDf, an overcollateralized synthetic dollar, and sUSDf, its ERC-4626 yield vault. Minting USDf is KYC-gated; the fork test stakes USDf into sUSDf and redeems it.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "meth",
+    name: "mETH Protocol",
+    category: "staking",
+    url: "https://www.mantle.xyz/meth",
+    about:
+      "Mantle's ETH liquid staking token on Ethereum. The fork test stakes ETH for mETH and files an unstake request.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "kpk",
+    name: "KPK",
+    category: "vaults",
+    url: "https://kpk.io/",
+    about:
+      "Risk curator (formerly karpatkey) for Morpho, Gearbox and Symbiotic vaults plus onchain funds. The fork test deposits and redeems USDC on KPK USDC Prime, a Morpho Vault V2 on Ethereum.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "galaxy",
+    name: "Galaxy Curation",
+    category: "vaults",
+    url: "https://curation.galaxy.com/",
+    about:
+      "Galaxy's risk curator for Morpho vaults on Ethereum, Base and Arc. The fork test deposits and redeems USDC on Galaxy USDC Quality, a Morpho Vault V2 on Ethereum.",
+    data: "On-chain RPC",
+  },
+  {
+    id: "aera",
+    name: "Aera",
+    category: "vaults",
+    url: "https://aera.finance/",
+    about:
+      "Vault protocol run by guardians (Gauntlet runs gtUSDa on Base). Entry and exit go through a Provisioner that solvers fill. The fork test files a gtUSDa deposit request and refunds it after the deadline.",
+    data: "On-chain RPC",
+  },
 ];
 
 /** Script families that span protocols. Same id rule as PROTOCOLS. */
@@ -2156,6 +2201,11 @@ const SCRIPT_DESCRIPTIONS = {
   "fork:ember:deposit": "Deposit USDC into Ember Earn and queue a redeemShares withdrawal on an Ethereum fork",
   "fork:vesper:deposit": "Mint USDv from USDC through the Vesper Gateway, stake it into sUSDv and request a cooldown unstake on an Ethereum fork",
   "fork:etherfi-cash:supply": "Supply USDC to the ether.fi Cash Aave V4 Spoke and withdraw it on an OP Mainnet fork",
+  "fork:falcon:stake": "Stake USDf into Falcon sUSDf and redeem it on an Ethereum fork",
+  "fork:meth:stake": "Stake ETH for mETH and file an unstake request on an Ethereum fork",
+  "fork:kpk:deposit": "Deposit USDC into KPK USDC Prime (Morpho Vault V2) and redeem it on an Ethereum fork",
+  "fork:galaxy:deposit": "Deposit USDC into Galaxy USDC Quality (Morpho Vault V2) and redeem it on an Ethereum fork",
+  "fork:aera:request": "File an Aera gtUSDa deposit request and refund it after the deadline on a Base fork",
   "fork:curvance:deposit": "Lend WMON into Curvance cWMON (WMON | USDC market) and redeem it on a Monad fork",
   "fork:cooler:borrow": "Olympus Cooler V2: post gOHM, borrow USDS, repay in full and withdraw the collateral on an Ethereum fork",
   "fork:stakelink:deposit": "Deposit LINK into the stake.link Priority Pool (staked or queued) and unqueue the queued part on an Ethereum fork",

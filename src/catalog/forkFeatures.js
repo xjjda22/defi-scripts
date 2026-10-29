@@ -493,6 +493,15 @@ const FEATURES = [
     params: amount("0.1", "ETH"),
   },
   {
+    script: "fork:meth:stake",
+    section: "actions",
+    chain: "ethereum",
+    title: "Stake ETH for mETH and request unstake (mETH Protocol)",
+    action: "mETH `Staking.stake(minMETHAmount)` with native ETH, then `unstakeRequest` of every mETH minted. Pre-checks: `mETH()` and `unstakeRequestsManager()` are the documented contracts, staking and unstake requests are not paused, the staking allowlist is off, and the amount is above `minimumStakeBound()`",
+    assertion: "mETH minted equals the pre-tx `ethToMETH(value)` exactly and the Staking contract holds exactly the ETH; `unstakeRequest` moves every mETH into the UnstakeRequestsManager and emits `UnstakeRequested` for the user with `mETHLocked` = the minted mETH and `ethAmount` = the pre-tx `mETHToETH`. Finalisation and the claim are not waited out",
+    params: amount("1", "ETH"),
+  },
+  {
     script: "fork:meta-pool:deposit",
     section: "actions",
     chain: "ethereum",
@@ -665,6 +674,33 @@ const FEATURES = [
     title: "Deposit and queue a withdrawal (Ember Earn)",
     assertion:
       "USDC into Ember Earn (eEARN, ERC-4626 deposit), then `redeemShares`. Pre-checks: `asset()` is USDC and `maxDeposit` covers the amount (below it is a labelled read). Asserts the vault pulled exactly the amount, the shares equal the pre-tx `previewDeposit`, and `redeemShares` moved every share into the vault and appended one queue entry for the user with those shares and `estimatedWithdrawAmount` = `convertToAssets(shares)`. Ember's operator processes the queue (3-day period), so the payout is not waited out",
+    params: amount("100", "USDC"),
+  },
+  {
+    script: "fork:kpk:deposit",
+    section: "vaults",
+    chain: "ethereum",
+    title: "Deposit and redeem (KPK USDC Prime)",
+    assertion:
+      "USDC into KPK USDC Prime on Ethereum, a Morpho Vault V2 curated by KPK, then redeem. Same gate pre-check and round-trip assertions as RockawayX. KPK's Gearbox pools, Symbiotic vault and managed Safes are not exercised",
+    params: amount("100", "USDC"),
+  },
+  {
+    script: "fork:galaxy:deposit",
+    section: "vaults",
+    chain: "ethereum",
+    title: "Deposit and redeem (Galaxy USDC Quality)",
+    assertion:
+      "USDC into Galaxy USDC Quality (gUSDCq) on Ethereum, a Morpho Vault V2 curated by Galaxy Curation, then redeem. Same gate pre-check and round-trip assertions as RockawayX. Most of the row's TVL is the Galaxy USDC vault on Arc, which the repo does not fork",
+    params: amount("100", "USDC"),
+  },
+  {
+    script: "fork:aera:request",
+    section: "vaults",
+    chain: "base",
+    title: "Request a deposit and refund it (Aera gtUSDa)",
+    assertion:
+      "USDC `requestDeposit` (auto price, no solver tip, 1-hour deadline, `minUnitsOut` = 97% of `convertTokenToUnits`) on the gtUSDa ProvisionerV2 on Base. Pre-checks: the vault's `provisioner()` and `feeCalculator()` are the documented ones, async USDC deposits are enabled and the vault is not paused. Asserts the user's USDC and the Provisioner's USDC move by exactly the amount and `asyncRequestHashes` holds `getRequestHash` of the request; after the deadline `refundRequest` returns exactly the USDC, clears the hash, and the user holds no units. Solving is done by Aera's solver off this machine",
     params: amount("100", "USDC"),
   },
   // ---- Stablecoins, RWA, bridges ----------------------------------------
@@ -915,6 +951,15 @@ const FEATURES = [
     assertion:
       "Gateway `deposit` of USDC mints exactly the pre-tx `previewDeposit` in USDv (fixed-price adapter at 1.0) and pulls exactly the USDC. Staking all of it into sUSDv (ERC-4626) spends exactly that USDv, the `Deposit` event reports those assets and the user's shares, and shares are within 1 bp of the preview (sUSDv vests yield per second). `requestRedeem` burns every share, opens one pending request whose assets equal the rise in `totalAssetsInCooldown`, and that amount is at least the pre-tx `previewRedeem` and within 1 bp of it (vesting can add a second of yield). The 7-day cooldown and the USDv -> USDC redemption are not waited out",
     params: amount("100", "USDC"),
+  },
+  {
+    script: "fork:falcon:stake",
+    section: "stables",
+    chain: "ethereum",
+    title: "Stake USDf into sUSDf and redeem (Falcon Finance)",
+    assertion:
+      "USDf into sUSDf (ERC-4626), then `redeem` every share. Pre-checks: `asset()` is the documented USDf and `maxDeposit` covers the amount. Asserts the user's USDf and the vault's USDf move by exactly the amount, the `Deposit` event reports the amount and the user's shares, and the shares are within 1 bp of the pre-tx `previewDeposit` (sUSDf vests yield per second); the redeem burns every share, the `Withdraw` event matches the USDf received, and that is within 1 bp of both `previewRedeem` and the amount staked. Minting USDf from collateral is KYC-gated and is not called",
+    params: amount("100", "USDf"),
   },
 ];
 
