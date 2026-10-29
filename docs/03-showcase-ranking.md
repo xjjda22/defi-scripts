@@ -63,7 +63,7 @@ score = 0.30·size + 0.21·growth + 0.17·tvlAdded + 0.10·feesMomentum + 0.07·
         + 0.012 · min(X posts, 6)
 ```
 
-The two external signals are optional. When a source is off (no key, no addresses, or a CI build without `NANSEN_PUBLIC=1`) its weight is dropped and the remaining weights are renormalised to 1. A row with no mapped token — or a source that failed — scores the neutral 0.5 on that signal, so the board still ranks. Details, keys and the redistribution gate: [`05-external-sources.md`](./05-external-sources.md).
+CoinGecko attention runs by default; Nansen is opt-in. When a source is off (no addresses, `SIGNALS_OFF=1`, or a CI build without `NANSEN_PUBLIC=1`) its weight is dropped and the remaining weights are renormalised to 1. A row with no mapped token — or a source that failed — scores the neutral 0.5 on that signal, so the board still ranks. CI refuses to publish a build without CoinGecko. Details, keys and the redistribution gate: [`05-external-sources.md`](./05-external-sources.md).
 
 The X bonus caps at **+0.072**, about a quarter of the spread between a median and a top-decile row on one input, so mentions break near-ties but do not lift a small protocol over a large grower. Ties break by TVL, then id. `components` on each row stores its percentiles, and the page shows them under **Details**.
 

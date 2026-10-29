@@ -55,6 +55,8 @@ async function collectSignals(rows) {
     const state = !meta.enabled ? "off" : meta.available ? `${meta.matched} rows` : "unavailable";
     console.log(`signal ${meta.id}: ${state}${meta.credits ? ` · ${meta.credits} credits` : ""}`);
   }
+  const external = [cg.meta, nan.meta].filter(meta => meta.enabled && meta.available).map(meta => meta.name || meta.id);
+  console.log(`sources: DefiLlama core${external.length ? ` + ${external.join(" + ")}` : " (no external signal)"}`);
 
   return { byId, sources: [cg.meta, nan.meta], publishSafe, mapped: targets.length };
 }

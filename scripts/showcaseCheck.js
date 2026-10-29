@@ -115,8 +115,15 @@ function main() {
   if (methodology.sources && !Array.isArray(methodology.sources)) {
     problems.push("methodology.sources must be an array");
   }
-  if (methodology.publishSafe === false && (process.env.GITHUB_ACTIONS === "true" || process.env.CI === "true")) {
+  const inCi = process.env.GITHUB_ACTIONS === "true" || process.env.CI === "true";
+  if (methodology.publishSafe === false && inCi) {
     problems.push("publishSafe is false: this build contains data that is not cleared for public redistribution");
+  }
+  const coingecko = (methodology.sources || []).find(source => source.id === "coingecko");
+  if (inCi && (!coingecko || !coingecko.enabled || !coingecko.available || !(coingecko.matched > 0))) {
+    problems.push(
+      "CoinGecko attention is missing: CI must publish DefiLlama + CoinGecko. Set COINGECKO_API_KEY, or keep the committed data.json."
+    );
   }
 
   if (problems.length) {

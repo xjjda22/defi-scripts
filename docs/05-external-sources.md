@@ -1,6 +1,6 @@
 # External signals (CoinGecko, Nansen)
 
-The top-200 board is built from DefiLlama's free API. Two optional sources now sit beside it, each a percentile over the same eligible rows:
+The top-200 board is built from DefiLlama's free API. CoinGecko attention runs by default beside it; Nansen smart money is opt-in. Both are percentiles over the same eligible rows:
 
 | Signal | Source | Raw value | Weight |
 | --- | --- | --- | --- |
@@ -9,7 +9,9 @@ The top-200 board is built from DefiLlama's free API. Two optional sources now s
 
 The other 0.85 stays with `size` 0.30, `growth` 0.21, `tvlAdded` 0.17, `feesMomentum` 0.10 and `volumeMomentum` 0.07. Weights live in [`src/analytics/ranking/weights.js`](../src/analytics/ranking/weights.js); the X-mention bonus (+0.072 cap) is still added on top.
 
-Both signals are **optional and fail-open**. A missing key, a failed call or a row with no token scores a neutral 0.5 — the same rule the core inputs use. When a whole source is off, its weight is dropped and the remaining weights are renormalised to 1, so the board still ranks and the score stays on a 0–1 scale.
+CoinGecko is **on by default**; Nansen is opt-in. Both **fail open**: a failed call or a row with no token scores a neutral 0.5 — the same rule the core inputs use. When a source is off, its weight is dropped and the remaining weights are renormalised to 1, so the board still ranks and the score stays on a 0–1 scale.
+
+In CI, `scripts/showcaseCheck.js` rejects a build whose `methodology.sources` has no available CoinGecko rows, so the published page always carries DefiLlama **and** CoinGecko. A keyless CI build that gets rate-limited fails the check and the Pages workflow falls back to the committed `data.json` instead of publishing a DefiLlama-only board.
 
 ## Token map
 
