@@ -37,7 +37,8 @@ function describeLlamaMonitor(command) {
   const chain = chainRaw ? ` + TVL, 7d/30d change and share of chain TVL on ${decodeURIComponent(chainRaw)}` : "";
   const oi = envValue(command, "DEFILLAMA_OI") === "1" ? " + open interest (total24h)" : "";
   const volumeKind = envValue(command, "DEFILLAMA_VOLUME");
-  const volume = volumeKind ? ` + ${volumeKind} volume (24h/7d/30d)` : "";
+  const volumeHigh = envValue(command, "DEFILLAMA_VOLUME_HIGH") === "1" ? " and its all-time daily high" : "";
+  const volume = volumeKind ? ` + ${volumeKind} volume (24h/7d/30d)${volumeHigh}` : "";
   return `DefiLlama TVL + TVL by chain${dates}${chain}${fees}${oi}${volume}${months} (\`${slug}\`)`;
 }
 
