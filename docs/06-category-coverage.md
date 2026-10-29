@@ -4,8 +4,9 @@ Status: **proposal, not shipped.** The board still renders the twelve tabs descr
 [03-showcase-ranking.md](./03-showcase-ranking.md). This page records what the catch-all holds, which
 buckets are large enough to deserve their own tab, and what changing the taxonomy would touch.
 
-Numbers are from the build generated **2026-10-29 14:43 UTC** (the same `showcase/data.json` the page
-serves). Fees are DefiLlama 30-day fees. One protocol can carry several Llama categories, so column
+Numbers are from the full-universe build of **2026-10-29 14:43 UTC**, taken before the candidate-pool
+cap. The cap now limits the board to ~267 rows (`other` 32); the shares below still describe DefiLlama's
+composition and remain the evidence for the proposed tabs. Fees are DefiLlama 30-day fees. One protocol can carry several Llama categories, so column
 sums overlap; the overlap is largest for launchpads, which also count as an interface or a Telegram bot.
 
 ## Where `other` goes

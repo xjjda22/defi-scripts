@@ -19,7 +19,7 @@ To recount X mentions from a directory of list reads:
 X_MENTIONS_DIR=/path/to/list-reads npm run showcase:build
 ```
 
-A build pulls about 800 protocol histories from DefiLlama. `RANKING_CACHE_DIR=/tmp/llama-cache` keeps each TVL series on disk for 20 hours, so a second run the same day takes seconds. `RANKING_CONCURRENCY` (default 6) sets the parallel pulls.
+A build now pulls about 270 protocol histories from DefiLlama (the candidate pool). `RANKING_CACHE_DIR=/tmp/llama-cache` keeps each TVL series on disk for 20 hours, so a second run the same day takes seconds. `RANKING_CONCURRENCY` (default 6) sets the parallel pulls.
 
 The script exits non-zero when `GET /protocols` fails, or when more than 5% of the history pulls fail (the growth terms would be unreliable). A failed fees or volume overview is a warning and that input stays neutral.
 
@@ -37,6 +37,14 @@ The board is a snapshot. Refresh it with the claims run:
 
 Eligible rows come from `GET https://api.llama.fi/protocols`. A protocol qualifies with at least **$5M** TVL, or **$100k** of 30-day fees, or **$5M** of 30-day volume.
 
+**Candidate pool.** Scoring every eligible family would mean ~740 TVL history calls. The pool is capped before any history is fetched, as the union of:
+
+- DefiLlama's top **200** rows by TVL,
+- CoinGecko's top **200** tokens by market cap (joined through `token-map.json`; 43 matched in the last build),
+- the top **20** rows in every category, ranked on TVL, then fees, then volume.
+
+The last build kept **267** candidate rows and fetched **272** histories, down from 741. Percentiles and the top 200 are computed inside this pool; a row outside it cannot enter. Every category keeps at least 20 rows. `stats.universe` records the counts, and `methodology.universe` carries the parameters.
+
 **Excluded** (counted in `stats.excluded`): `CEX`, `Ponzi`, `Token Locker` (team tokens parked in a vesting contract are not DeFi usage), and a few non-DeFi fee earners (`Coins Tracker`, `Domains`, `Foundation`, `Physical TCG`, `Luck Games`, `Gamified Mining`). Fee rows that DefiLlama marks `protocolType: "chain"` are a chain's own gas fees (Ethereum, Solana, Tron) and are ignored, so whole chains do not enter on the fees floor.
 
 **One row per protocol family and category.** DefiLlama splits many protocols into children that share a `parentProtocol` (Aave V2/V3/V4, Uniswap V2/V3/V4, Morpho Blue and Midnight). Children of one parent that land in the same showcase category are summed into one row named after the parent (from `GET /lite/protocols2`). Children in different categories stay separate, with the category in the name: `Jupiter Lend`, `Jupiter Perpetual Exchange`, `Lighter (Perps)` and `Lighter Bridge` are different rows. The row's **Details** lists the children it combines. This is what stops a new version (Aave V4) from taking a top-10 slot on its own launch growth.
@@ -45,7 +53,7 @@ Chains are represented by their canonical-bridge row where DefiLlama has one (Ba
 
 ## Score
 
-Every input becomes a **percentile** (0 to 1, ties share the average rank) across all eligible rows. A missing input scores 0.5, so a protocol without a fees adapter is neither helped nor punished.
+Every input becomes a **percentile** (0 to 1, ties share the average rank) across the candidate pool. A missing input scores 0.5, so a protocol without a fees adapter is neither helped nor punished.
 
 | Input | Weight | Definition |
 | --- | --- | --- |
@@ -116,7 +124,7 @@ The catalog card's category is only a fallback for a Llama category the map does
 | `boards` | Market boards (cross-protocol) | Catalog `BOARDS` with `group: "boards"` |
 | `tooling` | Swap & simulation tooling | Catalog `BOARDS` with `group: "tooling"` |
 
-The last two tabs are not DefiLlama protocols. They list the repo's cross-protocol boards and swap/simulation commands in catalog order. Each category tab keeps its top 100 rows (plus any row in the overall top 200), then appends catalog protocols that did not clear the floor, so every monitor stays visible.
+The last two tabs are not DefiLlama protocols. They list the repo's cross-protocol boards and swap/simulation commands in catalog order. Each category tab lists its pool rows (20-62 in the last build), then appends catalog protocols that did not clear the floor, so every monitor stays visible.
 
 The table above describes what ships today. What the catch-all actually holds, and the case for promoting Launchpads and Prediction markets (plus splitting Stablecoins/RWA) into their own tabs, is recorded in [06-category-coverage.md](./06-category-coverage.md). Those changes are proposals and would change the category count, the catalog cards and the docs — the score is unaffected.
 
@@ -124,7 +132,7 @@ The table above describes what ships today. What the catch-all actually holds, a
 
 ## Output
 
-`showcase/data.json`: `generatedAt`, `methodology` (weights, core and signal weights, floors, endpoints, exclusions, mention corpus, `sources`, `tokenCoverage`, `publishSafe`), `categories` (label, row count, eligible count, how many made the top 200), `overall` (200 rows), `byCategory`, and `stats` (`dedicatedMonitor` vs `rankingOnly` in the top 200, `newInTop200`, history misses, signal coverage and enabled source ids, exclusions).
+`showcase/data.json`: `generatedAt`, `methodology` (weights, core and signal weights, floors, endpoints, exclusions, mention corpus, `sources`, `tokenCoverage`, `publishSafe`), `categories` (label, row count, eligible count, how many made the top 200), `overall` (200 rows), `byCategory`, and `stats` (`dedicatedMonitor` vs `rankingOnly` in the top 200, `newInTop200`, history misses, signal coverage and enabled source ids, `universe` counts, exclusions).
 
 Each scored row: `rank`, `overallRank`, `id`, `name`, `slug` (DefiLlama slug, the parent's for a combined row), `category`, `llamaCategories`, `members` (combined children), `tvl`, `tvl6mAgo`, `tvlAdded6m`, `tvlChange6m` (percent against `max(tvl6mAgo, $1M)`), `isNew`, `ageDays`, `fees30d`, `feesChange30d`, `volume30d`, `volumeChange30d`, `xMentions`, `xLists`, `token` (CoinGecko id, symbol, market cap, 24h volume, turnover), `signals` (`attention`, `smartMoney` percentiles), `llamaUrl`, `appUrl`, `chainTvls` (up to eight chains, borrowed rows omitted), `scripts` (`{ name, file, kind }`), `testing` (`mode` `fork` or `api-only`, copy-paste commands, contracts, category recipe), `coverage`, `score`, `components`. `token` and `signals` are `null` when the row has no mapped token.
 

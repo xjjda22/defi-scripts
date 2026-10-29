@@ -21,6 +21,8 @@ const { loadTokenMap } = require("./tokenMap");
 const ROOT = path.resolve(__dirname, "../../../..");
 const CACHE_DIR = process.env.SIGNALS_CACHE_DIR || path.join(ROOT, "data", "cache");
 const CACHE_FILE = path.join(CACHE_DIR, "coingecko-markets.json");
+const TOP_CACHE_FILE = path.join(CACHE_DIR, "coingecko-top.json");
+const TOP_LIMIT = Number(process.env.COINGECKO_TOP_LIMIT) || 200;
 const TTL_MS = Number(process.env.COINGECKO_CACHE_TTL_MS) || 6 * 3600 * 1000;
 const TIMEOUT_MS = Number(process.env.COINGECKO_TIMEOUT_MS) || 20000;
 const MAX_IDS_PER_CALL = 200;
@@ -54,6 +56,21 @@ function readCache() {
 function writeCache(coins) {
   fs.mkdirSync(CACHE_DIR, { recursive: true });
   fs.writeFileSync(CACHE_FILE, JSON.stringify({ fetchedAt: Date.now(), coins }));
+}
+
+function readTopCache() {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(TOP_CACHE_FILE, "utf8"));
+    if (parsed && Array.isArray(parsed.ids) && parsed.fetchedAt) return parsed;
+  } catch {
+    // no usable cache
+  }
+  return { fetchedAt: 0, ids: [] };
+}
+
+function writeTopCache(ids) {
+  fs.mkdirSync(CACHE_DIR, { recursive: true });
+  fs.writeFileSync(TOP_CACHE_FILE, JSON.stringify({ fetchedAt: Date.now(), ids }));
 }
 
 function chunks(items, size) {
@@ -101,6 +118,19 @@ async function requestMarkets(ids) {
   return parseMarkets(response.data);
 }
 
+async function fetchTop(limit) {
+  const cache = readTopCache();
+  if (Date.now() - Number(cache.fetchedAt || 0) < TTL_MS && cache.ids.length >= limit) return cache.ids;
+  const response = await axios.get(`${host()}/coins/markets`, {
+    timeout: TIMEOUT_MS,
+    headers: authHeader(),
+    params: { vs_currency: "usd", order: "market_cap_desc", per_page: limit, page: 1, sparkline: "false" },
+  });
+  const ids = (Array.isArray(response.data) ? response.data : []).map(coin => coin && coin.id).filter(Boolean);
+  if (ids.length) writeTopCache(ids);
+  return ids;
+}
+
 async function fetchMarkets(ids) {
   const coins = {};
   for (const group of chunks(ids, MAX_IDS_PER_CALL)) {
@@ -141,11 +171,11 @@ async function collect(targets) {
   if (process.env.SIGNALS_OFF === "1") {
     meta.enabled = false;
     meta.note = "Disabled with SIGNALS_OFF=1.";
-    return { byRow: new Map(), meta };
+    return { byRow: new Map(), topIds: [], meta };
   }
   if (!targets.length) {
     meta.note = "No row in token-map.json is in this build.";
-    return { byRow: new Map(), meta };
+    return { byRow: new Map(), topIds: [], meta };
   }
 
   const ids = [...new Set(targets.map(target => target.token.coingeckoId))];
@@ -162,15 +192,22 @@ async function collect(targets) {
       if (!coin || !coin.marketCap || coin.marketCap <= 0) continue;
       byRow.set(target.rowId, { ...coin, turnover: coin.volume24h / coin.marketCap });
     }
+    let topIds = [];
+    try {
+      topIds = await fetchTop(TOP_LIMIT);
+    } catch (err) {
+      console.warn(`coingecko: top-${TOP_LIMIT} list failed (${err.message}) — universe uses TVL + category floor only`);
+    }
     meta.available = true;
     meta.asOf = new Date().toISOString();
     meta.matched = byRow.size;
+    meta.topIds = topIds.length;
     if (!process.env.COINGECKO_API_KEY) meta.note += " No API key: the public host is IP-throttled.";
-    return { byRow, meta };
+    return { byRow, topIds, meta };
   } catch (err) {
     meta.note = `Call failed (${err.message}); signal stays neutral.`;
     console.warn(`coingecko: ${err.message} — attention stays neutral`);
-    return { byRow: new Map(), meta };
+    return { byRow: new Map(), topIds: [], meta };
   }
 }
 

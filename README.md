@@ -111,7 +111,7 @@ DefiLlama, Dune and protocol dashboards are great for looking. This is for **scr
 
 ## Trending showcase
 
-A static top-200 board of DeFi protocols trending over the last six months, with one tab for each of the twelve catalog categories. The score blends size, six-month TVL growth (in percent and in dollars), 30-day fees and volume momentum, a CoinGecko attention signal (on by default) and an optional Nansen smart-money signal, plus a small bonus for distinct posts on the tracked X lists. Versions of one protocol are combined (Aave V2/V3/V4 is one row), protocols listed in the last six months carry a **New** badge, and rows the repo already monitors link straight to their scripts.
+A static top-200 board of DeFi protocols trending over the last six months, scored from a capped candidate pool (~270 rows: DefiLlama top 200 by TVL, CoinGecko top 200 by market cap, and every category's top 20), with one tab for each of the twelve catalog categories. The score blends size, six-month TVL growth (in percent and in dollars), 30-day fees and volume momentum, a CoinGecko attention signal (on by default) and an optional Nansen smart-money signal, plus a small bonus for distinct posts on the tracked X lists. Versions of one protocol are combined (Aave V2/V3/V4 is one row), protocols listed in the last six months carry a **New** badge, and rows the repo already monitors link straight to their scripts.
 
 ```bash
 npm run showcase:build     # rebuild showcase/data.json from DefiLlama (~800 history pulls)

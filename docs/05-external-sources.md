@@ -15,7 +15,7 @@ In CI, `scripts/showcaseCheck.js` rejects a build whose `methodology.sources` ha
 
 ## Token map
 
-[`src/analytics/ranking/token-map.json`](../src/analytics/ranking/token-map.json) joins a showcase row id to one CoinGecko id plus the contract addresses Nansen needs (Ethereum, Solana, Base, Arbitrum, Optimism, Polygon, BNB, Avalanche). It currently maps 73 row ids; 70 of them appeared in the last build and 52 of those made the top 200.
+[`src/analytics/ranking/token-map.json`](../src/analytics/ranking/token-map.json) joins a showcase row id to one CoinGecko id plus the contract addresses Nansen needs (Ethereum, Solana, Base, Arbitrum, Optimism, Polygon, BNB, Avalanche). It currently maps 73 row ids; 70 of them appeared in the last build and 62 of those made the top 200.
 
 Add a row only when the token clearly represents that protocol. A wrong token is worse than a missing one: it would let an unrelated coin move a protocol's rank. Unmapped rows are neutral, not penalised.
 

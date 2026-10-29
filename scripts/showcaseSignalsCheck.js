@@ -17,6 +17,7 @@ const coingecko = require("../src/analytics/ranking/sources/coingecko");
 const nansen = require("../src/analytics/ranking/sources/nansen");
 const { mergeSignals } = require("../src/analytics/ranking/sources");
 const { activeWeights, roundWeights, CORE_WEIGHTS, SIGNAL_WEIGHTS } = require("../src/analytics/ranking/weights");
+const { selectUniverse } = require("../src/analytics/ranking/universe");
 
 const fixtures = path.join(__dirname, "..", "test", "fixtures");
 const problems = [];
@@ -88,9 +89,31 @@ const rounded = roundWeights(both);
 const roundedSum = Object.values(rounded).reduce((sum, value) => sum + value, 0);
 check("rounded weights sum to 1", Math.abs(roundedSum - 1) < 0.001, String(roundedSum));
 
+// Universe cap: 3 TVL rows + one CoinGecko row + one category floor per category.
+const group = (id, category, values) => ({ id, category, members: [values] });
+const groups = [
+  group("g1", "dex", { tvl: 1000, fees30d: 0, volume30d: 0 }),
+  group("g2", "dex", { tvl: 900, fees30d: 0, volume30d: 0 }),
+  group("g3", "dex", { tvl: 800, fees30d: 0, volume30d: 0 }),
+  group("g4", "lending", { tvl: 0, fees30d: 500, volume30d: 0 }),
+  group("g5", "lending", { tvl: 700, fees30d: 0, volume30d: 0 }),
+  group("g6", "other", { tvl: 50, fees30d: 0, volume30d: 0 }),
+  group("g7", "other", { tvl: 0, fees30d: 0, volume30d: 100 }),
+  group("cg", "dex", { tvl: 10, fees30d: 0, volume30d: 0 }),
+];
+const signalById = new Map([["cg", { token: { coingeckoId: "token-cg" } }]]);
+const capped = selectUniverse({ groups, signals: { byId: signalById }, topTokenIds: ["token-cg"], overall: 3, perCategory: 1 });
+const ids = capped.groups.map(item => item.id);
+check("universe keeps TVL top", ["g1", "g2", "g5"].every(id => ids.includes(id)), ids.join(","));
+check("universe adds CoinGecko top", ids.includes("cg"), ids.join(","));
+check("universe keeps category floor", ids.includes("g7"), ids.join(","));
+check("universe covers every category", new Set(capped.groups.map(item => item.category)).size === 3, ids.join(","));
+const filled = selectUniverse({ groups, signals: { byId: signalById }, topTokenIds: ["token-cg"], overall: 10, perCategory: 1 });
+check("universe tops up to the floor", filled.groups.length === groups.length, String(filled.groups.length));
+
 if (problems.length) {
   console.error(`showcase signals: ${problems.length} problem(s)`);
   for (const problem of problems) console.error(` - ${problem}`);
   process.exit(1);
 }
-console.log("showcase signals: ok (turnover, netflow intensity, join, weight renormalisation)");
+console.log("showcase signals: ok (turnover, netflow, join, weights, universe cap)");

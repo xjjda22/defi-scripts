@@ -63,6 +63,7 @@ const {
 const { countProtocolMentions, toPublicMentions, loadPublicMentions } = require("./mentions");
 const { collectSignals } = require("./sources");
 const { CORE_WEIGHTS, SIGNAL_WEIGHTS, activeWeights, roundWeights } = require("./weights");
+const { selectUniverse } = require("./universe");
 const { buildCoverageIndex, linkCatalog, scriptLinks, MONITOR, RANKING_ONLY, enrichShowcase, cleanChainTvl, topChainTvl } = require("./coverage");
 
 const ROOT = path.resolve(__dirname, "../../..");
@@ -465,7 +466,7 @@ function catalogExtra(entry, mentionFor) {
   };
 }
 
-function methodology(corpus, weights, signals) {
+function methodology(corpus, weights, signals, universe) {
   const w = roundWeights(weights);
   const parts = [
     `size ${w.size}`,
@@ -499,6 +500,7 @@ function methodology(corpus, weights, signals) {
     mentionBonus: `${MENTION_STEP} per distinct X post, capped at ${MENTION_CAP} posts (max +${roundTo(MENTION_CAP * MENTION_STEP, 3)})`,
     mentionCorpus: corpus || null,
     sources: signals ? signals.sources : [],
+    universe: universe || null,
     tokenCoverage: signals ? signals.mapped : 0,
     publishSafe: signals ? signals.publishSafe : true,
     floors: {
@@ -521,7 +523,10 @@ function methodology(corpus, weights, signals) {
     excluded: [...EXCLUDED_LLAMA_CATEGORIES],
     summary:
       "Each row is a protocol family in one category (DefiLlama children with the same parent are summed, so Aave V2/V3/V4 are one row). " +
-      `The score is a weighted sum of percentiles across all eligible rows: ${parts.join(", ")}, plus a small bonus ` +
+      (universe
+        ? `The candidate pool is the union of DefiLlama's top ${universe.overall} rows by TVL, CoinGecko's top ${universe.overall} tokens by market cap and the top ${universe.perCategory} rows in every category (${universe.candidates} rows); percentiles are computed inside that pool. `
+        : "") +
+      `The score is a weighted sum of percentiles across the pool: ${parts.join(", ")}, plus a small bonus ` +
       "per distinct X post from the user's lists. Percentiles cannot saturate, so a fresh listing cannot jump the board on a " +
       "capped growth number. A family with no TVL 180 days ago is marked New: its relative growth is neutral and it is judged on " +
       "the dollars it has gathered." +
@@ -608,26 +613,9 @@ async function main() {
   }
   candidates.sort((a, b) => a.protocol.slug.localeCompare(b.protocol.slug));
 
-  const historyTargets = candidates.filter(row => row.needsHistory);
-  console.log(
-    chalk.gray(
-      `${protocols.length} protocols, ${candidates.length} eligible, ${historyTargets.length} history fetches (concurrency ${HISTORY_CONCURRENCY}${CACHE_DIR ? `, cache ${CACHE_DIR}` : ""})`
-    )
-  );
+  const groups = buildGroups(candidates, parentNames);
   const historyCache = new Map();
   let historyMisses = 0;
-  let finished = 0;
-  await mapPool(historyTargets, HISTORY_CONCURRENCY, async row => {
-    const series = await fetchHistory(row.protocol.slug);
-    historyCache.set(row.protocol.slug, series);
-    if (!series) historyMisses += 1;
-    finished += 1;
-    if (finished % 50 === 0 || finished === historyTargets.length) {
-      console.error(chalk.gray(`history ${finished}/${historyTargets.length}`));
-    }
-  });
-
-  const groups = buildGroups(candidates, parentNames);
 
   const mentionTargets = groups.map(group => ({
     id: group.id,
@@ -673,7 +661,29 @@ async function main() {
   const mentionFor = mentionLookup(mentionResult);
   const signals = await collectSignals(groups.map(group => ({ id: group.id })));
 
-  const scored = groups.map(group => {
+  // Cap the universe before any TVL history is fetched: DefiLlama's top 200 by
+  // TVL, CoinGecko's top 200 by market cap, and every category's top 20.
+  const universe = selectUniverse({ groups, signals, topTokenIds: signals.topTokenIds });
+  const historyTargets = universe.groups.flatMap(group => group.members).filter(member => member.needsHistory);
+  console.log(
+    chalk.gray(
+      `${protocols.length} protocols, ${candidates.length} eligible, ${universe.meta.candidates} candidate rows ` +
+        `(TVL top ${universe.meta.tvlTop}, CoinGecko top ${universe.meta.coinGeckoTop}, category floor ${universe.meta.categoryFloor}), ` +
+        `${historyTargets.length} history fetches (concurrency ${HISTORY_CONCURRENCY}${CACHE_DIR ? `, cache ${CACHE_DIR}` : ""})`
+    )
+  );
+  let finished = 0;
+  await mapPool(historyTargets, HISTORY_CONCURRENCY, async row => {
+    const series = await fetchHistory(row.protocol.slug);
+    historyCache.set(row.protocol.slug, series);
+    if (!series) historyMisses += 1;
+    finished += 1;
+    if (finished % 50 === 0 || finished === historyTargets.length) {
+      console.error(chalk.gray(`history ${finished}/${historyTargets.length}`));
+    }
+  });
+
+  const scored = universe.groups.map(group => {
     const members = group.members;
     const tvl = sumField(members, "tvl");
     const history = familyHistory(members, historyCache, cutoff, nowSec);
@@ -850,7 +860,7 @@ async function main() {
   const monitored = overall.filter(row => row.coverage === MONITOR).length;
   const payload = {
     generatedAt,
-    methodology: methodology(mentionResult.corpus, weights, signals),
+    methodology: methodology(mentionResult.corpus, weights, signals, universe.meta),
     categories,
     overall,
     byCategory,
@@ -866,6 +876,7 @@ async function main() {
       mentionedNames: mentionResult.rows.length,
       signalCoverage: signals.byId.size,
       signalsEnabled: signals.sources.filter(source => source.enabled && source.available).map(source => source.id),
+      universe: universe.meta,
       excluded: excludedCounts,
     },
   };
