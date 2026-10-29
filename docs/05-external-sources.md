@@ -27,6 +27,7 @@ One batched call: `GET /coins/markets?vs_currency=usd&ids=…&price_change_perce
 
 - The score uses **turnover**, not price momentum. TVL is dollar-denominated, so a token's price rise already inflates `growth` and `tvlAdded`; price change would double-count it.
 - Free Demo key: 100 calls/min. Keyless calls work on the public host but are throttled per shared IP, so CI can be rate-limited.
+- Demo and Pro keys both start with `CG-`. The tier cannot be inferred from the key: Demo is the default (`api.coingecko.com`, `x-cg-demo-api-key`); a paid key sets `COINGECKO_API_TIER=pro` (`pro-api.coingecko.com`, `x-cg-pro-api-key`).
 - Cache: `data/cache/coingecko-markets.json`, six hours (`COINGECKO_CACHE_TTL_MS`). The cache is gitignored.
 - Attribution: "Token market data by CoinGecko" is rendered in the page footer, linked to [coingecko.com](https://www.coingecko.com). Confirm the current free-tier clause before publishing.
 - A 429 is retried once after six seconds; any other failure disables `attention` for that build with a warning.
@@ -57,7 +58,8 @@ Do not commit a `showcase/data.json` built with `publishSafe: false` to `main` b
 ## Environment
 
 ```bash
-COINGECKO_API_KEY=            # Demo key; keyless works but is throttled
+COINGECKO_API_KEY=            # Demo or Pro key; keyless works but is throttled
+COINGECKO_API_TIER=demo       # set "pro" for a paid key
 NANSEN_API_KEY=               # required for smart money; create it at app.nansen.ai
 NANSEN_PUBLIC=1               # 0/1 flag, NOT a URL; only after redistribution approval
 SIGNALS_OFF=1                 # disable every external signal for one build
