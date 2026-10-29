@@ -84,12 +84,17 @@ async function requireFork(chainKey) {
 
 async function dealErc20(chainKey, token, account, amount) {
   const provider = getProvider(chainKey);
-  try {
-    await provider.send("anvil_deal", [token, account, ethers.toBeHex(amount)]);
-    return true;
-  } catch {
-    return false;
+  // anvil_deal is "Method not found" on Anvil 1.8.5; anvil_dealERC20 sets the balance slot
+  // (works for USDC on a mainnet fork). Used when every configured whale is short.
+  for (const method of ["anvil_deal", "anvil_dealERC20"]) {
+    try {
+      await provider.send(method, [token, account, ethers.toBeHex(amount)]);
+      if ((await getTokenBalance(token, account, chainKey)) >= amount) return true;
+    } catch {
+      // try the next method
+    }
   }
+  return false;
 }
 
 /**

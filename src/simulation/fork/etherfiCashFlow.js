@@ -76,12 +76,15 @@ async function run() {
       supplied + 1n >= amount &&
       supplied <= amount;
 
-    const receipt = await (await spoke.withdraw(spec.reserveId, supplied, user, GAS)).wait();
+    // Withdraw with MaxUint256 (the Spoke caps it at the user's balance). Withdrawing the
+    // `supplied` amount read a block earlier left 1 share behind once interest accrued in between.
+    const receipt = await (await spoke.withdraw(spec.reserveId, ethers.MaxUint256, user, GAS)).wait();
     const userAfter = await usdc.balanceOf(user);
     const hubAfter = await usdc.balanceOf(spec.hub);
     const left = await reader.getUserSuppliedShares(spec.reserveId, user);
     const back = userAfter - userMid;
-    const withdrawOk = back === supplied && hubMid - hubAfter === supplied && left === 0n;
+    // Interest between the read and the withdraw can add a few wei to what comes back.
+    const withdrawOk = back >= supplied && back <= supplied + amount / 10000n + 2n && hubMid - hubAfter === back && left === 0n;
 
     const ok = supplyOk && withdrawOk;
     return finish({
