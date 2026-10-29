@@ -15,6 +15,27 @@ const ROOT = path.resolve(__dirname, "..");
 const FILE = path.join(ROOT, "showcase", "data.json");
 const NUMERIC = ["tvl", "tvl6mAgo", "tvlAdded6m", "tvlChange6m", "fees30d", "volume30d", "xMentions", "score"];
 
+function checkSignals(row, label, problems) {
+  if (row.signals) {
+    for (const key of ["attention", "smartMoney"]) {
+      const value = row.signals[key];
+      if (value == null) continue;
+      if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 1) {
+        problems.push(`${label}/${row.id}: signals.${key} is ${value}`);
+      }
+    }
+  }
+  if (row.token) {
+    for (const key of ["marketCap", "volume24h", "turnover"]) {
+      const value = row.token[key];
+      if (value != null && (typeof value !== "number" || !Number.isFinite(value))) {
+        problems.push(`${label}/${row.id}: token.${key} is ${value}`);
+      }
+    }
+    if (!row.token.coingeckoId) problems.push(`${label}/${row.id}: token without coingeckoId`);
+  }
+}
+
 function checkTesting(row, problems) {
   const testing = row.testing;
   if (!testing || (testing.mode !== "fork" && testing.mode !== "api-only")) {
@@ -55,6 +76,7 @@ function main() {
     if (!categoryIds.has(row.category)) problems.push(`${row.id}: unknown category ${row.category}`);
     if (!row.name) problems.push(`${row.id}: empty name`);
     checkTesting(row, problems);
+    checkSignals(row, "overall", problems);
     if (row.tvl == null && row.fees30d == null && row.volume30d == null) problems.push(`${row.id}: no TVL, fees or volume`);
     if (typeof row.score !== "number") problems.push(`${row.id}: missing score`);
     if (idx > 0 && row.score > overall[idx - 1].score) problems.push(`${row.id}: out of score order`);
@@ -66,6 +88,7 @@ function main() {
     rows.forEach((row, idx) => {
       if (row.rank !== idx + 1) problems.push(`${id} row ${idx} has rank ${row.rank}`);
       checkTesting(row, problems);
+      checkSignals(row, id, problems);
       for (const key of NUMERIC) {
         const value = row[key];
         if (value != null && (typeof value !== "number" || !Number.isFinite(value))) {
@@ -82,6 +105,18 @@ function main() {
   }
   for (const id of categoryIds) {
     if (!(data.byCategory || {})[id]) problems.push(`tab ${id} missing from byCategory`);
+  }
+
+  const methodology = data.methodology || {};
+  if (methodology.weights) {
+    const total = Object.values(methodology.weights).reduce((sum, value) => sum + value, 0);
+    if (Math.abs(total - 1) > 0.001) problems.push(`methodology.weights sum to ${total}, expected 1`);
+  }
+  if (methodology.sources && !Array.isArray(methodology.sources)) {
+    problems.push("methodology.sources must be an array");
+  }
+  if (methodology.publishSafe === false && (process.env.GITHUB_ACTIONS === "true" || process.env.CI === "true")) {
+    problems.push("publishSafe is false: this build contains data that is not cleared for public redistribution");
   }
 
   if (problems.length) {

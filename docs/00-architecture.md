@@ -35,4 +35,4 @@ npm scripts in `package.json` → `src/analytics/`, `src/crosschain/`, `src/simu
 
 ## External APIs
 
-No in-repo HTTP server. Outbound: DefiLlama `api.llama.fi`, Morpho GraphQL, Lido, Ethena, CoinGecko, plus `*_RPC_URL`.
+No in-repo HTTP server. Outbound: DefiLlama `api.llama.fi`, Morpho GraphQL, Lido, Ethena, CoinGecko, Nansen (optional, local-only until redistribution approval — see [05-external-sources.md](./05-external-sources.md)), plus `*_RPC_URL`.

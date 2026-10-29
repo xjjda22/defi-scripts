@@ -111,15 +111,16 @@ DefiLlama, Dune and protocol dashboards are great for looking. This is for **scr
 
 ## Trending showcase
 
-A static top-200 board of DeFi protocols trending over the last six months, with one tab for each of the twelve catalog categories. The score blends size, six-month TVL growth (in percent and in dollars), 30-day fees and volume momentum, and a small bonus for distinct posts on the tracked X lists. Versions of one protocol are combined (Aave V2/V3/V4 is one row), protocols listed in the last six months carry a **New** badge, and rows the repo already monitors link straight to their scripts.
+A static top-200 board of DeFi protocols trending over the last six months, with one tab for each of the twelve catalog categories. The score blends size, six-month TVL growth (in percent and in dollars), 30-day fees and volume momentum, an optional CoinGecko attention signal and an optional Nansen smart-money signal, plus a small bonus for distinct posts on the tracked X lists. Versions of one protocol are combined (Aave V2/V3/V4 is one row), protocols listed in the last six months carry a **New** badge, and rows the repo already monitors link straight to their scripts.
 
 ```bash
 npm run showcase:build     # rebuild showcase/data.json from DefiLlama (~800 history pulls)
-node scripts/showcaseCheck.js   # offline sanity check of showcase/data.json (also runs in CI)
+node scripts/showcaseCheck.js         # offline sanity check of showcase/data.json (also runs in CI)
+node scripts/showcaseSignalsCheck.js  # offline check of the CoinGecko/Nansen plumbing
 npm run showcase:serve     # http://127.0.0.1:4173
 ```
 
-Live page: <https://xjjda22.github.io/defi-scripts/> (deep links work, for example `#tab=perps`, `#q=morpho`, or `#p=uniswap`). Methodology, the category map and the refresh routine are in [docs/03-showcase-ranking.md](docs/03-showcase-ranking.md). Each row opens a test panel (`#p=<slug>` or `showcase/protocol.html?slug=`) with its scripts, fork commands, contracts and testnet faucets. Fork setup is in [docs/04-fork-testing.md](docs/04-fork-testing.md).
+Live page: <https://xjjda22.github.io/defi-scripts/> (deep links work, for example `#tab=perps`, `#q=morpho`, or `#p=uniswap`). Methodology, the category map and the refresh routine are in [docs/03-showcase-ranking.md](docs/03-showcase-ranking.md); the external signals, their keys and the Nansen redistribution gate are in [docs/05-external-sources.md](docs/05-external-sources.md); the audit of what the `other` tab hides and the proposed Launchpads / Prediction markets tabs are in [docs/06-category-coverage.md](docs/06-category-coverage.md). Each row opens a test panel (`#p=<slug>` or `showcase/protocol.html?slug=`) with its scripts, fork commands, contracts and testnet faucets. Fork setup is in [docs/04-fork-testing.md](docs/04-fork-testing.md).
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js

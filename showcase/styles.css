@@ -66,17 +66,18 @@ h1 {
   line-height: 1.45;
 }
 .mast-stats {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  width: 100%;
+  max-width: 474px;
 }
 .stat {
   background: var(--bg-2);
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 12px 14px;
-  min-width: 108px;
+  min-width: 0;
   box-shadow: var(--shadow);
 }
 .stat b {
@@ -93,15 +94,16 @@ h1 {
   padding: 8px 28px 0;
   display: flex;
   gap: 16px;
-  align-items: flex-end;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 .tabs {
   display: flex;
   gap: 8px;
-  overflow-x: auto;
+  flex-wrap: wrap;
+  flex: 1 1 0;
+  min-width: 0;
   padding-bottom: 8px;
-  flex: 1;
-  scrollbar-width: thin;
 }
 .tabs button {
   border: 1px solid var(--line);
@@ -117,6 +119,10 @@ h1 {
   color: var(--accent-ink);
   border-color: var(--accent);
   font-weight: 600;
+}
+.search {
+  flex: 0 0 auto;
+  margin-left: auto;
 }
 .search input {
   background: var(--bg-2);
@@ -135,6 +141,30 @@ h1 {
   font-size: 14px;
 }
 .status:empty { display: none; }
+.warn {
+  width: calc(100% - 56px);
+  max-width: 1224px;
+  box-sizing: border-box;
+  margin: 10px auto 0;
+  padding: 10px 14px;
+  border: 1px solid rgba(240, 153, 122, 0.5);
+  border-radius: 10px;
+  background: rgba(240, 153, 122, 0.12);
+  color: var(--down);
+  font-size: 13px;
+}
+.warn[hidden] { display: none; }
+.sig {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(223, 242, 106, 0.12);
+  color: var(--accent);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.sig.smart { background: rgba(142, 224, 168, 0.12); color: var(--up); }
 
 .table-wrap {
   max-width: 1280px;
@@ -199,6 +229,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   border-radius: 999px;
   padding: 3px 8px;
   font-size: 12px;
+  white-space: nowrap;
   background: var(--chip);
   color: var(--ink);
 }
@@ -213,6 +244,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .tabs .count { opacity: 0.7; font-size: 0.85em; margin-left: 2px; }
 .why { margin-top: 4px; max-width: 420px; }
 .why p { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+tr:has(.why[open]) td { vertical-align: top; }
 button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .detail {
@@ -288,10 +320,21 @@ button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visibl
   cursor: pointer;
 }
 .copy.done { background: var(--up); }
-.kind-block { margin: 0 0 12px; }
+.kind-block { margin: 0 0 12px; min-width: 0; }
 .kind-block h4 { margin: 0 0 6px; font-size: 14px; }
-.script-row { display: flex; gap: 8px; align-items: center; margin: 4px 0; }
-.script-row code { flex: 1; }
+.script-row { display: flex; gap: 8px; align-items: center; margin: 4px 0; min-width: 0; }
+.script-row code { flex: 1 1 auto; min-width: 0; order: 1; }
+.script-row > * { min-width: 0; }
+.script-row a {
+  display: block;
+  order: 2;
+  flex: 0 1 340px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.script-row .copy { order: 3; flex: 0 0 auto; }
+.chain-list code { overflow-wrap: anywhere; }
 .badge.api { background: rgba(240, 153, 122, 0.16); color: var(--down); }
 .badge.fork { background: rgba(223, 242, 106, 0.16); color: var(--accent); }
 .links { display: flex; flex-wrap: wrap; gap: 14px; margin: 8px 0 18px; }
@@ -367,41 +410,87 @@ footer p { margin: 6px 0; font-size: 14px; }
   clip: rect(0 0 0 0);
 }
 
+@media (max-width: 1180px) and (min-width: 861px) {
+  .col-scripts, td.scripts { display: none; }
+  table { min-width: 0; }
+  th, td { padding-left: 6px; padding-right: 6px; }
+}
+
 @media (max-width: 860px) {
   .mast, .toolbar { flex-direction: column; align-items: stretch; padding-left: 16px; padding-right: 16px; }
-  .mast-stats { justify-content: flex-start; }
-  .search input { width: 100%; }
+  .warn { width: calc(100% - 32px); }
+  .mast-stats { width: 100%; max-width: none; }
+  .search { width: 100%; margin-left: 0; }
+  .search input { width: 100%; min-width: 0; }
+  .tabs {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+  }
+  .tabs::-webkit-scrollbar { display: none; }
   .table-wrap { padding: 0 8px; }
   table { min-width: 0; }
   thead { display: none; }
   table, tbody, tr, td { display: block; width: 100%; }
   tr {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    column-gap: 8px;
     margin: 0 8px 12px;
     padding: 8px 12px 12px;
     border: 1px solid var(--line);
     border-radius: 16px;
     background: rgba(28, 32, 22, 0.75);
   }
-  td { border: 0; padding: 6px 0; text-align: left !important; }
+  td {
+    border: 0;
+    padding: 5px 0;
+    text-align: left !important;
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 8px;
+    grid-column: 1 / -1;
+  }
   td::before {
     content: attr(data-label);
     display: block;
+    flex: 0 0 auto;
+    margin-right: auto;
     color: var(--muted);
     font-size: 11px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    margin-bottom: 2px;
   }
-  td[data-label="#"] { display: inline-block; width: auto; margin-right: 8px; }
+  td[data-label="#"] { display: block; width: auto; margin-right: 0; grid-column: 1; }
   td[data-label="#"]::before { display: none; }
-  td[data-label="Protocol"] { display: inline-block; width: auto; }
+  td[data-label="Protocol"] { display: block; width: auto; grid-column: 2; }
   td[data-label="Protocol"]::before { display: none; }
+  td[data-label="Scripts"] { display: block; }
+  td[data-label="Scripts"]::before { margin-bottom: 2px; }
   .col-scripts, td.scripts { max-width: none; }
   .bar { width: 64px; }
   .method { margin: 22px 16px 0; }
   .detail { padding: 0 16px; }
   .detail-card { padding: 16px 14px 8px; }
   .cmd, .script-row { flex-direction: column; align-items: stretch; }
+  .script-row a { order: 2; }
+  .script-row .copy { order: 3; }
   .copy { align-self: flex-start; }
-  .search input { min-width: 0; }
+}
+
+/* Tablets have the width to show every category; phones keep the scroll row. */
+@media (min-width: 601px) and (max-width: 860px) {
+  .tabs {
+    flex-wrap: wrap;
+    overflow: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
 }

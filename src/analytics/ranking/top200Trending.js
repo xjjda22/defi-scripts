@@ -59,6 +59,8 @@ const {
   CATEGORY_BY_ID,
 } = require("./categoryMap");
 const { countProtocolMentions, toPublicMentions, loadPublicMentions } = require("./mentions");
+const { collectSignals } = require("./sources");
+const { CORE_WEIGHTS, SIGNAL_WEIGHTS, activeWeights, roundWeights } = require("./weights");
 const { buildCoverageIndex, linkCatalog, scriptLinks, MONITOR, RANKING_ONLY, enrichShowcase, cleanChainTvl, topChainTvl } = require("./coverage");
 
 const ROOT = path.resolve(__dirname, "../../..");
@@ -74,7 +76,6 @@ const VOLUME_MOMENTUM_FLOOR_USD = 1_000_000;
 const WINDOW_DAYS = 180;
 const TOP_N = 200;
 const CATEGORY_LIMIT = 100;
-const WEIGHTS = { size: 0.35, growth: 0.25, tvlAdded: 0.2, feesMomentum: 0.12, volumeMomentum: 0.08 };
 const MENTION_CAP = 6;
 const MENTION_STEP = 0.012;
 const DAY = 86400;
@@ -419,6 +420,8 @@ function toOutputRow(row, rank, overallRank) {
     chainTvls: row.chainTvls || [],
     scripts: row.scripts,
     coverage: row.coverage,
+    token: row.token || null,
+    signals: row.signalPercentiles || null,
     score: roundTo(row.score, 4),
     components: row.components,
   };
@@ -452,19 +455,50 @@ function catalogExtra(entry, mentionFor) {
     chainTvls: [],
     scripts: scriptLinks(entry),
     coverage: MONITOR,
+    token: null,
+    signals: null,
     score: null,
     components: null,
     catalogOnly: true,
   };
 }
 
-function methodology(corpus) {
+function methodology(corpus, weights, signals) {
+  const w = roundWeights(weights);
+  const parts = [
+    `size ${w.size}`,
+    `6-month relative TVL growth ${w.growth}`,
+    `6-month TVL added in dollars ${w.tvlAdded}`,
+    `30-day fees momentum ${w.feesMomentum}`,
+    `30-day DEX volume momentum ${w.volumeMomentum}`,
+  ];
+  if (w.attention != null) parts.push(`token attention (24h turnover) ${w.attention}`);
+  if (w.smartMoney != null) parts.push(`smart-money netflow ${w.smartMoney}`);
+  const activeSignalNames = [];
+  if (w.attention != null) activeSignalNames.push("CoinGecko turnover");
+  if (w.smartMoney != null) activeSignalNames.push("Nansen 30-day smart-money netflow");
+  let signalNote = " No external signal ran in this build, so the core weights were renormalised to 1.";
+  if (activeSignalNames.length) {
+    const verb = activeSignalNames.length === 1 ? "sits" : "sit";
+    signalNote =
+      ` ${activeSignalNames.join(" and ")} ${verb} beside DefiLlama, as a percentile across the ${signals ? signals.mapped : 0} rows with a mapped token` +
+      ` (turnover and netflow are divided by market cap). An unmapped row scores a neutral 0.5.`;
+    const off = [];
+    if (SIGNAL_WEIGHTS.attention && w.attention == null) off.push("CoinGecko turnover");
+    if (SIGNAL_WEIGHTS.smartMoney && w.smartMoney == null) off.push("Nansen smart money");
+    if (off.length) signalNote += ` ${off.join(" and ")} ${off.length === 1 ? "is" : "are"} off in this build.`;
+  }
   return {
     windowDays: WINDOW_DAYS,
-    weights: WEIGHTS,
+    weights: w,
+    coreWeights: CORE_WEIGHTS,
+    signalWeights: SIGNAL_WEIGHTS,
     scoring: "percentile",
     mentionBonus: `${MENTION_STEP} per distinct X post, capped at ${MENTION_CAP} posts (max +${roundTo(MENTION_CAP * MENTION_STEP, 3)})`,
     mentionCorpus: corpus || null,
+    sources: signals ? signals.sources : [],
+    tokenCoverage: signals ? signals.mapped : 0,
+    publishSafe: signals ? signals.publishSafe : true,
     floors: {
       minTvlUsd: MIN_TVL_USD,
       minFees30dUsd: MIN_FEES_30D_USD,
@@ -485,11 +519,12 @@ function methodology(corpus) {
     excluded: [...EXCLUDED_LLAMA_CATEGORIES],
     summary:
       "Each row is a protocol family in one category (DefiLlama children with the same parent are summed, so Aave V2/V3/V4 are one row). " +
-      "The score is a weighted sum of percentiles across all eligible rows: size 0.35, 6-month relative TVL growth 0.25, " +
-      "6-month TVL added in dollars 0.20, 30-day fees momentum 0.12 and 30-day DEX volume momentum 0.08, plus a small bonus " +
+      `The score is a weighted sum of percentiles across all eligible rows: ${parts.join(", ")}, plus a small bonus ` +
       "per distinct X post from the user's lists. Percentiles cannot saturate, so a fresh listing cannot jump the board on a " +
       "capped growth number. A family with no TVL 180 days ago is marked New: its relative growth is neutral and it is judged on " +
-      "the dollars it has gathered. CEX, Ponzi and token-locker rows are excluded.",
+      "the dollars it has gathered." +
+      signalNote +
+      " CEX, Ponzi and token-locker rows are excluded.",
   };
 }
 
@@ -634,6 +669,7 @@ async function main() {
     console.warn(chalk.yellow("warning: no X notes directory and no data/x-mentions.json; mention bonus is 0"));
   }
   const mentionFor = mentionLookup(mentionResult);
+  const signals = await collectSignals(groups.map(group => ({ id: group.id })));
 
   const scored = groups.map(group => {
     const members = group.members;
@@ -707,6 +743,12 @@ async function main() {
     };
   });
 
+  scored.forEach(row => {
+    const signal = signals.byId.get(row.id) || null;
+    row.signalsRaw = signal;
+    row.token = signal ? signal.token : null;
+  });
+
   // Size is ranked on the row's own basis so dollars of TVL, fees and volume are
   // never compared directly: TVL rows against TVL rows, the rest against every
   // row's 30-day fees (or, without fees, every row's 30-day volume).
@@ -718,21 +760,34 @@ async function main() {
     else if (row.sizeBasis === "fees") row.inputs.size = feesPct[i];
     else row.inputs.size = row.volume30d > 0 ? volumePct[i] : null;
   });
+  const enabledSignals = Object.keys(SIGNAL_WEIGHTS).filter(key =>
+    signals.sources.some(source => source.key === key && source.enabled && source.available)
+  );
+  const weights = activeWeights(enabledSignals);
   const pct = {};
-  for (const key of Object.keys(WEIGHTS)) {
-    pct[key] = key === "size" ? scored.map(row => row.inputs.size ?? 0) : percentiles(scored.map(row => row.inputs[key]));
+  for (const key of Object.keys(weights)) {
+    if (key === "size") pct[key] = scored.map(row => row.inputs.size ?? 0);
+    else if (key === "attention") pct[key] = percentiles(scored.map(row => (row.signalsRaw ? row.signalsRaw.attention : null)));
+    else if (key === "smartMoney")
+      pct[key] = percentiles(scored.map(row => (row.signalsRaw ? row.signalsRaw.smartMoney : null)));
+    else pct[key] = percentiles(scored.map(row => row.inputs[key]));
   }
   scored.forEach((row, i) => {
     const mentionBonus = MENTION_STEP * Math.min(row.xMentions || 0, MENTION_CAP);
     let score = mentionBonus;
     const components = {};
-    for (const [key, weight] of Object.entries(WEIGHTS)) {
+    for (const [key, weight] of Object.entries(weights)) {
       score += weight * pct[key][i];
       components[key] = roundTo(pct[key][i], 3);
     }
     components.mentions = roundTo(mentionBonus, 3);
     row.score = score;
     row.components = components;
+    if (row.signalsRaw) {
+      const signalPercentiles = {};
+      for (const key of enabledSignals) signalPercentiles[key] = roundTo(pct[key][i], 3);
+      row.signalPercentiles = signalPercentiles;
+    }
   });
 
   scored.sort(compareScore);
@@ -793,7 +848,7 @@ async function main() {
   const monitored = overall.filter(row => row.coverage === MONITOR).length;
   const payload = {
     generatedAt,
-    methodology: methodology(mentionResult.corpus),
+    methodology: methodology(mentionResult.corpus, weights, signals),
     categories,
     overall,
     byCategory,
@@ -807,6 +862,8 @@ async function main() {
       newInTop200: overall.filter(row => row.isNew).length,
       historyMisses,
       mentionedNames: mentionResult.rows.length,
+      signalCoverage: signals.byId.size,
+      signalsEnabled: signals.sources.filter(source => source.enabled && source.available).map(source => source.id),
       excluded: excludedCounts,
     },
   };

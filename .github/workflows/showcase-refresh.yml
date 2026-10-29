@@ -33,7 +33,11 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: node src/analytics/ranking/top200Trending.js
+        env:
+          # Optional: without the secret CoinGecko runs keyless and may be throttled.
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
       - run: node scripts/showcaseCheck.js
+      - run: node scripts/showcaseSignalsCheck.js
       - name: Commit showcase/data.json
         run: |
           if git diff --quiet -- showcase/data.json; then

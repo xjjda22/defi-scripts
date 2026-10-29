@@ -42,7 +42,10 @@ jobs:
         continue-on-error: true
         # A slow DefiLlama day must not hold the deploy; past this, publish the committed data.
         timeout-minutes: 25
-        run: node src/analytics/ranking/top200Trending.js && node scripts/showcaseCheck.js
+        env:
+          # Optional: without the secret CoinGecko runs keyless and may be throttled.
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+        run: node src/analytics/ranking/top200Trending.js && node scripts/showcaseCheck.js && node scripts/showcaseSignalsCheck.js
       - name: Fall back to the committed data
         if: steps.rebuild.outcome != 'success'
         run: git checkout -- showcase/data.json && node scripts/showcaseCheck.js

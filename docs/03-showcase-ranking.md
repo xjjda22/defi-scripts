@@ -9,6 +9,7 @@ Architecture: [`00-architecture.md`](./00-architecture.md). Category ids match [
 ```bash
 npm run showcase:build          # reuse data/x-mentions.json
 node scripts/showcaseCheck.js   # offline check of showcase/data.json (CI runs it too)
+node scripts/showcaseSignalsCheck.js  # offline check of the external signal plumbing
 npm run showcase:serve          # http://127.0.0.1:4173 (HOST=0.0.0.0 to share on a LAN)
 ```
 
@@ -48,16 +49,21 @@ Every input becomes a **percentile** (0 to 1, ties share the average rank) acros
 
 | Input | Weight | Definition |
 | --- | --- | --- |
-| size | 0.35 | TVL, ranked among rows with at least $5M TVL. A row below that is ranked on its 30-day fees among every row's fees (or, without fees, its 30-day volume), so TVL, fee and volume dollars are never compared directly. |
-| growth | 0.25 | `ln(TVL now / max(TVL 180 days ago, $1M))`, unclamped. The $1M floor stops a dust baseline from reading as a thousand-fold move. |
-| tvlAdded | 0.20 | TVL now minus TVL 180 days ago, in dollars. This is what lets Morpho (+$3.9B) outrank a protocol that went from $30M to $300M. |
-| feesMomentum | 0.12 | `ln(fees last 30d / fees previous 30d)`, only when both windows are at least $10k. |
-| volumeMomentum | 0.08 | The same on 30-day volume, both windows at least $1M: spot DEX volume, then aggregator volume, then options volume. Perp volume needs DefiLlama's paid API, so perps lean on fees. |
+| size | 0.30 | TVL, ranked among rows with at least $5M TVL. A row below that is ranked on its 30-day fees among every row's fees (or, without fees, its 30-day volume), so TVL, fee and volume dollars are never compared directly. |
+| growth | 0.21 | `ln(TVL now / max(TVL 180 days ago, $1M))`, unclamped. The $1M floor stops a dust baseline from reading as a thousand-fold move. |
+| tvlAdded | 0.17 | TVL now minus TVL 180 days ago, in dollars. This is what lets Morpho (+$3.9B) outrank a protocol that went from $30M to $300M. |
+| feesMomentum | 0.10 | `ln(fees last 30d / fees previous 30d)`, only when both windows are at least $10k. |
+| volumeMomentum | 0.07 | The same on 30-day volume, both windows at least $1M: spot DEX volume, then aggregator volume, then options volume. Perp volume needs DefiLlama's paid API, so perps lean on fees. |
+| attention | 0.08 | CoinGecko turnover: 24h volume ÷ market cap, for rows with a mapped token. Price change is deliberately not used — TVL is in dollars, so price is already in `growth`. |
+| smartMoney | 0.07 | Nansen 30-day smart-money netflow ÷ market cap, for rows with a mapped token. |
 
 ```text
-score = 0.35·size + 0.25·growth + 0.20·tvlAdded + 0.12·feesMomentum + 0.08·volumeMomentum
+score = 0.30·size + 0.21·growth + 0.17·tvlAdded + 0.10·feesMomentum + 0.07·volumeMomentum
+        + 0.08·attention + 0.07·smartMoney
         + 0.012 · min(X posts, 6)
 ```
+
+The two external signals are optional. When a source is off (no key, no addresses, or a CI build without `NANSEN_PUBLIC=1`) its weight is dropped and the remaining weights are renormalised to 1. A row with no mapped token — or a source that failed — scores the neutral 0.5 on that signal, so the board still ranks. Details, keys and the redistribution gate: [`05-external-sources.md`](./05-external-sources.md).
 
 The X bonus caps at **+0.072**, about a quarter of the spread between a median and a top-decile row on one input, so mentions break near-ties but do not lift a small protocol over a large grower. Ties break by TVL, then id. `components` on each row stores its percentiles, and the page shows them under **Details**.
 
@@ -112,13 +118,15 @@ The catalog card's category is only a fallback for a Llama category the map does
 
 The last two tabs are not DefiLlama protocols. They list the repo's cross-protocol boards and swap/simulation commands in catalog order. Each category tab keeps its top 100 rows (plus any row in the overall top 200), then appends catalog protocols that did not clear the floor, so every monitor stays visible.
 
+The table above describes what ships today. What the catch-all actually holds, and the case for promoting Launchpads and Prediction markets (plus splitting Stablecoins/RWA) into their own tabs, is recorded in [06-category-coverage.md](./06-category-coverage.md). Those changes are proposals and would change the category count, the catalog cards and the docs — the score is unaffected.
+
 `coverage` is `covered by a dedicated monitor` when one of the row's children matches a catalog protocol with its own npm scripts, and `ranking only` otherwise. Each script carries the file it runs; the page links it to the source on GitHub.
 
 ## Output
 
-`showcase/data.json`: `generatedAt`, `methodology` (weights, floors, endpoints, exclusions, mention corpus), `categories` (label, row count, eligible count, how many made the top 200), `overall` (200 rows), `byCategory`, and `stats` (`dedicatedMonitor` vs `rankingOnly` in the top 200, `newInTop200`, history misses, exclusions).
+`showcase/data.json`: `generatedAt`, `methodology` (weights, core and signal weights, floors, endpoints, exclusions, mention corpus, `sources`, `tokenCoverage`, `publishSafe`), `categories` (label, row count, eligible count, how many made the top 200), `overall` (200 rows), `byCategory`, and `stats` (`dedicatedMonitor` vs `rankingOnly` in the top 200, `newInTop200`, history misses, signal coverage and enabled source ids, exclusions).
 
-Each scored row: `rank`, `overallRank`, `id`, `name`, `slug` (DefiLlama slug, the parent's for a combined row), `category`, `llamaCategories`, `members` (combined children), `tvl`, `tvl6mAgo`, `tvlAdded6m`, `tvlChange6m` (percent against `max(tvl6mAgo, $1M)`), `isNew`, `ageDays`, `fees30d`, `feesChange30d`, `volume30d`, `volumeChange30d`, `xMentions`, `xLists`, `llamaUrl`, `appUrl`, `chainTvls` (up to eight chains, borrowed rows omitted), `scripts` (`{ name, file, kind }`), `testing` (`mode` `fork` or `api-only`, copy-paste commands, contracts, category recipe), `coverage`, `score`, `components`.
+Each scored row: `rank`, `overallRank`, `id`, `name`, `slug` (DefiLlama slug, the parent's for a combined row), `category`, `llamaCategories`, `members` (combined children), `tvl`, `tvl6mAgo`, `tvlAdded6m`, `tvlChange6m` (percent against `max(tvl6mAgo, $1M)`), `isNew`, `ageDays`, `fees30d`, `feesChange30d`, `volume30d`, `volumeChange30d`, `xMentions`, `xLists`, `token` (CoinGecko id, symbol, market cap, 24h volume, turnover), `signals` (`attention`, `smartMoney` percentiles), `llamaUrl`, `appUrl`, `chainTvls` (up to eight chains, borrowed rows omitted), `scripts` (`{ name, file, kind }`), `testing` (`mode` `fork` or `api-only`, copy-paste commands, contracts, category recipe), `coverage`, `score`, `components`. `token` and `signals` are `null` when the row has no mapped token.
 
 Open a protocol with `#p=<slug>` or `protocol.html?slug=<slug>`. The panel lists scripts, fork commands, contracts and testnet faucets. How that maps onto `fork:*` is in [04-fork-testing.md](./04-fork-testing.md). `stats.forkInTop200` and `stats.apiOnlyInTop200` count the top 200.
 

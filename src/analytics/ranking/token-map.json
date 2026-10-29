@@ -1,0 +1,691 @@
+{
+  "note": "Showcase row id -> the token that best represents the protocol's usage. Keyed by the row id in showcase/data.json (DefiLlama family id). CoinGecko proves turnover/attention; Nansen proves smart-money netflow through the addresses. Add a row only when the token clearly belongs to that protocol; an unmapped row scores a neutral 0.5 on both signals.",
+  "updatedAt": "2026-10-29",
+  "rows": {
+    "morpho": {
+      "coingeckoId": "morpho",
+      "symbol": "MORPHO",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x58d97b57bb95320f9a05dc918aef65434969c2b2",
+        "base": "0xbaa5cc21fd487b8fcc2f632f3f4e8d37262a0842",
+        "arbitrum": "0x40bd670a58238e6e230c430bbb5ce6ec0d40df48"
+      }
+    },
+    "compound-finance": {
+      "coingeckoId": "compound-governance-token",
+      "symbol": "COMP",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xc00e94cb662c3520282e6f5717214004a7f26888",
+        "bnb": "0x52ce071bd9b1c4b00a0b92d298c512478cad67e8",
+        "base": "0x9e1028f5f1d5ede59748ffcee5532509976840e0",
+        "arbitrum": "0x354a6da3fcde098f8389cad84b0182725c6c91de",
+        "avalanche": "0xc3048e19e76cb9a3aa9d77d8c03c29fc906e2437",
+        "polygon": "0x8505b9d2254a7ae468c0e9dd10ccea3a837aef5c"
+      }
+    },
+    "venus-core-pool": {
+      "coingeckoId": "venus",
+      "symbol": "XVS",
+      "kind": "governance",
+      "addresses": {
+        "bnb": "0xcf6bb5389c92bdda8a3747ddb454cb7a64626c63",
+        "optimism": "0x4a971e87ad1f61f7f3081645f52a99277ae917cf",
+        "ethereum": "0xd3cc9d8f3689b83c91b7b59cab4946b063eb894a",
+        "base": "0xebb7873213c8d1d9913d8ea39aa12d74cb107995",
+        "arbitrum": "0xc1eb7689147c81ac840d4ff0d298489fc7986d52"
+      }
+    },
+    "maple": {
+      "coingeckoId": "syrup",
+      "symbol": "SYRUP",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x643c4e15d7d62ad0abec4a9bd4b001aa3ef52d66",
+        "base": "0x688aee022aa544f150678b8e5720b6b96a9e9a2f"
+      }
+    },
+    "liquity": {
+      "coingeckoId": "liquity",
+      "symbol": "LQTY",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d",
+        "arbitrum": "0xfb9e5d956d889d91a82737b9bfcdac1dce3e1449"
+      }
+    },
+    "alchemix-v3": {
+      "coingeckoId": "alchemix",
+      "symbol": "ALCX",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xdbdb4d16eda451d0503b854cf79d55697f90c8df"
+      }
+    },
+    "dolomite": {
+      "coingeckoId": "dolomite",
+      "symbol": "DOLO",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x0f81001ef0a83ecce5ccebf63eb302c70a39a654"
+      }
+    },
+    "sparklend": {
+      "coingeckoId": "spark-2",
+      "symbol": "SPK",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xc20059e0317de91738d13af027dfc4a50781b066"
+      }
+    },
+    "world-liberty-financial": {
+      "coingeckoId": "world-liberty-financial",
+      "symbol": "WLFI",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xda5e1988097297dcdc1f90d4dfe7909e847cbef6",
+        "solana": "WLFinEv6ypjkczcS83FZqFpgFZYwQXutRbxGe7oC16g",
+        "bnb": "0x47474747477b199288bf72a1d702f7fe0fb1deea"
+      }
+    },
+    "curve-finance--lending": {
+      "coingeckoId": "curve-dao-token",
+      "symbol": "CRV",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xd533a949740bb3306d119cc777fa900ba034cd52",
+        "arbitrum": "0x11cdb42b0eb46d95f990bedd4695a6e3fa034978",
+        "optimism": "0x0994206dfe8de6ec6920ff4d779b0d950605fb53",
+        "base": "0x8ee73c484a26e0a5df2ee2a4960b789967dd0415",
+        "polygon": "0x172370d5cd63279efa6d502dab29171933a610af"
+      }
+    },
+    "etherfi-borrowing-market": {
+      "coingeckoId": "ether-fi",
+      "symbol": "ETHFI",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xfe0c30065b384f05761f15d0cc899d4f9f9cc0eb",
+        "arbitrum": "0x7189fb5b6504bbff6a852b13b7b82a3c118fdc27",
+        "base": "0x6c240dda6b5c336df09a4d011139beaaa1ea2aa2"
+      }
+    },
+    "justlend-v1": {
+      "coingeckoId": "just",
+      "symbol": "JST",
+      "kind": "governance",
+      "addresses": {}
+    },
+    "blend-pools-v2": {
+      "coingeckoId": "blend",
+      "symbol": "BLND",
+      "kind": "governance",
+      "addresses": {}
+    },
+    "save": {
+      "coingeckoId": "save",
+      "symbol": "SAVE",
+      "kind": "governance",
+      "addresses": {
+        "solana": "SAVEaeeqeXNKYb4Lyx28DkUms5gyZ76vGa6fCfdzWfK"
+      }
+    },
+    "resupply": {
+      "coingeckoId": "resupply",
+      "symbol": "RSUP",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x419905009e4656fdc02418c7df35b1e61ed5f726"
+      }
+    },
+    "uniswap": {
+      "coingeckoId": "uniswap",
+      "symbol": "UNI",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+        "avalanche": "0x8ebaf22b6f053dffeaf46f4dd9efa95d89ba8580",
+        "optimism": "0x6fd9d7ad17242c41f7131d257212c54a0e816691",
+        "arbitrum": "0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0",
+        "polygon": "0xb33eaad8d922b1083446dc23f610c2567fb5180f",
+        "bnb": "0xbf5140a22578168fd562dccf235e5d43a02ce9b1"
+      }
+    },
+    "raydium-amm": {
+      "coingeckoId": "raydium",
+      "symbol": "RAY",
+      "kind": "governance",
+      "addresses": {
+        "solana": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R"
+      }
+    },
+    "orca-dex": {
+      "coingeckoId": "orca",
+      "symbol": "ORCA",
+      "kind": "governance",
+      "addresses": {
+        "solana": "orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE"
+      }
+    },
+    "pancakeswap--dex": {
+      "coingeckoId": "pancakeswap-token",
+      "symbol": "CAKE",
+      "kind": "governance",
+      "addresses": {
+        "bnb": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "ethereum": "0x152649ea73beab28c5b49b26eb48f7ead6d4c898",
+        "base": "0x3055913c90fcc1a6ce9a358911721eeb942013a1",
+        "solana": "4qQeZ5LwSz6HuupUu8jCtgXyW1mYQcNbFAW1sWZp89HL",
+        "arbitrum": "0x1b896893dfc86bb67cf57767298b9073d2c1ba2c"
+      }
+    },
+    "aerodrome--dex": {
+      "coingeckoId": "aerodrome-finance",
+      "symbol": "AERO",
+      "kind": "governance",
+      "addresses": {
+        "base": "0x940181a94a35a4569e4529a3cdfb74e38fd98631"
+      }
+    },
+    "thorchain-dex": {
+      "coingeckoId": "thorchain",
+      "symbol": "RUNE",
+      "kind": "governance",
+      "addresses": {}
+    },
+    "sun--dex": {
+      "coingeckoId": "sun-token",
+      "symbol": "SUN",
+      "kind": "governance",
+      "addresses": {}
+    },
+    "bittensor-dtao": {
+      "coingeckoId": "bittensor",
+      "symbol": "TAO",
+      "kind": "governance",
+      "addresses": {}
+    },
+    "sanctum-infinity": {
+      "coingeckoId": "sanctum-2",
+      "symbol": "SANC",
+      "kind": "governance",
+      "addresses": {
+        "solana": "CLoUDKc4Ane7HeQcPpE3YHnznRxhMimJ4MyaUqyHFzAu"
+      }
+    },
+    "dexalot-dex": {
+      "coingeckoId": "dexalot",
+      "symbol": "ALOT",
+      "kind": "governance",
+      "addresses": {
+        "avalanche": "0x093783055f9047c2bff99c4e414501f8a147bc69",
+        "bnb": "0x9d5a383581882750ce27f84c72f017b378edb736",
+        "arbitrum": "0x9d5a383581882750ce27f84c72f017b378edb736",
+        "base": "0x9d5a383581882750ce27f84c72f017b378edb736"
+      }
+    },
+    "lido": {
+      "coingeckoId": "lido-dao",
+      "symbol": "LDO",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x5a98fcbea516cf06857215779fd812ca3bef1b32",
+        "optimism": "0xfdb794692724153d1488ccdbe0c56c252596735f",
+        "polygon": "0xc3c7d422809852031b44ab29eec9f1eff2a58756",
+        "arbitrum": "0x13ad51ed4f1b7e9dc168d8a00cb3f4ddd85efa60"
+      }
+    },
+    "marinade-finance": {
+      "coingeckoId": "marinade",
+      "symbol": "MNDE",
+      "kind": "governance",
+      "addresses": {
+        "solana": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey"
+      }
+    },
+    "jito-liquid-staking": {
+      "coingeckoId": "jito-governance-token",
+      "symbol": "JTO",
+      "kind": "governance",
+      "addresses": {
+        "solana": "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL"
+      }
+    },
+    "coinbase-wrapped-staked-eth": {
+      "coingeckoId": "coinbase-wrapped-staked-eth",
+      "symbol": "CBETH",
+      "kind": "lst",
+      "addresses": {
+        "ethereum": "0xbe9895146f7af43049ca1c1ae358b0541ea49704",
+        "base": "0x2ae3f1ec7f1f5012cfeab0185bfc7aa3cf0dec22",
+        "optimism": "0xaddb6a0412de1ba0f936dcaeb8aaa24578dcf3b2",
+        "arbitrum": "0x1debd73e752beaf79865fd6446b0c970eae7732f",
+        "polygon": "0x4b4327db1600b8b1440163f667e199cef35385f5"
+      }
+    },
+    "rocket-pool": {
+      "coingeckoId": "rocket-pool",
+      "symbol": "RPL",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xd33526068d116ce69f19a9ee46f0bd304f21a51f",
+        "arbitrum": "0xb766039cc6db368759c1e56b79affe831d0cc507",
+        "polygon": "0x7205705771547cf79201111b4bd8aaf29467b9ec"
+      }
+    },
+    "origin-ether": {
+      "coingeckoId": "origin-ether",
+      "symbol": "OETH",
+      "kind": "lst",
+      "addresses": {
+        "ethereum": "0x856c4efb76c1d1ae02e20ceb03a2a6a08b0b8dc3"
+      }
+    },
+    "stakewise-v3": {
+      "coingeckoId": "stakewise",
+      "symbol": "SWISE",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x48c3399719b582dd63eb5aadf12a40b4c3f52fa2"
+      }
+    },
+    "lista-liquid-staking": {
+      "coingeckoId": "lista",
+      "symbol": "LISTA",
+      "kind": "governance",
+      "addresses": {
+        "bnb": "0xfceb31a79f71ac9cbdcf853519c1b12d379edc46"
+      }
+    },
+    "benqi-staked-avax": {
+      "coingeckoId": "benqi",
+      "symbol": "QI",
+      "kind": "governance",
+      "addresses": {
+        "avalanche": "0x8729438eb15e2c8b576fcc6aecda6a148776c0f5"
+      }
+    },
+    "optimism-bridge": {
+      "coingeckoId": "optimism",
+      "symbol": "OP",
+      "kind": "governance",
+      "addresses": {
+        "optimism": "0x4200000000000000000000000000000000000042"
+      }
+    },
+    "arbitrum-bridge": {
+      "coingeckoId": "arbitrum",
+      "symbol": "ARB",
+      "kind": "governance",
+      "addresses": {
+        "arbitrum": "0x912ce59144191c1204e64559fe8253a0e49e6548",
+        "ethereum": "0xb50721bcf8d664c30412cfbc6cf7a15145234ad1"
+      }
+    },
+    "starknet-bridge": {
+      "coingeckoId": "starknet",
+      "symbol": "STRK",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xca14007eff0db1f8135f4c25b34de49ab0d42766",
+        "solana": "HsRpHQn6VbyMs5b5j5SV6xQ2VvpvvCCzu19GjytVSCoz"
+      }
+    },
+    "layerzero-v2": {
+      "coingeckoId": "layerzero",
+      "symbol": "ZRO",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x6985884c4392d348587b19cb9eaaf157f13271cd",
+        "bnb": "0x6985884c4392d348587b19cb9eaaf157f13271cd",
+        "polygon": "0x6985884c4392d348587b19cb9eaaf157f13271cd",
+        "arbitrum": "0x6985884c4392d348587b19cb9eaaf157f13271cd",
+        "base": "0x6985884c4392d348587b19cb9eaaf157f13271cd",
+        "optimism": "0x6985884c4392d348587b19cb9eaaf157f13271cd",
+        "avalanche": "0x6985884c4392d348587b19cb9eaaf157f13271cd"
+      }
+    },
+    "hyperliquid-bridge": {
+      "coingeckoId": "hyperliquid",
+      "symbol": "HYPE",
+      "kind": "governance",
+      "addresses": {}
+    },
+    "wbtc": {
+      "coingeckoId": "wrapped-bitcoin",
+      "symbol": "WBTC",
+      "kind": "wrapped",
+      "addresses": {
+        "ethereum": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+        "optimism": "0x68f180fcce6836688e9084f035309e29bf0a2095",
+        "avalanche": "0x0555e30da8f98308edb960aa94c0db47230d2b9c",
+        "solana": "5XZw2LKTyrfvfiskJ78AMpackRjPcyCif1WhUsPDuVqQ",
+        "bnb": "0x0555e30da8f98308edb960aa94c0db47230d2b9c",
+        "base": "0x0555e30da8f98308edb960aa94c0db47230d2b9c"
+      }
+    },
+    "polygon-bridge": {
+      "coingeckoId": "polygon-ecosystem-token",
+      "symbol": "POL",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x455e53cbb86018ac2b8092fdcd39d8444affc3f6",
+        "polygon": "0x0000000000000000000000000000000000001010"
+      }
+    },
+    "axelar-network": {
+      "coingeckoId": "axelar",
+      "symbol": "AXL",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x467719ad09025fcc6cf6f8311755809d45a5e5f3",
+        "avalanche": "0x44c784266cf024a60e8acf2427b9857ace194c5d",
+        "arbitrum": "0x23ee2343b892b1bb63503a4fabc840e0e2c6810f",
+        "bnb": "0x8b1f4432f943c465a973fedc6d7aa50fc96f1f65",
+        "polygon": "0x6e4e624106cb12e168e6533f8ec7c82263358940",
+        "optimism": "0x23ee2343b892b1bb63503a4fabc840e0e2c6810f",
+        "base": "0x23ee2343b892b1bb63503a4fabc840e0e2c6810f"
+      }
+    },
+    "near-bridge": {
+      "coingeckoId": "near",
+      "symbol": "NEAR",
+      "kind": "governance",
+      "addresses": {}
+    },
+    "avalanche-core-bridge": {
+      "coingeckoId": "avalanche-2",
+      "symbol": "AVAX",
+      "kind": "governance",
+      "addresses": {}
+    },
+    "lighter-bridge": {
+      "coingeckoId": "lighter",
+      "symbol": "LIT",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x232ce3bd40fcd6f80f3d55a522d03f25df784ee2"
+      }
+    },
+    "solvbtc": {
+      "coingeckoId": "solv-btc",
+      "symbol": "SOLVBTC",
+      "kind": "wrapped",
+      "addresses": {
+        "ethereum": "0x7a56e1c57c7475ccf742a1832b028f0456652f97",
+        "solana": "SoLvHDFVstC74Jr9eNLTDoG4goSUsn1RENmjNtFKZvW",
+        "arbitrum": "0x3647c54c4c2c65bc7a2d63c0da2809b399dbbdc0",
+        "avalanche": "0xbc78d84ba0c46dfe32cf2895a19939c86b81a777",
+        "base": "0x3b86ad95859b6ab773f55f8d94b4b9d443ee931f",
+        "bnb": "0x4aae823a6a0b376de6a78e74ecc5b079d38cbcf7",
+        "polygon": "0xae4efbc7736f963982aacb17efa37fcbab924cb3"
+      }
+    },
+    "maker": {
+      "coingeckoId": "sky",
+      "symbol": "SKY",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x56072c95faa701256059aa122697b133aded9279"
+      }
+    },
+    "tether": {
+      "coingeckoId": "tether",
+      "symbol": "USDT",
+      "kind": "stablecoin",
+      "addresses": {
+        "ethereum": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+        "solana": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+        "avalanche": "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7"
+      }
+    },
+    "ripple-usd": {
+      "coingeckoId": "ripple-usd",
+      "symbol": "RLUSD",
+      "kind": "stablecoin",
+      "addresses": {
+        "ethereum": "0x8292bb45bf1ee4d140127049757c2e0ff06317ed"
+      }
+    },
+    "falcon-finance": {
+      "coingeckoId": "falcon-finance",
+      "symbol": "USDF",
+      "kind": "stablecoin",
+      "addresses": {
+        "ethereum": "0xfa2b947eec368f42195f24f36d2af29f7c24cec2",
+        "bnb": "0xb3b02e4a9fb2bd28cc2ff97b0ab3f6b3ec1ee9d2"
+      }
+    },
+    "solv-protocol--stable-rwa": {
+      "coingeckoId": "solv-protocol",
+      "symbol": "SOLV",
+      "kind": "governance",
+      "addresses": {
+        "bnb": "0xabe8e5cabe24cb36df9540088fd7ce1175b9bc52",
+        "ethereum": "0x169e36f327caa83d004f5c2668ac25a1424c940d"
+      }
+    },
+    "usdd": {
+      "coingeckoId": "usdd",
+      "symbol": "USDD",
+      "kind": "stablecoin",
+      "addresses": {
+        "ethereum": "0x4f8e5de400de08b164e7421b3ee387f461becd1a",
+        "bnb": "0x45e51bc23d592eb2dba86da3985299f7895d66ba"
+      }
+    },
+    "tornado-cash": {
+      "coingeckoId": "tornado-cash",
+      "symbol": "TORN",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x77777feddddffc19ff86db637967013e6c6a116c",
+        "bnb": "0x1ba8d3c4c219b124d351f603060663bd1bcd9bbf"
+      }
+    },
+    "pump--other": {
+      "coingeckoId": "pump-fun",
+      "symbol": "PUMP",
+      "kind": "governance",
+      "addresses": {
+        "solana": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn"
+      }
+    },
+    "chainlink--other": {
+      "coingeckoId": "chainlink",
+      "symbol": "LINK",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x514910771af9ca656af840dff83e8264ecf986ca",
+        "base": "0x88fb150bdc53a65fe94dea0c9ba0a6daf8c6e196",
+        "arbitrum": "0xf97f4df75117a78c1a5a0dbb814af92458539fb4",
+        "optimism": "0x350a791bfc2c21f9ed5d10980dad2e2638ffa7f6",
+        "avalanche": "0x5947bb275c521040051d82396192181b413227a3",
+        "solana": "LinkhB3afbBKb2EQQu7s7umdZceV3wcvAUJhQAfQ23L",
+        "bnb": "0xf8a0bf9cf54bb92f17374d9e9a321e6a111a51bd",
+        "polygon": "0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39"
+      }
+    },
+    "meteora-dynamic-bonding-curve": {
+      "coingeckoId": "meteora",
+      "symbol": "MET",
+      "kind": "governance",
+      "addresses": {
+        "solana": "METvsvVRapdj9cFLzq4Tr43xK4tAjQfwX76z3n6mWQL"
+      }
+    },
+    "zama": {
+      "coingeckoId": "zama",
+      "symbol": "ZAMA",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xa12cc123ba206d4031d1c7f6223d1c2ec249f4f3",
+        "bnb": "0x6907a5986c4950bdaf2f81828ec0737ce787519f",
+        "solana": "4Zp52aF4hZi9fzH19xpbWKYKQvgLyCN67KFbrQDqeTKh"
+      }
+    },
+    "jupiter-perpetual-exchange": {
+      "coingeckoId": "jupiter-exchange-solana",
+      "symbol": "JUP",
+      "kind": "governance",
+      "addresses": {
+        "solana": "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"
+      }
+    },
+    "lighter--perps": {
+      "coingeckoId": "lighter",
+      "symbol": "LIT",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x232ce3bd40fcd6f80f3d55a522d03f25df784ee2"
+      }
+    },
+    "cowswap": {
+      "coingeckoId": "cow-protocol",
+      "symbol": "COW",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xdef1ca1fb7fbcdc777520aa7f396b4e015f497ab",
+        "bnb": "0x5bfdaa3f7c28b9994b56135403bf1acea02595b0",
+        "polygon": "0x2f4efd3aa42e15a1ec6114547151b63ee5d39958",
+        "base": "0xc694a91e6b071bf030a18bd3053a7fe09b6dae69",
+        "arbitrum": "0xcb8b5cd20bdcaea9a010ac1f8d835824f5c87a04"
+      }
+    },
+    "0x": {
+      "coingeckoId": "0x",
+      "symbol": "ZRX",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xe41d2489571d322189246dafa5ebde1f4699f498"
+      }
+    },
+    "near-intents": {
+      "coingeckoId": "near",
+      "symbol": "NEAR",
+      "kind": "governance",
+      "addresses": {}
+    },
+    "fluid-lite": {
+      "coingeckoId": "instadapp",
+      "symbol": "FLUID",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x6f40d4a6237c257fff2db00fa0510deeecd303eb",
+        "arbitrum": "0x61e030a56d33e8260fdd81f03b162a79fe3449cd",
+        "base": "0x61e030a56d33e8260fdd81f03b162a79fe3449cd",
+        "solana": "DuEy8wWrzCUun5ZbbG9hkVqXqqicpTQw8gB7nEAzpCHQ",
+        "polygon": "0xf50d05a1402d0adafa880d36050736f9f6ee7dee"
+      }
+    },
+    "spark--vaults": {
+      "coingeckoId": "spark-2",
+      "symbol": "SPK",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xc20059e0317de91738d13af027dfc4a50781b066"
+      }
+    },
+    "aave": {
+      "coingeckoId": "aave",
+      "symbol": "AAVE",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
+        "optimism": "0x76fb31fb4af56892a25e32cfc43de717950c9278",
+        "polygon": "0xd6df932a45c0f255f85145f286ea0b292b21c90b",
+        "arbitrum": "0xba5ddd1f9d7f570dc94a51479a000e3bce967196",
+        "base": "0x63706e401c06ac8513145b7687a14804d17f814b",
+        "avalanche": "0x63a72806098bd3d9520cc43356dd78afe5d386d9",
+        "solana": "AavE1kKKnesPw4MuRJmJ9jZs9QzEE8CPxQ3ViczUDfc1",
+        "bnb": "0xfb6115445bff7b52feb98650c87f44907e58f802"
+      }
+    },
+    "ethena": {
+      "coingeckoId": "ethena",
+      "symbol": "ENA",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x57e114b691db790c35207b2e685d4a43181e6061",
+        "arbitrum": "0x58538e6a46e07434d7e7375bc268d3cb839c0133",
+        "avalanche": "0x58538e6a46e07434d7e7375bc268d3cb839c0133",
+        "base": "0x58538e6a46e07434d7e7375bc268d3cb839c0133",
+        "optimism": "0x58538e6a46e07434d7e7375bc268d3cb839c0133",
+        "solana": "72QvBVwpxqmheEPfaCwWSWqEFsUy3rhWt6JhQBMNTwD1"
+      }
+    },
+    "ondo-finance": {
+      "coingeckoId": "ondo-finance",
+      "symbol": "ONDO",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xfaba6f8e4a5e8ab82f62fe7c39859fa577269be3"
+      }
+    },
+    "1inch-swap": {
+      "coingeckoId": "1inch",
+      "symbol": "1INCH",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x111111111117dc0aa78b770fa6a738034120c302",
+        "arbitrum": "0x6314c31a7a1652ce482cffe247e9cb7c3f4bb9af",
+        "avalanche": "0xd501281565bf7789224523144fe5d98e8b28f267",
+        "optimism": "0xad42d013ac31486b73b6b059e748172994736426",
+        "base": "0xc5fecc3a29fb57b5024eec8a2239d4621e111cbe",
+        "bnb": "0x111111111117dc0aa78b770fa6a738034120c302"
+      }
+    },
+    "uniswap--dex": {
+      "coingeckoId": "uniswap",
+      "symbol": "UNI",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+        "avalanche": "0x8ebaf22b6f053dffeaf46f4dd9efa95d89ba8580",
+        "optimism": "0x6fd9d7ad17242c41f7131d257212c54a0e816691",
+        "arbitrum": "0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0",
+        "polygon": "0xb33eaad8d922b1083446dc23f610c2567fb5180f",
+        "bnb": "0xbf5140a22578168fd562dccf235e5d43a02ce9b1"
+      }
+    },
+    "pancakeswap-aggregator": {
+      "coingeckoId": "pancakeswap-token",
+      "symbol": "CAKE",
+      "kind": "governance",
+      "addresses": {
+        "bnb": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "ethereum": "0x152649ea73beab28c5b49b26eb48f7ead6d4c898",
+        "base": "0x3055913c90fcc1a6ce9a358911721eeb942013a1",
+        "solana": "4qQeZ5LwSz6HuupUu8jCtgXyW1mYQcNbFAW1sWZp89HL",
+        "arbitrum": "0x1b896893dfc86bb67cf57767298b9073d2c1ba2c"
+      }
+    },
+    "jupiter-lend": {
+      "coingeckoId": "jupiter-exchange-solana",
+      "symbol": "JUP",
+      "kind": "governance",
+      "addresses": {
+        "solana": "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"
+      }
+    },
+    "ether.fi-liquid": {
+      "coingeckoId": "ether-fi",
+      "symbol": "ETHFI",
+      "kind": "governance",
+      "addresses": {
+        "ethereum": "0xfe0c30065b384f05761f15d0cc899d4f9f9cc0eb",
+        "arbitrum": "0x7189fb5b6504bbff6a852b13b7b82a3c118fdc27",
+        "base": "0x6c240dda6b5c336df09a4d011139beaaa1ea2aa2"
+      }
+    },
+    "lista-dao--lending": {
+      "coingeckoId": "lista",
+      "symbol": "LISTA",
+      "kind": "governance",
+      "addresses": {
+        "bnb": "0xfceb31a79f71ac9cbdcf853519c1b12d379edc46"
+      }
+    }
+  }
+}

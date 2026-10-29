@@ -1,0 +1,38 @@
+{
+  "data": [
+    {
+      "token_address": "0xAAA",
+      "token_symbol": "TA",
+      "chain": "ethereum",
+      "market_cap_usd": 1000,
+      "net_flow_1h_usd": 1,
+      "net_flow_24h_usd": 10,
+      "net_flow_7d_usd": 40,
+      "net_flow_30d_usd": 100,
+      "trader_count": 12
+    },
+    {
+      "token_address": "0xBBB",
+      "token_symbol": "TB",
+      "chain": "ethereum",
+      "market_cap_usd": 500,
+      "net_flow_1h_usd": -1,
+      "net_flow_24h_usd": -10,
+      "net_flow_7d_usd": -40,
+      "net_flow_30d_usd": -100,
+      "trader_count": 7
+    },
+    {
+      "token_address": "SoLCaseMint111111111111111111111111111111",
+      "token_symbol": "TC",
+      "chain": "solana",
+      "market_cap_usd": 200,
+      "net_flow_1h_usd": 0,
+      "net_flow_24h_usd": 5,
+      "net_flow_7d_usd": 20,
+      "net_flow_30d_usd": 50,
+      "trader_count": 4
+    }
+  ],
+  "pagination": { "page": 1, "per_page": 1000, "is_last_page": true }
+}

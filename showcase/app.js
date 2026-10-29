@@ -2,6 +2,13 @@
 const REPO_BLOB = "https://github.com/xjjda22/defi-scripts/blob/main/";
 const MONITOR = "covered by a dedicated monitor";
 const TEXT_KEYS = new Set(["name", "category", "coverage"]);
+// Fallbacks for data.json built before source metadata carried its own url.
+// Source branding and fallbacks for data.json built before the metadata carried
+// its own url/name. Only the brand name is linked, so both credits look alike.
+const SOURCE_META = {
+  coingecko: { name: "CoinGecko", url: "https://www.coingecko.com" },
+  nansen: { name: "Nansen API", url: "https://www.nansen.ai" },
+};
 
 const PROTOCOL_PAGE = document.body.dataset.page === "protocol";
 const SCRIPT_GROUPS = [
@@ -73,6 +80,21 @@ function coverageBadge(row) {
   return '<span class="badge">Ranking only</span>';
 }
 
+function signalsCell(row) {
+  const signals = row.signals;
+  if (!signals) return '<span class="chg">—</span>';
+  const parts = [];
+  if (isNum(signals.attention)) {
+    const title = `CoinGecko turnover percentile: ${Math.round(signals.attention * 100)}`;
+    parts.push(`<span class="sig" title="${esc(title)}">A ${Math.round(signals.attention * 100)}</span>`);
+  }
+  if (isNum(signals.smartMoney)) {
+    const title = `Nansen smart-money percentile: ${Math.round(signals.smartMoney * 100)}`;
+    parts.push(`<span class="sig smart" title="${esc(title)}">S ${Math.round(signals.smartMoney * 100)}</span>`);
+  }
+  return parts.length ? parts.join("") : '<span class="chg">—</span>';
+}
+
 function mentionBadge(row) {
   const n = row.xMentions || 0;
   if (!n) return '<span class="chg">0</span>';
@@ -127,7 +149,7 @@ function scriptGroups(scripts) {
       .map(item => {
         const command = `npm run ${item.name}`;
         const link = item.file
-          ? `<a href="${esc(REPO_BLOB + item.file)}" target="_blank" rel="noreferrer">${esc(item.file)}</a>`
+          ? `<a href="${esc(REPO_BLOB + item.file)}" target="_blank" rel="noreferrer" title="${esc(item.file)}">${esc(item.file)}</a>`
           : "";
         return `<div class="script-row"><code>${esc(command)}</code>${copyButton(command)}${link}</div>`;
       })
@@ -262,7 +284,10 @@ function detailHtml(row) {
       <div class="fact"><b>${row.isNew ? "New" : esc(signedPct(row.tvlChange6m))}</b><span>6-month TVL</span></div>
       <div class="fact"><b>${esc(money(row.fees30d))}</b><span>30d fees</span></div>
       <div class="fact"><b>${esc(money(row.tvlAdded6m))}</b><span>6-month added</span></div>
+      ${row.signals && isNum(row.signals.attention) ? `<div class="fact"><b>${Math.round(row.signals.attention * 100)}</b><span>Attention pct</span></div>` : ""}
+      ${row.signals && isNum(row.signals.smartMoney) ? `<div class="fact"><b>${Math.round(row.signals.smartMoney * 100)}</b><span>Smart money pct</span></div>` : ""}
     </div>
+    ${row.token ? `<p class="muted">${esc(row.token.symbol || "")} · market cap ${money(row.token.marketCap)} · 24h volume ${money(row.token.volume24h)}${isNum(row.token.turnover) ? ` · turnover ${(row.token.turnover * 100).toFixed(2)}%` : ""}</p>` : ""}
     <h3>TVL by chain</h3>
     ${chainTvlHtml(row)}
     <h3>Test it</h3>
@@ -324,8 +349,14 @@ function breakdown(row) {
   const c = row.components;
   if (c) {
     const pct = value => (isNum(value) ? `${Math.round(value * 100)}` : "—");
+    const signalBits = [
+      isNum(c.attention) ? `attention ${pct(c.attention)}` : "",
+      isNum(c.smartMoney) ? `smart money ${pct(c.smartMoney)}` : "",
+    ]
+      .filter(Boolean)
+      .join(", ");
     parts.push(
-      `<p>Score ${isNum(row.score) ? row.score.toFixed(3) : "—"}. Percentiles: size ${pct(c.size)}, growth ${pct(c.growth)}, TVL added ${pct(c.tvlAdded)}, fees momentum ${pct(c.feesMomentum)}, volume momentum ${pct(c.volumeMomentum)}. X bonus +${isNum(c.mentions) ? c.mentions.toFixed(3) : "0"}.</p>`
+      `<p>Score ${isNum(row.score) ? row.score.toFixed(3) : "—"}. Percentiles: size ${pct(c.size)}, growth ${pct(c.growth)}, TVL added ${pct(c.tvlAdded)}, fees momentum ${pct(c.feesMomentum)}, volume momentum ${pct(c.volumeMomentum)}${signalBits ? `, ${signalBits}` : ""}. X bonus +${isNum(c.mentions) ? c.mentions.toFixed(3) : "0"}.</p>`
     );
   }
   const facts = [];
@@ -333,6 +364,18 @@ function breakdown(row) {
   if (isNum(row.volume30d)) facts.push(`30d volume ${money(row.volume30d)}${isNum(row.volumeChange30d) ? ` (${signedPct(row.volumeChange30d)})` : ""}`);
   if (row.llamaCategories && row.llamaCategories.length) facts.push(`DefiLlama: ${row.llamaCategories.join(", ")}`);
   if (facts.length) parts.push(`<p>${esc(facts.join(" · "))}</p>`);
+  if (row.signals) {
+    const signalFacts = [];
+    if (isNum(row.signals.attention)) signalFacts.push(`attention ${Math.round(row.signals.attention * 100)}`);
+    if (isNum(row.signals.smartMoney)) signalFacts.push(`smart money ${Math.round(row.signals.smartMoney * 100)}`);
+    if (signalFacts.length) parts.push(`<p>Signal percentiles: ${esc(signalFacts.join(", "))}.</p>`);
+  }
+  if (row.token) {
+    const turnover = isNum(row.token.turnover) ? ` · turnover ${(row.token.turnover * 100).toFixed(2)}%` : "";
+    parts.push(
+      `<p>${esc(row.token.symbol || "")} · market cap ${money(row.token.marketCap)} · 24h volume ${money(row.token.volume24h)}${turnover}</p>`
+    );
+  }
   if (row.members && row.members.length) {
     parts.push(
       `<p>Combines ${row.members.map(m => `<a href="https://defillama.com/protocol/${encodeURIComponent(m.slug)}" target="_blank" rel="noreferrer">${esc(m.name)}</a> ${money(m.tvl)}`).join(", ")}</p>`
@@ -387,20 +430,48 @@ function visibleRows() {
   return rows.slice().sort((a, b) => compare(a, b, state.sortKey) || (a.rank || 0) - (b.rank || 0));
 }
 
+// Tabs use short labels so all twelve fit without clipping; the table and the
+// detail panel still show the full category name.
+const TAB_LABELS = {
+  dex: "Spot DEX",
+  aggregator: "Aggregators",
+  perps: "Perps",
+  lending: "Lending",
+  vaults: "Vaults",
+  staking: "Liquid staking",
+  restaking: "Restaking",
+  "stable-rwa": "Stablecoins & RWA",
+  "bridge-chain": "Bridges & chains",
+  other: "Launchpads & other",
+  boards: "Boards",
+  tooling: "Tooling",
+};
+
 function tabList() {
-  return [{ id: "overall", label: "Top 200", count: (state.data.overall || []).length }].concat(
-    (state.data.categories || []).map(cat => ({ id: cat.id, label: cat.label, count: cat.count }))
+  return [{ id: "overall", label: "Top 200", count: null }].concat(
+    (state.data.categories || []).map(cat => ({
+      id: cat.id,
+      label: TAB_LABELS[cat.id] || cat.label,
+      count: cat.count,
+    }))
   );
 }
 
 function renderTabs() {
-  $("tabs").innerHTML = tabList()
+  const host = $("tabs");
+  host.innerHTML = tabList()
     .map(tab => {
       const selected = tab.id === state.tab;
-      return `<button type="button" role="tab" id="tab-${esc(tab.id)}" data-tab="${esc(tab.id)}" aria-selected="${selected}" aria-controls="board" tabindex="${selected ? 0 : -1}">${esc(tab.label)} <span class="count">${esc(tab.count)}</span></button>`;
+      const count = tab.count == null ? "" : ` <span class="count">${esc(tab.count)}</span>`;
+      return `<button type="button" role="tab" id="tab-${esc(tab.id)}" data-tab="${esc(tab.id)}" aria-selected="${selected}" aria-controls="board" tabindex="${selected ? 0 : -1}">${esc(tab.label)}${count}</button>`;
     })
     .join("");
   $("board").setAttribute("aria-labelledby", `tab-${state.tab}`);
+  const active = host.querySelector('[aria-selected="true"]');
+  if (active && host.scrollWidth > host.clientWidth + 1) {
+    const delta = active.getBoundingClientRect().left - host.getBoundingClientRect().left;
+    if (delta < 0 || delta + active.offsetWidth > host.clientWidth) host.scrollLeft += delta - 16;
+  }
 }
 
 function renderStats() {
@@ -425,13 +496,43 @@ function renderMethod() {
   const w = m.weights || {};
   const floors = m.floors || {};
   const corpus = m.mentionCorpus;
+  const labels = {
+    size: "size",
+    growth: "6-month growth",
+    tvlAdded: "6-month TVL added",
+    feesMomentum: "fees momentum",
+    volumeMomentum: "volume momentum",
+    attention: "token attention",
+    smartMoney: "smart-money flow",
+  };
+  const weightLine = Object.entries(w)
+    .map(([key, value]) => `${esc(labels[key] || key)} ${esc(value)}`)
+    .join(" · ");
   const corpusLine = corpus
     ? `<li>X mentions: ${esc(corpus.posts)} distinct posts from ${esc((corpus.lists || []).length)} lists, ${esc(corpus.from)} to ${esc(corpus.to)}. ${esc(m.mentionBonus || "")}.</li>`
     : `<li>X mentions: ${esc(m.mentionBonus || "")}.</li>`;
+  const sources = (m.sources || [])
+    .map(source => {
+      const stateLabel = !source.enabled ? "off" : source.available ? `${source.matched} rows` : "unavailable";
+      const preview = source.available && source.public === false ? " (preview)" : "";
+      return `${esc(source.label || source.id)} ${esc(stateLabel)}${preview}`;
+    })
+    .join(" · ");
+  const sourceLine = sources
+    ? `<li>External sources: ${sources}. ${esc(m.tokenCoverage || 0)} rows have a mapped token; the rest score a neutral 0.5.</li>`
+    : "";
+  const legends = [];
+  if (isNum(w.attention)) legends.push("<b>A</b> = CoinGecko attention percentile");
+  if (isNum(w.smartMoney)) legends.push("<b>S</b> = Nansen smart-money percentile");
+  const legendLine = legends.length
+    ? `<li>Signals column: ${legends.join(", ")}. A dash means the row has no mapped token.</li>`
+    : "";
   $("method-body").innerHTML = `
     <p>${esc(m.summary || "")}</p>
     <ul>
-      <li>Weights: size ${esc(w.size)} · 6-month growth ${esc(w.growth)} · 6-month TVL added ${esc(w.tvlAdded)} · fees momentum ${esc(w.feesMomentum)} · volume momentum ${esc(w.volumeMomentum)}.</li>
+      <li>Weights: ${weightLine}.</li>
+      ${sourceLine}
+      ${legendLine}
       ${corpusLine}
       <li>${esc(state.data.stats && state.data.stats.eligible)} protocol rows scored. Floors: TVL ${money(floors.minTvlUsd)}, or 30-day fees ${money(floors.minFees30dUsd)}, or 30-day volume ${money(floors.minVolume30dUsd)}. Excluded: ${esc((m.excluded || []).join(", "))}.</li>
     </ul>`;
@@ -465,6 +566,7 @@ function renderTable() {
         <td class="num" data-label="6-month added">${addedCell(row.tvlAdded6m)}</td>
         <td class="num" data-label="30d fees">${money(row.fees30d)}</td>
         <td class="num" data-label="X posts">${mentionBadge(row)}</td>
+        <td class="num" data-label="Signals">${signalsCell(row)}</td>
         <td data-label="Monitor">${coverageBadge(row)}</td>
         <td class="scripts" data-label="Scripts">${scriptsCell(row.scripts)}</td>
       </tr>`;
@@ -597,8 +699,43 @@ async function init() {
     return;
   }
   const stats = state.data.stats || {};
-  $("lede").textContent = `The top ${stats.overall || 200} DeFi protocols by a six-month trend score: size, TVL growth in percent and in dollars, fees and volume momentum, and a small bonus for posts on the tracked X lists.`;
+  const methodology = state.data.methodology || {};
+  const signalCount = (stats.signalsEnabled || []).length;
+  const signalText = signalCount
+    ? signalCount === 2
+      ? "token attention and smart-money flow, "
+      : "an external signal, "
+    : "";
+  $("lede").textContent = `The top ${stats.overall || 200} DeFi protocols by a six-month trend score: size, TVL growth in percent and in dollars, fees and volume momentum, ${signalText}and a small bonus for posts on the tracked X lists.`;
   $("generated").textContent = generatedLabel(state.data.generatedAt);
+
+  const sourcesLine = $("sources-line");
+  if (sourcesLine) {
+    const credits = (methodology.sources || [])
+      .filter(source => source.enabled && source.available && source.attribution)
+      .map(source => {
+        const branding = SOURCE_META[source.id] || {};
+        const url = source.url || branding.url;
+        const name = source.name || branding.name;
+        const attribution = String(source.attribution);
+        const anchor = target =>
+          `<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(target)}</a>`;
+        if (!url) return esc(attribution);
+        if (name && attribution.endsWith(name)) {
+          return `${esc(attribution.slice(0, -name.length))}${anchor(name)}`;
+        }
+        return anchor(attribution);
+      })
+      .join(". ");
+    const defillama = 'Core market data from <a href="https://defillama.com" target="_blank" rel="noreferrer">DefiLlama</a>.';
+    sourcesLine.innerHTML = credits ? `${credits}. ${defillama}` : defillama;
+  }
+  const warn = $("warn");
+  if (warn && methodology.publishSafe === false) {
+    warn.hidden = false;
+    warn.textContent =
+      "Local preview: this build includes smart-money data that is not cleared for public redistribution. Do not deploy until Nansen approval is in place.";
+  }
   readHash();
   if (PROTOCOL_PAGE) {
     const lede = $("lede");
