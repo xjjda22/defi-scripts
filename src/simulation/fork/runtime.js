@@ -36,6 +36,8 @@ const EXTRA_WHALES = {
     gOHM: ["0xD3204Ae00d6599Ba6e182c6D640A79d76CdAad74"],
     // sUSDS holds the savings USDS. https://developers.sky.money/
     USDS: ["0xa3931d71877C0E7a3148CB7Eb4463524FEc27fbD"],
+    // Curve USDC/USDf pool (name() "USDC/USDf" on-chain). Not the sUSDf vault, which would break its accounting.
+    USDf: ["0x72310DAAed61321b02B08A547150c07522c6a976"],
   },
   base: {
     WETH: ["0x46e6b214b524310239732D51387075E0e70970bf", "0x4200000000000000000000000000000000000006"],

@@ -21,6 +21,8 @@ const {
   SATURN,
   CONCENTRATOR,
   FLUID_LITE,
+  KPK,
+  GALAXY,
 } = require("../../catalog/contracts");
 const { requireFork, impersonateFunded, formatUnits, finish } = require("./runtime");
 
@@ -488,6 +490,8 @@ async function run() {
     if (protocol === "lista-dao") return await erc4626(base, LISTA_LENDING);
     if (protocol === "clearstar") return await morphoV2Deposit(base, CLEARSTAR);
     if (protocol === "hyperithm") return await morphoV2Deposit(base, HYPERITHM);
+    if (protocol === "kpk") return await morphoV2Deposit(base, KPK);
+    if (protocol === "galaxy") return await morphoV2Deposit(base, GALAXY);
     if (protocol === "concrete") return await concreteDeposit(base);
     if (protocol === "curvance") return await curvanceDeposit(base);
     if (protocol === "saturn") return await saturnDeposit(base);
