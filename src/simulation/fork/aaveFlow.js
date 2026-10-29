@@ -23,6 +23,28 @@ const POOL_ABI = [
 
 const VARIABLE = 2n;
 
+// ReserveConfiguration bits (Aave V3): 56 active, 57 frozen, 60 paused.
+function reserveFlags(config) {
+  const data = BigInt(config.data ?? config[0] ?? config);
+  return { active: ((data >> 56n) & 1n) === 1n, frozen: ((data >> 57n) & 1n) === 1n, paused: ((data >> 60n) & 1n) === 1n };
+}
+
+/**
+ * A frozen reserve rejects supply and borrow (ReserveFrozen), a paused one rejects everything.
+ * Every action here supplies first (borrow and repay also supply WETH collateral), so a blocked
+ * reserve is a labelled FAIL before any tx, the same rule as the Swell and Puffer pauses.
+ */
+async function blockedReserves(poolRead, assets) {
+  const blocked = [];
+  for (const [symbol, asset] of assets) {
+    const flags = reserveFlags((await poolRead.getReserveData(asset)).configuration);
+    if (!flags.active) blocked.push(`${symbol}:inactive`);
+    else if (flags.paused) blocked.push(`${symbol}:paused`);
+    else if (flags.frozen) blocked.push(`${symbol}:frozen`);
+  }
+  return blocked;
+}
+
 function poolAddress(chain, protocol) {
   if (protocol === "spark") return SPARK_POOL;
   return CHAINS[chain]?.aave?.v3?.pool || null;
@@ -69,6 +91,19 @@ async function run() {
   }
 
   try {
+    const needed = action === "borrow" || action === "repay" ? [["USDC", usdc], ["WETH", weth]] : [["USDC", usdc]];
+    const blocked = await blockedReserves(poolRead, needed);
+    if (blocked.length) {
+      return finish({
+        ok: false,
+        protocol,
+        action,
+        chain,
+        block: ctx.forkBlock,
+        key: `reserveBlocked=${blocked.join(",")}`,
+        error: `${protocol} reserve not open for supply (${blocked.join(", ")}); no tx sent`,
+      });
+    }
     if (action === "supply") return await supplyUsdc({ chain, protocol, action, ctx, poolAddr, usdc, reserve, provider });
     if (action === "withdraw") return await withdrawUsdc({ chain, protocol, action, ctx, poolAddr, usdc, reserve, provider });
     if (action === "borrow") return await borrowUsdc({ chain, protocol, action, ctx, poolAddr, usdc, weth, provider });

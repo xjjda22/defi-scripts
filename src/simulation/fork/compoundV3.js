@@ -18,6 +18,8 @@ const COMET_ABI = [
   "function balanceOf(address) view returns (uint256)",
   "function borrowBalanceOf(address) view returns (uint256)",
   "function userCollateral(address, address) view returns (uint128 balance, uint128 reserved)",
+  "function isSupplyPaused() view returns (bool)",
+  "function isWithdrawPaused() view returns (bool)",
 ];
 
 async function run() {
@@ -38,6 +40,22 @@ async function run() {
   const provider = getProvider(chain);
   const cometRead = new ethers.Contract(COMPOUND_CUSDC_V3, COMET_ABI, provider);
   try {
+    // Both actions supply then withdraw. A Pause Guardian pause reverts Paused(), so it is a
+    // labelled FAIL before any tx (same rule as the Swell and Puffer pauses).
+    const paused = [];
+    if (await cometRead.isSupplyPaused()) paused.push("supply");
+    if (await cometRead.isWithdrawPaused()) paused.push("withdraw");
+    if (paused.length) {
+      return finish({
+        ok: false,
+        protocol,
+        action,
+        chain,
+        block: ctx.forkBlock,
+        key: `paused=${paused.join(",")}`,
+        error: `cUSDCv3 ${paused.join(" and ")} paused by the Pause Guardian; no tx sent`,
+      });
+    }
     if (action === "supply") return await supplyBase({ chain, protocol, action, ctx, usdc, cometRead });
     if (action === "borrow") return await borrowBase({ chain, protocol, action, ctx, usdc, weth, provider, cometRead });
     return finish({ ok: false, protocol, action, chain, block: ctx.forkBlock, error: `Unknown action ${action}` });
