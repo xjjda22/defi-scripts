@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-29T16:51:23.943Z",
+ "generatedAt": "2026-10-29T16:54:48.104Z",
  "methodology": {
   "windowDays": 180,
   "weights": {
@@ -48,7 +48,7 @@
     "enabled": true,
     "available": true,
     "endpoint": "GET api.coingecko.com/api/v3/coins/markets",
-    "asOf": "2026-10-29T16:51:30.304Z",
+    "asOf": "2026-10-29T16:54:53.360Z",
     "matched": 70,
     "name": "CoinGecko",
     "attribution": "Token market data by CoinGecko",
