@@ -7,6 +7,9 @@
  *   LLAMA_FEES_LABEL   optional banner title
  *   LLAMA_FEES_SMOKE=1 print one OK line per slug and exit non-zero unless every slug has
  *                      positive 30d fees (used by simulate:*:smoke)
+ *   LLAMA_FEES_DAYS=N  optional (1-60, off unless set): also print each slug's last N daily fee points, their
+ *                      mean and the 30d total annualized (x 365/30), for "fees are $X per day" /
+ *                      "about $Y a year" claims
  *
  * Prints 24h / 7d / 30d fees, the previous 30 days and the 30d change, 30d revenue and
  * the all-time totals. Chain "revenue" on DefiLlama is the burned / protocol-kept part of gas.
@@ -35,6 +38,29 @@ function money(v) {
   return n == null ? "—" : formatCurrency(n);
 }
 
+function daysFromEnv(env = process.env) {
+  const n = parseInt(String(env.LLAMA_FEES_DAYS || "").trim(), 10);
+  return Number.isFinite(n) && n >= 1 && n <= 60 ? n : 0;
+}
+
+function printDaily(r, days) {
+  const pts = (Array.isArray(r.chart) ? r.chart : []).filter(
+    p => Array.isArray(p) && Number.isFinite(p[0]) && Number.isFinite(Number(p[1]))
+  );
+  if (!pts.length) {
+    console.log(chalk.gray(`  ${r.slug}: no daily fee points`));
+    return;
+  }
+  const last = pts.slice(-days);
+  const t = createTable(["Date (UTC)", "Fees"], { colAligns: ["left", "right"] });
+  for (const p of last) t.push([new Date(p[0] * 1000).toISOString().slice(0, 10), formatCurrency(Number(p[1]))]);
+  const mean = last.reduce((a, p) => a + Number(p[1]), 0) / last.length;
+  t.push([`Mean of ${last.length} days`, formatCurrency(mean)]);
+  t.push(["30d fees annualized (x 365/30)", r.fees30d != null ? formatCurrency((r.fees30d * 365) / 30) : "—"]);
+  console.log(chalk.yellow(`\n${r.name}: last ${last.length} daily fee points (/summary/fees/${r.slug})\n`));
+  console.log(t.toString());
+}
+
 async function loadSlug(slug) {
   const [fees, revenue] = await Promise.all([
     fetchFeesChart(slug).catch(e => ({ error: e })),
@@ -54,6 +80,7 @@ async function loadSlug(slug) {
     rev30d: revenue && !revenue.error ? num(revenue.total30d) : null,
     feesAllTime: fees && !fees.error ? num(fees.totalAllTime) : null,
     revAllTime: revenue && !revenue.error ? num(revenue.totalAllTime) : null,
+    chart: fees && !fees.error ? fees.totalDataChart : null,
   };
 }
 
@@ -99,6 +126,8 @@ async function main() {
     if (r.error) console.log(chalk.gray(`  ${r.slug}: ${r.error.message || r.error}`));
   }
   console.log(chalk.gray("\n30d windows are the last 30 daily points; prior 30d is the 30 points before that.\n"));
+  const days = daysFromEnv();
+  if (days) for (const r of rows) printDaily(r, days);
 }
 
 if (require.main === module) {
@@ -108,4 +137,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { slugsFromEnv };
+module.exports = { slugsFromEnv, daysFromEnv };

@@ -8,6 +8,8 @@
  * and its date from the same endpoint's daily chart, for "OI at a yearly high" claims.
  * Optional: DEFILLAMA_VOLUME=dexs|aggregators adds 24h / 7d / 30d volume from /summary/{kind}/{slug},
  * for venues that hold no TVL (aggregators, prop AMMs).
+ * Optional: DEFILLAMA_VOLUME_HIGH=1 (with DEFILLAMA_VOLUME) also prints the all-time daily volume high and its
+ * date, the latest daily point and how far below the high it is, for "volume down 96% from ATH" claims.
  * Optional: DEFILLAMA_MONTHS=N (1-24) adds UTC calendar-month totals for the last N months from the
  * daily charts: fees + revenue when DEFILLAMA_FEES=1, volume when DEFILLAMA_VOLUME is set. For
  * "revenue in September" / "Q3 volume" / "12-month revenue" claims. The current month is partial.
@@ -119,6 +121,41 @@ function yearToDateHigh(chart, nowMs = Date.now()) {
   return { high, latest: pts.length ? pts[pts.length - 1] : null };
 }
 
+/**
+ * @param {Array<[number, number]>|undefined} chart - [unixSeconds, usd][]
+ * @returns {{ high: [number, number]|null, latest: [number, number]|null }}
+ */
+function allTimeHigh(chart) {
+  const pts = Array.isArray(chart)
+    ? chart.filter(p => Array.isArray(p) && Number.isFinite(p[0]) && Number.isFinite(Number(p[1])))
+    : [];
+  const high = pts.reduce((a, b) => (a == null || Number(b[1]) > Number(a[1]) ? b : a), null);
+  return { high, latest: pts.length ? pts[pts.length - 1] : null };
+}
+
+async function printVolumeHigh(slug, kind) {
+  let d;
+  try {
+    d = await fetchVolumeChart(slug, kind);
+  } catch (e) {
+    console.log(chalk.gray(`  volume history unavailable on /summary/${kind}/${slug}: ${e.message || e}`));
+    return;
+  }
+  const { high, latest } = allTimeHigh(d && d.totalDataChart);
+  const day = p => new Date(p[0] * 1000).toISOString().slice(0, 10);
+  const t = createTable(["Field", "Value"], { colAligns: ["left", "right"] });
+  t.push(["All-time daily high", high ? `${formatCurrency(Number(high[1]))} (${day(high)})` : "n/a"]);
+  t.push(["Latest daily point", latest ? `${formatCurrency(Number(latest[1]))} (${day(latest)})` : "n/a"]);
+  if (high && latest && Number(high[1]) > 0) {
+    t.push([
+      "Latest vs all-time high",
+      `${(((Number(latest[1]) - Number(high[1])) / Number(high[1])) * 100).toFixed(1)}%`,
+    ]);
+  }
+  console.log(chalk.yellow(`\nDaily volume all-time high (DefiLlama /summary/${kind} daily chart)\n`));
+  console.log(t.toString());
+}
+
 async function printOpenInterestHigh(slug) {
   let d;
   try {
@@ -171,12 +208,23 @@ function tvlOnOrBefore(series, day) {
 
 function printTvlOnDates(series, dates, borrowedSeries) {
   const withBorrowed = Array.isArray(borrowedSeries) && borrowedSeries.length > 0;
-  const rows = dates.map(day => [day, tvlOnOrBefore(series, day), withBorrowed ? tvlOnOrBefore(borrowedSeries, day) : null]);
+  const rows = dates.map(day => [
+    day,
+    tvlOnOrBefore(series, day),
+    withBorrowed ? tvlOnOrBefore(borrowedSeries, day) : null,
+  ]);
   const head = ["Date (UTC)", "TVL", ...(withBorrowed ? ["Borrowed", "TVL + borrowed"] : []), "Point used"];
   const t = createTable(head, { colAligns: ["left", ...head.slice(1).map(() => "right")] });
   for (const [day, p, b] of rows) {
-    const extra = withBorrowed ? [b ? formatCurrency(b.usd) : "n/a", p && b ? formatCurrency(p.usd + b.usd) : "n/a"] : [];
-    t.push([day, p ? formatCurrency(p.usd) : "n/a", ...extra, p ? new Date(p.date * 1000).toISOString().slice(0, 10) : "—"]);
+    const extra = withBorrowed
+      ? [b ? formatCurrency(b.usd) : "n/a", p && b ? formatCurrency(p.usd + b.usd) : "n/a"]
+      : [];
+    t.push([
+      day,
+      p ? formatCurrency(p.usd) : "n/a",
+      ...extra,
+      p ? new Date(p.date * 1000).toISOString().slice(0, 10) : "—",
+    ]);
   }
   const pct = (a, b) => (a > 0 ? `${(((b - a) / a) * 100).toFixed(1)}%` : "n/a");
   const [, first, firstB] = rows[0] || [];
@@ -250,7 +298,10 @@ async function printChainShare(d, label, chain) {
   t.push([`${label} borrowed on ${chain}`, borrowed != null ? formatCurrency(borrowed) : "—"]);
   t.push([`${label} TVL change 7d`, fmtChange(changeOverDays(pts, 7))]);
   t.push([`${label} TVL change 30d`, fmtChange(changeOverDays(pts, 30))]);
-  t.push([`${label} first point on ${chain}`, pts.length ? `${formatCurrency(pts[0].usd)} (${day(pts[0].date)})` : "n/a"]);
+  t.push([
+    `${label} first point on ${chain}`,
+    pts.length ? `${formatCurrency(pts[0].usd)} (${day(pts[0].date)})` : "n/a",
+  ]);
   t.push([`${chain} chain TVL (/v2/chains)`, chainTvl != null ? formatCurrency(chainTvl) : "n/a"]);
   t.push([`${chain} chain TVL change 7d`, fmtChange(changeOverDays(chainPts, 7))]);
   t.push([`${chain} chain TVL change 30d`, fmtChange(changeOverDays(chainPts, 30))]);
@@ -343,7 +394,9 @@ async function main() {
     const tvlDates = tvlDatesFromEnv(process.env.DEFILLAMA_TVL_DATES);
     if (tvlDates.length) {
       const borrowedSeries =
-        process.env.DEFILLAMA_TVL_DATES_BORROWED === "1" ? d.chainTvls && d.chainTvls.borrowed && d.chainTvls.borrowed.tvl : null;
+        process.env.DEFILLAMA_TVL_DATES_BORROWED === "1"
+          ? d.chainTvls && d.chainTvls.borrowed && d.chainTvls.borrowed.tvl
+          : null;
       printTvlOnDates(d.tvl, tvlDates, borrowedSeries);
     }
     const shareChain = decodeLlamaToken(process.env.DEFILLAMA_CHAIN);
@@ -351,6 +404,7 @@ async function main() {
     const volumeKind = (process.env.DEFILLAMA_VOLUME || "").trim();
     if (volumeKind === "dexs" || volumeKind === "aggregators") {
       await printVolume(slug, volumeKind);
+      if (process.env.DEFILLAMA_VOLUME_HIGH === "1") await printVolumeHigh(slug, volumeKind);
     }
     if (process.env.DEFILLAMA_FEES === "1") {
       await printFeesAndRevenue(slug);
@@ -378,4 +432,12 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { yearToDateHigh, monthsFromEnv, tvlDatesFromEnv, tvlOnOrBefore, changeOverDays, seriesPoints };
+module.exports = {
+  yearToDateHigh,
+  allTimeHigh,
+  monthsFromEnv,
+  tvlDatesFromEnv,
+  tvlOnOrBefore,
+  changeOverDays,
+  seriesPoints,
+};

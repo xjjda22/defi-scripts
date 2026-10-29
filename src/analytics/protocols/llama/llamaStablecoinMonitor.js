@@ -6,6 +6,8 @@
  *   LLAMA_STABLECOIN_ID       (required) DefiLlama stablecoin id (e.g. 373 for USDsui)
  *   LLAMA_STABLECOIN_SMOKE=1  (optional) print a one-line OK and exit non-zero on failure (simulate:*:smoke)
  *   LLAMA_STABLECOIN_MIN_USD  (optional, smoke only) fail if circulating supply is below this value
+ *   LLAMA_STABLECOIN_SHARE=1  (optional) add a share-of-supply column to the by-chain table, plus whether the
+ *                             latest daily point is the all-time high. For "62% is issued on Ethereum" claims.
  *
  * Prints current circulating supply by chain, the 7d / 30d change and the all-time high (date).
  * If the series has a gap of more than 3 days at the 7d/30d target, the first point after it is used (or "—"),
@@ -113,10 +115,16 @@ async function main() {
     t.push([`Change since first point (${day(stats.sinceFirst.from)})`, fmtChange(stats.sinceFirst)]);
   }
   t.push(["All-time high (daily series)", stats ? `${fmt(stats.high.v)} (${day(stats.high.date)})` : "—"]);
+  if (process.env.LLAMA_STABLECOIN_SHARE === "1" && stats) {
+    t.push(["Latest daily point is the all-time high", stats.high.date === stats.last.date ? "yes" : "no"]);
+  }
   console.log(t.toString());
   if (chains.length) {
-    const ct = createTable(["Chain", "Circulating"], { colAligns: ["left", "right"] });
-    for (const [c, v] of chains) ct.push([c, fmt(v)]);
+    const share = process.env.LLAMA_STABLECOIN_SHARE === "1" && current > 0;
+    const ct = share
+      ? createTable(["Chain", "Circulating", "Share"], { colAligns: ["left", "right", "right"] })
+      : createTable(["Chain", "Circulating"], { colAligns: ["left", "right"] });
+    for (const [c, v] of chains) ct.push(share ? [c, fmt(v), `${((v / current) * 100).toFixed(1)}%`] : [c, fmt(v)]);
     console.log(chalk.yellow("\nBy chain\n"));
     console.log(ct.toString());
   }

@@ -1677,10 +1677,11 @@ const PROTOCOLS = [
     name: "Pons",
     category: "other",
     url: "https://pons.fun",
-    about: "Launchpad (DefiLlama parent `pons`: Pons V1 + V2, no TVL). Fees/revenue with monthly totals.",
+    about: "Launchpad (DefiLlama parent `pons`: Pons V1 + V2, no TVL). Fees/revenue with monthly totals, and DEX volume with its all-time daily high.",
     data: "DefiLlama",
     notes: [
       "\"$PONS … daily revenue crashing from $2M to just $36K (98% drop) … Only 1.1K launches today vs 36K at peak\" ([X @jussy_world](https://x.com/jussy_world/status/2112438814589571464), 2026-10-20). `analytics:pons:revenue` prints DefiLlama fees/revenue (24h revenue $67.95K, September revenue $23.40M vs October-to-date $1.93M on 2026-10-21). Launch counts are not on DefiLlama.",
+      "\"Pons trading volume is now down 96% from its all-time high\" ([X @stacy_muur](https://x.com/stacy_muur/status/2115443765754359885), 2026-10-28, Inner Circle CT). `analytics:pons:volume` on 2026-10-30 (DefiLlama `/summary/dexs/pons`): all-time daily high $173.07M on 2026-09-06, latest daily $7.12M on 2026-10-29, -95.9% — matches; 30d volume $309.23M.",
     ],
   },
   {
@@ -1772,6 +1773,89 @@ const PROTOCOLS = [
     about:
       "The ether.fi-managed Aave V4 market on OP Mainnet behind ether.fi Cash borrowing. Borrowing is limited to ether.fi Safes; the fork test supplies USDC to the Spoke and withdraws it.",
     data: "On-chain RPC",
+  },
+  {
+    id: "fence",
+    name: "Fence Finance",
+    category: "lending",
+    url: "https://defillama.com/hacks",
+    about:
+      "Credit tranche pools on Avalanche (linked by Blockaid to Valinor Digital and Fence). Exploit read from DefiLlama `/hacks` (name `Fence Finance`).",
+    data: "DefiLlama /hacks",
+    notes: [
+      "About $1M USDC drained from an Avalanche TranchePool on 2026-10-27/28 (flash loan used to inflate shares before redeeming). \"About $1 million in USDC is gone from an Avalanche vault Blockaid links to Valinor Digital and Fence\" ([X @laurashin](https://x.com/laurashin/status/2115448353760973037), 2026-10-28, Inner Circle CT); also [SlowMist Hacked](https://hacked.slowmist.io/?page=1) and [Blockchain Breaches](https://www.blockchainbreaches.com/en/breaches/fence-finance-2026). `analytics:fence:exploit` on 2026-10-30: DefiLlama `/hacks` 2026-10-27, $1.01M, Avalanche, Token & Share Accounting / Incorrect Share Accounting — matches. The drained pool `0xE25CB545Bdd47a8Ec2d08001cb5661B00D47621a` (EIP-55, has code on Avalanche C-Chain) is not in `src/catalog/contracts.js`: the monitor does not read it and Avalanche is not a configured chain.",
+    ],
+  },
+  {
+    id: "zklink",
+    name: "zkLink Nova",
+    category: "bridge-chain",
+    url: "https://zk.link",
+    about:
+      "zkLink Nova aggregated-L3 bridge/escrow on Ethereum. Exploit read from DefiLlama `/hacks` (name `zkLink Nova`).",
+    data: "DefiLlama /hacks",
+    notes: [
+      "Ethereum bridge/escrow drained on 2026-10-28 (~22:21Z) with a forged batch root, about $743K–$786K. Sources: [pwn.watch](https://pwn.watch/i/zklink-nova-bridge-forged-batch-root-exploit-oct-2026), [Parapet Labs post-mortem](https://parapetlabs.net/blog/zklink-nova-exploit-post-mortem/), [SlowMist Hacked](https://hacked.slowmist.io/?page=1) (no X source). `analytics:zklink:exploit` on 2026-10-30: DefiLlama `/hacks` 2026-10-28, $783.10K, Ethereum, Bridge & Cross-Chain / Cross-Chain Message Spoofing — matches.",
+    ],
+  },
+  {
+    id: "strata",
+    name: "Strata",
+    category: "vaults",
+    url: "https://strata.markets",
+    about:
+      "Tranched yield markets: senior (SR*) and junior (JR*) slices of yield-bearing assets. `analytics:strata:srnopal` reads the DefiLlama yields pool for srnOPAL (senior tranche of BlackOpal's nOPAL on Plume) and ranks every Strata SR* pool by current APY.",
+    data: "DefiLlama yields",
+    notes: [
+      "\"Senior spotlight: srnOPAL — 8.72% projected APY, the highest senior yield on Strata this week\" ([X @strata_markets](https://x.com/strata_markets/status/2115806832849788997), 2026-10-29), read as the quote in [X @plumenetwork](https://x.com/plumenetwork/status/2115822898942464080) (2026-10-29, Privacy dashboard update). `analytics:strata:srnopal` on 2026-10-30 (pool `37925366-b5d4-579d-88d5-7ae9aed9056d`): APY 8.40% (8.61% on 2026-10-28), 30-day mean 8.70%, TVL $108.87K; ranked first of 7 Strata SR* pools (next SRUSDAT 8.11%). Highest senior yield matches; DefiLlama's trailing APY is close to, not equal to, the 8.72% projection.",
+    ],
+  },
+  {
+    id: "rlusd",
+    name: "Ripple USD (RLUSD)",
+    category: "stable-rwa",
+    url: "https://ripple.com/solutions/stablecoin/",
+    about:
+      "Ripple's USD stablecoin on Ethereum and the XRP Ledger (DefiLlama stablecoin id 250). Supply by chain with each chain's share and an all-time-high check.",
+    data: "DefiLlama stablecoins",
+    notes: [
+      "\"Ripple's RLUSD outstanding supply hits an all-time high of $2.6B • Ethereum: $1.6B • XRP Ledger: $986.8M. Roughly 62% of RLUSD is issued on Ethereum\" ([X @tokenterminal](https://x.com/tokenterminal/status/2115508329795760511), 2026-10-28, ON CHAIN). `analytics:rlusd:supply` on 2026-10-30: $2.61B circulating, Ethereum $1.62B (61.9%), XRPL $993.72M (38.1%), all-time high $2.60B on 2026-10-29 (the latest daily point), +10.52% over 7 days — matches.",
+    ],
+  },
+  {
+    id: "tradexyz",
+    name: "trade[XYZ]",
+    category: "perps",
+    url: "https://app.trade.xyz/",
+    about:
+      "HIP-3 RWA/equity perps on Hyperliquid (DefiLlama `tradexyz`, no TVL). Open interest and its YTD high. Volume is on the paywalled `/summary/derivatives`, so it is not printed.",
+    notes: [
+      "\"tradexyz alone carries $3.95B of open interest on Hyperliquid\" ([X @zerokn0wledge_](https://x.com/zerokn0wledge_/status/2115550196616831191), 2026-10-28, Airdrop?). `analytics:tradexyz:oi` on 2026-10-30: open interest $4.00B (daily chart $3.95B on 2026-10-26, $4.02B on 2026-10-28), YTD high $4.54B on 2026-08-17 — matches.",
+    ],
+  },
+  {
+    id: "sui",
+    name: "Sui",
+    category: "bridge-chain",
+    url: "https://sui.io",
+    about:
+      "Sui L1 chain gas fees and revenue (DefiLlama `/summary/fees/sui`), with the last 7 daily points and the 30d total annualized.",
+    data: "DefiLlama /summary/fees",
+    notes: [
+      "\"Over 30 days the fees on the Sui chain added up to about 180,000 dollars, roughly 2.2 million a year\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2115406009086906699), 2026-10-28, Airdrop?). `analytics:sui:fees` on 2026-10-30: 30d fees $164.27K (prior 30d $168.07K), annualized $2.00M, about $2.4K a day — about 9% below the claim (mismatch; same order of magnitude).",
+    ],
+  },
+  {
+    id: "avalanche",
+    name: "Avalanche C-Chain",
+    category: "bridge-chain",
+    url: "https://www.avax.network",
+    about:
+      "Avalanche C-Chain gas fees (DefiLlama `/summary/fees/avalanche`), with the last 14 daily points for \"fees per day\" claims.",
+    data: "DefiLlama /summary/fees",
+    notes: [
+      "\"Fees are back to $4,200 per day\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2115486769030570206), 2026-10-28, Airdrop?). `analytics:avalanche:fees` on 2026-10-30: daily fees $3.61K (10-25), $5.18K (10-26), $4.51K (10-27), $5.97K (10-28), $8.16K (10-29); 7d $36.53K (about $5.2K a day), 30d $345.62K. No day around 10-28 reads $4.2K (mismatch); the 10-25 to 10-27 levels are in that range.",
+    ],
   },
 ];
 
@@ -1873,6 +1957,18 @@ const SCRIPT_DESCRIPTIONS = {
   "simulate:sentora:usd-vault:smoke": "Fails unless the Sentora USD vault yields pool TVL is above $10M",
   "analytics:usdsui:supply": "USDsui circulating supply by chain, 7d/30d change and all-time high (DefiLlama stablecoins id 373)",
   "simulate:usdsui:supply:smoke": "Fails unless USDsui circulating supply is above $10M",
+  "analytics:fence:exploit": "Fence Finance exploit from DefiLlama `/hacks` (name match, since 2026-10-27)",
+  "simulate:fence:exploit:smoke": "Fails unless DefiLlama `/hacks` lists the Fence Finance incident since 2026-10-27 with a positive amount",
+  "analytics:zklink:exploit": "zkLink Nova exploit from DefiLlama `/hacks` (name match, since 2026-10-28)",
+  "simulate:zklink:exploit:smoke": "Fails unless DefiLlama `/hacks` lists the zkLink Nova incident since 2026-10-28 with a positive amount",
+  "analytics:strata:srnopal": "Strata srnOPAL (Ethereum) TVL, APY, 30-day mean APY and TVL change (DefiLlama yields pool), plus every Strata SR* pool ranked by current APY (DefiLlama `/pools`)",
+  "simulate:strata:srnopal:smoke": "Fails unless the Strata srnOPAL yields pool TVL is above $10K",
+  "analytics:rlusd:supply": "RLUSD circulating supply by chain with each chain's share, 7d/30d change and all-time high (DefiLlama stablecoins id 250)",
+  "simulate:rlusd:supply:smoke": "Fails unless RLUSD circulating supply is above $1B",
+  "analytics:sui:fees": "Sui chain fees 24h/7d/30d, prior 30d, 30d revenue, the last 7 daily points and 30d fees annualized (DefiLlama `/summary/fees/sui`)",
+  "simulate:sui:fees:smoke": "Fails unless Sui has positive 30d chain fees",
+  "analytics:avalanche:fees": "Avalanche chain fees 24h/7d/30d, prior 30d, 30d revenue and the last 14 daily points (DefiLlama `/summary/fees/avalanche`)",
+  "simulate:avalanche:fees:smoke": "Fails unless Avalanche has positive 30d chain fees",
   "crosschain:uniswap:tvl": "TVL across Uniswap V1–V4 on every configured chain",
   "crosschain:uniswap:volume": "24h volume across Uniswap V1–V4 on every configured chain",
   "crosschain:uniswap:liquidity": "Live liquidity flows from V2/V3/V4 mint and burn events",
