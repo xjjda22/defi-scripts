@@ -3,6 +3,73 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-10-30]
+
+Mon/Wed/Fri pass: claims from 2026-10-27 20:00Z to ~2026-10-29 21:30Z, the playground batch and the health check. Squash-merged on 2026-10-30 as [#41](https://github.com/xjjda22/defi-scripts/pull/41) (claims, `f6abf70`), [#42](https://github.com/xjjda22/defi-scripts/pull/42) (playground, `09a9c85`) and [#43](https://github.com/xjjda22/defi-scripts/pull/43) (health, `78a4d37`). This entry also records the showcase CoinGecko/Nansen work pushed straight to `main` on 2026-10-30 (`e3bd201` to `97d5aab`), which had no changelog entry.
+
+### Fixed
+
+- Health after the 2026-10-29 Binance hot-wallet drain (~$3.3B): Aave V3 Core froze USDC/USDT/WETH (block 26301183), Compound cUSDCv3 paused supply and transfer (block 26301162) and Dolomite's `getMarketPrice` reverts "Price cannot be zero". `aaveFlow.js` (Aave/Spark), `compoundV3.js` and `dolomiteFlow.js` now pre-check reserve frozen/paused, pause flags and market price, and FAIL with `reserveBlocked=…`, `paused=supply` or `marketPrice=unavailable` without sending a tx. They stay FAIL until the protocols unpause.
+- `fork:etherfi-cash:supply` (flake on slow Optimism RPCs, `sharesLeft=1`): withdraws `MaxUint256` and accepts a return within 1 bp + 2 wei of `supplied`, hub drop equal to the amount returned and zero shares left. PASS 3/3 on publicnode, 1/1 on `mainnet.optimism.io`.
+- `runtime.js` `dealErc20` falls back to `anvil_dealERC20` when a whale is short (Binance 14 is down to 1 ETH / 52K USDC / 0 WETH, Binance 8 to 142 USDC).
+
+### Changed
+
+- Showcase ranking (`e3bd201`–`97d5aab`): CoinGecko attention (24h volume ÷ market cap, weight 0.08, on by default) and Nansen smart money (30d netflow ÷ market cap, weight 0.07, opt-in, local-only until redistribution approval) join the DefiLlama inputs, now size 0.30, growth 0.21, tvlAdded 0.17, feesMomentum 0.10, volumeMomentum 0.07. New `src/analytics/ranking/sources/{coingecko,nansen,index,tokenMap}.js`, `token-map.json` (73 rows), `universe.js` (candidate pool capped at 267 rows, from 741), `weights.js`, `docs/05-external-sources.md`, `docs/06-category-coverage.md`, `scripts/showcaseSignalsCheck.js` and npm scripts `showcase:check`, `showcase:signals:check`. `.env` is loaded for showcase builds; Pages and showcase-refresh CI pass `COINGECKO_API_KEY` and refuse a build without CoinGecko data. Demo/Pro tier is set with `COINGECKO_API_TIER`. Responsive showcase UI.
+- Claims shared code (opt-in, byte-identical regression replays): `dexProtocolMonitor.js` `DEFILLAMA_VOLUME_HIGH`, `chainFeesBoard.js` `LLAMA_FEES_DAYS`, `llamaStablecoinMonitor.js` `LLAMA_STABLECOIN_SHARE`, `llamaYieldPoolMonitor.js` `LLAMA_YIELD_PROJECT` / `LLAMA_YIELD_SYMBOL_PREFIX`.
+- Playground: new `src/simulation/fork/entryRequestFlows.js` (Falcon, mETH, Aera); KPK and Galaxy reuse `morphoV2Deposit`. New USDf whale (Curve USDC/USDf pool `0x72310DAAed61321b02B08A547150c07522c6a976`). The veda recipe also keys ether.fi Liquid and Nonce Capital; the world-chain recipe keys World Chain Bridge. Showcase `testing` stamps only: `forkInTop200` 55 → 63, `apiOnlyInTop200` 145 → 137.
+
+### Added
+
+**Claims** (#41: 8 monitors, 16 scripts)
+- Exploits (`/hacks`): `analytics:fence:exploit` ($1.01M, Avalanche), `analytics:zklink:exploit` ($783.10K).
+- `analytics:strata:srnopal`, `analytics:rlusd:supply`, `analytics:tradexyz:oi`, `analytics:sui:fees`, `analytics:avalanche:fees`, `analytics:pons:volume`.
+
+**Playground** (#42)
+- Fork tests + contracts: Falcon (`fork:falcon:stake`), mETH (`fork:meth:stake`), Aera on Base (`fork:aera:request`), KPK (`fork:kpk:deposit`), Galaxy Curation (`fork:galaxy:deposit`).
+- Linked to existing tests: ether.fi Liquid and Nonce Capital (`fork:veda:deposit`), World Chain Bridge (`fork:world-chain:deposit`).
+- Contracts only: OpenTrade (KYC-gated vaults).
+- Coverage, recounted at 104 forkable top-200 rows on the CoinGecko-era ranking: fork tests **52 → 60**, contracts **62 → 70**.
+
+### Decisions
+
+- Mismatches recorded: Sui 30d fees $164.27K (claim ~$180K); Avalanche daily fees $3.61K–$8.16K, ~$5.2K 7d avg (claim $4,200); Strata srnOPAL 8.40% now (claim 8.72%, still the highest senior pool).
+- Skipped: Polymarket frontend drain (not on `/hacks` yet, re-check), trade[XYZ] cumulative volume (paywalled), $STANDARD revenue, Privacy Pools v2, Optimum, RWA/Maple totals, Predict Fun (before window), Binance wallet drain and Tether freeze (CEX).
+- Nansen stays off in CI and on the published board until Nansen approves redistribution (`NANSEN_PUBLIC=1`).
+- Next playground candidates: #117 Theo, #124 Lagoon, #126 SolvBTC, #128 CIAN.
+
+### Verified (2026-10-30, live)
+
+| Check | Result |
+| --- | --- |
+| 8 claim monitors + 8 smokes (#41) | 16/16 exit 0 |
+| RLUSD | $2.61B, Ethereum $1.62B (61.9%), XRPL $993.72M, ATH 10-29 |
+| tradeXYZ OI | $4.00B (YTD high $4.54B, 08-17) |
+| Pons volume | ATH $173.07M (09-06) → $7.12M (-95.9%) |
+| Playground forks (#42) | Falcon 100 USDf → 87.694846 sUSDf; mETH 1 ETH → 0.907411 mETH, unstake queued; Aera 100 USDC request + refund; Galaxy 100 USDC → 97.847614 gUSDCq; KPK 100 USDC → 96.232201 shares; all round trips clean |
+| `simulate:*:smoke` | 196/196 exit 0 |
+| DefiLlama endpoints | 157/157 return 200 with data |
+| Contract book | 232/232 EIP-55 with code |
+| Fork suite on main `09a9c85` | 87 PASS / 10 FAIL of 97 |
+| Fork suite on #43 | Ethereum 77 PASS / 8 labelled protocol-state FAIL (Aave ×4, Compound ×2, Dolomite, Swell); L2/alt 11 PASS / 1 FAIL (Venus, once) |
+| Gates | lint, `catalog:check`, `showcaseCheck`, `showcaseSignalsCheck`, `node --check`; CI green on #41, #42, #43 |
+
+### Known issues carried forward
+
+- **CI `fork-suite` skips the forks** (no RPC secret).
+- **Busy-list coverage is keyword-only**; Binance/Polymarket posts flooded the busy lists on 10-29, so Airdrop? 10-29 00:00–19:50Z is essentially unscanned.
+- **Aave V3 Core, Compound cUSDCv3 and Dolomite** paused/frozen after the Binance drain; their fork tests FAIL until they unpause.
+- **Swell is paused**; `/hacks` amount still null.
+- **`fork:venus:supply`** FAILed once on BSC (cause unconfirmed; the BSC whale may be a drained Binance wallet).
+- **`fork:rockawayx:deposit`** can FAIL when its Morpho liquidity market is at 100% utilization.
+- **Pendle +43% claim** vs DefiLlama +33.3%.
+- **Playground depth**: 44 of 104 forkable rows have no fork test.
+- **`anvil_deal` Method not found** on Anvil 1.8.5 (`anvil_dealERC20` fallback now used); Anvil not on default `PATH`.
+- **Velodrome on `mainnet.optimism.io`** times out (passes on publicnode).
+- **`308faf0` showcase ranking refresh** unmerged.
+- **Nansen signal** not live (no key, no redistribution approval). `src/utils/prices.js` still calls CoinGecko keyless.
+- Resolved: `fork:etherfi-cash:supply` flake (#43).
+
 ## [2026-10-28]
 
 Mon/Wed/Fri pass: claims from 2026-10-22 21:00Z to 2026-10-27 ~21:00Z (this window also covers the 2026-10-26 claims run, which failed before building), the playground batch and the health check. Squash-merged on 2026-10-28 as [#37](https://github.com/xjjda22/defi-scripts/pull/37) (claims, `7fcf486`), [#38](https://github.com/xjjda22/defi-scripts/pull/38) (playground, `2326851`) and [#39](https://github.com/xjjda22/defi-scripts/pull/39) (health, `1c12e46`). This entry also records the 2026-10-26 playground batch, [#36](https://github.com/xjjda22/defi-scripts/pull/36) (`78c9954`, merged 2026-10-27), which had no changelog entry.
