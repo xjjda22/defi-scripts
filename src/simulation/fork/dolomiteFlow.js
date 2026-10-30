@@ -14,6 +14,7 @@ const ERC = ["function balanceOf(address) view returns (uint256)", "function app
 const MARGIN_ABI = [
   "function getMarketIdByTokenAddress(address token) view returns (uint256)",
   "function getMarketIsClosing(uint256 marketId) view returns (bool)",
+  "function getMarketPrice(uint256 marketId) view returns (uint256)",
   "function getAccountWei((address owner, uint256 number) account, uint256 marketId) view returns ((bool sign, uint256 value))",
 ];
 // https://docs.dolomite.io/developer-documentation/depositing-or-withdrawing
@@ -48,6 +49,14 @@ async function supplyWithdraw(base) {
   const marketId = await margin.getMarketIdByTokenAddress(DOLOMITE.usdc);
   if (await margin.getMarketIsClosing(marketId)) {
     return finish({ ...base, ok: false, error: `Dolomite USDC market ${marketId} is closing` });
+  }
+  // Every deposit reads the market price; a zero oracle price reverts "Storage: Price cannot be zero",
+  // so check it first and FAIL with that label before any tx.
+  try {
+    await margin.getMarketPrice(marketId);
+  } catch (err) {
+    const why = explain(err);
+    return finish({ ...base, ok: false, key: `marketPrice=unavailable`, error: `Dolomite USDC market ${marketId} price read reverts (${why}); no tx sent` });
   }
   const amount = ethers.parseUnits(process.env.FORK_AMOUNT || "100", 6);
   const signer = await impersonateFunded(base.chain, "USDC", DOLOMITE.usdc, amount);
