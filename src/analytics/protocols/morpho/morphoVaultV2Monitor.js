@@ -9,6 +9,10 @@
  *   MORPHO_VAULT_LABEL    (optional) banner title
  *   MORPHO_VAULT_SMOKE=1  (optional) print a one-line OK and exit non-zero on failure (used by simulate:*:smoke)
  *   MORPHO_VAULT_MIN_USD  (optional, smoke only) fail if totalAssetsUsd is below this value
+ *   MORPHO_VAULT_V1=1     (optional, off unless set) read a MetaMorpho (V1) vault via `vaultByAddress` instead of
+ *                         `vaultV2ByAddress` (e.g. Gauntlet USDC Prime on Base). Same output fields.
+ *   MORPHO_VAULT_APY_DAYS=N (optional, 1-30, with MORPHO_VAULT_V1=1) also print the hourly net APY peak and low over
+ *                         the last N days from `historicalState.netApy`, for "APY reached 12.72% before easing" claims
  */
 
 require("dotenv").config();
@@ -33,6 +37,77 @@ const VAULT_QUERY = `
     }
   }
 `;
+
+const VAULT_V1_QUERY = `
+  query VaultV1($address: String!, $chainId: Int!, $opts: TimeseriesOptions, $withHistory: Boolean!) {
+    vaultByAddress(address: $address, chainId: $chainId) {
+      address
+      name
+      symbol
+      asset { symbol }
+      liquidity { usd }
+      state { totalAssetsUsd netApy curators { name } }
+      historicalState @include(if: $withHistory) { netApy(options: $opts) { x y } }
+    }
+  }
+`;
+
+/**
+ * MetaMorpho (V1) vault, mapped to the V2 field names used by main().
+ * @param {string} address
+ * @param {number} chainId
+ * @param {number} [apyDays] - 0 to skip the hourly netApy history
+ */
+async function fetchVaultV1(address, chainId, apyDays = 0) {
+  const now = Math.floor(Date.now() / 1000);
+  const variables = {
+    address,
+    chainId,
+    withHistory: apyDays > 0,
+    opts: { startTimestamp: now - apyDays * 86400, endTimestamp: now, interval: "HOUR" },
+  };
+  const { data } = await axios.post(
+    MORPHO_GRAPHQL,
+    { query: VAULT_V1_QUERY, variables },
+    {
+      timeout: 25_000,
+      headers: { "Content-Type": "application/json", "User-Agent": "defi-scripts/morpho-vault" },
+    }
+  );
+  if (data.errors?.length) {
+    throw new Error(data.errors.map(e => e.message).join("; "));
+  }
+  const v = data.data?.vaultByAddress;
+  if (!v) throw new Error(`Vault ${address} not found on chain ${chainId}`);
+  return {
+    address: v.address,
+    name: v.name,
+    symbol: v.symbol,
+    asset: v.asset,
+    totalAssetsUsd: v.state?.totalAssetsUsd,
+    liquidityUsd: v.liquidity?.usd,
+    netApy: v.state?.netApy,
+    curators: { items: v.state?.curators || [] },
+    apyHistory: v.historicalState?.netApy || [],
+  };
+}
+
+function printApyHistory(points, days) {
+  const pts = (Array.isArray(points) ? points : []).filter(p => p && Number.isFinite(p.x) && numOrNull(p.y) != null);
+  if (!pts.length) {
+    console.log(chalk.gray("  no hourly net APY history"));
+    return;
+  }
+  const hi = pts.reduce((a, p) => (p.y > a.y ? p : a));
+  const lo = pts.reduce((a, p) => (p.y < a.y ? p : a));
+  const at = p => new Date(p.x * 1000).toISOString().slice(0, 16).replace("T", " ");
+  const t = createTable(["Field", "Value"], { colAligns: ["left", "right"] });
+  t.push([`Hourly net APY peak (last ${days}d)`, `${(hi.y * 100).toFixed(2)}% (${at(hi)} UTC)`]);
+  t.push([`Hourly net APY low (last ${days}d)`, `${(lo.y * 100).toFixed(2)}% (${at(lo)} UTC)`]);
+  t.push(["Hourly points", String(pts.length)]);
+  console.log(chalk.yellow("\nNet APY history (Morpho historicalState, hourly)\n"));
+  console.log(t.toString());
+}
 
 function numOrNull(v) {
   const n = typeof v === "string" ? Number(v) : v;
@@ -63,7 +138,10 @@ async function main() {
   if (!/^0x[a-fA-F0-9]{40}$/.test(address) || !Number.isInteger(chainId)) {
     throw new Error("Set MORPHO_VAULT_ADDRESS (0x…) and MORPHO_VAULT_CHAIN_ID (e.g. 5042)");
   }
-  const v = await fetchVaultV2(address, chainId);
+  const v1 = process.env.MORPHO_VAULT_V1 === "1";
+  const apyDaysRaw = parseInt(process.env.MORPHO_VAULT_APY_DAYS || "", 10);
+  const apyDays = v1 && Number.isInteger(apyDaysRaw) && apyDaysRaw >= 1 && apyDaysRaw <= 30 ? apyDaysRaw : 0;
+  const v = v1 ? await fetchVaultV1(address, chainId, apyDays) : await fetchVaultV2(address, chainId);
   const label = (process.env.MORPHO_VAULT_LABEL || v.name || address).trim();
   const tvl = numOrNull(v.totalAssetsUsd);
   const apy = numOrNull(v.netApy);
@@ -77,7 +155,7 @@ async function main() {
     return;
   }
 
-  console.log(chalk.cyan.bold(`\n${label} (Morpho Vault V2)\n`));
+  console.log(chalk.cyan.bold(`\n${label} (${v1 ? "MetaMorpho vault (V1)" : "Morpho Vault V2"})\n`));
   const t = createTable(["Field", "Value"], { colAligns: ["left", "right"] });
   t.push(["Name", `${v.name} (${v.symbol})`]);
   t.push(["Chain id", String(chainId)]);
@@ -88,6 +166,7 @@ async function main() {
   t.push(["Liquidity (USD)", numOrNull(v.liquidityUsd) != null ? formatCurrency(numOrNull(v.liquidityUsd)) : "—"]);
   t.push(["Net APY", apy != null ? `${(apy * 100).toFixed(2)}%` : "—"]);
   console.log(t.toString());
+  if (apyDays) printApyHistory(v.apyHistory, apyDays);
 }
 
 if (require.main === module) {
@@ -97,4 +176,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { fetchVaultV2 };
+module.exports = { fetchVaultV2, fetchVaultV1 };

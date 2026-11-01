@@ -10,6 +10,9 @@
  *   LLAMA_FEES_DAYS=N  optional (1-60, off unless set): also print each slug's last N daily fee points, their
  *                      mean and the 30d total annualized (x 365/30), for "fees are $X per day" /
  *                      "about $Y a year" claims
+ *   LLAMA_FEES_1Y=1    optional (off unless set): also print each slug's fees and revenue over the last 365 daily
+ *                      points (trailing 12 months) and the first point used, for "collected $160M in fees over
+ *                      the last 12 months" / "earned $283K over the past year" claims
  *
  * Prints 24h / 7d / 30d fees, the previous 30 days and the 30d change, 30d revenue and
  * the all-time totals. Chain "revenue" on DefiLlama is the burned / protocol-kept part of gas.
@@ -61,6 +64,35 @@ function printDaily(r, days) {
   console.log(t.toString());
 }
 
+/**
+ * Sum of the last `days` daily points.
+ * @param {Array<[number, number]>|null} chart
+ * @param {number} days
+ * @returns {{ total: number, points: number, from: number }|null}
+ */
+function trailingSum(chart, days) {
+  const pts = (Array.isArray(chart) ? chart : []).filter(
+    p => Array.isArray(p) && Number.isFinite(p[0]) && Number.isFinite(Number(p[1]))
+  );
+  if (!pts.length) return null;
+  const last = pts.slice(-days);
+  return { total: last.reduce((a, p) => a + Number(p[1]), 0), points: last.length, from: last[0][0] };
+}
+
+function printTrailingYear(rows) {
+  const day = s => new Date(s * 1000).toISOString().slice(0, 10);
+  const t = createTable(["Slug", "Fees 365d", "Revenue 365d", "Daily points", "From (UTC)"], {
+    colAligns: ["left", "right", "right", "right", "left"],
+  });
+  for (const r of rows) {
+    const f = trailingSum(r.chart, 365);
+    const v = trailingSum(r.revChart, 365);
+    t.push([r.slug, f ? money(f.total) : "—", v ? money(v.total) : "—", f ? f.points : "—", f ? day(f.from) : "—"]);
+  }
+  console.log(chalk.yellow("\nTrailing 12 months (last 365 daily points, /summary/fees)\n"));
+  console.log(t.toString());
+}
+
 async function loadSlug(slug) {
   const [fees, revenue] = await Promise.all([
     fetchFeesChart(slug).catch(e => ({ error: e })),
@@ -81,6 +113,7 @@ async function loadSlug(slug) {
     feesAllTime: fees && !fees.error ? num(fees.totalAllTime) : null,
     revAllTime: revenue && !revenue.error ? num(revenue.totalAllTime) : null,
     chart: fees && !fees.error ? fees.totalDataChart : null,
+    revChart: revenue && !revenue.error ? revenue.totalDataChart : null,
   };
 }
 
@@ -128,6 +161,7 @@ async function main() {
   console.log(chalk.gray("\n30d windows are the last 30 daily points; prior 30d is the 30 points before that.\n"));
   const days = daysFromEnv();
   if (days) for (const r of rows) printDaily(r, days);
+  if (process.env.LLAMA_FEES_1Y === "1") printTrailingYear(rows);
 }
 
 if (require.main === module) {
@@ -137,4 +171,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { slugsFromEnv, daysFromEnv };
+module.exports = { slugsFromEnv, daysFromEnv, trailingSum };
