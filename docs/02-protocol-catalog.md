@@ -503,12 +503,12 @@ BNB Chain ve(3,3) DEX.
 
 [thruster.finance](https://thruster.finance) · Data: DefiLlama · Analytics · Smoke
 
-Blast DEX.
+Blast DEX. Blast is shutting down, and DefiLlama reports Thruster (and all of Blast) at $0 TVL from 2026-10-31, so the smoke allows $0 TVL and fails only if the `thruster` row disappears.
 
 | Command | Kind | What it does |
 |---|---|---|
 | `npm run analytics:thruster:dex` | Analytics | DefiLlama TVL + TVL by chain (`thruster`) |
-| `npm run simulate:thruster:smoke` | Smoke | Fails unless DefiLlama `thruster` returns positive TVL |
+| `npm run simulate:thruster:smoke` | Smoke | Fails unless DefiLlama `thruster` returns a listing; $0 TVL allowed |
 
 <a id="p-ammalgam"></a>
 
