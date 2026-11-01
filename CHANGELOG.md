@@ -3,6 +3,76 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-11-02]
+
+Mon/Wed/Fri pass: claims from 2026-10-29 21:00Z to ~2026-11-01 21:30Z, the playground batch and the health check. Squash-merged on 2026-11-02 as [#45](https://github.com/xjjda22/defi-scripts/pull/45) (health, `b95b59c`), [#46](https://github.com/xjjda22/defi-scripts/pull/46) (playground, `1caf723`) and [#48](https://github.com/xjjda22/defi-scripts/pull/48) (claims, `5ca6a72`). The claims part stopped before pushing; part 4 finished its regression and gates, pushed it and rebuilt it on `main` after #45/#46 (the first push, [#47](https://github.com/xjjda22/defi-scripts/pull/47), was closed as superseded).
+
+### Fixed
+
+- `simulate:thruster:smoke`: Blast shut down and DefiLlama Thruster TVL went $3.9M (10-29) → $1.8M (10-30) → $0 (10-31). `SMOKE_MIN_TVL_USD=0` (same as `simulate:blast:smoke`), catalog note, docs regenerated.
+- `fork:venus:supply` (BSC): the Binance hot-wallet whale `0x8894…` holds 3 USDC and `anvil_dealERC20` could not fund BSC USDC. Binance 8 `0xF977…` (~362.8M BSC USDC) added as an extra BSC USDC whale. PASS 2/2.
+- `fork:dolomite:supply`: every Dolomite Ethereum market (WETH, USD1, USDC, LINK) now reports `getMarketIsClosing=true` (oracle prices are back). The FAIL is labelled `marketClosing=true`; no tx is sent.
+
+### Changed
+
+- Claims shared code (opt-in, byte-identical regression on 48 existing scripts): `dexProtocolMonitor.js` daily fees/revenue points with window max and holders revenue; `chainFeesBoard.js` trailing-1y column; `arcChainMonitor.js` chain DEX exclude list and daily point; `llamaYieldPoolMonitor.js` additions; `morphoVaultV2Monitor.js` MetaMorpho V1 vault path.
+- Playground: `runtime.js` `dealErc20` gets a last-resort `probeBalanceSlot` (`anvil_setStorageAt` on Solidity/Vyper mapping slots 0–200 and the OZ v5 ERC-7201 slot, every miss restored), used only when `anvil_deal` and `anvil_dealERC20` both fail (LUSD, Curve 3Crv, thUSD, rsETH). Theo snapshots and reverts its 5-day warp so oracle-gated tests later on the same fork (CIAN) are unaffected. Showcase `testing` stamps only: `forkInTop200` 63 → 70, `apiOnlyInTop200` 137 → 130.
+
+### Added
+
+**Claims** (#48: 25 monitors, 50 scripts)
+- Exploits (`/hacks`): `analytics:polymarket:exploit` ($2.70M, Polygon, 10-29), `analytics:troves:exploit` ($666.93K, Starknet, 10-31), `analytics:premia:exploit` ($437.00K, Arbitrum, 11-01).
+- Protocol fees/revenue/TVL: `analytics:aave:v3-tvl`, `analytics:pumpfun:fees`, `analytics:titan:revenue`, `analytics:hyperliquid:revenue`, `analytics:papertrade:stakers`, `analytics:fx:revenue`, `analytics:uniswap:daily-revenue`, `analytics:beaverbuild:revenue`, `analytics:faroo:tvl`.
+- Chains: `analytics:base:chain`, `analytics:base:l2-fees`, `analytics:hyperevm:chain`, `analytics:hedera:fees`, `analytics:bnb:fees`, `analytics:shibarium:fees`, `analytics:beam:fees`.
+- Vaults, yields, OI: `analytics:gauntlet:usdc-prime` (Morpho V1, Base), `analytics:hyperlend:eth-apy`, `analytics:pareto:falconx`, `analytics:jupiter:eurc-apy`, `analytics:hyperliquid:oi`, `analytics:ondo:perps-oi`.
+- Each with a `simulate:<id>:<kind>:smoke`. New registry ids include troves, premia, titan, hyperevm, hedera, shibarium, beam, pareto, faroo.
+
+**Playground** (#46: rows #117, #124, #126, #128, #131, #132, #133, #137, #140)
+- Fork tests + contracts (new `src/simulation/fork/poolEntryFlows.js`): Theo (`fork:theo:stake`), SolvBTC (`fork:solvbtc:subscribe`), CIAN Yield Layer (`fork:cian:deposit`), Zama (`fork:zama:wrap`), Convex Finance (`fork:convex:deposit`, `CONVEX_PID` dial), USDT0 (`fork:usdt0:send`), Liquity (`fork:liquity:deposit`).
+- Contracts only: SSV Network (validator key shares + 32 ETH beacon deposit), Lagoon (curator-settled ERC-7540 vaults, no reference vault).
+- Coverage at 104 forkable top-200 rows: fork tests **60 → 67**, contracts **70 → 79**.
+
+### Decisions
+
+- Mismatches recorded: Aave V3 weekly TVL -11.2% to $14.97B on DefiLlama daily close (claim -13.3% / $14.64B, intraday cutoff); HyperEVM DEX volume 10-29 ~$471.6M after removing HyperCore spot (claim $317M, definition-dependent); Beam fees show no 98% drop on DefiLlama; HyperLend UETH supply APY max 5.20% daily (claim 50%, intraday not visible); Pareto FalconX vault $131.94M (claim $180M+; all Pareto credit pools ~$179M); Base L2 fees Robinhood -13% and Celo -44% vs growthepie.
+- Covered already, no new script: Hyperliquid September revenue (Grayscale $105M vs DefiLlama $74.19M), Swell rates restored, Aave unfreeze, Robinhood Chain ~$1B TVL, RLUSD ~$200M frozen, pump.fun-only fees.
+- Not built: total stablecoin supply $298.5B (qualified and matched, $298.36B on 11-01, but needs a new aggregate mode in `llamaStablecoinMonitor.js`); carried to the next claims run.
+- Skipped: b14g (no `/hacks` amount), Name.com DNS hijack (no per-protocol amount), Hifi/Zilliqa/Humanode (before window, no amount), perps volume (paywalled), Jumper volume (DefiLlama series stops 09-30), Figure Democratized Prime, staked swanUSD, Binance-attacker flows (CEX).
+- Next playground candidates: #141 Polymarket, #144 Solv Protocol, #146 Bedrock uniBTC, #149 Aster.
+
+### Verified (2026-11-02, live)
+
+| Check | Result |
+| --- | --- |
+| 25 claim monitors + 25 smokes (#48) | 50/50 exit 0 |
+| Shared-code regression | 48/48 existing scripts byte-identical |
+| Polymarket / Troves / Premia `/hacks` | $2.70M / $666.93K / $437.00K |
+| Titan Builder revenue 10-29 + 10-30 | $22.93M (claim $22.83M) |
+| Pump (all products) daily fees | $4.28M (10-30), $3.92M (10-31) |
+| Gauntlet USDC Prime | $403.12M, hourly net APY peak 13.16% (10-30) |
+| BNB chain fees 365d / mcap | $162.61M / $93.09B (~572x) |
+| Playground forks (#46) | Theo 100 thUSD → 98.070775 sthUSD, redeem 99.999999; SolvBTC 0.01 WBTC → 0.009975; CIAN 1 rsETH → 1.039149 shares; Zama wrap 100 USDC; Convex 100 LP in/out; USDT0 100 USDT sent to Arbitrum; Liquity 1000 LUSD in/out; all PASS on two fresh forks |
+| `simulate:*:smoke` | 195/196 exit 0 on main (Thruster, fixed in #45) |
+| DefiLlama endpoints | 159/159 return 200 with data |
+| Contract book | 232/232 EIP-55 with code |
+| Fork suite on main `1c3c120` | 94 PASS / 3 FAIL of 97 (Venus fixed in #45; Dolomite and Swell protocol state) |
+| Gates | lint, `catalog:check`, `showcaseCheck`, `showcaseSignalsCheck`; CI green on #45, #46, #48 |
+
+### Known issues carried forward
+
+- **CI `fork-suite` skips the forks** (no RPC secret).
+- **Busy-list coverage is keyword-only and incomplete**: X search errored after ~20 queries; Inner Circle CT 10-30 15:00Z–10-31 19:00Z and Airdrop? 10-31 18:00Z–11-01 00:00Z were not scanned, and replies are not covered on the busy lists.
+- **Dolomite**: all Ethereum markets closing; `fork:dolomite:supply` FAILs until they reopen.
+- **Swell** `coreMethodsPaused=true` on the fork despite Swell's 11-01 post that deposits reopened; `/hacks` amount still null.
+- **Blast shut down** (TVL $0, public RPC dead); `stonkfun` newly flagged deprecated on DefiLlama (data still served).
+- **Pendle +43% claim** vs DefiLlama +33.3%.
+- **Playground depth**: 37 of 104 forkable rows have no fork test.
+- **`anvil_deal` Method not found** on Anvil 1.8.5 and `anvil_dealERC20` misses some tokens (now backed by the slot probe); Anvil not on default `PATH`.
+- **Velodrome on `mainnet.optimism.io`** not retested (passes on publicnode).
+- **`308faf0` showcase ranking refresh** unmerged.
+- **Nansen signal** not live; `src/utils/prices.js` still calls CoinGecko keyless.
+- Resolved: Aave V3 Core and Compound cUSDCv3 freezes (all 6 tests PASS), `fork:venus:supply` (#45), `fork:etherfi-cash:supply` flake (still passing), `fork:rockawayx:deposit` utilization (PASS).
+
 ## [2026-10-30]
 
 Mon/Wed/Fri pass: claims from 2026-10-27 20:00Z to ~2026-10-29 21:30Z, the playground batch and the health check. Squash-merged on 2026-10-30 as [#41](https://github.com/xjjda22/defi-scripts/pull/41) (claims, `f6abf70`), [#42](https://github.com/xjjda22/defi-scripts/pull/42) (playground, `09a9c85`) and [#43](https://github.com/xjjda22/defi-scripts/pull/43) (health, `78a4d37`). This entry also records the showcase CoinGecko/Nansen work pushed straight to `main` on 2026-10-30 (`e3bd201` to `97d5aab`), which had no changelog entry.
