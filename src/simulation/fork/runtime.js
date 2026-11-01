@@ -94,6 +94,41 @@ async function dealErc20(chainKey, token, account, amount) {
       // try the next method
     }
   }
+  return probeBalanceSlot(provider, chainKey, token, account, amount);
+}
+
+// ERC-7201 slot of OpenZeppelin v5 upgradeable ERC20 ("openzeppelin.storage.ERC20"); _balances is its first field.
+const OZ5_ERC20_SLOT = 0x52c63247e1f47db19d5ce0460030c497f067ca4cebf71ba98eeadabe20bace00n;
+
+/**
+ * Last resort when anvil_dealERC20 cannot find the slot (seen on LUSD, Curve 3Crv, thUSD, rsETH):
+ * write the balance into each candidate mapping slot (Solidity and Vyper key order, plain slots
+ * 0-200 and the OZ v5 namespaced slot) and keep the first one balanceOf reads back. Every miss is
+ * restored, so a wrong guess leaves no state behind.
+ */
+async function probeBalanceSlot(provider, chainKey, token, account, amount) {
+  const coder = ethers.AbiCoder.defaultAbiCoder();
+  const value = ethers.toBeHex(amount, 32);
+  const slots = [OZ5_ERC20_SLOT];
+  for (let i = 0n; i <= 200n; i += 1n) slots.push(i);
+  for (const slot of slots) {
+    for (const order of ["solidity", "vyper"]) {
+      const key = ethers.keccak256(
+        order === "solidity"
+          ? coder.encode(["address", "uint256"], [account, slot])
+          : coder.encode(["uint256", "address"], [slot, account])
+      );
+      let previous;
+      try {
+        previous = await provider.send("eth_getStorageAt", [token, key, "latest"]);
+        await provider.send("anvil_setStorageAt", [token, key, value]);
+        if ((await getTokenBalance(token, account, chainKey)) >= amount) return true;
+        await provider.send("anvil_setStorageAt", [token, key, ethers.toBeHex(BigInt(previous), 32)]);
+      } catch {
+        return false;
+      }
+    }
+  }
   return false;
 }
 
