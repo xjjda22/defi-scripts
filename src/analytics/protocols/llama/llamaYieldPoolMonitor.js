@@ -12,6 +12,8 @@
  *                             the full /pools list (~12MB) and rank that project's pools by current APY, marking this
  *                             pool. For "the highest senior yield on Strata" claims.
  *   LLAMA_YIELD_SYMBOL_PREFIX (optional, with LLAMA_YIELD_PROJECT) only rank pools whose symbol starts with it (e.g. SR)
+ *   LLAMA_YIELD_DAYS=N        (optional, 1-60, off unless set) also print the last N daily points (APY, base/reward,
+ *                             TVL) and the highest daily APY in that window, for "APY spiked to 50%" claims
  *
  * Prints latest TVL and APY (base / reward), the 30-day mean of the daily APY points, the 30-day
  * realized APY from pricePerShare when DefiLlama records it, TVL 7d/30d change and the TVL high.
@@ -124,8 +126,27 @@ async function main() {
   t.push(["TVL change 30d", chg(stats.change30d)]);
   t.push(["TVL high", stats.high ? `${formatCurrency(stats.high.tvl)} (${day(stats.high.date)})` : "—"]);
   console.log(t.toString());
+  const days = parseInt(String(process.env.LLAMA_YIELD_DAYS || "").trim(), 10);
+  if (Number.isFinite(days) && days >= 1 && days <= 60) printDailyPoints(poolPoints(data && data.data), days);
   const project = (process.env.LLAMA_YIELD_PROJECT || "").trim();
   if (project) await printProjectRank(pool, project, (process.env.LLAMA_YIELD_SYMBOL_PREFIX || "").trim());
+}
+
+function printDailyPoints(pts, days) {
+  const last = pts.slice(-days);
+  if (!last.length) return;
+  const day = s => new Date(s * 1000).toISOString().slice(0, 10);
+  const pct = v => (v == null ? "—" : `${v.toFixed(2)}%`);
+  const t = createTable(["Date (UTC)", "APY", "Base", "Reward", "TVL"], {
+    colAligns: ["left", "right", "right", "right", "right"],
+  });
+  for (const p of last) {
+    t.push([day(p.date), pct(p.apy), pct(p.apyBase), pct(p.apyReward), p.tvl != null ? formatCurrency(p.tvl) : "—"]);
+  }
+  const best = last.filter(p => p.apy != null).reduce((a, p) => (a == null || p.apy > a.apy ? p : a), null);
+  t.push([`Highest of ${last.length} days`, best ? `${pct(best.apy)} (${day(best.date)})` : "—", "", "", ""]);
+  console.log(chalk.yellow(`\nDaily points, last ${last.length} (DefiLlama yields /chart; one snapshot per day)\n`));
+  console.log(t.toString());
 }
 
 /**

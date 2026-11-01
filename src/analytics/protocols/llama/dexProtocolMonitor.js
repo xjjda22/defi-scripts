@@ -21,6 +21,14 @@
  * prints the protocol's TVL and borrowed on that chain, its 7d/30d change and first point, the chain's total TVL
  * (/v2/chains) with its 7d/30d change, and the protocol's share of it. For "X holds 55% of chain TVL" or
  * "TVL on chain up 32% in 30 days" claims.
+ * Optional: DEFILLAMA_FEES_DAYS=N (1-60, with DEFILLAMA_FEES=1) prints the last N daily fees and revenue points,
+ * the highest daily revenue (and fees) in that window and the all-time totals, for "made $3.5M in revenue today" /
+ * "highest in 12 days" claims. DEFILLAMA_HOLDERS=1 adds a holders-revenue column and its all-time total
+ * (dataType=dailyHoldersRevenue), for "paid stakers $60M since launch" claims.
+ * Optional: DEFILLAMA_QUARTERS=1 (with DEFILLAMA_MONTHS) adds UTC calendar-quarter totals of the monthly rows,
+ * for "Q3 revenue was $X" claims. A quarter is marked partial when a month is missing or still running.
+ * Optional: DEFILLAMA_OI_COMPARE=slug,slug (with DEFILLAMA_OI=1) prints those protocols' open interest next to
+ * this one, the ratio to each and to their sum, for "~5x the OI of X, more than Y and Z combined" claims.
  * Off unless set, so existing scripts are unchanged. Do not use /summary/derivatives (paywalled).
  */
 
@@ -43,6 +51,7 @@ const {
   decodeLlamaToken,
 } = require("../../utils/defiLlamaProtocol");
 const { createTable, formatCurrency } = require("../../utils/displayHelpers");
+const { quarterlyTotals } = require("./arcChainMonitor");
 
 function numOrNull(v) {
   return typeof v === "number" && Number.isFinite(v) ? v : null;
@@ -358,6 +367,114 @@ async function printMonthly(slug, months, { fees, volumeKind }) {
   t.push([`Total (${monthKeys.length} months)`, ...totals.map(v => formatCurrency(v))]);
   console.log(chalk.yellow(`\nMonthly totals (DefiLlama daily charts, last ${months} months)\n`));
   console.log(t.toString());
+  if (process.env.DEFILLAMA_QUARTERS === "1") printQuarters(series);
+}
+
+function printQuarters(series) {
+  const perSeries = series.map(([, rows]) => quarterlyTotals(rows));
+  const qKeys = [...new Set(perSeries.flatMap(rows => rows.map(r => r.quarter)))].sort();
+  if (!qKeys.length) return;
+  const t = createTable(["Quarter (UTC)", ...series.map(([n]) => n)], {
+    colAligns: ["left", ...series.map(() => "right")],
+  });
+  for (const q of qKeys) {
+    const rows = perSeries.map(r => r.find(x => x.quarter === q));
+    const partial = rows.some(r => r && !r.complete);
+    t.push([partial ? `${q} (partial)` : q, ...rows.map(r => (r ? formatCurrency(r.total) : "—"))]);
+  }
+  console.log(chalk.yellow("\nQuarterly totals (sum of the monthly rows above)\n"));
+  console.log(t.toString());
+}
+
+function feesDaysFromEnv(env = process.env) {
+  const n = parseInt(String(env.DEFILLAMA_FEES_DAYS || "").trim(), 10);
+  return Number.isFinite(n) && n >= 1 && n <= 60 ? n : 0;
+}
+
+/**
+ * Daily points keyed by UTC day.
+ * @param {Array<[number, number]>|undefined} chart
+ * @returns {Map<string, number>}
+ */
+function dailyByDay(chart) {
+  const m = new Map();
+  for (const p of Array.isArray(chart) ? chart : []) {
+    if (!Array.isArray(p) || !Number.isFinite(Number(p[0])) || !Number.isFinite(Number(p[1]))) continue;
+    m.set(new Date(Number(p[0]) * 1000).toISOString().slice(0, 10), Number(p[1]));
+  }
+  return m;
+}
+
+async function printFeesDaily(slug, days, withHolders) {
+  const kinds = [
+    ["Fees", undefined],
+    ["Revenue", "dailyRevenue"],
+    ...(withHolders ? [["Holders revenue", "dailyHoldersRevenue"]] : []),
+  ];
+  const loaded = await Promise.all(
+    kinds.map(async ([name, dataType]) => {
+      try {
+        const d = await fetchFeesChart(slug, dataType);
+        return { name, byDay: dailyByDay(d && d.totalDataChart), allTime: numOrNull(d && d.totalAllTime) };
+      } catch (e) {
+        console.log(chalk.gray(`  ${name.toLowerCase()} history unavailable: ${e.message || e}`));
+        return { name, byDay: new Map(), allTime: null };
+      }
+    })
+  );
+  const dayKeys = [...new Set(loaded.flatMap(s => [...s.byDay.keys()]))].sort().slice(-days);
+  if (!dayKeys.length) return;
+  const t = createTable(["Date (UTC)", ...loaded.map(s => s.name)], {
+    colAligns: ["left", ...loaded.map(() => "right")],
+  });
+  for (const k of dayKeys) {
+    t.push([k, ...loaded.map(s => (s.byDay.has(k) ? formatCurrency(s.byDay.get(k)) : "—"))]);
+  }
+  t.push([
+    `Highest of ${dayKeys.length} days`,
+    ...loaded.map(s => {
+      const best = dayKeys
+        .filter(k => s.byDay.has(k))
+        .reduce((a, k) => (a == null || s.byDay.get(k) > s.byDay.get(a) ? k : a), null);
+      return best ? `${formatCurrency(s.byDay.get(best))} (${best})` : "—";
+    }),
+  ]);
+  t.push(["All-time total", ...loaded.map(s => (s.allTime != null ? formatCurrency(s.allTime) : "—"))]);
+  console.log(
+    chalk.yellow(`\nDaily fees / revenue, last ${dayKeys.length} days (DefiLlama /summary/fees daily chart)\n`)
+  );
+  console.log(t.toString());
+}
+
+function oiCompareFromEnv(env = process.env) {
+  return [...new Set(String(env.DEFILLAMA_OI_COMPARE || "").split(","))]
+    .map(x => x.trim())
+    .filter(x => /^[a-z0-9.\-_]+$/i.test(x))
+    .slice(0, 8);
+}
+
+async function printOpenInterestCompare(slug, label, others) {
+  const load = async s => {
+    try {
+      return numOrNull((await fetchOpenInterestSummary(s)).total24h);
+    } catch (e) {
+      console.log(chalk.gray(`  open interest unavailable for ${s}: ${e.message || e}`));
+      return null;
+    }
+  };
+  const [main, ...rest] = await Promise.all([slug, ...others].map(load));
+  const ratio = v => (main != null && v ? `${(main / v).toFixed(2)}x` : "n/a");
+  const t = createTable(["Protocol (slug)", "Open interest", `${label} ÷ this`], {
+    colAligns: ["left", "right", "right"],
+  });
+  t.push([`${label} (${slug})`, main != null ? formatCurrency(main) : "n/a", ""]);
+  others.forEach((s, i) => t.push([s, rest[i] != null ? formatCurrency(rest[i]) : "n/a", ratio(rest[i])]));
+  if (others.length > 1) {
+    const sum = rest.every(v => v != null) ? rest.reduce((a, v) => a + v, 0) : null;
+    t.push([`Sum of ${others.length} others`, sum != null ? formatCurrency(sum) : "n/a", ratio(sum)]);
+  }
+  console.log(chalk.yellow("\nOpen interest comparison (DefiLlama /summary/open-interest, total24h)\n"));
+  console.log(t.toString());
 }
 
 async function main() {
@@ -408,6 +525,8 @@ async function main() {
     }
     if (process.env.DEFILLAMA_FEES === "1") {
       await printFeesAndRevenue(slug);
+      const feesDays = feesDaysFromEnv();
+      if (feesDays) await printFeesDaily(slug, feesDays, process.env.DEFILLAMA_HOLDERS === "1");
     }
     const months = monthsFromEnv();
     if (months) {
@@ -421,6 +540,8 @@ async function main() {
       if (process.env.DEFILLAMA_OI_HIGH === "1") {
         await printOpenInterestHigh(slug);
       }
+      const oiOthers = oiCompareFromEnv();
+      if (oiOthers.length) await printOpenInterestCompare(slug, d.name || label, oiOthers);
     }
   } catch (e) {
     console.error(chalk.red((e && e.response?.status === 404 && "Protocol not found on DefiLlama") || e.message));
@@ -440,4 +561,7 @@ module.exports = {
   tvlOnOrBefore,
   changeOverDays,
   seriesPoints,
+  feesDaysFromEnv,
+  dailyByDay,
+  oiCompareFromEnv,
 };
