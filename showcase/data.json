@@ -13293,7 +13293,13 @@
      "tvl": 1
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:theo:stake",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": null,
    "signals": null,
@@ -13308,24 +13314,81 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Stake + lockup redeem",
+    "note": "Theo thUSD / sthUSD on Ethereum. Minting thUSD and thBILL goes through whitelisted signed orders, so the test stakes thUSD into sthUSD (open to anyone), requests the redemption and claims it after the 5-day lockup, which it advances on the fork. thBILL and the minters are listed for verification.",
     "appUrl": "https://app.theo.xyz/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic stablecoin check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
-     ],
-     "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:theo:stake"
+    ],
+    "tests": [
+     {
+      "script": "fork:theo:stake",
+      "action": "stake",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:theo:stake",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Stake thUSD into sthUSD, request and claim the redemption (Theo)",
+      "assertion": "Pre-checks: `asset()` is the documented thUSD and the vault is not paused. `deposit` moves exactly the amount, mints exactly the pre-tx `previewDeposit` and emits a matching `Deposit`. `initiateRedeem` burns every share and books one request for them worth the pre-tx `convertToAssets` (within 1 bp, vesting only moves it up). After `lockupPeriod` (5 days) is advanced on the fork, `redeem` pays exactly the booked thUSD and clears the request; the time jump is then reverted with `evm_revert`. Minting thUSD itself is whitelisted (signed orders) and is not called",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "thUSD"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "thUSD",
+      "address": "0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3",
+      "doc": "https://docs.theo.xyz/developers/deployed-addresses",
+      "explorerUrl": "https://etherscan.io/address/0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3"
+     },
+     {
+      "chain": "ethereum",
+      "label": "sthUSD (ERC-4626 staking vault)",
+      "address": "0xA808Bc9775cb41c52C7842f8b50427fE7A770326",
+      "doc": "https://docs.theo.xyz/developers/deployed-addresses",
+      "explorerUrl": "https://etherscan.io/address/0xA808Bc9775cb41c52C7842f8b50427fE7A770326"
+     },
+     {
+      "chain": "ethereum",
+      "label": "thUSD Mint & Redeem (whitelisted signed orders)",
+      "address": "0x2D99aC801DC0edadD53f5688FeF2317932E8696e",
+      "doc": "https://docs.theo.xyz/developers/deployed-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x2D99aC801DC0edadD53f5688FeF2317932E8696e"
+     },
+     {
+      "chain": "ethereum",
+      "label": "thBILL",
+      "address": "0x5FA487BCa6158c64046B2813623e20755091DA0b",
+      "doc": "https://docs.theo.xyz/developers/deployed-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x5FA487BCa6158c64046B2813623e20755091DA0b"
+     },
+     {
+      "chain": "ethereum",
+      "label": "thBILL minter",
+      "address": "0x8a2c307D1462Ff4fA98c9c119D3A3457AD505Eb1",
+      "doc": "https://docs.theo.xyz/developers/deployed-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x8a2c307D1462Ff4fA98c9c119D3A3457AD505Eb1"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -14027,14 +14090,36 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://lagoon.finance",
+    "note": "No fork test: Lagoon vaults are each deployed by their curator from the Factory, with their own whitelist, valuation manager and settlement schedule. Deposits are ERC-7540 requests that only turn into shares when the curator settles a valuation, and Lagoon's docs do not name a reference vault, so there is no single protocol-level vault behind this row to assert on. The Ethereum Factory, ProtocolRegistry and vault logic from the official addresses page are listed for verification.",
+    "appUrl": "https://app.lagoon.finance/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
     "tests": [],
     "features": [],
-    "contracts": [],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Vault Factory",
+      "address": "0x8D6f5479B14348186faE9BC7E636e947c260f9B1",
+      "doc": "https://docs.lagoon.finance/resources/networks-and-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x8D6f5479B14348186faE9BC7E636e947c260f9B1"
+     },
+     {
+      "chain": "ethereum",
+      "label": "ProtocolRegistry",
+      "address": "0x6dA4D1859bA1d02D095D2246142CdAd52233e27C",
+      "doc": "https://docs.lagoon.finance/resources/networks-and-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x6dA4D1859bA1d02D095D2246142CdAd52233e27C"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Vault logic v0.6.0",
+      "address": "0x6C77c47FB8168E22976C3B0338CB1769c952249f",
+      "doc": "https://docs.lagoon.finance/resources/networks-and-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x6C77c47FB8168E22976C3B0338CB1769c952249f"
+     }
+    ],
     "recipe": {
      "title": "Generic vault fork",
      "chain": "ethereum",
@@ -14179,7 +14264,13 @@
      "tvl": 4
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:solvbtc:subscribe",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": {
     "coingeckoId": "solv-btc",
@@ -14202,24 +14293,74 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Mint SolvBTC",
+    "note": "Most of the row is BTC on Bitcoin, which the repo does not fork. On Ethereum, the SolvBTC Router mints SolvBTC from WBTC through the permissionless WBTC storage pool; the test does that. Redemption is an Open Fund request Solv settles and is not run. xSolvBTC and the LST router are listed for verification.",
     "appUrl": "https://app.solv.finance/solvbtc",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-     ],
-     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:solvbtc:subscribe"
+    ],
+    "tests": [
+     {
+      "script": "fork:solvbtc:subscribe",
+      "action": "subscribe",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:solvbtc:subscribe",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Mint SolvBTC with WBTC through the SolvBTC Router",
+      "assertion": "Pre-check: `checkPoolPermission` is true for a fresh account on the documented Ethereum WBTC storage pool. `createSubscription` takes exactly the WBTC, the user's SolvBTC rises by exactly the router's static-call return value, SolvBTC total supply rises by the same amount, `CreateSubscription` reports it with the WBTC paid, and the amount is within 1% of the WBTC at 1:1 (it carries Solv's deposit fee). Redeeming SolvBTC is an Open Fund request settled by Solv and is not run",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "0.01",
+        "unit": "WBTC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "SolvBTC",
+      "address": "0x7A56E1C57C7475CCf742a1832B028F0456652F97",
+      "doc": "https://docs.solv.finance/developer-guide/contracts",
+      "explorerUrl": "https://etherscan.io/address/0x7A56E1C57C7475CCf742a1832B028F0456652F97"
+     },
+     {
+      "chain": "ethereum",
+      "label": "xSolvBTC",
+      "address": "0xd9D920AA40f578ab794426F5C90F6C731D159DEf",
+      "doc": "https://docs.solv.finance/developer-guide/contracts",
+      "explorerUrl": "https://etherscan.io/address/0xd9D920AA40f578ab794426F5C90F6C731D159DEf"
+     },
+     {
+      "chain": "ethereum",
+      "label": "SolvBTC Router",
+      "address": "0x1fF7d7C0A7D8E94046708C611DeC5056A9d2B823",
+      "doc": "https://docs.solv.finance/developer-guide/contracts",
+      "explorerUrl": "https://etherscan.io/address/0x1fF7d7C0A7D8E94046708C611DeC5056A9d2B823"
+     },
+     {
+      "chain": "ethereum",
+      "label": "SolvBTC LST RouterV2",
+      "address": "0x3d93B9e8F0886358570646dAd9421564C5fE6334",
+      "doc": "https://docs.solv.finance/developer-guide/contracts",
+      "explorerUrl": "https://etherscan.io/address/0x3d93B9e8F0886358570646dAd9421564C5fE6334"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -14333,7 +14474,13 @@
      "tvl": 544
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:cian:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": null,
    "signals": null,
@@ -14348,24 +14495,74 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://yieldlayer.cian.app/vaults/0xB13aa2d0345b0439b064f26B82D8dCf3f508775d?chainId=1&utm_source=TPFDZE",
+    "mode": "fork",
+    "label": "Deposit + redeem request",
+    "note": "CIAN rsETH Yield Layer on Ethereum, the largest public Yield Layer vault in CIAN's vault API. The test deposits rsETH and queues a redemption with the RedeemOperator, which CIAN's operator settles. The stETH Yield Layer is listed for verification; Mantle and other chains are not forked.",
+    "appUrl": "https://yieldlayer.cian.app/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:cian:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:cian:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:cian:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit rsETH into the CIAN rsETH Yield Layer and request redemption",
+      "assertion": "Pre-checks: `asset()` is rsETH, not paused, `maxDeposit` covers the amount, and the operator's exchange-price window (`remainingUpdateTime`) is open (deposits revert `PriceNotUpdated()` otherwise). `deposit` takes exactly the rsETH and mints exactly the pre-tx `previewDeposit`, matching the rise in total supply. `requestRedeem(shares, rsETH)` moves every share to the documented RedeemOperator queue. CIAN settles the queue off the fork, so the rsETH payout is not asserted",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "1",
+        "unit": "rsETH"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "rsETH Yield Layer vault (ylrsETH)",
+      "address": "0xd87a19fF681AE98BF10d2220D1AE3Fbd374ADE4e",
+      "doc": "https://docs.cian.app/yieldlayer/for-builders-developer-documentation/yield-layer-contracts",
+      "explorerUrl": "https://etherscan.io/address/0xd87a19fF681AE98BF10d2220D1AE3Fbd374ADE4e"
+     },
+     {
+      "chain": "ethereum",
+      "label": "rsETH Yield Layer RedeemOperator",
+      "address": "0x47DBD71Db64617f6cBD45eB9D9Ba876F40ED239E",
+      "doc": "https://docs.cian.app/yieldlayer/for-builders-developer-documentation/yield-layer-contracts",
+      "explorerUrl": "https://etherscan.io/address/0x47DBD71Db64617f6cBD45eB9D9Ba876F40ED239E"
+     },
+     {
+      "chain": "ethereum",
+      "label": "stETH Yield Layer vault (ylstETH)",
+      "address": "0xB13aa2d0345b0439b064f26B82D8dCf3f508775d",
+      "doc": "https://docs.cian.app/yieldlayer/for-builders-developer-documentation/yield-layer-contracts",
+      "explorerUrl": "https://etherscan.io/address/0xB13aa2d0345b0439b064f26B82D8dCf3f508775d"
+     },
+     {
+      "chain": "ethereum",
+      "label": "stETH Yield Layer RedeemOperator",
+      "address": "0xdAc6748CbB7CD9DA1868eB7aD598273122f012db",
+      "doc": "https://docs.cian.app/yieldlayer/for-builders-developer-documentation/yield-layer-contracts",
+      "explorerUrl": "https://etherscan.io/address/0xdAc6748CbB7CD9DA1868eB7aD598273122f012db"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -14659,6 +14856,11 @@
      "name": "simulate:zama:smoke",
      "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
      "kind": "smoke"
+    },
+    {
+     "name": "fork:zama:wrap",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
     }
    ],
    "coverage": "covered by a dedicated monitor",
@@ -14683,23 +14885,81 @@
     "mentions": 0.012
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Confidential wrap",
+    "note": "Zama's confidential token wrappers on Ethereum (ERC-7984): the row's TVL is ERC-20s locked in them. The test wraps USDC into cUSDC. Balances become FHE handles, so the encrypted amount is not read, and unwrapping needs the Zama decryption network, which a fork does not have.",
     "appUrl": "https://www.zama.org/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic API check",
-     "chain": "ethereum",
-     "commands": [
-      "npm run simulate:polymarket:smoke"
-     ],
-     "note": "No fork script for this category. Use the protocol’s DefiLlama smoke when it has one."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:zama:wrap"
+    ],
+    "tests": [
+     {
+      "script": "fork:zama:wrap",
+      "action": "wrap",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:zama:wrap",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Wrap USDC into Zama confidential cUSDC",
+      "assertion": "Pre-checks: the Wrappers Registry lists cUSDC as the valid wrapper for USDC and its `underlying()` is USDC. `wrap` takes exactly the amount from the user, the wrapper's USDC rises by it, `inferredTotalSupply` rises by amount / `rate()`, and the user gets a non-zero encrypted balance handle. Balances are FHE ciphertexts, so the amount inside the handle is not read; unwrapping needs the Zama decryption network and is not run",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDC"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Wrappers Registry",
+      "address": "0xeb5015fF021DB115aCe010f23F55C2591059bBA0",
+      "doc": "https://docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum",
+      "explorerUrl": "https://etherscan.io/address/0xeb5015fF021DB115aCe010f23F55C2591059bBA0"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Confidential USDC (cUSDC)",
+      "address": "0xe978F22157048E5DB8E5d07971376e86671672B2",
+      "doc": "https://docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum",
+      "explorerUrl": "https://etherscan.io/address/0xe978F22157048E5DB8E5d07971376e86671672B2"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Confidential USDT (cUSDT)",
+      "address": "0xAe0207C757Aa2B4019Ad96edD0092ddc63EF0c50",
+      "doc": "https://docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum",
+      "explorerUrl": "https://etherscan.io/address/0xAe0207C757Aa2B4019Ad96edD0092ddc63EF0c50"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Confidential WETH (cWETH)",
+      "address": "0xda9396b82634Ea99243cE51258B6A5Ae512D4893",
+      "doc": "https://docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum",
+      "explorerUrl": "https://etherscan.io/address/0xda9396b82634Ea99243cE51258B6A5Ae512D4893"
+     },
+     {
+      "chain": "ethereum",
+      "label": "Zama Token",
+      "address": "0xA12CC123ba206d4031D1c7f6223D1C2Ec249f4f3",
+      "doc": "https://docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum",
+      "explorerUrl": "https://etherscan.io/address/0xA12CC123ba206d4031D1c7f6223D1C2Ec249f4f3"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -14745,7 +15005,13 @@
      "tvl": 219421
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:convex:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": null,
    "signals": null,
@@ -14760,24 +15026,93 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Booster deposit + withdraw",
+    "note": "Convex for Curve on Ethereum: deposit Curve LP through the Booster with stake=true and withdraw it from the pool's BaseRewardPool. Pid 9 (Curve 3pool) by default; CONVEX_PID picks another pool. cvxCRV staking and vlCVX locking are not exercised; their contracts are listed for verification.",
     "appUrl": "https://www.convexfinance.com/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic vault fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-     ],
-     "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:convex:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:convex:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:convex:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit Curve 3pool LP into Convex and withdraw",
+      "assertion": "Booster `poolInfo(9)` (Curve 3pool) gives the LP token, gauge and BaseRewardPool; neither the pool nor the Booster is shut down. `deposit(pid, amount, true)` takes exactly the LP, the Curve gauge's LP rises by it, and the user's BaseRewardPool balance and its total supply rise by it (no loose cvx3Crv left). `withdrawAndUnwrap` returns every LP, clears the stake and restores the gauge balance. CRV/CVX reward claims are not asserted",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "3Crv"
+       },
+       {
+        "env": "CONVEX_PID",
+        "label": "Booster pid",
+        "default": "9"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "Booster (main deposit contract)",
+      "address": "0xF403C135812408BFbE8713b5A23a04b3D48AAE31",
+      "doc": "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0xF403C135812408BFbE8713b5A23a04b3D48AAE31"
+     },
+     {
+      "chain": "ethereum",
+      "label": "3pool BaseRewardPool (Booster.poolInfo(9).crvRewards)",
+      "address": "0x689440f2Ff927E1f24c72F1087E1FAF471eCe1c8",
+      "doc": "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x689440f2Ff927E1f24c72F1087E1FAF471eCe1c8"
+     },
+     {
+      "chain": "ethereum",
+      "label": "CVX",
+      "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+      "doc": "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B"
+     },
+     {
+      "chain": "ethereum",
+      "label": "cvxCRV",
+      "address": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
+      "doc": "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7"
+     },
+     {
+      "chain": "ethereum",
+      "label": "CRV Depositor",
+      "address": "0x8014595F2AB54cD7c604B00E9fb932176fDc86Ae",
+      "doc": "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x8014595F2AB54cD7c604B00E9fb932176fDc86Ae"
+     },
+     {
+      "chain": "ethereum",
+      "label": "CVX Locker (vlCVX)",
+      "address": "0x72a19342e8F1838460eBFCCEf09F6585e32db86E",
+      "doc": "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+      "explorerUrl": "https://etherscan.io/address/0x72a19342e8F1838460eBFCCEf09F6585e32db86E"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -14811,7 +15146,13 @@
      "tvl": 3164136970
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:usdt0:send",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": null,
    "signals": null,
@@ -14826,24 +15167,74 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://usdt0.to",
+    "mode": "fork",
+    "label": "OFT send",
+    "note": "USDT0 is Tether's LayerZero OFT. On Ethereum the OFT Adapter locks USDT (the row's TVL) and other chains mint USDT0. The test sends USDT to Arbitrum through the adapter; the mint on Arbitrum needs LayerZero DVNs and an executor, which a fork does not run. The XAUT0 adapter and the IOTA lockbox are listed for verification.",
+    "appUrl": "https://usdt0.to/transfer",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic bridge check",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-     ],
-     "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:usdt0:send"
+    ],
+    "tests": [
+     {
+      "script": "fork:usdt0:send",
+      "action": "send",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:usdt0:send",
+      "section": "stables",
+      "chain": "ethereum",
+      "title": "Bridge USDT to Arbitrum through the USDT0 OFT Adapter",
+      "assertion": "Pre-check: the adapter's `token()` is USDT. `quoteOFT` sets `minAmountLD` to the quoted received amount and `quoteSend` prices the LayerZero fee; `send` to Arbitrum (EID 30110) takes exactly the amount from the user, the adapter's locked USDT rises by exactly the quoted `amountSentLD`, and `OFTSent` reports the destination, sender, sent and received amounts. Minting USDT0 on Arbitrum needs LayerZero delivery and is not run",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "100",
+        "unit": "USDT"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "USDT0 OFT Adapter (locks USDT)",
+      "address": "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee",
+      "doc": "https://docs.usdt0.to/technical-documentation/developer",
+      "explorerUrl": "https://etherscan.io/address/0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee"
+     },
+     {
+      "chain": "ethereum",
+      "label": "USDT (locked asset)",
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "doc": "https://docs.usdt0.to/technical-documentation/developer",
+      "explorerUrl": "https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7"
+     },
+     {
+      "chain": "ethereum",
+      "label": "XAUT0 OFT Adapter",
+      "address": "0xb9c2321BB7D0Db468f570D10A424d1Cc8EFd696C",
+      "doc": "https://docs.usdt0.to/technical-documentation/developer",
+      "explorerUrl": "https://etherscan.io/address/0xb9c2321BB7D0Db468f570D10A424d1Cc8EFd696C"
+     },
+     {
+      "chain": "ethereum",
+      "label": "USDT0 IOTA lockbox (OFT Adapter)",
+      "address": "0xAEf027F94008430BF4Fc27FFABB49ea6F1dd3414",
+      "doc": "https://docs.usdt0.to/technical-documentation/developer",
+      "explorerUrl": "https://etherscan.io/address/0xAEf027F94008430BF4Fc27FFABB49ea6F1dd3414"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -15168,14 +15559,29 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": "https://ssv.network/",
+    "note": "No fork test: the row is ETH staked in validators run by SSV operator clusters. Registering a validator needs a real validator key split into operator-encrypted key shares and a 32 ETH beacon-chain deposit, and its effect (validator duties) happens on the consensus layer, not in an EVM contract a fork can assert on. The SSV Network and SSV Network Views contracts are listed for verification.",
+    "appUrl": "https://app.ssv.network/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
     "tests": [],
     "features": [],
-    "contracts": [],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "SSV Network (ssvnetwork.eth)",
+      "address": "0xDD9BC35aE942eF0cFa76930954a156B3fF30a4E1",
+      "doc": "https://docs.ssv.network/developers/smart-contracts/",
+      "explorerUrl": "https://etherscan.io/address/0xDD9BC35aE942eF0cFa76930954a156B3fF30a4E1"
+     },
+     {
+      "chain": "ethereum",
+      "label": "SSV Network Views (views.ssvnetwork.eth)",
+      "address": "0xafE830B6Ee262ba11cce5F32fDCd760FFE6a66e4",
+      "doc": "https://docs.ssv.network/developers/smart-contracts/",
+      "explorerUrl": "https://etherscan.io/address/0xafE830B6Ee262ba11cce5F32fDCd760FFE6a66e4"
+     }
+    ],
     "recipe": {
      "title": "Generic liquid-staking fork",
      "chain": "ethereum",
@@ -15356,7 +15762,13 @@
      "tvl": 261079946
     }
    ],
-   "scripts": [],
+   "scripts": [
+    {
+     "name": "fork:liquity:deposit",
+     "file": "src/simulation/fork/run.js",
+     "kind": "fork"
+    }
+   ],
    "coverage": "ranking only",
    "token": {
     "coingeckoId": "liquity",
@@ -15379,24 +15791,95 @@
     "mentions": 0
    },
    "testing": {
-    "mode": "api-only",
-    "note": "No fork test for this protocol.",
+    "mode": "fork",
+    "label": "Stability Pool",
+    "note": "Liquity V1: LUSD into the Stability Pool and back. Opening a trove (ETH collateral, 2,000 LUSD minimum debt) is not exercised. Liquity V2 (BOLD, ETH / wstETH / rETH branches) is part of the row; its core contracts are listed for verification.",
     "appUrl": "https://www.liquity.org/",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
-    "commands": [],
-    "tests": [],
-    "features": [],
-    "contracts": [],
-    "recipe": {
-     "title": "Generic lending fork",
-     "chain": "ethereum",
-     "commands": [
-      "CHAIN=ethereum node scripts/startFork.js",
-      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-     ],
-     "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-    }
+    "commands": [
+     "CHAIN=ethereum node scripts/startFork.js",
+     "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+     "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:liquity:deposit"
+    ],
+    "tests": [
+     {
+      "script": "fork:liquity:deposit",
+      "action": "deposit",
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "note": null
+     }
+    ],
+    "features": [
+     {
+      "script": "fork:liquity:deposit",
+      "section": "vaults",
+      "chain": "ethereum",
+      "title": "Deposit LUSD into the Liquity V1 Stability Pool and withdraw",
+      "assertion": "Pre-check: the Stability Pool's `lusdToken()` is the documented LUSD. `provideToSP` pulls exactly the amount, `getTotalLUSDDeposits` rises by it and the compounded deposit equals it; `withdrawFromSP` returns every LUSD, leaves a 0 deposit and restores the pool total. Opening a trove and Liquity V2 (BOLD) are not exercised",
+      "params": [
+       {
+        "env": "FORK_AMOUNT",
+        "label": "Amount",
+        "default": "1000",
+        "unit": "LUSD"
+       }
+      ]
+     }
+    ],
+    "contracts": [
+     {
+      "chain": "ethereum",
+      "label": "V1 StabilityPool",
+      "address": "0x66017D22b0f8556afDd19FC67041899Eb65a21bb",
+      "doc": "https://docs.liquity.org/liquity-v1/documentation/resources",
+      "explorerUrl": "https://etherscan.io/address/0x66017D22b0f8556afDd19FC67041899Eb65a21bb"
+     },
+     {
+      "chain": "ethereum",
+      "label": "V1 BorrowerOperations",
+      "address": "0x24179CD81c9e782A4096035f7eC97fB8B783e007",
+      "doc": "https://docs.liquity.org/liquity-v1/documentation/resources",
+      "explorerUrl": "https://etherscan.io/address/0x24179CD81c9e782A4096035f7eC97fB8B783e007"
+     },
+     {
+      "chain": "ethereum",
+      "label": "V1 TroveManager",
+      "address": "0xA39739EF8b0231DbFA0DcdA07d7e29faAbCf4bb2",
+      "doc": "https://docs.liquity.org/liquity-v1/documentation/resources",
+      "explorerUrl": "https://etherscan.io/address/0xA39739EF8b0231DbFA0DcdA07d7e29faAbCf4bb2"
+     },
+     {
+      "chain": "ethereum",
+      "label": "LUSD",
+      "address": "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
+      "doc": "https://docs.liquity.org/liquity-v1/documentation/resources",
+      "explorerUrl": "https://etherscan.io/address/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0"
+     },
+     {
+      "chain": "ethereum",
+      "label": "V2 BOLD",
+      "address": "0x6440f144b7e50D6a8439336510312d2F54beB01D",
+      "doc": "https://docs.liquity.org/v2-documentation/technical-docs-and-audits",
+      "explorerUrl": "https://etherscan.io/address/0x6440f144b7e50D6a8439336510312d2F54beB01D"
+     },
+     {
+      "chain": "ethereum",
+      "label": "V2 CollateralRegistry",
+      "address": "0xf949982B91C8c61e952B3bA942cbbfaef5386684",
+      "doc": "https://docs.liquity.org/v2-documentation/technical-docs-and-audits",
+      "explorerUrl": "https://etherscan.io/address/0xf949982B91C8c61e952B3bA942cbbfaef5386684"
+     },
+     {
+      "chain": "ethereum",
+      "label": "V2 ETH branch StabilityPool",
+      "address": "0x5721cbbd64fc7Ae3Ef44A0A3F9a790A9264Cf9BF",
+      "doc": "https://docs.liquity.org/v2-documentation/technical-docs-and-audits",
+      "explorerUrl": "https://etherscan.io/address/0x5721cbbd64fc7Ae3Ef44A0A3F9a790A9264Cf9BF"
+     }
+    ],
+    "recipe": null
    }
   },
   {
@@ -31291,7 +31774,13 @@
       "tvl": 261079946
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:liquity:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": {
      "coingeckoId": "liquity",
@@ -31314,24 +31803,95 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Stability Pool",
+     "note": "Liquity V1: LUSD into the Stability Pool and back. Opening a trove (ETH collateral, 2,000 LUSD minimum debt) is not exercised. Liquity V2 (BOLD, ETH / wstETH / rETH branches) is part of the row; its core contracts are listed for verification.",
      "appUrl": "https://www.liquity.org/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic lending fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply"
-      ],
-      "note": "No dedicated fork script. Aave V3 supply on an Ethereum fork is the lending recipe."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:liquity:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:liquity:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:liquity:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit LUSD into the Liquity V1 Stability Pool and withdraw",
+       "assertion": "Pre-check: the Stability Pool's `lusdToken()` is the documented LUSD. `provideToSP` pulls exactly the amount, `getTotalLUSDDeposits` rises by it and the compounded deposit equals it; `withdrawFromSP` returns every LUSD, leaves a 0 deposit and restores the pool total. Opening a trove and Liquity V2 (BOLD) are not exercised",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "1000",
+         "unit": "LUSD"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "V1 StabilityPool",
+       "address": "0x66017D22b0f8556afDd19FC67041899Eb65a21bb",
+       "doc": "https://docs.liquity.org/liquity-v1/documentation/resources",
+       "explorerUrl": "https://etherscan.io/address/0x66017D22b0f8556afDd19FC67041899Eb65a21bb"
+      },
+      {
+       "chain": "ethereum",
+       "label": "V1 BorrowerOperations",
+       "address": "0x24179CD81c9e782A4096035f7eC97fB8B783e007",
+       "doc": "https://docs.liquity.org/liquity-v1/documentation/resources",
+       "explorerUrl": "https://etherscan.io/address/0x24179CD81c9e782A4096035f7eC97fB8B783e007"
+      },
+      {
+       "chain": "ethereum",
+       "label": "V1 TroveManager",
+       "address": "0xA39739EF8b0231DbFA0DcdA07d7e29faAbCf4bb2",
+       "doc": "https://docs.liquity.org/liquity-v1/documentation/resources",
+       "explorerUrl": "https://etherscan.io/address/0xA39739EF8b0231DbFA0DcdA07d7e29faAbCf4bb2"
+      },
+      {
+       "chain": "ethereum",
+       "label": "LUSD",
+       "address": "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
+       "doc": "https://docs.liquity.org/liquity-v1/documentation/resources",
+       "explorerUrl": "https://etherscan.io/address/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0"
+      },
+      {
+       "chain": "ethereum",
+       "label": "V2 BOLD",
+       "address": "0x6440f144b7e50D6a8439336510312d2F54beB01D",
+       "doc": "https://docs.liquity.org/v2-documentation/technical-docs-and-audits",
+       "explorerUrl": "https://etherscan.io/address/0x6440f144b7e50D6a8439336510312d2F54beB01D"
+      },
+      {
+       "chain": "ethereum",
+       "label": "V2 CollateralRegistry",
+       "address": "0xf949982B91C8c61e952B3bA942cbbfaef5386684",
+       "doc": "https://docs.liquity.org/v2-documentation/technical-docs-and-audits",
+       "explorerUrl": "https://etherscan.io/address/0xf949982B91C8c61e952B3bA942cbbfaef5386684"
+      },
+      {
+       "chain": "ethereum",
+       "label": "V2 ETH branch StabilityPool",
+       "address": "0x5721cbbd64fc7Ae3Ef44A0A3F9a790A9264Cf9BF",
+       "doc": "https://docs.liquity.org/v2-documentation/technical-docs-and-audits",
+       "explorerUrl": "https://etherscan.io/address/0x5721cbbd64fc7Ae3Ef44A0A3F9a790A9264Cf9BF"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -35210,14 +35770,36 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://lagoon.finance",
+     "note": "No fork test: Lagoon vaults are each deployed by their curator from the Factory, with their own whitelist, valuation manager and settlement schedule. Deposits are ERC-7540 requests that only turn into shares when the curator settles a valuation, and Lagoon's docs do not name a reference vault, so there is no single protocol-level vault behind this row to assert on. The Ethereum Factory, ProtocolRegistry and vault logic from the official addresses page are listed for verification.",
+     "appUrl": "https://app.lagoon.finance/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
      "features": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Vault Factory",
+       "address": "0x8D6f5479B14348186faE9BC7E636e947c260f9B1",
+       "doc": "https://docs.lagoon.finance/resources/networks-and-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x8D6f5479B14348186faE9BC7E636e947c260f9B1"
+      },
+      {
+       "chain": "ethereum",
+       "label": "ProtocolRegistry",
+       "address": "0x6dA4D1859bA1d02D095D2246142CdAd52233e27C",
+       "doc": "https://docs.lagoon.finance/resources/networks-and-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x6dA4D1859bA1d02D095D2246142CdAd52233e27C"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Vault logic v0.6.0",
+       "address": "0x6C77c47FB8168E22976C3B0338CB1769c952249f",
+       "doc": "https://docs.lagoon.finance/resources/networks-and-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x6C77c47FB8168E22976C3B0338CB1769c952249f"
+      }
+     ],
      "recipe": {
       "title": "Generic vault fork",
       "chain": "ethereum",
@@ -35280,7 +35862,13 @@
       "tvl": 544
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:cian:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": null,
     "signals": null,
@@ -35295,24 +35883,74 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://yieldlayer.cian.app/vaults/0xB13aa2d0345b0439b064f26B82D8dCf3f508775d?chainId=1&utm_source=TPFDZE",
+     "mode": "fork",
+     "label": "Deposit + redeem request",
+     "note": "CIAN rsETH Yield Layer on Ethereum, the largest public Yield Layer vault in CIAN's vault API. The test deposits rsETH and queues a redemption with the RedeemOperator, which CIAN's operator settles. The stETH Yield Layer is listed for verification; Mantle and other chains are not forked.",
+     "appUrl": "https://yieldlayer.cian.app/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:cian:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:cian:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:cian:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit rsETH into the CIAN rsETH Yield Layer and request redemption",
+       "assertion": "Pre-checks: `asset()` is rsETH, not paused, `maxDeposit` covers the amount, and the operator's exchange-price window (`remainingUpdateTime`) is open (deposits revert `PriceNotUpdated()` otherwise). `deposit` takes exactly the rsETH and mints exactly the pre-tx `previewDeposit`, matching the rise in total supply. `requestRedeem(shares, rsETH)` moves every share to the documented RedeemOperator queue. CIAN settles the queue off the fork, so the rsETH payout is not asserted",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "1",
+         "unit": "rsETH"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "rsETH Yield Layer vault (ylrsETH)",
+       "address": "0xd87a19fF681AE98BF10d2220D1AE3Fbd374ADE4e",
+       "doc": "https://docs.cian.app/yieldlayer/for-builders-developer-documentation/yield-layer-contracts",
+       "explorerUrl": "https://etherscan.io/address/0xd87a19fF681AE98BF10d2220D1AE3Fbd374ADE4e"
+      },
+      {
+       "chain": "ethereum",
+       "label": "rsETH Yield Layer RedeemOperator",
+       "address": "0x47DBD71Db64617f6cBD45eB9D9Ba876F40ED239E",
+       "doc": "https://docs.cian.app/yieldlayer/for-builders-developer-documentation/yield-layer-contracts",
+       "explorerUrl": "https://etherscan.io/address/0x47DBD71Db64617f6cBD45eB9D9Ba876F40ED239E"
+      },
+      {
+       "chain": "ethereum",
+       "label": "stETH Yield Layer vault (ylstETH)",
+       "address": "0xB13aa2d0345b0439b064f26B82D8dCf3f508775d",
+       "doc": "https://docs.cian.app/yieldlayer/for-builders-developer-documentation/yield-layer-contracts",
+       "explorerUrl": "https://etherscan.io/address/0xB13aa2d0345b0439b064f26B82D8dCf3f508775d"
+      },
+      {
+       "chain": "ethereum",
+       "label": "stETH Yield Layer RedeemOperator",
+       "address": "0xdAc6748CbB7CD9DA1868eB7aD598273122f012db",
+       "doc": "https://docs.cian.app/yieldlayer/for-builders-developer-documentation/yield-layer-contracts",
+       "explorerUrl": "https://etherscan.io/address/0xdAc6748CbB7CD9DA1868eB7aD598273122f012db"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -35358,7 +35996,13 @@
       "tvl": 219421
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:convex:deposit",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": null,
     "signals": null,
@@ -35373,24 +36017,93 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Booster deposit + withdraw",
+     "note": "Convex for Curve on Ethereum: deposit Curve LP through the Booster with stake=true and withdraw it from the pool's BaseRewardPool. Pid 9 (Curve 3pool) by default; CONVEX_PID picks another pool. cvxCRV staking and vlCVX locking are not exercised; their contracts are listed for verification.",
      "appUrl": "https://www.convexfinance.com/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic vault fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:steakhouse:deposit"
-      ],
-      "note": "No dedicated fork script. Steakhouse USDC deposit and redeem on an Ethereum fork is the vault recipe. A vault with maxDeposit 0 stays read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:convex:deposit"
+     ],
+     "tests": [
+      {
+       "script": "fork:convex:deposit",
+       "action": "deposit",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:convex:deposit",
+       "section": "vaults",
+       "chain": "ethereum",
+       "title": "Deposit Curve 3pool LP into Convex and withdraw",
+       "assertion": "Booster `poolInfo(9)` (Curve 3pool) gives the LP token, gauge and BaseRewardPool; neither the pool nor the Booster is shut down. `deposit(pid, amount, true)` takes exactly the LP, the Curve gauge's LP rises by it, and the user's BaseRewardPool balance and its total supply rise by it (no loose cvx3Crv left). `withdrawAndUnwrap` returns every LP, clears the stake and restores the gauge balance. CRV/CVX reward claims are not asserted",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "3Crv"
+        },
+        {
+         "env": "CONVEX_PID",
+         "label": "Booster pid",
+         "default": "9"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Booster (main deposit contract)",
+       "address": "0xF403C135812408BFbE8713b5A23a04b3D48AAE31",
+       "doc": "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0xF403C135812408BFbE8713b5A23a04b3D48AAE31"
+      },
+      {
+       "chain": "ethereum",
+       "label": "3pool BaseRewardPool (Booster.poolInfo(9).crvRewards)",
+       "address": "0x689440f2Ff927E1f24c72F1087E1FAF471eCe1c8",
+       "doc": "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x689440f2Ff927E1f24c72F1087E1FAF471eCe1c8"
+      },
+      {
+       "chain": "ethereum",
+       "label": "CVX",
+       "address": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+       "doc": "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B"
+      },
+      {
+       "chain": "ethereum",
+       "label": "cvxCRV",
+       "address": "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7",
+       "doc": "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7"
+      },
+      {
+       "chain": "ethereum",
+       "label": "CRV Depositor",
+       "address": "0x8014595F2AB54cD7c604B00E9fb932176fDc86Ae",
+       "doc": "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x8014595F2AB54cD7c604B00E9fb932176fDc86Ae"
+      },
+      {
+       "chain": "ethereum",
+       "label": "CVX Locker (vlCVX)",
+       "address": "0x72a19342e8F1838460eBFCCEf09F6585e32db86E",
+       "doc": "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x72a19342e8F1838460eBFCCEf09F6585e32db86E"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -39031,14 +39744,29 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://ssv.network/",
+     "note": "No fork test: the row is ETH staked in validators run by SSV operator clusters. Registering a validator needs a real validator key split into operator-encrypted key shares and a 32 ETH beacon-chain deposit, and its effect (validator duties) happens on the consensus layer, not in an EVM contract a fork can assert on. The SSV Network and SSV Network Views contracts are listed for verification.",
+     "appUrl": "https://app.ssv.network/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
      "tests": [],
      "features": [],
-     "contracts": [],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "SSV Network (ssvnetwork.eth)",
+       "address": "0xDD9BC35aE942eF0cFa76930954a156B3fF30a4E1",
+       "doc": "https://docs.ssv.network/developers/smart-contracts/",
+       "explorerUrl": "https://etherscan.io/address/0xDD9BC35aE942eF0cFa76930954a156B3fF30a4E1"
+      },
+      {
+       "chain": "ethereum",
+       "label": "SSV Network Views (views.ssvnetwork.eth)",
+       "address": "0xafE830B6Ee262ba11cce5F32fDCd760FFE6a66e4",
+       "doc": "https://docs.ssv.network/developers/smart-contracts/",
+       "explorerUrl": "https://etherscan.io/address/0xafE830B6Ee262ba11cce5F32fDCd760FFE6a66e4"
+      }
+     ],
      "recipe": {
       "title": "Generic liquid-staking fork",
       "chain": "ethereum",
@@ -43874,7 +44602,13 @@
       "tvl": 1
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:theo:stake",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": null,
     "signals": null,
@@ -43889,24 +44623,81 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Stake + lockup redeem",
+     "note": "Theo thUSD / sthUSD on Ethereum. Minting thUSD and thBILL goes through whitelisted signed orders, so the test stakes thUSD into sthUSD (open to anyone), requests the redemption and claims it after the 5-day lockup, which it advances on the fork. thBILL and the minters are listed for verification.",
      "appUrl": "https://app.theo.xyz/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic stablecoin check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:convert"
-      ],
-      "note": "No dedicated fork script. Sky DAI→USDS on an Ethereum fork is the stablecoin recipe. KYC-gated RWA rows stay read-only."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:theo:stake"
+     ],
+     "tests": [
+      {
+       "script": "fork:theo:stake",
+       "action": "stake",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:theo:stake",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Stake thUSD into sthUSD, request and claim the redemption (Theo)",
+       "assertion": "Pre-checks: `asset()` is the documented thUSD and the vault is not paused. `deposit` moves exactly the amount, mints exactly the pre-tx `previewDeposit` and emits a matching `Deposit`. `initiateRedeem` burns every share and books one request for them worth the pre-tx `convertToAssets` (within 1 bp, vesting only moves it up). After `lockupPeriod` (5 days) is advanced on the fork, `redeem` pays exactly the booked thUSD and clears the request; the time jump is then reverted with `evm_revert`. Minting thUSD itself is whitelisted (signed orders) and is not called",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "thUSD"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "thUSD",
+       "address": "0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3",
+       "doc": "https://docs.theo.xyz/developers/deployed-addresses",
+       "explorerUrl": "https://etherscan.io/address/0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3"
+      },
+      {
+       "chain": "ethereum",
+       "label": "sthUSD (ERC-4626 staking vault)",
+       "address": "0xA808Bc9775cb41c52C7842f8b50427fE7A770326",
+       "doc": "https://docs.theo.xyz/developers/deployed-addresses",
+       "explorerUrl": "https://etherscan.io/address/0xA808Bc9775cb41c52C7842f8b50427fE7A770326"
+      },
+      {
+       "chain": "ethereum",
+       "label": "thUSD Mint & Redeem (whitelisted signed orders)",
+       "address": "0x2D99aC801DC0edadD53f5688FeF2317932E8696e",
+       "doc": "https://docs.theo.xyz/developers/deployed-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x2D99aC801DC0edadD53f5688FeF2317932E8696e"
+      },
+      {
+       "chain": "ethereum",
+       "label": "thBILL",
+       "address": "0x5FA487BCa6158c64046B2813623e20755091DA0b",
+       "doc": "https://docs.theo.xyz/developers/deployed-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x5FA487BCa6158c64046B2813623e20755091DA0b"
+      },
+      {
+       "chain": "ethereum",
+       "label": "thBILL minter",
+       "address": "0x8a2c307D1462Ff4fA98c9c119D3A3457AD505Eb1",
+       "doc": "https://docs.theo.xyz/developers/deployed-addresses",
+       "explorerUrl": "https://etherscan.io/address/0x8a2c307D1462Ff4fA98c9c119D3A3457AD505Eb1"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -47694,7 +48485,13 @@
       "tvl": 4
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:solvbtc:subscribe",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": {
      "coingeckoId": "solv-btc",
@@ -47717,24 +48514,74 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Mint SolvBTC",
+     "note": "Most of the row is BTC on Bitcoin, which the repo does not fork. On Ethereum, the SolvBTC Router mints SolvBTC from WBTC through the permissionless WBTC storage pool; the test does that. Redemption is an Open Fund request Solv settles and is not run. xSolvBTC and the LST router are listed for verification.",
      "appUrl": "https://app.solv.finance/solvbtc",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-      ],
-      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:solvbtc:subscribe"
+     ],
+     "tests": [
+      {
+       "script": "fork:solvbtc:subscribe",
+       "action": "subscribe",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:solvbtc:subscribe",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Mint SolvBTC with WBTC through the SolvBTC Router",
+       "assertion": "Pre-check: `checkPoolPermission` is true for a fresh account on the documented Ethereum WBTC storage pool. `createSubscription` takes exactly the WBTC, the user's SolvBTC rises by exactly the router's static-call return value, SolvBTC total supply rises by the same amount, `CreateSubscription` reports it with the WBTC paid, and the amount is within 1% of the WBTC at 1:1 (it carries Solv's deposit fee). Redeeming SolvBTC is an Open Fund request settled by Solv and is not run",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "0.01",
+         "unit": "WBTC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "SolvBTC",
+       "address": "0x7A56E1C57C7475CCf742a1832B028F0456652F97",
+       "doc": "https://docs.solv.finance/developer-guide/contracts",
+       "explorerUrl": "https://etherscan.io/address/0x7A56E1C57C7475CCf742a1832B028F0456652F97"
+      },
+      {
+       "chain": "ethereum",
+       "label": "xSolvBTC",
+       "address": "0xd9D920AA40f578ab794426F5C90F6C731D159DEf",
+       "doc": "https://docs.solv.finance/developer-guide/contracts",
+       "explorerUrl": "https://etherscan.io/address/0xd9D920AA40f578ab794426F5C90F6C731D159DEf"
+      },
+      {
+       "chain": "ethereum",
+       "label": "SolvBTC Router",
+       "address": "0x1fF7d7C0A7D8E94046708C611DeC5056A9d2B823",
+       "doc": "https://docs.solv.finance/developer-guide/contracts",
+       "explorerUrl": "https://etherscan.io/address/0x1fF7d7C0A7D8E94046708C611DeC5056A9d2B823"
+      },
+      {
+       "chain": "ethereum",
+       "label": "SolvBTC LST RouterV2",
+       "address": "0x3d93B9e8F0886358570646dAd9421564C5fE6334",
+       "doc": "https://docs.solv.finance/developer-guide/contracts",
+       "explorerUrl": "https://etherscan.io/address/0x3d93B9e8F0886358570646dAd9421564C5fE6334"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -47768,7 +48615,13 @@
       "tvl": 3164136970
      }
     ],
-    "scripts": [],
+    "scripts": [
+     {
+      "name": "fork:usdt0:send",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
+     }
+    ],
     "coverage": "ranking only",
     "token": null,
     "signals": null,
@@ -47783,24 +48636,74 @@
      "mentions": 0
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": "https://usdt0.to",
+     "mode": "fork",
+     "label": "OFT send",
+     "note": "USDT0 is Tether's LayerZero OFT. On Ethereum the OFT Adapter locks USDT (the row's TVL) and other chains mint USDT0. The test sends USDT to Arbitrum through the adapter; the mint on Arbitrum needs LayerZero DVNs and an executor, which a fork does not run. The XAUT0 adapter and the IOTA lockbox are listed for verification.",
+     "appUrl": "https://usdt0.to/transfer",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic bridge check",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:arbitrum:deposit"
-      ],
-      "note": "No dedicated fork script. An Arbitrum Inbox depositEth on an Ethereum fork is the bridge recipe. Destination delivery needs the rollup."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:usdt0:send"
+     ],
+     "tests": [
+      {
+       "script": "fork:usdt0:send",
+       "action": "send",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:usdt0:send",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Bridge USDT to Arbitrum through the USDT0 OFT Adapter",
+       "assertion": "Pre-check: the adapter's `token()` is USDT. `quoteOFT` sets `minAmountLD` to the quoted received amount and `quoteSend` prices the LayerZero fee; `send` to Arbitrum (EID 30110) takes exactly the amount from the user, the adapter's locked USDT rises by exactly the quoted `amountSentLD`, and `OFTSent` reports the destination, sender, sent and received amounts. Minting USDT0 on Arbitrum needs LayerZero delivery and is not run",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDT"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "USDT0 OFT Adapter (locks USDT)",
+       "address": "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee",
+       "doc": "https://docs.usdt0.to/technical-documentation/developer",
+       "explorerUrl": "https://etherscan.io/address/0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDT (locked asset)",
+       "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+       "doc": "https://docs.usdt0.to/technical-documentation/developer",
+       "explorerUrl": "https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7"
+      },
+      {
+       "chain": "ethereum",
+       "label": "XAUT0 OFT Adapter",
+       "address": "0xb9c2321BB7D0Db468f570D10A424d1Cc8EFd696C",
+       "doc": "https://docs.usdt0.to/technical-documentation/developer",
+       "explorerUrl": "https://etherscan.io/address/0xb9c2321BB7D0Db468f570D10A424d1Cc8EFd696C"
+      },
+      {
+       "chain": "ethereum",
+       "label": "USDT0 IOTA lockbox (OFT Adapter)",
+       "address": "0xAEf027F94008430BF4Fc27FFABB49ea6F1dd3414",
+       "doc": "https://docs.usdt0.to/technical-documentation/developer",
+       "explorerUrl": "https://etherscan.io/address/0xAEf027F94008430BF4Fc27FFABB49ea6F1dd3414"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -51177,6 +52080,11 @@
       "name": "simulate:zama:smoke",
       "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
       "kind": "smoke"
+     },
+     {
+      "name": "fork:zama:wrap",
+      "file": "src/simulation/fork/run.js",
+      "kind": "fork"
      }
     ],
     "coverage": "covered by a dedicated monitor",
@@ -51201,23 +52109,81 @@
      "mentions": 0.012
     },
     "testing": {
-     "mode": "api-only",
-     "note": "No fork test for this protocol.",
+     "mode": "fork",
+     "label": "Confidential wrap",
+     "note": "Zama's confidential token wrappers on Ethereum (ERC-7984): the row's TVL is ERC-20s locked in them. The test wraps USDC into cUSDC. Balances become FHE handles, so the encrypted amount is not read, and unwrapping needs the Zama decryption network, which a fork does not have.",
      "appUrl": "https://www.zama.org/",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "contracts": [],
-     "recipe": {
-      "title": "Generic API check",
-      "chain": "ethereum",
-      "commands": [
-       "npm run simulate:polymarket:smoke"
-      ],
-      "note": "No fork script for this category. Use the protocol’s DefiLlama smoke when it has one."
-     }
+     "commands": [
+      "CHAIN=ethereum node scripts/startFork.js",
+      "FORK_BLOCK=<block> CHAIN=ethereum node scripts/startFork.js",
+      "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:zama:wrap"
+     ],
+     "tests": [
+      {
+       "script": "fork:zama:wrap",
+       "action": "wrap",
+       "chain": "ethereum",
+       "rpcEnv": "ETHEREUM_RPC_URL",
+       "note": null
+      }
+     ],
+     "features": [
+      {
+       "script": "fork:zama:wrap",
+       "section": "stables",
+       "chain": "ethereum",
+       "title": "Wrap USDC into Zama confidential cUSDC",
+       "assertion": "Pre-checks: the Wrappers Registry lists cUSDC as the valid wrapper for USDC and its `underlying()` is USDC. `wrap` takes exactly the amount from the user, the wrapper's USDC rises by it, `inferredTotalSupply` rises by amount / `rate()`, and the user gets a non-zero encrypted balance handle. Balances are FHE ciphertexts, so the amount inside the handle is not read; unwrapping needs the Zama decryption network and is not run",
+       "params": [
+        {
+         "env": "FORK_AMOUNT",
+         "label": "Amount",
+         "default": "100",
+         "unit": "USDC"
+        }
+       ]
+      }
+     ],
+     "contracts": [
+      {
+       "chain": "ethereum",
+       "label": "Wrappers Registry",
+       "address": "0xeb5015fF021DB115aCe010f23F55C2591059bBA0",
+       "doc": "https://docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum",
+       "explorerUrl": "https://etherscan.io/address/0xeb5015fF021DB115aCe010f23F55C2591059bBA0"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Confidential USDC (cUSDC)",
+       "address": "0xe978F22157048E5DB8E5d07971376e86671672B2",
+       "doc": "https://docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum",
+       "explorerUrl": "https://etherscan.io/address/0xe978F22157048E5DB8E5d07971376e86671672B2"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Confidential USDT (cUSDT)",
+       "address": "0xAe0207C757Aa2B4019Ad96edD0092ddc63EF0c50",
+       "doc": "https://docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum",
+       "explorerUrl": "https://etherscan.io/address/0xAe0207C757Aa2B4019Ad96edD0092ddc63EF0c50"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Confidential WETH (cWETH)",
+       "address": "0xda9396b82634Ea99243cE51258B6A5Ae512D4893",
+       "doc": "https://docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum",
+       "explorerUrl": "https://etherscan.io/address/0xda9396b82634Ea99243cE51258B6A5Ae512D4893"
+      },
+      {
+       "chain": "ethereum",
+       "label": "Zama Token",
+       "address": "0xA12CC123ba206d4031D1c7f6223D1C2Ec249f4f3",
+       "doc": "https://docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum",
+       "explorerUrl": "https://etherscan.io/address/0xA12CC123ba206d4031D1c7f6223D1C2Ec249f4f3"
+      }
+     ],
+     "recipe": null
     }
    },
    {
@@ -53999,7 +54965,7 @@
    "Domains": 15,
    "Coins Tracker": 2
   },
-  "forkInTop200": 63,
-  "apiOnlyInTop200": 137
+  "forkInTop200": 70,
+  "apiOnlyInTop200": 130
  }
 }
