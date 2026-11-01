@@ -17,6 +17,11 @@
  *   LLAMA_CHAIN_STABLES=1         — stablecoin market cap on the chain (all pegs, USD) with 7d/30d change from
  *                                  stablecoins.llama.fi/stablecoincharts/<name>. For "chain X added $Y of
  *                                  stablecoins in 30 days" claims.
+ *   LLAMA_CHAIN_DEX_DAYS=N (1-60) — last N daily chain DEX volume points from /overview/dexs/<name> (chart kept),
+ *                                  for "$317M in DEX volume yesterday" claims.
+ *   LLAMA_CHAIN_DEX_EXCLUDE=<names> (with LLAMA_CHAIN_DEX_DAYS; comma-separated DefiLlama protocol display names,
+ *                                  percent-encoded) — also prints the excluded protocols' volume and the remainder
+ *                                  per day, e.g. to separate HyperEVM DEXs from HyperCore spot on "Hyperliquid L1".
  */
 
 require("dotenv").config();
@@ -241,6 +246,63 @@ async function printChainMonthly(chainName, months, { dex, fees, feesSlug }) {
   console.log(qt.toString());
 }
 
+function chainDexDaysFromEnv(env = process.env) {
+  const n = parseInt(String(env.LLAMA_CHAIN_DEX_DAYS || "").trim(), 10);
+  return Number.isFinite(n) && n >= 1 && n <= 60 ? n : 0;
+}
+
+/**
+ * Per-day chain DEX volume, the volume of `exclude` protocols and the remainder.
+ * @param {{ totalDataChart?: Array<[number, number]>, totalDataChartBreakdown?: Array<[number, object]> }} d
+ * @param {number} days
+ * @param {string[]} exclude - protocol display names
+ */
+function chainDexDaily(d, days, exclude) {
+  const byDay = new Map();
+  for (const p of (d && d.totalDataChart) || []) {
+    if (Array.isArray(p) && Number.isFinite(Number(p[0])) && Number.isFinite(Number(p[1]))) {
+      byDay.set(Number(p[0]), { total: Number(p[1]), excluded: 0 });
+    }
+  }
+  for (const p of (d && d.totalDataChartBreakdown) || []) {
+    const row = Array.isArray(p) && byDay.get(Number(p[0]));
+    if (!row || !p[1] || typeof p[1] !== "object") continue;
+    for (const name of exclude) row.excluded += Number(p[1][name]) || 0;
+  }
+  return [...byDay.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .slice(-days)
+    .map(([ts, r]) => ({ day: new Date(ts * 1000).toISOString().slice(0, 10), ...r, rest: r.total - r.excluded }));
+}
+
+async function printChainDexDaily(chainName, days, exclude) {
+  let d;
+  try {
+    d = await fetchLlamaJson(
+      `/overview/dexs/${encodeURIComponent(chainName)}?excludeTotalDataChart=false&excludeTotalDataChartBreakdown=${
+        exclude.length ? "false" : "true"
+      }`
+    );
+  } catch (e) {
+    console.log(chalk.gray(`  daily DEX volume unavailable: ${e.message || e}`));
+    return;
+  }
+  const rows = chainDexDaily(d, days, exclude);
+  if (!rows.length) return;
+  const head = ["Date (UTC)", "DEX volume", ...(exclude.length ? ["Excluded", "Remainder"] : [])];
+  const t = createTable(head, { colAligns: ["left", ...head.slice(1).map(() => "right")] });
+  for (const r of rows) {
+    t.push([
+      r.day,
+      formatCurrency(r.total),
+      ...(exclude.length ? [formatCurrency(r.excluded), formatCurrency(r.rest)] : []),
+    ]);
+  }
+  console.log(chalk.yellow(`\nDaily DEX volume, last ${rows.length} days (DefiLlama /overview/dexs/${chainName})\n`));
+  console.log(t.toString());
+  if (exclude.length) console.log(chalk.gray(`  Excluded protocols: ${exclude.join(", ")}`));
+}
+
 async function main() {
   installCliSafeStdout();
   const chainName = llamaChainNameFromEnv();
@@ -294,6 +356,14 @@ async function main() {
         feesSlug,
       });
     }
+    const dexDays = chainDexDaysFromEnv();
+    if (dexDays) {
+      const exclude = decodeLlamaToken(process.env.LLAMA_CHAIN_DEX_EXCLUDE)
+        .split(",")
+        .map(x => x.trim())
+        .filter(Boolean);
+      await printChainDexDaily(chainName, dexDays, exclude);
+    }
     const note = decodeLlamaToken(process.env.LLAMA_CHAIN_NOTE);
     if (note) console.log(chalk.gray(`\nNote: ${note}\n`));
   } catch (e) {
@@ -306,4 +376,12 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { quarterlyTotals, chainMonthsFromEnv, stablecoinSeries, fetchChainStablecoins, changeOverDays };
+module.exports = {
+  quarterlyTotals,
+  chainMonthsFromEnv,
+  stablecoinSeries,
+  fetchChainStablecoins,
+  changeOverDays,
+  chainDexDaysFromEnv,
+  chainDexDaily,
+};
