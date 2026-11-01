@@ -961,6 +961,69 @@ const FEATURES = [
       "USDf into sUSDf (ERC-4626), then `redeem` every share. Pre-checks: `asset()` is the documented USDf and `maxDeposit` covers the amount. Asserts the user's USDf and the vault's USDf move by exactly the amount, the `Deposit` event reports the amount and the user's shares, and the shares are within 1 bp of the pre-tx `previewDeposit` (sUSDf vests yield per second); the redeem burns every share, the `Withdraw` event matches the USDf received, and that is within 1 bp of both `previewRedeem` and the amount staked. Minting USDf from collateral is KYC-gated and is not called",
     params: amount("100", "USDf"),
   },
+  {
+    script: "fork:usdt0:send",
+    section: "stables",
+    chain: "ethereum",
+    title: "Bridge USDT to Arbitrum through the USDT0 OFT Adapter",
+    assertion:
+      "Pre-check: the adapter's `token()` is USDT. `quoteOFT` sets `minAmountLD` to the quoted received amount and `quoteSend` prices the LayerZero fee; `send` to Arbitrum (EID 30110) takes exactly the amount from the user, the adapter's locked USDT rises by exactly the quoted `amountSentLD`, and `OFTSent` reports the destination, sender, sent and received amounts. Minting USDT0 on Arbitrum needs LayerZero delivery and is not run",
+    params: amount("100", "USDT"),
+  },
+  {
+    script: "fork:liquity:deposit",
+    section: "vaults",
+    chain: "ethereum",
+    title: "Deposit LUSD into the Liquity V1 Stability Pool and withdraw",
+    assertion:
+      "Pre-check: the Stability Pool's `lusdToken()` is the documented LUSD. `provideToSP` pulls exactly the amount, `getTotalLUSDDeposits` rises by it and the compounded deposit equals it; `withdrawFromSP` returns every LUSD, leaves a 0 deposit and restores the pool total. Opening a trove and Liquity V2 (BOLD) are not exercised",
+    params: amount("1000", "LUSD"),
+  },
+  {
+    script: "fork:convex:deposit",
+    section: "vaults",
+    chain: "ethereum",
+    title: "Deposit Curve 3pool LP into Convex and withdraw",
+    assertion:
+      "Booster `poolInfo(9)` (Curve 3pool) gives the LP token, gauge and BaseRewardPool; neither the pool nor the Booster is shut down. `deposit(pid, amount, true)` takes exactly the LP, the Curve gauge's LP rises by it, and the user's BaseRewardPool balance and its total supply rise by it (no loose cvx3Crv left). `withdrawAndUnwrap` returns every LP, clears the stake and restores the gauge balance. CRV/CVX reward claims are not asserted",
+    params: [...amount("100", "3Crv"), { env: "CONVEX_PID", label: "Booster pid", default: "9" }],
+  },
+  {
+    script: "fork:theo:stake",
+    section: "stables",
+    chain: "ethereum",
+    title: "Stake thUSD into sthUSD, request and claim the redemption (Theo)",
+    assertion:
+      "Pre-checks: `asset()` is the documented thUSD and the vault is not paused. `deposit` moves exactly the amount, mints exactly the pre-tx `previewDeposit` and emits a matching `Deposit`. `initiateRedeem` burns every share and books one request for them worth the pre-tx `convertToAssets` (within 1 bp, vesting only moves it up). After `lockupPeriod` (5 days) is advanced on the fork, `redeem` pays exactly the booked thUSD and clears the request; the time jump is then reverted with `evm_revert`. Minting thUSD itself is whitelisted (signed orders) and is not called",
+    params: amount("100", "thUSD"),
+  },
+  {
+    script: "fork:cian:deposit",
+    section: "vaults",
+    chain: "ethereum",
+    title: "Deposit rsETH into the CIAN rsETH Yield Layer and request redemption",
+    assertion:
+      "Pre-checks: `asset()` is rsETH, not paused, `maxDeposit` covers the amount, and the operator's exchange-price window (`remainingUpdateTime`) is open (deposits revert `PriceNotUpdated()` otherwise). `deposit` takes exactly the rsETH and mints exactly the pre-tx `previewDeposit`, matching the rise in total supply. `requestRedeem(shares, rsETH)` moves every share to the documented RedeemOperator queue. CIAN settles the queue off the fork, so the rsETH payout is not asserted",
+    params: amount("1", "rsETH"),
+  },
+  {
+    script: "fork:solvbtc:subscribe",
+    section: "stables",
+    chain: "ethereum",
+    title: "Mint SolvBTC with WBTC through the SolvBTC Router",
+    assertion:
+      "Pre-check: `checkPoolPermission` is true for a fresh account on the documented Ethereum WBTC storage pool. `createSubscription` takes exactly the WBTC, the user's SolvBTC rises by exactly the router's static-call return value, SolvBTC total supply rises by the same amount, `CreateSubscription` reports it with the WBTC paid, and the amount is within 1% of the WBTC at 1:1 (it carries Solv's deposit fee). Redeeming SolvBTC is an Open Fund request settled by Solv and is not run",
+    params: amount("0.01", "WBTC"),
+  },
+  {
+    script: "fork:zama:wrap",
+    section: "stables",
+    chain: "ethereum",
+    title: "Wrap USDC into Zama confidential cUSDC",
+    assertion:
+      "Pre-checks: the Wrappers Registry lists cUSDC as the valid wrapper for USDC and its `underlying()` is USDC. `wrap` takes exactly the amount from the user, the wrapper's USDC rises by it, `inferredTotalSupply` rises by amount / `rate()`, and the user gets a non-zero encrypted balance handle. Balances are FHE ciphertexts, so the amount inside the handle is not read; unwrapping needs the Zama decryption network and is not run",
+    params: amount("100", "USDC"),
+  },
 ];
 
 const BY_SCRIPT = new Map(FEATURES.map(feature => [feature.script, feature]));

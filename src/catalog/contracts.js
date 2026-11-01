@@ -129,6 +129,19 @@ const DOCS = {
   kpkUsdcPrime: "https://docs.kpk.io/vaults/vaults/morpho/ethereum/usdc-prime",
   kpkUsdcPrimeCore: "https://docs.kpk.io/vaults/vaults/morpho/ethereum/usdc-prime-core",
   galaxy: "https://docs.curation.galaxy.com/products/deployed-vaults",
+  usdt0: "https://docs.usdt0.to/technical-documentation/developer",
+  liquityV1: "https://docs.liquity.org/liquity-v1/documentation/resources",
+  liquityV2: "https://docs.liquity.org/v2-documentation/technical-docs-and-audits",
+  convex: "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
+  theo: "https://docs.theo.xyz/developers/deployed-addresses",
+  theoSthusd: "https://docs.theo.xyz/developers/contract-reference/sthusd",
+  cian: "https://docs.cian.app/yieldlayer/for-builders-developer-documentation/yield-layer-contracts",
+  solv: "https://docs.solv.finance/developer-guide/contracts",
+  // SolvBTC storage pool ids per chain and currency (Ethereum WBTC pool used by the fork test).
+  solvPools: "https://docs.solv.finance/developer-guide/data-services/solvbtc-solvbtc.lsts-storage-pools",
+  zama: "https://docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum",
+  ssv: "https://docs.ssv.network/developers/smart-contracts/",
+  lagoon: "https://docs.lagoon.finance/resources/networks-and-addresses",
 };
 
 /**
@@ -280,6 +293,15 @@ function contractBook() {
     opentrade: [],
     kpk: [],
     "galaxy-curation": [],
+    usdt0: [],
+    liquity: [],
+    "convex-finance": [],
+    theo: [],
+    "cian-yield-layer": [],
+    solvbtc: [],
+    zama: [],
+    "ssv-network": [],
+    lagoon: [],
   };
 
   push(book.uniswap, eth, "V2 router", uni.v2.router, DOCS.uniswap);
@@ -714,6 +736,56 @@ function contractBook() {
   push(book.opentrade, eth, "USD Money Market Fund Vault (XMMF)", "0x1e571c87556F216662fa8D25143b1b0618512Ef6", DOCS.opentrade);
   push(book.opentrade, eth, "USD Money Market Fund Vault USDT (XMMF-USDT)", "0xD06f235DF80D4981816F7fB0936973155CDe1f4C", DOCS.opentrade);
 
+  // USDT0 on Ethereum: the OFT Adapter locks USDT for every other USDT0 chain.
+  push(book.usdt0, eth, "USDT0 OFT Adapter (locks USDT)", "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee", DOCS.usdt0);
+  push(book.usdt0, eth, "USDT (locked asset)", "0xdAC17F958D2ee523a2206206994597C13D831ec7", DOCS.usdt0);
+  push(book.usdt0, eth, "XAUT0 OFT Adapter", "0xb9c2321BB7D0Db468f570D10A424d1Cc8EFd696C", DOCS.usdt0);
+  push(book.usdt0, eth, "USDT0 IOTA lockbox (OFT Adapter)", "0xAEf027F94008430BF4Fc27FFABB49ea6F1dd3414", DOCS.usdt0);
+  // Liquity V1 (LUSD) and V2 (BOLD, ETH branch) on Ethereum.
+  push(book.liquity, eth, "V1 StabilityPool", "0x66017D22b0f8556afDd19FC67041899Eb65a21bb", DOCS.liquityV1);
+  push(book.liquity, eth, "V1 BorrowerOperations", "0x24179CD81c9e782A4096035f7eC97fB8B783e007", DOCS.liquityV1);
+  push(book.liquity, eth, "V1 TroveManager", "0xA39739EF8b0231DbFA0DcdA07d7e29faAbCf4bb2", DOCS.liquityV1);
+  push(book.liquity, eth, "LUSD", "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0", DOCS.liquityV1);
+  push(book.liquity, eth, "V2 BOLD", "0x6440f144b7e50D6a8439336510312d2F54beB01D", DOCS.liquityV2);
+  push(book.liquity, eth, "V2 CollateralRegistry", "0xf949982B91C8c61e952B3bA942cbbfaef5386684", DOCS.liquityV2);
+  push(book.liquity, eth, "V2 ETH branch StabilityPool", "0x5721cbbd64fc7Ae3Ef44A0A3F9a790A9264Cf9BF", DOCS.liquityV2);
+  // Convex (Curve) on Ethereum. The 3pool reward pool is Booster.poolInfo(9).crvRewards.
+  push(book["convex-finance"], eth, "Booster (main deposit contract)", "0xF403C135812408BFbE8713b5A23a04b3D48AAE31", DOCS.convex);
+  push(book["convex-finance"], eth, "3pool BaseRewardPool (Booster.poolInfo(9).crvRewards)", "0x689440f2Ff927E1f24c72F1087E1FAF471eCe1c8", DOCS.convex);
+  push(book["convex-finance"], eth, "CVX", "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B", DOCS.convex);
+  push(book["convex-finance"], eth, "cvxCRV", "0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7", DOCS.convex);
+  push(book["convex-finance"], eth, "CRV Depositor", "0x8014595F2AB54cD7c604B00E9fb932176fDc86Ae", DOCS.convex);
+  push(book["convex-finance"], eth, "CVX Locker (vlCVX)", "0x72a19342e8F1838460eBFCCEf09F6585e32db86E", DOCS.convex);
+  // Theo on Ethereum.
+  push(book.theo, eth, "thUSD", "0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3", DOCS.theo);
+  push(book.theo, eth, "sthUSD (ERC-4626 staking vault)", "0xA808Bc9775cb41c52C7842f8b50427fE7A770326", DOCS.theo);
+  push(book.theo, eth, "thUSD Mint & Redeem (whitelisted signed orders)", "0x2D99aC801DC0edadD53f5688FeF2317932E8696e", DOCS.theo);
+  push(book.theo, eth, "thBILL", "0x5FA487BCa6158c64046B2813623e20755091DA0b", DOCS.theo);
+  push(book.theo, eth, "thBILL minter", "0x8a2c307D1462Ff4fA98c9c119D3A3457AD505Eb1", DOCS.theo);
+  // CIAN Yield Layer on Ethereum.
+  push(book["cian-yield-layer"], eth, "rsETH Yield Layer vault (ylrsETH)", "0xd87a19fF681AE98BF10d2220D1AE3Fbd374ADE4e", DOCS.cian);
+  push(book["cian-yield-layer"], eth, "rsETH Yield Layer RedeemOperator", "0x47DBD71Db64617f6cBD45eB9D9Ba876F40ED239E", DOCS.cian);
+  push(book["cian-yield-layer"], eth, "stETH Yield Layer vault (ylstETH)", "0xB13aa2d0345b0439b064f26B82D8dCf3f508775d", DOCS.cian);
+  push(book["cian-yield-layer"], eth, "stETH Yield Layer RedeemOperator", "0xdAc6748CbB7CD9DA1868eB7aD598273122f012db", DOCS.cian);
+  // SolvBTC on Ethereum.
+  push(book.solvbtc, eth, "SolvBTC", "0x7A56E1C57C7475CCf742a1832B028F0456652F97", DOCS.solv);
+  push(book.solvbtc, eth, "xSolvBTC", "0xd9D920AA40f578ab794426F5C90F6C731D159DEf", DOCS.solv);
+  push(book.solvbtc, eth, "SolvBTC Router", "0x1fF7d7C0A7D8E94046708C611DeC5056A9d2B823", DOCS.solv);
+  push(book.solvbtc, eth, "SolvBTC LST RouterV2", "0x3d93B9e8F0886358570646dAd9421564C5fE6334", DOCS.solv);
+  // Zama confidential token wrappers on Ethereum.
+  push(book.zama, eth, "Wrappers Registry", "0xeb5015fF021DB115aCe010f23F55C2591059bBA0", DOCS.zama);
+  push(book.zama, eth, "Confidential USDC (cUSDC)", "0xe978F22157048E5DB8E5d07971376e86671672B2", DOCS.zama);
+  push(book.zama, eth, "Confidential USDT (cUSDT)", "0xAe0207C757Aa2B4019Ad96edD0092ddc63EF0c50", DOCS.zama);
+  push(book.zama, eth, "Confidential WETH (cWETH)", "0xda9396b82634Ea99243cE51258B6A5Ae512D4893", DOCS.zama);
+  push(book.zama, eth, "Zama Token", "0xA12CC123ba206d4031D1c7f6223D1C2Ec249f4f3", DOCS.zama);
+  // SSV Network on Ethereum.
+  push(book["ssv-network"], eth, "SSV Network (ssvnetwork.eth)", "0xDD9BC35aE942eF0cFa76930954a156B3fF30a4E1", DOCS.ssv);
+  push(book["ssv-network"], eth, "SSV Network Views (views.ssvnetwork.eth)", "0xafE830B6Ee262ba11cce5F32fDCd760FFE6a66e4", DOCS.ssv);
+  // Lagoon protocol contracts on Ethereum (vaults are deployed per curator from the Factory).
+  push(book.lagoon, eth, "Vault Factory", "0x8D6f5479B14348186faE9BC7E636e947c260f9B1", DOCS.lagoon);
+  push(book.lagoon, eth, "ProtocolRegistry", "0x6dA4D1859bA1d02D095D2246142CdAd52233e27C", DOCS.lagoon);
+  push(book.lagoon, eth, "Vault logic v0.6.0", "0x6C77c47FB8168E22976C3B0338CB1769c952249f", DOCS.lagoon);
+
   return book;
 }
 
@@ -1144,5 +1216,47 @@ module.exports = {
     rewardRouter: "0x5E4766F932ce00aA4a1A82d3Da85adf15C5694A1",
     glp: "0x4277f8F2c384827B5273592FF7CeBd9f2C1ac258",
     fsGlp: "0x1aDDD80E6039594eE970E5872D247bf0414C8903",
+  },
+  // https://docs.usdt0.to/technical-documentation/developer (Ethereum OFT Adapter, Arbitrum EID)
+  USDT0: {
+    adapter: "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee",
+    usdt: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    arbitrumEid: 30110,
+  },
+  // https://docs.liquity.org/liquity-v1/documentation/resources
+  LIQUITY: {
+    stabilityPool: "0x66017D22b0f8556afDd19FC67041899Eb65a21bb",
+    lusd: "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
+  },
+  // https://docs.convexfinance.com/convexfinance/faq/contract-addresses. LP token, gauge and
+  // reward pool are read from Booster.poolInfo(pid) at run time (pid 9 = Curve 3pool).
+  CONVEX: {
+    booster: "0xF403C135812408BFbE8713b5A23a04b3D48AAE31",
+    pid: "9",
+  },
+  // https://docs.theo.xyz/developers/deployed-addresses
+  THEO: {
+    thusd: "0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3",
+    sthusd: "0xA808Bc9775cb41c52C7842f8b50427fE7A770326",
+  },
+  // https://docs.cian.app/yieldlayer/for-builders-developer-documentation/yield-layer-contracts (Yield Layer rsETH).
+  // rsETH is the vault's asset() (Kelp rsETH).
+  CIAN: {
+    vault: "0xd87a19fF681AE98BF10d2220D1AE3Fbd374ADE4e",
+    redeemOperator: "0x47DBD71Db64617f6cBD45eB9D9Ba876F40ED239E",
+    rseth: "0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7",
+  },
+  // https://docs.solv.finance/developer-guide/contracts and the storage-pools page (Ethereum WBTC pool).
+  SOLVBTC: {
+    router: "0x1fF7d7C0A7D8E94046708C611DeC5056A9d2B823",
+    solvbtc: "0x7A56E1C57C7475CCf742a1832B028F0456652F97",
+    wbtc: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+    wbtcPoolId: "0x716db7dc196abe78d5349c7166896f674ab978af26ada3e5b3ea74c5a1b48307",
+  },
+  // https://docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum
+  ZAMA: {
+    registry: "0xeb5015fF021DB115aCe010f23F55C2591059bBA0",
+    cusdc: "0xe978F22157048E5DB8E5d07971376e86671672B2",
+    usdc: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   },
 };
