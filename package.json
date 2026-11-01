@@ -221,7 +221,7 @@
     "simulate:syncswap:smoke": "SMOKE_SLUG=syncswap node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:synthetix:smoke": "SMOKE_SLUG=synthetix node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:thena:smoke": "SMOKE_SLUG=thena node src/simulation/api/smokeDefiLlamaProtocol.js",
-    "simulate:thruster:smoke": "SMOKE_SLUG=thruster node src/simulation/api/smokeDefiLlamaProtocol.js",
+    "simulate:thruster:smoke": "SMOKE_SLUG=thruster SMOKE_MIN_TVL_USD=0 node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:ammalgam:smoke": "SMOKE_ALLOW_NOT_LISTED=1 SMOKE_SLUG=ammalgam node src/simulation/api/smokeDefiLlamaProtocol.js",
     "simulate:morpho:smoke": "node src/simulation/api/smokeMorphoGraphql.js",
     "simulate:reya:smoke": "SMOKE_SLUG=reya-perps node src/simulation/api/smokeDefiLlamaProtocol.js",

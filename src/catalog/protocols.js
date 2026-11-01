@@ -129,7 +129,14 @@ const PROTOCOLS = [
   { id: "quickswap", name: "QuickSwap V3", category: "dex", url: "https://quickswap.exchange", about: "Polygon AMM." },
   { id: "syncswap", name: "SyncSwap", category: "dex", url: "https://syncswap.xyz", about: "zkSync-family AMM." },
   { id: "thena", name: "THENA", category: "dex", url: "https://thena.fi", about: "BNB Chain ve(3,3) DEX." },
-  { id: "thruster", name: "Thruster", category: "dex", url: "https://thruster.finance", about: "Blast DEX." },
+  {
+    id: "thruster",
+    name: "Thruster",
+    category: "dex",
+    url: "https://thruster.finance",
+    about:
+      "Blast DEX. Blast is shutting down, and DefiLlama reports Thruster (and all of Blast) at $0 TVL from 2026-10-31, so the smoke allows $0 TVL and fails only if the `thruster` row disappears.",
+  },
   {
     id: "ammalgam",
     name: "Ammalgam",

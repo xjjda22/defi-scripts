@@ -54,7 +54,9 @@ const EXTRA_WHALES = {
   },
   bsc: {
     WETH: ["0x8894E0a0c962CB723c1976a4421c95949bE2D4E3"],
-    USDC: ["0x8894E0a0c962CB723c1976a4421c95949bE2D4E3"],
+    // 0x8894… held only 3 USDC on 2026-11-02 (Binance hot wallet after the 2026-10-29 drain);
+    // Binance 8 (0xF977…) held ~362.8M BSC USDC.
+    USDC: ["0x8894E0a0c962CB723c1976a4421c95949bE2D4E3", "0xF977814e90dA44bFA03b6295A0616a897441aceC"],
     USDT: ["0x8894E0a0c962CB723c1976a4421c95949bE2D4E3"],
   },
   arbitrum: {
