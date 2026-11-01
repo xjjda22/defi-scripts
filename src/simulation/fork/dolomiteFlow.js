@@ -48,7 +48,7 @@ async function supplyWithdraw(base) {
   const margin = new ethers.Contract(DOLOMITE.margin, MARGIN_ABI, provider);
   const marketId = await margin.getMarketIdByTokenAddress(DOLOMITE.usdc);
   if (await margin.getMarketIsClosing(marketId)) {
-    return finish({ ...base, ok: false, error: `Dolomite USDC market ${marketId} is closing` });
+    return finish({ ...base, ok: false, key: `marketClosing=true`, error: `Dolomite USDC market ${marketId} is closing; no tx sent` });
   }
   // Every deposit reads the market price; a zero oracle price reverts "Storage: Price cannot be zero",
   // so check it first and FAIL with that label before any tx.
