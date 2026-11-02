@@ -48,8 +48,14 @@ function checkSignals(row, label, problems) {
   }
 }
 
+const STATUSES = new Set(["direct", "linked", "failing-paused", "none"]);
+
 function checkTesting(row, problems) {
   const testing = row.testing;
+  if (testing && !STATUSES.has(testing.status)) problems.push(`${row && row.id}: testing.status is ${testing.status}`);
+  if (testing && (testing.status === "none") !== (testing.mode === "api-only")) {
+    problems.push(`${row.id}: testing.status ${testing.status} disagrees with mode ${testing.mode}`);
+  }
   if (!testing || (testing.mode !== "fork" && testing.mode !== "api-only")) {
     problems.push(`${row.id}: testing.mode must be fork or api-only`);
     return;
