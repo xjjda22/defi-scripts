@@ -1,6 +1,6 @@
 /**
  * BSC + L2 lending TVL snapshot from DefiLlama (Compound-class + Venus).
- * Uses on-chain Aave/Morpho rates via `npm run analytics:lending:rates` for live APYs.
+ * Uses on-chain Aave/Morpho rates via `npm run analytics -- lending:rates` for live APYs.
  *
  * Env:
  *   LENDING_LLAMA_CHAINS — comma-separated DefiLlama chain names (default: BSC, Arbitrum, Base)
@@ -64,7 +64,7 @@ async function main() {
     }
   }
 
-  console.log(chalk.gray("\nLive supply/borrow APYs: npm run analytics:lending:rates\n"));
+  console.log(chalk.gray("\nLive supply/borrow APYs: npm run analytics -- lending:rates\n"));
 }
 
 if (require.main === module) {

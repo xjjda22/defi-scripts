@@ -1,5 +1,5 @@
 /**
- * Smoke for analytics:derive:options.
+ * Smoke for analytics -- derive:options.
  * Fails when /summary/options/derive-options dailyNotionalVolume errors
  * or 30d notional is missing or not > 0.
  * Also reads /protocol/derive and /overview/options so the OK line includes TVL and share.

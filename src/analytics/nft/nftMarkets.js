@@ -2,8 +2,8 @@
  * NFT landscape: Llama marketplace fees + a 10-collection watchlist.
  * Floor quotes are optional (Reservoir). Not a snipe / wash bot.
  *
- *   npm run analytics:nft:markets
- *   RESERVOIR_API_KEY=... npm run analytics:nft:markets
+ *   npm run analytics -- nft:markets
+ *   RESERVOIR_API_KEY=... npm run analytics -- nft:markets
  */
 
 require("dotenv").config();

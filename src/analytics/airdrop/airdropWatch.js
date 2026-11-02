@@ -2,8 +2,8 @@
  * Airdrop / points calendar (research only).
  * Does not claim, sybil, or submit txs. Optional join to defi-mev trends-report.
  *
- *   npm run analytics:airdrop:watch
- *   TRENDS_REPORT=/path/to/trends-report.json npm run analytics:airdrop:watch
+ *   npm run analytics -- airdrop:watch
+ *   TRENDS_REPORT=/path/to/trends-report.json npm run analytics -- airdrop:watch
  */
 
 require("dotenv").config();

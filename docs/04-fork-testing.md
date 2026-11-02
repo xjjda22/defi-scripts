@@ -104,7 +104,7 @@ Perp books are not Uniswap-style routers. GMX V2 runs an order pipeline and Hype
 
 The script therefore reads `Vault.poolAmounts(USDC)`, `GlpManager.getAum/getPrice` and `GLP.totalSupply()` and asserts the book still reads. GLP price on the last run was about **$0.090** with a V1 AUM near **$848k**, down from the V1 peak, which is consistent with a closed book.
 
-**Hyperliquid has no fork coverage and no monitor is built from a bridge read.** The perps engine is off-chain, and the widely-copied Ethereum "bridge" address `0x2Df1c67E04526f42B83764733b06AAf4e2B05B02` has **no contract code** on Ethereum or Arbitrum and does not even pass EIP-55 checksum validation, so it cannot be asserted against. `analytics:hyperliquid:perps` covers TVL and fees from DefiLlama.
+**Hyperliquid has no fork coverage and no monitor is built from a bridge read.** The perps engine is off-chain, and the widely-copied Ethereum "bridge" address `0x2Df1c67E04526f42B83764733b06AAf4e2B05B02` has **no contract code** on Ethereum or Arbitrum and does not even pass EIP-55 checksum validation, so it cannot be asserted against. `monitor:dex -- hyperliquid:perps` covers TVL and fees from DefiLlama.
 
 Raydium is Solana. The suite does not fork it. The showcase marks that row API-only.
 

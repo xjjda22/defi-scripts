@@ -10,9 +10,9 @@
  * - Balance health & arbitrage opportunities
  *
  * Usage:
- *   npm run analytics:curve:pools [chain] [poolName]
- *   npm run analytics:curve:pools ethereum 3pool
- *   npm run analytics:curve:pools --help
+ *   npm run analytics -- curve:pools [chain] [poolName]
+ *   npm run analytics -- curve:pools ethereum 3pool
+ *   npm run analytics -- curve:pools --help
  */
 
 const { ethers } = require("ethers");
@@ -234,7 +234,7 @@ async function main() {
 Curve Pool Monitor - Monitor Curve pool states and APYs
 
 Usage:
-  npm run analytics:curve:pools
+  npm run analytics -- curve:pools
 
 Monitors all configured pools:
   - 3pool (USDC/USDT/DAI) [V1 - StableSwap]

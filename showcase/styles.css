@@ -197,8 +197,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .name { font-weight: 600; color: inherit; text-decoration: none; }
 .name:hover, .name:focus-visible { color: var(--accent); }
 .slug { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
-.llama { color: var(--accent); text-decoration: none; font-size: 12px; }
-.llama:hover { text-decoration: underline; }
+.llama, .gecko { color: var(--accent); text-decoration: none; font-size: 12px; margin-left: 6px; }
+.llama:hover, .gecko:hover { text-decoration: underline; }
 
 .bar {
   display: inline-flex;

@@ -370,7 +370,7 @@ async function main() {
 Uniswap Price Monitor - Compare prices across V2, V3, V4
 
 Usage:
-  npm run analytics:uniswap:prices
+  npm run analytics -- uniswap:prices
 
 Monitors default pairs:
   - WETH/USDC (1 ETH)

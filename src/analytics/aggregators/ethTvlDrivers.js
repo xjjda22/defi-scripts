@@ -1,7 +1,7 @@
 /**
  * Ethereum DeFi TVL drivers: implied 7d $ inflow/outflow by protocol and category.
  *
- *   npm run analytics:eth:tvl-drivers
+ *   npm run analytics -- eth:tvl-drivers
  *
  * change_7d is protocol-wide. Rows require Ethereum share ≥ ETH_SHARE_MIN so the
  * dollar estimate is not a Solana/Tron bleed. CEX omitted (not chain TVL).

@@ -1,7 +1,7 @@
 /**
  * Ethereum DEX venue share: Uniswap V4 vs V3 vs aggregators vs long-tail.
  *
- *   npm run analytics:eth:dex-share
+ *   npm run analytics -- eth:dex-share
  *
  * 7d Δ above FROM_ZERO_PCT is labeled "new" (listing from near zero), not organic.
  */
@@ -151,7 +151,7 @@ async function main() {
   console.log(chalk.yellow("\n7d risers (vol ≥ $1M)\n"));
   console.log(rise.toString());
   console.log(chalk.gray('\n"(new)" = 7d Δ ≥ 400%. Treat as a listing from near zero, not organic growth.'));
-  console.log(chalk.gray("Live quotes: CHAIN=ethereum npm run analytics:dex:prices\n"));
+  console.log(chalk.gray("Live quotes: CHAIN=ethereum npm run analytics -- dex:prices\n"));
 }
 
 module.exports = { FROM_ZERO_PCT, CHAIN, buildEthDexShare, protoName, isFromZero };

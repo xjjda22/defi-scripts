@@ -1,6 +1,6 @@
 /**
  * Category view: headline TVL from DefiLlama for major lending families (MVP).
- * On-chain rates: npm run analytics:lending:rates
+ * On-chain rates: npm run analytics -- lending:rates
  */
 
 require("dotenv").config();
@@ -45,7 +45,7 @@ async function main() {
     table.push([r.label, r.slug, tvlCell]);
   }
   console.log(table.toString());
-  console.log(chalk.gray("\nRates: npm run analytics:lending:rates"));
+  console.log(chalk.gray("\nRates: npm run analytics -- lending:rates"));
 }
 
 if (require.main === module) {

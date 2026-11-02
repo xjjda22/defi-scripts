@@ -1,9 +1,9 @@
 /**
  * ETH / BTC spot and ratio across last month / this month / this week.
  *
- *   npm run analytics:ethbtc:ratio
+ *   npm run analytics -- ethbtc:ratio
  *
- * Chain TVL windows: npm run analytics:ethbtc:tvl
+ * Chain TVL windows: npm run analytics -- ethbtc:tvl
  */
 
 require("dotenv").config();
@@ -124,7 +124,7 @@ async function main() {
   t.push(["This week", formatPct(board.thisWeek.eth), formatPct(board.thisWeek.btc), formatPct(board.thisWeek.ratioPct)]);
   console.log("");
   console.log(t.toString());
-  console.log(chalk.gray("\nChain TVL: npm run analytics:ethbtc:tvl\n"));
+  console.log(chalk.gray("\nChain TVL: npm run analytics -- ethbtc:tvl\n"));
 }
 
 module.exports = { buildEthBtcRatio, seriesToTvlMap };

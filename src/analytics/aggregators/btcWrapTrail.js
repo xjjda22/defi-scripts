@@ -1,9 +1,9 @@
 /**
  * Bitcoin wrap listing trail: Circle Bitcoin daily TVL plus peer 7d $ delta.
  *
- *   npm run analytics:btc:wrap-trail
+ *   npm run analytics -- btc:wrap-trail
  *
- * Snapshot largest/week-up stays on `analytics:btc:wraps`. This board is the
+ * Snapshot largest/week-up stays on `analytics -- btc:wraps`. This board is the
  * from-zero path (Circle listed mid-September) vs Kraken / Babylon / Nexus.
  */
 

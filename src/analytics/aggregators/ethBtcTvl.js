@@ -1,7 +1,7 @@
 /**
  * Ethereum vs Bitcoin chain TVL across last month / this month / this week.
  *
- *   npm run analytics:ethbtc:tvl
+ *   npm run analytics -- ethbtc:tvl
  */
 
 require("dotenv").config();

@@ -2,7 +2,7 @@
  * Live L2 rollup board: DefiLlama chain TVL + DEX 30d volume.
  * Reuses chains.js keys; does not duplicate RPC maps.
  *
- *   npm run analytics:l2:overview
+ *   npm run analytics -- l2:overview
  */
 
 require("dotenv").config();
@@ -117,7 +117,7 @@ async function main() {
   if (missingDex.length) {
     console.log(chalk.gray(`\nDEX overview missing: ${missingDex.map(r => r.label).join(", ")}`));
   }
-  console.log(chalk.gray("\nLive quotes: CHAIN=base|arbitrum|unichain npm run analytics:dex:prices"));
+  console.log(chalk.gray("\nLive quotes: CHAIN=base|arbitrum|unichain npm run analytics -- dex:prices"));
   if (ok === 0) process.exit(1);
 }
 

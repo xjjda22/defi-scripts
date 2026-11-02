@@ -122,7 +122,7 @@ const FORK_RECIPES = [
     contractKeys: ["gmx"],
     category: "perps",
     label: "Read-only (V1 vault, sunset)",
-    note: "GMX V1 is sunset: the docs say trading and providing liquidity are no longer supported, Vault.isSwapEnabled()/isLeverageEnabled() are false and GLP minting reverts. The script reads the V1 vault, GLP supply and GLP price. The V2 perp order pipeline is not exercised on a local fork; analytics:gmx:perps covers OI and fees.",
+    note: "GMX V1 is sunset: the docs say trading and providing liquidity are no longer supported, Vault.isSwapEnabled()/isLeverageEnabled() are false and GLP minting reverts. The script reads the V1 vault, GLP supply and GLP price. The V2 perp order pipeline is not exercised on a local fork; monitor:dex -- gmx:perps covers OI and fees.",
     tests: [test("fork:gmx:read", "read", "arbitrum")],
   }),
   recipe({
@@ -869,7 +869,7 @@ const API_ONLY = [
     keys: ["near-intents"],
     category: "aggregator",
     appUrl: "https://near.com/",
-    note: "No fork test: NEAR Intents settles on NEAR. Balances live in the intents.near Verifier contract's internal ledger and solvers fill signed intents off-chain (docs.near-intents.org). EVM chains only hold bridged deposits, so there is no EVM contract with a permissionless action to assert on a fork. analytics:near:intents covers TVL and volume.",
+    note: "No fork test: NEAR Intents settles on NEAR. Balances live in the intents.near Verifier contract's internal ledger and solvers fill signed intents off-chain (docs.near-intents.org). EVM chains only hold bridged deposits, so there is no EVM contract with a permissionless action to assert on a fork. monitor:dex -- near:intents covers TVL and volume.",
   },
   {
     keys: ["re"],
@@ -893,7 +893,7 @@ const API_ONLY = [
     keys: ["maple"],
     category: "lending",
     appUrl: "https://www.maple.finance",
-    note: "Permissioned: no fork test. syrupUSDC and syrupUSDT deposits must go through SyrupRouter, which enforces PoolPermissionManager \"P:deposit\"; a first deposit needs an authorization signature from Maple, and withdrawals are a queued requestRedeem that Maple processes (docs.maple.finance smart-contract integration). analytics:maple:lending covers TVL and fees.",
+    note: "Permissioned: no fork test. syrupUSDC and syrupUSDT deposits must go through SyrupRouter, which enforces PoolPermissionManager \"P:deposit\"; a first deposit needs an authorization signature from Maple, and withdrawals are a queued requestRedeem that Maple processes (docs.maple.finance smart-contract integration). monitor:dex -- maple:lending covers TVL and fees.",
   },
   {
     keys: ["fx-protocol", "fx"],
@@ -1069,6 +1069,8 @@ function scriptKind(name) {
   const script = String(name || "");
   if (script.startsWith("fork:")) return "fork";
   if (script.startsWith("swap:")) return "swap";
+  if (script.startsWith("monitor:dex")) return "analytics";
+  if (script.startsWith("analytics -- ") || script.startsWith("crosschain -- ")) return "analytics";
   if (script.startsWith("analytics:") || script.startsWith("crosschain:")) return "analytics";
   if (script.includes(":smoke")) return "smoke";
   if (/^simulate:(uniswapx:fill|aave:(v3:fork|liquidations|versions)|morpho:fork|lido:fork)/.test(script)) return "fork";

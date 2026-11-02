@@ -44,8 +44,8 @@ const PROTOCOLS = [
       "V2/V3/V4 AMM. The deepest coverage in the repo: cross-chain trackers, price monitor, fork quotes and swaps.",
     data: "Subgraphs, on-chain RPC, DefiLlama",
     notes: [
-      "\"Uniswap's protocol revenue reached $14.81M in September 2026, its highest month since the fee switch went live. Robinhood Chain contributed $7.87M of it, or 53%\" ([X @tokenterminal](https://x.com/tokenterminal/status/2111428989608923206), 2026-10-17). `analytics:uniswap:revenue` prints DefiLlama `uniswap` fees/revenue by month (September revenue $15.49M on DefiLlama). The per-chain split is not printed.",
-      "\"@Uniswap hit $1.2M revenue (bad-priced swaps + arb bots flooding pools) … @Beaverbuild made $1.47M\" after the Binance-hack dumps ([X @jussy_world](https://x.com/jussy_world/status/2116478620957069371) (2026-10-31, Inner Circle CT)). `analytics:uniswap:daily-revenue` on 2026-11-02: DefiLlama `uniswap` daily revenue $1.19M on 2026-10-29 (fees $9.62M), $214.72K the day before — matches.",
+      "\"Uniswap's protocol revenue reached $14.81M in September 2026, its highest month since the fee switch went live. Robinhood Chain contributed $7.87M of it, or 53%\" ([X @tokenterminal](https://x.com/tokenterminal/status/2111428989608923206), 2026-10-17). `monitor:dex -- uniswap:revenue` prints DefiLlama `uniswap` fees/revenue by month (September revenue $15.49M on DefiLlama). The per-chain split is not printed.",
+      "\"@Uniswap hit $1.2M revenue (bad-priced swaps + arb bots flooding pools) … @Beaverbuild made $1.47M\" after the Binance-hack dumps ([X @jussy_world](https://x.com/jussy_world/status/2116478620957069371) (2026-10-31, Inner Circle CT)). `monitor:dex -- uniswap:daily-revenue` on 2026-11-02: DefiLlama `uniswap` daily revenue $1.19M on 2026-10-29 (fees $9.62M), $214.72K the day before — matches.",
     ],
   },
   {
@@ -53,10 +53,10 @@ const PROTOCOLS = [
     name: "Curve Finance",
     category: "dex",
     url: "https://curve.fi",
-    about: "Stablecoin-focused AMM; LlamaLend V1/V2 borrowed + TVL via `analytics:curve:lending`.",
+    about: "Stablecoin-focused AMM; LlamaLend V1/V2 borrowed + TVL via `analytics -- curve:lending`.",
     data: "Subgraphs, on-chain RPC, DefiLlama",
     notes: [
-      "Curve LlamaLend active loans rose from $42.18M (2026-06-30) to $70.9M (2026-09-30), above the $69M end-2025 level; LlamaLend v2 drove ~84% of the net increase ([crypto.news](https://crypto.news/curve-finance-loans-climb-68-in-q3-as-defi-lending/), 2026-10-15). `analytics:curve:lending` sums DefiLlama `curve-llamalend` + `curve-llamalend-v2` borrowed (aggregate `borrowed` key, not double-counted with `*-borrowed`) and TVL.",
+      "Curve LlamaLend active loans rose from $42.18M (2026-06-30) to $70.9M (2026-09-30), above the $69M end-2025 level; LlamaLend v2 drove ~84% of the net increase ([crypto.news](https://crypto.news/curve-finance-loans-climb-68-in-q3-as-defi-lending/), 2026-10-15). `analytics -- curve:lending` sums DefiLlama `curve-llamalend` + `curve-llamalend-v2` borrowed (aggregate `borrowed` key, not double-counted with `*-borrowed`) and TVL.",
     ],
   },
   {
@@ -67,7 +67,7 @@ const PROTOCOLS = [
     about: "Weighted / composable pools behind a single Vault. DefiLlama parent slug `balancer` for TVL + fees.",
     data: "Subgraphs, on-chain RPC, DefiLlama",
     notes: [
-      "BAL holders voted 99.2% (42 votes, 17.2M BAL) to shut Balancer down; pools go withdrawals-only on 2026-10-30 (some v3 pools to 11-30), bug bounty ends 10-30, BAL burn redemptions open May 2027 at ~$0.158/BAL. TVL cited ~$58.5M (from $157M in March); August protocol revenue ~$30K vs ~$150K/month spend ([rekt.news](https://www.rekt.news/out-of-balance), 2026-10-14). `analytics:balancer:protocol` prints DefiLlama TVL by chain and fees/revenue (`DEFILLAMA_FEES=1`). The Snapshot vote result itself is not readable here.",
+      "BAL holders voted 99.2% (42 votes, 17.2M BAL) to shut Balancer down; pools go withdrawals-only on 2026-10-30 (some v3 pools to 11-30), bug bounty ends 10-30, BAL burn redemptions open May 2027 at ~$0.158/BAL. TVL cited ~$58.5M (from $157M in March); August protocol revenue ~$30K vs ~$150K/month spend ([rekt.news](https://www.rekt.news/out-of-balance), 2026-10-14). `monitor:dex -- balancer:protocol` prints DefiLlama TVL by chain and fees/revenue (`DEFILLAMA_FEES=1`). The Snapshot vote result itself is not readable here.",
     ],
   },
   {
@@ -105,7 +105,7 @@ const PROTOCOLS = [
     url: "https://pancakeswap.finance",
     about: "Multichain V3 AMM.",
     notes: [
-      "\"PancakeSwap Aggregator just crossed $1B in routed volume over the last 30 days\" ([X @PancakeSwap](https://x.com/PancakeSwap/status/2112725564276514924), 2026-10-21). `analytics:pancakeswap:aggregator` prints DefiLlama `pancakeswap-aggregator` volume (30d $1.22B on 2026-10-23) and monthly totals.",
+      "\"PancakeSwap Aggregator just crossed $1B in routed volume over the last 30 days\" ([X @PancakeSwap](https://x.com/PancakeSwap/status/2112725564276514924), 2026-10-21). `monitor:dex -- pancakeswap:aggregator` prints DefiLlama `pancakeswap-aggregator` volume (30d $1.22B on 2026-10-23) and monthly totals.",
     ],
   },
   { id: "camelot", name: "Camelot", category: "dex", url: "https://camelot.exchange", about: "Arbitrum-native DEX." },
@@ -115,9 +115,9 @@ const PROTOCOLS = [
     name: "Fluid DEX",
     category: "dex",
     url: "https://fluid.io",
-    about: "DEX on top of Fluid's lending liquidity layer. Fluid Lending (borrowed + fees) via `analytics:fluid:lending`.",
+    about: "DEX on top of Fluid's lending liquidity layer. Fluid Lending (borrowed + fees) via `monitor:dex -- fluid:lending`.",
     notes: [
-      "Fluid Lending: \"$1.77B active loans, now the 3rd largest onchain money market\" and \"best weekly revenue in 4 months\" ([X @DefiIgnas](https://x.com/DefiIgnas/status/2112554133257691275), 2026-10-20). `analytics:fluid:lending` prints DefiLlama `fluid-lending` TVL, borrowed by chain and fees/revenue. DefiLlama shows ~$672M borrowed (2026-10-21); the $1.77B figure likely counts Fluid-powered Jupiter Lend on Solana, which DefiLlama lists separately.",
+      "Fluid Lending: \"$1.77B active loans, now the 3rd largest onchain money market\" and \"best weekly revenue in 4 months\" ([X @DefiIgnas](https://x.com/DefiIgnas/status/2112554133257691275), 2026-10-20). `monitor:dex -- fluid:lending` prints DefiLlama `fluid-lending` TVL, borrowed by chain and fees/revenue. DefiLlama shows ~$672M borrowed (2026-10-21); the $1.77B figure likely counts Fluid-powered Jupiter Lend on Solana, which DefiLlama lists separately.",
     ],
   },
   {
@@ -291,7 +291,7 @@ const PROTOCOLS = [
     about: "PropAMM / active-AMM DEX on BNB, Ethereum, Base and Robinhood Chain (DefiLlama `metric-v1`). TVL plus dexs volume by month.",
     data: "DefiLlama",
     notes: [
-      "\"$340M in RWA volume on Metric since launch\" ([X @realpepito](https://x.com/realpepito/status/2111843913938207090), 2026-10-18); \"~20% of Robinhood stock-token DEX volume\" in its first ~24h ([X @Nomaticcap](https://x.com/Nomaticcap/status/2111211943713546518), 2026-10-16). `analytics:metric:dex` prints total DefiLlama volume (30d $2.97B, all-time $4.37B on 2026-10-21); the RWA-only slice and the Robinhood share are not broken out.",
+      "\"$340M in RWA volume on Metric since launch\" ([X @realpepito](https://x.com/realpepito/status/2111843913938207090), 2026-10-18); \"~20% of Robinhood stock-token DEX volume\" in its first ~24h ([X @Nomaticcap](https://x.com/Nomaticcap/status/2111211943713546518), 2026-10-16). `monitor:dex -- metric:dex` prints total DefiLlama volume (30d $2.97B, all-time $4.37B on 2026-10-21); the RWA-only slice and the Robinhood share are not broken out.",
     ],
   },
   {
@@ -302,7 +302,7 @@ const PROTOCOLS = [
     about: "Small Ethereum DEX. Exploit read from DefiLlama `/hacks` (name `Yapeswap`).",
     data: "DefiLlama /hacks",
     notes: [
-      "Malicious governance proposal on 2026-10-25: a zero-quorum vote handed over the factory admin role, ~$21.9K lost (DefiLlama `/hacks`; SlowMist alert cited by [SigIntZero](https://sigintzero.com/blog/x100-4-85m-flash-loan-senate-takeover), 2026-10-26). `analytics:yapeswap:exploit` reads DefiLlama `/hacks` (2026-10-25, $21,900, Governance / Malicious Proposal). Public-feed claim, not an X post.",
+      "Malicious governance proposal on 2026-10-25: a zero-quorum vote handed over the factory admin role, ~$21.9K lost (DefiLlama `/hacks`; SlowMist alert cited by [SigIntZero](https://sigintzero.com/blog/x100-4-85m-flash-loan-senate-takeover), 2026-10-26). `analytics -- yapeswap:exploit` reads DefiLlama `/hacks` (2026-10-25, $21,900, Governance / Malicious Proposal). Public-feed claim, not an X post.",
     ],
   },
   // Aggregators & intents
@@ -355,8 +355,8 @@ const PROTOCOLS = [
     about: "Cross-chain intent settlement.",
     notes: [
       "Passed ~$31.4B cumulative volume ([Bitinsider](https://bitinsider.io/articles/near-protocol-intents-surpass-30b-in-all-time-volume-as-daily-records-fall), 2026-09-22).",
-      "Exploited for ~$3.8M in USDT on BNB Chain (Sep 30 to Oct 1) through the Omni deposit/withdrawal layer; funds returned in full on 2026-10-02 ([Cointelegraph](https://cointelegraph.com/news/near-intents-recovers-entire-stolen-38m-after-ultimatum-to-exploiter), 2026-10-03; [Decrypt](https://decrypt.co/380014/near-intents-recovers-3-8-million-after-48-hour-ultimatum), 2026-10-04; [X](https://x.com/zacodil/status/2108480859942555933), 2026-10-09). `analytics:near:exploit` reads the incident from DefiLlama `/hacks` (id 6225); DefiLlama does not record the returned funds.",
-      "\"~$10.4B in quarterly Intents volume\" in Q3 ([X @nansen_ai](https://x.com/nansen_ai/status/2112530026088522110), 2026-10-20); \"from $2.40 billion in July to $4.80 billion in September. Q3 volume reached $10.41 billion\" (Bitwise, quoted by [X @NEARProtocol](https://x.com/NEARProtocol/status/2112619862593880571), 2026-10-20). `analytics:near:intents-volume` prints DefiLlama `near-intents` dexs volume by month: Jul $2.21B, Aug $2.78B, Sep $4.80B (Q3 ≈ $9.79B on DefiLlama, 2026-10-21).",
+      "Exploited for ~$3.8M in USDT on BNB Chain (Sep 30 to Oct 1) through the Omni deposit/withdrawal layer; funds returned in full on 2026-10-02 ([Cointelegraph](https://cointelegraph.com/news/near-intents-recovers-entire-stolen-38m-after-ultimatum-to-exploiter), 2026-10-03; [Decrypt](https://decrypt.co/380014/near-intents-recovers-3-8-million-after-48-hour-ultimatum), 2026-10-04; [X](https://x.com/zacodil/status/2108480859942555933), 2026-10-09). `analytics -- near:exploit` reads the incident from DefiLlama `/hacks` (id 6225); DefiLlama does not record the returned funds.",
+      "\"~$10.4B in quarterly Intents volume\" in Q3 ([X @nansen_ai](https://x.com/nansen_ai/status/2112530026088522110), 2026-10-20); \"from $2.40 billion in July to $4.80 billion in September. Q3 volume reached $10.41 billion\" (Bitwise, quoted by [X @NEARProtocol](https://x.com/NEARProtocol/status/2112619862593880571), 2026-10-20). `monitor:dex -- near:intents-volume` prints DefiLlama `near-intents` dexs volume by month: Jul $2.21B, Aug $2.78B, Sep $4.80B (Q3 ≈ $9.79B on DefiLlama, 2026-10-21).",
     ],
   },
   {
@@ -367,7 +367,7 @@ const PROTOCOLS = [
     about: "Token lockers and vesting (DefiLlama `uncx-network-v2`).",
     data: "DefiLlama /hacks",
     notes: [
-      "Vesting V2 share-accounting bug exploited 2026-10-14: DefiLlama `/hacks` id 1765 records ~$86K, while Blockaid/news put later losses at ~$1.49M across 11 txs on BSC (~$969K), Ethereum (~$242K), Robinhood Chain (~$169K) and Base (~$114K) by 2026-10-15; ~$3.25M left in the affected Ethereum contract; LP lockers unaffected ([The Defiant](https://thedefiant.io/news/hacks/uncx-vesting-pool-exploited-for-about-86-000-blockaid-says), 2026-10-14; [TokenPost](https://www.tokenpost.com/news/technology/31955), 2026-10-14; [Crypto Times](https://www.cryptotimes.io/2026/10/15/uncx-exploit-escalates-vesting-v2-bug-drains-1-5m-across-4-chains-as-copycats-join-in/), 2026-10-15). `analytics:uncx:exploit` reads DefiLlama `/hacks` (id 1765); cite the Blockaid $1.49M figure alongside Llama's $86K.",
+      "Vesting V2 share-accounting bug exploited 2026-10-14: DefiLlama `/hacks` id 1765 records ~$86K, while Blockaid/news put later losses at ~$1.49M across 11 txs on BSC (~$969K), Ethereum (~$242K), Robinhood Chain (~$169K) and Base (~$114K) by 2026-10-15; ~$3.25M left in the affected Ethereum contract; LP lockers unaffected ([The Defiant](https://thedefiant.io/news/hacks/uncx-vesting-pool-exploited-for-about-86-000-blockaid-says), 2026-10-14; [TokenPost](https://www.tokenpost.com/news/technology/31955), 2026-10-14; [Crypto Times](https://www.cryptotimes.io/2026/10/15/uncx-exploit-escalates-vesting-v2-bug-drains-1-5m-across-4-chains-as-copycats-join-in/), 2026-10-15). `analytics -- uncx:exploit` reads DefiLlama `/hacks` (id 1765); cite the Blockaid $1.49M figure alongside Llama's $86K.",
     ],
   },
   // Perps & derivatives
@@ -378,8 +378,8 @@ const PROTOCOLS = [
     url: "https://hyperliquid.xyz",
     about: "Perps L1.",
     notes: [
-      "\"Hyperliquid collected about 91 million dollars in trading fees in September\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2111781997534433773), 2026-10-18). `analytics:hyperliquid:fees` prints DefiLlama `hyperliquid` fees/revenue by month (September fees $91.33M).",
-      "\"Hyperliquid did 3,5M in revenue today!\" ([X @Henrik_on_HL](https://x.com/Henrik_on_HL/status/2116312331135140157) (2026-10-30, Airdrop?)); \"total revenue has passed $1B\" ([X @hantengri](https://x.com/hantengri/status/2116597261106876854) (2026-10-31, Airdrop?)). `analytics:hyperliquid:revenue` on 2026-11-02: daily revenue $4.87M (10-29), $3.74M (10-30), $1.24M (10-31); all-time revenue $1.39B — both match. \"@HyperliquidX has ~5x the open interest of @Aster_DEX, and more than @variational_io and @Lighter_xyz combined\" ([X @stacy_muur](https://x.com/stacy_muur/status/2116595312550928744) (2026-10-31, Inner Circle CT)). `analytics:hyperliquid:oi` on 2026-11-02: Hyperliquid OI $7.57B vs Aster $1.40B (5.40x), Variational $897.08M + Lighter $707.28M = $1.60B — matches. Grayscale's \"$105M September revenue\" ([X @WuBlockchain](https://x.com/WuBlockchain/status/2116232188333359500), 2026-10-30, ON CHAIN): `analytics:hyperliquid:fees` shows Sept 2026 revenue $74.19M (fees $91.33M) — MISMATCH (definition differs).",
+      "\"Hyperliquid collected about 91 million dollars in trading fees in September\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2111781997534433773), 2026-10-18). `monitor:dex -- hyperliquid:fees` prints DefiLlama `hyperliquid` fees/revenue by month (September fees $91.33M).",
+      "\"Hyperliquid did 3,5M in revenue today!\" ([X @Henrik_on_HL](https://x.com/Henrik_on_HL/status/2116312331135140157) (2026-10-30, Airdrop?)); \"total revenue has passed $1B\" ([X @hantengri](https://x.com/hantengri/status/2116597261106876854) (2026-10-31, Airdrop?)). `monitor:dex -- hyperliquid:revenue` on 2026-11-02: daily revenue $4.87M (10-29), $3.74M (10-30), $1.24M (10-31); all-time revenue $1.39B — both match. \"@HyperliquidX has ~5x the open interest of @Aster_DEX, and more than @variational_io and @Lighter_xyz combined\" ([X @stacy_muur](https://x.com/stacy_muur/status/2116595312550928744) (2026-10-31, Inner Circle CT)). `monitor:dex -- hyperliquid:oi` on 2026-11-02: Hyperliquid OI $7.57B vs Aster $1.40B (5.40x), Variational $897.08M + Lighter $707.28M = $1.60B — matches. Grayscale's \"$105M September revenue\" ([X @WuBlockchain](https://x.com/WuBlockchain/status/2116232188333359500), 2026-10-30, ON CHAIN): `monitor:dex -- hyperliquid:fees` shows Sept 2026 revenue $74.19M (fees $91.33M) — MISMATCH (definition differs).",
     ],
   },
   { id: "gmx", name: "GMX", category: "perps", url: "https://gmx.io", about: "Pool-backed perps." },
@@ -395,10 +395,10 @@ const PROTOCOLS = [
     category: "perps",
     url: "https://lighter.xyz",
     about:
-      "ZK perp order book. Analytics adds open interest and its year-to-date high (`DEFILLAMA_OI=1 DEFILLAMA_OI_HIGH=1`); the smoke requires positive open interest (`SMOKE_OI=1`). `analytics:lighter:revenue` adds fees/revenue and monthly totals.",
+      "ZK perp order book. Analytics adds open interest and its year-to-date high (`DEFILLAMA_OI=1 DEFILLAMA_OI_HIGH=1`); the smoke requires positive open interest (`SMOKE_OI=1`). `monitor:dex -- lighter:revenue` adds fees/revenue and monthly totals.",
     notes: [
       "Open interest hit a 2026 high; core exchange up ~50% since August; the Robinhood partnership is ~a quarter of Lighter's OI and fee revenue and nearly 40% of daily active accounts ([TokenPost](https://www.tokenpost.com/news/business/28319), 2026-10-08; [Coinfomania](https://coinfomania.com/lighter-exchange-hits-2026-high-in-open-interest/), 2026-10-08; [X](https://x.com/Delphi_Digital/status/2108206129574539702), 2026-10-08). Analytics prints `/summary/open-interest/lighter` `total24h` and the YTD high from its daily chart; the Robinhood share is not tracked.",
-      "\"Lighter: Q2 Revenue: $7.2m, Q3 Revenue: $8.55m, Revenue up 19% QoQ\" ([X @TrustlessState](https://x.com/TrustlessState/status/2113267584304857540), 2026-10-22). `analytics:lighter:revenue` prints DefiLlama fees/revenue and monthly totals since April (2026-10-23: Q2 revenue $7.24M matches; Q3 $9.85M, +36% QoQ, above the post).",
+      "\"Lighter: Q2 Revenue: $7.2m, Q3 Revenue: $8.55m, Revenue up 19% QoQ\" ([X @TrustlessState](https://x.com/TrustlessState/status/2113267584304857540), 2026-10-22). `monitor:dex -- lighter:revenue` prints DefiLlama fees/revenue and monthly totals since April (2026-10-23: Q2 revenue $7.24M matches; Q3 $9.85M, +36% QoQ, above the post).",
     ],
   },
   {
@@ -409,8 +409,8 @@ const PROTOCOLS = [
     about: "Synthetic BTC/ETH perps on HyperEVM against a protocol-owned pool (DefiLlama slug `papertrade`).",
     notes: [
       "Pre-deposits opened 2026-10-08; live trading expected ~1h after the 2026-10-10 HyperEVM upgrade (may slip to 2026-10-11) ([DeFi Prime](https://defiprime.com/papertrade-opens-predeposits-before-hyperevm-launch), 2026-10-09; [SignalPlus](https://t.signalplus.com/crypto-news/detail/papertrade-opens-predeposits-ahead-october-trading-launch?lang=en-US), 2026-10-08). ~$25M in user deposits ahead of launch is a single X post ([X](https://x.com/zoomerfied/status/2108565430499717403), 2026-10-09); analytics prints live DefiLlama TVL.",
-      "Revenue claims: \"$50M in revenue in its first week\" ([X @patfscott](https://x.com/patfscott/status/2111185661432893613), 2026-10-16) and \"$57M revenue in 8 days\" ([X @jussy_world](https://x.com/jussy_world/status/2111814590950711579), 2026-10-18). `analytics:papertrade:revenue` prints DefiLlama fees/revenue 24h/7d/30d and month-to-date (2026-10-21: 7d $28.54M, all-time $61.80M since the 2026-10-10 launch).",
-      "(a) \"papertrade staking revenue is ~2m today, highest in the past 12 days\" ([X @Mikey0x_](https://x.com/Mikey0x_/status/2115955197164064931) (2026-10-29, Airdrop?)); (b) \"Papertrade has paid its stakers $60.7M since launch on the 10th\" ([X @zerokn0wledge_](https://x.com/zerokn0wledge_/status/2116063302950515155) (2026-10-30, Airdrop?)). `analytics:papertrade:stakers` on 2026-11-02: revenue $2.02M on 10-29, the highest since $2.34M on 10-18 — (a) matches; holders revenue since launch $63.61M (all-time) vs $60.7M posted on 10-30 — (b) close (+5%, later days included). The \"91.6% wasn't fees\" split is not on DefiLlama.",
+      "Revenue claims: \"$50M in revenue in its first week\" ([X @patfscott](https://x.com/patfscott/status/2111185661432893613), 2026-10-16) and \"$57M revenue in 8 days\" ([X @jussy_world](https://x.com/jussy_world/status/2111814590950711579), 2026-10-18). `monitor:dex -- papertrade:revenue` prints DefiLlama fees/revenue 24h/7d/30d and month-to-date (2026-10-21: 7d $28.54M, all-time $61.80M since the 2026-10-10 launch).",
+      "(a) \"papertrade staking revenue is ~2m today, highest in the past 12 days\" ([X @Mikey0x_](https://x.com/Mikey0x_/status/2115955197164064931) (2026-10-29, Airdrop?)); (b) \"Papertrade has paid its stakers $60.7M since launch on the 10th\" ([X @zerokn0wledge_](https://x.com/zerokn0wledge_/status/2116063302950515155) (2026-10-30, Airdrop?)). `monitor:dex -- papertrade:stakers` on 2026-11-02: revenue $2.02M on 10-29, the highest since $2.34M on 10-18 — (a) matches; holders revenue since launch $63.61M (all-time) vs $60.7M posted on 10-30 — (b) close (+5%, later days included). The \"91.6% wasn't fees\" split is not on DefiLlama.",
     ],
   },
   {
@@ -425,7 +425,7 @@ const PROTOCOLS = [
     name: "Drake Exchange",
     category: "perps",
     url: "https://drake.exchange",
-    about: "Monad CLOB-AMM perp DEX. Points / MON campaign row lives in `analytics:airdrop:watch`.",
+    about: "Monad CLOB-AMM perp DEX. Points / MON campaign row lives in `analytics -- airdrop:watch`.",
   },
   {
     id: "synthetix",
@@ -496,7 +496,7 @@ const PROTOCOLS = [
     about: "Perp DEX; deposits sit in the PopDEX bridge on Arbitrum/Morph (DefiLlama `popdex-bridge`). Perps fees are `popdex-perps`.",
     data: "DefiLlama",
     notes: [
-      "\"Closed Beta 已做到近 70M TVL\" (closed beta reached nearly $70M TVL) ahead of the 2026-10-19 Open Beta ([X @pandaBA007](https://x.com/pandaBA007/status/2112120838975816007), 2026-10-19). `analytics:popdex:tvl` prints DefiLlama `popdex-bridge` TVL by chain ($71.80M on 2026-10-21).",
+      "\"Closed Beta 已做到近 70M TVL\" (closed beta reached nearly $70M TVL) ahead of the 2026-10-19 Open Beta ([X @pandaBA007](https://x.com/pandaBA007/status/2112120838975816007), 2026-10-19). `monitor:dex -- popdex:tvl` prints DefiLlama `popdex-bridge` TVL by chain ($71.80M on 2026-10-21).",
     ],
   },
   {
@@ -507,7 +507,7 @@ const PROTOCOLS = [
     about: "Hyperliquid perps front end (DefiLlama `hypercall-perps`, Interface; options are `hypercall`). Volume only.",
     data: "DefiLlama",
     notes: [
-      "\"Yesterday Hypercall did more perp volume on Hyperliquid than Metamask, Insilico, Liquid and Axiom\" ([X @trajan0x](https://x.com/trajan0x/status/2111227611292799318), 2026-10-16). `analytics:hypercall:perps` prints DefiLlama dexs volume (30d $5.91M on 2026-10-21). The other front ends are not compared.",
+      "\"Yesterday Hypercall did more perp volume on Hyperliquid than Metamask, Insilico, Liquid and Axiom\" ([X @trajan0x](https://x.com/trajan0x/status/2111227611292799318), 2026-10-16). `monitor:dex -- hypercall:perps` prints DefiLlama dexs volume (30d $5.91M on 2026-10-21). The other front ends are not compared.",
     ],
   },
   {
@@ -518,7 +518,7 @@ const PROTOCOLS = [
     about:
       "ZK-validium perp DEX. DefiLlama parent `grvt`: TVL (Grvt Bridge) and open interest. Perp volume is on the paywalled `/summary/derivatives`, so it is not printed.",
     notes: [
-      "\"latest snapshot, Oct. 21: → $14.75B perp volume / 30D → $3.45B perp volume / 7D → $446.6M open interest → $36.1M TVL\" ([X @Nick_Researcher](https://x.com/Nick_Researcher/status/2113114914319696263), 2026-10-22). `analytics:grvt:perps` prints DefiLlama TVL ($33.65M on 2026-10-23) and open interest ($451.0M). Volume is not checkable on the free API.",
+      "\"latest snapshot, Oct. 21: → $14.75B perp volume / 30D → $3.45B perp volume / 7D → $446.6M open interest → $36.1M TVL\" ([X @Nick_Researcher](https://x.com/Nick_Researcher/status/2113114914319696263), 2026-10-22). `monitor:dex -- grvt:perps` prints DefiLlama TVL ($33.65M on 2026-10-23) and open interest ($451.0M). Volume is not checkable on the free API.",
     ],
   },
   {
@@ -529,7 +529,7 @@ const PROTOCOLS = [
     about:
       "Perp DEX that moved from Starknet to Arc. Prints DefiLlama `extended-perps` TVL by chain.",
     notes: [
-      "\"@extendedapp is moving completely from Starknet to @arc today, October 22. Starknet currently has about $159M in DeFi TVL, and Extended alone accounts for $117M\" ([X @wyckoffweb](https://x.com/wyckoffweb/status/2113306705161281590), 2026-10-22). On 2026-10-23 DefiLlama shows Extended Perps $114.26M with $114.10M on Arc and ~$128 on Starknet; Starknet chain TVL is in `analytics:starknet:chain`.",
+      "\"@extendedapp is moving completely from Starknet to @arc today, October 22. Starknet currently has about $159M in DeFi TVL, and Extended alone accounts for $117M\" ([X @wyckoffweb](https://x.com/wyckoffweb/status/2113306705161281590), 2026-10-22). On 2026-10-23 DefiLlama shows Extended Perps $114.26M with $114.10M on Arc and ~$128 on Starknet; Starknet chain TVL is in `analytics -- starknet:chain`.",
     ],
   },
   {
@@ -540,7 +540,7 @@ const PROTOCOLS = [
     about:
       "Solana perp DEX run inside the validator set. DefiLlama `bulk`: TVL, fees/revenue, open interest and its YTD high. Perp volume is on the paywalled `/summary/derivatives`, so it is not printed.",
     notes: [
-      "\"Six weeks live: $1.4B cumulative volume, OI from $1.4M on the 9th of Sep to $13.4M today\" ([X @zerokn0wledge_](https://x.com/zerokn0wledge_/status/2113873623719239851), 2026-10-24, Airdrop?). DefiLlama's open-interest chart starts at $1.39M on 2026-09-09 (matches) and reads $14.40M on 2026-10-24; `analytics:bulk:perps` printed $15.78M (a YTD high, 2026-10-27), TVL $8.38M and 30d fees $435.19K on 2026-10-28. Cumulative volume is not checkable on the free API (`/summary/derivatives/bulk` returns 402).",
+      "\"Six weeks live: $1.4B cumulative volume, OI from $1.4M on the 9th of Sep to $13.4M today\" ([X @zerokn0wledge_](https://x.com/zerokn0wledge_/status/2113873623719239851), 2026-10-24, Airdrop?). DefiLlama's open-interest chart starts at $1.39M on 2026-09-09 (matches) and reads $14.40M on 2026-10-24; `monitor:dex -- bulk:perps` printed $15.78M (a YTD high, 2026-10-27), TVL $8.38M and 30d fees $435.19K on 2026-10-28. Cumulative volume is not checkable on the free API (`/summary/derivatives/bulk` returns 402).",
     ],
   },
   // Lending & money markets
@@ -557,12 +557,12 @@ const PROTOCOLS = [
     category: "lending",
     url: "https://aave.com",
     about:
-      "V2/V3 lending: live rates, version comparison, liquidations, and fork reads. `analytics:aave:mantle` reads Aave V3 TVL on Mantle (DefiLlama `aave-v3` chainTvls) next to Mantle chain TVL; `analytics:aave:v4` sums DefiLlama `aave-v4` TVL + borrowed.",
+      "V2/V3 lending: live rates, version comparison, liquidations, and fork reads. `monitor:dex -- aave:mantle` reads Aave V3 TVL on Mantle (DefiLlama `aave-v3` chainTvls) next to Mantle chain TVL; `analytics -- aave:v4` sums DefiLlama `aave-v4` TVL + borrowed.",
     data: "On-chain RPC, DefiLlama",
     notes: [
-      "\"Mantle x AAVE: TVL on Mantle is up 32% to $64M in 30 days\" ([X @crypto_linn](https://x.com/crypto_linn/status/2114570465050075165), 2026-10-26, Inner Circle CT). The figure is Aave V3's own TVL on Mantle, not Mantle chain TVL: DefiLlama `aave-v3` Mantle was $64.3M on 2026-10-23 vs $48.9M on 2026-09-23 (+31.4%). `analytics:aave:mantle` on 2026-10-28: Aave V3 Mantle TVL $71.29M (+45.2% over 30 days), borrowed $150.26M; Mantle chain TVL $114.41M (+18.5% over 30 days), Aave V3 = 62.3% of it.",
-      "\"Aave V4 just crossed $1.5B in deposits. And active loans are almost at $500M\" ([X @alphaleaked](https://x.com/alphaleaked/status/2114747847031607446), 2026-10-26, Airdrop?). `analytics:aave:v4` on 2026-10-28 (DefiLlama `aave-v4`, Ethereum / Arc / Avalanche / Base): TVL $742.1M + borrowed $462.4M = $1.20B. Loans (~$462M) are close to the claim; DefiLlama deposits are ~$1.2B, not $1.5B (Aave's own dashboard may count differently). `analytics:aave:versions` covers V2/V3 rates only.",
-      "\"Aave V3 TVL fell 13.3% on the week\" to $14.64B (30 Oct cutoff, 21:00 UTC) ([Portals DeFi Weekly, Oct 2026 week 5](https://blog.portals.fi/defi-weekly-october-2026-week-5-binance-hack/), 2026-10-31). `analytics:aave:v3-tvl` on 2026-11-02: DefiLlama `aave-v3` daily TVL $16.85B (10-23) → $14.97B (10-30), -11.2%; $15.23B on 11-01 — MISMATCH (Portals used an intraday 21:00 UTC cutoff; DefiLlama's daily close is $14.97B).",
+      "\"Mantle x AAVE: TVL on Mantle is up 32% to $64M in 30 days\" ([X @crypto_linn](https://x.com/crypto_linn/status/2114570465050075165), 2026-10-26, Inner Circle CT). The figure is Aave V3's own TVL on Mantle, not Mantle chain TVL: DefiLlama `aave-v3` Mantle was $64.3M on 2026-10-23 vs $48.9M on 2026-09-23 (+31.4%). `monitor:dex -- aave:mantle` on 2026-10-28: Aave V3 Mantle TVL $71.29M (+45.2% over 30 days), borrowed $150.26M; Mantle chain TVL $114.41M (+18.5% over 30 days), Aave V3 = 62.3% of it.",
+      "\"Aave V4 just crossed $1.5B in deposits. And active loans are almost at $500M\" ([X @alphaleaked](https://x.com/alphaleaked/status/2114747847031607446), 2026-10-26, Airdrop?). `analytics -- aave:v4` on 2026-10-28 (DefiLlama `aave-v4`, Ethereum / Arc / Avalanche / Base): TVL $742.1M + borrowed $462.4M = $1.20B. Loans (~$462M) are close to the claim; DefiLlama deposits are ~$1.2B, not $1.5B (Aave's own dashboard may count differently). `analytics -- aave:versions` covers V2/V3 rates only.",
+      "\"Aave V3 TVL fell 13.3% on the week\" to $14.64B (30 Oct cutoff, 21:00 UTC) ([Portals DeFi Weekly, Oct 2026 week 5](https://blog.portals.fi/defi-weekly-october-2026-week-5-binance-hack/), 2026-10-31). `monitor:dex -- aave:v3-tvl` on 2026-11-02: DefiLlama `aave-v3` daily TVL $16.85B (10-23) → $14.97B (10-30), -11.2%; $15.23B on 11-01 — MISMATCH (Portals used an intraday 21:00 UTC cutoff; DefiLlama's daily close is $14.97B).",
     ],
   },
   {
@@ -570,11 +570,11 @@ const PROTOCOLS = [
     name: "Morpho",
     category: "lending",
     url: "https://morpho.org",
-    about: "Morpho Blue isolated markets. Also a row in `analytics:lending:aggregate`. No swap script by design.",
+    about: "Morpho Blue isolated markets. Also a row in `analytics -- lending:aggregate`. No swap script by design.",
     data: "Morpho GraphQL, on-chain RPC",
     notes: [
-      "\"Dollar loans against bitcoin on Morpho's Base markets are up about 55% this year to $1.6B, and the borrowing rate has dropped from about 7.5% to 5%\" ([X @Delphi_Digital](https://x.com/Delphi_Digital/status/2112197769645490434), 2026-10-19); \"7 vaults send $1.45B into one cbBTC/USDC market\" ([X @maikaisogawa](https://x.com/maikaisogawa/status/2112197837496963515), 2026-10-19). `analytics:morpho:base-btc` sums Morpho GraphQL `borrowAssetsUsd` over Base (8453) markets with BTC collateral and lists the largest (2026-10-21: $1.61B across 11 markets, cbBTC/USDC $1.60B borrowed / $1.77B supplied at 5.19% borrow APY). The vault-to-market allocation is not printed.",
-      "\"Over the past year, its TVL has surged from $9.3B to over $17 billion\" ([X @TheDeFinvestor](https://x.com/TheDeFinvestor/status/2115030061355245736), 2026-10-27, Airdrop? / Inner Circle CT); \"Morpho also holds 55% of TVL on Robinhood Chain: $617M of $1.13B, up from $11M at launch in July\" ([X @patfscott](https://x.com/patfscott/status/2115045782734967030), 2026-10-27, Airdrop?). `analytics:morpho:tvl` (DefiLlama parent `morpho`) on 2026-10-28: TVL $7.99B → $11.34B and TVL + borrowed $12.20B → $17.20B between 2025-10-27 and 2026-10-27. \"Over $17B\" matches TVL + borrowed; the $9.3B starting point matches neither series. Robinhood Chain: Morpho $615.10M of $1.13B chain TVL (54.3%), first point $10.72M on 2026-07-03 — matches.",
+      "\"Dollar loans against bitcoin on Morpho's Base markets are up about 55% this year to $1.6B, and the borrowing rate has dropped from about 7.5% to 5%\" ([X @Delphi_Digital](https://x.com/Delphi_Digital/status/2112197769645490434), 2026-10-19); \"7 vaults send $1.45B into one cbBTC/USDC market\" ([X @maikaisogawa](https://x.com/maikaisogawa/status/2112197837496963515), 2026-10-19). `analytics -- morpho:base-btc` sums Morpho GraphQL `borrowAssetsUsd` over Base (8453) markets with BTC collateral and lists the largest (2026-10-21: $1.61B across 11 markets, cbBTC/USDC $1.60B borrowed / $1.77B supplied at 5.19% borrow APY). The vault-to-market allocation is not printed.",
+      "\"Over the past year, its TVL has surged from $9.3B to over $17 billion\" ([X @TheDeFinvestor](https://x.com/TheDeFinvestor/status/2115030061355245736), 2026-10-27, Airdrop? / Inner Circle CT); \"Morpho also holds 55% of TVL on Robinhood Chain: $617M of $1.13B, up from $11M at launch in July\" ([X @patfscott](https://x.com/patfscott/status/2115045782734967030), 2026-10-27, Airdrop?). `monitor:dex -- morpho:tvl` (DefiLlama parent `morpho`) on 2026-10-28: TVL $7.99B → $11.34B and TVL + borrowed $12.20B → $17.20B between 2025-10-27 and 2026-10-27. \"Over $17B\" matches TVL + borrowed; the $9.3B starting point matches neither series. Robinhood Chain: Morpho $615.10M of $1.13B chain TVL (54.3%), first point $10.72M on 2026-07-03 — matches.",
     ],
   },
   {
@@ -606,7 +606,7 @@ const PROTOCOLS = [
     about: "Self-repaying loans; DefiLlama parent slug `alchemix` (includes Base).",
     data: "DefiLlama",
     notes: [
-      "Alchemix Base TVL ~$2.38M matches an Inner Circle CT claim ([X](https://x.com/scupytrooples/status/2110721103853400532) by @scupytrooples, 2026-10-15). `analytics:alchemix:base` prints DefiLlama TVL by chain (Base row at minimum).",
+      "Alchemix Base TVL ~$2.38M matches an Inner Circle CT claim ([X](https://x.com/scupytrooples/status/2110721103853400532) by @scupytrooples, 2026-10-15). `monitor:dex -- alchemix:base` prints DefiLlama TVL by chain (Base row at minimum).",
     ],
   },
   {
@@ -632,7 +632,7 @@ const PROTOCOLS = [
     name: "Spark",
     category: "lending",
     url: "https://spark.fi",
-    about: "Sky-aligned lending; also a row in `analytics:lending:aggregate`.",
+    about: "Sky-aligned lending; also a row in `analytics -- lending:aggregate`.",
   },
   {
     id: "nostra",
@@ -672,7 +672,7 @@ const PROTOCOLS = [
     notes: [
       "Record $2.41B total deposits on 2026-09-22 ([Solana Compass](https://solanacompass.com/news/jupiter-perps-adds-six-markets-including-tokenized-spacex-hype-and-zec-via-gum-orderbook), 2026-09-22).",
       "Jupiter Earn to seed $10M of sUSDai DEX liquidity on the Lend AMM ([Altcoin Buzz](https://www.altcoinbuzz.io/kamino-opens-usdc-borrowing-against-gpu-loan-yields-on-solana), 2026-09-25).",
-      "\"31.76% APY on euro Backed EURC by Circle. Only on @JupiterExchange\" ([X @NaveenCypto](https://x.com/NaveenCypto/status/2116406046659100722) (2026-10-31, Inner Circle CT)). `analytics:jupiter:eurc-apy` reads the DefiLlama yields pool `c6d1abbb-1e0a-47a0-99bd-3155b797d7d3` (Jupiter Lend EURC, Solana). on 2026-11-02: daily APY 6.20% (10-29), 42.21% (10-30), 6.90% (10-31), 6.53% (11-01), TVL $4.43M — the spike matches (DefiLlama's daily snapshot caught 42.21%, the post 31.76%).",
+      "\"31.76% APY on euro Backed EURC by Circle. Only on @JupiterExchange\" ([X @NaveenCypto](https://x.com/NaveenCypto/status/2116406046659100722) (2026-10-31, Inner Circle CT)). `analytics -- jupiter:eurc-apy` reads the DefiLlama yields pool `c6d1abbb-1e0a-47a0-99bd-3155b797d7d3` (Jupiter Lend EURC, Solana). on 2026-11-02: daily APY 6.20% (10-29), 42.21% (10-30), 6.90% (10-31), 6.53% (11-01), TVL $4.43M — the spike matches (DefiLlama's daily snapshot caught 42.21%, the post 31.76%).",
     ],
   },
   {
@@ -684,7 +684,7 @@ const PROTOCOLS = [
       "Hyperliquid lending (parent of `hyperlend-pooled` + `hyperlend-isolated`). Analytics adds fees/revenue; the smoke requires revenue. Market size ≈ the `Hyperliquid L1` TVL row plus the `borrowed` row.",
     notes: [
       "First institutional credit facility on HyperLend's Aviya Finance with Anchorage Digital custody; over $800M market size ([GlobeNewswire via Stockhouse](https://stockhouse.com/news/press-releases/2026/09/30/hyperion-defi-anchorage-digital-and-hyperlend-together-announce-the-first), 2026-09-30).",
-      "\"50% supply APY on ETH at HyperLend\" ([X @0xNessus](https://x.com/0xNessus/status/2116489120902250664) (2026-10-31, Airdrop?)); \"APY on ETH spiking on @hyperlendx\" ([X @reisnertobias](https://x.com/reisnertobias/status/2116542358573531324) (2026-10-31, Inner Circle CT)). `analytics:hyperlend:eth-apy` reads the DefiLlama yields pool `3002bd03-5e7e-4e38-9b0a-381c1109f77b` (UETH supply). on 2026-11-02: daily APY 2.50% (10-30), 5.20% (10-31), 5.18% (11-01), TVL $1.39M — MISMATCH (DefiLlama keeps one snapshot a day, so an intraday ~50% spike is not visible).",
+      "\"50% supply APY on ETH at HyperLend\" ([X @0xNessus](https://x.com/0xNessus/status/2116489120902250664) (2026-10-31, Airdrop?)); \"APY on ETH spiking on @hyperlendx\" ([X @reisnertobias](https://x.com/reisnertobias/status/2116542358573531324) (2026-10-31, Inner Circle CT)). `analytics -- hyperlend:eth-apy` reads the DefiLlama yields pool `3002bd03-5e7e-4e38-9b0a-381c1109f77b` (UETH supply). on 2026-11-02: daily APY 2.50% (10-30), 5.20% (10-31), 5.18% (11-01), TVL $1.39M — MISMATCH (DefiLlama keeps one snapshot a day, so an intraday ~50% spike is not visible).",
     ],
   },
   {
@@ -725,7 +725,7 @@ const PROTOCOLS = [
     about: "TON lending/vault protocol (DefiLlama `affluent`). Exploit amount from DefiLlama `/hacks` (id 5726).",
     data: "DefiLlama /hacks",
     notes: [
-      "Unbacked-mint exploit on TON, 2026-10-16, ~$1.053M ([DeTracker](https://feed.detracker.xyz/), 2026-10-16; [DefiLlama /hacks](https://defillama.com/hacks)). `analytics:affluent:exploit` reads DefiLlama `/hacks` (id 5726, since 2026-10-15). TVL fell from ~$1.74M to ~$1.46M by 2026-10-20.",
+      "Unbacked-mint exploit on TON, 2026-10-16, ~$1.053M ([DeTracker](https://feed.detracker.xyz/), 2026-10-16; [DefiLlama /hacks](https://defillama.com/hacks)). `analytics -- affluent:exploit` reads DefiLlama `/hacks` (id 5726, since 2026-10-15). TVL fell from ~$1.74M to ~$1.46M by 2026-10-20.",
     ],
   },
   {
@@ -746,11 +746,11 @@ const PROTOCOLS = [
     category: "vaults",
     url: "https://sentora.com",
     about:
-      "Morpho vault curator. Llama reports all Sentora vaults, not a single vault. Sentora RLUSD Main is on Ethereum; its maxDeposit is 0, so the fork test only reads it. `analytics:sentora:usd-vault` reads the DefiLlama yields pool for the Sentora USD vault (Ethereum, USDC).",
+      "Morpho vault curator. Llama reports all Sentora vaults, not a single vault. Sentora RLUSD Main is on Ethereum; its maxDeposit is 0, so the fork test only reads it. `analytics -- sentora:usd-vault` reads the DefiLlama yields pool for the Sentora USD vault (Ethereum, USDC).",
     notes: [
       `Morpho Sentora RLUSD Main (Vault V2) on Ethereum at $424.20M TVL and 5.67% APY (${PORTALS_W4}).`,
-      "The single vault is readable via Morpho's API (`vaultV2s`, `0x6dC58a0FdfC8D694e571DC59B9A52EEEa780E6bf`). Distinct from Upshift Sentora USD Earn (`analytics:upshift:allocator`).",
-      "\"Our Sentora USD vault surpassed $100M in deposits, with a current 30-day APY of 7.6%\" ([X @SentoraHQ](https://x.com/SentoraHQ/status/2114646957759348972), 2026-10-26, ON CHAIN), linking `vaults.sentora.com/vault/ethereum/0x74aD2F789Ed583DBd141bbdafC673fE1F033718b` (the Upshift-run Sentora USD vault already in `src/catalog/contracts.js`; `asset()` = USDC, but its ERC-4626 views revert, so it is not read on-chain). `analytics:sentora:usd-vault` reads DefiLlama yields pool `f4200c7d-d3fd-5b88-9398-ba66eac63a03` (`sentora-curator`, Ethereum, USDC, \"Sentora USD\"), the only USDC pool with that name. On 2026-10-28: TVL $116.56M (+23.5% over 30 days), APY 7.50%, 30-day mean 7.59%, 30-day realized from pricePerShare 7.58% — matches.",
+      "The single vault is readable via Morpho's API (`vaultV2s`, `0x6dC58a0FdfC8D694e571DC59B9A52EEEa780E6bf`). Distinct from Upshift Sentora USD Earn (`monitor:dex -- upshift:allocator`).",
+      "\"Our Sentora USD vault surpassed $100M in deposits, with a current 30-day APY of 7.6%\" ([X @SentoraHQ](https://x.com/SentoraHQ/status/2114646957759348972), 2026-10-26, ON CHAIN), linking `vaults.sentora.com/vault/ethereum/0x74aD2F789Ed583DBd141bbdafC673fE1F033718b` (the Upshift-run Sentora USD vault already in `src/catalog/contracts.js`; `asset()` = USDC, but its ERC-4626 views revert, so it is not read on-chain). `analytics -- sentora:usd-vault` reads DefiLlama yields pool `f4200c7d-d3fd-5b88-9398-ba66eac63a03` (`sentora-curator`, Ethereum, USDC, \"Sentora USD\"), the only USDC pool with that name. On 2026-10-28: TVL $116.56M (+23.5% over 30 days), APY 7.50%, 30-day mean 7.59%, 30-day realized from pricePerShare 7.58% — matches.",
     ],
   },
   {
@@ -815,12 +815,12 @@ const PROTOCOLS = [
     category: "vaults",
     url: "https://www.pendle.finance/",
     about:
-      "Pendle Ecosystem High Yield USDC Morpho Vault V2 on Ethereum (`0xcf609F8327E68b42AF54F9D529b9f65d68038435`; Morpho GraphQL, no RPC). Sibling 'Pendle Ecosystem USDC' vault `0x55C1B6e461a6334B567bAF0FEb5D728715446f05`. `analytics:pendle:tvl` reads Pendle V2 protocol TVL from DefiLlama; `analytics:pendle:revenue` reads parent `pendle` fees/revenue and volume.",
+      "Pendle Ecosystem High Yield USDC Morpho Vault V2 on Ethereum (`0xcf609F8327E68b42AF54F9D529b9f65d68038435`; Morpho GraphQL, no RPC). Sibling 'Pendle Ecosystem USDC' vault `0x55C1B6e461a6334B567bAF0FEb5D728715446f05`. `monitor:dex -- pendle:tvl` reads Pendle V2 protocol TVL from DefiLlama; `monitor:dex -- pendle:revenue` reads parent `pendle` fees/revenue and volume.",
     data: "Morpho GraphQL, DefiLlama",
     notes: [
-      "Launched 2026-10-14 on Ethereum; ~$15.76M deposits by 2026-10-15, 8.31% net APY (1.76% PENDLE rewards after 10% perf fee), ~98.6% / $15.54M in the PT-reUSD market, co-curated by Pendle and Armitage (Wintermute) ([Crypto Briefing](https://cryptobriefing.com/pendle-high-yield-usdc-vault-morpho/), 2026-10-15). `analytics:pendle:hy-vault` reads Morpho GraphQL Vault V2 on chainId 1. Market allocation is not printed by the current monitor. Address verified EIP-55 with on-chain code.",
-      "\"@pendle_fi's TVL has grown by 43% while emissions went down by 58%\", quoting Alea Research: Pendle V2 capital $809M on 2026-06-30 and $1.16B on 2026-09-30 ([X @monosarin](https://x.com/monosarin/status/2112867438442189198), 2026-10-21). `analytics:pendle:tvl` prints DefiLlama `pendle-v2` TVL on both dates: $942.01M → $1.26B (+33.3%). Emissions are not tracked.",
-      "\"$452K protocol revenue / 30D, $815.6M DEX volume / 30D\" as of 2026-10-24 ([X @Nick_Researcher](https://x.com/Nick_Researcher/status/2113857588823798055), 2026-10-24, Airdrop?); \"Pendle's 30-day fee revenue is $336,000\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2114382077034717464), 2026-10-25, Airdrop?). `analytics:pendle:revenue` (DefiLlama parent `pendle`) on 2026-10-28: 30d revenue $452.39K, fees $459.00K, 30d volume $900.42M; September revenue $554.89K. The $452K matches; the $336K figure does not match DefiLlama.",
+      "Launched 2026-10-14 on Ethereum; ~$15.76M deposits by 2026-10-15, 8.31% net APY (1.76% PENDLE rewards after 10% perf fee), ~98.6% / $15.54M in the PT-reUSD market, co-curated by Pendle and Armitage (Wintermute) ([Crypto Briefing](https://cryptobriefing.com/pendle-high-yield-usdc-vault-morpho/), 2026-10-15). `analytics -- pendle:hy-vault` reads Morpho GraphQL Vault V2 on chainId 1. Market allocation is not printed by the current monitor. Address verified EIP-55 with on-chain code.",
+      "\"@pendle_fi's TVL has grown by 43% while emissions went down by 58%\", quoting Alea Research: Pendle V2 capital $809M on 2026-06-30 and $1.16B on 2026-09-30 ([X @monosarin](https://x.com/monosarin/status/2112867438442189198), 2026-10-21). `monitor:dex -- pendle:tvl` prints DefiLlama `pendle-v2` TVL on both dates: $942.01M → $1.26B (+33.3%). Emissions are not tracked.",
+      "\"$452K protocol revenue / 30D, $815.6M DEX volume / 30D\" as of 2026-10-24 ([X @Nick_Researcher](https://x.com/Nick_Researcher/status/2113857588823798055), 2026-10-24, Airdrop?); \"Pendle's 30-day fee revenue is $336,000\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2114382077034717464), 2026-10-25, Airdrop?). `monitor:dex -- pendle:revenue` (DefiLlama parent `pendle`) on 2026-10-28: 30d revenue $452.39K, fees $459.00K, 30d volume $900.42M; September revenue $554.89K. The $452K matches; the $336K figure does not match DefiLlama.",
     ],
   },
   {
@@ -855,7 +855,7 @@ const PROTOCOLS = [
     data: "On-chain RPC",
     notes: [
       "Gauntlet USDC Prime V2 maxDeposit is 0, so the fork uses the V1 MetaMorpho vault.",
-      "\"Gauntlet USDC Prime on Base reached 12.72% APY on 30 Oct before easing to 6.24% … $402.92M in deposits\" ([Portals DeFi Weekly, Oct 2026 week 5](https://blog.portals.fi/defi-weekly-october-2026-week-5-binance-hack/), 2026-10-31). `analytics:gauntlet:usdc-prime` reads Morpho GraphQL `vaultByAddress` (MetaMorpho V1, `MORPHO_VAULT_V1=1`) for `0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61` on Base (EIP-55, 19,340 bytes of code). on 2026-11-02: $403.12M total assets, 4.80% net APY now; hourly net APY peak 13.16% at 2026-10-30 04:00 UTC — matches on deposits and the 30 Oct spike; APY has since eased below 6.24%.",
+      "\"Gauntlet USDC Prime on Base reached 12.72% APY on 30 Oct before easing to 6.24% … $402.92M in deposits\" ([Portals DeFi Weekly, Oct 2026 week 5](https://blog.portals.fi/defi-weekly-october-2026-week-5-binance-hack/), 2026-10-31). `analytics -- gauntlet:usdc-prime` reads Morpho GraphQL `vaultByAddress` (MetaMorpho V1, `MORPHO_VAULT_V1=1`) for `0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61` on Base (EIP-55, 19,340 bytes of code). on 2026-11-02: $403.12M total assets, 4.80% net APY now; hourly net APY peak 13.16% at 2026-10-30 04:00 UTC — matches on deposits and the 30 Oct spike; APY has since eased below 6.24%.",
     ],
   },
   {
@@ -895,8 +895,8 @@ const PROTOCOLS = [
     about: "RockawayX f(x) Protocol Ecosystem USDC Morpho Vault V2 on Ethereum (`0x2cA22cb25558fa2018ecb1CE4eD8AF92Ee7ea423`, roxFX), lending USDC against fxSAVE. No RPC needed.",
     data: "Morpho GraphQL",
     notes: [
-      "\"The f(x) Ecosystem USDC vault on Morpho lends against fxSAVE … Earn 8.26% … $20M already in. Curated by @RockawayX x @protocol_fx\" ([X @PhilMrlo](https://x.com/PhilMrlo/status/2111175343319245156), 2026-10-16). `analytics:fx:morpho-vault` reads Morpho GraphQL Vault V2 on chainId 1 (2026-10-21: $13.97M total assets, 6.81% net APY, curator RockawayX). Address found via Morpho GraphQL `vaultV2s`, EIP-55 checksummed, on-chain code verified, `name()` = \"RockawayX f(x) Protocol Ecosystem USDC\", `asset()` = USDC.",
-      "\"protocol_fx's earnings on DeFiLlama: Q1 2026 $121.08K. Q2 $175.99K. Q3 $365.49K. Q4 $206.05K so far\" ([X @FxIntern](https://x.com/FxIntern/status/2116778682568118323) (2026-11-01, Inner Circle CT, reposted by @rektdiomedes)); \"market cap is only $2.99M but the TVL is $185M\" ([X @rektdiomedes](https://x.com/rektdiomedes/status/2116315163712516141) (2026-10-30, Inner Circle CT)). `analytics:fx:revenue` on 2026-11-02: DefiLlama `fx-protocol` revenue by quarter $121.08K / $175.99K / $365.49K / $206.04K (Q4 to date) — matches exactly. TVL $105.97M plus $86.90M pool2 = $192.87M (\"$185M\" matches only with pool2 counted); CoinGecko FXN market cap $3.14M (not read by the script).",
+      "\"The f(x) Ecosystem USDC vault on Morpho lends against fxSAVE … Earn 8.26% … $20M already in. Curated by @RockawayX x @protocol_fx\" ([X @PhilMrlo](https://x.com/PhilMrlo/status/2111175343319245156), 2026-10-16). `analytics -- fx:morpho-vault` reads Morpho GraphQL Vault V2 on chainId 1 (2026-10-21: $13.97M total assets, 6.81% net APY, curator RockawayX). Address found via Morpho GraphQL `vaultV2s`, EIP-55 checksummed, on-chain code verified, `name()` = \"RockawayX f(x) Protocol Ecosystem USDC\", `asset()` = USDC.",
+      "\"protocol_fx's earnings on DeFiLlama: Q1 2026 $121.08K. Q2 $175.99K. Q3 $365.49K. Q4 $206.05K so far\" ([X @FxIntern](https://x.com/FxIntern/status/2116778682568118323) (2026-11-01, Inner Circle CT, reposted by @rektdiomedes)); \"market cap is only $2.99M but the TVL is $185M\" ([X @rektdiomedes](https://x.com/rektdiomedes/status/2116315163712516141) (2026-10-30, Inner Circle CT)). `monitor:dex -- fx:revenue` on 2026-11-02: DefiLlama `fx-protocol` revenue by quarter $121.08K / $175.99K / $365.49K / $206.04K (Q4 to date) — matches exactly. TVL $105.97M plus $86.90M pool2 = $192.87M (\"$185M\" matches only with pool2 counted); CoinGecko FXN market cap $3.14M (not read by the script).",
     ],
   },
   {
@@ -908,7 +908,7 @@ const PROTOCOLS = [
       "Aerie Capital x Plume USDC Core Morpho Vault V2 on Ethereum (`0x5E2339BCb89B42782CEE454B46C7C6f88c0E4f83`, AxP-USDC Core), lending USDC to Morpho borrowers who post Plume vault tokens as collateral. No RPC needed.",
     data: "Morpho GraphQL",
     notes: [
-      "\"As of October 27, 2026, the Aerie x Plume USDC Core lending vault on Ethereum mainnet is currently offering a variable 12.45% APY to USDC deposits\" ([X @AerieCapital](https://x.com/AerieCapital/status/2115137086252863788), 2026-10-27, Privacy dashboard update). `analytics:aerie:morpho-vault` reads Morpho GraphQL Vault V2 on chainId 1; on 2026-10-28: $5.77M total assets, $293.65K liquidity, 13.25% net APY (variable; above the quoted 12.45%). Address EIP-55 checksummed, on-chain code verified, `name()` = \"Aerie x Plume USDC Core\", `asset()` = USDC.",
+      "\"As of October 27, 2026, the Aerie x Plume USDC Core lending vault on Ethereum mainnet is currently offering a variable 12.45% APY to USDC deposits\" ([X @AerieCapital](https://x.com/AerieCapital/status/2115137086252863788), 2026-10-27, Privacy dashboard update). `analytics -- aerie:morpho-vault` reads Morpho GraphQL Vault V2 on chainId 1; on 2026-10-28: $5.77M total assets, $293.65K liquidity, 13.25% net APY (variable; above the quoted 12.45%). Address EIP-55 checksummed, on-chain code verified, `name()` = \"Aerie x Plume USDC Core\", `asset()` = USDC.",
     ],
   },
   // Liquid staking
@@ -1096,7 +1096,7 @@ const PROTOCOLS = [
     notes: [
       `Swell recorded $22,370 gross profit in Q2'26. ${LRT_COMBINED}`,
       FEES_NOTE,
-      "Oracle-bot hot keys compromised from 14:25 UTC on 2026-10-21; swETH and rswETH rates raised up to 1%/hour with no new ETH, from 1.133254 and 1.082464, and four malicious upgrade payloads deployed that could reach ~2,513 ETH (not executed, no confirmed loss) ([X @odysseas_eth](https://x.com/odysseas_eth/status/2113087137444683860), 2026-10-22; [Crypto Briefing](https://cryptobriefing.com/swell-sweth-rsweth-inflated-rates-hot-keys/), 2026-10-22; [0xCERT-2026-0262](https://www.0xcert.com/advisory/0xCERT-2026-0262), 2026-10-22). `analytics:swell:incident` reads both rates on-chain against those baselines (2026-10-23: swETH 1.202970, +6.15%; rswETH 1.137680, +5.10%) and the DefiLlama `/hacks` row (no amount recorded). swETH `0xf951E335afb289353dc249e82926178EaC7DEd78` (Etherscan \"Swell Network: swETH Token\", DefiLlama `fees/swell.ts`).",
+      "Oracle-bot hot keys compromised from 14:25 UTC on 2026-10-21; swETH and rswETH rates raised up to 1%/hour with no new ETH, from 1.133254 and 1.082464, and four malicious upgrade payloads deployed that could reach ~2,513 ETH (not executed, no confirmed loss) ([X @odysseas_eth](https://x.com/odysseas_eth/status/2113087137444683860), 2026-10-22; [Crypto Briefing](https://cryptobriefing.com/swell-sweth-rsweth-inflated-rates-hot-keys/), 2026-10-22; [0xCERT-2026-0262](https://www.0xcert.com/advisory/0xCERT-2026-0262), 2026-10-22). `analytics -- swell:incident` reads both rates on-chain against those baselines (2026-10-23: swETH 1.202970, +6.15%; rswETH 1.137680, +5.10%) and the DefiLlama `/hacks` row (no amount recorded). swETH `0xf951E335afb289353dc249e82926178EaC7DEd78` (Etherscan \"Swell Network: swETH Token\", DefiLlama `fees/swell.ts`).",
     ],
   },
   {
@@ -1123,10 +1123,10 @@ const PROTOCOLS = [
     category: "stable-rwa",
     url: "https://sky.money",
     about:
-      "DAI↔USDS converter, sUSDS and sDAI ERC-4626 deposit/redeem, plus the DSR read. `analytics:sky:revenue` prints DefiLlama `sky-lending` fees/revenue and monthly totals.",
+      "DAI↔USDS converter, sUSDS and sDAI ERC-4626 deposit/redeem, plus the DSR read. `monitor:dex -- sky:revenue` prints DefiLlama `sky-lending` fees/revenue and monthly totals.",
     data: "On-chain RPC, DefiLlama",
     notes: [
-      "\"September rev grew ~50% while supply grew ~28%\" ([X @yashascore](https://x.com/yashascore/status/2113678231270457680), 2026-10-23, Airdrop?). `analytics:sky:revenue` on 2026-10-28 (DefiLlama `sky-lending`, parent `sky`): revenue July $14.24M, August $14.12M, September $13.44M (-4.8% MoM); September 2025 was $28.19M. DefiLlama does not show ~50% growth on either basis; the post's basis is not stated.",
+      "\"September rev grew ~50% while supply grew ~28%\" ([X @yashascore](https://x.com/yashascore/status/2113678231270457680), 2026-10-23, Airdrop?). `monitor:dex -- sky:revenue` on 2026-10-28 (DefiLlama `sky-lending`, parent `sky`): revenue July $14.24M, August $14.12M, September $13.44M (-4.8% MoM); September 2025 was $28.19M. DefiLlama does not show ~50% growth on either basis; the post's basis is not stated.",
     ],
   },
   {
@@ -1156,8 +1156,8 @@ const PROTOCOLS = [
       "Tokenized treasuries. Mint is KYC-gated. DefiLlama's protocol TVL for RWA listings is empty, so analytics reads USDY + OUSG Ethereum supply x coins price. The fork test reads the USDY and OUSG oracles.",
     data: "On-chain RPC, DefiLlama coins",
     notes: [
-      "\"latest snapshot: $1.765B perp volume / 7D, $4.676B perp volume / 30D, $110.35M open interest\"; ~86% of Ondo Perps volume from RWAs ([X @Nick_Researcher](https://x.com/Nick_Researcher/status/2112763274999800152), 2026-10-21). `analytics:ondo:perps` prints DefiLlama `ondo-perps` open interest and its YTD high ($110.81M on 2026-10-22, a YTD high). Perp volume is on the paywalled `/summary/derivatives`.",
-      "\"$ONDO Perps crossed $20B in cumulative trading volume … $100M+ open interest\" ([X @WhaleFactor](https://x.com/WhaleFactor/status/2116602406842552344) (2026-10-31, Airdrop?)). `analytics:ondo:perps-oi` on 2026-11-02: DefiLlama `ondo-perps` OI $105.72M (YTD high $113.88M on 10-26) — matches. Cumulative perps volume is on the paywalled derivatives endpoint, so it is not checked.",
+      "\"latest snapshot: $1.765B perp volume / 7D, $4.676B perp volume / 30D, $110.35M open interest\"; ~86% of Ondo Perps volume from RWAs ([X @Nick_Researcher](https://x.com/Nick_Researcher/status/2112763274999800152), 2026-10-21). `monitor:dex -- ondo:perps` prints DefiLlama `ondo-perps` open interest and its YTD high ($110.81M on 2026-10-22, a YTD high). Perp volume is on the paywalled `/summary/derivatives`.",
+      "\"$ONDO Perps crossed $20B in cumulative trading volume … $100M+ open interest\" ([X @WhaleFactor](https://x.com/WhaleFactor/status/2116602406842552344) (2026-10-31, Airdrop?)). `monitor:dex -- ondo:perps-oi` on 2026-11-02: DefiLlama `ondo-perps` OI $105.72M (YTD high $113.88M on 10-26) — matches. Cumulative perps volume is on the paywalled derivatives endpoint, so it is not checked.",
     ],
   },
   {
@@ -1186,10 +1186,10 @@ const PROTOCOLS = [
     name: "Tether",
     category: "stable-rwa",
     url: "https://tether.to",
-    about: "USDT issuer. Mint and redeem are off-chain. The fork test only transfers USDT. Revenue (DefiLlama fees) via `analytics:tether:revenue`.",
+    about: "USDT issuer. Mint and redeem are off-chain. The fork test only transfers USDT. Revenue (DefiLlama fees) via `monitor:dex -- tether:revenue`.",
     data: "DefiLlama",
     notes: [
-      "\"$5.79B of revenue over the past 12 months on $183B of USDT\" (Token Terminal article, [X @tokenterminal](https://x.com/tokenterminal/status/2112214218820702318), 2026-10-19). `analytics:tether:revenue` prints DefiLlama `tether` fees/revenue with 12 monthly totals (≈ $5.75B over the 12 months to 2026-10-21).",
+      "\"$5.79B of revenue over the past 12 months on $183B of USDT\" (Token Terminal article, [X @tokenterminal](https://x.com/tokenterminal/status/2112214218820702318), 2026-10-19). `monitor:dex -- tether:revenue` prints DefiLlama `tether` fees/revenue with 12 monthly totals (≈ $5.75B over the 12 months to 2026-10-21).",
     ],
   },
   {
@@ -1216,7 +1216,7 @@ const PROTOCOLS = [
     about: "Plume's RWA vaults across Ethereum, Plume, Solana, BNB and Avalanche (DefiLlama `plume-vaults`).",
     data: "DefiLlama",
     notes: [
-      "\"Plume Vaults has attracted over $250M in RWA TVL\" ([X @plumenetwork](https://x.com/plumenetwork/status/2112173816143282305), 2026-10-19). `analytics:plume:vaults` prints DefiLlama TVL by chain ($226.99M on 2026-10-21, below the claim).",
+      "\"Plume Vaults has attracted over $250M in RWA TVL\" ([X @plumenetwork](https://x.com/plumenetwork/status/2112173816143282305), 2026-10-19). `monitor:dex -- plume:vaults` prints DefiLlama TVL by chain ($226.99M on 2026-10-21, below the claim).",
     ],
   },
   {
@@ -1227,7 +1227,7 @@ const PROTOCOLS = [
     about: "Sui's native stablecoin issued by Stripe's Bridge (DefiLlama stablecoin id 373).",
     data: "DefiLlama stablecoins",
     notes: [
-      "\"Sui's own stablecoin just hit a record $80M supply\" ([X @Kylechasse](https://x.com/Kylechasse/status/2111302282700816514), 2026-10-17). `analytics:usdsui:supply` prints DefiLlama circulating supply, 7d/30d change and the all-time high (ATH $80.06M on 2026-10-15; $78.59M on 2026-10-21). The SUI buybacks are not tracked.",
+      "\"Sui's own stablecoin just hit a record $80M supply\" ([X @Kylechasse](https://x.com/Kylechasse/status/2111302282700816514), 2026-10-17). `analytics -- usdsui:supply` prints DefiLlama circulating supply, 7d/30d change and the all-time high (ATH $80.06M on 2026-10-15; $78.59M on 2026-10-21). The SUI buybacks are not tracked.",
     ],
   },
   {
@@ -1239,7 +1239,7 @@ const PROTOCOLS = [
       "Circle's euro stablecoin (DefiLlama stablecoin id 50, `peggedEUR`). Amounts print in euros, plus the USD value at DefiLlama's price.",
     data: "DefiLlama stablecoins",
     notes: [
-      "\"EURC is the first euro stablecoin to cross €450M in circulation\" ([X @peterschroederr](https://x.com/peterschroederr/status/2113734755623833830), 2026-10-23, Airdrop?). `analytics:eurc:supply` on 2026-10-28: €444.55M circulating (≈ $494.91M at $1.1133), +7.80% over 30 days, all-time high €445.76M on 2026-10-17. DefiLlama has not recorded €450M; Circle's own figure may differ.",
+      "\"EURC is the first euro stablecoin to cross €450M in circulation\" ([X @peterschroederr](https://x.com/peterschroederr/status/2113734755623833830), 2026-10-23, Airdrop?). `analytics -- eurc:supply` on 2026-10-28: €444.55M circulating (≈ $494.91M at $1.1133), +7.80% over 30 days, all-time high €445.76M on 2026-10-17. DefiLlama has not recorded €450M; Circle's own figure may differ.",
     ],
   },
   {
@@ -1251,7 +1251,7 @@ const PROTOCOLS = [
       "Open Standard's OUSD (DefiLlama stablecoin id 443, \"Open USD\"), on Tempo, Ethereum, Base and Solana. Not Origin Dollar (id 23).",
     data: "DefiLlama stablecoins",
     notes: [
-      "\"Open Standard leads stablecoin issuers by market cap growth over the past 30 days, with its OUSD adding $794M\" ([X @tokenterminal](https://x.com/tokenterminal/status/2115185904033902691), 2026-10-27, ON CHAIN). `analytics:ousd:supply` on 2026-10-28: $830.75M circulating ($530.67M on Tempo), +1.13% over 7 days. DefiLlama's series starts 2026-09-30 at $454M, so there is no 30-day point; the change since then is +$379.49M (+83.5%), not $794M (Token Terminal likely counts supply from near zero).",
+      "\"Open Standard leads stablecoin issuers by market cap growth over the past 30 days, with its OUSD adding $794M\" ([X @tokenterminal](https://x.com/tokenterminal/status/2115185904033902691), 2026-10-27, ON CHAIN). `analytics -- ousd:supply` on 2026-10-28: $830.75M circulating ($530.67M on Tempo), +1.13% over 7 days. DefiLlama's series starts 2026-09-30 at $454M, so there is no 30-day point; the change since then is +$379.49M (+83.5%), not $794M (Token Terminal likely counts supply from near zero).",
     ],
   },
   {
@@ -1262,7 +1262,7 @@ const PROTOCOLS = [
     about: "TRON DAO's USDD (DefiLlama stablecoin id 14), mostly on Tron and Ethereum.",
     data: "DefiLlama stablecoins",
     notes: [
-      "\"$USDD was the fastest-growing stablecoin in the past week\" ([X @stacy_muur](https://x.com/stacy_muur/status/2115115315092979957), 2026-10-27, Inner Circle CT), quoting a RWA Foundation / Token Terminal report that USDD \"added $180.3M in market cap\". `analytics:usdd:supply` on 2026-10-28: $1.74B circulating, +$8.16M (+0.46%) over 7 days on the daily series (down from $1.80B on 2026-10-24), +$228.69M (+14.8%) over 30 days. DefiLlama does not show it as the week's fastest grower (OUSD alone added +$9.36M); the post's window and data source differ.",
+      "\"$USDD was the fastest-growing stablecoin in the past week\" ([X @stacy_muur](https://x.com/stacy_muur/status/2115115315092979957), 2026-10-27, Inner Circle CT), quoting a RWA Foundation / Token Terminal report that USDD \"added $180.3M in market cap\". `analytics -- usdd:supply` on 2026-10-28: $1.74B circulating, +$8.16M (+0.46%) over 7 days on the daily series (down from $1.80B on 2026-10-24), +$228.69M (+14.8%) over 30 days. DefiLlama does not show it as the week's fastest grower (OUSD alone added +$9.36M); the post's window and data source differ.",
     ],
   },
   // Bridges & chains
@@ -1287,7 +1287,7 @@ const PROTOCOLS = [
     url: "https://bridge.base.org",
     about: "OP Stack L1StandardBridge for Base. Fork test calls depositETH on Ethereum only.",
     notes: [
-      "\"Base: ~$6B TVL\" ([X @CryptoKaleo](https://x.com/CryptoKaleo/status/2116981884479566033) (2026-11-01, Airdrop? / Inner Circle CT)). `analytics:base:chain` on 2026-11-02: Base chain TVL $5.96B — matches. \"$BASE is generating over $2.5M in L2 fee revenue over 30 days … Base $2.55M, Robinhood Chain $1.68M, Arbitrum One $613K, Starknet $227K, Celo $131K\" (growthepie, to Oct 28; [X @WhaleFactor](https://x.com/WhaleFactor/status/2115993265266721119) (2026-10-30, Airdrop?)). `analytics:base:l2-fees` on 2026-11-02: 30d chain gas fees Base $2.47M, Robinhood Chain $1.47M, Arbitrum $595.49K, Starknet $212.27K, Celo $73.30K — matches for Base/Arbitrum/Starknet (within ~7%); Robinhood -13% and Celo -44% (different window/method).",
+      "\"Base: ~$6B TVL\" ([X @CryptoKaleo](https://x.com/CryptoKaleo/status/2116981884479566033) (2026-11-01, Airdrop? / Inner Circle CT)). `analytics -- base:chain` on 2026-11-02: Base chain TVL $5.96B — matches. \"$BASE is generating over $2.5M in L2 fee revenue over 30 days … Base $2.55M, Robinhood Chain $1.68M, Arbitrum One $613K, Starknet $227K, Celo $131K\" (growthepie, to Oct 28; [X @WhaleFactor](https://x.com/WhaleFactor/status/2115993265266721119) (2026-10-30, Airdrop?)). `analytics -- base:l2-fees` on 2026-11-02: 30d chain gas fees Base $2.47M, Robinhood Chain $1.47M, Arbitrum $595.49K, Starknet $212.27K, Celo $73.30K — matches for Base/Arbitrum/Starknet (within ~7%); Robinhood -13% and Celo -44% (different window/method).",
     ],
   },
   {
@@ -1313,7 +1313,7 @@ const PROTOCOLS = [
     about: "StarkGate L1 ETH bridge. Fork test deposits ETH with the message fee and checks the lock, Deposit, and the core contract's LogMessageToL2.",
     data: "On-chain RPC, DefiLlama chains",
     notes: [
-      "\"TVL stayed around 160 million the whole time\" ([X @odin_free](https://x.com/odin_free/status/2112076313926533456), 2026-10-19). `analytics:starknet:chain` prints DefiLlama Starknet chain TVL (7d/30d change) and DEX volume.",
+      "\"TVL stayed around 160 million the whole time\" ([X @odin_free](https://x.com/odin_free/status/2112076313926533456), 2026-10-19). `analytics -- starknet:chain` prints DefiLlama Starknet chain TVL (7d/30d change) and DEX volume.",
     ],
   },
   {
@@ -1404,7 +1404,7 @@ const PROTOCOLS = [
     name: "WBTC",
     category: "bridge-chain",
     url: "https://wbtc.network",
-    about: "Custodial Bitcoin wrap on Ethereum and other chains. Also a row in `analytics:btc:wraps`.",
+    about: "Custodial Bitcoin wrap on Ethereum and other chains. Also a row in `analytics -- btc:wraps`.",
   },
   {
     id: "megaeth",
@@ -1428,11 +1428,11 @@ const PROTOCOLS = [
     category: "bridge-chain",
     url: "https://circle.com",
     about:
-      "Circle's L1 (chainId 5042). Chain TVL, not a protocol row; not an L2. `analytics:arc:stablecoins` adds the chain's stablecoin market cap and its 7d/30d change (`LLAMA_CHAIN_STABLES=1`).",
+      "Circle's L1 (chainId 5042). Chain TVL, not a protocol row; not an L2. `analytics -- arc:stablecoins` adds the chain's stablecoin market cap and its 7d/30d change (`LLAMA_CHAIN_STABLES=1`).",
     data: "DefiLlama chains, DefiLlama stablecoins",
     notes: [
       "Arc DeFi TVL $494M, +44.52% 7d, 10 days after mainnet ([TokenPost](https://www.tokenpost.com/news/technology/24382), 2026-09-26).",
-      "\"Arc leads chains by stablecoin market cap growth over the past 30 days, adding $525M\" ([X @tokenterminal](https://x.com/tokenterminal/status/2115186257764688232), 2026-10-27, ON CHAIN). `analytics:arc:stablecoins` on 2026-10-28 (DefiLlama `/stablecoincharts/Arc`): $993.86M on 2026-10-27, +$524.97M (+112.0%) over 30 days — matches. `analytics:arc:chain` prints chain TVL only.",
+      "\"Arc leads chains by stablecoin market cap growth over the past 30 days, adding $525M\" ([X @tokenterminal](https://x.com/tokenterminal/status/2115186257764688232), 2026-10-27, ON CHAIN). `analytics -- arc:stablecoins` on 2026-10-28 (DefiLlama `/stablecoincharts/Arc`): $993.86M on 2026-10-27, +$524.97M (+112.0%) over 30 days — matches. `analytics -- arc:chain` prints chain TVL only.",
     ],
   },
   {
@@ -1467,7 +1467,7 @@ const PROTOCOLS = [
       "Blockstream's federated Bitcoin sidechain. L-BTC supply (net pegged in) vs the federation's BTC reserve from the public liquid.network audit API, the shortfall in BTC and USD, coverage, and month-end coverage. Not a DefiLlama slug.",
     data: "liquid.network audit API",
     notes: [
-      "Peg-outs (L-BTC to BTC redemptions) stay frozen 35 days after the 2026-09-06 Elements exploit: the reserve is ~603 BTC short of circulating L-BTC (85.8% coverage), and Liquid says redemptions need full 1:1 backing plus completed security reviews before restarting ([The Defiant](https://thedefiant.io/news/security/liquid-bitcoin-redemptions-remain-frozen-with-85-8-reserve-coverage), 2026-10-11; [TokenPost](https://www.tokenpost.com/news/technology/29859), 2026-10-11; [Crypto Briefing](https://cryptobriefing.com/liquid-network-halts-bitcoin-redemptions-reserve-gap/), 2026-10-11). The exploit minted ~4,000 unbacked L-BTC (~$320M); ~3,400 BTC was returned and ~598.5 BTC kept ([Rekt](https://rekt.news/liquid-network-rekt), 2026-09-16; DefiLlama `/hacks` \"Liquid Network\", 2026-09-06, $320M). `analytics:liquid:reserves` prints the live supply, reserve and coverage; peg-out status is not exposed by the API.",
+      "Peg-outs (L-BTC to BTC redemptions) stay frozen 35 days after the 2026-09-06 Elements exploit: the reserve is ~603 BTC short of circulating L-BTC (85.8% coverage), and Liquid says redemptions need full 1:1 backing plus completed security reviews before restarting ([The Defiant](https://thedefiant.io/news/security/liquid-bitcoin-redemptions-remain-frozen-with-85-8-reserve-coverage), 2026-10-11; [TokenPost](https://www.tokenpost.com/news/technology/29859), 2026-10-11; [Crypto Briefing](https://cryptobriefing.com/liquid-network-halts-bitcoin-redemptions-reserve-gap/), 2026-10-11). The exploit minted ~4,000 unbacked L-BTC (~$320M); ~3,400 BTC was returned and ~598.5 BTC kept ([Rekt](https://rekt.news/liquid-network-rekt), 2026-09-16; DefiLlama `/hacks` \"Liquid Network\", 2026-09-06, $320M). `analytics -- liquid:reserves` prints the live supply, reserve and coverage; peg-out status is not exposed by the API.",
     ],
   },
   {
@@ -1510,7 +1510,7 @@ const PROTOCOLS = [
     about: "Tron chain fees/revenue (DefiLlama fees slug `tron`) with monthly totals.",
     data: "DefiLlama",
     notes: [
-      "\"Tron ranks No. 1 among all chains in 24-hour, 7-day, and 30-day revenue … Its monthly revenue reached $23.41M\" ([X @lookonchain](https://x.com/lookonchain/status/2112051216293540072), 2026-10-19). `analytics:tron:revenue` prints DefiLlama fees/revenue (30d $23.66M; September $23.85M).",
+      "\"Tron ranks No. 1 among all chains in 24-hour, 7-day, and 30-day revenue … Its monthly revenue reached $23.41M\" ([X @lookonchain](https://x.com/lookonchain/status/2112051216293540072), 2026-10-19). `monitor:dex -- tron:revenue` prints DefiLlama fees/revenue (30d $23.66M; September $23.85M).",
     ],
   },
   {
@@ -1521,7 +1521,7 @@ const PROTOCOLS = [
     about: "Solana chain TVL (7d/30d change), DEX volume and app fees from DefiLlama.",
     data: "DefiLlama chains",
     notes: [
-      "\"DeFi TVL: ~$5.85B • Stablecoin supply: ~$15.6B • App revenue (24h): ~$3.5M • DEX volume (24h): ~$1.08B\" ([X @satyamsharma_33](https://x.com/satyamsharma_33/status/2111896253181436399), 2026-10-18). `analytics:solana:chain` prints DefiLlama chain TVL ($5.97B on 2026-10-21), `/overview/dexs/Solana` and `/overview/fees/Solana`. Stablecoin supply is not printed.",
+      "\"DeFi TVL: ~$5.85B • Stablecoin supply: ~$15.6B • App revenue (24h): ~$3.5M • DEX volume (24h): ~$1.08B\" ([X @satyamsharma_33](https://x.com/satyamsharma_33/status/2111896253181436399), 2026-10-18). `analytics -- solana:chain` prints DefiLlama chain TVL ($5.97B on 2026-10-21), `/overview/dexs/Solana` and `/overview/fees/Solana`. Stablecoin supply is not printed.",
     ],
   },
   {
@@ -1532,7 +1532,7 @@ const PROTOCOLS = [
     about: "Qubic L1. Wallet-drain incident read from DefiLlama `/hacks` (name `Qubic`).",
     data: "DefiLlama /hacks",
     notes: [
-      "\"Qubic Attack Drains 1,404 Wallets of Approximately 2.94 Trillion QU, With 87.1% of Stolen Funds Frozen\"; insufficient randomness in some wallet seeds, 23:42 UTC Oct 17 to 01:26 UTC Oct 18 ([X @WuBlockchain](https://x.com/WuBlockchain/status/2111991201016721809), 2026-10-19). `analytics:qubic:exploit` reads DefiLlama `/hacks` (2026-10-17, $1.3M, Key Compromise / Weak Key Generation). DefiLlama does not record the frozen funds.",
+      "\"Qubic Attack Drains 1,404 Wallets of Approximately 2.94 Trillion QU, With 87.1% of Stolen Funds Frozen\"; insufficient randomness in some wallet seeds, 23:42 UTC Oct 17 to 01:26 UTC Oct 18 ([X @WuBlockchain](https://x.com/WuBlockchain/status/2111991201016721809), 2026-10-19). `analytics -- qubic:exploit` reads DefiLlama `/hacks` (2026-10-17, $1.3M, Key Compromise / Weak Key Generation). DefiLlama does not record the frozen funds.",
     ],
   },
   {
@@ -1544,7 +1544,7 @@ const PROTOCOLS = [
       "Berachain L1 chain TVL (7d/30d change) and DEX volume from DefiLlama (chain name `Berachain`).",
     data: "DefiLlama chains",
     notes: [
-      "\"Hit $3.27B in TVL > Lose 99% of peak TVL > Drop to $32M\" ([X @Defi_Warhol](https://x.com/Defi_Warhol/status/2112861733727724013), 2026-10-21). `analytics:berachain:chain` prints DefiLlama chain TVL ($33.77M on 2026-10-23, -6.1% 30d). The \"$6.29 drained\" Railway post on 2026-10-22 is a joke and is not tracked.",
+      "\"Hit $3.27B in TVL > Lose 99% of peak TVL > Drop to $32M\" ([X @Defi_Warhol](https://x.com/Defi_Warhol/status/2112861733727724013), 2026-10-21). `analytics -- berachain:chain` prints DefiLlama chain TVL ($33.77M on 2026-10-23, -6.1% 30d). The \"$6.29 drained\" Railway post on 2026-10-22 is a joke and is not tracked.",
     ],
   },
   {
@@ -1556,7 +1556,7 @@ const PROTOCOLS = [
       "WAX bridge to Ethereum and Solana. Exploit read from DefiLlama `/hacks` (name `WAX Multi-Chain Bridge`).",
     data: "DefiLlama /hacks",
     notes: [
-      "Exploited 2026-10-22: `eth.token::withdraw` accepted a negative `max_fee`, so withdrawals recorded in full were charged nothing and Ethereum/Solana released USDC, USDT, DAI, WETH and WBTC (~$75K–$90.5K) ([Coinfomania](https://coinfomania.com/wax-suffers-90-5k-loss-due-to-technical-oversight/), 2026-10-22; [The Crypto Times](https://www.cryptotimes.io/2026/10/22/wax-multi-chain-bridge-exploited-for-roughly-75000/), 2026-10-22). `analytics:wax:exploit` reads DefiLlama `/hacks` ($90,500, Input Validation / Missing Input Validation).",
+      "Exploited 2026-10-22: `eth.token::withdraw` accepted a negative `max_fee`, so withdrawals recorded in full were charged nothing and Ethereum/Solana released USDC, USDT, DAI, WETH and WBTC (~$75K–$90.5K) ([Coinfomania](https://coinfomania.com/wax-suffers-90-5k-loss-due-to-technical-oversight/), 2026-10-22; [The Crypto Times](https://www.cryptotimes.io/2026/10/22/wax-multi-chain-bridge-exploited-for-roughly-75000/), 2026-10-22). `analytics -- wax:exploit` reads DefiLlama `/hacks` ($90,500, Input Validation / Missing Input Validation).",
     ],
   },
   {
@@ -1567,7 +1567,7 @@ const PROTOCOLS = [
     about: "Initia L1 (interwoven rollups). Exploit read from DefiLlama `/hacks` (name `Initia`).",
     data: "DefiLlama /hacks",
     notes: [
-      "Bridged tokens infinite-minted and the bridge drained on 2026-10-23; the chain was halted. \"Hacker has cashed out $2.6m thus far with more in flight\" ([X @spreekaway](https://x.com/spreekaway/status/2113653520981447144), 2026-10-23, ON CHAIN / Inner Circle CT); \"$2.6m already cashed out, wallet funded from tornado cash\" ([X @KookCapitalLLC](https://x.com/KookCapitalLLC/status/2113743767710949406), 2026-10-23, Inner Circle CT). `analytics:initia:exploit` reads DefiLlama `/hacks` (2026-10-23, $2.6M, Token & Share Accounting / Infinite Mint).",
+      "Bridged tokens infinite-minted and the bridge drained on 2026-10-23; the chain was halted. \"Hacker has cashed out $2.6m thus far with more in flight\" ([X @spreekaway](https://x.com/spreekaway/status/2113653520981447144), 2026-10-23, ON CHAIN / Inner Circle CT); \"$2.6m already cashed out, wallet funded from tornado cash\" ([X @KookCapitalLLC](https://x.com/KookCapitalLLC/status/2113743767710949406), 2026-10-23, Inner Circle CT). `analytics -- initia:exploit` reads DefiLlama `/hacks` (2026-10-23, $2.6M, Token & Share Accounting / Infinite Mint).",
     ],
   },
   {
@@ -1579,8 +1579,8 @@ const PROTOCOLS = [
       "BSC chain TVL, DEX volume, app fees/revenue and chain gas fees/revenue (`LLAMA_CHAIN_FEES_SLUG=bsc`), with monthly and calendar-quarter totals (`LLAMA_CHAIN_MONTHS=9`).",
     data: "DefiLlama chains",
     notes: [
-      "\"BNB Chain's Q3 by the numbers: Network revenue +54% to $54.2M; Spot DEX volume +28% to $75.7B\" (Blockworks Q3 report; [X @BNBCHAIN](https://x.com/BNBCHAIN/status/2113556068697530860), 2026-10-23, ON CHAIN). `analytics:bnb:chain` on 2026-10-28: chain gas fees Q2 $31.17M → Q3 $49.17M (+57.7%); DEX volume Q2 $74.97B → Q3 $102.62B (+36.9%); app revenue on BSC Q2 $41.07M → Q3 $92.64M. DefiLlama's definitions differ from Blockworks', so the levels do not match; the gas-fee growth is close to the claimed +54%.",
-      "\"BNB is worth about 93 billion dollars, but its chain collected only about 160 million dollars in fees over the last 12 months. That is about 570 times\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2116568653483450716) (2026-10-31, Airdrop?)). `analytics:bnb:fees` on 2026-11-02: trailing 365-day BSC chain fees $162.61M; CoinGecko BNB market cap $93.09B (not read by the script) → ~572x — matches.",
+      "\"BNB Chain's Q3 by the numbers: Network revenue +54% to $54.2M; Spot DEX volume +28% to $75.7B\" (Blockworks Q3 report; [X @BNBCHAIN](https://x.com/BNBCHAIN/status/2113556068697530860), 2026-10-23, ON CHAIN). `analytics -- bnb:chain` on 2026-10-28: chain gas fees Q2 $31.17M → Q3 $49.17M (+57.7%); DEX volume Q2 $74.97B → Q3 $102.62B (+36.9%); app revenue on BSC Q2 $41.07M → Q3 $92.64M. DefiLlama's definitions differ from Blockworks', so the levels do not match; the gas-fee growth is close to the claimed +54%.",
+      "\"BNB is worth about 93 billion dollars, but its chain collected only about 160 million dollars in fees over the last 12 months. That is about 570 times\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2116568653483450716) (2026-10-31, Airdrop?)). `analytics -- bnb:fees` on 2026-11-02: trailing 365-day BSC chain fees $162.61M; CoinGecko BNB market cap $93.09B (not read by the script) → ~572x — matches.",
     ],
   },
   // Launchpads, prediction & other
@@ -1592,7 +1592,7 @@ const PROTOCOLS = [
     about:
       "Solana NFT/token standard and launchpad. DefiLlama TVL is empty; analytics prints fees/revenue and monthly totals, the smoke requires positive 24h revenue.",
     notes: [
-      "\"$MPLX: Annual Earnings (revenue): $2.2M using Trailing 30D Annualized; Annual Buybacks: 50% = $1.1M\" ([X @DegenMack](https://x.com/DegenMack/status/2113329230314721648), 2026-10-22). `analytics:metaplex:revenue` prints DefiLlama revenue (30d $181.63K on 2026-10-23 ≈ $2.21M annualized). Buybacks are not tracked.",
+      "\"$MPLX: Annual Earnings (revenue): $2.2M using Trailing 30D Annualized; Annual Buybacks: 50% = $1.1M\" ([X @DegenMack](https://x.com/DegenMack/status/2113329230314721648), 2026-10-22). `monitor:dex -- metaplex:revenue` prints DefiLlama revenue (30d $181.63K on 2026-10-23 ≈ $2.21M annualized). Buybacks are not tracked.",
     ],
   },
   {
@@ -1603,7 +1603,7 @@ const PROTOCOLS = [
     about:
       "Solana gamified-mining store-of-value token (DefiLlama `ore-protocol`). DefiLlama TVL is empty; analytics prints fees/revenue and monthly totals, the smoke requires positive 24h revenue.",
     notes: [
-      "\"$3.7M/month revenue ($130K/day avg) with 99% going to buybacks, burns & stakers\" ([X @jussy_world](https://x.com/jussy_world/status/2114273009578262785), 2026-10-25, Airdrop?); \"~$1M/week\" revenue ([X @sol_nxxn](https://x.com/sol_nxxn/status/2114401739033976968), 2026-10-25, Airdrop?). `analytics:ore:revenue` on 2026-10-28: 30d revenue $3.91M, 7d $972.10K, 24h $138.74K; September $2.50M, October to date $3.48M. Buybacks are not tracked.",
+      "\"$3.7M/month revenue ($130K/day avg) with 99% going to buybacks, burns & stakers\" ([X @jussy_world](https://x.com/jussy_world/status/2114273009578262785), 2026-10-25, Airdrop?); \"~$1M/week\" revenue ([X @sol_nxxn](https://x.com/sol_nxxn/status/2114401739033976968), 2026-10-25, Airdrop?). `monitor:dex -- ore:revenue` on 2026-10-28: 30d revenue $3.91M, 7d $972.10K, 24h $138.74K; September $2.50M, October to date $3.48M. Buybacks are not tracked.",
     ],
   },
   {
@@ -1614,7 +1614,7 @@ const PROTOCOLS = [
     about: "Ethereum token with a three-seat Senate governing its Freezer treasury. Exploit read from DefiLlama `/hacks` (name `X100`).",
     data: "DefiLlama /hacks",
     notes: [
-      "Flash-loan governance takeover on 2026-10-24: a 1.94M USDT Aave flash loan bought two of three Senate seats and passed a proposal that sold 400,000 treasury X for 35.68 USDT; the first attacker kept 4,749,726 USDT and copycats brought realized losses to ~$4.85M ([CCN](https://www.ccn.com/news/crypto/x100-hack-governance-exploit-treasury-drain/), 2026-10-26; [SigIntZero](https://sigintzero.com/blog/x100-4-85m-flash-loan-senate-takeover), 2026-10-26). `analytics:x100:exploit` reads DefiLlama `/hacks` (2026-10-24, $4.75M, Governance / Flashloan Governance Attack), i.e. the first transaction only. No recovery reported.",
+      "Flash-loan governance takeover on 2026-10-24: a 1.94M USDT Aave flash loan bought two of three Senate seats and passed a proposal that sold 400,000 treasury X for 35.68 USDT; the first attacker kept 4,749,726 USDT and copycats brought realized losses to ~$4.85M ([CCN](https://www.ccn.com/news/crypto/x100-hack-governance-exploit-treasury-drain/), 2026-10-26; [SigIntZero](https://sigintzero.com/blog/x100-4-85m-flash-loan-senate-takeover), 2026-10-26). `analytics -- x100:exploit` reads DefiLlama `/hacks` (2026-10-24, $4.75M, Governance / Flashloan Governance Attack), i.e. the first transaction only. No recovery reported.",
     ],
   },
   {
@@ -1626,8 +1626,8 @@ const PROTOCOLS = [
       "Solana launchpad. Llama TVL is empty, so analytics shows fees/revenue and the smoke requires positive 24h revenue.",
     notes: [
       "$1.96M 24h protocol revenue, ahead of Hyperliquid's $1.86M ([BlockBeats](https://en.theblockbeats.news/flash/369146), 2026-09-26).",
-      "pump.fun App referral program gives away all app revenue; \"already paid out nearly $20M in just 2 months\" ([X @sue_xbt](https://x.com/sue_xbt/status/2111328921631551595), 2026-10-17). `analytics:pumpfun:app` prints DefiLlama `pump.fun-mobile-app` fees/revenue by month (Aug–Oct fees ≈ $20.2M, revenue ≈ $9.6M). Payouts themselves are not on DefiLlama.",
-      "\"worst day you can imagine and $PUMP still ends up making +$4M/day in fees\" ([X @proxima424](https://x.com/proxima424/status/2116998447203262647) (2026-11-01, Dev Alpha)). `analytics:pumpfun:fees` reads the DefiLlama parent `pump` (pump.fun + PumpSwap + app + terminal). on 2026-11-02: daily fees $4.53M (10-29), $4.28M (10-30), $3.92M (10-31); 30d $167.02M — matches (~$4M/day). `analytics:pumpfun:launchpad` covers pump.fun alone.",
+      "pump.fun App referral program gives away all app revenue; \"already paid out nearly $20M in just 2 months\" ([X @sue_xbt](https://x.com/sue_xbt/status/2111328921631551595), 2026-10-17). `monitor:dex -- pumpfun:app` prints DefiLlama `pump.fun-mobile-app` fees/revenue by month (Aug–Oct fees ≈ $20.2M, revenue ≈ $9.6M). Payouts themselves are not on DefiLlama.",
+      "\"worst day you can imagine and $PUMP still ends up making +$4M/day in fees\" ([X @proxima424](https://x.com/proxima424/status/2116998447203262647) (2026-11-01, Dev Alpha)). `monitor:dex -- pumpfun:fees` reads the DefiLlama parent `pump` (pump.fun + PumpSwap + app + terminal). on 2026-11-02: daily fees $4.53M (10-29), $4.28M (10-30), $3.92M (10-31); 30d $167.02M — matches (~$4M/day). `monitor:dex -- pumpfun:launchpad` covers pump.fun alone.",
     ],
   },
   {
@@ -1638,7 +1638,7 @@ const PROTOCOLS = [
     about: "Prediction market. The Llama slug tracks the international book.",
     notes: [
       "Polymarket U.S. just over $1.03B notional volume on the Sep 19-20 weekend ([SCCG](https://sccgmanagement.com/sccg-articles/2026/09/23/kalshi-crypto-volume-allegations-emerge-against-backdrop-of-764-billion-prediction-market-record/), 2026-09-23).",
-      "Polymarket International frontend drain (compromised third-party DebugBear RUM script used open sessions to sell positions and move funds), 2026-10-29 ~17:10–18:02 UTC, ~$2.7M. [X @devjoshstevens](https://x.com/devjoshstevens/status/2116254421369655514) (2026-10-30, mev gigachads); [@PolymarketTrade](https://x.com/PolymarketTrade/status/2115874609014726842) (2026-10-29); CNBC / BleepingComputer / AP coverage. `analytics:polymarket:exploit` on 2026-11-02: DefiLlama `/hacks` 2026-10-29, $2.70M, Polygon, Frontend & Infrastructure / Supply Chain Attack — matches (news: ~$3.9M being returned; DefiLlama leaves returnedFunds empty). `LLAMA_HACK_SINCE=2026-10-29` is required because an older 2026-06-25 Polymarket row exists.",
+      "Polymarket International frontend drain (compromised third-party DebugBear RUM script used open sessions to sell positions and move funds), 2026-10-29 ~17:10–18:02 UTC, ~$2.7M. [X @devjoshstevens](https://x.com/devjoshstevens/status/2116254421369655514) (2026-10-30, mev gigachads); [@PolymarketTrade](https://x.com/PolymarketTrade/status/2115874609014726842) (2026-10-29); CNBC / BleepingComputer / AP coverage. `analytics -- polymarket:exploit` on 2026-11-02: DefiLlama `/hacks` 2026-10-29, $2.70M, Polygon, Frontend & Infrastructure / Supply Chain Attack — matches (news: ~$3.9M being returned; DefiLlama leaves returnedFunds empty). `LLAMA_HACK_SINCE=2026-10-29` is required because an older 2026-06-25 Polymarket row exists.",
     ],
   },
   {
@@ -1671,7 +1671,7 @@ const PROTOCOLS = [
     about: "Solana launchpad (DefiLlama `stonkfun`, no TVL). Fees/revenue with monthly totals.",
     data: "DefiLlama",
     notes: [
-      "\"Over the past 30 days, the Solana launchpad recorded $20.8M in protocol revenue\" ([X @SolanaSensei](https://x.com/SolanaSensei/status/2112511403672404403), 2026-10-20). `analytics:stonkfun:revenue` prints DefiLlama fees/revenue (30d fees $20.37M, revenue $17.94M on 2026-10-21).",
+      "\"Over the past 30 days, the Solana launchpad recorded $20.8M in protocol revenue\" ([X @SolanaSensei](https://x.com/SolanaSensei/status/2112511403672404403), 2026-10-20). `monitor:dex -- stonkfun:revenue` prints DefiLlama fees/revenue (30d fees $20.37M, revenue $17.94M on 2026-10-21).",
     ],
   },
   {
@@ -1682,7 +1682,7 @@ const PROTOCOLS = [
     about: "Tokenized trading-card packs on Solana (DefiLlama `collector-crypt`, no TVL). Fees/revenue plus dexs volume.",
     data: "DefiLlama",
     notes: [
-      "\"$24.3M in gross revenue in 24 hours\" (Collector Crypt, quoted by [X @sjdedic](https://x.com/sjdedic/status/2112628950736237001), 2026-10-20). DefiLlama books that $24.36M as 24h volume (pack sales); 24h fees/revenue are $2.12M (2026-10-21). `analytics:collector-crypt:revenue` prints both.",
+      "\"$24.3M in gross revenue in 24 hours\" (Collector Crypt, quoted by [X @sjdedic](https://x.com/sjdedic/status/2112628950736237001), 2026-10-20). DefiLlama books that $24.36M as 24h volume (pack sales); 24h fees/revenue are $2.12M (2026-10-21). `monitor:dex -- collector-crypt:revenue` prints both.",
     ],
   },
   {
@@ -1693,7 +1693,7 @@ const PROTOCOLS = [
     about: "Base launchpad (DefiLlama `umia`). TVL plus dexs volume by month.",
     data: "DefiLlama",
     notes: [
-      "\"Since launch, Umia has maintained constant, healthy, organic volume, averaging $300k per day\" (@fra_mosterts, quoted by [X @merklefruit](https://x.com/merklefruit/status/2111127196349972663), 2026-10-16). `analytics:umia:launchpad` prints DefiLlama volume: $7.14M all-time since the 2026-08-26 listing (~$130K/day), 30d $4.85M, below the claim.",
+      "\"Since launch, Umia has maintained constant, healthy, organic volume, averaging $300k per day\" (@fra_mosterts, quoted by [X @merklefruit](https://x.com/merklefruit/status/2111127196349972663), 2026-10-16). `monitor:dex -- umia:launchpad` prints DefiLlama volume: $7.14M all-time since the 2026-08-26 listing (~$130K/day), 30d $4.85M, below the claim.",
     ],
   },
   {
@@ -1704,8 +1704,8 @@ const PROTOCOLS = [
     about: "Launchpad (DefiLlama parent `pons`: Pons V1 + V2, no TVL). Fees/revenue with monthly totals, and DEX volume with its all-time daily high.",
     data: "DefiLlama",
     notes: [
-      "\"$PONS … daily revenue crashing from $2M to just $36K (98% drop) … Only 1.1K launches today vs 36K at peak\" ([X @jussy_world](https://x.com/jussy_world/status/2112438814589571464), 2026-10-20). `analytics:pons:revenue` prints DefiLlama fees/revenue (24h revenue $67.95K, September revenue $23.40M vs October-to-date $1.93M on 2026-10-21). Launch counts are not on DefiLlama.",
-      "\"Pons trading volume is now down 96% from its all-time high\" ([X @stacy_muur](https://x.com/stacy_muur/status/2115443765754359885), 2026-10-28, Inner Circle CT). `analytics:pons:volume` on 2026-10-30 (DefiLlama `/summary/dexs/pons`): all-time daily high $173.07M on 2026-09-06, latest daily $7.12M on 2026-10-29, -95.9% — matches; 30d volume $309.23M.",
+      "\"$PONS … daily revenue crashing from $2M to just $36K (98% drop) … Only 1.1K launches today vs 36K at peak\" ([X @jussy_world](https://x.com/jussy_world/status/2112438814589571464), 2026-10-20). `monitor:dex -- pons:revenue` prints DefiLlama fees/revenue (24h revenue $67.95K, September revenue $23.40M vs October-to-date $1.93M on 2026-10-21). Launch counts are not on DefiLlama.",
+      "\"Pons trading volume is now down 96% from its all-time high\" ([X @stacy_muur](https://x.com/stacy_muur/status/2115443765754359885), 2026-10-28, Inner Circle CT). `monitor:dex -- pons:volume` on 2026-10-30 (DefiLlama `/summary/dexs/pons`): all-time daily high $173.07M on 2026-09-06, latest daily $7.12M on 2026-10-29, -95.9% — matches; 30d volume $309.23M.",
     ],
   },
   {
@@ -1716,7 +1716,7 @@ const PROTOCOLS = [
     about: "AI trading/staking service on BNB Chain. Exploit read from DefiLlama `/hacks` (name `AlpsCon AI Trade Hub`).",
     data: "DefiLlama /hacks",
     notes: [
-      "Exploited 2026-10-19 on BSC for ~$152.8K USDC: a whitelisted Hardhat default test wallet (public key) was used via EIP-7702 and a 1.03M USDC flash loan claimed historical V7–V9 rewards ([Tozvan](https://tozvan.com/hacks/alpscon-ai-trade-hub-exploit), 2026-10-19; [telem.news](https://telem.news/security/alpscon-ai-exploited-152k-bnb-chain-whitelisted-hardhat-test-7ef99ce4), 2026-10-19). `analytics:alpscon:exploit` reads DefiLlama `/hacks` ($152,809, Incorrect Share Accounting).",
+      "Exploited 2026-10-19 on BSC for ~$152.8K USDC: a whitelisted Hardhat default test wallet (public key) was used via EIP-7702 and a 1.03M USDC flash loan claimed historical V7–V9 rewards ([Tozvan](https://tozvan.com/hacks/alpscon-ai-trade-hub-exploit), 2026-10-19; [telem.news](https://telem.news/security/alpscon-ai-exploited-152k-bnb-chain-whitelisted-hardhat-test-7ef99ce4), 2026-10-19). `analytics -- alpscon:exploit` reads DefiLlama `/hacks` ($152,809, Incorrect Share Accounting).",
     ],
   },
   {
@@ -1807,7 +1807,7 @@ const PROTOCOLS = [
       "Credit tranche pools on Avalanche (linked by Blockaid to Valinor Digital and Fence). Exploit read from DefiLlama `/hacks` (name `Fence Finance`).",
     data: "DefiLlama /hacks",
     notes: [
-      "About $1M USDC drained from an Avalanche TranchePool on 2026-10-27/28 (flash loan used to inflate shares before redeeming). \"About $1 million in USDC is gone from an Avalanche vault Blockaid links to Valinor Digital and Fence\" ([X @laurashin](https://x.com/laurashin/status/2115448353760973037), 2026-10-28, Inner Circle CT); also [SlowMist Hacked](https://hacked.slowmist.io/?page=1) and [Blockchain Breaches](https://www.blockchainbreaches.com/en/breaches/fence-finance-2026). `analytics:fence:exploit` on 2026-10-30: DefiLlama `/hacks` 2026-10-27, $1.01M, Avalanche, Token & Share Accounting / Incorrect Share Accounting — matches. The drained pool `0xE25CB545Bdd47a8Ec2d08001cb5661B00D47621a` (EIP-55, has code on Avalanche C-Chain) is not in `src/catalog/contracts.js`: the monitor does not read it and Avalanche is not a configured chain.",
+      "About $1M USDC drained from an Avalanche TranchePool on 2026-10-27/28 (flash loan used to inflate shares before redeeming). \"About $1 million in USDC is gone from an Avalanche vault Blockaid links to Valinor Digital and Fence\" ([X @laurashin](https://x.com/laurashin/status/2115448353760973037), 2026-10-28, Inner Circle CT); also [SlowMist Hacked](https://hacked.slowmist.io/?page=1) and [Blockchain Breaches](https://www.blockchainbreaches.com/en/breaches/fence-finance-2026). `analytics -- fence:exploit` on 2026-10-30: DefiLlama `/hacks` 2026-10-27, $1.01M, Avalanche, Token & Share Accounting / Incorrect Share Accounting — matches. The drained pool `0xE25CB545Bdd47a8Ec2d08001cb5661B00D47621a` (EIP-55, has code on Avalanche C-Chain) is not in `src/catalog/contracts.js`: the monitor does not read it and Avalanche is not a configured chain.",
     ],
   },
   {
@@ -1819,7 +1819,7 @@ const PROTOCOLS = [
       "zkLink Nova aggregated-L3 bridge/escrow on Ethereum. Exploit read from DefiLlama `/hacks` (name `zkLink Nova`).",
     data: "DefiLlama /hacks",
     notes: [
-      "Ethereum bridge/escrow drained on 2026-10-28 (~22:21Z) with a forged batch root, about $743K–$786K. Sources: [pwn.watch](https://pwn.watch/i/zklink-nova-bridge-forged-batch-root-exploit-oct-2026), [Parapet Labs post-mortem](https://parapetlabs.net/blog/zklink-nova-exploit-post-mortem/), [SlowMist Hacked](https://hacked.slowmist.io/?page=1) (no X source). `analytics:zklink:exploit` on 2026-10-30: DefiLlama `/hacks` 2026-10-28, $783.10K, Ethereum, Bridge & Cross-Chain / Cross-Chain Message Spoofing — matches.",
+      "Ethereum bridge/escrow drained on 2026-10-28 (~22:21Z) with a forged batch root, about $743K–$786K. Sources: [pwn.watch](https://pwn.watch/i/zklink-nova-bridge-forged-batch-root-exploit-oct-2026), [Parapet Labs post-mortem](https://parapetlabs.net/blog/zklink-nova-exploit-post-mortem/), [SlowMist Hacked](https://hacked.slowmist.io/?page=1) (no X source). `analytics -- zklink:exploit` on 2026-10-30: DefiLlama `/hacks` 2026-10-28, $783.10K, Ethereum, Bridge & Cross-Chain / Cross-Chain Message Spoofing — matches.",
     ],
   },
   {
@@ -1828,10 +1828,10 @@ const PROTOCOLS = [
     category: "vaults",
     url: "https://strata.markets",
     about:
-      "Tranched yield markets: senior (SR*) and junior (JR*) slices of yield-bearing assets. `analytics:strata:srnopal` reads the DefiLlama yields pool for srnOPAL (senior tranche of BlackOpal's nOPAL on Plume) and ranks every Strata SR* pool by current APY.",
+      "Tranched yield markets: senior (SR*) and junior (JR*) slices of yield-bearing assets. `analytics -- strata:srnopal` reads the DefiLlama yields pool for srnOPAL (senior tranche of BlackOpal's nOPAL on Plume) and ranks every Strata SR* pool by current APY.",
     data: "DefiLlama yields",
     notes: [
-      "\"Senior spotlight: srnOPAL — 8.72% projected APY, the highest senior yield on Strata this week\" ([X @strata_markets](https://x.com/strata_markets/status/2115806832849788997), 2026-10-29), read as the quote in [X @plumenetwork](https://x.com/plumenetwork/status/2115822898942464080) (2026-10-29, Privacy dashboard update). `analytics:strata:srnopal` on 2026-10-30 (pool `37925366-b5d4-579d-88d5-7ae9aed9056d`): APY 8.40% (8.61% on 2026-10-28), 30-day mean 8.70%, TVL $108.87K; ranked first of 7 Strata SR* pools (next SRUSDAT 8.11%). Highest senior yield matches; DefiLlama's trailing APY is close to, not equal to, the 8.72% projection.",
+      "\"Senior spotlight: srnOPAL — 8.72% projected APY, the highest senior yield on Strata this week\" ([X @strata_markets](https://x.com/strata_markets/status/2115806832849788997), 2026-10-29), read as the quote in [X @plumenetwork](https://x.com/plumenetwork/status/2115822898942464080) (2026-10-29, Privacy dashboard update). `analytics -- strata:srnopal` on 2026-10-30 (pool `37925366-b5d4-579d-88d5-7ae9aed9056d`): APY 8.40% (8.61% on 2026-10-28), 30-day mean 8.70%, TVL $108.87K; ranked first of 7 Strata SR* pools (next SRUSDAT 8.11%). Highest senior yield matches; DefiLlama's trailing APY is close to, not equal to, the 8.72% projection.",
     ],
   },
   {
@@ -1843,7 +1843,7 @@ const PROTOCOLS = [
       "Ripple's USD stablecoin on Ethereum and the XRP Ledger (DefiLlama stablecoin id 250). Supply by chain with each chain's share and an all-time-high check.",
     data: "DefiLlama stablecoins",
     notes: [
-      "\"Ripple's RLUSD outstanding supply hits an all-time high of $2.6B • Ethereum: $1.6B • XRP Ledger: $986.8M. Roughly 62% of RLUSD is issued on Ethereum\" ([X @tokenterminal](https://x.com/tokenterminal/status/2115508329795760511), 2026-10-28, ON CHAIN). `analytics:rlusd:supply` on 2026-10-30: $2.61B circulating, Ethereum $1.62B (61.9%), XRPL $993.72M (38.1%), all-time high $2.60B on 2026-10-29 (the latest daily point), +10.52% over 7 days — matches.",
+      "\"Ripple's RLUSD outstanding supply hits an all-time high of $2.6B • Ethereum: $1.6B • XRP Ledger: $986.8M. Roughly 62% of RLUSD is issued on Ethereum\" ([X @tokenterminal](https://x.com/tokenterminal/status/2115508329795760511), 2026-10-28, ON CHAIN). `analytics -- rlusd:supply` on 2026-10-30: $2.61B circulating, Ethereum $1.62B (61.9%), XRPL $993.72M (38.1%), all-time high $2.60B on 2026-10-29 (the latest daily point), +10.52% over 7 days — matches.",
     ],
   },
   {
@@ -1854,7 +1854,7 @@ const PROTOCOLS = [
     about:
       "HIP-3 RWA/equity perps on Hyperliquid (DefiLlama `tradexyz`, no TVL). Open interest and its YTD high. Volume is on the paywalled `/summary/derivatives`, so it is not printed.",
     notes: [
-      "\"tradexyz alone carries $3.95B of open interest on Hyperliquid\" ([X @zerokn0wledge_](https://x.com/zerokn0wledge_/status/2115550196616831191), 2026-10-28, Airdrop?). `analytics:tradexyz:oi` on 2026-10-30: open interest $4.00B (daily chart $3.95B on 2026-10-26, $4.02B on 2026-10-28), YTD high $4.54B on 2026-08-17 — matches.",
+      "\"tradexyz alone carries $3.95B of open interest on Hyperliquid\" ([X @zerokn0wledge_](https://x.com/zerokn0wledge_/status/2115550196616831191), 2026-10-28, Airdrop?). `monitor:dex -- tradexyz:oi` on 2026-10-30: open interest $4.00B (daily chart $3.95B on 2026-10-26, $4.02B on 2026-10-28), YTD high $4.54B on 2026-08-17 — matches.",
     ],
   },
   {
@@ -1866,7 +1866,7 @@ const PROTOCOLS = [
       "Sui L1 chain gas fees and revenue (DefiLlama `/summary/fees/sui`), with the last 7 daily points and the 30d total annualized.",
     data: "DefiLlama /summary/fees",
     notes: [
-      "\"Over 30 days the fees on the Sui chain added up to about 180,000 dollars, roughly 2.2 million a year\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2115406009086906699), 2026-10-28, Airdrop?). `analytics:sui:fees` on 2026-10-30: 30d fees $164.27K (prior 30d $168.07K), annualized $2.00M, about $2.4K a day — about 9% below the claim (mismatch; same order of magnitude).",
+      "\"Over 30 days the fees on the Sui chain added up to about 180,000 dollars, roughly 2.2 million a year\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2115406009086906699), 2026-10-28, Airdrop?). `analytics -- sui:fees` on 2026-10-30: 30d fees $164.27K (prior 30d $168.07K), annualized $2.00M, about $2.4K a day — about 9% below the claim (mismatch; same order of magnitude).",
     ],
   },
   {
@@ -1878,7 +1878,7 @@ const PROTOCOLS = [
       "Avalanche C-Chain gas fees (DefiLlama `/summary/fees/avalanche`), with the last 14 daily points for \"fees per day\" claims.",
     data: "DefiLlama /summary/fees",
     notes: [
-      "\"Fees are back to $4,200 per day\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2115486769030570206), 2026-10-28, Airdrop?). `analytics:avalanche:fees` on 2026-10-30: daily fees $3.61K (10-25), $5.18K (10-26), $4.51K (10-27), $5.97K (10-28), $8.16K (10-29); 7d $36.53K (about $5.2K a day), 30d $345.62K. No day around 10-28 reads $4.2K (mismatch); the 10-25 to 10-27 levels are in that range.",
+      "\"Fees are back to $4,200 per day\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2115486769030570206), 2026-10-28, Airdrop?). `analytics -- avalanche:fees` on 2026-10-30: daily fees $3.61K (10-25), $5.18K (10-26), $4.51K (10-27), $5.97K (10-28), $8.16K (10-29); 7d $36.53K (about $5.2K a day), 30d $345.62K. No day around 10-28 reads $4.2K (mismatch); the 10-25 to 10-27 levels are in that range.",
     ],
   },
   {
@@ -1935,7 +1935,7 @@ const PROTOCOLS = [
       "Starknet vault manager (formerly STRKFarm). Exploit read from DefiLlama `/hacks` (name `Troves`).",
     data: "DefiLlama /hacks",
     notes: [
-      "A retired rebalancer contract kept its permissions; a flash-loan helper drained ~8.57 WBTC-equivalent from the Ekubo xWBTC/WBTC vault on 2026-10-31 ~08:25 UTC. \"@trovesfi was exploited for ~$660,000 in BTC … hijacking a legacy rebalancing contract that retained permissions\" ([X @camolNFT](https://x.com/camolNFT/status/2116571195822735436) (2026-10-31, Inner Circle CT)); [0xCERT-2026-0295](https://www.0xcert.com/advisory/0xCERT-2026-0295); [TokenPost](https://www.tokenpost.com/news/technology/45642). `analytics:troves:exploit` on 2026-11-02: DefiLlama `/hacks` 2026-10-31, $666.93K, Access Control (chain not recorded) — matches. Starknet is not a configured chain.",
+      "A retired rebalancer contract kept its permissions; a flash-loan helper drained ~8.57 WBTC-equivalent from the Ekubo xWBTC/WBTC vault on 2026-10-31 ~08:25 UTC. \"@trovesfi was exploited for ~$660,000 in BTC … hijacking a legacy rebalancing contract that retained permissions\" ([X @camolNFT](https://x.com/camolNFT/status/2116571195822735436) (2026-10-31, Inner Circle CT)); [0xCERT-2026-0295](https://www.0xcert.com/advisory/0xCERT-2026-0295); [TokenPost](https://www.tokenpost.com/news/technology/45642). `analytics -- troves:exploit` on 2026-11-02: DefiLlama `/hacks` 2026-10-31, $666.93K, Access Control (chain not recorded) — matches. Starknet is not a configured chain.",
     ],
   },
   {
@@ -1947,7 +1947,7 @@ const PROTOCOLS = [
       "Options AMM (Premia V3 on Arbitrum). Exploit read from DefiLlama `/hacks` (name `Premia V3`).",
     data: "DefiLlama /hacks",
     notes: [
-      "Six short-volatility vaults drained in two flash-loan transactions on 2026-11-01 ~03:15 UTC, about $437K ([The Defiant](https://thedefiant.io/news/hacks/attacker-drains-about-437-000-in-collateral-from-premia-vaults), 2026-11-01; [0xCERT-2026-0297](https://www.0xcert.com/advisory/0xCERT-2026-0297)). `analytics:premia:exploit` on 2026-11-02: DefiLlama `/hacks` 2026-11-01, $437.00K, Arbitrum, Protocol Logic / Withdrawal Logic Flaw — matches; DefiLlama `premia-v3` TVL $532.5K (11-01) → $67.4K. Attacker contract `0x577168C8c6fA937495C3D6961f1d7D734b2d785f` (EIP-55, 22,852 bytes of code on Arbitrum) is cited here only, not in `src/catalog/contracts.js`.",
+      "Six short-volatility vaults drained in two flash-loan transactions on 2026-11-01 ~03:15 UTC, about $437K ([The Defiant](https://thedefiant.io/news/hacks/attacker-drains-about-437-000-in-collateral-from-premia-vaults), 2026-11-01; [0xCERT-2026-0297](https://www.0xcert.com/advisory/0xCERT-2026-0297)). `analytics -- premia:exploit` on 2026-11-02: DefiLlama `/hacks` 2026-11-01, $437.00K, Arbitrum, Protocol Logic / Withdrawal Logic Flaw — matches; DefiLlama `premia-v3` TVL $532.5K (11-01) → $67.4K. Attacker contract `0x577168C8c6fA937495C3D6961f1d7D734b2d785f` (EIP-55, 22,852 bytes of code on Arbitrum) is cited here only, not in `src/catalog/contracts.js`.",
     ],
   },
   {
@@ -1959,7 +1959,7 @@ const PROTOCOLS = [
       "Ethereum block builder. Fees and revenue from DefiLlama `/summary/fees/titan-builder` (no TVL).",
     data: "DefiLlama",
     notes: [
-      "\"Titan Builder briefly ranked first in 24-hour protocol revenue with $22.83 million, surpassing Tether (according to DeFiLlama)\" ([X @WuBlockchain](https://x.com/WuBlockchain/status/2116422366570098807) (2026-10-31, ON CHAIN)); \"TitanBuilder collected 24.7m in fees\" ([X @0xngmi](https://x.com/0xngmi/status/2116214905590133122) (2026-10-30, Inner Circle CT)); also [X @jussy_world](https://x.com/jussy_world/status/2116253626356449346) (2026-10-30, Inner Circle CT). `analytics:titan:revenue` on 2026-11-02: daily revenue $15.47M (10-29) + $7.46M (10-30) = $22.93M; fees $16.33M + $8.59M = $24.92M; usually ~$0.1M/day — matches (a rolling 24h straddles both UTC days). The smoke checks 24h fees, since builder revenue can be near zero.",
+      "\"Titan Builder briefly ranked first in 24-hour protocol revenue with $22.83 million, surpassing Tether (according to DeFiLlama)\" ([X @WuBlockchain](https://x.com/WuBlockchain/status/2116422366570098807) (2026-10-31, ON CHAIN)); \"TitanBuilder collected 24.7m in fees\" ([X @0xngmi](https://x.com/0xngmi/status/2116214905590133122) (2026-10-30, Inner Circle CT)); also [X @jussy_world](https://x.com/jussy_world/status/2116253626356449346) (2026-10-30, Inner Circle CT). `monitor:dex -- titan:revenue` on 2026-11-02: daily revenue $15.47M (10-29) + $7.46M (10-30) = $22.93M; fees $16.33M + $8.59M = $24.92M; usually ~$0.1M/day — matches (a rolling 24h straddles both UTC days). The smoke checks 24h fees, since builder revenue can be near zero.",
     ],
   },
   {
@@ -1971,7 +1971,7 @@ const PROTOCOLS = [
       "DefiLlama chain `Hyperliquid L1` (HyperEVM plus HyperCore spot). DEX volume per day from `/overview/dexs/Hyperliquid L1`, with HyperCore's spot orderbook excluded.",
     data: "DefiLlama",
     notes: [
-      "\"something is happening on hyperevm $317m in DEX volume yesterday\" (= 2026-10-29; [X @Adam_Tehc](https://x.com/Adam_Tehc/status/2116050643823783986) (2026-10-30, Airdrop? / Inner Circle CT)). `analytics:hyperevm:chain` on 2026-11-02: Hyperliquid L1 chain DEX volume $903.39M on 10-29, of which Hyperliquid Spot Orderbook $431.77M; remainder $471.62M (still includes Unit, Project X and other HyperCore-adjacent rows) — MISMATCH / definition-dependent.",
+      "\"something is happening on hyperevm $317m in DEX volume yesterday\" (= 2026-10-29; [X @Adam_Tehc](https://x.com/Adam_Tehc/status/2116050643823783986) (2026-10-30, Airdrop? / Inner Circle CT)). `analytics -- hyperevm:chain` on 2026-11-02: Hyperliquid L1 chain DEX volume $903.39M on 10-29, of which Hyperliquid Spot Orderbook $431.77M; remainder $471.62M (still includes Unit, Project X and other HyperCore-adjacent rows) — MISMATCH / definition-dependent.",
     ],
   },
   {
@@ -1983,7 +1983,7 @@ const PROTOCOLS = [
       "Hedera network fees from DefiLlama `/summary/fees/hedera`.",
     data: "DefiLlama",
     notes: [
-      "\"The Hedera ETF earns $550,000 a year in fees. The entire Hedera network earned $283,000 in fees over the same period\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2116474496098124244) (2026-10-31, Airdrop?)). `analytics:hedera:fees` on 2026-11-02: trailing 365-day network fees $281.30K (30d $15.84K) — matches. The ETF fee figure is not read.",
+      "\"The Hedera ETF earns $550,000 a year in fees. The entire Hedera network earned $283,000 in fees over the same period\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2116474496098124244) (2026-10-31, Airdrop?)). `analytics -- hedera:fees` on 2026-11-02: trailing 365-day network fees $281.30K (30d $15.84K) — matches. The ETF fee figure is not read.",
     ],
   },
   {
@@ -1995,7 +1995,7 @@ const PROTOCOLS = [
       "Shibarium chain fees from DefiLlama `/summary/fees/shibarium`.",
     data: "DefiLlama",
     notes: [
-      "\"Shibarium's entire fee revenue over the last 30 days is $25. The token's market cap is still measured in billions\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2116177464544403723) (2026-10-30, Airdrop?)). `analytics:shibarium:fees` on 2026-11-02: 30d fees $25.28, 365d $849.98; CoinGecko SHIB market cap $2.77B (not read by the script) — matches.",
+      "\"Shibarium's entire fee revenue over the last 30 days is $25. The token's market cap is still measured in billions\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2116177464544403723) (2026-10-30, Airdrop?)). `analytics -- shibarium:fees` on 2026-11-02: 30d fees $25.28, 365d $849.98; CoinGecko SHIB market cap $2.77B (not read by the script) — matches.",
     ],
   },
   {
@@ -2007,7 +2007,7 @@ const PROTOCOLS = [
       "Beam chain TVL and monthly chain fees from DefiLlama (`/v2/chains`, `/summary/fees/beam`).",
     data: "DefiLlama",
     notes: [
-      "\"Beam's fee revenue fell 98% in 7 months. Its market cap just hit $233M\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2116491001753944140) (2026-10-31, Airdrop?)). `analytics:beam:fees` on 2026-11-02: DefiLlama Beam chain fees by month Mar-2026 $44.78, Sep $29.27, Oct $98.51 (all tiny); CoinGecko BEAM market cap $278.7M — MISMATCH (no 98% drop in DefiLlama's series; the post likely uses another fee source).",
+      "\"Beam's fee revenue fell 98% in 7 months. Its market cap just hit $233M\" ([X @BitcoinStrat](https://x.com/BitcoinStrat/status/2116491001753944140) (2026-10-31, Airdrop?)). `analytics -- beam:fees` on 2026-11-02: DefiLlama Beam chain fees by month Mar-2026 $44.78, Sep $29.27, Oct $98.51 (all tiny); CoinGecko BEAM market cap $278.7M — MISMATCH (no 98% drop in DefiLlama's series; the post likely uses another fee source).",
     ],
   },
   {
@@ -2019,7 +2019,7 @@ const PROTOCOLS = [
       "Pareto credit vaults. FalconX USDC vault from the DefiLlama yields pool `2eb2bdf8-c3e3-5b30-8d49-8d5232294184`, plus every `pareto-credit` pool ranked by APY.",
     data: "DefiLlama yields",
     notes: [
-      "\"FalconX Credit Vault: $180M+ deposits on Ethereum, now expanding to Base … Platform TVL ~$227M\" ([X @NaveenCypto](https://x.com/NaveenCypto/status/2116164461627326552) (2026-10-30, Inner Circle CT), quoting @paretocredit). `analytics:pareto:falconx` on 2026-11-02: FalconX vault TVL $131.94M, APY 8.06% (TVL high $181.66M on 2026-07-31); the six `pareto-credit` pools sum to ~$179M — MISMATCH on $180M+ for the vault today (the figure matches the vault's July high and the platform-wide sum). DefiLlama's `pareto` protocol TVL ($0.76M) does not count credit vaults.",
+      "\"FalconX Credit Vault: $180M+ deposits on Ethereum, now expanding to Base … Platform TVL ~$227M\" ([X @NaveenCypto](https://x.com/NaveenCypto/status/2116164461627326552) (2026-10-30, Inner Circle CT), quoting @paretocredit). `analytics -- pareto:falconx` on 2026-11-02: FalconX vault TVL $131.94M, APY 8.06% (TVL high $181.66M on 2026-07-31); the six `pareto-credit` pools sum to ~$179M — MISMATCH on $180M+ for the vault today (the figure matches the vault's July high and the platform-wide sum). DefiLlama's `pareto` protocol TVL ($0.76M) does not count credit vaults.",
     ],
   },
   {
@@ -2031,7 +2031,7 @@ const PROTOCOLS = [
       "Ethereum block builder. Fees and revenue from DefiLlama `/summary/fees/beaverbuild` (no TVL).",
     data: "DefiLlama",
     notes: [
-      "\"@Beaverbuild made $1.47M\" on the Binance-hack flow day ([X @jussy_world](https://x.com/jussy_world/status/2116478620957069371) (2026-10-31, Inner Circle CT)). `analytics:beaverbuild:revenue` on 2026-11-02: daily revenue $1.47M on 2026-10-29 (fees $2.56M); under $300/day on the days around it — matches. The smoke checks 24h fees (`SMOKE_FEES_DATATYPE=dailyFees`).",
+      "\"@Beaverbuild made $1.47M\" on the Binance-hack flow day ([X @jussy_world](https://x.com/jussy_world/status/2116478620957069371) (2026-10-31, Inner Circle CT)). `monitor:dex -- beaverbuild:revenue` on 2026-11-02: daily revenue $1.47M on 2026-10-29 (fees $2.56M); under $300/day on the days around it — matches. The smoke checks 24h fees (`SMOKE_FEES_DATATYPE=dailyFees`).",
     ],
   },
   {
@@ -2043,7 +2043,7 @@ const PROTOCOLS = [
       "Liquid staking for PROS (stPROS) on Pharos. TVL from DefiLlama `/protocol/faroo`.",
     data: "DefiLlama",
     notes: [
-      "\"$1.3m tvl and 2.27m+ $pros staked in 48 hours. estimated apy: 42%\" ([X @the_smart_ape](https://x.com/the_smart_ape/status/2116480477125386674) (2026-10-31, Inner Circle CT)). `analytics:faroo:tvl` on 2026-11-02: DefiLlama TVL $663.76K (10-29) → $1.28M (10-31), $1.15M on 11-01 — matches on TVL. DefiLlama has no Faroo yields pool, so the 42% APY is not checked.",
+      "\"$1.3m tvl and 2.27m+ $pros staked in 48 hours. estimated apy: 42%\" ([X @the_smart_ape](https://x.com/the_smart_ape/status/2116480477125386674) (2026-10-31, Inner Circle CT)). `monitor:dex -- faroo:tvl` on 2026-11-02: DefiLlama TVL $663.76K (10-29) → $1.28M (10-31), $1.15M on 11-01 — matches on TVL. DefiLlama has no Faroo yields pool, so the 42% APY is not checked.",
     ],
   },
   {
@@ -2144,218 +2144,218 @@ const BOARDS = [
 
 /** Descriptions for scripts whose purpose cannot be derived from their command line. */
 const SCRIPT_DESCRIPTIONS = {
-  "analytics:chains:fees": "Fees 24h/7d/30d, prior 30d and 30d change, 30d revenue and all-time fees for Ethereum, Tron, ICP, Celestia and Algorand (DefiLlama `/summary/fees`)",
+  "analytics -- chains:fees": "Fees 24h/7d/30d, prior 30d and 30d change, 30d revenue and all-time fees for Ethereum, Tron, ICP, Celestia and Algorand (DefiLlama `/summary/fees`)",
   "simulate:chains:fees:smoke": "Fails unless every chain on the board has positive 30d fees",
-  "analytics:morpho:base-btc": "Sum of Morpho Blue borrows against BTC collateral (cbBTC, LBTC, …) on Base, with the largest markets' supply, utilization and borrow APY (Morpho GraphQL)",
+  "analytics -- morpho:base-btc": "Sum of Morpho Blue borrows against BTC collateral (cbBTC, LBTC, …) on Base, with the largest markets' supply, utilization and borrow APY (Morpho GraphQL)",
   "simulate:morpho:base-btc:smoke": "Fails unless Morpho Base BTC-collateral borrows are above $100M",
-  "analytics:fx:morpho-vault": "Total assets, liquidity, net APY and curators for the RockawayX f(x) Protocol Ecosystem USDC Morpho vault on Ethereum",
+  "analytics -- fx:morpho-vault": "Total assets, liquidity, net APY and curators for the RockawayX f(x) Protocol Ecosystem USDC Morpho vault on Ethereum",
   "simulate:fx:morpho-vault:smoke": "Fails unless the f(x) Ecosystem USDC vault totalAssetsUsd is above $1M",
-  "analytics:affluent:exploit": "Affluent exploit amount, chain and technique from DefiLlama `/hacks` (`LLAMA_HACK_ID=5726`, since 2026-10-15)",
+  "analytics -- affluent:exploit": "Affluent exploit amount, chain and technique from DefiLlama `/hacks` (`LLAMA_HACK_ID=5726`, since 2026-10-15)",
   "simulate:affluent:exploit:smoke": "Fails unless DefiLlama `/hacks` lists an Affluent incident since 2026-10-15 with a positive amount",
-  "analytics:qubic:exploit": "Qubic wallet-drain incident from DefiLlama `/hacks` (`LLAMA_HACK_NAME=Qubic`, since 2026-10-17)",
+  "analytics -- qubic:exploit": "Qubic wallet-drain incident from DefiLlama `/hacks` (`LLAMA_HACK_NAME=Qubic`, since 2026-10-17)",
   "simulate:qubic:exploit:smoke": "Fails unless DefiLlama `/hacks` lists a Qubic incident since 2026-10-17 with a positive amount",
-  "analytics:alpscon:exploit": "AlpsCon AI Trade Hub exploit from DefiLlama `/hacks` (name match, since 2026-10-19)",
+  "analytics -- alpscon:exploit": "AlpsCon AI Trade Hub exploit from DefiLlama `/hacks` (name match, since 2026-10-19)",
   "simulate:alpscon:exploit:smoke": "Fails unless DefiLlama `/hacks` lists the AlpsCon AI Trade Hub incident since 2026-10-19 with a positive amount",
-  "analytics:swell:incident": "swETH / rswETH exchange rates on Ethereum vs the pre-incident rates (1.133254 / 1.082464), supply, and the DefiLlama `/hacks` Swell row (needs ETHEREUM_RPC_URL)",
+  "analytics -- swell:incident": "swETH / rswETH exchange rates on Ethereum vs the pre-incident rates (1.133254 / 1.082464), supply, and the DefiLlama `/hacks` Swell row (needs ETHEREUM_RPC_URL)",
   "simulate:swell:incident:smoke": "Fails unless swETH `swETHToETHRate()` and rswETH `rswETHToETHRate()` read on-chain above 1 ETH",
-  "analytics:wax:exploit": "WAX Multi-Chain Bridge exploit from DefiLlama `/hacks` (name match, since 2026-10-22)",
+  "analytics -- wax:exploit": "WAX Multi-Chain Bridge exploit from DefiLlama `/hacks` (name match, since 2026-10-22)",
   "simulate:wax:exploit:smoke": "Fails unless DefiLlama `/hacks` lists the WAX Multi-Chain Bridge incident since 2026-10-22 with a positive amount",
-  "analytics:initia:exploit": "Initia exploit from DefiLlama `/hacks` (name match, since 2026-10-23)",
+  "analytics -- initia:exploit": "Initia exploit from DefiLlama `/hacks` (name match, since 2026-10-23)",
   "simulate:initia:exploit:smoke": "Fails unless DefiLlama `/hacks` lists the Initia incident since 2026-10-23 with a positive amount",
-  "analytics:x100:exploit": "X100 governance exploit from DefiLlama `/hacks` (name match, since 2026-10-24)",
+  "analytics -- x100:exploit": "X100 governance exploit from DefiLlama `/hacks` (name match, since 2026-10-24)",
   "simulate:x100:exploit:smoke": "Fails unless DefiLlama `/hacks` lists the X100 incident since 2026-10-24 with a positive amount",
-  "analytics:yapeswap:exploit": "Yapeswap exploit from DefiLlama `/hacks` (name match, since 2026-10-25)",
+  "analytics -- yapeswap:exploit": "Yapeswap exploit from DefiLlama `/hacks` (name match, since 2026-10-25)",
   "simulate:yapeswap:exploit:smoke": "Fails unless DefiLlama `/hacks` lists the Yapeswap incident since 2026-10-25 with a positive amount",
-  "analytics:eurc:supply": "EURC circulating supply in euros (+ USD at DefiLlama price) by chain, 7d/30d change and all-time high (DefiLlama stablecoins id 50)",
+  "analytics -- eurc:supply": "EURC circulating supply in euros (+ USD at DefiLlama price) by chain, 7d/30d change and all-time high (DefiLlama stablecoins id 50)",
   "simulate:eurc:supply:smoke": "Fails unless EURC circulating supply is above €100M",
-  "analytics:bnb:chain": "BSC chain TVL, DEX volume, app fees and chain gas fees/revenue, with monthly and calendar-quarter totals (DefiLlama `/v2/chains`, `/overview/dexs`, `/overview/fees`, `/summary/fees/bsc`)",
+  "analytics -- bnb:chain": "BSC chain TVL, DEX volume, app fees and chain gas fees/revenue, with monthly and calendar-quarter totals (DefiLlama `/v2/chains`, `/overview/dexs`, `/overview/fees`, `/summary/fees/bsc`)",
   "simulate:bnb:chain:smoke": "Fails unless DefiLlama lists BSC with chain TVL above $1B",
-  "analytics:berachain:chain": "Berachain chain TVL (7d/30d change) and DEX volume (DefiLlama `/v2/chains`, `/overview/dexs`)",
+  "analytics -- berachain:chain": "Berachain chain TVL (7d/30d change) and DEX volume (DefiLlama `/v2/chains`, `/overview/dexs`)",
   "simulate:berachain:chain:smoke": "Fails unless DefiLlama lists Berachain with chain TVL above $1M",
-  "analytics:solana:chain": "Solana chain TVL (7d/30d change), DEX volume and app fees (DefiLlama `/v2/chains`, `/overview/dexs`, `/overview/fees`)",
+  "analytics -- solana:chain": "Solana chain TVL (7d/30d change), DEX volume and app fees (DefiLlama `/v2/chains`, `/overview/dexs`, `/overview/fees`)",
   "simulate:solana:chain:smoke": "Fails unless DefiLlama lists Solana with chain TVL above $1B",
-  "analytics:starknet:chain": "Starknet chain TVL (7d/30d change) and DEX volume (DefiLlama `/v2/chains`, `/overview/dexs`)",
+  "analytics -- starknet:chain": "Starknet chain TVL (7d/30d change) and DEX volume (DefiLlama `/v2/chains`, `/overview/dexs`)",
   "simulate:starknet:chain:smoke": "Fails unless DefiLlama lists Starknet with chain TVL above $10M",
-  "analytics:aerie:morpho-vault":
+  "analytics -- aerie:morpho-vault":
     "Total assets, liquidity, net APY and curators for the Aerie x Plume USDC Core Morpho vault on Ethereum",
   "simulate:aerie:morpho-vault:smoke": "Fails unless the Aerie x Plume USDC Core vault totalAssetsUsd is above $1M",
-  "analytics:ousd:supply": "Open USD (OUSD) circulating supply by chain, 7d/30d change (or since the first point) and all-time high (DefiLlama stablecoins id 443)",
+  "analytics -- ousd:supply": "Open USD (OUSD) circulating supply by chain, 7d/30d change (or since the first point) and all-time high (DefiLlama stablecoins id 443)",
   "simulate:ousd:supply:smoke": "Fails unless Open USD circulating supply is above $100M",
-  "analytics:usdd:supply": "USDD circulating supply by chain, 7d/30d change and all-time high (DefiLlama stablecoins id 14)",
+  "analytics -- usdd:supply": "USDD circulating supply by chain, 7d/30d change and all-time high (DefiLlama stablecoins id 14)",
   "simulate:usdd:supply:smoke": "Fails unless USDD circulating supply is above $500M",
-  "analytics:arc:stablecoins":
+  "analytics -- arc:stablecoins":
     "Arc chain TVL plus stablecoin market cap and its 7d/30d change (DefiLlama `/v2/chains`, `/stablecoincharts/Arc`)",
   "simulate:arc:stablecoins:smoke": "Fails unless DefiLlama lists Arc and its stablecoin market cap is above $100M",
-  "simulate:arc:smoke": "Smoke for `analytics:arc:chain`",
-  "analytics:aave:v4": "Aave V4 TVL and borrowed, total and by chain; deposits = TVL + borrowed (DefiLlama `aave-v4`)",
+  "simulate:arc:smoke": "Smoke for `analytics -- arc:chain`",
+  "analytics -- aave:v4": "Aave V4 TVL and borrowed, total and by chain; deposits = TVL + borrowed (DefiLlama `aave-v4`)",
   "simulate:aave:v4:smoke": "Fails unless DefiLlama `aave-v4` reports positive borrowed",
-  "analytics:sentora:usd-vault":
+  "analytics -- sentora:usd-vault":
     "Sentora USD vault (Ethereum, USDC) TVL, APY, 30-day mean and realized APY, TVL change (DefiLlama yields pool)",
   "simulate:sentora:usd-vault:smoke": "Fails unless the Sentora USD vault yields pool TVL is above $10M",
-  "analytics:usdsui:supply": "USDsui circulating supply by chain, 7d/30d change and all-time high (DefiLlama stablecoins id 373)",
+  "analytics -- usdsui:supply": "USDsui circulating supply by chain, 7d/30d change and all-time high (DefiLlama stablecoins id 373)",
   "simulate:usdsui:supply:smoke": "Fails unless USDsui circulating supply is above $10M",
-  "analytics:fence:exploit": "Fence Finance exploit from DefiLlama `/hacks` (name match, since 2026-10-27)",
+  "analytics -- fence:exploit": "Fence Finance exploit from DefiLlama `/hacks` (name match, since 2026-10-27)",
   "simulate:fence:exploit:smoke": "Fails unless DefiLlama `/hacks` lists the Fence Finance incident since 2026-10-27 with a positive amount",
-  "analytics:zklink:exploit": "zkLink Nova exploit from DefiLlama `/hacks` (name match, since 2026-10-28)",
+  "analytics -- zklink:exploit": "zkLink Nova exploit from DefiLlama `/hacks` (name match, since 2026-10-28)",
   "simulate:zklink:exploit:smoke": "Fails unless DefiLlama `/hacks` lists the zkLink Nova incident since 2026-10-28 with a positive amount",
-  "analytics:strata:srnopal": "Strata srnOPAL (Ethereum) TVL, APY, 30-day mean APY and TVL change (DefiLlama yields pool), plus every Strata SR* pool ranked by current APY (DefiLlama `/pools`)",
+  "analytics -- strata:srnopal": "Strata srnOPAL (Ethereum) TVL, APY, 30-day mean APY and TVL change (DefiLlama yields pool), plus every Strata SR* pool ranked by current APY (DefiLlama `/pools`)",
   "simulate:strata:srnopal:smoke": "Fails unless the Strata srnOPAL yields pool TVL is above $10K",
-  "analytics:rlusd:supply": "RLUSD circulating supply by chain with each chain's share, 7d/30d change and all-time high (DefiLlama stablecoins id 250)",
+  "analytics -- rlusd:supply": "RLUSD circulating supply by chain with each chain's share, 7d/30d change and all-time high (DefiLlama stablecoins id 250)",
   "simulate:rlusd:supply:smoke": "Fails unless RLUSD circulating supply is above $1B",
-  "analytics:sui:fees": "Sui chain fees 24h/7d/30d, prior 30d, 30d revenue, the last 7 daily points and 30d fees annualized (DefiLlama `/summary/fees/sui`)",
+  "analytics -- sui:fees": "Sui chain fees 24h/7d/30d, prior 30d, 30d revenue, the last 7 daily points and 30d fees annualized (DefiLlama `/summary/fees/sui`)",
   "simulate:sui:fees:smoke": "Fails unless Sui has positive 30d chain fees",
-  "analytics:avalanche:fees": "Avalanche chain fees 24h/7d/30d, prior 30d, 30d revenue and the last 14 daily points (DefiLlama `/summary/fees/avalanche`)",
+  "analytics -- avalanche:fees": "Avalanche chain fees 24h/7d/30d, prior 30d, 30d revenue and the last 14 daily points (DefiLlama `/summary/fees/avalanche`)",
   "simulate:avalanche:fees:smoke": "Fails unless Avalanche has positive 30d chain fees",
-  "analytics:polymarket:exploit": "Polymarket International frontend drain from DefiLlama `/hacks` (name match, since 2026-10-29)",
+  "analytics -- polymarket:exploit": "Polymarket International frontend drain from DefiLlama `/hacks` (name match, since 2026-10-29)",
   "simulate:polymarket:exploit:smoke": "Fails unless DefiLlama `/hacks` lists the Polymarket International incident since 2026-10-29 with a positive amount",
-  "analytics:troves:exploit": "Troves (Starknet) exploit from DefiLlama `/hacks` (name match, since 2026-10-31)",
+  "analytics -- troves:exploit": "Troves (Starknet) exploit from DefiLlama `/hacks` (name match, since 2026-10-31)",
   "simulate:troves:exploit:smoke": "Fails unless DefiLlama `/hacks` lists the Troves incident since 2026-10-31 with a positive amount",
-  "analytics:premia:exploit": "Premia V3 (Arbitrum) exploit from DefiLlama `/hacks` (name match, since 2026-11-01)",
+  "analytics -- premia:exploit": "Premia V3 (Arbitrum) exploit from DefiLlama `/hacks` (name match, since 2026-11-01)",
   "simulate:premia:exploit:smoke": "Fails unless DefiLlama `/hacks` lists the Premia V3 incident since 2026-11-01 with a positive amount",
-  "analytics:aave:v3-tvl": "Aave V3 TVL on 2026-10-23, 10-30 and 11-01 and the change between them (DefiLlama `aave-v3` daily TVL)",
+  "monitor:dex -- aave:v3-tvl": "Aave V3 TVL on 2026-10-23, 10-30 and 11-01 and the change between them (DefiLlama `aave-v3` daily TVL)",
   "simulate:aave:v3-tvl:smoke": "Fails unless DefiLlama `aave-v3` is live with positive TVL",
-  "analytics:gauntlet:usdc-prime": "Gauntlet USDC Prime (Base, MetaMorpho V1) total assets, liquidity, net APY and the 10-day hourly net APY peak/low (Morpho GraphQL)",
+  "analytics -- gauntlet:usdc-prime": "Gauntlet USDC Prime (Base, MetaMorpho V1) total assets, liquidity, net APY and the 10-day hourly net APY peak/low (Morpho GraphQL)",
   "simulate:gauntlet:usdc-prime:smoke": "Fails unless Gauntlet USDC Prime total assets are above $100M (Morpho GraphQL)",
-  "analytics:pumpfun:fees": "Pump (all products: pump.fun, PumpSwap, app, terminal) fees/revenue 24h/7d/30d and the last 10 daily points (DefiLlama parent `pump`)",
+  "monitor:dex -- pumpfun:fees": "Pump (all products: pump.fun, PumpSwap, app, terminal) fees/revenue 24h/7d/30d and the last 10 daily points (DefiLlama parent `pump`)",
   "simulate:pumpfun:fees:smoke": "Fails unless the DefiLlama parent `pump` is live and has positive 24h revenue",
-  "analytics:titan:revenue": "Titan Builder fees/revenue 24h/7d/30d, the last 7 daily points and all-time totals (DefiLlama `/summary/fees/titan-builder`)",
+  "monitor:dex -- titan:revenue": "Titan Builder fees/revenue 24h/7d/30d, the last 7 daily points and all-time totals (DefiLlama `/summary/fees/titan-builder`)",
   "simulate:titan:revenue:smoke": "Fails unless Titan Builder has positive 24h fees on DefiLlama",
-  "analytics:hyperliquid:revenue": "Hyperliquid fees/revenue 24h/7d/30d, the last 7 daily points, the highest day and all-time totals (DefiLlama `/summary/fees/hyperliquid`)",
+  "monitor:dex -- hyperliquid:revenue": "Hyperliquid fees/revenue 24h/7d/30d, the last 7 daily points, the highest day and all-time totals (DefiLlama `/summary/fees/hyperliquid`)",
   "simulate:hyperliquid:revenue:smoke": "Fails unless Hyperliquid has positive 24h revenue on DefiLlama",
-  "analytics:papertrade:stakers": "Papertrade fees, revenue and holders (staker) revenue for the last 21 days, the highest day and all-time totals (DefiLlama)",
+  "monitor:dex -- papertrade:stakers": "Papertrade fees, revenue and holders (staker) revenue for the last 21 days, the highest day and all-time totals (DefiLlama)",
   "simulate:papertrade:stakers:smoke": "Fails unless Papertrade has positive 24h revenue on DefiLlama",
-  "analytics:base:chain": "Base chain TVL with 7d/30d change, app fees and chain gas fees/revenue (DefiLlama `/v2/chains`, `/overview/fees/Base`, `/summary/fees/base`)",
+  "analytics -- base:chain": "Base chain TVL with 7d/30d change, app fees and chain gas fees/revenue (DefiLlama `/v2/chains`, `/overview/fees/Base`, `/summary/fees/base`)",
   "simulate:base:chain:smoke": "Fails unless DefiLlama lists the Base chain with positive TVL",
-  "analytics:base:l2-fees": "30d chain gas fees for Base, Robinhood Chain, Arbitrum, Starknet and Celo, with prior 30d and change (DefiLlama `/summary/fees`)",
+  "analytics -- base:l2-fees": "30d chain gas fees for Base, Robinhood Chain, Arbitrum, Starknet and Celo, with prior 30d and change (DefiLlama `/summary/fees`)",
   "simulate:base:l2-fees:smoke": "Fails unless Base, Robinhood Chain, Arbitrum, Starknet and Celo all have positive 30d chain fees",
-  "analytics:hyperevm:chain": "Hyperliquid L1 chain TVL, DEX volume 24h/7d/30d and the last 7 daily DEX volume points with Hyperliquid Spot Orderbook excluded (DefiLlama `/overview/dexs`)",
+  "analytics -- hyperevm:chain": "Hyperliquid L1 chain TVL, DEX volume 24h/7d/30d and the last 7 daily DEX volume points with Hyperliquid Spot Orderbook excluded (DefiLlama `/overview/dexs`)",
   "simulate:hyperevm:chain:smoke": "Fails unless DefiLlama lists the Hyperliquid L1 chain with positive TVL",
-  "analytics:hedera:fees": "Hedera network fees 24h/7d/30d, prior 30d and trailing 365-day fees (DefiLlama `/summary/fees/hedera`)",
+  "analytics -- hedera:fees": "Hedera network fees 24h/7d/30d, prior 30d and trailing 365-day fees (DefiLlama `/summary/fees/hedera`)",
   "simulate:hedera:fees:smoke": "Fails unless Hedera has positive 30d network fees",
-  "analytics:bnb:fees": "BNB Chain fees 24h/7d/30d, prior 30d and trailing 365-day fees and revenue (DefiLlama `/summary/fees/bsc`)",
+  "analytics -- bnb:fees": "BNB Chain fees 24h/7d/30d, prior 30d and trailing 365-day fees and revenue (DefiLlama `/summary/fees/bsc`)",
   "simulate:bnb:fees:smoke": "Fails unless BSC has positive 30d chain fees",
-  "analytics:shibarium:fees": "Shibarium chain fees 24h/7d/30d, prior 30d and trailing 365-day fees (DefiLlama `/summary/fees/shibarium`)",
+  "analytics -- shibarium:fees": "Shibarium chain fees 24h/7d/30d, prior 30d and trailing 365-day fees (DefiLlama `/summary/fees/shibarium`)",
   "simulate:shibarium:fees:smoke": "Fails unless Shibarium has positive 30d chain fees",
-  "analytics:beam:fees": "Beam chain TVL and chain fees 24h/7d/30d plus the last 8 calendar months and quarters (DefiLlama `/v2/chains`, `/summary/fees/beam`)",
+  "analytics -- beam:fees": "Beam chain TVL and chain fees 24h/7d/30d plus the last 8 calendar months and quarters (DefiLlama `/v2/chains`, `/summary/fees/beam`)",
   "simulate:beam:fees:smoke": "Fails unless Beam has positive 30d chain fees",
-  "analytics:hyperlend:eth-apy": "HyperLend UETH supply pool (Hyperliquid L1) TVL, APY, 30-day mean and the last 10 daily APY points (DefiLlama yields pool)",
+  "analytics -- hyperlend:eth-apy": "HyperLend UETH supply pool (Hyperliquid L1) TVL, APY, 30-day mean and the last 10 daily APY points (DefiLlama yields pool)",
   "simulate:hyperlend:eth-apy:smoke": "Fails unless the HyperLend UETH yields pool TVL is above $500K",
-  "analytics:pareto:falconx": "Pareto FalconX credit vault (Ethereum, USDC) TVL, APY and TVL change (DefiLlama yields pool), plus every pareto-credit pool ranked by APY",
+  "analytics -- pareto:falconx": "Pareto FalconX credit vault (Ethereum, USDC) TVL, APY and TVL change (DefiLlama yields pool), plus every pareto-credit pool ranked by APY",
   "simulate:pareto:falconx:smoke": "Fails unless the Pareto FalconX yields pool TVL is above $50M",
-  "analytics:fx:revenue": "f(x) Protocol TVL, fees/revenue 24h/7d/30d and monthly plus calendar-quarter totals for the last 10 months (DefiLlama `fx-protocol`)",
+  "monitor:dex -- fx:revenue": "f(x) Protocol TVL, fees/revenue 24h/7d/30d and monthly plus calendar-quarter totals for the last 10 months (DefiLlama `fx-protocol`)",
   "simulate:fx:revenue:smoke": "Fails unless DefiLlama `fx-protocol` is live and has positive 24h fees",
-  "analytics:uniswap:daily-revenue": "Uniswap (all versions) fees/revenue 24h/7d/30d, the last 7 daily points and all-time totals (DefiLlama parent `uniswap`)",
+  "monitor:dex -- uniswap:daily-revenue": "Uniswap (all versions) fees/revenue 24h/7d/30d, the last 7 daily points and all-time totals (DefiLlama parent `uniswap`)",
   "simulate:uniswap:daily-revenue:smoke": "Fails unless the DefiLlama parent `uniswap` is live and has positive 24h revenue",
-  "analytics:beaverbuild:revenue": "BeaverBuild fees/revenue 24h/7d/30d, the last 7 daily points and all-time totals (DefiLlama `/summary/fees/beaverbuild`)",
+  "monitor:dex -- beaverbuild:revenue": "BeaverBuild fees/revenue 24h/7d/30d, the last 7 daily points and all-time totals (DefiLlama `/summary/fees/beaverbuild`)",
   "simulate:beaverbuild:revenue:smoke": "Fails unless BeaverBuild has positive 24h fees on DefiLlama",
-  "analytics:hyperliquid:oi": "Hyperliquid open interest next to Aster, Variational and Lighter, with the ratio to each and to their sum (DefiLlama `/summary/open-interest`)",
+  "monitor:dex -- hyperliquid:oi": "Hyperliquid open interest next to Aster, Variational and Lighter, with the ratio to each and to their sum (DefiLlama `/summary/open-interest`)",
   "simulate:hyperliquid:oi:smoke": "Fails unless Hyperliquid has positive open interest on DefiLlama",
-  "analytics:ondo:perps-oi": "Ondo Perps open interest and its year-to-date high (DefiLlama `/summary/open-interest/ondo-perps`)",
+  "monitor:dex -- ondo:perps-oi": "Ondo Perps open interest and its year-to-date high (DefiLlama `/summary/open-interest/ondo-perps`)",
   "simulate:ondo:perps-oi:smoke": "Fails unless Ondo Perps has positive open interest on DefiLlama",
-  "analytics:jupiter:eurc-apy": "Jupiter Lend EURC pool (Solana) TVL, APY, 30-day mean and the last 7 daily APY points (DefiLlama yields pool)",
+  "analytics -- jupiter:eurc-apy": "Jupiter Lend EURC pool (Solana) TVL, APY, 30-day mean and the last 7 daily APY points (DefiLlama yields pool)",
   "simulate:jupiter:eurc-apy:smoke": "Fails unless the Jupiter Lend EURC yields pool TVL is above $1M",
-  "analytics:faroo:tvl": "Faroo (stPROS, Pharos) TVL on 2026-10-29, 10-31 and 11-01 and the change (DefiLlama `faroo`)",
+  "monitor:dex -- faroo:tvl": "Faroo (stPROS, Pharos) TVL on 2026-10-29, 10-31 and 11-01 and the change (DefiLlama `faroo`)",
   "simulate:faroo:tvl:smoke": "Fails unless DefiLlama `faroo` is live with positive TVL",
-  "crosschain:uniswap:tvl": "TVL across Uniswap V1–V4 on every configured chain",
-  "crosschain:uniswap:volume": "24h volume across Uniswap V1–V4 on every configured chain",
-  "crosschain:uniswap:liquidity": "Live liquidity flows from V2/V3/V4 mint and burn events",
-  "crosschain:uniswap:weekly:tvl": "Daily TVL history for the past week (CSV in `output/`)",
-  "crosschain:uniswap:weekly:volume": "Daily volume history for the past week (CSV in `output/`)",
-  "crosschain:uniswap:weekly:liquidity": "Daily liquidity changes for the past week",
-  "crosschain:curve:tvl": "TVL across Curve deployments on every configured chain",
-  "crosschain:curve:volume": "24h volume across Curve deployments",
-  "crosschain:curve:weekly:tvl": "Daily TVL history for the past week (CSV in `output/`)",
-  "crosschain:curve:weekly:volume": "Daily volume history for the past week (CSV in `output/`)",
-  "crosschain:balancer:tvl": "TVL across Balancer V2/V3 deployments",
-  "crosschain:balancer:volume": "24h volume across Balancer deployments",
-  "crosschain:balancer:weekly:tvl": "Daily TVL history for the past week (CSV in `output/`)",
-  "crosschain:balancer:weekly:volume": "Daily volume history for the past week (CSV in `output/`)",
-  "crosschain:sushiswap:tvl": "TVL across SushiSwap V2/V3 deployments",
-  "crosschain:sushiswap:volume": "24h volume across SushiSwap deployments",
-  "crosschain:sushiswap:weekly:tvl": "Daily TVL history for the past week (CSV in `output/`)",
-  "crosschain:sushiswap:weekly:volume": "Daily volume history for the past week (CSV in `output/`)",
+  "crosschain -- uniswap:tvl": "TVL across Uniswap V1–V4 on every configured chain",
+  "crosschain -- uniswap:volume": "24h volume across Uniswap V1–V4 on every configured chain",
+  "crosschain -- uniswap:liquidity": "Live liquidity flows from V2/V3/V4 mint and burn events",
+  "crosschain -- uniswap:weekly:tvl": "Daily TVL history for the past week (CSV in `output/`)",
+  "crosschain -- uniswap:weekly:volume": "Daily volume history for the past week (CSV in `output/`)",
+  "crosschain -- uniswap:weekly:liquidity": "Daily liquidity changes for the past week",
+  "crosschain -- curve:tvl": "TVL across Curve deployments on every configured chain",
+  "crosschain -- curve:volume": "24h volume across Curve deployments",
+  "crosschain -- curve:weekly:tvl": "Daily TVL history for the past week (CSV in `output/`)",
+  "crosschain -- curve:weekly:volume": "Daily volume history for the past week (CSV in `output/`)",
+  "crosschain -- balancer:tvl": "TVL across Balancer V2/V3 deployments",
+  "crosschain -- balancer:volume": "24h volume across Balancer deployments",
+  "crosschain -- balancer:weekly:tvl": "Daily TVL history for the past week (CSV in `output/`)",
+  "crosschain -- balancer:weekly:volume": "Daily volume history for the past week (CSV in `output/`)",
+  "crosschain -- sushiswap:tvl": "TVL across SushiSwap V2/V3 deployments",
+  "crosschain -- sushiswap:volume": "24h volume across SushiSwap deployments",
+  "crosschain -- sushiswap:weekly:tvl": "Daily TVL history for the past week (CSV in `output/`)",
+  "crosschain -- sushiswap:weekly:volume": "Daily volume history for the past week (CSV in `output/`)",
 
-  "analytics:uniswap:prices": "Compare V2/V3/V4 prices and fee tiers for the configured pairs",
-  "analytics:curve:pools": "Virtual price, balances, APY and imbalance per pool",
-  "analytics:balancer:pools": "Weighted pool balances, weight drift and impermanent loss",
-  "analytics:sushiswap:pools": "SushiSwap vs Uniswap prices per pair",
-  "analytics:uniswapx:activity":
+  "analytics -- uniswap:prices": "Compare V2/V3/V4 prices and fee tiers for the configured pairs",
+  "analytics -- curve:pools": "Virtual price, balances, APY and imbalance per pool",
+  "analytics -- balancer:pools": "Weighted pool balances, weight drift and impermanent loss",
+  "analytics -- sushiswap:pools": "SushiSwap vs Uniswap prices per pair",
+  "analytics -- uniswapx:activity":
     "Recent `Fill` events on the reactor (`CHAIN`, `UNISWAPX_REACTOR`, `UNISWAPX_MAX_BLOCKS`)",
-  "analytics:aave:markets": "Aave V3 supply/borrow rates and utilization on every configured chain",
-  "analytics:aave:versions": "Aave V2 vs V3 rates across L1 and L2s",
-  "analytics:aave:liquidations": "Recent `LiquidationCall` logs; health factors for `AAVE_WATCH_ADDRESSES`",
-  "analytics:morpho:optimizer": "Best Morpho Blue markets per loan asset vs Aave V3 rates",
-  "analytics:keyrock:vault": "Total assets, liquidity, net APY and curators for the Morpho vault",
-  "analytics:pendle:hy-vault": "Total assets, liquidity, net APY and curators for the Pendle Ecosystem High Yield USDC Morpho vault on Ethereum",
+  "analytics -- aave:markets": "Aave V3 supply/borrow rates and utilization on every configured chain",
+  "analytics -- aave:versions": "Aave V2 vs V3 rates across L1 and L2s",
+  "analytics -- aave:liquidations": "Recent `LiquidationCall` logs; health factors for `AAVE_WATCH_ADDRESSES`",
+  "analytics -- morpho:optimizer": "Best Morpho Blue markets per loan asset vs Aave V3 rates",
+  "analytics -- keyrock:vault": "Total assets, liquidity, net APY and curators for the Morpho vault",
+  "analytics -- pendle:hy-vault": "Total assets, liquidity, net APY and curators for the Pendle Ecosystem High Yield USDC Morpho vault on Ethereum",
   "simulate:pendle:hy-vault:smoke": "Fails unless the Pendle HY USDC vault totalAssetsUsd is above $1M",
-  "analytics:uncx:exploit":
+  "analytics -- uncx:exploit":
     "UNCX Vesting V2 exploit amount, chains, and technique from DefiLlama `/hacks` (`LLAMA_HACK_ID=1765`, since 2026-10-14)",
   "simulate:uncx:exploit:smoke":
     "Fails unless DefiLlama `/hacks` lists a UNCX incident since 2026-10-14 with a positive amount",
-  "analytics:curve:lending":
+  "analytics -- curve:lending":
     "Sums Curve LlamaLend V1+V2 DefiLlama TVL and borrowed (`curve-llamalend` + `curve-llamalend-v2`) without double-counting",
   "simulate:curve:lending:smoke": "Fails unless both LlamaLend slugs report positive borrowed",
-  "analytics:balancer:protocol": "Balancer DefiLlama TVL by chain plus fees/revenue (wind-down / withdrawals-only note in catalog)",
+  "monitor:dex -- balancer:protocol": "Balancer DefiLlama TVL by chain plus fees/revenue (wind-down / withdrawals-only note in catalog)",
   "simulate:balancer:protocol:smoke": "Fails unless DefiLlama `balancer` TVL is positive",
-  "analytics:alchemix:base": "Alchemix DefiLlama TVL by chain (Base row answers the Inner Circle CT claim)",
+  "monitor:dex -- alchemix:base": "Alchemix DefiLlama TVL by chain (Base row answers the Inner Circle CT claim)",
   "simulate:alchemix:base:smoke": "Fails unless DefiLlama `alchemix` TVL is positive",
-  "analytics:lido:staking": "stETH APR, TVL and stETH/wstETH peg (L2 peg needs RPCs)",
-  "analytics:stakestone:staking": "TVL and optional chart APY, compared to Lido",
-  "analytics:kintsu:staking": "TVL and yields-chart APY, compared to Lido and StakeStone",
-  "analytics:sky:rates": "DSR from the Maker Pot plus Maker and Sky TVL rows",
-  "analytics:ethena:monitor": "TVL, mint/redeem pairs and USDe / sUSDe `totalSupply`",
-  "analytics:buidl:markets": "BUIDL Ethereum `totalSupply` x DefiLlama coins price",
-  "analytics:ondo:markets": "USDY + OUSG Ethereum `totalSupply` x DefiLlama coins price",
+  "analytics -- lido:staking": "stETH APR, TVL and stETH/wstETH peg (L2 peg needs RPCs)",
+  "analytics -- stakestone:staking": "TVL and optional chart APY, compared to Lido",
+  "analytics -- kintsu:staking": "TVL and yields-chart APY, compared to Lido and StakeStone",
+  "analytics -- sky:rates": "DSR from the Maker Pot plus Maker and Sky TVL rows",
+  "analytics -- ethena:monitor": "TVL, mint/redeem pairs and USDe / sUSDe `totalSupply`",
+  "analytics -- buidl:markets": "BUIDL Ethereum `totalSupply` x DefiLlama coins price",
+  "analytics -- ondo:markets": "USDY + OUSG Ethereum `totalSupply` x DefiLlama coins price",
   "simulate:buidl:smoke": "Fails unless BUIDL Ethereum supply x price is positive",
   "simulate:ondo:smoke": "Fails unless USDY and OUSG Ethereum supply x price are positive",
-  "analytics:monad:dex": "Monad chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Monad`), 7d/30d change, and DEX volume",
-  "analytics:megaeth:chain":
+  "analytics -- monad:dex": "Monad chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Monad`), 7d/30d change, and DEX volume",
+  "analytics -- megaeth:chain":
     "MegaETH chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=MegaETH`), 7d/30d change, and DEX volume",
-  "analytics:soneium:chain":
+  "analytics -- soneium:chain":
     "Soneium chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Soneium`), 7d/30d change, and DEX volume",
-  "analytics:payy:bridge": "USDC `balanceOf` the Payy Ethereum bridge",
-  "analytics:arc:chain":
+  "analytics -- payy:bridge": "USDC `balanceOf` the Payy Ethereum bridge",
+  "analytics -- arc:chain":
     "Arc chain TVL from DefiLlama `/v2/chains`, plus 7d/30d change (`LLAMA_CHAIN_NAME` defaults to Arc)",
-  "analytics:blast:chain": "Blast chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Blast`), plus 7d/30d change",
-  "analytics:abstract:chain":
+  "analytics -- blast:chain": "Blast chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Blast`), plus 7d/30d change",
+  "analytics -- abstract:chain":
     "Abstract chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Abstract`), 7d/30d change, DEX volume, and the 2026-12-15 shutdown note",
-  "analytics:robinhood:chain":
+  "analytics -- robinhood:chain":
     "Robinhood Chain TVL, DEX volume, and fees (`LLAMA_CHAIN_NAME` percent-encoded as `Robinhood%20Chain`)",
-  "analytics:stellar:chain": "Stellar chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Stellar`), 7d/30d change, and DEX volume",
-  "analytics:near:exploit":
+  "analytics -- stellar:chain": "Stellar chain TVL from DefiLlama `/v2/chains` (`LLAMA_CHAIN_NAME=Stellar`), 7d/30d change, and DEX volume",
+  "analytics -- near:exploit":
     "NEAR Intents exploit amount, chain, and technique from DefiLlama `/hacks` (`LLAMA_HACK_ID=6225`, since 2026-09-30)",
   "simulate:near:exploit:smoke": "Fails unless DefiLlama `/hacks` lists a NEAR Intents incident since 2026-09-30 with a positive amount",
-  "analytics:liquid:reserves":
+  "analytics -- liquid:reserves":
     "Liquid Network L-BTC supply vs federation BTC reserve (liquid.network audit API): shortfall in BTC and USD, coverage, and month-end coverage",
   "simulate:liquid:smoke": "Fails unless the liquid.network audit API returns a positive L-BTC supply and BTC reserve; prints the gap and coverage",
-  "analytics:derive:options":
+  "analytics -- derive:options":
     "Derive options notional and premium (24h/7d/30d), TVL, share vs Paradex and the rest, plus Hypercall TVL",
   "simulate:derive:smoke": "Fails unless Derive 30d options notional is > 0 (`/summary/options/derive-options`)",
-  "analytics:reya:dex": "DefiLlama TVL + TVL by chain (`REYA_LLAMA_SLUG`, default `reya-perps`)",
-  "analytics:ammalgam:hybrid": "DefiLlama summary when `AMMALGAM_LLAMA_SLUG` is set",
-  "analytics:eth:dex-share": "Ethereum venue volume: Uniswap V4 vs V3 vs 1inch Aqua vs long-tail",
-  "analytics:eth:lending-movers": "Ethereum lending/CDP 7d TVL change (Aave V4, Spark, Morpho)",
-  "analytics:eth:yield": "Pendle V2 DEX volume plus Ethereum yield TVL movers",
-  "analytics:eth:tvl-drivers": "Ethereum DeFi 7d $ inflow/outflow by protocol (CEX omitted)",
-  "analytics:eth:aave-mix": "Aave V3 vs V4 vs Horizon collateral and borrowed on Ethereum",
-  "analytics:eth:pendle-markets": "Pendle chain TVL plus Ethereum PT/YT market liquidity",
-  "analytics:ethbtc:tvl": "Ethereum vs Bitcoin chain TVL: last month, this month, this week",
-  "analytics:ethbtc:ratio": "ETH vs BTC spot and ratio for the same windows (CoinGecko)",
-  "analytics:btc:wraps": "Bitcoin wrap / restake TVL (WBTC, Babylon, Citrea, Nexus)",
-  "analytics:btc:wrap-trail": "Circle Bitcoin daily TVL path vs Kraken / Babylon / Nexus",
-  "analytics:l2:overview": "TVL + DEX 30d volume for Arb/OP/Base/Polygon/Scroll/zkSync/Linea/Unichain",
-  "analytics:rwa:overview": "RWA protocol TVL (DigiFT, Huma, Ondo, BUIDL, thBill)",
-  "analytics:nft:markets": "Marketplace fees + 10-collection watchlist (`RESERVOIR_API_KEY` for floors)",
-  "analytics:airdrop:watch": "Research calendar; optional join to a `trends-report.json` (`TRENDS_REPORT`)",
-  "analytics:lending:aggregate": "DefiLlama TVL for Aave, Morpho, Compound, Spark, Venus, Euler, Curvance, Resolv",
-  "analytics:lending:rates": "Best supply/borrow across Aave (on-chain) + Morpho (API) per chain",
-  "analytics:lending:venues": "Compound V3 + Venus TVL on BSC and L2s (`LENDING_LLAMA_CHAINS`)",
-  "analytics:staking:aggregate": "LST category view from DefiLlama",
-  "analytics:staking:compare": "Lido vs StakeStone vs Kintsu heuristic score",
-  "analytics:amm:aggregate": "Headline TVL for major AMMs (`AMM_PROTOCOLS`)",
-  "analytics:dex:prices": "Prices across Uniswap, Sushi, Curve; supports `CHAIN` and `PAIR_GROUP=daytrade`",
-  "analytics:weekly:blocks": "Block-level transaction and gas analysis",
-  "simulate:weekly:blocks": "Same as `analytics:weekly:blocks`",
+  "analytics -- reya:dex": "DefiLlama TVL + TVL by chain (`REYA_LLAMA_SLUG`, default `reya-perps`)",
+  "analytics -- ammalgam:hybrid": "DefiLlama summary when `AMMALGAM_LLAMA_SLUG` is set",
+  "analytics -- eth:dex-share": "Ethereum venue volume: Uniswap V4 vs V3 vs 1inch Aqua vs long-tail",
+  "analytics -- eth:lending-movers": "Ethereum lending/CDP 7d TVL change (Aave V4, Spark, Morpho)",
+  "analytics -- eth:yield": "Pendle V2 DEX volume plus Ethereum yield TVL movers",
+  "analytics -- eth:tvl-drivers": "Ethereum DeFi 7d $ inflow/outflow by protocol (CEX omitted)",
+  "analytics -- eth:aave-mix": "Aave V3 vs V4 vs Horizon collateral and borrowed on Ethereum",
+  "analytics -- eth:pendle-markets": "Pendle chain TVL plus Ethereum PT/YT market liquidity",
+  "analytics -- ethbtc:tvl": "Ethereum vs Bitcoin chain TVL: last month, this month, this week",
+  "analytics -- ethbtc:ratio": "ETH vs BTC spot and ratio for the same windows (CoinGecko)",
+  "analytics -- btc:wraps": "Bitcoin wrap / restake TVL (WBTC, Babylon, Citrea, Nexus)",
+  "analytics -- btc:wrap-trail": "Circle Bitcoin daily TVL path vs Kraken / Babylon / Nexus",
+  "analytics -- l2:overview": "TVL + DEX 30d volume for Arb/OP/Base/Polygon/Scroll/zkSync/Linea/Unichain",
+  "analytics -- rwa:overview": "RWA protocol TVL (DigiFT, Huma, Ondo, BUIDL, thBill)",
+  "analytics -- nft:markets": "Marketplace fees + 10-collection watchlist (`RESERVOIR_API_KEY` for floors)",
+  "analytics -- airdrop:watch": "Research calendar; optional join to a `trends-report.json` (`TRENDS_REPORT`)",
+  "analytics -- lending:aggregate": "DefiLlama TVL for Aave, Morpho, Compound, Spark, Venus, Euler, Curvance, Resolv",
+  "analytics -- lending:rates": "Best supply/borrow across Aave (on-chain) + Morpho (API) per chain",
+  "analytics -- lending:venues": "Compound V3 + Venus TVL on BSC and L2s (`LENDING_LLAMA_CHAINS`)",
+  "analytics -- staking:aggregate": "LST category view from DefiLlama",
+  "analytics -- staking:compare": "Lido vs StakeStone vs Kintsu heuristic score",
+  "analytics -- amm:aggregate": "Headline TVL for major AMMs (`AMM_PROTOCOLS`)",
+  "analytics -- dex:prices": "Prices across Uniswap, Sushi, Curve; supports `CHAIN` and `PAIR_GROUP=daytrade`",
+  "analytics -- weekly:blocks": "Block-level transaction and gas analysis",
+  "simulate:weekly:blocks": "Same as `analytics -- weekly:blocks`",
 
   "simulate:aave:v3:fork": "Aave V3 supply/borrow flow on a fork",
   "simulate:aave:markets": "Read-only Aave V3 market state (`SIMULATE_ONLY=true`)",
@@ -2366,8 +2366,8 @@ const SCRIPT_DESCRIPTIONS = {
   "simulate:lido:fork": "Lido stake flow on a fork",
   "simulate:lido:read": "Read-only Lido state (`SIMULATE_ONLY=true`)",
   "simulate:uniswapx:fill": "Replay a historical fill via `eth_call` at its block (`UNISWAPX_REPLAY_TX`)",
-  "simulate:lending:rates:smoke": "Smoke for `analytics:lending:rates`",
-  "simulate:staking:compare:smoke": "Smoke for `analytics:staking:compare`",
+  "simulate:lending:rates:smoke": "Smoke for `analytics -- lending:rates`",
+  "simulate:staking:compare:smoke": "Smoke for `analytics -- staking:compare`",
   "simulate:quote": "Quote one swap without sending (`SIMULATE_ONLY=true`)",
   "simulate:swap": "Simulate one swap end to end",
   "simulate:multi:quote": "Quote the same trade on every protocol (`SIMULATE_ONLY=true`)",

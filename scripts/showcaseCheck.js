@@ -34,6 +34,18 @@ function checkSignals(row, label, problems) {
     }
     if (!row.token.coingeckoId) problems.push(`${label}/${row.id}: token without coingeckoId`);
   }
+  // Product links: every scored row carries its DefiLlama page, and the CoinGecko page
+  // when a token is mapped. Catalog-only rows (appended to a tab, no DefiLlama row and
+  // no score) legitimately have neither.
+  if (row.score != null && (!row.llamaUrl || !/^https:\/\/defillama\.com\/protocol\//.test(row.llamaUrl))) {
+    problems.push(`${label}/${row.id}: llamaUrl is ${row.llamaUrl}`);
+  }
+  const gecko = row.token && row.token.coingeckoId
+    ? `https://www.coingecko.com/en/coins/${encodeURIComponent(row.token.coingeckoId)}`
+    : null;
+  if ((row.coingeckoUrl || null) !== gecko) {
+    problems.push(`${label}/${row.id}: coingeckoUrl is ${row.coingeckoUrl}, expected ${gecko}`);
+  }
 }
 
 function checkTesting(row, problems) {

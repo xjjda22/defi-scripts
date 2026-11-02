@@ -10,9 +10,9 @@
  * - IL risk assessment
  *
  * Usage:
- *   npm run analytics:balancer:pools [chain] [poolName]
- *   npm run analytics:balancer:pools ethereum wethUsdc5050
- *   npm run analytics:balancer:pools --help
+ *   npm run analytics -- balancer:pools [chain] [poolName]
+ *   npm run analytics -- balancer:pools ethereum wethUsdc5050
+ *   npm run analytics -- balancer:pools --help
  */
 
 const { ethers } = require("ethers");
@@ -207,7 +207,7 @@ async function main() {
 Balancer Pool Monitor - Monitor Balancer weighted pools
 
 Usage:
-  npm run analytics:balancer:pools
+  npm run analytics -- balancer:pools
 
 Monitors all configured pools:
   - WETH/USDC (50/50) [V2]

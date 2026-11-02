@@ -477,11 +477,37 @@ async function printOpenInterestCompare(slug, label, others) {
   console.log(t.toString());
 }
 
+/**
+ * `npm run monitor:dex -- <id>` resolves the target from src/catalog/monitorTargets.js
+ * and fills the env this monitor reads. An explicitly set env var always wins, so the
+ * direct `DEFILLAMA_SLUG=... node ...` form keeps working.
+ */
+function applyTargetArg(argv = process.argv) {
+  const key = (argv[2] || "").trim();
+  if (!key || key.startsWith("-")) return null;
+  const { MONITOR_TARGETS } = require("../../../catalog/monitorTargets");
+  const target =
+    MONITOR_TARGETS.find(t => `${t.id}:${t.action}` === key) || MONITOR_TARGETS.find(t => t.id === key);
+  if (!target) {
+    const ids = [...new Set(MONITOR_TARGETS.map(t => t.id))].sort();
+    console.error(chalk.red(`Unknown monitor target "${key}".`));
+    console.error(chalk.gray(`Run \`npm run monitor:dex -- <id>\`. Ids: ${ids.join(", ")}`));
+    process.exit(1);
+  }
+  process.env.DEFILLAMA_SLUG = target.slug;
+  if (!process.env.DEFILLAMA_LABEL) process.env.DEFILLAMA_LABEL = target.label || target.slug;
+  for (const [k, v] of Object.entries(target.env || {})) {
+    if (process.env[k] === undefined) process.env[k] = String(v);
+  }
+  return target;
+}
+
 async function main() {
   installCliSafeStdout();
+  applyTargetArg();
   const slug = (process.env.DEFILLAMA_SLUG || "").trim();
   if (!slug) {
-    console.error(chalk.red("Set DEFILLAMA_SLUG (e.g. aerodrome)"));
+    console.error(chalk.red("Set DEFILLAMA_SLUG (e.g. aerodrome) or run `npm run monitor:dex -- <id>`"));
     process.exit(1);
   }
   const label = (process.env.DEFILLAMA_LABEL || slug).trim();

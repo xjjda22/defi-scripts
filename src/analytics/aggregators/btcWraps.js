@@ -1,7 +1,7 @@
 /**
  * Bitcoin DeFi wraps and restaking (not CEX custody, not AMM volume).
  *
- *   npm run analytics:btc:wraps
+ *   npm run analytics -- btc:wraps
  */
 
 require("dotenv").config();

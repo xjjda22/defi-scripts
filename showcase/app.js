@@ -102,6 +102,14 @@ function mentionBadge(row) {
   return `<span class="badge mentions" title="${esc(`${n} distinct posts${lists ? ` on ${lists}` : ""}`)}">${n}</span>`;
 }
 
+// CoinGecko product page. Falls back to the mapped token id so a data.json built
+// before coingeckoUrl existed still renders the link.
+function geckoUrl(row) {
+  if (row.coingeckoUrl) return row.coingeckoUrl;
+  const id = row.token && row.token.coingeckoId;
+  return id ? `https://www.coingecko.com/en/coins/${encodeURIComponent(id)}` : null;
+}
+
 function scriptKind(name) {
   const script = String(name || "");
   if (script.startsWith("fork:")) return "fork";
@@ -256,9 +264,11 @@ function detailHtml(row) {
     fork && testing.features && testing.features.length
       ? row.scripts.filter(script => scriptKind(scriptName(script)) !== "fork")
       : row.scripts;
+  const gecko = geckoUrl(row);
   const links = [
     app ? `<a href="${esc(app)}" target="_blank" rel="noreferrer">Official app</a>` : "",
     row.llamaUrl ? `<a href="${esc(row.llamaUrl)}" target="_blank" rel="noreferrer">DefiLlama</a>` : "",
+    gecko ? `<a href="${esc(gecko)}" target="_blank" rel="noreferrer">CoinGecko</a>` : "",
   ]
     .filter(Boolean)
     .join("");
@@ -552,9 +562,13 @@ function renderTable() {
   $("status").textContent = rows.length ? `${rows.length} shown` : "No protocols match.";
   $("rows").innerHTML = rows
     .map(row => {
-      const link = row.llamaUrl
-        ? ` <a class="llama" href="${esc(row.llamaUrl)}" target="_blank" rel="noreferrer">DefiLlama</a>`
-        : "";
+      const gecko = geckoUrl(row);
+      const link = [
+        row.llamaUrl
+          ? ` <a class="llama" href="${esc(row.llamaUrl)}" target="_blank" rel="noreferrer">DefiLlama</a>`
+          : "",
+        gecko ? ` <a class="gecko" href="${esc(gecko)}" target="_blank" rel="noreferrer">CoinGecko</a>` : "",
+      ].join("");
       const overall =
         state.tab !== "overall" && row.overallRank ? `<span class="slug">#${esc(row.overallRank)} overall</span>` : "";
       return `<tr>

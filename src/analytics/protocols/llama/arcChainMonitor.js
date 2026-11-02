@@ -1,6 +1,6 @@
 /**
  * DefiLlama chain TVL monitor (no protocol slug).
- * LLAMA_CHAIN_NAME defaults to "Arc" (Circle L1, chainId 5042), so `analytics:arc:chain` is unchanged.
+ * LLAMA_CHAIN_NAME defaults to "Arc" (Circle L1, chainId 5042), so `analytics -- arc:chain` is unchanged.
  * Names with spaces are percent-encoded in the npm script (`Robinhood%20Chain`) and decoded here;
  * request paths are encoded again via encodeURIComponent.
  * Also prints 7d/30d TVL change from /v2/historicalChainTvl/<name> when that series is available.

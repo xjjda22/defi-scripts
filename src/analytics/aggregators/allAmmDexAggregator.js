@@ -61,7 +61,7 @@ async function main() {
     }
   }
   console.log(table.toString());
-  console.log(chalk.gray("\nDetail: npm run analytics:dex:prices"));
+  console.log(chalk.gray("\nDetail: npm run analytics -- dex:prices"));
 }
 
 if (require.main === module) {

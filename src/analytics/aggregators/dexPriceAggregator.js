@@ -14,9 +14,9 @@
  * - Optimal routing recommendation
  *
  * Usage:
- *   npm run analytics:dex:prices [chain] [tokenIn] [tokenOut] [amount]
- *   npm run analytics:dex:prices ethereum WETH USDC 1
- *   npm run analytics:dex:prices --help
+ *   npm run analytics -- dex:prices [chain] [tokenIn] [tokenOut] [amount]
+ *   npm run analytics -- dex:prices ethereum WETH USDC 1
+ *   npm run analytics -- dex:prices --help
  */
 
 const { ethers } = require("ethers");
@@ -375,7 +375,7 @@ async function main() {
 Multi-DEX Price Aggregator - Find the best price across all DEXs
 
 Usage:
-  npm run analytics:dex:prices
+  npm run analytics -- dex:prices
 
 Environment:
   CHAIN=ethereum|arbitrum|base|bsc|zksync|scroll|...   (default: ethereum)

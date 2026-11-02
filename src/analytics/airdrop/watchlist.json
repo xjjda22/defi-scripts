@@ -72,7 +72,7 @@
       "season": "Points + $100k MON over 4 weeks (from 2026-09-07 public mainnet)",
       "status": "farming",
       "claimWindow": "MON weekly, claimable Mondays 00:00 UTC; no token announced",
-      "notes": "Source: https://drake.exchange/points . TVL: npm run analytics:drake:perps"
+      "notes": "Source: https://drake.exchange/points . TVL: npm run monitor:dex -- drake:perps"
     },
     {
       "protocol": "Apyx",

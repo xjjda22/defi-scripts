@@ -1,7 +1,7 @@
 /**
  * RWA / tokenization TVL board (Ethereum first).
  *
- *   npm run analytics:rwa:overview
+ *   npm run analytics -- rwa:overview
  *
  * Complements one-off Ondo / BUIDL slug monitors with DigiFT, Huma, thBill, etc.
  */

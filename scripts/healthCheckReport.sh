@@ -53,6 +53,14 @@ while IFS= read -r line; do
 done < <(node -e "
   const p = require('./package.json');
   Object.keys(p.scripts).sort().forEach((k) => console.log(k));
+  // The monitor:dex / analytics / crosschain drivers expand from their tables, so the
+  // report still covers every target now that they are not separate package.json entries.
+  const { MONITOR_TARGETS } = require('./src/catalog/monitorTargets');
+  for (const t of MONITOR_TARGETS) console.log('monitor:dex -- ' + t.id + ':' + t.action);
+  const { TARGETS: A } = require('./src/catalog/analyticsTargets');
+  for (const t of A) console.log('analytics -- ' + t.key);
+  const { TARGETS: C } = require('./src/catalog/crosschainTargets');
+  for (const t of C) console.log('crosschain -- ' + t.key);
 ")
 
 crosschain=()
@@ -62,9 +70,10 @@ swap=()
 
 for n in "${ALL_NAMES[@]}"; do
   [[ "$n" == prettier || "$n" == lint:fix || "$n" =~ ^report: ]] && continue
-  if [[ "$n" =~ ^crosschain: ]]; then
+  [[ "$n" == analytics || "$n" == crosschain || "$n" == monitor:dex ]] && continue
+  if [[ "$n" =~ ^crosschain\ --\  ]]; then
     crosschain+=("$n")
-  elif [[ "$n" =~ ^analytics: ]]; then
+  elif [[ "$n" =~ ^analytics\ --\  || "$n" =~ ^monitor:dex\ --\  ]]; then
     analytics+=("$n")
   elif [[ "$n" =~ ^simulate: ]] || [[ "$n" =~ ^test:pairs ]]; then
     simulation+=("$n")
@@ -95,7 +104,13 @@ run_one() {
   set +e
   local out_tmp
   out_tmp="$(mktemp)"
-  run_cmd npm run "$script" --silent >"$out_tmp" 2>&1
+  if [[ "$script" == *" -- "* ]]; then
+    local family="${script%% -- *}"
+    local key="${script#* -- }"
+    run_cmd npm run "$family" --silent -- "$key" >"$out_tmp" 2>&1
+  else
+    run_cmd npm run "$script" --silent >"$out_tmp" 2>&1
+  fi
   ec=$?
   set -e
   end=$(date +%s)

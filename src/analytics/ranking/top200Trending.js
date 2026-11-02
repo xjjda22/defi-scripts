@@ -759,6 +759,11 @@ async function main() {
     const signal = signals.byId.get(row.id) || null;
     row.signalsRaw = signal;
     row.token = signal ? signal.token : null;
+    // Product page on CoinGecko, next to the DefiLlama one. Null when the row has no
+    // mapped token, so the board renders only the links that exist.
+    row.coingeckoUrl = row.token && row.token.coingeckoId
+      ? `https://www.coingecko.com/en/coins/${encodeURIComponent(row.token.coingeckoId)}`
+      : null;
   });
 
   // Size is ranked on the row's own basis so dollars of TVL, fees and volume are

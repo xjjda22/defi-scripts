@@ -1,9 +1,9 @@
 /**
  * Aave on Ethereum: V3 vs V4 vs Horizon collateral mix and borrowed.
  *
- *   npm run analytics:eth:aave-mix
+ *   npm run analytics -- eth:aave-mix
  *
- * On-chain V2/V3 rates remain `analytics:aave:markets` / `simulate:aave:versions`.
+ * On-chain V2/V3 rates remain `analytics -- aave:markets` / `simulate:aave:versions`.
  * This board is Llama TVL + token breakdown (V4 is not in the rate aggregator).
  */
 

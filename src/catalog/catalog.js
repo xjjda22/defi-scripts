@@ -1,6 +1,9 @@
 const pkg = require("../../package.json");
 const { CATEGORIES, BOARD_GROUPS, PROTOCOLS, BOARDS, SCRIPT_DESCRIPTIONS } = require("./protocols");
 const { featuresByScript } = require("./forkFeatures");
+const { MONITOR_TARGETS } = require("./monitorTargets");
+const { TARGETS: ANALYTICS_TARGETS } = require("./analyticsTargets");
+const { TARGETS: CROSSCHAIN_TARGETS } = require("./crosschainTargets");
 
 const KINDS = ["Analytics", "Smoke", "Simulate", "Swap", "Cross-chain", "Fork"];
 const FAMILIES = new Set(["analytics", "simulate", "swap", "crosschain", "fork"]);
@@ -16,6 +19,7 @@ function classify(name, command) {
   if (name === "fork:all" || name === "simulate:fork:suite") return { id: "validate", kind: "Fork" };
   if (parts[0] === "fork") return { id: parts[1], kind: "Fork" };
   if (!FAMILIES.has(parts[0])) return null;
+  if (parts.length < 2) return null;
   const id = parts[0] === "simulate" && parts[1] === "dex" ? parts[2] : parts[1];
   if (parts[0] === "analytics") return { id, kind: "Analytics" };
   if (parts[0] === "swap") return { id, kind: "Swap" };
@@ -74,8 +78,60 @@ function describeSmokeFromSibling(script, scripts) {
   if (script.kind !== "Smoke") return null;
   const analytics = scripts.filter(s => s.id === script.id && s.kind === "Analytics");
   const twin = `analytics:${script.name.replace(/^simulate:/, "").replace(/:smoke$/, "")}`;
-  const target = analytics.find(s => s.name === twin) || (analytics.length === 1 ? analytics[0] : null);
+  const target =
+    analytics.find(s => s.name === twin || s.legacy === twin) || (analytics.length === 1 ? analytics[0] : null);
   return target ? `Smoke for \`${target.name}\`` : null;
+}
+
+const MONITOR_SOURCE = "src/analytics/protocols/llama/dexProtocolMonitor.js";
+
+/** Rebuild the env a `monitor:dex` target used to carry in its own npm script. */
+function monitorCommand(target) {
+  const parts = [`DEFILLAMA_SLUG=${target.slug}`, `DEFILLAMA_LABEL='${target.label || target.slug}'`];
+  for (const [key, value] of Object.entries(target.env || {})) parts.push(`${key}=${value}`);
+  return `node ${MONITOR_SOURCE} ${parts.join(" ")}`;
+}
+
+/**
+ * One catalog script per `monitor:dex` target. The name is the command a user
+ * actually types (`npm run monitor:dex -- <id>:<action>`), while `command` keeps the
+ * env the monitor reads, so coverage, descriptions and source links still resolve.
+ */
+function monitorEntries(scriptMap) {
+  const out = [];
+  for (const target of MONITOR_TARGETS) {
+    const key = `${target.id}:${target.action}`;
+    const name = `monitor:dex -- ${key}`;
+    if (scriptMap[`analytics:${key}`] || scriptMap[name]) continue;
+    out.push({ name, legacy: `analytics:${key}`, id: target.id, kind: "Analytics", command: monitorCommand(target) });
+  }
+  return out;
+}
+
+/**
+ * One catalog script per `analytics` / `crosschain` driver target. The name is the
+ * command a user types (`npm run analytics -- <key>`); `command` keeps the env and
+ * module so descriptions, `data:` and source links still resolve.
+ */
+const DRIVER_FAMILIES = [
+  { family: "analytics", targets: ANALYTICS_TARGETS },
+  { family: "crosschain", targets: CROSSCHAIN_TARGETS },
+];
+
+function driverEntries(scriptMap) {
+  const out = [];
+  for (const { family, targets } of DRIVER_FAMILIES) {
+    for (const target of targets) {
+      const legacy = `${family}:${target.key}`;
+      const name = `${family} -- ${target.key}`;
+      if (scriptMap[legacy] || scriptMap[name]) continue;
+      const env = Object.entries(target.env || {}).map(([k, v]) => `${k}=${v}`);
+      const command = [...env, `node ${target.module}`].join(" ");
+      const c = classify(legacy, command) || { id: target.key.split(":")[0], kind: "Analytics" };
+      out.push({ name, legacy, command, id: c.id, kind: c.kind });
+    }
+  }
+  return out;
 }
 
 function loadScripts(scriptMap = pkg.scripts) {
@@ -84,9 +140,11 @@ function loadScripts(scriptMap = pkg.scripts) {
     const c = classify(name, command);
     if (c) scripts.push({ name, command, ...c });
   }
+  scripts.push(...monitorEntries(scriptMap), ...driverEntries(scriptMap));
   for (const s of scripts) {
     s.description =
       SCRIPT_DESCRIPTIONS[s.name] ||
+      (s.legacy && SCRIPT_DESCRIPTIONS[s.legacy]) ||
       describeLlamaMonitor(s.command) ||
       describeLlamaSmoke(s.command) ||
       describeDexVariant(s.command) ||

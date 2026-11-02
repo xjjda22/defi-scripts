@@ -1,9 +1,9 @@
 /**
  * Pendle depth: chain TVL split plus Ethereum active PT/YT markets (liquidity, implied APY).
  *
- *   npm run analytics:eth:pendle-markets
+ *   npm run analytics -- eth:pendle-markets
  *
- * Venue volume stays on `analytics:eth:yield`. This board answers which markets
+ * Venue volume stays on `analytics -- eth:yield`. This board answers which markets
  * the Pendle DEX print is actually trading (RWA/stables vs LST).
  */
 

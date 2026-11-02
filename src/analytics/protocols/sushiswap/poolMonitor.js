@@ -9,9 +9,9 @@
  * - Shows when to use SushiSwap (LP incentives) vs Uniswap (better prices)
  *
  * Usage:
- *   npm run analytics:sushiswap:pools [chain] [tokenIn] [tokenOut] [amount]
- *   npm run analytics:sushiswap:pools ethereum WETH USDC 1
- *   npm run analytics:sushiswap:pools --help
+ *   npm run analytics -- sushiswap:pools [chain] [tokenIn] [tokenOut] [amount]
+ *   npm run analytics -- sushiswap:pools ethereum WETH USDC 1
+ *   npm run analytics -- sushiswap:pools --help
  */
 
 const { ethers } = require("ethers");
@@ -240,7 +240,7 @@ async function main() {
 SushiSwap Pool Monitor - Compare SushiSwap and Uniswap prices
 
 Usage:
-  npm run analytics:sushiswap:pools
+  npm run analytics -- sushiswap:pools
 
 Monitors default pairs:
   - WETH/USDC (1 ETH)

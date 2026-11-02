@@ -1,6 +1,8 @@
 # Architecture (defi-scripts)
 
-A collection of standalone Node.js (CommonJS) scripts, exposed as npm scripts. No server, no database. Coverage notes: [`01-protocol-script-coverage.md`](./01-protocol-script-coverage.md). Commands per protocol: [`02-protocol-catalog.md`](./02-protocol-catalog.md) (generated from `src/catalog/protocols.js` + `package.json`; `npm run catalog`).
+A collection of standalone Node.js (CommonJS) scripts, exposed as npm scripts. No server, no database. Coverage notes: [`01-protocol-script-coverage.md`](./01-protocol-script-coverage.md). Commands per protocol: [`02-protocol-catalog.md`](./02-protocol-catalog.md) (generated from `src/catalog/protocols.js`, `package.json` and the three driver tables; `npm run catalog`).
+
+Three drivers keep `package.json` small: `monitor:dex -- <id>:<action>` (DefiLlama one-liners, rows in `src/catalog/monitorTargets.js`), `analytics -- <key>` (rows in `src/catalog/analyticsTargets.js`) and `crosschain -- <key>` (rows in `src/catalog/crosschainTargets.js`). `scripts/runTarget.js` resolves the last two and spawns the module with the row's env.
 
 MEV tooling (bundle simulation, sandwich/flashloan analysis, bots) is intentionally out of scope; other projects can reuse `src/config/chains.js`, the quote helpers and `src/utils/web3.js` directly.
 
@@ -23,7 +25,7 @@ MEV tooling (bundle simulation, sandwich/flashloan analysis, bots) is intentiona
 
 ## Entry points
 
-npm scripts in `package.json` → `src/analytics/`, `src/crosschain/`, `src/simulation/`, `src/examples/`. Fork validator: `scripts/validateForkSimulations.js`. Fork suite: `npm run fork:all`. Trending board: `npm run ranking:top200` (same script as `showcase:build`). Protocol test panel: [docs/04-fork-testing.md](./04-fork-testing.md).
+npm scripts in `package.json` plus the `monitor:dex` / `analytics` / `crosschain` drivers → `src/analytics/`, `src/crosschain/`, `src/simulation/`, `src/examples/`. Fork validator: `scripts/validateForkSimulations.js`. Fork suite: `npm run fork:all`. Trending board: `npm run ranking:top200` (same script as `showcase:build`). Protocol test panel: [docs/04-fork-testing.md](./04-fork-testing.md).
 
 ## Hotspots
 

@@ -1,9 +1,9 @@
 /**
  * Ethereum lending / CDP TVL movers (7d). Catches Aave V4, Spark, Morpho, new books.
  *
- *   npm run analytics:eth:lending-movers
+ *   npm run analytics -- eth:lending-movers
  *
- * Snapshot TVL without Δ is still `analytics:lending:aggregate`.
+ * Snapshot TVL without Δ is still `analytics -- lending:aggregate`.
  */
 
 require("dotenv").config();
@@ -98,7 +98,7 @@ async function main() {
   printTable("Week up", board.weekUp);
   printTable("Week down", board.weekDown);
   console.log(chalk.gray('\n"(new)" = 7d Δ ≥ 400%. Treat as a listing from near zero.\n'));
-  console.log(chalk.gray("On-chain rates: npm run analytics:lending:rates\n"));
+  console.log(chalk.gray("On-chain rates: npm run analytics -- lending:rates\n"));
 }
 
 module.exports = { MIN_TVL, isLending, buildEthLendingMovers };

@@ -1,7 +1,7 @@
 /**
  * Pendle / Ethereum yield tape: DEX volume for Pendle V2 plus yield TVL movers.
  *
- *   npm run analytics:eth:yield
+ *   npm run analytics -- eth:yield
  */
 
 require("dotenv").config();
