@@ -112,7 +112,7 @@ npm run fork:all                                  # SKIPPED without RPC is not a
 
 Everything marked `[reviewed]` has no gate. If you add a gate for one, flip its tag in the same PR.
 
-## 6. Snapshot — 2026-11-02 build + fork campaign `56ca5ef`
+## 6. Snapshot — 2026-11-02 18:06 rebuild (#60)
 
 The four buckets sum to 200. Rows, not scripts: one protocol family is one row.
 
@@ -127,11 +127,12 @@ The four buckets sum to 200. Rows, not scripts: one protocol family is one row.
 | Rows with a dedicated monitor | 97 |
 | Ranking-only rows | 103 |
 
-Rebuilt from `showcase/data.json` (generatedAt 2026-11-02T18:06Z) after the fork campaign landed:
-the board now carries 89 fork stamps, up from 72, and bucket 4 is down to the two rows nothing has
-investigated yet — Armitage by Wintermute and xDAI Stake Bridge. Bucket 2 grew to 18 because the
-four rows the campaign proved is not forkable (Liquid Collective, Solv stablecoin, SoSoValue
-Indexes, Avalanche Core Bridge) now have `API_ONLY` entries with the on-chain evidence.
+Rebuilt from `showcase/data.json` (`generatedAt` 2026-11-02T18:06Z) after the fork campaign landed:
+fork stamps went 72 → 89, and bucket 4 is down to the two rows nothing has investigated yet —
+Armitage by Wintermute and xDAI Stake Bridge. Bucket 2 is 18: the four rows the campaign proved
+not forkable (Liquid Collective, Solv stablecoin, SoSoValue Indexes, Avalanche Core Bridge) now
+carry `API_ONLY` entries with the on-chain evidence, offset by the board churn of that rebuild —
+14 rows entered and 14 left, so the old 15 is not a base you can add to.
 
 Bucket 3 is 91, not the 96 that `stats.coverage.nonForkable` reports: that count overlaps
 `API_ONLY`, and the buckets here are disjoint so they sum to 200. Do not add a curated row to
