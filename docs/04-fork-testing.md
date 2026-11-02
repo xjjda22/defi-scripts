@@ -59,6 +59,17 @@ The tables below, and the "Test it" panel on each protocol page, are both genera
 | `fork:aerodrome:swap` | Base | **Reference swap only:** Uniswap V3 (SwapRouter02) on Base, because the Slipstream quoter reverts here. Aerodrome contracts are not exercised | USDC balance increases |
 | `fork:velodrome:swap` | Optimism | **Reference swap only:** Uniswap V3 on Optimism. Velodrome contracts are not exercised | USDC balance increases |
 | `fork:pancakeswap:v3` | Ethereum | WETH→USDC on PancakeSwap V3. `CHAIN=bsc` runs it on BSC instead | USDC balance increases |
+| `fork:uniswap:v2-add` | Ethereum | Buy USDC on Router02, then `addLiquidity` USDC/WETH | LP minted = staticCall preview, within 0.1% of the reserve-share formula; reserves grow by the amounts used |
+| `fork:uniswap:v3-mint` | Ethereum | `NonfungiblePositionManager.mint` WETH/USDC 0.05%, ±20 tick spacings | NFT owned by the minter, `positions().liquidity` = event liquidity, both legs used |
+| `fork:uniswap:v3-remove` | Ethereum | Mint, then `decreaseLiquidity` all + `collect` | Liquidity 0, collected ≥ owed and ≥ 99.9% of each deposited leg |
+| `fork:uniswap:v4-add` | Ethereum | `PositionManager.modifyLiquidities` MINT_POSITION + SETTLE_PAIR + SWEEP, ETH/USDC 0.05% via Permit2 | `getPositionLiquidity` = requested liquidity, NFT owned by the minter, ETH and USDC both spent, excess ETH swept back |
+| `fork:pancakeswap:v2-swap` | Bsc | `swapExactETHForTokens` on the V2 router | USDT received ≥ `getAmountsOut` in the same block |
+| `fork:pancakeswap:v3-mint` | Bsc | `NonfungiblePositionManager.mint` USDT/WBNB 0.05% | NFT owned by the minter, liquidity = event, both legs used |
+| `fork:pancakeswap:v3-remove` | Bsc | Mint, then `decreaseLiquidity` all + `collect` | Liquidity 0, collected ≥ owed and ≥ 99.9% of each leg |
+| `fork:pancakeswap:farm` | Bsc | Mint, `safeTransferFrom` the NFT to MasterChef V3, warp 1h, swap through the pool | MasterChef owns the NFT, `userPositionInfos` has the user, pid and liquidity, `pendingCake` > 0 |
+| `fork:curve:add` | Ethereum | `add_liquidity` single-sided USDC | 3Crv ≥ 99% of `calc_token_amount` and worth ≥ 99% of the USDC at virtual price |
+| `fork:curve:remove` | Ethereum | Add, then `remove_liquidity_one_coin` to USDC | USDC back ≥ `calc_withdraw_one_coin` and ≥ 99% of the USDC put in, 0 3Crv left |
+| `fork:curve:gauge` | Ethereum | Add, then `deposit` 3Crv into the 3pool LiquidityGauge | Gauge balance = 3Crv deposited, wallet 3Crv 0 |
 | `fork:monad:v3` | Monad | Uniswap V3 | Skipped when `MONAD_RPC_URL` is unset |
 | `fork:aave:supply` / `:borrow` / `:repay` / `:withdraw` | Ethereum | Aave V3 pool from `chains.js` | aToken, debt, or wallet balance moves the right way |
 | `fork:aave:flashloan` | Ethereum | `flashLoanSimple` 100k USDC into a receiver deployed on the fork (`contracts/FlashReceivers.sol`) | the callback saw the full amount, the premium equals `FLASHLOAN_PREMIUM_TOTAL`, the receiver paid exactly the premium and the aToken's USDC rose by it |
