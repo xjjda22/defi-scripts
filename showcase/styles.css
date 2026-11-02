@@ -337,6 +337,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visibl
 .chain-list code { overflow-wrap: anywhere; }
 .badge.api { background: rgba(240, 153, 122, 0.16); color: var(--down); }
 .badge.fork { background: rgba(223, 242, 106, 0.16); color: var(--accent); }
+.badge.warn { background: rgba(255, 196, 87, 0.16); color: #ffc457; }
 .links { display: flex; flex-wrap: wrap; gap: 14px; margin: 8px 0 18px; }
 .chain-list { margin: 0; padding-left: 18px; color: var(--muted); }
 .chain-list li { margin: 4px 0; }

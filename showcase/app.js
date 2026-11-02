@@ -248,12 +248,35 @@ function featuresHtml(features) {
     .join("")}</ol>`;
 }
 
+// Honest fork status: direct, linked (another product's test), failing-paused (fails on
+// purpose while the protocol is paused) or none (API-only).
+const STATUS_LABEL = {
+  direct: "Fork test",
+  linked: "Linked fork test",
+  "failing-paused": "Fork test · protocol paused",
+  none: "API-only",
+};
+function statusBadge(testing) {
+  const status = testing.status || (testing.mode === "fork" ? "direct" : "none");
+  const cls = status === "direct" ? "fork" : status === "none" ? "api" : "warn";
+  const title =
+    status === "linked"
+      ? `Uses ${testing.via || "another product's test"}: ${testing.reason || ""}`
+      : status === "failing-paused"
+        ? (testing.paused || []).map(item => `${item.script}: ${item.reason}`).join(" ")
+        : "";
+  return `<span class="badge ${cls}"${title ? ` title="${esc(title)}"` : ""}>${esc(status === "direct" ? testing.label || STATUS_LABEL.direct : STATUS_LABEL[status])}</span>`;
+}
+function disputedBadge(row) {
+  if (!row.dataDisputed) return "";
+  const title = (row.disputes || []).map(item => `${item.metric}: claim ${item.claim}, DefiLlama ${item.defillama}`).join(" · ");
+  return ` <span class="badge warn" title="${esc(title)}">data disputed</span>`;
+}
+
 function detailHtml(row) {
   const testing = row.testing || { mode: "api-only", note: "No fork test for this protocol.", recipe: null };
   const fork = testing.mode === "fork";
-  const mode = fork
-    ? `<span class="badge fork">${esc(testing.label || "Fork test")}</span>`
-    : `<span class="badge api">${esc(testing.label || "API-only")}</span>`;
+  const mode = statusBadge(testing) + disputedBadge(row);
   const back = PROTOCOL_PAGE
     ? `<a class="back" href="index.html">← Back to the board</a>`
     : `<a class="back" href="#${state.tab === "overall" ? "" : `tab=${encodeURIComponent(state.tab)}`}">← Back to the board</a>`;
@@ -297,6 +320,8 @@ function detailHtml(row) {
       ${row.signals && isNum(row.signals.attention) ? `<div class="fact"><b>${Math.round(row.signals.attention * 100)}</b><span>Attention pct</span></div>` : ""}
       ${row.signals && isNum(row.signals.smartMoney) ? `<div class="fact"><b>${Math.round(row.signals.smartMoney * 100)}</b><span>Smart money pct</span></div>` : ""}
     </div>
+    ${row.volumeNote ? `<p class="muted"><b>Volume:</b> ${esc(row.volumeNote)}</p>` : ""}
+    ${row.dataDisputed ? `<p class="muted"><b>Data disputed.</b> ${(row.disputes || []).map(item => `${esc(item.metric)}: claim ${esc(item.claim)} vs DefiLlama ${esc(item.defillama)} (${esc(item.recorded)})`).join("; ")}. The score still uses DefiLlama; see data/disputes.json.</p>` : ""}
     ${row.token ? `<p class="muted">${esc(row.token.symbol || "")} · market cap ${money(row.token.marketCap)} · 24h volume ${money(row.token.volume24h)}${isNum(row.token.turnover) ? ` · turnover ${(row.token.turnover * 100).toFixed(2)}%` : ""}</p>` : ""}
     <h3>TVL by chain</h3>
     ${chainTvlHtml(row)}
@@ -484,13 +509,25 @@ function renderTabs() {
   }
 }
 
+function coverageBits(coverage) {
+  if (!coverage) return [];
+  const f = coverage.forkable || {};
+  const snap = coverage.snapshot ? ` (snapshot ${coverage.snapshot.id})` : "";
+  return [
+    [`${f.direct ?? "—"}/${coverage.forkableRows ?? "—"}`, `forkable rows with a direct fork test${snap}`],
+    [f.linked ?? "—", "linked fork tests"],
+    [f["failing-paused"] ?? "—", "failing: protocol paused"],
+    [`${(coverage.top50 || {}).direct ?? "—"}/50`, "top 50 direct"],
+    [(coverage.nonForkable || {}).rows ?? "—", "on non-forkable chains"],
+  ];
+}
+
 function renderStats() {
   const stats = state.data.stats || {};
   const bits = [
     [stats.overall ?? (state.data.overall || []).length, "in the top 200"],
     [stats.dedicatedMonitor ?? "—", "with a monitor"],
-    [stats.forkInTop200 ?? "—", "with a fork test"],
-    [stats.apiOnlyInTop200 ?? "—", "API-only"],
+    ...coverageBits(stats.coverage),
     [stats.rankingOnly ?? "—", "ranking only"],
     [stats.newInTop200 ?? "—", "new in 6 months"],
   ];
@@ -573,7 +610,7 @@ function renderTable() {
         state.tab !== "overall" && row.overallRank ? `<span class="slug">#${esc(row.overallRank)} overall</span>` : "";
       return `<tr>
         <td data-label="#">${esc(row.rank ?? "—")}</td>
-        <td data-label="Protocol"><a class="name" href="${PROTOCOL_PAGE ? `protocol.html?slug=${encodeURIComponent(row.slug || row.id)}` : `#p=${encodeURIComponent(row.slug || row.id)}`}">${esc(row.name)}</a><span class="slug">${esc(row.slug)}${link}</span>${overall}${breakdown(row)}</td>
+        <td data-label="Protocol"><a class="name" href="${PROTOCOL_PAGE ? `protocol.html?slug=${encodeURIComponent(row.slug || row.id)}` : `#p=${encodeURIComponent(row.slug || row.id)}`}">${esc(row.name)}</a>${disputedBadge(row)}<span class="slug">${esc(row.slug)}${link}</span>${overall}${breakdown(row)}</td>
         <td class="col-cat" data-label="Category">${esc(labelFor(row.category))}</td>
         <td class="num" data-label="TVL">${money(row.tvl)}</td>
         <td class="num" data-label="6-month TVL">${changeCell(row)}</td>

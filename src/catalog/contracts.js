@@ -130,6 +130,8 @@ const DOCS = {
   kpkUsdcPrimeCore: "https://docs.kpk.io/vaults/vaults/morpho/ethereum/usdc-prime-core",
   galaxy: "https://docs.curation.galaxy.com/products/deployed-vaults",
   usdt0: "https://docs.usdt0.to/technical-documentation/developer",
+  benqiCore: "https://docs.benqi.fi/resources/contracts/core-markets",
+  benqi: "https://docs.benqi.fi/resources/contracts",
   liquityV1: "https://docs.liquity.org/liquity-v1/documentation/resources",
   liquityV2: "https://docs.liquity.org/v2-documentation/technical-docs-and-audits",
   convex: "https://docs.convexfinance.com/convexfinance/faq/contract-addresses",
@@ -302,6 +304,8 @@ function contractBook() {
     zama: [],
     "ssv-network": [],
     lagoon: [],
+    "benqi-lending": [],
+    "benqi-staked-avax": [],
   };
 
   push(book.uniswap, eth, "V2 router", uni.v2.router, DOCS.uniswap);
@@ -785,6 +789,13 @@ function contractBook() {
   push(book.lagoon, eth, "Vault Factory", "0x8D6f5479B14348186faE9BC7E636e947c260f9B1", DOCS.lagoon);
   push(book.lagoon, eth, "ProtocolRegistry", "0x6dA4D1859bA1d02D095D2246142CdAd52233e27C", DOCS.lagoon);
   push(book.lagoon, eth, "Vault logic v0.6.0", "0x6C77c47FB8168E22976C3B0338CB1769c952249f", DOCS.lagoon);
+  // LayerZero V2: the OApp the fork test sends through (EndpointV2 and libraries are listed above).
+  push(book["layerzero-v2"], eth, "USDT0 OFT Adapter (OApp used by fork:layerzero:send)", "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee", DOCS.usdt0);
+  // Benqi on Avalanche C-Chain.
+  push(book["benqi-lending"], "avalanche", "Comptroller", "0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4", DOCS.benqiCore);
+  push(book["benqi-lending"], "avalanche", "qiUSDCn (native USDC market)", "0xB715808a78F6041E46d61Cb123C9B4A27056AE9C", DOCS.benqiCore);
+  push(book["benqi-lending"], "avalanche", "USDC (native, qiUSDCn underlying)", "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E", DOCS.benqiCore);
+  push(book["benqi-staked-avax"], "avalanche", "sAVAX (BENQI Staked AVAX)", "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE", DOCS.benqi);
 
   return book;
 }
@@ -1222,6 +1233,18 @@ module.exports = {
     adapter: "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee",
     usdt: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
     arbitrumEid: 30110,
+  },
+  // EndpointV2: docs.layerzero.network/v2/deployments/chains/ethereum (Ethereum EID 30101).
+  LAYERZERO: {
+    endpointV2: "0x1a44076050125825900e736c501f859c50fE728c",
+    ethereumEid: 30101,
+  },
+  // https://docs.benqi.fi/resources/contracts (+ /core-markets). qiUSDCn underlying() is native USDC.
+  BENQI: {
+    comptroller: "0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4",
+    qiUsdcn: "0xB715808a78F6041E46d61Cb123C9B4A27056AE9C",
+    usdc: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+    savax: "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
   },
   // https://docs.liquity.org/liquity-v1/documentation/resources
   LIQUITY: {

@@ -130,6 +130,14 @@ The table above describes what ships today. What the catch-all actually holds, a
 
 `coverage` is `covered by a dedicated monitor` when one of the row's children matches a catalog protocol with its own npm scripts, and `ranking only` otherwise. Each script carries the file it runs; the page links it to the source on GitHub.
 
+## Coverage, disputes and perps
+
+**Fork status per row** (`testing.status`): `direct`, `linked` (another product's test), `failing-paused` (fails on purpose while the protocol is paused) or `none`. `stats.coverage` counts these against the pinned forkable snapshot `data/coverage-snapshot.json`, reports the top 50 separately, and lists non-forkable rows by chain with a reason. The headline counts `direct` only. `stats.forkInTop200` still counts every row with a fork recipe, for continuity. See [07-playground-priorities.md](./07-playground-priorities.md).
+
+**Disputed data** (`dataDisputed`, `disputes`): rows whose DefiLlama figures a claims run found contradicted are listed in `data/disputes.json` and shown with a "data disputed" badge. Scores are not adjusted; the flag stops the board from presenting those figures as settled. `stats.disputed` counts open disputes and flagged rows.
+
+**Perps** (`volumeBasis`, `volumeNote`): DefiLlama perp volume (`/summary/derivatives`) is Pro-only, so perps rows have no volume input. `volumeMomentum` is the neutral 0.5 and the score leans on TVL and 30-day fees. Open interest is read by claim monitors only and is not a score input. Nothing is estimated or back-filled.
+
 ## Output
 
 `showcase/data.json`: `generatedAt`, `methodology` (weights, core and signal weights, floors, endpoints, exclusions, mention corpus, `sources`, `tokenCoverage`, `publishSafe`), `categories` (label, row count, eligible count, how many made the top 200), `overall` (200 rows), `byCategory`, and `stats` (`dedicatedMonitor` vs `rankingOnly` in the top 200, `newInTop200`, history misses, signal coverage and enabled source ids, `universe` counts, exclusions).

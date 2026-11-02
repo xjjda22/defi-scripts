@@ -1,0 +1,22 @@
+{
+  "note": "Claim-vs-DefiLlama mismatches recorded by the claim monitors (CHANGELOG Decisions). The showcase marks matching rows dataDisputed; the score is NOT changed, the flag tells readers not to trust the DefiLlama figure blindly. Chain-level disputes (rowIds empty) are listed for the record. Add an entry whenever a claims run records a MISMATCH; set resolved when DefiLlama or the claim is corrected.",
+  "updatedAt": "2026-11-02",
+  "disputes": [
+    { "id": "sky-sep-revenue", "rowIds": ["maker"], "metric": "September revenue change", "claim": "+50%", "defillama": "-4.8% ($14.12M Aug -> $13.44M Sep)", "monitor": "analytics:sky:revenue", "recorded": "2026-10-28" },
+    { "id": "eurc-supply", "rowIds": ["eurc", "circle"], "metric": "EURC supply", "claim": "EUR 450M", "defillama": "EUR 444.55M (ATH EUR 445.76M)", "monitor": "analytics:eurc:supply", "recorded": "2026-10-28" },
+    { "id": "ousd-growth", "rowIds": ["ousd"], "metric": "Open USD 30d growth", "claim": "+$794M", "defillama": "+$379.49M since series start 09-30", "monitor": "analytics:ousd:supply", "recorded": "2026-10-28" },
+    { "id": "usdd-growth", "rowIds": ["usdd"], "metric": "USDD 7d growth", "claim": "fastest-growing stablecoin", "defillama": "+0.46% 7d", "monitor": "analytics:usdd:supply", "recorded": "2026-10-28" },
+    { "id": "aave-v4-deposits", "rowIds": ["aave"], "metric": "Aave V4 deposits", "claim": "$1.5B", "defillama": "$1.20B (TVL $742.1M + borrowed $462.4M)", "monitor": "analytics:aave:v4", "recorded": "2026-10-28" },
+    { "id": "aave-v3-weekly-tvl", "rowIds": ["aave"], "metric": "Aave V3 weekly TVL", "claim": "-13.3% to $14.64B", "defillama": "-11.2% to $14.97B (daily close; claim used an intraday cutoff)", "monitor": "analytics:aave:v3-tvl", "recorded": "2026-11-02" },
+    { "id": "pendle-q3", "rowIds": ["pendle-v2"], "metric": "Pendle Q3 growth", "claim": "+43% (Alea Research)", "defillama": "+33.3%", "monitor": "analytics:pendle:revenue", "recorded": "2026-10-23" },
+    { "id": "pendle-revenue-336k", "rowIds": ["pendle-v2"], "metric": "Pendle 30d revenue", "claim": "$336K (one post; the other post's $452K matches)", "defillama": "$452.39K", "monitor": "analytics:pendle:revenue", "recorded": "2026-10-28" },
+    { "id": "hyperlend-ueth-apy", "rowIds": ["hyperlend-pooled"], "metric": "UETH supply APY", "claim": "50%", "defillama": "max 5.20% daily (intraday not visible)", "monitor": "analytics:hyperlend:yields", "recorded": "2026-11-02" },
+    { "id": "hyperliquid-sep-revenue", "rowIds": ["hyperliquid--perps"], "metric": "September revenue", "claim": "$105M (Grayscale)", "defillama": "$74.19M", "monitor": null, "recorded": "2026-11-02" },
+    { "id": "morpho-start", "rowIds": ["morpho"], "metric": "Morpho one-year start value", "claim": "$9.3B", "defillama": "matches neither TVL nor TVL + borrowed ($12.20B)", "monitor": "analytics:morpho:tvl", "recorded": "2026-10-28" },
+    { "id": "sui-fees", "rowIds": [], "metric": "Sui 30d fees (chain)", "claim": "~$180K", "defillama": "$164.27K", "monitor": "analytics:sui:fees", "recorded": "2026-10-30" },
+    { "id": "avalanche-fees", "rowIds": [], "metric": "Avalanche daily fees (chain)", "claim": "$4,200/day", "defillama": "$3.61K-$8.16K daily, ~$5.2K 7d avg", "monitor": "analytics:avalanche:fees", "recorded": "2026-10-30" },
+    { "id": "hyperevm-dex-volume", "rowIds": [], "metric": "HyperEVM DEX volume 10-29 (chain)", "claim": "$317M", "defillama": "~$471.6M after removing HyperCore spot (definition-dependent)", "monitor": null, "recorded": "2026-11-02" },
+    { "id": "beam-fees", "rowIds": [], "metric": "Beam fees drop (chain)", "claim": "-98%", "defillama": "no 98% drop", "monitor": null, "recorded": "2026-11-02" },
+    { "id": "pareto-falconx", "rowIds": [], "metric": "Pareto FalconX vault", "claim": "$180M+", "defillama": "$131.94M (all Pareto credit pools ~$179M)", "monitor": null, "recorded": "2026-11-02" }
+  ]
+}

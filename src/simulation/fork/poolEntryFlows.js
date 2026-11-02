@@ -1,6 +1,9 @@
 /**
  * Entry actions for seven top-200 rows (playground 2026-11-02). A revert is a FAIL.
  * - usdt0 (Ethereum): USDT0 OFT Adapter send() of USDT to Arbitrum (locks USDT in the adapter).
+ * - layerzero (Ethereum): the same OFT send, asserted at the LayerZero V2 layer: the OApp's endpoint()
+ *   is EndpointV2, EndpointV2 emits PacketSent from the OApp's configured send library, and the
+ *   adapter's outbound nonce to Arbitrum advances by one (LayerZero V2 row, 2026-11-02).
  * - liquity (Ethereum): Liquity V1 Stability Pool provideToSP with LUSD, then withdrawFromSP of all of it.
  * - convex (Ethereum): Booster deposit of Curve 3pool LP (pid 9) with stake, then withdrawAndUnwrap.
  * - theo (Ethereum): thUSD into sthUSD (ERC-4626), initiateRedeem, wait out the lockup, then redeem.
@@ -12,7 +15,7 @@
 
 const { ethers } = require("ethers");
 const { getProvider } = require("../../utils/web3");
-const { USDT0, LIQUITY, CONVEX, THEO, CIAN, SOLVBTC, ZAMA } = require("../../catalog/contracts");
+const { USDT0, LAYERZERO, LIQUITY, CONVEX, THEO, CIAN, SOLVBTC, ZAMA } = require("../../catalog/contracts");
 const { requireFork, impersonateFunded, formatUnits, finish } = require("./runtime");
 
 const GAS = { gasLimit: 3_000_000n };
@@ -29,6 +32,13 @@ const OFT_ABI = [
   `function quoteSend(${SEND_PARAM}, bool payInLzToken) view returns (tuple(uint256 nativeFee, uint256 lzTokenFee))`,
   `function send(${SEND_PARAM}, tuple(uint256 nativeFee, uint256 lzTokenFee), address refundAddress) payable returns (tuple(bytes32 guid, uint64 nonce, tuple(uint256 nativeFee, uint256 lzTokenFee) fee), tuple(uint256 amountSentLD, uint256 amountReceivedLD))`,
   "event OFTSent(bytes32 indexed guid, uint32 dstEid, address indexed fromAddress, uint256 amountSentLD, uint256 amountReceivedLD)",
+];
+const OAPP_ABI = ["function endpoint() view returns (address)"];
+const ENDPOINT_ABI = [
+  "function getSendLibrary(address sender, uint32 dstEid) view returns (address)",
+  "function outboundNonce(address sender, uint32 dstEid, bytes32 receiver) view returns (uint64)",
+  "function eid() view returns (uint32)",
+  "event PacketSent(bytes encodedPayload, bytes options, address sendLibrary)",
 ];
 const SP_ABI = [
   "function provideToSP(uint256 _amount, address _frontEndTag)",
@@ -149,6 +159,54 @@ async function usdt0Send(base) {
     ok,
     detail: `send ${formatUnits(amount, 6)} USDT to Arbitrum (EID ${spec.arbitrumEid}) through the USDT0 OFT Adapter, LayerZero fee ${ethers.formatEther(fee.nativeFee)} ETH\nuser USDT -${formatUnits(userBefore - userAfter, 6)}, adapter USDT ${formatUnits(lockedBefore, 6)} -> ${formatUnits(lockedAfter, 6)}\nOFTSent guid ${sent ? sent.guid : "-"} sent ${sent ? formatUnits(sent.amountSentLD, 6) : "-"} received ${sent ? formatUnits(sent.amountReceivedLD, 6) : "-"}\ntx ${receipt.hash}`,
     error: ok ? null : "USDT0 send did not lock exactly the quoted amount or emit a matching OFTSent",
+  });
+}
+
+/**
+ * LayerZero V2: send USDT through the USDT0 OFT Adapter (an OApp on EndpointV2) and assert the
+ * messaging layer itself. Delivery needs DVNs and an executor, which a fork does not run.
+ */
+async function layerzeroSend(base) {
+  const spec = USDT0;
+  const provider = getProvider(base.chain);
+  const oapp = new ethers.Contract(spec.adapter, [...OFT_ABI, ...OAPP_ABI], provider);
+  const endpointAddr = await oapp.endpoint();
+  if (endpointAddr.toLowerCase() !== LAYERZERO.endpointV2.toLowerCase()) {
+    return finish({ ...base, ok: false, error: `OApp endpoint() is ${endpointAddr}, not EndpointV2 ${LAYERZERO.endpointV2}` });
+  }
+  const endpoint = new ethers.Contract(LAYERZERO.endpointV2, ENDPOINT_ABI, provider);
+  const eid = Number(await endpoint.eid());
+  const sendLib = await endpoint.getSendLibrary(spec.adapter, spec.arbitrumEid);
+  const peer = await provider.call({
+    to: spec.adapter,
+    data: new ethers.Interface(["function peers(uint32) view returns (bytes32)"]).encodeFunctionData("peers", [spec.arbitrumEid]),
+  });
+  const receiver = ethers.dataSlice(peer, 0, 32);
+  const nonceBefore = await endpoint.outboundNonce(spec.adapter, spec.arbitrumEid, receiver);
+  const amount = ethers.parseUnits(process.env.FORK_AMOUNT || "100", 6);
+  const signer = await impersonateFunded(base.chain, "USDT", spec.usdt, amount);
+  const user = await signer.getAddress();
+  await (await new ethers.Contract(spec.usdt, ERC, signer).approve(spec.adapter, amount)).wait();
+  const param = [spec.arbitrumEid, ethers.zeroPadValue(user, 32), amount, 0n, "0x", "0x", "0x"];
+  const [, , quoted] = await oapp.quoteOFT(param);
+  param[3] = quoted.amountReceivedLD;
+  const fee = await oapp.quoteSend(param, false);
+  const adapter = new ethers.Contract(spec.adapter, OFT_ABI, signer);
+  const receipt = await (await adapter.send(param, [fee.nativeFee, 0n], user, { ...GAS, value: fee.nativeFee })).wait();
+  const [packet] = eventArgs(receipt, endpoint.interface, "PacketSent", LAYERZERO.endpointV2);
+  const nonceAfter = await endpoint.outboundNonce(spec.adapter, spec.arbitrumEid, receiver);
+  const ok =
+    eid === LAYERZERO.ethereumEid &&
+    !!packet &&
+    packet.sendLibrary.toLowerCase() === sendLib.toLowerCase() &&
+    nonceAfter === nonceBefore + 1n &&
+    fee.nativeFee > 0n;
+  return finish({
+    ...base,
+    ok,
+    key: `eid=${eid} nonce=${nonceBefore}->${nonceAfter} sendLib=${sendLib.slice(0, 10)}… fee=${ethers.formatEther(fee.nativeFee)}ETH`,
+    detail: `OFT send of ${formatUnits(amount, 6)} USDT to Arbitrum (EID ${spec.arbitrumEid}) via EndpointV2 ${LAYERZERO.endpointV2} (EID ${eid})\nPacketSent from send library ${packet ? packet.sendLibrary : "-"} (configured ${sendLib}), outbound nonce ${nonceBefore} -> ${nonceAfter}\nDelivery on Arbitrum needs DVNs + executor; not run on a fork.\ntx ${receipt.hash}`,
+    error: ok ? null : "EndpointV2 did not emit PacketSent from the configured send library or advance the outbound nonce",
   });
 }
 
@@ -461,6 +519,7 @@ async function run() {
   }
   try {
     if (protocol === "usdt0") return await usdt0Send(base);
+    if (protocol === "layerzero") return await layerzeroSend(base);
     if (protocol === "liquity") return await liquityDeposit(base);
     if (protocol === "convex") return await convexDeposit(base);
     if (protocol === "theo") return await theoStake(base);
