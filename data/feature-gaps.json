@@ -4,62 +4,13 @@
   "totals": {
     "protocols": 127,
     "features": 284,
-    "direct": 136,
+    "direct": 148,
     "linked": 3,
     "failingPaused": 2,
-    "gap": 92,
-    "notTestable": 51
+    "gap": 79,
+    "notTestable": 52
   },
   "gaps": [
-    {
-      "rank": 2,
-      "protocol": "Aave",
-      "key": "aave",
-      "feature": "flash loan",
-      "note": "Pool.flashLoanSimple with a receiver contract deployed on the fork."
-    },
-    {
-      "rank": 2,
-      "protocol": "Aave",
-      "key": "aave",
-      "feature": "set collateral / e-mode",
-      "note": "setUserUseReserveAsCollateral and setUserEMode on a supplied position."
-    },
-    {
-      "rank": 2,
-      "protocol": "Aave",
-      "key": "aave",
-      "feature": "stake AAVE (Umbrella/stkAAVE)",
-      "note": "stkAAVE stake + cooldown."
-    },
-    {
-      "rank": 3,
-      "protocol": "SparkLend",
-      "key": "sparklend",
-      "feature": "liquidate",
-      "note": "Aave-fork liquidationCall on a price-shocked position."
-    },
-    {
-      "rank": 3,
-      "protocol": "SparkLend",
-      "key": "sparklend",
-      "feature": "flash loan",
-      "note": "Pool.flashLoanSimple."
-    },
-    {
-      "rank": 4,
-      "protocol": "Morpho",
-      "key": "morpho",
-      "feature": "liquidate",
-      "note": "Morpho.liquidate after an oracle price override on the fork."
-    },
-    {
-      "rank": 4,
-      "protocol": "Morpho",
-      "key": "morpho",
-      "feature": "flash loan",
-      "note": "Morpho.flashLoan with a callback contract."
-    },
     {
       "rank": 6,
       "protocol": "Sentora Curator",
@@ -80,27 +31,6 @@
       "key": "defi-saver-asset-management",
       "feature": "automation / recipes",
       "note": "DSProxy recipe executor over Aave/Maker positions; needs the recipe encoder."
-    },
-    {
-      "rank": 42,
-      "protocol": "Curve Finance (Lending)",
-      "key": "curve-finance--lending",
-      "feature": "create loan (borrow)",
-      "note": "LlamaLend Controller.create_loan."
-    },
-    {
-      "rank": 42,
-      "protocol": "Curve Finance (Lending)",
-      "key": "curve-finance--lending",
-      "feature": "repay",
-      "note": "Controller.repay."
-    },
-    {
-      "rank": 42,
-      "protocol": "Curve Finance (Lending)",
-      "key": "curve-finance--lending",
-      "feature": "liquidate",
-      "note": "Controller.liquidate on a soft-liquidated band after price override."
     },
     {
       "rank": 49,
@@ -206,27 +136,6 @@
       "key": "cooler-loans",
       "feature": "repay",
       "note": "MonoCooler.repay."
-    },
-    {
-      "rank": 82,
-      "protocol": "Compound Finance",
-      "key": "compound-finance",
-      "feature": "absorb (liquidate)",
-      "note": "Comet.absorb on an underwater account after an oracle override."
-    },
-    {
-      "rank": 82,
-      "protocol": "Compound Finance",
-      "key": "compound-finance",
-      "feature": "buyCollateral",
-      "note": "Comet.buyCollateral when reserves are below target."
-    },
-    {
-      "rank": 82,
-      "protocol": "Compound Finance",
-      "key": "compound-finance",
-      "feature": "claim COMP rewards",
-      "note": "CometRewards.claim after time warp."
     },
     {
       "rank": 84,
@@ -704,10 +613,10 @@
       "docs": "https://aave.com/docs/developers/smart-contracts/pool",
       "counts": {
         "features": 8,
-        "direct": 5,
+        "direct": 8,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 3,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -753,21 +662,27 @@
         },
         {
           "feature": "flash loan",
-          "status": "gap",
-          "scripts": [],
-          "note": "Pool.flashLoanSimple with a receiver contract deployed on the fork."
+          "status": "direct",
+          "scripts": [
+            "fork:aave:flashloan"
+          ],
+          "note": null
         },
         {
           "feature": "set collateral / e-mode",
-          "status": "gap",
-          "scripts": [],
-          "note": "setUserUseReserveAsCollateral and setUserEMode on a supplied position."
+          "status": "direct",
+          "scripts": [
+            "fork:aave:emode"
+          ],
+          "note": null
         },
         {
           "feature": "stake AAVE (Umbrella/stkAAVE)",
-          "status": "gap",
-          "scripts": [],
-          "note": "stkAAVE stake + cooldown."
+          "status": "direct",
+          "scripts": [
+            "fork:aave:stake"
+          ],
+          "note": null
         }
       ]
     },
@@ -779,10 +694,10 @@
       "docs": "https://docs.spark.fi/dev/sparklend",
       "counts": {
         "features": 6,
-        "direct": 4,
+        "direct": 6,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 2,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -820,15 +735,19 @@
         },
         {
           "feature": "liquidate",
-          "status": "gap",
-          "scripts": [],
-          "note": "Aave-fork liquidationCall on a price-shocked position."
+          "status": "direct",
+          "scripts": [
+            "fork:spark:liquidate"
+          ],
+          "note": null
         },
         {
           "feature": "flash loan",
-          "status": "gap",
-          "scripts": [],
-          "note": "Pool.flashLoanSimple."
+          "status": "direct",
+          "scripts": [
+            "fork:spark:flashloan"
+          ],
+          "note": null
         }
       ]
     },
@@ -840,10 +759,10 @@
       "docs": "https://docs.morpho.org/build/borrow/concepts",
       "counts": {
         "features": 7,
-        "direct": 4,
+        "direct": 6,
         "linked": 1,
         "failingPaused": 0,
-        "gap": 2,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -889,15 +808,19 @@
         },
         {
           "feature": "liquidate",
-          "status": "gap",
-          "scripts": [],
-          "note": "Morpho.liquidate after an oracle price override on the fork."
+          "status": "direct",
+          "scripts": [
+            "fork:morpho:liquidate"
+          ],
+          "note": null
         },
         {
           "feature": "flash loan",
-          "status": "gap",
-          "scripts": [],
-          "note": "Morpho.flashLoan with a callback contract."
+          "status": "direct",
+          "scripts": [
+            "fork:morpho:flashloan"
+          ],
+          "note": null
         }
       ]
     },
@@ -1599,10 +1522,10 @@
       "docs": "https://docs.curve.finance/lending/overview",
       "counts": {
         "features": 5,
-        "direct": 2,
+        "direct": 5,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 3,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -1624,21 +1547,27 @@
         },
         {
           "feature": "create loan (borrow)",
-          "status": "gap",
-          "scripts": [],
-          "note": "LlamaLend Controller.create_loan."
+          "status": "direct",
+          "scripts": [
+            "fork:llamalend:borrow"
+          ],
+          "note": null
         },
         {
           "feature": "repay",
-          "status": "gap",
-          "scripts": [],
-          "note": "Controller.repay."
+          "status": "direct",
+          "scripts": [
+            "fork:llamalend:repay"
+          ],
+          "note": null
         },
         {
           "feature": "liquidate",
-          "status": "gap",
-          "scripts": [],
-          "note": "Controller.liquidate on a soft-liquidated band after price override."
+          "status": "direct",
+          "scripts": [
+            "fork:llamalend:liquidate"
+          ],
+          "note": null
         }
       ]
     },
@@ -2415,11 +2344,11 @@
       "docs": "https://docs.compound.finance",
       "counts": {
         "features": 7,
-        "direct": 4,
+        "direct": 6,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 3,
-        "notTestable": 0
+        "gap": 0,
+        "notTestable": 1
       },
       "features": [
         {
@@ -2456,21 +2385,25 @@
         },
         {
           "feature": "absorb (liquidate)",
-          "status": "gap",
-          "scripts": [],
-          "note": "Comet.absorb on an underwater account after an oracle override."
+          "status": "direct",
+          "scripts": [
+            "fork:compound:absorb"
+          ],
+          "note": null
         },
         {
           "feature": "buyCollateral",
-          "status": "gap",
-          "scripts": [],
-          "note": "Comet.buyCollateral when reserves are below target."
+          "status": "direct",
+          "scripts": [
+            "fork:compound:buycollateral"
+          ],
+          "note": null
         },
         {
           "feature": "claim COMP rewards",
-          "status": "gap",
+          "status": "not-testable",
           "scripts": [],
-          "note": "CometRewards.claim after time warp."
+          "note": "baseTrackingSupplySpeed and baseTrackingBorrowSpeed are 0 on every Ethereum Comet (cUSDCv3, cWETHv3, cUSDTv3, cUSDSv3) as of 2026-11-02, so claim pays nothing to assert."
         }
       ]
     },
