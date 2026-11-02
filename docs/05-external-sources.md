@@ -82,7 +82,7 @@ The offline check uses fixtures in `test/fixtures/` and needs no network or keys
 
 ## Limits
 
-- Coverage is 73 mapped row ids, of which 70 were present and 52 made the top 200 in the last build. Extending the token map is the cheapest way to raise it.
+- Coverage is 73 mapped row ids, of which 70 were present and 62 made the top 200 in the last build. Extending the token map is the cheapest way to raise it.
 - CoinGecko cannot tell a protocol's own usage from a governance token's speculation; turnover is an attention proxy, not revenue.
 - Nansen's netflow endpoint keeps a rolling 30 days, so it cannot backfill the six-month window.
 - Tokens that exist only as a native asset (NEAR, TAO, RUNE) have no contract address in the map, so Nansen cannot score those rows. CoinGecko still can.

@@ -3,6 +3,29 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-11-03] Rules file, and the coverage counts it quotes
+
+**Local only.** Docs and one new file; no code change.
+
+### Added
+
+- `AGENTS.md` — the working rules, numbered and tagged. The unit of work is a top-200 row, not a
+  protocol; every row sits in exactly one of four buckets (fork-tested / API-only with a reason /
+  not forkable / EVM-forkable unbuilt), and each rule carries `[checked]` (a command fails) or
+  `[reviewed]` (a human does). Only 3 of 17 rules have a gate today, and the file says so.
+
+### Changed
+
+- `docs/07-fork-coverage-plan.md` — the bucket table was written before #59 and still quoted
+  72 fork-tested / 22 unbuilt. It now reads 90 fork-tested / 19 API-only / 91 not forkable / **0
+  unbuilt**, and the 22-row plan is recorded by outcome (18 built, 4 infeasible with evidence)
+  instead of by chain.
+- `docs/03-showcase-ranking.md` — CoinGecko candidate rows in the last build 43 → **41**
+  (`methodology.universe.coinGeckoTop`).
+- `docs/05-external-sources.md` — mapped rows that made the top 200 52 → **62**, matching the
+  `token-map.json` count and `showcase/data.json`. The same file already said 62 in its token-map
+  section, so the two numbers disagreed with each other.
+
 ## [2026-11-03] fork coverage: 18 new protocol tests, contract gate, suite isolation
 
 Closes most of the `docs/07` bucket-4 queue: 18 new `fork:*` tests across 7 chains, every one
