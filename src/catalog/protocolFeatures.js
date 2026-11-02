@@ -148,9 +148,9 @@ const P = [
   { key: "huma", name: "Huma", docs: "https://docs.huma.finance", features: { "deposit": n("Primary TVL on Solana; EVM pools are allowlisted.") } },
   // ---- 51-100 ------------------------------------------------------------------------
   { key: "pancakeswap--dex", name: "PancakeSwap (DEX)", docs: "https://docs.pancakeswap.finance/developers/smart-contracts", features: {
-    "swap (V3)": t("fork:pancakeswap:v3"), "swap (V2)": g("V2 router swap on the BSC fork."),
-    "add liquidity (V3 NFT)": g("NonfungiblePositionManager.mint."), "remove liquidity": g("decreaseLiquidity + collect."),
-    "stake CAKE / farm": g("MasterChef v3 deposit of the position NFT."),
+    "swap (V3)": t("fork:pancakeswap:v3"), "swap (V2)": t("fork:pancakeswap:v2-swap"),
+    "add liquidity (V3 NFT)": t("fork:pancakeswap:v3-mint"), "remove liquidity": t("fork:pancakeswap:v3-remove"),
+    "stake CAKE / farm": t("fork:pancakeswap:farm"),
   } },
   { key: "clearstar", name: "Clearstar", docs: "https://docs.morpho.org", features: {
     "vault deposit": t("fork:clearstar:deposit"), "vault withdraw/redeem": t("fork:clearstar:deposit"),
@@ -193,10 +193,10 @@ const P = [
     "swap V2": t("fork:uniswap:v2"), "swap V3": t("fork:uniswap:v3"), "swap V4": t("fork:uniswap:v4"),
     "quote (all versions)": t("simulate:dex:uniswap:v3"),
     "UniswapX fill": t("simulate:uniswapx:fill"),
-    "add liquidity V2": g("Router02.addLiquidity, assert LP tokens."),
-    "add liquidity V3 (mint NFT)": g("NonfungiblePositionManager.mint."),
-    "remove liquidity V3": g("decreaseLiquidity + collect."),
-    "add liquidity V4": g("PositionManager.modifyLiquidities."),
+    "add liquidity V2": t("fork:uniswap:v2-add"),
+    "add liquidity V3 (mint NFT)": t("fork:uniswap:v3-mint"),
+    "remove liquidity V3": t("fork:uniswap:v3-remove"),
+    "add liquidity V4": t("fork:uniswap:v4-add"),
   } },
   { key: "cooler-loans", name: "Cooler Loans", docs: "https://docs.olympusdao.finance", features: {
     "borrow against gOHM": t("fork:cooler:borrow"), "repay": g("MonoCooler.repay."),
@@ -290,8 +290,8 @@ const P = [
   } },
   { key: "curve-dex", name: "Curve DEX", docs: "https://docs.curve.finance", features: {
     "swap": t("fork:curve:swap"), "quote": t("simulate:dex:curve"),
-    "add liquidity": g("pool.add_liquidity, assert LP."), "remove liquidity": g("remove_liquidity_one_coin."),
-    "gauge deposit": g("LiquidityGauge.deposit."),
+    "add liquidity": t("fork:curve:add"), "remove liquidity": t("fork:curve:remove"),
+    "gauge deposit": t("fork:curve:gauge"),
   } },
   { key: "convex-finance", name: "Convex Finance", docs: "https://docs.convexfinance.com", features: { "deposit / stake": t("fork:convex:deposit"), "claim rewards": g("getReward after time warp.") } },
   { key: "fluid-dex", name: "Fluid DEX", docs: "https://docs.fluid.instadapp.io", features: { "swap": g("FluidDexT1.swapIn on Ethereum.") } },
