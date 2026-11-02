@@ -35,6 +35,7 @@ const VAULT_ABI = [
   ...ERC,
   "function deposit(uint256 assets, address receiver) returns (uint256)",
   "function redeem(uint256 shares, address receiver, address owner) returns (uint256)",
+  "function withdraw(uint256 assets, address receiver, address owner) returns (uint256)",
   "function convertToAssets(uint256 shares) view returns (uint256)",
   "function maxDeposit(address) view returns (uint256)",
   "function totalAssets() view returns (uint256)",
@@ -64,6 +65,7 @@ const VAULT_V2_GATES = [
   "function sendSharesGate() view returns (address)",
   "function receiveAssetsGate() view returns (address)",
   "function sendAssetsGate() view returns (address)",
+  "function liquidityAdapter() view returns (address)",
 ];
 const LLAMALEND_FACTORY_ABI = ["function vaults(uint256) view returns (address)"];
 
@@ -150,15 +152,24 @@ async function erc4626(base, spec, options = {}) {
   await (await vault.deposit(amount, user, GAS)).wait();
   const assetsMid = await asset.balanceOf(user);
   const shares = (await vault.balanceOf(user)) - sharesBefore;
-  const redeemed = await vault.redeem(shares, user, user, GAS);
-  const receipt = await redeemed.wait();
+  // Morpho Vault V2 with idle-only liquidity: accrued interest on our shares can exceed the
+  // idle USDC (our deposit + dust), so redeeming every share reverts TransferReverted on a
+  // fresh fork. options.exitByWithdraw withdraws exactly the deposited assets instead and
+  // allows only interest-dust shares to remain.
+  const exit = options.exitByWithdraw
+    ? await vault.withdraw(amount, user, user, GAS)
+    : await vault.redeem(shares, user, user, GAS);
+  const receipt = await exit.wait();
   const assetsAfter = await asset.balanceOf(user);
   const sharesAfter = await vault.balanceOf(user);
   const dust = amount / 1000n + 2n;
   // A real round trip: the deposit pulled `amount`, minted shares, the redeem burned all of
   // them and returned the assets (within rounding). Equal before/after balances alone could be a no-op.
   const pulled = assetsBefore - assetsMid === amount;
-  const burned = sharesAfter === sharesBefore;
+  const leftover = sharesAfter - sharesBefore;
+  const burned = options.exitByWithdraw
+    ? assetsAfter === assetsBefore && leftover < shares && (await reader.convertToAssets(leftover)) <= dust
+    : sharesAfter === sharesBefore;
   const returned = assetsAfter + dust >= assetsBefore && assetsAfter > assetsMid;
   const ok = shares > 0n && pulled && burned && returned;
   const mid = formatUnits(assetsMid, spec.decimals);
@@ -187,7 +198,11 @@ async function morphoV2Deposit(base, spec) {
     if (gate !== ethers.ZeroAddress) set.push(`${name}=${gate}`);
   }
   if (set.length) return readVault(base, spec, `gated(${set.join(",")})`);
-  return erc4626(base, spec, { skipMaxDeposit: true });
+  // No liquidity adapter: the deposit stays idle, and redeeming every share can ask for more
+  // than the idle balance once interest accrues (TransferReverted, seen on hyperUSDCa).
+  // With an adapter, redeem pulls from the adapter and the full redeem works.
+  const idleOnly = (await gates.liquidityAdapter()) === ethers.ZeroAddress;
+  return erc4626(base, spec, { skipMaxDeposit: true, exitByWithdraw: idleOnly });
 }
 
 async function rockawayxDeposit(base) {
@@ -479,7 +494,8 @@ async function run() {
   try {
     if (protocol === "steakhouse") return await erc4626(base, VAULTS.steakhouse);
     if (protocol === "gauntlet") return await erc4626(base, VAULTS.gauntlet);
-    if (protocol === "sentora") return await erc4626(base, VAULTS.sentora);
+    // Sentora RLUSD Main is a Morpho Vault V2 (maxDeposit is always 0), so gates are the pre-check.
+    if (protocol === "sentora") return await morphoV2Deposit(base, VAULTS.sentora);
     if (protocol === "yearn") return await erc4626(base, VAULTS.yearn);
     if (protocol === "euler") return await erc4626(base, VAULTS.euler);
     if (protocol === "veda") return await vedaDeposit(base);

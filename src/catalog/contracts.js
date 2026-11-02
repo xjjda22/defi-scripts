@@ -865,6 +865,21 @@ module.exports = {
   // https://docs.lido.fi/deployed-contracts/ (WithdrawalQueueERC721, name() "Lido: stETH Withdrawal NFT")
   LIDO_WITHDRAWAL_QUEUE: "0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1",
   ROCKET_DEPOSIT_POOL: "0xCE15294273CFb9D9b628F4D61636623decDF4fdC",
+  // Exit / withdrawal-request contracts for src/simulation/fork/exitFlows.js.
+  EXITS: {
+    // https://etherfi.gitbook.io/etherfi/products/liquid/live-vaults/liquid-eth-vault (BoringOnChainQueue)
+    vedaQueue: "0x0D2dF071207E18Ca8638b4f04E98c53155eC2cE0",
+    // https://developers.skyeco.com/guides/psm/litepsm/ (LitePSMWrapper-USDS-USDC)
+    skyPsmWrapper: "0xA188EEC8F81263234dA3622A406892F3D630f98c",
+    // https://etherfi.gitbook.io/etherfi/developers/contracts-and-integrations/deployed-contracts
+    etherfiWithdrawNft: "0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c",
+    // https://github.com/Kelp-DAO/LRT-rsETH (LRTWithdrawalManager)
+    kelpWithdrawalManager: "0x62De59c08eB5dAE4b7E6F7a8cAd3006d6965ec16",
+    // https://docs.renzoprotocol.com/docs/contracts/ethereum-mainnet (Renzo Withdrawal Contract)
+    renzoWithdrawQueue: "0x5efc9D10E42FB517456f4ac41EB5e2eBe42C8918",
+    // https://docs.rocketpool.net/overview/contracts-integrations (rETH)
+    rETH: "0xae78736Cd615f374D3085123A210448E74Fc6393",
+  },
   CBETH: "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
   ETHERFI: {
     liquidityPool: "0x308861A430be4cce5502d0A12724771Fc6DaF216",

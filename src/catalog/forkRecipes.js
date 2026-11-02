@@ -227,7 +227,7 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["veda"],
     note: "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false. The ether.fi Liquid row and the Nonce Capital row (the curator of the ether.fi Liquid vaults, veda.tech/ecosystem/nonce-capital) share this vault; Liquid USD, Liquid BTC and Nonce's OP Mainnet Midas tokens are not exercised.",
-    tests: [test("fork:veda:deposit", "deposit", "ethereum")],
+    tests: [test("fork:veda:deposit", "deposit", "ethereum"), test("fork:veda:request", "request", "ethereum")],
   }),
   recipe({
     keys: ["upshift"],
@@ -301,7 +301,7 @@ const FORK_RECIPES = [
     appUrl: "https://stake.rocketpool.net",
     chain: "ethereum",
     contractKeys: ["rocketpool"],
-    tests: [test("fork:rocketpool:deposit", "deposit", "ethereum")],
+    tests: [test("fork:rocketpool:deposit", "deposit", "ethereum"), test("fork:rocketpool:burn", "burn", "ethereum")],
   }),
   recipe({
     keys: ["cbeth", "coinbase-wrapped-staked-eth"],
@@ -318,7 +318,7 @@ const FORK_RECIPES = [
     appUrl: "https://www.ether.fi",
     chain: "ethereum",
     contractKeys: ["etherfi"],
-    tests: [test("fork:etherfi:deposit", "deposit", "ethereum"), test("fork:etherfi:wrap", "wrap", "ethereum")],
+    tests: [test("fork:etherfi:deposit", "deposit", "ethereum"), test("fork:etherfi:wrap", "wrap", "ethereum"), test("fork:etherfi:request", "request", "ethereum")],
   }),
   recipe({
     keys: ["kelp"],
@@ -326,7 +326,7 @@ const FORK_RECIPES = [
     appUrl: "https://kelpdao.xyz",
     chain: "ethereum",
     contractKeys: ["kelp"],
-    tests: [test("fork:kelp:deposit", "deposit", "ethereum")],
+    tests: [test("fork:kelp:deposit", "deposit", "ethereum"), test("fork:kelp:request", "request", "ethereum")],
   }),
   recipe({
     keys: ["renzo"],
@@ -334,7 +334,7 @@ const FORK_RECIPES = [
     appUrl: "https://app.renzoprotocol.com",
     chain: "ethereum",
     contractKeys: ["renzo"],
-    tests: [test("fork:renzo:deposit", "deposit", "ethereum")],
+    tests: [test("fork:renzo:deposit", "deposit", "ethereum"), test("fork:renzo:request", "request", "ethereum")],
   }),
   recipe({
     keys: ["eigenlayer", "eigencloud"],
@@ -384,6 +384,8 @@ const FORK_RECIPES = [
       test("fork:sky:convert", "convert", "ethereum"),
       test("fork:sky:susds", "susds", "ethereum"),
       test("fork:sky:sdai", "sdai", "ethereum"),
+      test("fork:sky:redeem", "redeem", "ethereum"),
+      test("fork:sky:psm", "psm", "ethereum"),
     ],
   }),
   recipe({
@@ -516,7 +518,7 @@ const FORK_RECIPES = [
     chain: "bsc",
     contractKeys: ["lista-liquid-staking"],
     note: "ListaStakeManager.deposit() stakes native BNB and mints slisBNB. Withdrawal is a 7-day unbond queue, so the fork test only stakes.",
-    tests: [test("fork:lista:stake", "stake", "bsc")],
+    tests: [test("fork:lista:stake", "stake", "bsc"), test("fork:lista:unstake", "unstake", "bsc")],
   }),
   recipe({
     keys: ["venus-core-pool", "venus"],
@@ -653,7 +655,7 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["stakewise-v3"],
     note: "StakeWise V3 Genesis Vault. depositAndMintOsToken stakes ETH and mints osETH in one call; exits go through the validator exit queue, so the fork test does not redeem.",
-    tests: [test("fork:stakewise:deposit", "deposit", "ethereum")],
+    tests: [test("fork:stakewise:deposit", "deposit", "ethereum"), test("fork:stakewise:exit", "exit", "ethereum")],
   }),
   recipe({
     keys: ["clearstar"],
