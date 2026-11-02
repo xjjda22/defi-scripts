@@ -3,6 +3,61 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-11-03] fork coverage: 18 new protocol tests, contract gate, suite isolation
+
+Closes most of the `docs/07` bucket-4 queue: 18 new `fork:*` tests across 7 chains, every one
+verified on a live Anvil fork with a measured state delta. Four rows were resolved as
+**not testable**, each with on-chain evidence rather than a skip: Liquid Collective (KYC
+allowlist), Solv Protocol stablecoin (BSC pools whitelisted), SoSoValue Indexes (Base-only +
+KYB-WLP mint) and Avalanche Core Bridge (already recorded, warden custody).
+
+New tests (chain): Tornado Cash, Fluid DEX, Obol, USDD, Pendle V2, Bedrock uniBTC, Derive V3,
+Railgun, Fluid Lending, Mellow Core, Axelar, Fraxtal (Ethereum); Aster Bridge, BitFi Basis (BSC);
+Grove Finance (Base); Hyperliquid Bridge (Arbitrum); Avant (Avalanche); Polymarket (Polygon).
+
+### Added
+
+- `src/simulation/fork/flows/` — one module per protocol, resolved by `resolveTarget()` in
+  `run.js`, so a new test is one new file instead of an edit to the dispatcher plus three
+  registries.
+- `scripts/importForkSpecs.js` — applies a spec from `output/fork-specs/<target>.json` to all six
+  registries (script, recipe, feature, description, protocol, contract). Idempotent.
+- `scripts/buildContracts.js` + `npm run build:contracts` / `check:contracts` — compiles
+  `FlashReceivers.sol` and `MockPrice.sol` with solc 0.8.24 (optimizer off) and fails CI when
+  `artifacts.json` no longer matches its sources. CI installs Foundry and runs the check.
+- `docs/07-fork-coverage-plan.md` — the bucket-4 queue, the agent contract and the acceptance bar.
+
+### Changed
+
+- `forkSuite.js`: every test now runs inside `evm_snapshot`/`evm_revert`, so one test's time warp
+  or `anvil_setCode` cannot leak into the next. This fixed three order-dependent failures
+  (`fork:superstate:nav`, `fork:saturn:stake`, `fork:cian:deposit`) that passed alone and failed
+  in-suite. `FORK_ISOLATE=0` disables it.
+- `forkSuite.js`: `FORK_RESTART_CHAINS` (default `bsc`) restarts Anvil per test on chains whose
+  upstream prunes state faster than a chain run takes. BSC is now 10/10; before, the later tests
+  failed with `could not coalesce error` against bsc-dataseed's ~128-block window.
+- Showcase rows carry `coingeckoUrl` next to `llamaUrl`; both render on the board and in the
+  detail panel. 62 of 200 rows have a mapped token.
+
+### Verified (2026-11-03)
+
+| Check | Result |
+| --- | --- |
+| `npm run fork:all` (all chains) | **150 PASS / 2 FAIL / 152** |
+| The 2 failures | `fork:dolomite:supply` (market closing, documented `failing-paused`) and `fork:rocketpool:burn` (burn pays dust instead of `getEthValue`) — both predate this work |
+| `npm run check:contracts` | 3 artifacts match their sources |
+| `npm run catalog:check` | clean; every new script registered and described |
+| `npm run coverage:features:check` | 290 features, 189 tested, 42 gaps, 54 not testable |
+| `npm run lint` | clean |
+
+### Known gaps
+
+- 16 of the 18 new protocols still have no `analytics`/`monitor:dex` row and 17 have no
+  `simulate:*:smoke`, so they do not yet meet the `AGENTS.md` §3 definition of done for a row.
+- `showcase/data.json` was edited by hand earlier in this work (script renames, `coingeckoUrl`);
+  AGENTS.md R0.1 forbids that. A `npm run showcase:build` regenerates it correctly.
+- Avant and Hyperliquid Bridge ran through public/standard RPCs; the rest used `.env` endpoints.
+
 ## [2026-11-02] gap batch 1 (30% target): lending, DEX, staking/vaults
 
 First batch against the `docs/08` gap list, run as three parallel batches. Squash-merged as [#55](https://github.com/xjjda22/defi-scripts/pull/55) (lending, `0d48d48`), [#56](https://github.com/xjjda22/defi-scripts/pull/56) (DEX, `5f0f052`) and [#57](https://github.com/xjjda22/defi-scripts/pull/57) (staking/vaults, `7707c7f`). Every new test passed a live Anvil fork run.

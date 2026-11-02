@@ -110,6 +110,24 @@ const DOCS = {
   olympus: "https://docs.olympusdao.finance/main/contracts/addresses",
   stakeLink: "https://docs.stake.link/resources/contracts-and-integrations",
   fluidLite: "https://lite.guides.instadapp.io/getting-started/vault-receipt-tokens",
+  "polymarketDoc": "https://docs.polymarket.com/developers/CTF/overview",
+  "hyperliquid-bridgeDoc": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/usdc",
+  "avantDoc": "https://docs.avantprotocol.com/security/contract-addresses",
+  "fraxtalDoc": "https://docs.frax.com/fraxtal/addresses/fraxtal-contracts",
+  "axelarDoc": "https://docs.axelar.dev/resources/contract-addresses/mainnet/",
+  "mellow-coreDoc": "https://docs.mellow.finance/lido-earn/deployments",
+  "fluid-lendingDoc": "https://github.com/instadapp/fluid-contracts-public/blob/main/deployments/deployments.md",
+  "railgunDoc": "https://docs.railgun.org/wiki/learn/helpful-links",
+  "derive-v3Doc": "https://docs.derive.xyz/getting-started/contracts",
+  "bedrock-unibtcDoc": "https://docs.bedrock.technology/security/smart-contracts/unibtc.md",
+  "bitfi-basisDoc": "https://docs.bitfi.one/developer/bfbtc-overview/deployed-contracts",
+  "aster-bridgeDoc": "https://docs.asterdex.com/overview/smart-contracts",
+  pendleDoc: "https://github.com/pendle-finance/pendle-core-v2-public/blob/main/deployments/1-core.json",
+  usddDoc: "https://docs.usdd.io/developers/deployment-addresses",
+  obolDoc: "https://docs.obol.org/community-and-governance/obol-token",
+  groveDoc: "https://github.com/grove-labs/grove-address-registry/blob/master/src/Base.sol",
+  fluidDex: "https://docs.fluid.instadapp.io/integrate/dex-swaps.html",
+  tornadoCash: "https://github.com/tornadocash/docs/blob/en/general/tornado-cash-smart-contracts.md",
   // Ember's vault API (OpenAPI spec linked from learn.ember.so/ember-protocol/api-docs); the ember.so app reads it.
   ember: "https://vaults.api.sui-prod.bluefin.io/api/v2/vaults?chain=ethereum",
   lombard: "https://docs.lombard.finance/learn/transparency/smart-contracts",
@@ -797,6 +815,101 @@ function contractBook() {
   push(book["benqi-lending"], "avalanche", "qiUSDCn (native USDC market)", "0xB715808a78F6041E46d61Cb123C9B4A27056AE9C", DOCS.benqiCore);
   push(book["benqi-lending"], "avalanche", "USDC (native, qiUSDCn underlying)", "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E", DOCS.benqiCore);
   push(book["benqi-staked-avax"], "avalanche", "sAVAX (BENQI Staked AVAX)", "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE", DOCS.benqi);
+
+  // Fork tests added 2026-11-03 (docs/07-fork-coverage-plan.md).
+  book["tornado-cash"] = [];
+  push(book["tornado-cash"], eth, "Tornado Cash Classic 0.1 ETH pool", "0x12D66f87A04A9E220743712cE6d9bB1B5616B8Fc", DOCS.tornadoCash);
+  book["fluid-dex"] = [];
+  push(book["fluid-dex"], eth, "Fluid DEX USDC/native-ETH pool", "0x836951EB21F3Df98273517B7249dCEFF270d34bf", DOCS.fluidDex);
+
+  book["grove"] = [];
+  push(book["grove"], "base", "Grove x Steakhouse USDC (Morpho Vault V2, symbol grove-steakUSDC)", "0xbeef0786756810478b88982DE00F3CD7fdB8e7c7", DOCS.groveDoc);
+  push(book["grove"], "base", "USDC (Base, the vault asset)", "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", DOCS.groveDoc);
+  push(book["grove"], "base", "Grove Base Executor (owner() of the vault)", "0x491EDFB0B8b608044e227225C715981a30F3A44E", DOCS.groveDoc);
+
+  book["obol"] = [];
+  push(book["obol"], "ethereum", "stOBOL (FixedStakedObol, non-rebasing staked OBOL)", "0x6590cBBCCbE6B83eF3774Ef1904D86A7B02c2fCC", DOCS.obolDoc);
+  push(book["obol"], "ethereum", "OBOL token (the staked asset)", "0x0B010000b7624eb9B3DfBC279673C76E9D29D5F7", DOCS.obolDoc);
+  push(book["obol"], "ethereum", "ObolStaker (reward-streaming staking contract)", "0x30641013934ec7625c9e73a4D63aab4201004259", DOCS.obolDoc);
+  push(book["obol"], "ethereum", "rstOBOL (rebasing staked OBOL, the stOBOL accounting core; read from stOBOL.LST())", "0x1932e815254c53B3Ecd81CECf252A5AC7f0e8BeA", DOCS.obolDoc);
+
+  book["usdd"] = [];
+  push(book["usdd"], "ethereum", "USDD PSM — MCD_PSM_USDT_A (UsddPsm, DssPsm fork)", "0xcE355440c00014A229bbEc030A2B8f8EB45a2897", DOCS.usddDoc);
+  push(book["usdd"], "ethereum", "USDD (USDD 2.0 token, Ethereum)", "0x4f8e5DE400DE08B164E7421B3EE387f461beCD1A", DOCS.usddDoc);
+  push(book["usdd"], "ethereum", "USDT Join — JOIN_PSM_USDT_A (AuthGemJoin, the approval target)", "0x217e42CEB2eAE9ECB788fDF0e31c806c531760A3", DOCS.usddDoc);
+  push(book["usdd"], "ethereum", "USDT (Tether USD, the PSM gem, 6 decimals)", "0xdAC17F958D2ee523a2206206994597C13D831ec7", DOCS.usddDoc);
+
+  book["pendle"] = [];
+  push(book["pendle"], "ethereum", "Pendle Router V4", "0x888888888889758F76e7103c6CbF23ABbF58F946", DOCS.pendleDoc);
+  push(book["pendle"], "ethereum", "Pendle RouterStatic (swapExactTokenForPtStatic quote)", "0x263833d47eA3fA4a30f269323aba6a107f9eB14C", DOCS.pendleDoc);
+  push(book["pendle"], "ethereum", "Pendle market PT-stETH-30DEC2027", "0x34280882267ffa6383b363e278b027be083bbe3b", DOCS.pendleDoc);
+  push(book["pendle"], "ethereum", "SY stETH (the market's SY)", "0xcbC72d92b2dc8187414F6734718563898740C0BC", DOCS.pendleDoc);
+  push(book["pendle"], "ethereum", "PT-stETH-30DEC2027", "0xb253Eff1104802b97aC7E3aC9FdD73AecE295a2c", DOCS.pendleDoc);
+  push(book["pendle"], "ethereum", "wstETH (input token, the market's underlyingAsset)", "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0", DOCS.pendleDoc);
+
+  book["aster-bridge"] = [];
+  push(book["aster-bridge"], "bsc", "Aster Deposit Bridge (AstherusVault, ERC-1967 proxy)", "0x128463A60784c4D3f46c23Af3f65Ed859Ba87974", DOCS["aster-bridgeDoc"]);
+
+  book["bitfi-basis"] = [];
+  push(book["bitfi-basis"], "bsc", "bfBTC (BitFi Bitcoin, the BSC basis vault)", "0x623F2774d9f27B59bc6b954544487532CE79d9DF", DOCS["bitfi-basisDoc"]);
+  push(book["bitfi-basis"], "bsc", "BTCB (BSC BTC, the vault's underlyingAsset)", "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c", DOCS["bitfi-basisDoc"]);
+
+  book["bedrock-unibtc"] = [];
+  push(book["bedrock-unibtc"], "ethereum", "Bedrock Vault (TransparentUpgradeableProxy) — the permissionless wrapped-BTC mint", "0x047D41F2544B7F63A8e991aF2068a363d210d6Da", DOCS["bedrock-unibtcDoc"]);
+  push(book["bedrock-unibtc"], "ethereum", "uniBTC (Bedrock universal BTC, 8 decimals; the Vault is its only MINTER_ROLE holder)", "0x004E9C3EF86bc1ca1f0bB5C7662861Ee93350568", DOCS["bedrock-unibtcDoc"]);
+  push(book["bedrock-unibtc"], "ethereum", "WBTC (Wrapped BTC, 8 decimals) — the token minted against", "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599", DOCS["bedrock-unibtcDoc"]);
+
+  book["derive-v3"] = [];
+  push(book["derive-v3"], "ethereum", "Derive v3 ACTION_MANAGER (OnchainActionManager proxy; depositToNewSubaccount)", "0xE366CcA474968e33b777E13905829A3b800CFAD3", DOCS['derive-v3Doc']);
+  push(book["derive-v3"], "ethereum", "Derive v3 WITHDRAWAL_OUTBOX (asset registry: USDC spot label -> USDC token + SPOT_VAULT)", "0x7c743D79C9C595cE332314503d84cBBb4E85FA63", DOCS['derive-v3Doc']);
+  push(book["derive-v3"], "ethereum", "Derive v3 SPOT_VAULT (collateral custody; receives the deposit)", "0x2e7dF4fAf35a1599979C7E764444e112d936ec42", DOCS['derive-v3Doc']);
+  push(book["derive-v3"], "ethereum", "USDC (Ethereum ERC-20 pulled by the deposit)", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", DOCS['derive-v3Doc']);
+
+  book["railgun"] = [];
+  push(book["railgun"], "ethereum", "RailgunSmartWallet (Ethereum proxy, EIP-1967)", "0xFA7093CDD9EE6932B4eb2c9e1cde7CE00B1FA4b9", DOCS['railgunDoc']);
+  push(book["railgun"], "ethereum", "RailgunSmartWallet implementation (proxy's implementation slot)", "0xD662C4B1F22AcEb0BEaCdf3A493De6f478686A0C", DOCS['railgunDoc']);
+  push(book["railgun"], "ethereum", "USDC (the shielded token)", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", DOCS['railgunDoc']);
+  push(book["railgun"], "ethereum", "Railgun Treasury (receives the shield deduction)", "0xE8A8B458BcD1Ececc6b6b58F80929b29cCecFF40", DOCS['railgunDoc']);
+
+  book["fluid-lending"] = [];
+  push(book["fluid-lending"], "ethereum", "Fluid fUSDC (fToken_fUSDC, ERC-4626 lending token)", "0x9Fb7b4477576Fe5B32be4C1843aFB1e55F251B33", DOCS['fluid-lendingDoc']);
+  push(book["fluid-lending"], "ethereum", "USDC (fUSDC underlying)", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", DOCS['fluid-lendingDoc']);
+  push(book["fluid-lending"], "ethereum", "Fluid Liquidity (liquidity layer that holds all fToken underlying)", "0x52Aa899454998Be5b000Ad077a46Bbe360F4e497", DOCS['fluid-lendingDoc']);
+
+  book["mellow-core"] = [];
+  push(book["mellow-core"], "ethereum", "Lido Earn USD (earnUSD), a Mellow Core Vault / MetaVault", "0x014e6DA8F283C4aF65B2AA0f201438680A004452", DOCS['mellow-coreDoc']);
+  push(book["mellow-core"], "ethereum", "SyncDepositQueue (USDC) of the earnUSD vault", "0xf6AFAf6afcAe116dD37A779D50fE6c5fa6f8C8f5", DOCS['mellow-coreDoc']);
+  push(book["mellow-core"], "ethereum", "ShareManager of earnUSD (share ERC-20, totalShares, whitelist flags)", "0x4Ce1ac8F43E0E5BD7A346A98aF777bF8fbeA1981", DOCS['mellow-coreDoc']);
+  push(book["mellow-core"], "ethereum", "Oracle of earnUSD (USDC priceD18 with shares = assets * price)", "0x827044735c9708a2cf850e7Ea37EBa43bc786028", DOCS['mellow-coreDoc']);
+  push(book["mellow-core"], "ethereum", "FeeManager of earnUSD (baseAsset, deposit fee)", "0x72fa23f40e08eB9E45953233b2Dd9665E347e8Dc", DOCS['mellow-coreDoc']);
+  push(book["mellow-core"], "ethereum", "USDC (Ethereum, the vault asset)", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", DOCS['mellow-coreDoc']);
+
+  book["axelar"] = [];
+  push(book["axelar"], "ethereum", "AxelarGateway (Ethereum)", "0x4F4495243837681061C4743b74B3eEdf548D56A5", DOCS['axelarDoc']);
+  push(book["axelar"], "ethereum", "AxelarGasService (Ethereum)", "0x2d5d7d31F671F86C782533cc367F14109a082712", DOCS['axelarDoc']);
+  push(book["axelar"], "ethereum", "Interchain Token Service (Polygon, message destination)", "0xB5FB4BE02232B1bBA4dC8f81dc24C26980dE9e3C", DOCS['axelarDoc']);
+
+  book["fraxtal"] = [];
+  push(book["fraxtal"], "ethereum", "Fraxtal L1StandardBridgeProxy", "0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2", DOCS['fraxtalDoc']);
+  push(book["fraxtal"], "ethereum", "Fraxtal OptimismPortalProxy", "0x36cb65c1967A0Fb0EEE11569C51C2f2aA1Ca6f6D", DOCS['fraxtalDoc']);
+  push(book["fraxtal"], "ethereum", "frxUSD (Ethereum; L2 representation 0xFc00000000000000000000000000000000000001)", "0x853d955aCEf822Db058eb8505911ED77F175b99e", DOCS['fraxtalDoc']);
+
+  book["avant"] = [];
+  push(book["avant"], "avalanche", "savUSD (Staked avUSD — ERC-4626 vault, symbol savUSD, asset avUSD)", "0x06d47F3fb376649c3A9Dafe069B3D6E35572219E", DOCS['avantDoc']);
+  push(book["avant"], "avalanche", "avUSD (Avant USD, the staked asset; 18 decimals)", "0x24dE8771bC5DdB3362Db529Fc3358F2df3A0E346", DOCS['avantDoc']);
+  push(book["avant"], "avalanche", "AvantMintingV2 (avUSD's approved minter; read-only evidence that the mint leg is gated)", "0xcb43139E90f019624e3B76C56FB05394B162A49c", DOCS['avantDoc']);
+
+  book["hyperliquid-bridge"] = [];
+  push(book["hyperliquid-bridge"], "arbitrum", "Hyperliquid Bridge (Bridge2, Arbitrum USDC escrow)", "0x2df1c51e09aecf9cacb7bc98cb1742757f163df7", DOCS['hyperliquid-bridgeDoc']);
+  push(book["hyperliquid-bridge"], "arbitrum", "Arbitrum native USDC (asset the escrow holds; also read back from usdcToken())", "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", DOCS['hyperliquid-bridgeDoc']);
+
+  book["polymarket"] = [];
+  push(book["polymarket"], "polygon", "ConditionalTokens (Gnosis CTF, Polymarket deployment)", "0x4D97DCd97eC945f40cF65F87097ACe5EA0476045", DOCS['polymarketDoc']);
+  push(book["polymarket"], "polygon", "USDC (USDC.e, the CTF collateral)", "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174", DOCS['polymarketDoc']);
+  push(book["polymarket"], "polygon", "UMA CTF Adapter V4 (oracle of regular Polymarket conditions; PolygonScan label 'Polymarket: UMA CTF Adapter V4')", "0x65070BE91477460D8A7AeEb94ef92fe056C2f2A7", DOCS['polymarketDoc']);
+  push(book["polymarket"], "polygon", "CTF Exchange V2", "0xE111180000d2663C0091e4f400237545B87B996B", DOCS['polymarketDoc']);
+  push(book["polymarket"], "polygon", "CtfCollateralAdapter V2 (unwraps pUSD to USDC.e and splits the CTF)", "0xADa100874d00e3331D00F2007a9c336a65009718", DOCS['polymarketDoc']);
+  push(book["polymarket"], "polygon", "pUSD / Polymarket USD (PMCT, the V2 exchange collateral wrapper)", "0xC011a7E12a19f7B1f670d46F03B03f3342E82DFB", DOCS['polymarketDoc']);
 
   return book;
 }

@@ -2,13 +2,13 @@
   "snapshot": "2026-11-02",
   "rankedFrom": "2026-11-02T01:16:26.383Z",
   "totals": {
-    "protocols": 127,
-    "features": 284,
-    "direct": 171,
+    "protocols": 129,
+    "features": 290,
+    "direct": 189,
     "linked": 3,
     "failingPaused": 2,
-    "gap": 56,
-    "notTestable": 52
+    "gap": 42,
+    "notTestable": 54
   },
   "gaps": [
     {
@@ -96,13 +96,6 @@
       "note": "Withdrawal contract requestWithdraw."
     },
     {
-      "rank": 119,
-      "protocol": "Bedrock uniBTC",
-      "key": "bedrock-unibtc",
-      "feature": "mint uniBTC from WBTC",
-      "note": "Vault.mint with WBTC on Ethereum."
-    },
-    {
       "rank": 122,
       "protocol": "Saturn",
       "key": "saturn",
@@ -122,13 +115,6 @@
       "key": "lagoon",
       "feature": "ERC-7540 deposit request",
       "note": "requestDeposit on a Lagoon vault."
-    },
-    {
-      "rank": 131,
-      "protocol": "USDD",
-      "key": "usdd",
-      "feature": "PSM / mint",
-      "note": "Ethereum PSM swap; main TVL on Tron (not forkable)."
     },
     {
       "rank": 132,
@@ -152,20 +138,6 @@
       "note": "liquidate after price override."
     },
     {
-      "rank": 134,
-      "protocol": "Avant Protocol",
-      "key": "avant-protocol",
-      "feature": "stake avUSD",
-      "note": "Avalanche/Ethereum staking vault."
-    },
-    {
-      "rank": 136,
-      "protocol": "Solv Protocol (Stablecoin)",
-      "key": "solv-protocol--stable-rwa",
-      "feature": "subscribe",
-      "note": "BSC vault subscribe."
-    },
-    {
       "rank": 138,
       "protocol": "Theo",
       "key": "theo",
@@ -178,13 +150,6 @@
       "key": "cian-yield-layer",
       "feature": "withdraw request",
       "note": "requestRedeem."
-    },
-    {
-      "rank": 143,
-      "protocol": "Polymarket",
-      "key": "polymarket",
-      "feature": "split / merge positions (CTF)",
-      "note": "ConditionalTokens splitPosition on Polygon."
     },
     {
       "rank": 150,
@@ -222,34 +187,6 @@
       "note": "getReward after time warp."
     },
     {
-      "rank": 161,
-      "protocol": "Fluid DEX",
-      "key": "fluid-dex",
-      "feature": "swap",
-      "note": "FluidDexT1.swapIn on Ethereum."
-    },
-    {
-      "rank": 167,
-      "protocol": "Aster (Bridge)",
-      "key": "astherus--bridge-chain",
-      "feature": "deposit",
-      "note": "Aster deposit vault on BSC."
-    },
-    {
-      "rank": 169,
-      "protocol": "Railgun",
-      "key": "railgun",
-      "feature": "shield",
-      "note": "RailgunSmartWallet.shield (needs a note commitment)."
-    },
-    {
-      "rank": 170,
-      "protocol": "BitFi Basis",
-      "key": "bitfi-basis",
-      "feature": "deposit",
-      "note": "Basis vault deposit on BSC."
-    },
-    {
       "rank": 171,
       "protocol": "Benqi Staked Avax",
       "key": "benqi-staked-avax",
@@ -267,22 +204,8 @@
       "rank": 172,
       "protocol": "Pendle V2",
       "key": "pendle-v2",
-      "feature": "swap PT",
-      "note": "Router swapExactTokenForPt."
-    },
-    {
-      "rank": 172,
-      "protocol": "Pendle V2",
-      "key": "pendle-v2",
       "feature": "add liquidity",
       "note": "addLiquiditySingleToken."
-    },
-    {
-      "rank": 181,
-      "protocol": "Fluid Lending",
-      "key": "fluid-lending",
-      "feature": "fToken deposit",
-      "note": "fUSDC ERC-4626 deposit."
     },
     {
       "rank": 181,
@@ -313,25 +236,11 @@
       "note": "VotingEscrow.createLock."
     },
     {
-      "rank": 192,
-      "protocol": "Mellow Core",
-      "key": "mellow-core",
-      "feature": "vault deposit",
-      "note": "Mellow vault deposit on Ethereum."
-    },
-    {
       "rank": 195,
       "protocol": "USD AI",
       "key": "usd-ai",
       "feature": "mint USDai",
       "note": "USDai mint from USDC on Arbitrum."
-    },
-    {
-      "rank": null,
-      "protocol": "Axelar",
-      "key": "axelar",
-      "feature": "callContract / sendToken",
-      "note": "Gateway.sendToken / ITS interchainTransfer on Ethereum."
     },
     {
       "rank": null,
@@ -367,13 +276,6 @@
       "key": "catalog:frax",
       "feature": "mint frxETH",
       "note": "frxETHMinter.submit."
-    },
-    {
-      "rank": null,
-      "protocol": "Lyra / Derive",
-      "key": "lyra",
-      "feature": "deposit",
-      "note": "Socket bridge deposit to Derive chain."
     },
     {
       "rank": null,
@@ -792,24 +694,26 @@
       "docs": "https://hyperliquid.gitbook.io",
       "counts": {
         "features": 2,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
         "gap": 0,
-        "notTestable": 2
+        "notTestable": 1
       },
       "features": [
         {
           "feature": "bridge deposit",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Recorded decision: Hyperliquid Bridge perps fork coverage closed."
+          "status": "direct",
+          "scripts": [
+            "fork:hyperliquid-bridge:deposit"
+          ],
+          "note": null
         },
         {
           "feature": "bridge withdraw",
           "status": "not-testable",
           "scripts": [],
-          "note": "Recorded decision: Hyperliquid Bridge perps fork coverage closed."
+          "note": "Withdrawals are validated on HyperCore and released by the L1 validators; only the Arbitrum escrow leg is forkable."
         }
       ]
     },
@@ -1047,8 +951,8 @@
       "pinned": true,
       "docs": "https://docs.tornado.ws",
       "counts": {
-        "features": 1,
-        "direct": 0,
+        "features": 2,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
         "gap": 0,
@@ -1056,10 +960,18 @@
       },
       "features": [
         {
-          "feature": "deposit / withdraw",
+          "feature": "deposit",
+          "status": "direct",
+          "scripts": [
+            "fork:tornado-cash:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "withdraw",
           "status": "not-testable",
           "scripts": [],
-          "note": "Recorded decision: Tornado Cash is skipped."
+          "note": "Needs the secret/nullifier preimage behind the commitment; the deposit test discards it by design."
         }
       ]
     },
@@ -2479,14 +2391,22 @@
       "pinned": true,
       "docs": "https://docs.obol.org",
       "counts": {
-        "features": 1,
-        "direct": 0,
+        "features": 2,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
         "gap": 0,
         "notTestable": 1
       },
       "features": [
+        {
+          "feature": "stake OBOL for stOBOL",
+          "status": "direct",
+          "scripts": [
+            "fork:obol:stake"
+          ],
+          "note": null
+        },
         {
           "feature": "create DV cluster",
           "status": "not-testable",
@@ -2728,18 +2648,20 @@
       "docs": "https://docs.bedrock.technology",
       "counts": {
         "features": 1,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "mint uniBTC from WBTC",
-          "status": "gap",
-          "scripts": [],
-          "note": "Vault.mint with WBTC on Ethereum."
+          "status": "direct",
+          "scripts": [
+            "fork:bedrock-unibtc:mint"
+          ],
+          "note": null
         }
       ]
     },
@@ -2940,18 +2862,20 @@
       "docs": "https://docs.usdd.io",
       "counts": {
         "features": 1,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "PSM / mint",
-          "status": "gap",
-          "scripts": [],
-          "note": "Ethereum PSM swap; main TVL on Tron (not forkable)."
+          "status": "direct",
+          "scripts": [
+            "fork:usdd:mint"
+          ],
+          "note": null
         }
       ]
     },
@@ -3006,18 +2930,20 @@
       "docs": "https://docs.avantprotocol.com",
       "counts": {
         "features": 1,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "stake avUSD",
-          "status": "gap",
-          "scripts": [],
-          "note": "Avalanche/Ethereum staking vault."
+          "status": "direct",
+          "scripts": [
+            "fork:avant:stake"
+          ],
+          "note": null
         }
       ]
     },
@@ -3032,15 +2958,15 @@
         "direct": 0,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
-        "notTestable": 0
+        "gap": 0,
+        "notTestable": 1
       },
       "features": [
         {
           "feature": "subscribe",
-          "status": "gap",
+          "status": "not-testable",
           "scripts": [],
-          "note": "BSC vault subscribe."
+          "note": "BSC pools are whitelisted: SolvBTCRouter.checkPoolPermission is false and OpenFundMarket.subscribe is router-only; the one permissionless pool (SolvBTC.BNB) is the SolvBTC product. Verified 2026-11-03."
         }
       ]
     },
@@ -3114,18 +3040,20 @@
       "docs": "https://docs.polymarket.com",
       "counts": {
         "features": 2,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 1
       },
       "features": [
         {
           "feature": "split / merge positions (CTF)",
-          "status": "gap",
-          "scripts": [],
-          "note": "ConditionalTokens splitPosition on Polygon."
+          "status": "direct",
+          "scripts": [
+            "fork:polymarket:split"
+          ],
+          "note": null
         },
         {
           "feature": "trade",
@@ -3359,18 +3287,20 @@
       "docs": "https://docs.fluid.instadapp.io",
       "counts": {
         "features": 1,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "swap",
-          "status": "gap",
-          "scripts": [],
-          "note": "FluidDexT1.swapIn on Ethereum."
+          "status": "direct",
+          "scripts": [
+            "fork:fluid-dex:swap"
+          ],
+          "note": null
         }
       ]
     },
@@ -3405,18 +3335,20 @@
       "docs": "https://docs.asterdex.com",
       "counts": {
         "features": 1,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "deposit",
-          "status": "gap",
-          "scripts": [],
-          "note": "Aster deposit vault on BSC."
+          "status": "direct",
+          "scripts": [
+            "fork:aster-bridge:deposit-native"
+          ],
+          "note": null
         }
       ]
     },
@@ -3428,18 +3360,20 @@
       "docs": "https://docs.railgun.org",
       "counts": {
         "features": 2,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 1
       },
       "features": [
         {
           "feature": "shield",
-          "status": "gap",
-          "scripts": [],
-          "note": "RailgunSmartWallet.shield (needs a note commitment)."
+          "status": "direct",
+          "scripts": [
+            "fork:railgun:shield"
+          ],
+          "note": null
         },
         {
           "feature": "unshield",
@@ -3457,18 +3391,20 @@
       "docs": "https://docs.bitfi.org",
       "counts": {
         "features": 1,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "deposit",
-          "status": "gap",
-          "scripts": [],
-          "note": "Basis vault deposit on BSC."
+          "status": "direct",
+          "scripts": [
+            "fork:bitfi-basis:deposit"
+          ],
+          "note": null
         }
       ]
     },
@@ -3511,10 +3447,10 @@
       "docs": "https://docs.pendle.finance",
       "counts": {
         "features": 4,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 3,
+        "gap": 2,
         "notTestable": 0
       },
       "features": [
@@ -3534,9 +3470,11 @@
         },
         {
           "feature": "swap PT",
-          "status": "gap",
-          "scripts": [],
-          "note": "Router swapExactTokenForPt."
+          "status": "direct",
+          "scripts": [
+            "fork:pendle:buy-pt"
+          ],
+          "note": null
         },
         {
           "feature": "add liquidity",
@@ -3610,18 +3548,20 @@
       "docs": "https://docs.fluid.instadapp.io",
       "counts": {
         "features": 2,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 2,
+        "gap": 1,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "fToken deposit",
-          "status": "gap",
-          "scripts": [],
-          "note": "fUSDC ERC-4626 deposit."
+          "status": "direct",
+          "scripts": [
+            "fork:fluid-lending:deposit"
+          ],
+          "note": null
         },
         {
           "feature": "vault borrow",
@@ -3723,18 +3663,51 @@
       "docs": "https://docs.mellow.finance",
       "counts": {
         "features": 1,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "vault deposit",
-          "status": "gap",
+          "status": "direct",
+          "scripts": [
+            "fork:mellow-core:deposit"
+          ],
+          "note": null
+        }
+      ]
+    },
+    {
+      "key": "fraxtal",
+      "name": "Fraxtal",
+      "rank": 193,
+      "pinned": false,
+      "docs": "https://docs.frax.com/fraxtal",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "L1 ERC-20 deposit (canonical bridge)",
+          "status": "direct",
+          "scripts": [
+            "fork:fraxtal:deposit-erc20"
+          ],
+          "note": null
+        },
+        {
+          "feature": "L1 ETH deposit",
+          "status": "not-testable",
           "scripts": [],
-          "note": "Mellow vault deposit on Ethereum."
+          "note": "Custom gas token chain: depositETH reverts and the bridge holds no ETH."
         }
       ]
     },
@@ -3807,6 +3780,37 @@
       ]
     },
     {
+      "key": "grove-finance",
+      "name": "Grove Finance",
+      "rank": 198,
+      "pinned": false,
+      "docs": "https://docs.grove.finance",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "vault deposit (Grove x Steakhouse USDC)",
+          "status": "direct",
+          "scripts": [
+            "fork:grove:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "allocator doCall / controller actions",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "RELAYER/CONTROLLER-only; no permissionless entry point."
+        }
+      ]
+    },
+    {
       "key": "sosovalue-indexes",
       "name": "SoSoValue Indexes",
       "rank": 200,
@@ -3825,7 +3829,7 @@
           "feature": "mint index",
           "status": "not-testable",
           "scripts": [],
-          "note": "Mint through the issuer (custodial basket)."
+          "note": "Base-only deployment (the row's Ethereum TVL is the ETH leg inside the Base baskets) and the mint is KYB-WLP gated: AssetToken.mint is ISSUER_ROLE, addMintRequest rejects non-participants. Verified 2026-11-03."
         }
       ]
     },
@@ -3891,18 +3895,20 @@
       "docs": "https://docs.axelar.dev",
       "counts": {
         "features": 1,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "callContract / sendToken",
-          "status": "gap",
-          "scripts": [],
-          "note": "Gateway.sendToken / ITS interchainTransfer on Ethereum."
+          "status": "direct",
+          "scripts": [
+            "fork:axelar:send-message"
+          ],
+          "note": null
         }
       ]
     },
@@ -4205,18 +4211,20 @@
       "docs": "https://docs.derive.xyz",
       "counts": {
         "features": 1,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "deposit",
-          "status": "gap",
-          "scripts": [],
-          "note": "Socket bridge deposit to Derive chain."
+          "status": "direct",
+          "scripts": [
+            "fork:derive-v3:deposit"
+          ],
+          "note": null
         }
       ]
     },

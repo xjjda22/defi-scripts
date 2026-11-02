@@ -16,10 +16,14 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci --no-audit --no-fund
+      - name: Foundry (solidity toolchain for the contract check)
+        uses: foundry-rs/foundry-toolchain@v1
       - name: Lint
         run: npm run lint
       - name: Catalog check
         run: node scripts/catalog.js --check
+      - name: Fork contracts match their sources
+        run: npm run check:contracts
       - name: Showcase data check
         run: node scripts/showcaseCheck.js
       - name: Live DefiLlama smoke (informational)

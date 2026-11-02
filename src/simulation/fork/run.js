@@ -150,11 +150,30 @@ function armWatchdog() {
   timer.unref();
 }
 
+/**
+ * A target resolves from TARGETS, or from its own module at ./flows/<target>.js. The second
+ * path means a new protocol test is one new file plus its catalog entries, not another edit
+ * to this dispatcher — which is what lets several tests be written in parallel.
+ */
+function resolveTarget(target) {
+  if (TARGETS[target]) return TARGETS[target];
+  try {
+    const flow = require(`./flows/${target}`);
+    return typeof flow.run === "function" ? flow.run : null;
+  } catch (error) {
+    const missing = error.code === "MODULE_NOT_FOUND" && String(error.message).includes(`/flows/${target}`);
+    if (missing) return null;
+    throw error;
+  }
+}
+
 async function main() {
   armWatchdog();
   const target = process.env.FORK_TARGET || process.env.FORK_PROTOCOL;
   const extras = require("./lendingExtras");
-  const run = extras.handles(process.env.FORK_PROTOCOL || target, process.env.FORK_ACTION) ? extras.run : TARGETS[target];
+  const run = extras.handles(process.env.FORK_PROTOCOL || target, process.env.FORK_ACTION)
+    ? extras.run
+    : resolveTarget(target);
   if (!run) {
     console.error(`FORK_RESULT status=FAIL protocol=${target || "-"} action=- chain=- block=-`);
     console.error(`Unknown FORK_TARGET ${target || "(unset)"}`);
