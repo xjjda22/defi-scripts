@@ -97,16 +97,21 @@ The tables below, and the "Test it" panel on each protocol page, are both genera
 | `fork:curvance:deposit` | Monad | WMON into cWMON of the WMON \| USDC market (ERC-4626 style `deposit`), then `redeem` every share. `marketManager()` must be the documented MarketManager. WMON is wrapped from native MON on the fork | the deposit pulled the full amount, shares were minted, the redeem burned every share and the WMON came back within rounding (plus a little interest) |
 | `fork:stakelink:deposit` | Ethereum | Priority Pool `deposit(amount, true, [])`: stakes what the Staking Pool can take now (stLINK) and queues the rest, then `unqueueTokens` the queued part. Pre-checks: the documented LINK / Staking Pool wiring, `poolStatus()` OPEN and not paused | the user's LINK drops by exactly the amount, the `Deposit` event's staked + queued equals it, stLINK rises by the staked part (2 wei share rounding), the account queue and `totalQueued` rise by the queued part, and the unqueue returns exactly that LINK and restores both |
 | `fork:lista:stake` | Bsc | `ListaStakeManager.deposit()` with native BNB | slisBNB balance increases |
+| `fork:lista:unstake` | Bsc | StakeManager `deposit` BNB → slisBNB, then `requestWithdraw` all | slisBNB goes to 0 and one withdrawal request for the full amount is recorded |
 | `fork:venus:supply` | Bsc | `vUSDC.mint` then `redeem` on the BSC Core Pool | the mint pulled the full USDC, vUSDC shares were minted, the redeem burned every share and USDC came back within rounding |
 | `fork:lista-dao:deposit` | Bsc | USDT into the Lista MoolahVault (USDT) (ERC-4626), then redeem | the deposit pulled the full amount, shares were minted, the redeem burned every share and USDT came back within rounding |
 | `fork:lido:submit` / `:wrap` | Ethereum | `submit` then optional `wrap` | stETH, then wstETH, increases |
 | `fork:lido:request` | Ethereum | `submit`, then WithdrawalQueueERC721 `requestWithdrawals` | one unstETH NFT minted to the user for the stETH amount; request not finalized; pause is a FAIL |
 | `fork:lido:unwrap` | Ethereum | `submit`, `wrap`, then `unwrap` the full wstETH balance | wstETH goes to 0 and stETH rises by getStETHByWstETH (±2 wei) |
 | `fork:rocketpool:deposit` | Ethereum | `deposit()` on the Rocket deposit pool | rETH increases, or skip when the cap is too small |
+| `fork:rocketpool:burn` | Ethereum | `deposit` ETH → rETH, then `rETH.burn` half | rETH falls by the burned amount and ETH received equals `getEthValue` exactly |
 | `fork:cbeth:rate` | Ethereum | `exchangeRate()` | rate above 1. No public mint |
 | `fork:etherfi:deposit` / `:wrap` | Ethereum | deposit ETH, wrap eETH | eETH, then weETH, increases |
+| `fork:etherfi:request` | Ethereum | `deposit` ETH → eETH, then LiquidityPool `requestWithdraw` | a WithdrawRequestNFT is minted to the user, eETH is taken, request not finalized |
 | `fork:kelp:deposit` | Ethereum | `depositETH` | rsETH increases, or skip when paused |
+| `fork:kelp:request` | Ethereum | `depositETH` → rsETH, then LRTWithdrawalManager `initiateWithdrawal(ETH)` | rsETH goes to 0 and the user's ETH request nonce range grows by one |
 | `fork:renzo:deposit` | Ethereum | `depositETH` | ezETH increases, or skip when capped |
+| `fork:renzo:request` | Ethereum | `depositETH` → ezETH, then WithdrawQueue `withdraw(ezETH, ETH)` | ezETH goes to 0 and outstanding withdraw requests grow by one |
 | `fork:eigenlayer:deposit` | Ethereum | `depositIntoStrategy` on the stETH strategy | deposit shares increase |
 | `fork:eigenlayer:queue` | Ethereum | deposit, then `queueWithdrawals` | exactly one withdrawal queued and the deposited shares leave the staker (`sharesLeft` back to the starting 0). The delay is not advanced, completion is not asserted |
 | `fork:symbiotic:read` | Ethereum | VaultFactory code | **Read-only.** Docs do not publish a permissionless vault |
@@ -116,6 +121,7 @@ The tables below, and the "Test it" panel on each protocol page, are both genera
 | `fork:meth:stake` | Ethereum | mETH `Staking.stake(minMETHAmount)` with native ETH, then `unstakeRequest` of every mETH minted. Pre-checks: `mETH()` and `unstakeRequestsManager()` are the documented contracts, staking and unstake requests are not paused, the staking allowlist is off, and the amount is above `minimumStakeBound()` | mETH minted equals the pre-tx `ethToMETH(value)` exactly and the Staking contract holds exactly the ETH; `unstakeRequest` moves every mETH into the UnstakeRequestsManager and emits `UnstakeRequested` for the user with `mETHLocked` = the minted mETH and `ethAmount` = the pre-tx `mETHToETH`. Finalisation and the claim are not waited out |
 | `fork:meta-pool:deposit` | Ethereum | spETH `depositETH(receiver)` (ERC-4626). The Staking contract may fill from the Liquid Unstake Pool instead of minting | spETH + Liquid Unstake Pool hold exactly the deposited ETH more, the ERC-4626 `Deposit` event reports assets = deposit and shares = the user's gain, and shares are within 1 bp of the pre-tx `previewDeposit`. Unstake is a pool swap or a 2-9 day queue, so there is no redeem |
 | `fork:stakewise:deposit` | Ethereum | Genesis Vault `depositAndMintOsToken` with native ETH, minting osETH worth half the deposit. Pre-checks: no pending keeper state update and room under `capacity()` | vault `totalAssets` rises by exactly the deposit, the `Deposited` event reports assets = deposit and shares = the user's gain (within 1 wei of the pre-tx `convertToShares`), and the user holds exactly the requested osETH, which equals the vault's osToken position. Exits use the validator exit queue, so there is no redeem |
+| `fork:stakewise:exit` | Ethereum | Genesis Vault `deposit`, then `enterExitQueue` for every share | vault shares go to 0 and ExitQueueEntered carries the full share amount and a ticket |
 | `fork:etherfi-cash:supply` | Optimism | USDC `supply` into reserve 0 of the ether.fi Cash Spoke (ether.fi-managed Aave V4 on OP Mainnet), then `withdraw` the full supplied balance. Pre-checks: reserve 0 is native USDC on the documented Liquidity Hub and is neither paused nor frozen | the user's USDC and the Hub's USDC move by exactly the amount, supply shares are minted and `getUserSuppliedAssets` is the amount within 1 wei; the withdraw returns exactly the supplied assets from the Hub and leaves 0 shares. Borrowing is limited to ether.fi Safes and is not called |
 | `fork:layerzero:send` | Ethereum | OApp send → EndpointV2 PacketSent | Pre-check: the OApp's `endpoint()` is the documented EndpointV2 and the endpoint's `eid()` is 30101. `send` to Arbitrum (EID 30110) makes EndpointV2 emit `PacketSent` from exactly the send library `getSendLibrary(oapp, 30110)` returns, and `outboundNonce(oapp, 30110, peer)` rises by one. DVN verification and executor delivery are not run |
 | `fork:benqi:supply` | Avalanche | supply USDC → qiUSDCn → redeem | Pre-check: Comptroller `mintGuardianPaused(qiUSDCn)` is false and `underlying()` is native USDC. `mint` returns 0, pulls exactly the amount, market cash rises by it and the qiTokens are worth the amount within 1 bp at `exchangeRateStored`; `redeem` of every qiToken returns the amount within 1 bp and leaves 0 qiUSDCn |
@@ -152,8 +158,9 @@ Same rules. A vault whose `maxDeposit` is 0 (or whose deposits are paused or clo
 | --- | --- |
 | `fork:steakhouse:deposit` | USDC into MetaMorpho Steakhouse USDC, then redeem. Asserts the deposit pulled the full amount, shares were minted, the redeem burned every share, and the USDC came back within rounding (the key prints USDC before → after deposit → after redeem) |
 | `fork:gauntlet:deposit` | Same on MetaMorpho Gauntlet USDC Prime (V1). V2 `maxDeposit` is 0, so V2 is not deposited into |
-| `fork:sentora:deposit` | Sentora RLUSD Main is on Ethereum and is Morpho Vault V2. `maxDeposit` is 0, so this reads `totalAssets` and `convertToAssets`. **Read-only** |
+| `fork:sentora:deposit` | deposit pulls exactly the amount and mints shares; the exit returns every RLUSD and leaves at most interest-dust shares. A set gate makes it a labelled read |
 | `fork:veda:deposit` | **Deposit only.** WETH into the ether.fi Liquid ETH BoringVault through its Teller. Shares minted. `bulkWithdraw` is not a public capability, and WETH `allowWithdraws` was false, so there is no redeem |
+| `fork:veda:request` | all shares move from the user to the queue and exactly one request is added; a paused queue or closed payout assets is a FAIL |
 | `fork:upshift:deposit` | USDC into Upshift Sentora USD, then `instantRedeem`. The USDC paid equals the pre-tx `previewRedemption(shares, true)` after-fee amount, that amount is the gross minus `instantRedemptionFee` (basis points), and the gross is within 1 bp of the deposit. If instant redeem is closed, `requestRedeem` is asserted and the withdrawal is not waited out |
 | `fork:yearn:deposit` | USDC into Yearn V3 USDC-1, then redeem |
 | `fork:euler:deposit` | USDC into Euler Earn K3 Capital Earn USDC (first non-deprecated Ethereum vault in euler-labels), then redeem |
@@ -182,6 +189,8 @@ Same rules: pinned block via `FORK_BLOCK`, whale impersonation or `anvil_deal`, 
 | --- | --- |
 | `fork:sky:convert` | DAI→USDS→DAI on the Sky converter, 1:1 |
 | `fork:sky:susds` | Deposit USDS into sUSDS and redeem |
+| `fork:sky:psm` | USDC and USDS move by exactly the amounts implied by `tin`/`tout`; a halted direction is a FAIL |
+| `fork:sky:redeem` | sUSDS goes to 0, USDS out ≥ previewRedeem and ≥ the deposit |
 | `fork:sky:sdai` | Deposit DAI into sDAI and redeem |
 | `fork:ethena:stake` | USDe→sUSDe. Mint is whitelisted and is not called |
 | `fork:usdai:stake` | USDai→sUSDai via ERC-4626 deposit. Protocol mint of USDai is whitelisted and is not called. Redeem is a 30-day queue, so this does not redeem |
