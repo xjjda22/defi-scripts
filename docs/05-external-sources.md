@@ -15,7 +15,7 @@ In CI, `scripts/showcaseCheck.js` rejects a build whose `methodology.sources` ha
 
 ## Token map
 
-[`src/analytics/ranking/token-map.json`](../src/analytics/ranking/token-map.json) joins a showcase row id to one CoinGecko id plus the contract addresses Nansen needs (Ethereum, Solana, Base, Arbitrum, Optimism, Polygon, BNB, Avalanche). It currently maps 73 row ids; 70 of them appeared in the last build and 62 of those made the top 200.
+[`src/analytics/ranking/token-map.json`](../src/analytics/ranking/token-map.json) joins a showcase row id to one CoinGecko id plus the contract addresses Nansen needs (Ethereum, Solana, Base, Arbitrum, Optimism, Polygon, BNB, Avalanche). It maps 73 row ids; in the 2026-11-02 18:06 build 70 of them matched and 61 of those made the top 200.
 
 Add a row only when the token clearly represents that protocol. A wrong token is worse than a missing one: it would let an unrelated coin move a protocol's rank. Unmapped rows are neutral, not penalised.
 
@@ -82,7 +82,7 @@ The offline check uses fixtures in `test/fixtures/` and needs no network or keys
 
 ## Limits
 
-- Coverage is 73 mapped row ids, of which 70 were present and 62 made the top 200 in the last build. Extending the token map is the cheapest way to raise it.
+- Coverage is 73 mapped row ids; in the 2026-11-02 18:06 build 70 matched and 61 made the top 200. Extending the token map is the cheapest way to raise it.
 - CoinGecko cannot tell a protocol's own usage from a governance token's speculation; turnover is an attention proxy, not revenue.
 - Nansen's netflow endpoint keeps a rolling 30 days, so it cannot backfill the six-month window.
 - Tokens that exist only as a native asset (NEAR, TAO, RUNE) have no contract address in the map, so Nansen cannot score those rows. CoinGecko still can.

@@ -17,14 +17,14 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 ### Changed
 
 - `docs/07-fork-coverage-plan.md` — the bucket table was written before #59 and still quoted
-  72 fork-tested / 22 unbuilt. It now reads 90 fork-tested / 19 API-only / 91 not forkable / **0
-  unbuilt**, and the 22-row plan is recorded by outcome (18 built, 4 infeasible with evidence)
-  instead of by chain.
-- `docs/03-showcase-ranking.md` — CoinGecko candidate rows in the last build 43 → **41**
+  72 fork-tested / 22 unbuilt. It now reads **89** fork-tested / **18** API-only / **91** not
+  forkable / **2** unbuilt (Armitage by Wintermute, xDAI Stake Bridge), and the campaign is
+  recorded by outcome (18 tests added, 4 rows infeasible with evidence) instead of by chain.
+  Figures are the 18:06 rebuild from #60; earlier local drafts of this entry said 90/19/0.
+- `docs/03-showcase-ranking.md` — CoinGecko candidate rows 43 → **42** in the 18:06 build
   (`methodology.universe.coinGeckoTop`).
-- `docs/05-external-sources.md` — mapped rows that made the top 200 52 → **62**, matching the
-  `token-map.json` count and `showcase/data.json`. The same file already said 62 in its token-map
-  section, so the two numbers disagreed with each other.
+- `docs/05-external-sources.md` — two spots disagreed on how many mapped rows made the top 200
+  (62 and 52). Both now say **61 matched in the 18:06 build**, alongside 70 matched tokens.
 
 ## [2026-11-03] fork coverage: 18 new protocol tests, contract gate, suite isolation
 

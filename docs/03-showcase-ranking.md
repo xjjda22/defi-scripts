@@ -40,7 +40,7 @@ Eligible rows come from `GET https://api.llama.fi/protocols`. A protocol qualifi
 **Candidate pool.** Scoring every eligible family would mean ~740 TVL history calls. The pool is capped before any history is fetched, as the union of:
 
 - DefiLlama's top **200** rows by TVL,
-- CoinGecko's top **200** tokens by market cap (joined through `token-map.json`; 41 candidate rows in the last build),
+- CoinGecko's top **200** tokens by market cap (joined through `token-map.json`; 42 candidate rows in the 2026-11-02 18:06 build, `methodology.universe.coinGeckoTop`),
 - the top **20** rows in every category, ranked on TVL, then fees, then volume.
 
 The last build kept **267** candidate rows and fetched **272** histories, down from 741. Percentiles and the top 200 are computed inside this pool; a row outside it cannot enter. Every category keeps at least 20 rows. `stats.universe` records the counts, and `methodology.universe` carries the parameters.

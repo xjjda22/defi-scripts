@@ -1,30 +1,31 @@
 # Fork coverage plan (2026-11-03)
 
-Status: **queue closed.** Fork tests cover 90 of the top 200 rows. The 22-row campaign this page
-was written for is finished — 18 built, 4 resolved as documented infeasible — so bucket 4 is
-empty and this page stays as the record of how the work was sized and run.
+Status: **campaign closed, two rows open.** Fork tests cover 89 of the top 200 rows; 111 do not.
+The queue is down to two rows nothing has investigated: Armitage by Wintermute and xDAI Stake
+Bridge. Figures are the 2026-11-02 18:06 board rebuild — `showcase/data.json` is authoritative
+and these move on every rebuild.
 
 ## Both numbers are smaller than they look
 
 | Bucket | Rows | Can a fork test cover it? |
 | --- | ---: | --- |
 | Top 200 | 200 | — |
-| Has a `fork:*` test today | 90 | — |
-| No fork test | 110 | — |
-| — documented as infeasible in `API_ONLY` | 19 | No, with a written reason |
+| Has a `fork:*` stamp | 89 | — |
+| No fork test | 111 | — |
+| — documented as infeasible in `API_ONLY` | 18 | No, with a written reason |
 | — non-EVM, or no chain TVL (Solana, Bitcoin, Hyperliquid L1, Tron, Sui, Stellar, others) | 91 | No: the suite is EVM-only |
-| **— EVM-forkable, just not built** | **0** | **The campaign is complete** |
+| **— EVM-forkable, just not built** | **2** | **Yes — the last two rows** |
 
-So "test every protocol's contracts" meant **22 tests**, not 110, and all 22 are now closed. The
-other 110 have a reason not to exist; that reason is data, not debt, and it is what `API_ONLY`
-records.
+So "test every protocol's contracts" meant a few dozen tests, not 111. The other 109 already have
+a reason not to exist; that reason is data, not debt, and it is what `API_ONLY` records.
 
-## The 22, by outcome
+## What the campaign changed
 
 | Outcome | Rows |
 | --- | --- |
-| Built (18) | Tornado Cash, Fluid DEX, Obol, USDD, Pendle V2, Bedrock uniBTC, Derive V3, Railgun, Fluid Lending, Mellow Core, Axelar, Fraxtal (Ethereum); Aster Bridge, BitFi Basis (BSC); Grove Finance (Base); Hyperliquid Bridge (Arbitrum); Avant (Avalanche); Polymarket (Polygon) |
-| Infeasible, with evidence (4) | Liquid Collective (KYC allowlist), Solv Protocol stablecoin (BSC pools whitelisted), SoSoValue Indexes (Base-only, KYB-WLP mint), Avalanche Core Bridge (warden custody) |
+| Added — 18 tests across 7 chains | Tornado Cash, Fluid DEX, Obol, USDD, Pendle V2, Bedrock uniBTC, Derive V3, Railgun, Fluid Lending, Mellow Core, Axelar, Fraxtal (Ethereum); Aster Bridge, BitFi Basis (BSC); Grove Finance (Base); Hyperliquid Bridge (Arbitrum); Avant (Avalanche); Polymarket (Polygon) |
+| Infeasible, recorded with evidence | Liquid Collective (KYC allowlist), Solv Protocol stablecoin (BSC pools whitelisted), SoSoValue Indexes (Base-only, KYB-WLP mint), Avalanche Core Bridge (warden custody) |
+| Still open | Armitage by Wintermute, xDAI Stake Bridge |
 
 Avalanche is forkable: `AVALANCHE_RPC_URL` is set in `.env`, and `https://api.avax.network/ext/bc/C/rpc` works as a public fallback (the Avant test used it).
 
