@@ -4,6 +4,8 @@ Routine-facing note for the playground batch (part 2 of 4). Updated 2026-11-02.
 
 ## Order of work
 
+**Since 2026-11-02 the per-feature backlog in [`docs/08-feature-test-gaps.md`](08-feature-test-gaps.md) comes first.** Every public, permissionless feature of every protocol must have a local Anvil fork test. Each playground run takes the next rows from its **Top gaps** table (top-50 rank first), builds them with strict assertions, flips the feature from `g(...)` to `t(...)` in `src/catalog/protocolFeatures.js` and runs `npm run coverage:features`. The row-level order below still applies to rows that have no test at all.
+
 1. **Top-50 gaps first.** Every top-50 row without a `direct` fork test, before any long-tail row. Re-check each run with `stats.coverage.top50` in `showcase/data.json`.
 2. **Forkable top-200 rows with status `none`**, by rank, skipping recorded decisions.
 3. **`linked` rows:** replace a borrowed test with the row's own product action when one exists.

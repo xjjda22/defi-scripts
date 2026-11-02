@@ -12,3 +12,4 @@ data/*
 !data/disputes.json
 !data/coverage-snapshot.json
 !data/row-status.json
+!data/feature-gaps.json
