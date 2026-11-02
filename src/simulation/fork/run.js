@@ -50,6 +50,7 @@ const TARGETS = {
   dex: () => require("./dexSwap").run(),
   uniswapv4: () => require("./uniswapV4").run(),
   pancake: () => require("./pancakeV3").run(),
+  dexlp: () => require("./dexLiquidity").run(),
   aave: () => require("./aaveFlow").run(),
   spark: () => require("./aaveFlow").run(),
   compound: () => require("./compoundV3").run(),
@@ -158,7 +159,7 @@ async function main() {
     console.error(`Unknown FORK_TARGET ${target || "(unset)"}`);
     process.exit(1);
   }
-  if (target !== "dex" && target !== "pancake" && target !== "uniswapv4" && !process.env.FORK_PROTOCOL) {
+  if (target !== "dex" && target !== "pancake" && target !== "uniswapv4" && target !== "dexlp" && !process.env.FORK_PROTOCOL) {
     process.env.FORK_PROTOCOL = target;
   }
   await run();
