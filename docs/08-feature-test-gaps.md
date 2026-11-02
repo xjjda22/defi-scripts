@@ -8,7 +8,7 @@ Rows: pinned snapshot `2026-11-02` plus catalog protocols with fork tests. Ranks
 
 | Protocols | Features | Tested-direct | Linked | Failing-paused | Gap | Not testable |
 | --- | --- | --- | --- | --- | --- | --- |
-| 127 | 284 | 171 | 3 | 2 | 56 | 52 |
+| 129 | 290 | 189 | 3 | 2 | 42 | 54 |
 
 ## Top gaps (priority order)
 
@@ -28,50 +28,36 @@ Top-50 rank first, then rank order; within a protocol, the order its features ar
 | 10 | 111 | EigenCloud | complete withdrawal | completeQueuedWithdrawal after time warp past the delay. |
 | 11 | 111 | EigenCloud | delegate to operator | DelegationManager.delegateTo. |
 | 12 | 116 | Meta Pool | withdraw request | Withdrawal contract requestWithdraw. |
-| 13 | 119 | Bedrock uniBTC | mint uniBTC from WBTC | Vault.mint with WBTC on Ethereum. |
-| 14 | 122 | Saturn | unstake | Unstake / cooldown. |
-| 15 | 123 | Sky | open vault / draw USDS | Sky Lockstake or ilk vault. |
-| 16 | 126 | Lagoon | ERC-7540 deposit request | requestDeposit on a Lagoon vault. |
-| 17 | 131 | USDD | PSM / mint | Ethereum PSM swap; main TVL on Tron (not forkable). |
-| 18 | 132 | Liquity | open trove | BorrowerOperations.openTrove. |
-| 19 | 132 | Liquity | redeem | redeemCollateral. |
-| 20 | 132 | Liquity | liquidate | liquidate after price override. |
-| 21 | 134 | Avant Protocol | stake avUSD | Avalanche/Ethereum staking vault. |
-| 22 | 136 | Solv Protocol (Stablecoin) | subscribe | BSC vault subscribe. |
-| 23 | 138 | Theo | unstake | Unstake / redeem. |
-| 24 | 139 | CIAN Yield Layer | withdraw request | requestRedeem. |
-| 25 | 143 | Polymarket | split / merge positions (CTF) | ConditionalTokens splitPosition on Polygon. |
-| 26 | 150 | SolvBTC | redeem | Redemption request. |
-| 27 | 152 | Venus Core Pool | borrow | vToken.borrow on BSC. |
-| 28 | 152 | Venus Core Pool | repay | repayBorrow. |
-| 29 | 152 | Venus Core Pool | redeem | redeemUnderlying. |
-| 30 | 159 | Convex Finance | claim rewards | getReward after time warp. |
-| 31 | 161 | Fluid DEX | swap | FluidDexT1.swapIn on Ethereum. |
-| 32 | 167 | Aster (Bridge) | deposit | Aster deposit vault on BSC. |
-| 33 | 169 | Railgun | shield | RailgunSmartWallet.shield (needs a note commitment). |
-| 34 | 170 | BitFi Basis | deposit | Basis vault deposit on BSC. |
-| 35 | 171 | Benqi Staked Avax | request unlock | requestUnlock + cooldown. |
-| 36 | 172 | Pendle V2 | mint PT/YT | Router mintPyFromToken. |
-| 37 | 172 | Pendle V2 | swap PT | Router swapExactTokenForPt. |
-| 38 | 172 | Pendle V2 | add liquidity | addLiquiditySingleToken. |
-| 39 | 181 | Fluid Lending | fToken deposit | fUSDC ERC-4626 deposit. |
-| 40 | 181 | Fluid Lending | vault borrow | Fluid vault operate(). |
-| 41 | 191 | Aero (DEX) | add liquidity | Router.addLiquidity. |
-| 42 | 191 | Aero (DEX) | gauge stake | Gauge.deposit. |
-| 43 | 191 | Aero (DEX) | lock AERO (veNFT) | VotingEscrow.createLock. |
-| 44 | 192 | Mellow Core | vault deposit | Mellow vault deposit on Ethereum. |
-| 45 | 195 | USD AI | mint USDai | USDai mint from USDC on Arbitrum. |
-| 46 | - | Axelar | callContract / sendToken | Gateway.sendToken / ITS interchainTransfer on Ethereum. |
-| 47 | - | Balancer | join pool | Vault.joinPool / V3 addLiquidity. |
-| 48 | - | Benqi Lending | borrow | qiToken.borrow on Avalanche. |
-| 49 | - | Benqi Lending | redeem | redeemUnderlying. |
-| 50 | - | Euler | borrow (EVC) | EVC enableController + borrow. |
-| 51 | - | Frax | mint frxETH | frxETHMinter.submit. |
-| 52 | - | Lyra / Derive | deposit | Socket bridge deposit to Derive chain. |
-| 53 | - | Rysk V12 | options trade | HyperEVM/Arbitrum options; chain not configured. |
-| 54 | - | SushiSwap | add liquidity | Router addLiquidity. |
-| 55 | - | Symbiotic | vault deposit | Vault.deposit. |
-| 56 | - | xDai Stake Bridge | relay tokens | Omnibridge relayTokens on Ethereum. |
+| 13 | 122 | Saturn | unstake | Unstake / cooldown. |
+| 14 | 123 | Sky | open vault / draw USDS | Sky Lockstake or ilk vault. |
+| 15 | 126 | Lagoon | ERC-7540 deposit request | requestDeposit on a Lagoon vault. |
+| 16 | 132 | Liquity | open trove | BorrowerOperations.openTrove. |
+| 17 | 132 | Liquity | redeem | redeemCollateral. |
+| 18 | 132 | Liquity | liquidate | liquidate after price override. |
+| 19 | 138 | Theo | unstake | Unstake / redeem. |
+| 20 | 139 | CIAN Yield Layer | withdraw request | requestRedeem. |
+| 21 | 150 | SolvBTC | redeem | Redemption request. |
+| 22 | 152 | Venus Core Pool | borrow | vToken.borrow on BSC. |
+| 23 | 152 | Venus Core Pool | repay | repayBorrow. |
+| 24 | 152 | Venus Core Pool | redeem | redeemUnderlying. |
+| 25 | 159 | Convex Finance | claim rewards | getReward after time warp. |
+| 26 | 171 | Benqi Staked Avax | request unlock | requestUnlock + cooldown. |
+| 27 | 172 | Pendle V2 | mint PT/YT | Router mintPyFromToken. |
+| 28 | 172 | Pendle V2 | add liquidity | addLiquiditySingleToken. |
+| 29 | 181 | Fluid Lending | vault borrow | Fluid vault operate(). |
+| 30 | 191 | Aero (DEX) | add liquidity | Router.addLiquidity. |
+| 31 | 191 | Aero (DEX) | gauge stake | Gauge.deposit. |
+| 32 | 191 | Aero (DEX) | lock AERO (veNFT) | VotingEscrow.createLock. |
+| 33 | 195 | USD AI | mint USDai | USDai mint from USDC on Arbitrum. |
+| 34 | - | Balancer | join pool | Vault.joinPool / V3 addLiquidity. |
+| 35 | - | Benqi Lending | borrow | qiToken.borrow on Avalanche. |
+| 36 | - | Benqi Lending | redeem | redeemUnderlying. |
+| 37 | - | Euler | borrow (EVC) | EVC enableController + borrow. |
+| 38 | - | Frax | mint frxETH | frxETHMinter.submit. |
+| 39 | - | Rysk V12 | options trade | HyperEVM/Arbitrum options; chain not configured. |
+| 40 | - | SushiSwap | add liquidity | Router addLiquidity. |
+| 41 | - | Symbiotic | vault deposit | Vault.deposit. |
+| 42 | - | xDai Stake Bridge | relay tokens | Omnibridge relayTokens on Ethereum. |
 
 ## Per protocol
 
@@ -159,12 +145,12 @@ Docs: https://docs.veda.tech · 2/2 tested-direct, 0 gap, 0 not testable
 
 ### #9 Hyperliquid Bridge
 
-Docs: https://hyperliquid.gitbook.io · 0/2 tested-direct, 0 gap, 2 not testable
+Docs: https://hyperliquid.gitbook.io · 1/2 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| bridge deposit | not-testable |  | Recorded decision: Hyperliquid Bridge perps fork coverage closed. |
-| bridge withdraw | not-testable |  | Recorded decision: Hyperliquid Bridge perps fork coverage closed. |
+| bridge deposit | tested-direct | `fork:hyperliquid-bridge:deposit` |  |
+| bridge withdraw | not-testable |  | Withdrawals are validated on HyperCore and released by the L1 validators; only the Arbitrum escrow leg is forkable. |
 
 ### #11 CCIP
 
@@ -232,11 +218,12 @@ Docs: https://docs.morpho.org · 2/2 tested-direct, 0 gap, 0 not testable
 
 ### #20 Tornado Cash
 
-Docs: https://docs.tornado.ws · 0/1 tested-direct, 0 gap, 1 not testable
+Docs: https://docs.tornado.ws · 1/2 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| deposit / withdraw | not-testable |  | Recorded decision: Tornado Cash is skipped. |
+| deposit | tested-direct | `fork:tornado-cash:deposit` |  |
+| withdraw | not-testable |  | Needs the secret/nullifier preimage behind the commitment; the deposit test discards it by design. |
 
 ### #21 Plume Vaults
 
@@ -623,10 +610,11 @@ Docs: https://docs.morpho.org · 2/2 tested-direct, 0 gap, 0 not testable
 
 ### #101 Obol
 
-Docs: https://docs.obol.org · 0/1 tested-direct, 0 gap, 1 not testable
+Docs: https://docs.obol.org · 1/2 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
+| stake OBOL for stOBOL | tested-direct | `fork:obol:stake` |  |
 | create DV cluster | not-testable |  | Distributed validator setup needs validator keys and the beacon chain. |
 
 ### #103 Arbitrum Bridge
@@ -695,11 +683,11 @@ Docs: https://docs.metapool.app · 1/2 tested-direct, 1 gap, 0 not testable
 
 ### #119 Bedrock uniBTC
 
-Docs: https://docs.bedrock.technology · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.bedrock.technology · 1/1 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| mint uniBTC from WBTC | **gap** |  | Vault.mint with WBTC on Ethereum. |
+| mint uniBTC from WBTC | tested-direct | `fork:bedrock-unibtc:mint` |  |
 
 ### #122 Saturn
 
@@ -752,11 +740,11 @@ Docs: https://docs.usdt0.to · 1/2 tested-direct, 0 gap, 1 not testable
 
 ### #131 USDD
 
-Docs: https://docs.usdd.io · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.usdd.io · 1/1 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| PSM / mint | **gap** |  | Ethereum PSM swap; main TVL on Tron (not forkable). |
+| PSM / mint | tested-direct | `fork:usdd:mint` |  |
 
 ### #132 Liquity
 
@@ -771,19 +759,19 @@ Docs: https://docs.liquity.org · 1/4 tested-direct, 3 gap, 0 not testable
 
 ### #134 Avant Protocol
 
-Docs: https://docs.avantprotocol.com · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.avantprotocol.com · 1/1 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| stake avUSD | **gap** |  | Avalanche/Ethereum staking vault. |
+| stake avUSD | tested-direct | `fork:avant:stake` |  |
 
 ### #136 Solv Protocol (Stablecoin)
 
-Docs: https://docs.solv.finance · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.solv.finance · 0/1 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| subscribe | **gap** |  | BSC vault subscribe. |
+| subscribe | not-testable |  | BSC pools are whitelisted: SolvBTCRouter.checkPoolPermission is false and OpenFundMarket.subscribe is router-only; the one permissionless pool (SolvBTC.BNB) is the SolvBTC product. Verified 2026-11-03. |
 
 ### #138 Theo
 
@@ -805,11 +793,11 @@ Docs: https://docs.cian.app · 1/2 tested-direct, 1 gap, 0 not testable
 
 ### #143 Polymarket
 
-Docs: https://docs.polymarket.com · 0/2 tested-direct, 1 gap, 1 not testable
+Docs: https://docs.polymarket.com · 1/2 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| split / merge positions (CTF) | **gap** |  | ConditionalTokens splitPosition on Polygon. |
+| split / merge positions (CTF) | tested-direct | `fork:polymarket:split` |  |
 | trade | not-testable |  | CLOB orders are matched off-chain by the operator; exploited 2026-10. |
 
 ### #144 SSV Network
@@ -872,11 +860,11 @@ Docs: https://docs.convexfinance.com · 1/2 tested-direct, 1 gap, 0 not testable
 
 ### #161 Fluid DEX
 
-Docs: https://docs.fluid.instadapp.io · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.fluid.instadapp.io · 1/1 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| swap | **gap** |  | FluidDexT1.swapIn on Ethereum. |
+| swap | tested-direct | `fork:fluid-dex:swap` |  |
 
 ### #165 Avalanche Core Bridge
 
@@ -888,28 +876,28 @@ Docs: https://core.app/bridge · 0/1 tested-direct, 0 gap, 1 not testable
 
 ### #167 Aster (Bridge)
 
-Docs: https://docs.asterdex.com · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.asterdex.com · 1/1 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| deposit | **gap** |  | Aster deposit vault on BSC. |
+| deposit | tested-direct | `fork:aster-bridge:deposit-native` |  |
 
 ### #169 Railgun
 
-Docs: https://docs.railgun.org · 0/2 tested-direct, 1 gap, 1 not testable
+Docs: https://docs.railgun.org · 1/2 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| shield | **gap** |  | RailgunSmartWallet.shield (needs a note commitment). |
+| shield | tested-direct | `fork:railgun:shield` |  |
 | unshield | not-testable |  | Needs a zk proof generated off-chain. |
 
 ### #170 BitFi Basis
 
-Docs: https://docs.bitfi.org · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.bitfi.org · 1/1 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| deposit | **gap** |  | Basis vault deposit on BSC. |
+| deposit | tested-direct | `fork:bitfi-basis:deposit` |  |
 
 ### #171 Benqi Staked Avax
 
@@ -922,13 +910,13 @@ Docs: https://docs.benqi.fi · 1/2 tested-direct, 1 gap, 0 not testable
 
 ### #172 Pendle V2
 
-Docs: https://docs.pendle.finance · 1/4 tested-direct, 3 gap, 0 not testable
+Docs: https://docs.pendle.finance · 2/4 tested-direct, 2 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | markets read | tested-direct | `simulate:eth:pendle-markets:smoke` |  |
 | mint PT/YT | **gap** |  | Router mintPyFromToken. |
-| swap PT | **gap** |  | Router swapExactTokenForPt. |
+| swap PT | tested-direct | `fork:pendle:buy-pt` |  |
 | add liquidity | **gap** |  | addLiquiditySingleToken. |
 
 ### #176 Rocket Pool
@@ -950,11 +938,11 @@ Docs: https://docs.liquidcollective.io · 0/1 tested-direct, 0 gap, 1 not testab
 
 ### #181 Fluid Lending
 
-Docs: https://docs.fluid.instadapp.io · 0/2 tested-direct, 2 gap, 0 not testable
+Docs: https://docs.fluid.instadapp.io · 1/2 tested-direct, 1 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| fToken deposit | **gap** |  | fUSDC ERC-4626 deposit. |
+| fToken deposit | tested-direct | `fork:fluid-lending:deposit` |  |
 | vault borrow | **gap** |  | Fluid vault operate(). |
 
 ### #186 Yearn
@@ -980,11 +968,20 @@ Docs: https://aerodrome.finance/docs · 2/5 tested-direct, 3 gap, 0 not testable
 
 ### #192 Mellow Core
 
-Docs: https://docs.mellow.finance · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.mellow.finance · 1/1 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| vault deposit | **gap** |  | Mellow vault deposit on Ethereum. |
+| vault deposit | tested-direct | `fork:mellow-core:deposit` |  |
+
+### #193 Fraxtal
+
+Docs: https://docs.frax.com/fraxtal · 1/2 tested-direct, 0 gap, 1 not testable
+
+| Feature | Status | Scripts | Note |
+| --- | --- | --- | --- |
+| L1 ERC-20 deposit (canonical bridge) | tested-direct | `fork:fraxtal:deposit-erc20` |  |
+| L1 ETH deposit | not-testable |  | Custom gas token chain: depositETH reverts and the bridge holds no ETH. |
 
 ### #195 USD AI
 
@@ -1005,13 +1002,22 @@ Docs: https://docs.gmx.io · 1/3 tested-direct, 0 gap, 2 not testable
 | open/close position | not-testable |  | Two-step: keeper executes the order with signed oracle prices. |
 | GM deposit | not-testable |  | Keeper-executed deposit with signed prices. |
 
+### #198 Grove Finance
+
+Docs: https://docs.grove.finance · 1/2 tested-direct, 0 gap, 1 not testable
+
+| Feature | Status | Scripts | Note |
+| --- | --- | --- | --- |
+| vault deposit (Grove x Steakhouse USDC) | tested-direct | `fork:grove:deposit` |  |
+| allocator doCall / controller actions | not-testable |  | RELAYER/CONTROLLER-only; no permissionless entry point. |
+
 ### #200 SoSoValue Indexes
 
 Docs: https://sosovalue.com · 0/1 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| mint index | not-testable |  | Mint through the issuer (custodial basket). |
+| mint index | not-testable |  | Base-only deployment (the row's Ethereum TVL is the ETH leg inside the Base baskets) and the mint is KYB-WLP gated: AssetToken.mint is ISSUER_ROLE, addMintRequest rejects non-participants. Verified 2026-11-03. |
 
 ### Across
 
@@ -1032,11 +1038,11 @@ Docs: https://wintermute.com · 0/1 tested-direct, 0 gap, 1 not testable
 
 ### Axelar
 
-Docs: https://docs.axelar.dev · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.axelar.dev · 1/1 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| callContract / sendToken | **gap** |  | Gateway.sendToken / ITS interchainTransfer on Ethereum. |
+| callContract / sendToken | tested-direct | `fork:axelar:send-message` |  |
 
 ### Balancer
 
@@ -1122,11 +1128,11 @@ Docs: https://kelp.gitbook.io · 2/2 tested-direct, 0 gap, 0 not testable
 
 ### Lyra / Derive
 
-Docs: https://docs.derive.xyz · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.derive.xyz · 1/1 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| deposit | **gap** |  | Socket bridge deposit to Derive chain. |
+| deposit | tested-direct | `fork:derive-v3:deposit` |  |
 
 ### Ondo
 

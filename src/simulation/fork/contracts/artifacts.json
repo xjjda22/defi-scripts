@@ -1,5 +1,5 @@
 {
- "_note": "Compiled with solc 0.8.24 (forge build, default optimizer settings) from FlashReceivers.sol and MockPrice.sol in this folder.",
+ "_note": "Compiled with solc 0.8.24 via `npm run build:contracts` (forge build --use 0.8.24, optimizer off) from FlashReceivers.sol and MockPrice.sol in this folder.",
  "AaveFlashReceiver": {
   "abi": [
    {

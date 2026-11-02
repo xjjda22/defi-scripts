@@ -156,6 +156,9 @@ const { anvilBin, anvilMissing, printAnvilHelp } = require("./lib/anvil");
 
 const TEST_TIMEOUT_MS = parseInt(process.env.FORK_TEST_TIMEOUT_MS || "180000", 10);
 
+// Chains whose upstream prunes state faster than a chain-wide run takes.
+const RESTART_CHAINS = new Set((process.env.FORK_RESTART_CHAINS || "bsc").split(",").map(c => c.trim()).filter(Boolean));
+
 /**
  * Run one npm fork script in its own process group with a hard deadline.
  * spawnSync's timeout only kills npm; the node grandchild keeps the pipes open and
@@ -229,6 +232,44 @@ function runScript(script, chain, forkUrl) {
   });
 }
 
+/** Minimal JSON-RPC call, so the suite can snapshot and rewind the anvil between tests. */
+async function rpc(url, method, params = []) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+  });
+  const body = await res.json();
+  if (body.error) throw new Error(body.error.message || `${method} failed`);
+  return body.result;
+}
+
+/**
+ * Each test used to run against whatever the previous one left behind: Theo's 5-day
+ * lockup warp, an oracle replaced with MockPrice, a whale drained by an earlier test.
+ * That leaks forward and makes unrelated tests flaky (see CHANGELOG 2026-11-02).
+ * Snapshot before, revert after, so every test starts from the same fork block.
+ */
+async function isolate(url, fn) {
+  let snapshot = null;
+  try {
+    snapshot = await rpc(url, "evm_snapshot");
+  } catch (error) {
+    console.warn(`\n  (snapshot unavailable: ${error.message}; running without isolation)`);
+  }
+  try {
+    return await fn();
+  } finally {
+    if (snapshot != null) {
+      try {
+        await rpc(url, "evm_revert", [snapshot]);
+      } catch (error) {
+        console.warn(`\n  (evm_revert failed: ${error.message})`);
+      }
+    }
+  }
+}
+
 async function main() {
   const only = new Set(
     (process.env.FORK_ONLY || "")
@@ -272,6 +313,7 @@ async function main() {
     }
 
     let started = null;
+    let selectedCandidate = null;
     let forkUrl = "";
     let block = "-";
     let reason = "";
@@ -282,6 +324,7 @@ async function main() {
       try {
         block = String(await waitForRpc(attemptUrl, ANVIL_READY_MS));
         started = attempt;
+        selectedCandidate = candidate;
         forkUrl = attemptUrl;
         console.log(`\nAnvil ${chain} at ${forkUrl} block ${block} (upstream ${hostOf(candidate)})`);
         break;
@@ -309,15 +352,31 @@ async function main() {
     }
 
     for (const plan of mine) {
+      // BSC's default upstream (bsc-dataseed) keeps only ~128 blocks of state, about 96 s, so a
+      // chain's later tests read pruned state and fail with "could not coalesce error" even
+      // though they pass on a fresh fork. Restart Anvil per test on those chains.
+      if (RESTART_CHAINS.has(chain) && selectedCandidate) {
+        stopAnvil(started.proc);
+        await sleep(400);
+        started = startAnvil(selectedCandidate, port, forkBlock);
+        forkUrl = `http://127.0.0.1:${port}`;
+        port += 1;
+        try {
+          block = String(await waitForRpc(forkUrl, ANVIL_READY_MS));
+        } catch (error) {
+          console.log(`\n  (restart failed: ${error.message}; keeping the previous fork)`);
+        }
+      }
       process.stdout.write(`→ ${plan.script} `);
-      let result = await runScript(plan.script, chain, forkUrl);
+      const run = () => (process.env.FORK_ISOLATE === "0" ? runScript(plan.script, chain, forkUrl) : isolate(forkUrl, () => runScript(plan.script, chain, forkUrl)));
+      let result = await run();
       const retry =
         result.status === "FAIL" &&
         process.env.FORK_RETRY !== "0" &&
         (RETRY_ONCE.has(plan.script) || TRANSIENT.test(`${result.key} ${result.tail}`));
       if (retry) {
         process.stdout.write(`FAIL (retrying once) `);
-        const again = await runScript(plan.script, chain, forkUrl);
+        const again = await run();
         again.retried = true;
         if (again.status === "PASS") again.key = `${again.key} (passed on retry)`.trim();
         result = again;

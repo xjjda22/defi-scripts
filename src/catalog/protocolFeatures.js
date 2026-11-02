@@ -26,8 +26,6 @@ const l = (script, why) => ({ kind: "linked", scripts: [script], note: why });
 const g = note => ({ kind: "gap", note });
 const n = reason => ({ kind: "not-testable", note: reason });
 
-const DECISION_HL = "Recorded decision: Hyperliquid Bridge perps fork coverage closed.";
-const DECISION_TC = "Recorded decision: Tornado Cash is skipped.";
 const OFFCHAIN_FILL = "Filled by off-chain solvers/relayers; the destination leg never lands on a single-chain fork.";
 const KYC = "Permissioned: KYC/whitelist gate on mint and redeem.";
 const NOT_EVM = "Settles on a non-EVM chain that Anvil cannot fork.";
@@ -72,7 +70,8 @@ const P = [
     "withdraw request (BoringOnChainQueue)": t("fork:veda:request"),
   } },
   { key: "hyperliquid-bridge", name: "Hyperliquid Bridge", docs: "https://hyperliquid.gitbook.io", features: {
-    "bridge deposit": n(DECISION_HL), "bridge withdraw": n(DECISION_HL),
+    "bridge deposit": t("fork:hyperliquid-bridge:deposit"),
+    "bridge withdraw": n("Withdrawals are validated on HyperCore and released by the L1 validators; only the Arbitrum escrow leg is forkable."),
   } },
   { key: "ccip", name: "CCIP", docs: "https://docs.chain.link/ccip", features: {
     "ccipSend (token/message)": t("fork:ccip:send"), "getFee quote": t("fork:ccip:send"),
@@ -95,8 +94,15 @@ const P = [
   { key: "rockawayx", name: "RockawayX", docs: "https://docs.morpho.org", features: {
     "vault deposit": t("fork:rockawayx:deposit"), "vault withdraw/redeem": t("fork:rockawayx:deposit"),
   } },
-  { key: "tornado-cash", name: "Tornado Cash", docs: "https://docs.tornado.ws", features: { "deposit / withdraw": n(DECISION_TC) } },
+  { key: "tornado-cash", name: "Tornado Cash", docs: "https://docs.tornado.ws", features: {
+    "deposit": t("fork:tornado-cash:deposit"),
+    "withdraw": n("Needs the secret/nullifier preimage behind the commitment; the deposit test discards it by design."),
+  } },
   { key: "plume-vaults", name: "Plume Vaults", docs: "https://docs.plume.org", features: { "vault deposit": n("Compliance-gated (allowlist).") } },
+  { key: "grove-finance", name: "Grove Finance", docs: "https://docs.grove.finance", features: {
+    "vault deposit (Grove x Steakhouse USDC)": t("fork:grove:deposit"),
+    "allocator doCall / controller actions": n("RELAYER/CONTROLLER-only; no permissionless entry point."),
+  } },
   { key: "nonce-capital", name: "Nonce Capital", docs: "https://docs.veda.tech", features: {
     "vault deposit": l("fork:veda:deposit", "Curator of ether.fi Liquid vaults; uses the Veda Teller."),
   } },
@@ -228,7 +234,7 @@ const P = [
     "vault deposit": t("fork:kpk:deposit"), "withdraw/redeem": t("fork:kpk:deposit"),
   } },
   // ---- 101-200 -----------------------------------------------------------------------
-  { key: "obol", name: "Obol", docs: "https://docs.obol.org", features: { "create DV cluster": n("Distributed validator setup needs validator keys and the beacon chain.") } },
+  { key: "obol", name: "Obol", docs: "https://docs.obol.org", features: { "stake OBOL for stOBOL": t("fork:obol:stake"), "create DV cluster": n("Distributed validator setup needs validator keys and the beacon chain.") } },
   { key: "arbitrum-bridge", name: "Arbitrum Bridge", docs: "https://docs.arbitrum.io/build-decentralized-apps/token-bridging", features: {
     "L1 -> L2 deposit": t("fork:arbitrum:deposit"), "L2 -> L1 withdraw": n("Outbox proof + 7-day window on the L2 fork."),
   } },
@@ -250,7 +256,7 @@ const P = [
   { key: "meta-pool", name: "Meta Pool", docs: "https://docs.metapool.app", features: {
     "deposit ETH -> mpETH": t("fork:meta-pool:deposit"), "withdraw request": g("Withdrawal contract requestWithdraw."),
   } },
-  { key: "bedrock-unibtc", name: "Bedrock uniBTC", docs: "https://docs.bedrock.technology", features: { "mint uniBTC from WBTC": g("Vault.mint with WBTC on Ethereum.") } },
+  { key: "bedrock-unibtc", name: "Bedrock uniBTC", docs: "https://docs.bedrock.technology", features: { "mint uniBTC from WBTC": t("fork:bedrock-unibtc:mint") } },
   { key: "saturn", name: "Saturn", docs: "https://saturncredit.gitbook.io/saturn-docs", features: {
     "stake USDat": t("fork:saturn:stake"), "unstake": g("Unstake / cooldown."),
   } },
@@ -267,17 +273,17 @@ const P = [
   { key: "usdt0", name: "USDT0", docs: "https://docs.usdt0.to", features: {
     "OFT send": t("fork:usdt0:send"), "receive": n("Executed by LayerZero on the destination chain."),
   } },
-  { key: "usdd", name: "USDD", docs: "https://docs.usdd.io", features: { "PSM / mint": g("Ethereum PSM swap; main TVL on Tron (not forkable).") } },
+  { key: "usdd", name: "USDD", docs: "https://docs.usdd.io", features: { "PSM / mint": t("fork:usdd:mint") } },
   { key: "liquity", name: "Liquity", docs: "https://docs.liquity.org", features: {
     "stability pool deposit": t("fork:liquity:deposit"), "open trove": g("BorrowerOperations.openTrove."),
     "redeem": g("redeemCollateral."), "liquidate": g("liquidate after price override."),
   } },
-  { key: "avant-protocol", name: "Avant Protocol", docs: "https://docs.avantprotocol.com", features: { "stake avUSD": g("Avalanche/Ethereum staking vault.") } },
-  { key: "solv-protocol--stable-rwa", name: "Solv Protocol (Stablecoin)", docs: "https://docs.solv.finance", features: { "subscribe": g("BSC vault subscribe.") } },
+  { key: "avant-protocol", name: "Avant Protocol", docs: "https://docs.avantprotocol.com", features: { "stake avUSD": t("fork:avant:stake") } },
+  { key: "solv-protocol--stable-rwa", name: "Solv Protocol (Stablecoin)", docs: "https://docs.solv.finance", features: { "subscribe": n("BSC pools are whitelisted: SolvBTCRouter.checkPoolPermission is false and OpenFundMarket.subscribe is router-only; the one permissionless pool (SolvBTC.BNB) is the SolvBTC product. Verified 2026-11-03.") } },
   { key: "theo", name: "Theo", docs: "https://docs.theo.xyz", features: { "stake": t("fork:theo:stake"), "unstake": g("Unstake / redeem.") } },
   { key: "cian-yield-layer", name: "CIAN Yield Layer", docs: "https://docs.cian.app", features: { "vault deposit": t("fork:cian:deposit"), "withdraw request": g("requestRedeem.") } },
   { key: "polymarket", name: "Polymarket", docs: "https://docs.polymarket.com", features: {
-    "split / merge positions (CTF)": g("ConditionalTokens splitPosition on Polygon."),
+    "split / merge positions (CTF)": t("fork:polymarket:split"),
     "trade": n("CLOB orders are matched off-chain by the operator; exploited 2026-10."),
   } },
   { key: "ssv-network", name: "SSV Network", docs: "https://docs.ssv.network", features: { "register validator": n("Needs validator keyshares from the SSV operator set.") } },
@@ -294,37 +300,38 @@ const P = [
     "gauge deposit": t("fork:curve:gauge"),
   } },
   { key: "convex-finance", name: "Convex Finance", docs: "https://docs.convexfinance.com", features: { "deposit / stake": t("fork:convex:deposit"), "claim rewards": g("getReward after time warp.") } },
-  { key: "fluid-dex", name: "Fluid DEX", docs: "https://docs.fluid.instadapp.io", features: { "swap": g("FluidDexT1.swapIn on Ethereum.") } },
+  { key: "fluid-dex", name: "Fluid DEX", docs: "https://docs.fluid.instadapp.io", features: { "swap": t("fork:fluid-dex:swap") } },
   { key: "avalanche-core-bridge", name: "Avalanche Core Bridge", docs: "https://core.app/bridge", features: { "bridge": n("Intel SGX warden custody; releases signed off-chain.") } },
-  { key: "astherus--bridge-chain", name: "Aster (Bridge)", docs: "https://docs.asterdex.com", features: { "deposit": g("Aster deposit vault on BSC.") } },
-  { key: "railgun", name: "Railgun", docs: "https://docs.railgun.org", features: { "shield": g("RailgunSmartWallet.shield (needs a note commitment)."), "unshield": n("Needs a zk proof generated off-chain.") } },
-  { key: "bitfi-basis", name: "BitFi Basis", docs: "https://docs.bitfi.org", features: { "deposit": g("Basis vault deposit on BSC.") } },
+  { key: "astherus--bridge-chain", name: "Aster (Bridge)", docs: "https://docs.asterdex.com", features: { "deposit": t("fork:aster-bridge:deposit-native") } },
+  { key: "railgun", name: "Railgun", docs: "https://docs.railgun.org", features: { "shield": t("fork:railgun:shield"), "unshield": n("Needs a zk proof generated off-chain.") } },
+  { key: "bitfi-basis", name: "BitFi Basis", docs: "https://docs.bitfi.org", features: { "deposit": t("fork:bitfi-basis:deposit") } },
   { key: "benqi-staked-avax", name: "Benqi Staked Avax", docs: "https://docs.benqi.fi", features: { "stake AVAX -> sAVAX": t("fork:benqi:stake"), "request unlock": g("requestUnlock + cooldown.") } },
   { key: "pendle-v2", name: "Pendle V2", docs: "https://docs.pendle.finance", features: {
     "markets read": t("simulate:eth:pendle-markets:smoke"),
-    "mint PT/YT": g("Router mintPyFromToken."), "swap PT": g("Router swapExactTokenForPt."), "add liquidity": g("addLiquiditySingleToken."),
+    "mint PT/YT": g("Router mintPyFromToken."), "swap PT": t("fork:pendle:buy-pt"), "add liquidity": g("addLiquiditySingleToken."),
   } },
   { key: "rocket-pool", name: "Rocket Pool", docs: "https://docs.rocketpool.net", features: { "deposit ETH -> rETH": t("fork:rocketpool:deposit"), "burn rETH": t("fork:rocketpool:burn") } },
   { key: "liquid-collective", name: "Liquid Collective", docs: "https://docs.liquidcollective.io", features: { "deposit": n(KYC) } },
-  { key: "fluid-lending", name: "Fluid Lending", docs: "https://docs.fluid.instadapp.io", features: { "fToken deposit": g("fUSDC ERC-4626 deposit."), "vault borrow": g("Fluid vault operate().") } },
+  { key: "fluid-lending", name: "Fluid Lending", docs: "https://docs.fluid.instadapp.io", features: { "fToken deposit": t("fork:fluid-lending:deposit"), "vault borrow": g("Fluid vault operate().") } },
   { key: "yearn", name: "Yearn", docs: "https://docs.yearn.fi", features: { "vault deposit": t("fork:yearn:deposit"), "withdraw/redeem": t("fork:yearn:deposit") } },
   { key: "aero-protocol--dex", name: "Aero (DEX)", docs: "https://aerodrome.finance/docs", features: {
     "swap (Aerodrome)": t("fork:aerodrome:swap"), "swap (Velodrome)": t("fork:velodrome:swap"),
     "add liquidity": g("Router.addLiquidity."), "gauge stake": g("Gauge.deposit."), "lock AERO (veNFT)": g("VotingEscrow.createLock."),
   } },
-  { key: "mellow-core", name: "Mellow Core", docs: "https://docs.mellow.finance", features: { "vault deposit": g("Mellow vault deposit on Ethereum.") } },
+  { key: "mellow-core", name: "Mellow Core", docs: "https://docs.mellow.finance", features: { "vault deposit": t("fork:mellow-core:deposit") } },
   { key: "usd-ai", name: "USD AI", docs: "https://docs.usd.ai", features: { "stake USDai": t("fork:usdai:stake"), "mint USDai": g("USDai mint from USDC on Arbitrum.") } },
   { key: "gmx--perps", name: "GMX (Perps)", docs: "https://docs.gmx.io", features: {
     "market read": t("fork:gmx:read"), "open/close position": n("Two-step: keeper executes the order with signed oracle prices."),
     "GM deposit": n("Keeper-executed deposit with signed prices."),
   } },
-  { key: "sosovalue-indexes", name: "SoSoValue Indexes", docs: "https://sosovalue.com", features: { "mint index": n("Mint through the issuer (custodial basket).") } },
+  { key: "sosovalue-indexes", name: "SoSoValue Indexes", docs: "https://sosovalue.com", features: { "mint index": n("Base-only deployment (the row's Ethereum TVL is the ETH leg inside the Base baskets) and the mint is KYB-WLP gated: AssetToken.mint is ISSUER_ROLE, addMintRequest rejects non-participants. Verified 2026-11-03.") } },
   // ---- pinned rows not in the current build ------------------------------------------
   { key: "armitage-by-wintermute", name: "Armitage by Wintermute", docs: "https://wintermute.com", features: { "vault deposit": n("Permissioned institutional vault.") } },
   { key: "rysk-v12", name: "Rysk V12", docs: "https://docs.rysk.finance", features: { "options trade": g("HyperEVM/Arbitrum options; chain not configured.") } },
-  { key: "axelar", name: "Axelar", docs: "https://docs.axelar.dev", features: { "callContract / sendToken": g("Gateway.sendToken / ITS interchainTransfer on Ethereum.") } },
+  { key: "axelar", name: "Axelar", docs: "https://docs.axelar.dev", features: { "callContract / sendToken": t("fork:axelar:send-message") } },
+  { key: "fraxtal", name: "Fraxtal", docs: "https://docs.frax.com/fraxtal", features: { "L1 ERC-20 deposit (canonical bridge)": t("fork:fraxtal:deposit-erc20"), "L1 ETH deposit": n("Custom gas token chain: depositETH reverts and the bridge holds no ETH.") } },
   { key: "xdai-stake-bridge", name: "xDai Stake Bridge", docs: "https://docs.gnosischain.com", features: { "relay tokens": g("Omnibridge relayTokens on Ethereum.") } },
-  { key: "lyra", name: "Lyra / Derive", docs: "https://docs.derive.xyz", features: { "deposit": g("Socket bridge deposit to Derive chain.") } },
+  { key: "lyra", name: "Lyra / Derive", docs: "https://docs.derive.xyz", features: { "deposit": t("fork:derive-v3:deposit") } },
   { key: "benqi-lending", name: "Benqi Lending", docs: "https://docs.benqi.fi", features: { "supply": t("fork:benqi:supply"), "borrow": g("qiToken.borrow on Avalanche."), "redeem": g("redeemUnderlying.") } },
   // ---- catalog protocols with fork tests, outside the current top 200 -----------------
   { key: "catalog:sushiswap", name: "SushiSwap", docs: "https://docs.sushi.com", features: { "swap V2": t("fork:sushiswap:v2"), "swap V3": t("fork:sushiswap:v3"), "add liquidity": g("Router addLiquidity.") } },
