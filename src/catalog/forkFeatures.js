@@ -239,7 +239,27 @@ const FEATURES = [
     assertion: "base balance or borrow balance increases",
     params: amount("100", "USDC"),
     group: "compound",
+  },  {
+    script: "fork:compound:repay",
+    section: "actions",
+    chain: "ethereum",
+    title: "Repay a Compound III borrow",
+    action: "WETH collateral, borrow USDC, `supply(USDC)` half the debt",
+    assertion: "borrowBalanceOf falls by the USDC spent and stays above 0",
+    params: amount("100", "USDC"),
+    group: "compound",
   },
+  {
+    script: "fork:compound:withdraw",
+    section: "actions",
+    chain: "ethereum",
+    title: "Withdraw supplied USDC from Compound III",
+    action: "Supply USDC, `withdraw(USDC)` half",
+    assertion: "wallet USDC rises by exactly the amount, base balance falls, no debt opened",
+    params: amount("1000", "USDC"),
+    group: "compound",
+  },
+
   {
     script: "fork:morpho:supply",
     section: "actions",
@@ -266,7 +286,27 @@ const FEATURES = [
       { env: "MORPHO_MARKET_ID", label: "Market id", default: "", unit: "" },
     ],
     group: "morpho",
+  },  {
+    script: "fork:morpho:repay",
+    section: "actions",
+    chain: "ethereum",
+    title: "Repay and withdraw collateral on Morpho Blue",
+    action: "Open a WETH/USDC borrow, `repay` half, `withdrawCollateral` 10%",
+    assertion: "borrow shares fall, collateral and wallet WETH move by exactly the withdrawn amount",
+    params: amount("100", "USDC"),
+    group: "morpho",
   },
+  {
+    script: "fork:morpho:withdraw",
+    section: "actions",
+    chain: "ethereum",
+    title: "Withdraw supplied USDC from Morpho Blue",
+    action: "Supply USDC, `withdraw` half as the lender",
+    assertion: "wallet USDC rises by exactly the amount and supply shares fall",
+    params: amount("1000", "USDC"),
+    group: "morpho",
+  },
+
   {
     script: "fork:llamalend:deposit",
     section: "actions",
@@ -371,7 +411,27 @@ const FEATURES = [
     assertion: "stETH, then wstETH, increases",
     params: [{ env: "LIDO_SUBMIT_WEI", label: "Amount (wei)", default: "", unit: "wei" }],
     group: "lido",
+  },  {
+    script: "fork:lido:request",
+    section: "actions",
+    chain: "ethereum",
+    title: "Request a stETH withdrawal",
+    action: "`submit`, then WithdrawalQueueERC721 `requestWithdrawals`",
+    assertion: "one unstETH NFT minted to the user for the stETH amount; request not finalized; pause is a FAIL",
+    params: amount("0.1", "ETH"),
+    group: "lido",
+  },  {
+    script: "fork:lido:unwrap",
+    section: "actions",
+    chain: "ethereum",
+    title: "Unwrap wstETH → stETH",
+    action: "`submit`, `wrap`, then `unwrap` the full wstETH balance",
+    assertion: "wstETH goes to 0 and stETH rises by getStETHByWstETH (±2 wei)",
+    params: amount("0.1", "ETH"),
+    group: "lido",
   },
+
+
   {
     script: "fork:rocketpool:deposit",
     section: "actions",
@@ -753,7 +813,14 @@ const FEATURES = [
     title: "Start the sUSDe cooldown",
     assertion: "Start the sUSDe cooldown. Completing the unstake waits out `cooldownDuration`",
     gated: true,
+  },  {
+    script: "fork:ethena:unstake",
+    section: "stables",
+    chain: "ethereum",
+    title: "Unstake sUSDe after the cooldown",
+    assertion: "Stake, `cooldownShares`, advance the fork by `cooldownDuration`, `unstake`: wallet USDe rises by exactly the cooled amount and the cooldown clears",
   },
+
   {
     script: "fork:circle:transfer",
     section: "stables",

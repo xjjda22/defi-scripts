@@ -63,7 +63,11 @@ The tables below, and the "Test it" panel on each protocol page, are both genera
 | `fork:aave:supply` / `:borrow` / `:repay` / `:withdraw` | Ethereum | Aave V3 pool from `chains.js` | aToken, debt, or wallet balance moves the right way |
 | `fork:spark:supply` / `:borrow` / `:repay` / `:withdraw` | Ethereum | Same four actions on the SparkLend pool | Spark is an Aave V3 fork |
 | `fork:compound:supply` / `:borrow` | Ethereum | Compound III cUSDCv3 | base balance or borrow balance increases |
+| `fork:compound:repay` | Ethereum | WETH collateral, borrow USDC, `supply(USDC)` half the debt | borrowBalanceOf falls by the USDC spent and stays above 0 |
+| `fork:compound:withdraw` | Ethereum | Supply USDC, `withdraw(USDC)` half | wallet USDC rises by exactly the amount, base balance falls, no debt opened |
 | `fork:morpho:supply` / `:borrow` | Ethereum | One listed WETH/USDC Morpho Blue market | supply shares or borrow shares increase |
+| `fork:morpho:repay` | Ethereum | Open a WETH/USDC borrow, `repay` half, `withdrawCollateral` 10% | borrow shares fall, collateral and wallet WETH move by exactly the withdrawn amount |
+| `fork:morpho:withdraw` | Ethereum | Supply USDC, `withdraw` half as the lender | wallet USDC rises by exactly the amount and supply shares fall |
 | `fork:llamalend:deposit` | Ethereum | crvUSD into the Llamalend V1 wstETH-long vault (`OneWayLendingFactory.vaults(13)`, ERC-4626), then redeem | the factory still lists the vault, the deposit pulled the full amount, shares were minted, the redeem burned every share and crvUSD came back within rounding |
 | `fork:dolomite:supply` | Ethereum | `DepositWithdrawalRouter.depositWei` into account 0, then `withdrawWei` of the full balance with `BalanceCheckFlag.From` | the deposit pulled the full amount, `DolomiteMargin.getAccountWei` rose by it, the withdraw left the account at 0 and the USDC came back |
 | `fork:cooler:borrow` | Ethereum | MonoCooler `addCollateral` (gOHM), `borrow` USDS, `repay(type(uint128).max)`, then `withdrawCollateral(type(uint128).max)`. Pre-checks: the documented gOHM / USDS tokens, `borrowsPaused()` false, and the borrow sits between `minDebtRequired()` and the origination LTV | `accountCollateral` and the wallet move by exactly the gOHM posted, the wallet receives exactly the USDS borrowed and `accountDebt` equals it, the full repay leaves `accountDebt` at 0 (paying the borrow plus per-second interest), and every gOHM comes back |
@@ -73,6 +77,8 @@ The tables below, and the "Test it" panel on each protocol page, are both genera
 | `fork:venus:supply` | Bsc | `vUSDC.mint` then `redeem` on the BSC Core Pool | the mint pulled the full USDC, vUSDC shares were minted, the redeem burned every share and USDC came back within rounding |
 | `fork:lista-dao:deposit` | Bsc | USDT into the Lista MoolahVault (USDT) (ERC-4626), then redeem | the deposit pulled the full amount, shares were minted, the redeem burned every share and USDT came back within rounding |
 | `fork:lido:submit` / `:wrap` | Ethereum | `submit` then optional `wrap` | stETH, then wstETH, increases |
+| `fork:lido:request` | Ethereum | `submit`, then WithdrawalQueueERC721 `requestWithdrawals` | one unstETH NFT minted to the user for the stETH amount; request not finalized; pause is a FAIL |
+| `fork:lido:unwrap` | Ethereum | `submit`, `wrap`, then `unwrap` the full wstETH balance | wstETH goes to 0 and stETH rises by getStETHByWstETH (±2 wei) |
 | `fork:rocketpool:deposit` | Ethereum | `deposit()` on the Rocket deposit pool | rETH increases, or skip when the cap is too small |
 | `fork:cbeth:rate` | Ethereum | `exchangeRate()` | rate above 1. No public mint |
 | `fork:etherfi:deposit` / `:wrap` | Ethereum | deposit ETH, wrap eETH | eETH, then weETH, increases |
@@ -157,6 +163,7 @@ Same rules: pinned block via `FORK_BLOCK`, whale impersonation or `anvil_deal`, 
 | `fork:ethena:stake` | USDe→sUSDe. Mint is whitelisted and is not called |
 | `fork:usdai:stake` | USDai→sUSDai via ERC-4626 deposit. Protocol mint of USDai is whitelisted and is not called. Redeem is a 30-day queue, so this does not redeem |
 | `fork:ethena:cooldown` | Start the sUSDe cooldown. Completing the unstake waits out `cooldownDuration` |
+| `fork:ethena:unstake` | Stake, `cooldownShares`, advance the fork by `cooldownDuration`, `unstake`: wallet USDe rises by exactly the cooled amount and the cooldown clears |
 | `fork:circle:transfer` / `fork:tether:transfer` | Transfer only. Mint and redeem are off-chain or KYC'd. The panel says **Transfer / read-only** |
 | `fork:frax:rate` | `sfrxUSD.convertToAssets`. Ethereum `maxDeposit` is 0, so there is no local deposit. The panel says **Read-only** (not KYC; there is just no Ethereum deposit path) |
 | `fork:buidl:read` | BUIDL `totalSupply`. **KYC-gated: read-only** |

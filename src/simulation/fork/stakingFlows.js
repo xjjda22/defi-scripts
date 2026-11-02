@@ -7,7 +7,7 @@ const { ethers } = require("ethers");
 const { COMMON_TOKENS } = require("../../config/chains");
 const { getProvider } = require("../../utils/web3");
 const { impersonateAccount } = require("../../utils/impersonate");
-const { ROCKET_DEPOSIT_POOL, CBETH, ETHERFI, KELP, RENZO } = require("../../catalog/contracts");
+const { LIDO_WITHDRAWAL_QUEUE, ROCKET_DEPOSIT_POOL, CBETH, ETHERFI, KELP, RENZO } = require("../../catalog/contracts");
 const { requireFork, formatUnits, finish, unavailable } = require("./runtime");
 
 const STETH_ABI = [
@@ -64,6 +64,8 @@ async function run() {
   try {
     if (protocol === "lido" && action === "submit") return await lidoSubmit(base);
     if (protocol === "lido" && action === "wrap") return await lidoWrap(base);
+    if (protocol === "lido" && action === "request") return await lidoRequest(base);
+    if (protocol === "lido" && action === "unwrap") return await lidoUnwrap(base);
     if (protocol === "rocketpool") return await rocketDeposit(base);
     if (protocol === "cbeth") return await cbethRate(base);
     if (protocol === "etherfi" && action === "deposit") return await etherfiDeposit(base);
@@ -118,6 +120,84 @@ async function lidoWrap(base) {
     key: `wstETH=${formatUnits(before, 18)}->${formatUnits(after, 18)}`,
     detail: `wrapped ${formatUnits(stBal, 18)} stETH\nwstETH ${formatUnits(before, 18)} -> ${formatUnits(after, 18)}\ntx ${receipt.hash}`,
     error: ok ? null : "wstETH balance did not increase",
+  });
+}
+
+/** Submit, wrap to wstETH, unwrap all of it back to stETH. */
+async function lidoUnwrap(base) {
+  const value = ethers.parseEther(process.env.FORK_AMOUNT || "0.1");
+  const stAddr = COMMON_TOKENS.stETH.ethereum;
+  const wstAddr = COMMON_TOKENS.wstETH.ethereum;
+  const signer = await fundedSigner(base.chain);
+  const user = await signer.getAddress();
+  const steth = new ethers.Contract(stAddr, [...STETH_ABI, "function approve(address,uint256) returns (bool)"], signer);
+  const wst = new ethers.Contract(wstAddr, [...WSTETH_ABI, "function unwrap(uint256) returns (uint256)", "function getStETHByWstETH(uint256) view returns (uint256)"], signer);
+  await (await steth.submit(ethers.ZeroAddress, { value })).wait();
+  const stBal = await steth.balanceOf(user);
+  await (await steth.approve(wstAddr, stBal)).wait();
+  await (await wst.wrap(stBal)).wait();
+  const wstBal = await wst.balanceOf(user);
+  const expected = await wst.getStETHByWstETH(wstBal);
+  const stMid = await steth.balanceOf(user);
+  const tx = await wst.unwrap(wstBal);
+  const receipt = await tx.wait();
+  const stAfter = await steth.balanceOf(user);
+  const wstAfter = await wst.balanceOf(user);
+  const got = stAfter - stMid;
+  const diff = got > expected ? got - expected : expected - got;
+  const ok = wstBal > 0n && wstAfter === 0n && diff <= 2n && got > 0n;
+  return finish({
+    ...base,
+    ok,
+    key: `wstETH=${formatUnits(wstBal, 18)}->${formatUnits(wstAfter, 18)} stETH+${formatUnits(got, 18)}`,
+    detail: `unwrapped ${formatUnits(wstBal, 18)} wstETH -> ${formatUnits(got, 18)} stETH (expected ${formatUnits(expected, 18)})\ntx ${receipt.hash}`,
+    error: ok ? null : "unwrap did not burn wstETH for the expected stETH",
+  });
+}
+
+/** Submit ETH, then queue the stETH for withdrawal: one unstETH NFT for the full amount. */
+async function lidoRequest(base) {
+  const value = ethers.parseEther(process.env.FORK_AMOUNT || "0.1");
+  const stAddr = COMMON_TOKENS.stETH.ethereum;
+  const signer = await fundedSigner(base.chain);
+  const user = await signer.getAddress();
+  const steth = new ethers.Contract(stAddr, [...STETH_ABI, "function approve(address,uint256) returns (bool)"], signer);
+  const queue = new ethers.Contract(
+    LIDO_WITHDRAWAL_QUEUE,
+    [
+      "function isPaused() view returns (bool)",
+      "function requestWithdrawals(uint256[] amounts, address owner) returns (uint256[] requestIds)",
+      "function getWithdrawalRequests(address owner) view returns (uint256[])",
+      "function getWithdrawalStatus(uint256[] ids) view returns (tuple(uint256 amountOfStETH, uint256 amountOfShares, address owner, uint256 timestamp, bool isFinalized, bool isClaimed)[])",
+      "function balanceOf(address) view returns (uint256)",
+    ],
+    signer
+  );
+  if (await queue.isPaused()) return finish({ ...base, ok: false, key: "paused=true", error: "Lido WithdrawalQueue is paused; no tx sent" });
+  await (await steth.submit(ethers.ZeroAddress, { value })).wait();
+  const stBal = await steth.balanceOf(user);
+  const nftBefore = await queue.balanceOf(user);
+  await (await steth.approve(LIDO_WITHDRAWAL_QUEUE, stBal)).wait();
+  const tx = await queue.requestWithdrawals([stBal], user);
+  const receipt = await tx.wait();
+  const ids = await queue.getWithdrawalRequests(user);
+  const nftAfter = await queue.balanceOf(user);
+  const stAfter = await steth.balanceOf(user);
+  const [status] = ids.length ? await queue.getWithdrawalStatus([ids[ids.length - 1]]) : [null];
+  const ok =
+    nftAfter === nftBefore + 1n &&
+    status &&
+    status.owner.toLowerCase() === user.toLowerCase() &&
+    status.amountOfStETH > 0n &&
+    stBal - status.amountOfStETH <= 2n &&
+    !status.isFinalized &&
+    stAfter <= 2n;
+  return finish({
+    ...base,
+    ok: Boolean(ok),
+    key: `unstETH=${nftBefore}->${nftAfter} requested=${status ? formatUnits(status.amountOfStETH, 18) : "-"} stETH`,
+    detail: `requestId ${ids.length ? ids[ids.length - 1] : "-"} for ${formatUnits(stBal, 18)} stETH (finalization and claim wait for the oracle report)\ntx ${receipt.hash}`,
+    error: ok ? null : "withdrawal request NFT not minted for the stETH amount",
   });
 }
 

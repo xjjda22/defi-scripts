@@ -3,6 +3,29 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-11-02] feature x test matrix and first gap batch
+
+Fork and simulation tests are now the top priority: every protocol's every public, permissionless feature is tested locally on an Anvil fork.
+
+### Added
+
+- `src/catalog/protocolFeatures.js`: per-protocol feature list (from official docs) mapped to `fork:*` / `simulate:*` scripts, with status `direct`, `linked`, `failing-paused`, `gap` or `not-testable` (with reason). Covers all 106 pinned forkable rows plus 21 catalog protocols with fork tests.
+- `npm run coverage:features` writes `data/feature-gaps.json` and `docs/08-feature-test-gaps.md` (totals, prioritized gap list, per-protocol matrix). `coverage:features:check` runs inside `catalog:check` and fails on a pinned row with no entry, a missing script, an unmapped `fork:*` script, or stale files.
+- Totals: 284 features across 127 protocols: 136 tested-direct, 3 linked, 2 failing-paused, 92 gaps, 51 not testable.
+- New fork tests (all PASS live on an Ethereum Anvil fork, block 26327319):
+  - `fork:compound:repay`: borrow 100 USDC on cUSDCv3, repay half; debt 100.0 -> 50.000002.
+  - `fork:compound:withdraw`: supply 1000 USDC, withdraw 500; wallet +500.0, no debt.
+  - `fork:morpho:repay`: repay half a Morpho Blue WETH/USDC borrow and withdraw 0.1 WETH collateral; borrow shares halved, collateral 1.0 -> 0.9.
+  - `fork:morpho:withdraw`: supply 1000 USDC, withdraw 500 as lender.
+  - `fork:lido:request`: `requestWithdrawals` on WithdrawalQueueERC721 `0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1` (docs.lido.fi deployed contracts; `name()` "Lido: stETH Withdrawal NFT"); one unstETH NFT for 0.1 stETH.
+  - `fork:lido:unwrap`: wrap then unwrap the full wstETH balance; stETH back within 2 wei of `getStETHByWstETH`.
+  - `fork:ethena:unstake`: stake, `cooldownShares`, advance 86400 s, `unstake`; wallet USDe rises by exactly the cooled amount.
+
+### Changed
+
+- Audit found that ERC-4626 vault tests already redeem (round trip), so vault withdraw/redeem is recorded as tested for Steakhouse, Gauntlet, RockawayX, Hyperithm, KPK, Galaxy, Clearstar, Spark Vaults, Yearn, Euler, Lista DAO, Curvance, LlamaLend, Concentrator, Upshift and Fluid Lite. Sentora stays a gap: its vault has `maxDeposit=0`, so the test runs as a read.
+- `docs/07`: the playground routine now works the `docs/08` Top gaps list first.
+
 ## [2026-11-02] follow-up: devil's-advocate fixes
 
 Fixes from the 2026-11-02 top-200 audit. Squash-merged as [#50](https://github.com/xjjda22/defi-scripts/pull/50) (infra, `a3f790f`) and [#51](https://github.com/xjjda22/defi-scripts/pull/51) (coverage and data integrity, `d01b8f5`). Ranking, scores and `showcase/data.json` `generatedAt` (2026-10-29T16:54Z) are unchanged; only stamps were added.

@@ -89,6 +89,8 @@ function check(catalog) {
   } catch (e) {
     problems.push(e.message);
   }
+  // Feature x test matrix (docs/08) must cover every pinned row and every fork:* script.
+  problems.push(...require("./featureGaps").check().problems);
   if (problems.length) {
     console.error(chalk.red(`Catalog check failed (${problems.length}):`));
     for (const p of problems) console.error(chalk.red(`  - ${p}`));

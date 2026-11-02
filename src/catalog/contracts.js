@@ -345,6 +345,7 @@ function contractBook() {
 
   push(book.lido, eth, "stETH", COMMON_TOKENS.stETH.ethereum, DOCS.lido);
   push(book.lido, eth, "wstETH", COMMON_TOKENS.wstETH.ethereum, "https://docs.lido.fi/contracts/wsteth");
+  push(book.lido, eth, "WithdrawalQueueERC721", "0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1", "https://docs.lido.fi/contracts/withdrawal-queue-erc721");
   // Current proxy from RocketStorage.getAddress(keccak256("contract.addressrocketDepositPool")).
   // The integrations page still lists the previous proxy 0xDD3f50F8A6CafbE9b31a427582963f465E745AF8,
   // which reverts "Invalid or outdated contract".
@@ -836,6 +837,8 @@ module.exports = {
   SPARK_POOL: "0xC13e21B648A5Ee794902342038FF3aDAB66BE987",
   COMPOUND_CUSDC_V3: "0xc3d688B66703497DAA19211EEdff47f25384cdc3",
   MORPHO_BLUE: "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
+  // https://docs.lido.fi/deployed-contracts/ (WithdrawalQueueERC721, name() "Lido: stETH Withdrawal NFT")
+  LIDO_WITHDRAWAL_QUEUE: "0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1",
   ROCKET_DEPOSIT_POOL: "0xCE15294273CFb9D9b628F4D61636623decDF4fdC",
   CBETH: "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
   ETHERFI: {
