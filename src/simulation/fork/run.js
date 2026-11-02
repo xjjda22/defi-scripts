@@ -151,7 +151,8 @@ function armWatchdog() {
 async function main() {
   armWatchdog();
   const target = process.env.FORK_TARGET || process.env.FORK_PROTOCOL;
-  const run = TARGETS[target];
+  const extras = require("./lendingExtras");
+  const run = extras.handles(process.env.FORK_PROTOCOL || target, process.env.FORK_ACTION) ? extras.run : TARGETS[target];
   if (!run) {
     console.error(`FORK_RESULT status=FAIL protocol=${target || "-"} action=- chain=- block=-`);
     console.error(`Unknown FORK_TARGET ${target || "(unset)"}`);
