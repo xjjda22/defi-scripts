@@ -22,11 +22,13 @@ const path = require("path");
 
 const PAUSED = {
   "fork:dolomite:supply": {
+    kind: "closing",
     since: "2026-10-29",
     reason:
       "Dolomite oracle price went to zero after the 2026-10-29 Binance hot-wallet drain; since 2026-11-02 every Ethereum market (WETH, USD1, USDC, LINK) has getMarketIsClosing=true.",
   },
   "fork:swell:deposit": {
+    kind: "paused",
     since: "2026-10-21",
     reason: "Swell AccessControlManager has core methods, bot methods and withdrawals paused after the 2026-10-21 incident.",
   },

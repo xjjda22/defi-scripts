@@ -267,6 +267,11 @@ function statusBadge(testing) {
         : "";
   return `<span class="badge ${cls}"${title ? ` title="${esc(title)}"` : ""}>${esc(status === "direct" ? testing.label || STATUS_LABEL.direct : STATUS_LABEL[status])}</span>`;
 }
+function protocolStatusBadge(row) {
+  if (!row.protocolStatus) return "";
+  const title = (row.protocolStatuses || []).map(item => `${item.status}${item.since ? ` since ${item.since}` : ""}: ${item.reason}`).join(" · ");
+  return ` <span class="badge state" title="${esc(title)}">${esc(row.protocolStatus)}</span>`;
+}
 function disputedBadge(row) {
   if (!row.dataDisputed) return "";
   const title = (row.disputes || []).map(item => `${item.metric}: claim ${item.claim}, DefiLlama ${item.defillama}`).join(" · ");
@@ -276,7 +281,7 @@ function disputedBadge(row) {
 function detailHtml(row) {
   const testing = row.testing || { mode: "api-only", note: "No fork test for this protocol.", recipe: null };
   const fork = testing.mode === "fork";
-  const mode = statusBadge(testing) + disputedBadge(row);
+  const mode = statusBadge(testing) + protocolStatusBadge(row) + disputedBadge(row);
   const back = PROTOCOL_PAGE
     ? `<a class="back" href="index.html">← Back to the board</a>`
     : `<a class="back" href="#${state.tab === "overall" ? "" : `tab=${encodeURIComponent(state.tab)}`}">← Back to the board</a>`;
@@ -320,6 +325,7 @@ function detailHtml(row) {
       ${row.signals && isNum(row.signals.attention) ? `<div class="fact"><b>${Math.round(row.signals.attention * 100)}</b><span>Attention pct</span></div>` : ""}
       ${row.signals && isNum(row.signals.smartMoney) ? `<div class="fact"><b>${Math.round(row.signals.smartMoney * 100)}</b><span>Smart money pct</span></div>` : ""}
     </div>
+    ${(row.protocolStatuses || []).length ? `<p class="muted"><b>Protocol state:</b> ${(row.protocolStatuses || []).map(item => `${esc(item.status)}${item.since ? ` since ${esc(item.since)}` : ""}: ${esc(item.reason)} (${esc(item.source)})`).join("; ")}. Scores are not adjusted.</p>` : ""}
     ${row.volumeNote ? `<p class="muted"><b>Volume:</b> ${esc(row.volumeNote)}</p>` : ""}
     ${row.dataDisputed ? `<p class="muted"><b>Data disputed.</b> ${(row.disputes || []).map(item => `${esc(item.metric)}: claim ${esc(item.claim)} vs DefiLlama ${esc(item.defillama)} (${esc(item.recorded)})`).join("; ")}. The score still uses DefiLlama; see data/disputes.json.</p>` : ""}
     ${row.token ? `<p class="muted">${esc(row.token.symbol || "")} · market cap ${money(row.token.marketCap)} · 24h volume ${money(row.token.volume24h)}${isNum(row.token.turnover) ? ` · turnover ${(row.token.turnover * 100).toFixed(2)}%` : ""}</p>` : ""}
@@ -610,7 +616,7 @@ function renderTable() {
         state.tab !== "overall" && row.overallRank ? `<span class="slug">#${esc(row.overallRank)} overall</span>` : "";
       return `<tr>
         <td data-label="#">${esc(row.rank ?? "—")}</td>
-        <td data-label="Protocol"><a class="name" href="${PROTOCOL_PAGE ? `protocol.html?slug=${encodeURIComponent(row.slug || row.id)}` : `#p=${encodeURIComponent(row.slug || row.id)}`}">${esc(row.name)}</a>${disputedBadge(row)}<span class="slug">${esc(row.slug)}${link}</span>${overall}${breakdown(row)}</td>
+        <td data-label="Protocol"><a class="name" href="${PROTOCOL_PAGE ? `protocol.html?slug=${encodeURIComponent(row.slug || row.id)}` : `#p=${encodeURIComponent(row.slug || row.id)}`}">${esc(row.name)}</a>${protocolStatusBadge(row)}${disputedBadge(row)}<span class="slug">${esc(row.slug)}${link}</span>${overall}${breakdown(row)}</td>
         <td class="col-cat" data-label="Category">${esc(labelFor(row.category))}</td>
         <td class="num" data-label="TVL">${money(row.tvl)}</td>
         <td class="num" data-label="6-month TVL">${changeCell(row)}</td>
@@ -634,7 +640,9 @@ function generatedLabel(iso) {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return `Generated ${iso}`;
   const local = date.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
-  return `Data generated ${local} (your time), ${iso.slice(0, 16).replace("T", " ")} UTC.`;
+  const hours = (Date.now() - date.getTime()) / 3600000;
+  const age = hours < 48 ? `${Math.max(0, Math.round(hours))} h old` : `${(hours / 24).toFixed(1)} days old: STALE, scores may not reflect current protocol state`;
+  return `Data generated ${local} (your time), ${iso.slice(0, 16).replace("T", " ")} UTC · ${age}.`;
 }
 
 function readHash() {
@@ -759,6 +767,10 @@ async function init() {
     : "";
   $("lede").textContent = `The top ${stats.overall || 200} DeFi protocols by a six-month trend score: size, TVL growth in percent and in dollars, fees and volume momentum, ${signalText}and a small bonus for posts on the tracked X lists.`;
   $("generated").textContent = generatedLabel(state.data.generatedAt);
+  {
+    const hours = (Date.now() - new Date(state.data.generatedAt).getTime()) / 3600000;
+    $("generated").classList.toggle("stale", hours >= 48);
+  }
 
   const sourcesLine = $("sources-line");
   if (sourcesLine) {
