@@ -4,27 +4,13 @@
   "totals": {
     "protocols": 127,
     "features": 284,
-    "direct": 159,
+    "direct": 171,
     "linked": 3,
     "failingPaused": 2,
-    "gap": 68,
+    "gap": 56,
     "notTestable": 52
   },
   "gaps": [
-    {
-      "rank": 6,
-      "protocol": "Sentora Curator",
-      "key": "sentora-curator",
-      "feature": "vault withdraw/redeem",
-      "note": "maxDeposit=0 on 2026-11-02, so fork:sentora:deposit runs as a read; redeem needs shares from an open vault or a whale."
-    },
-    {
-      "rank": 7,
-      "protocol": "Veda",
-      "key": "veda",
-      "feature": "withdraw request (AtomicQueue)",
-      "note": "AtomicQueue.updateAtomicRequest; solver fill is off-chain."
-    },
     {
       "rank": 39,
       "protocol": "Defi Saver Asset Management",
@@ -33,32 +19,11 @@
       "note": "DSProxy recipe executor over Aave/Maker positions; needs the recipe encoder."
     },
     {
-      "rank": 49,
-      "protocol": "Lista Liquid Staking",
-      "key": "lista-liquid-staking",
-      "feature": "request unstake",
-      "note": "StakeManager.requestWithdraw on the BSC fork."
-    },
-    {
       "rank": 60,
       "protocol": "Lista DAO (Lending)",
       "key": "lista-dao--lending",
       "feature": "borrow",
       "note": "Lista Moolah borrow (Morpho-fork) on BSC."
-    },
-    {
-      "rank": 72,
-      "protocol": "StakeWise V3",
-      "key": "stakewise-v3",
-      "feature": "mint osETH",
-      "note": "Vault.mintOsToken against the staked position."
-    },
-    {
-      "rank": 72,
-      "protocol": "StakeWise V3",
-      "key": "stakewise-v3",
-      "feature": "exit queue",
-      "note": "enterExitQueue."
     },
     {
       "rank": 73,
@@ -124,13 +89,6 @@
       "note": "DelegationManager.delegateTo."
     },
     {
-      "rank": 112,
-      "protocol": "mETH Protocol",
-      "key": "meth-protocol",
-      "feature": "unstake request",
-      "note": "Staking.unstakeRequest."
-    },
-    {
       "rank": 116,
       "protocol": "Meta Pool",
       "key": "meta-pool",
@@ -155,29 +113,8 @@
       "rank": 123,
       "protocol": "Sky",
       "key": "maker",
-      "feature": "sUSDS withdraw",
-      "note": "ERC-4626 redeem."
-    },
-    {
-      "rank": 123,
-      "protocol": "Sky",
-      "key": "maker",
-      "feature": "PSM swap (USDC <-> USDS)",
-      "note": "LitePSM sellGem/buyGem."
-    },
-    {
-      "rank": 123,
-      "protocol": "Sky",
-      "key": "maker",
       "feature": "open vault / draw USDS",
       "note": "Sky Lockstake or ilk vault."
-    },
-    {
-      "rank": 125,
-      "protocol": "ether.fi Stake",
-      "key": "ether.fi-stake",
-      "feature": "request withdrawal",
-      "note": "LiquidityPool.requestWithdraw (WithdrawRequestNFT)."
     },
     {
       "rank": 126,
@@ -341,13 +278,6 @@
       "note": "addLiquiditySingleToken."
     },
     {
-      "rank": 176,
-      "protocol": "Rocket Pool",
-      "key": "rocket-pool",
-      "feature": "burn rETH",
-      "note": "rETH.burn against deposit pool liquidity."
-    },
-    {
       "rank": 181,
       "protocol": "Fluid Lending",
       "key": "fluid-lending",
@@ -440,24 +370,10 @@
     },
     {
       "rank": null,
-      "protocol": "Kelp DAO",
-      "key": "catalog:kelp",
-      "feature": "withdraw request",
-      "note": "LRTWithdrawalManager.initiateWithdrawal."
-    },
-    {
-      "rank": null,
       "protocol": "Lyra / Derive",
       "key": "lyra",
       "feature": "deposit",
       "note": "Socket bridge deposit to Derive chain."
-    },
-    {
-      "rank": null,
-      "protocol": "Renzo",
-      "key": "catalog:renzo",
-      "feature": "withdraw request",
-      "note": "WithdrawQueue.withdraw."
     },
     {
       "rank": null,
@@ -810,10 +726,10 @@
       "docs": "https://docs.morpho.org",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -827,9 +743,11 @@
         },
         {
           "feature": "vault withdraw/redeem",
-          "status": "gap",
-          "scripts": [],
-          "note": "maxDeposit=0 on 2026-11-02, so fork:sentora:deposit runs as a read; redeem needs shares from an open vault or a whale."
+          "status": "direct",
+          "scripts": [
+            "fork:sentora:deposit"
+          ],
+          "note": null
         }
       ]
     },
@@ -841,10 +759,10 @@
       "docs": "https://docs.veda.tech",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -857,10 +775,12 @@
           "note": null
         },
         {
-          "feature": "withdraw request (AtomicQueue)",
-          "status": "gap",
-          "scripts": [],
-          "note": "AtomicQueue.updateAtomicRequest; solver fill is off-chain."
+          "feature": "withdraw request (BoringOnChainQueue)",
+          "status": "direct",
+          "scripts": [
+            "fork:veda:request"
+          ],
+          "note": null
         }
       ]
     },
@@ -1626,10 +1546,10 @@
       "docs": "https://docs.bsc.lista.org",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -1643,9 +1563,11 @@
         },
         {
           "feature": "request unstake",
-          "status": "gap",
-          "scripts": [],
-          "note": "StakeManager.requestWithdraw on the BSC fork."
+          "status": "direct",
+          "scripts": [
+            "fork:lista:unstake"
+          ],
+          "note": null
         }
       ]
     },
@@ -2004,10 +1926,10 @@
       "docs": "https://docs.stakewise.io",
       "counts": {
         "features": 3,
-        "direct": 1,
+        "direct": 3,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 2,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -2021,15 +1943,19 @@
         },
         {
           "feature": "mint osETH",
-          "status": "gap",
-          "scripts": [],
-          "note": "Vault.mintOsToken against the staked position."
+          "status": "direct",
+          "scripts": [
+            "fork:stakewise:deposit"
+          ],
+          "note": null
         },
         {
           "feature": "exit queue",
-          "status": "gap",
-          "scripts": [],
-          "note": "enterExitQueue."
+          "status": "direct",
+          "scripts": [
+            "fork:stakewise:exit"
+          ],
+          "note": null
         }
       ]
     },
@@ -2682,10 +2608,10 @@
       "docs": "https://docs.mantle.xyz/meth",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -2699,9 +2625,11 @@
         },
         {
           "feature": "unstake request",
-          "status": "gap",
-          "scripts": [],
-          "note": "Staking.unstakeRequest."
+          "status": "direct",
+          "scripts": [
+            "fork:meth:stake"
+          ],
+          "note": null
         }
       ]
     },
@@ -2854,10 +2782,10 @@
       "docs": "https://developers.sky.money",
       "counts": {
         "features": 6,
-        "direct": 3,
+        "direct": 5,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 3,
+        "gap": 1,
         "notTestable": 0
       },
       "features": [
@@ -2887,15 +2815,19 @@
         },
         {
           "feature": "sUSDS withdraw",
-          "status": "gap",
-          "scripts": [],
-          "note": "ERC-4626 redeem."
+          "status": "direct",
+          "scripts": [
+            "fork:sky:redeem"
+          ],
+          "note": null
         },
         {
           "feature": "PSM swap (USDC <-> USDS)",
-          "status": "gap",
-          "scripts": [],
-          "note": "LitePSM sellGem/buyGem."
+          "status": "direct",
+          "scripts": [
+            "fork:sky:psm"
+          ],
+          "note": null
         },
         {
           "feature": "open vault / draw USDS",
@@ -2913,10 +2845,10 @@
       "docs": "https://etherfi.gitbook.io",
       "counts": {
         "features": 3,
-        "direct": 2,
+        "direct": 3,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -2938,9 +2870,11 @@
         },
         {
           "feature": "request withdrawal",
-          "status": "gap",
-          "scripts": [],
-          "note": "LiquidityPool.requestWithdraw (WithdrawRequestNFT)."
+          "status": "direct",
+          "scripts": [
+            "fork:etherfi:request"
+          ],
+          "note": null
         }
       ]
     },
@@ -3620,10 +3554,10 @@
       "docs": "https://docs.rocketpool.net",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -3637,9 +3571,11 @@
         },
         {
           "feature": "burn rETH",
-          "status": "gap",
-          "scripts": [],
-          "note": "rETH.burn against deposit pool liquidity."
+          "status": "direct",
+          "scripts": [
+            "fork:rocketpool:burn"
+          ],
+          "note": null
         }
       ]
     },
@@ -4236,10 +4172,10 @@
       "docs": "https://kelp.gitbook.io",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -4253,9 +4189,11 @@
         },
         {
           "feature": "withdraw request",
-          "status": "gap",
-          "scripts": [],
-          "note": "LRTWithdrawalManager.initiateWithdrawal."
+          "status": "direct",
+          "scripts": [
+            "fork:kelp:request"
+          ],
+          "note": null
         }
       ]
     },
@@ -4346,10 +4284,10 @@
       "docs": "https://docs.renzoprotocol.com",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -4363,9 +4301,11 @@
         },
         {
           "feature": "withdraw request",
-          "status": "gap",
-          "scripts": [],
-          "note": "WithdrawQueue.withdraw."
+          "status": "direct",
+          "scripts": [
+            "fork:renzo:request"
+          ],
+          "note": null
         }
       ]
     },

@@ -65,11 +65,11 @@ const P = [
     "unwrap wstETH": t("fork:lido:unwrap"),
   } },
   { key: "sentora-curator", name: "Sentora Curator", docs: "https://docs.morpho.org", features: {
-    "vault deposit": t("fork:sentora:deposit"), "vault withdraw/redeem": g("maxDeposit=0 on 2026-11-02, so fork:sentora:deposit runs as a read; redeem needs shares from an open vault or a whale."),
+    "vault deposit": t("fork:sentora:deposit"), "vault withdraw/redeem": t("fork:sentora:deposit"),
   } },
   { key: "veda", name: "Veda", docs: "https://docs.veda.tech", features: {
     "Teller deposit": t("fork:veda:deposit"),
-    "withdraw request (AtomicQueue)": g("AtomicQueue.updateAtomicRequest; solver fill is off-chain."),
+    "withdraw request (BoringOnChainQueue)": t("fork:veda:request"),
   } },
   { key: "hyperliquid-bridge", name: "Hyperliquid Bridge", docs: "https://hyperliquid.gitbook.io", features: {
     "bridge deposit": n(DECISION_HL), "bridge withdraw": n(DECISION_HL),
@@ -143,7 +143,7 @@ const P = [
     "deposit request": t("fork:aera:request"), "solver fill / withdraw": n("Filled by the Aera solver (role-gated)."),
   } },
   { key: "lista-liquid-staking", name: "Lista Liquid Staking", docs: "https://docs.bsc.lista.org", features: {
-    "stake BNB -> slisBNB": t("fork:lista:stake"), "request unstake": g("StakeManager.requestWithdraw on the BSC fork."),
+    "stake BNB -> slisBNB": t("fork:lista:stake"), "request unstake": t("fork:lista:unstake"),
   } },
   { key: "huma", name: "Huma", docs: "https://docs.huma.finance", features: { "deposit": n("Primary TVL on Solana; EVM pools are allowlisted.") } },
   // ---- 51-100 ------------------------------------------------------------------------
@@ -176,8 +176,8 @@ const P = [
   } },
   { key: "opentrade", name: "OpenTrade", docs: "https://docs.opentrade.io", features: { "subscribe / redeem": n(KYC) } },
   { key: "stakewise-v3", name: "StakeWise V3", docs: "https://docs.stakewise.io", features: {
-    "vault deposit (osETH)": t("fork:stakewise:deposit"), "mint osETH": g("Vault.mintOsToken against the staked position."),
-    "exit queue": g("enterExitQueue."),
+    "vault deposit (osETH)": t("fork:stakewise:deposit"), "mint osETH": t("fork:stakewise:deposit"),
+    "exit queue": t("fork:stakewise:exit"),
   } },
   { key: "avalon-superearn", name: "Avalon Superearn", docs: "https://docs.avalonfinance.xyz", features: { "vault deposit": g("Ethereum vault deposit; contract address not yet verified against docs.") } },
   { key: "base-bridge", name: "Base Bridge", docs: "https://docs.base.org/chain/bridges", features: {
@@ -241,7 +241,7 @@ const P = [
     "delegate to operator": g("DelegationManager.delegateTo."),
   } },
   { key: "meth-protocol", name: "mETH Protocol", docs: "https://docs.mantle.xyz/meth", features: {
-    "stake ETH -> mETH": t("fork:meth:stake"), "unstake request": g("Staking.unstakeRequest."),
+    "stake ETH -> mETH": t("fork:meth:stake"), "unstake request": t("fork:meth:stake"),
   } },
   { key: "rsk-bridge", name: "RSK Bridge", docs: "https://dev.rootstock.io", features: { "peg in / out": n(NOT_EVM + " (Bitcoin leg).") } },
   { key: "spark--vaults", name: "Spark (Vaults)", docs: "https://docs.spark.fi", features: {
@@ -256,12 +256,12 @@ const P = [
   } },
   { key: "maker", name: "Sky", docs: "https://developers.sky.money", features: {
     "DAI <-> USDS convert": t("fork:sky:convert"), "sUSDS deposit": t("fork:sky:susds"), "sDAI deposit": t("fork:sky:sdai"),
-    "sUSDS withdraw": g("ERC-4626 redeem."), "PSM swap (USDC <-> USDS)": g("LitePSM sellGem/buyGem."),
+    "sUSDS withdraw": t("fork:sky:redeem"), "PSM swap (USDC <-> USDS)": t("fork:sky:psm"),
     "open vault / draw USDS": g("Sky Lockstake or ilk vault."),
   } },
   { key: "ether.fi-stake", name: "ether.fi Stake", docs: "https://etherfi.gitbook.io", features: {
     "deposit ETH -> eETH": t("fork:etherfi:deposit"), "wrap eETH -> weETH": t("fork:etherfi:wrap"),
-    "request withdrawal": g("LiquidityPool.requestWithdraw (WithdrawRequestNFT)."),
+    "request withdrawal": t("fork:etherfi:request"),
   } },
   { key: "lagoon", name: "Lagoon", docs: "https://docs.lagoon.finance", features: { "ERC-7540 deposit request": g("requestDeposit on a Lagoon vault.") } },
   { key: "usdt0", name: "USDT0", docs: "https://docs.usdt0.to", features: {
@@ -304,7 +304,7 @@ const P = [
     "markets read": t("simulate:eth:pendle-markets:smoke"),
     "mint PT/YT": g("Router mintPyFromToken."), "swap PT": g("Router swapExactTokenForPt."), "add liquidity": g("addLiquiditySingleToken."),
   } },
-  { key: "rocket-pool", name: "Rocket Pool", docs: "https://docs.rocketpool.net", features: { "deposit ETH -> rETH": t("fork:rocketpool:deposit"), "burn rETH": g("rETH.burn against deposit pool liquidity.") } },
+  { key: "rocket-pool", name: "Rocket Pool", docs: "https://docs.rocketpool.net", features: { "deposit ETH -> rETH": t("fork:rocketpool:deposit"), "burn rETH": t("fork:rocketpool:burn") } },
   { key: "liquid-collective", name: "Liquid Collective", docs: "https://docs.liquidcollective.io", features: { "deposit": n(KYC) } },
   { key: "fluid-lending", name: "Fluid Lending", docs: "https://docs.fluid.instadapp.io", features: { "fToken deposit": g("fUSDC ERC-4626 deposit."), "vault borrow": g("Fluid vault operate().") } },
   { key: "yearn", name: "Yearn", docs: "https://docs.yearn.fi", features: { "vault deposit": t("fork:yearn:deposit"), "withdraw/redeem": t("fork:yearn:deposit") } },
@@ -330,8 +330,8 @@ const P = [
   { key: "catalog:sushiswap", name: "SushiSwap", docs: "https://docs.sushi.com", features: { "swap V2": t("fork:sushiswap:v2"), "swap V3": t("fork:sushiswap:v3"), "add liquidity": g("Router addLiquidity.") } },
   { key: "catalog:balancer", name: "Balancer", docs: "https://docs.balancer.fi", features: { "swap": t("fork:balancer:swap"), "join pool": g("Vault.joinPool / V3 addLiquidity.") } },
   { key: "catalog:monad-v3", name: "Uniswap V3 on Monad", docs: "https://docs.uniswap.org", features: { "swap": t("fork:monad:v3") } },
-  { key: "catalog:kelp", name: "Kelp DAO", docs: "https://kelp.gitbook.io", features: { "deposit ETH -> rsETH": t("fork:kelp:deposit"), "withdraw request": g("LRTWithdrawalManager.initiateWithdrawal.") } },
-  { key: "catalog:renzo", name: "Renzo", docs: "https://docs.renzoprotocol.com", features: { "deposit ETH -> ezETH": t("fork:renzo:deposit"), "withdraw request": g("WithdrawQueue.withdraw.") } },
+  { key: "catalog:kelp", name: "Kelp DAO", docs: "https://kelp.gitbook.io", features: { "deposit ETH -> rsETH": t("fork:kelp:deposit"), "withdraw request": t("fork:kelp:request") } },
+  { key: "catalog:renzo", name: "Renzo", docs: "https://docs.renzoprotocol.com", features: { "deposit ETH -> ezETH": t("fork:renzo:deposit"), "withdraw request": t("fork:renzo:request") } },
   { key: "catalog:symbiotic", name: "Symbiotic", docs: "https://docs.symbiotic.fi", features: { "vault read": t("fork:symbiotic:read"), "vault deposit": g("Vault.deposit.") } },
   { key: "catalog:swell", name: "Swell", docs: "https://docs.swellnetwork.io", features: { "deposit ETH -> swETH": t("fork:swell:deposit") } },
   { key: "catalog:puffer", name: "Puffer", docs: "https://docs.puffer.fi", features: { "deposit ETH -> pufETH": t("fork:puffer:deposit") } },
