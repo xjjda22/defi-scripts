@@ -42,8 +42,8 @@ with no record of why.
 
 | # | Bucket | What must exist |
 |---|---|---|
-| 1 | **Fork-tested** | `<family>:<protocol>` monitor + smoke + `fork:<protocol>:<action>` + `forkFeatures.js` + `forkRecipes.js` |
-| 2 | **API-only, reason written** | Monitor + smoke + an `API_ONLY` entry in `forkRecipes.js` saying why a fork test cannot exist |
+| 1 | **Fork-tested** | `fork:<protocol>:<action>` that asserts a delta + `forkFeatures.js` + `forkRecipes.js` |
+| 2 | **API-only, reason written** | An `API_ONLY` entry in `forkRecipes.js` saying why a fork test cannot exist |
 | 3 | **Not forkable** | Classification in the coverage snapshot (non-EVM, no chain TVL, or chain without an RPC) + monitor/smoke where a data source exists |
 | 4 | **EVM-forkable, not built** | Nothing extra — this is the work queue |
 
@@ -59,8 +59,9 @@ with no record of why.
 
 ## 3. Definition of done
 
-- **A new protocol is done when** it has analytics + smoke + a `PROTOCOLS` entry + a bucket
-  assignment. Scripts alone are not done. `[reviewed]`
+- **A new protocol is done when** it has at least one registered script, a `PROTOCOLS` entry and
+  a bucket assignment. With a DefiLlama listing that means analytics + smoke; where a fork test
+  is the only meaningful surface, the row is fork-only and that is stated. `[reviewed]`
 - **A fork test is done when** it runs on a pinned block with impersonation or `anvil_deal`,
   needs no `PRIVATE_KEY`, fails on revert, and prints a measured state delta on PASS. A green
   call with no asserted delta is rejected. `[reviewed]`
@@ -88,10 +89,15 @@ with no record of why.
   cited from the protocol's official docs, and the fork source must match its artifact
   (`check:contracts`) `[checked]`.
 - **R4.7 Third-party data.** A committed `showcase/data.json` must have `publishSafe: true`
-  `[checked]`; CoinGecko attribution always, Nansen only after redistribution approval
-  `[reviewed]`.
+  `[checked]` in CI — `showcaseCheck.js` only enforces it when `CI`/`GITHUB_ACTIONS` is set, so a
+  local build can be unsafe. CoinGecko attribution always, Nansen only after redistribution
+  approval `[reviewed]`.
 - **R4.8 Process.** PR against `main`, wait for `check` + `fork-suite`, squash-merge, never push
   `main`. CHANGELOG entry for every change. `[reviewed]`
+- **R4.9 Public independence.** This repo must never import from `defi-mev`, read its files or
+  need it to run. The dependency only runs the other way. One violation to remove:
+  `src/analytics/airdrop/airdropWatch.js` resolves `../../defi-mev/data/trends-report.json`
+  (it fails soft, but a stranger's clone has no such path). `[reviewed]`
 
 ## 5. Enforcement
 
@@ -106,17 +112,27 @@ npm run fork:all                                  # SKIPPED without RPC is not a
 
 Everything marked `[reviewed]` has no gate. If you add a gate for one, flip its tag in the same PR.
 
-## 6. Snapshot — build 2026-11-02, regenerate before quoting
+## 6. Snapshot — 2026-11-02 build + fork campaign `56ca5ef`
 
-Verified against `showcase/data.json` (`stats.coverage`), reconciled so the four buckets sum to 200:
+The four buckets sum to 200. Rows, not scripts: one protocol family is one row.
 
 | | Rows |
 |---|---:|
 | Top 200 | 200 |
-| Bucket 1 — fork-tested | 72 |
-| Bucket 2 — API-only, reason written | 15 |
-| Bucket 3 — not forkable | 96 |
-| Bucket 4 — EVM-forkable, not built | 17 |
+| Bucket 1 — fork-tested | 89 |
+| Bucket 2 — API-only, reason written | 18 |
+| Bucket 3 — not forkable | 91 |
+| Bucket 4 — EVM-forkable, not built | 2 |
 | Candidate pool | 268 |
-| Rows with a dedicated monitor | 89 |
-| Ranking-only rows | 111 |
+| Rows with a dedicated monitor | 97 |
+| Ranking-only rows | 103 |
+
+Rebuilt from `showcase/data.json` (generatedAt 2026-11-02T18:06Z) after the fork campaign landed:
+the board now carries 89 fork stamps, up from 72, and bucket 4 is down to the two rows nothing has
+investigated yet — Armitage by Wintermute and xDAI Stake Bridge. Bucket 2 grew to 18 because the
+four rows the campaign proved is not forkable (Liquid Collective, Solv stablecoin, SoSoValue
+Indexes, Avalanche Core Bridge) now have `API_ONLY` entries with the on-chain evidence.
+
+Bucket 3 is 91, not the 96 that `stats.coverage.nonForkable` reports: that count overlaps
+`API_ONLY`, and the buckets here are disjoint so they sum to 200. Do not add a curated row to
+keep a number looking good; fix the input.

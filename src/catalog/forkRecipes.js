@@ -1166,6 +1166,30 @@ const API_ONLY = [
     appUrl: "https://app.lagoon.finance/",
     note: "No fork test: Lagoon vaults are each deployed by their curator from the Factory, with their own whitelist, valuation manager and settlement schedule. Deposits are ERC-7540 requests that only turn into shares when the curator settles a valuation, and Lagoon's docs do not name a reference vault, so there is no single protocol-level vault behind this row to assert on. The Ethereum Factory, ProtocolRegistry and vault logic from the official addresses page are listed for verification.",
   },
+  {
+    keys: ["liquid-collective"],
+    category: "staking",
+    appUrl: "https://liquidcollective.io",
+    note: "No fork test: LsETH deposit and redeem are allowlist-gated. River._onDeposit calls allowlist.onlyAllowed(depositor, DEPOSIT_MASK); on Ethereum block 26328497 Allowlist.getPermissions(fresh)=0 and River.deposit() with 1 ETH reverts 0x8e4a23d6 Unauthorized(depositor). The slashing containment flag is false, so the allowlist is the gate, not a pause. Verified 2026-11-03.",
+  },
+  {
+    keys: ["solv-protocol--stable-rwa"],
+    category: "stable-rwa",
+    appUrl: "https://solv.finance",
+    note: "No fork test: the BSC SolvBTC.TRADING pool is whitelisted. At BSC block 131276198 OpenFundMarket.poolInfos(poolId).permissionless is false, SolvBTCRouter.checkPoolPermission(fresh) is false and createSubscription reverts 'pool permission denied'; OpenFundMarket.subscribe is router-only. The only permissionless BSC pool (SolvBTC.BNB) is the SolvBTC product, not this row. Verified 2026-11-03.",
+  },
+  {
+    keys: ["sosovalue-indexes"],
+    category: "vaults",
+    appUrl: "https://sosovalue.com",
+    note: "No fork test: the SSI contracts are deployed on Base only (all 16 documented addresses return getCode=0x on Ethereum; the row's 'Ethereum' TVL is the ETH leg inside the Base baskets) and the mint is gated even there: AssetToken.mint is ISSUER_ROLE, AssetIssuer.addMintRequest rejects non-participants and USSI.applyMint requires PARTICIPANT_ROLE plus a signed order. Verified 2026-11-03.",
+  },
+  {
+    keys: ["avalanche-core-bridge"],
+    category: "bridge-chain",
+    appUrl: "https://core.app/bridge",
+    note: "No fork test: Intel SGX warden custody. The bridge releases funds on Avalanche only after a quorum of wardens signs the withdrawal off-chain, so there is no permissionless on-chain action to assert on a single-chain fork. Recorded 2026-11-03.",
+  },
 ];
 
 const CATEGORY_RECIPES = {
