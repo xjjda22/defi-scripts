@@ -38,15 +38,27 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - name: Check for an RPC secret
+      - name: Check for RPC secrets
         id: rpc
         env:
           ETHEREUM_RPC_URL: ${{ secrets.ETHEREUM_RPC_URL }}
+          BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
+          OPTIMISM_RPC_URL: ${{ secrets.OPTIMISM_RPC_URL }}
+          ARBITRUM_RPC_URL: ${{ secrets.ARBITRUM_RPC_URL }}
+          BSC_RPC_URL: ${{ secrets.BSC_RPC_URL }}
+          AVALANCHE_RPC_URL: ${{ secrets.AVALANCHE_RPC_URL }}
         run: |
-          if [ -z "$ETHEREUM_RPC_URL" ]; then
-            echo "ETHEREUM_RPC_URL secret is not set; skipping the fork suite."
+          present=""
+          for name in ETHEREUM_RPC_URL BASE_RPC_URL OPTIMISM_RPC_URL ARBITRUM_RPC_URL BSC_RPC_URL AVALANCHE_RPC_URL; do
+            if [ -n "${!name}" ]; then present="$present $name"; fi
+          done
+          if [ -z "$present" ]; then
+            msg="SKIPPED: no RPC URL configured for CI, so no fork test ran. This job is not a fork-test pass."
+            echo "::warning title=fork-suite skipped::$msg"
+            { echo "## Fork suite"; echo ""; echo "**$msg**"; } >> "$GITHUB_STEP_SUMMARY"
             echo "run=false" >> "$GITHUB_OUTPUT"
           else
+            echo "RPC secrets present:$present"
             echo "run=true" >> "$GITHUB_OUTPUT"
           fi
       - run: npm ci --no-audit --no-fund
@@ -61,5 +73,6 @@ jobs:
           OPTIMISM_RPC_URL: ${{ secrets.OPTIMISM_RPC_URL }}
           ARBITRUM_RPC_URL: ${{ secrets.ARBITRUM_RPC_URL }}
           BSC_RPC_URL: ${{ secrets.BSC_RPC_URL }}
+          AVALANCHE_RPC_URL: ${{ secrets.AVALANCHE_RPC_URL }}
           FORK_TEST_TIMEOUT_MS: "180000"
         run: npm run fork:all
