@@ -156,7 +156,12 @@ const FORK_RECIPES = [
     appUrl: "https://app.compound.finance",
     chain: "ethereum",
     contractKeys: ["compound"],
-    tests: [test("fork:compound:supply", "supply", "ethereum"), test("fork:compound:borrow", "borrow", "ethereum")],
+    tests: [
+      test("fork:compound:supply", "supply", "ethereum"),
+      test("fork:compound:borrow", "borrow", "ethereum"),
+      test("fork:compound:repay", "repay", "ethereum"),
+      test("fork:compound:withdraw", "withdraw", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["morpho", "morpho-blue"],
@@ -164,7 +169,12 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["morpho"],
     note: "Supply and borrow on the deepest listed WETH/USDC Morpho Blue market (or MORPHO_MARKET_ID).",
-    tests: [test("fork:morpho:supply", "supply", "ethereum"), test("fork:morpho:borrow", "borrow", "ethereum")],
+    tests: [
+      test("fork:morpho:supply", "supply", "ethereum"),
+      test("fork:morpho:borrow", "borrow", "ethereum"),
+      test("fork:morpho:repay", "repay", "ethereum"),
+      test("fork:morpho:withdraw", "withdraw", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["steakhouse", "steakhouse-financial"],
@@ -264,7 +274,12 @@ const FORK_RECIPES = [
     appUrl: "https://stake.lido.fi",
     chain: "ethereum",
     contractKeys: ["lido"],
-    tests: [test("fork:lido:submit", "submit", "ethereum"), test("fork:lido:wrap", "wrap", "ethereum")],
+    tests: [
+      test("fork:lido:submit", "submit", "ethereum"),
+      test("fork:lido:wrap", "wrap", "ethereum"),
+      test("fork:lido:request", "request", "ethereum"),
+      test("fork:lido:unwrap", "unwrap", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["rocketpool", "rocket-pool"],
@@ -363,7 +378,11 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["ethena"],
     note: "Minting USDe is whitelisted, so it is not tested. The public path is staking USDe into sUSDe and starting the cooldown.",
-    tests: [test("fork:ethena:stake", "stake", "ethereum"), test("fork:ethena:cooldown", "cooldown", "ethereum")],
+    tests: [
+      test("fork:ethena:stake", "stake", "ethereum"),
+      test("fork:ethena:cooldown", "cooldown", "ethereum"),
+      test("fork:ethena:unstake", "unstake", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["circle", "usdc"],
