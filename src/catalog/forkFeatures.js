@@ -971,6 +971,36 @@ const FEATURES = [
     params: amount("100", "USDT"),
   },
   {
+    script: "fork:layerzero:send",
+    section: "actions",
+    chain: "ethereum",
+    action: "OApp send → EndpointV2 PacketSent",
+    title: "Send a LayerZero V2 packet through an OApp (USDT0 OFT Adapter)",
+    assertion:
+      "Pre-check: the OApp's `endpoint()` is the documented EndpointV2 and the endpoint's `eid()` is 30101. `send` to Arbitrum (EID 30110) makes EndpointV2 emit `PacketSent` from exactly the send library `getSendLibrary(oapp, 30110)` returns, and `outboundNonce(oapp, 30110, peer)` rises by one. DVN verification and executor delivery are not run",
+    params: amount("100", "USDT"),
+  },
+  {
+    script: "fork:benqi:supply",
+    section: "actions",
+    chain: "avalanche",
+    action: "supply USDC → qiUSDCn → redeem",
+    title: "Supply native USDC to Benqi qiUSDCn and redeem",
+    assertion:
+      "Pre-check: Comptroller `mintGuardianPaused(qiUSDCn)` is false and `underlying()` is native USDC. `mint` returns 0, pulls exactly the amount, market cash rises by it and the qiTokens are worth the amount within 1 bp at `exchangeRateStored`; `redeem` of every qiToken returns the amount within 1 bp and leaves 0 qiUSDCn",
+    params: amount("100", "USDC"),
+  },
+  {
+    script: "fork:benqi:stake",
+    section: "actions",
+    chain: "avalanche",
+    action: "stake AVAX → sAVAX",
+    title: "Stake AVAX for Benqi sAVAX",
+    assertion:
+      "Pre-check: `mintingPaused()` is false. `submit` with the amount mints exactly the pre-tx `getSharesByPooledAvax(amount)` sAVAX and `totalPooledAvax` rises by exactly the amount. The 15-day `requestUnlock` exit is not exercised",
+    params: amount("1", "AVAX"),
+  },
+  {
     script: "fork:liquity:deposit",
     section: "vaults",
     chain: "ethereum",

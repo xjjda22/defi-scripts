@@ -7,6 +7,7 @@
 const { contractsForKeys } = require("./contracts");
 const { featuresByScript } = require("./forkFeatures");
 const { TESTNETS, CHAINLINK } = require("./faucets");
+const { statusFor, coverageStats } = require("./forkStatus");
 
 const LOCAL = "http://127.0.0.1:8545";
 
@@ -797,6 +798,36 @@ const FORK_RECIPES = [
     tests: [test("fork:usdt0:send", "send", "ethereum")],
   }),
   recipe({
+    keys: ["layerzero-v2", "layerzero"],
+    category: "bridge-chain",
+    label: "OApp send (source chain)",
+    appUrl: "https://layerzero.network/",
+    chain: "ethereum",
+    contractKeys: ["layerzero-v2"],
+    note: "LayerZero V2 is a messaging layer; its DefiLlama TVL is tokens locked in OFT adapters. The test sends USDT through the USDT0 OFT Adapter (an OApp) and asserts at the LayerZero layer: the OApp's endpoint() is EndpointV2, EndpointV2 emits PacketSent from the OApp's configured send library, and the outbound nonce to Arbitrum advances by one. DVN verification and executor delivery on the destination are off-chain/other-chain and not run on a fork.",
+    tests: [test("fork:layerzero:send", "send", "ethereum")],
+  }),
+  recipe({
+    keys: ["benqi-lending", "benqi"],
+    category: "lending",
+    label: "Supply and redeem",
+    appUrl: "https://app.benqi.fi/markets",
+    chain: "avalanche",
+    contractKeys: ["benqi-lending"],
+    note: "Benqi Core Markets on Avalanche C-Chain (Compound V2-style). Mints qiUSDCn with native USDC and redeems every qiToken; pre-checks Comptroller mintGuardianPaused. Borrowing, isolated (Ecosystem) markets and QI rewards are not exercised.",
+    tests: [test("fork:benqi:supply", "supply", "avalanche")],
+  }),
+  recipe({
+    keys: ["benqi-staked-avax"],
+    category: "staking",
+    label: "Stake",
+    appUrl: "https://app.benqi.fi/liquid-staking",
+    chain: "avalanche",
+    contractKeys: ["benqi-staked-avax"],
+    note: "Benqi Liquid Staking: submit() AVAX for sAVAX; shares must equal the pre-tx getSharesByPooledAvax and totalPooledAvax must rise by the amount. Unstaking is a 15-day requestUnlock cooldown and is not exercised.",
+    tests: [test("fork:benqi:stake", "stake", "avalanche")],
+  }),
+  recipe({
     keys: ["liquity"],
     category: "lending",
     label: "Stability Pool",
@@ -860,6 +891,17 @@ const FORK_RECIPES = [
 
 const API_ONLY = [
   {
+    keys: ["coinbase-bridge"],
+    category: "bridge-chain",
+    appUrl: "https://www.coinbase.com/cbbtc",
+    note: "No fork test: Coinbase Bridge is custodial. Its TVL is BTC, XRP and ADA held by Coinbase on Bitcoin, Ripple and Cardano; cbBTC and the other wrapped assets are minted and burned only by Coinbase's own minter, so there is no permissionless user action on a forkable chain. Checked 2026-11-02.",
+  },
+  {
+    keys: ["fence-finance", "fence"],
+    appUrl: "https://fence.finance",
+    note: "Contracts only: Fence Finance's Avalanche TranchePool was drained (~$1.01M USDC, DefiLlama /hacks 2026-10-27). Depositing into an exploited pool is not a meaningful test, so no fork test is added even though Avalanche is now forkable. analytics:fence:exploit tracks the incident.",
+  },
+  {
     keys: ["raydium-amm", "raydium", "raydium-amm-v3"],
     appUrl: "https://raydium.io",
     note: "Raydium is a Solana AMM. The fork suite is EVM-only, so this row stays API-only.",
@@ -907,12 +949,7 @@ const API_ONLY = [
     appUrl: "https://app.ipor.io/fusion",
     note: "No fork test: IPOR Fusion publishes the IporFusionFactoryProxy per chain (docs.ipor.io addresses), not a single permissionless vault. Curator vaults are cloned from the factory with their own fuses and deposit rules, so there is no one ERC-4626 address to assert on a fork. The factory address is listed for verification.",
   },
-  {
-    keys: ["layerzero-v2"],
-    category: "bridge-chain",
-    appUrl: "https://layerzero.network/",
-    note: "No fork test: LayerZero V2 is a messaging layer. EndpointV2 holds no user funds (it shows 0 ETH); value sits in each OApp or OFT adapter, and delivery needs DVNs and an Executor off this machine. fork:stargate:deposit already runs a real LayerZero V2 send through Stargate on Ethereum. The endpoint and message libraries are listed for verification.",
-  },
+
   {
     keys: ["avalon-superearn"],
     category: "vaults",
@@ -953,7 +990,7 @@ const API_ONLY = [
     keys: ["opentrade"],
     category: "stable-rwa",
     appUrl: "https://app.opentrade.io/",
-    note: "KYC-gated: no fork test. OpenTrade vaults lend only to onboarded institutions and accredited users who pass KYC/KYB (docs.opentrade.io eligibility requirements), and investments and withdrawal requests come from whitelisted wallets, so there is no permissionless action to run on a fork. Most of the row sits on Avalanche and Plume, which the repo does not fork. The four Ethereum vault tokens from the official contract page are listed for verification.",
+    note: "KYC-gated: no fork test. OpenTrade vaults lend only to onboarded institutions and accredited users who pass KYC/KYB (docs.opentrade.io eligibility requirements), and investments and withdrawal requests come from whitelisted wallets, so there is no permissionless action to run on a fork. Most of the row sits on Avalanche (forkable since 2026-11-02) and Plume, but the KYC gate blocks a permissionless test there too. The four Ethereum vault tokens from the official contract page are listed for verification.",
   },
   {
     keys: ["ssv-network"],
@@ -1130,6 +1167,7 @@ function attachTesting(row) {
         contracts: contractsForKeys(keys),
         recipe: categoryRecipe,
       };
+  Object.assign(row.testing, statusFor(row, keys));
   if (!row.appUrl && row.testing.appUrl) row.appUrl = row.testing.appUrl;
   return row;
 }
@@ -1195,11 +1233,70 @@ function enrichShowcase(data) {
   data.stats = data.stats || {};
   data.stats.forkInTop200 = fork;
   data.stats.apiOnlyInTop200 = apiOnly;
+  // forkInTop200 counts every row with a fork recipe. The honest split (direct, linked,
+  // failing-paused) and the pinned forkable denominator live in stats.coverage.
+  data.stats.coverage = coverageStats(data);
+  applyDisputes(data);
+  annotatePerps(data);
   data.methodology = data.methodology || {};
   data.methodology.testnets = TESTNETS;
   data.methodology.chainlinkFaucet = CHAINLINK;
   data.methodology.forkSuite = "npm run fork:all";
   return data;
+}
+
+/**
+ * Flag rows whose DefiLlama figures a claims run found disputed (data/disputes.json).
+ * The score is untouched; the flag is shown on the board and counted in stats.
+ */
+function applyDisputes(data) {
+  let file = null;
+  try {
+    file = JSON.parse(require("fs").readFileSync(require("path").join(__dirname, "..", "..", "data", "disputes.json"), "utf8"));
+  } catch {
+    return;
+  }
+  const open = (file.disputes || []).filter(item => !item.resolved);
+  const byRow = new Map();
+  for (const item of open) {
+    for (const id of item.rowIds || []) {
+      if (!byRow.has(id)) byRow.set(id, []);
+      byRow.get(id).push({ id: item.id, metric: item.metric, claim: item.claim, defillama: item.defillama, recorded: item.recorded });
+    }
+  }
+  const visit = row => {
+    const list = byRow.get(row.id) || [];
+    row.dataDisputed = list.length > 0;
+    row.disputes = list;
+  };
+  for (const row of data.overall || []) visit(row);
+  for (const list of Object.values(data.byCategory || {})) for (const row of list) visit(row);
+  data.stats.disputed = {
+    open: open.length,
+    rowsInTop200: (data.overall || []).filter(row => row.dataDisputed).length,
+    chainLevel: open.filter(item => !(item.rowIds || []).length).length,
+  };
+  data.methodology.disputes = "data/disputes.json: claim-vs-DefiLlama mismatches. Flagged rows show 'data disputed'; scores are not adjusted.";
+}
+
+/**
+ * Perp volume is DefiLlama Pro-only (/summary/derivatives returns 402 on the free API).
+ * Say so on every perps row instead of implying a volume input: volumeMomentum is the
+ * neutral 0.5 and size uses 30d fees when TVL is below the floor. Open interest is not a
+ * score input (it is read by the claim monitors only).
+ */
+const PERPS_NOTE =
+  "Perp volume is a paid DefiLlama endpoint (/summary/derivatives, HTTP 402 on the free API), so this row has no volume input: volumeMomentum is the neutral 0.5 and the score leans on TVL and fees. Open interest is read by claim monitors (DEFILLAMA_OI) but is not a score input.";
+
+function annotatePerps(data) {
+  const visit = row => {
+    if (row.category !== "perps") return;
+    row.volumeBasis = row.components && row.components.volumeMomentum !== 0.5 ? "spot/aggregator/options volume" : "none (perp volume paywalled)";
+    row.volumeNote = PERPS_NOTE;
+  };
+  for (const row of data.overall || []) visit(row);
+  for (const list of Object.values(data.byCategory || {})) for (const row of list) visit(row);
+  data.methodology.perps = PERPS_NOTE;
 }
 
 function suitePlans() {
