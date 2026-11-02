@@ -60,6 +60,10 @@ const FORK_RECIPES = [
       test("fork:uniswap:v2", "swap", "ethereum"),
       test("fork:uniswap:v3", "swap", "ethereum"),
       test("fork:uniswap:v4", "swap", "ethereum"),
+      test("fork:uniswap:v2-add", "add liquidity V2", "ethereum"),
+      test("fork:uniswap:v3-mint", "add liquidity V3", "ethereum"),
+      test("fork:uniswap:v3-remove", "remove liquidity V3", "ethereum"),
+      test("fork:uniswap:v4-add", "add liquidity V4", "ethereum"),
     ],
   }),
   recipe({
@@ -81,7 +85,12 @@ const FORK_RECIPES = [
     appUrl: "https://curve.fi",
     chain: "ethereum",
     contractKeys: ["curve"],
-    tests: [test("fork:curve:swap", "swap", "ethereum", "USDC/USDT on 3pool")],
+    tests: [
+      test("fork:curve:swap", "swap", "ethereum", "USDC/USDT on 3pool"),
+      test("fork:curve:add", "add liquidity", "ethereum", "USDC into 3pool"),
+      test("fork:curve:remove", "remove liquidity", "ethereum", "3Crv to USDC"),
+      test("fork:curve:gauge", "gauge deposit", "ethereum", "3pool gauge"),
+    ],
   }),
   recipe({
     keys: ["aerodrome", "aerodrome-v1", "aerodrome-slipstream"],
@@ -107,7 +116,13 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["pancakeswap"],
     note: "PancakeSwap V3 on Ethereum (same router addresses as BSC). Set CHAIN=bsc to run it on BSC instead.",
-    tests: [test("fork:pancakeswap:v3", "swap", "ethereum")],
+    tests: [
+      test("fork:pancakeswap:v3", "swap", "ethereum"),
+      test("fork:pancakeswap:v2-swap", "swap V2", "bsc"),
+      test("fork:pancakeswap:v3-mint", "add liquidity V3", "bsc"),
+      test("fork:pancakeswap:v3-remove", "remove liquidity V3", "bsc"),
+      test("fork:pancakeswap:farm", "farm (MasterChef V3)", "bsc"),
+    ],
   }),
   recipe({
     keys: ["monad"],

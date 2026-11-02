@@ -4,10 +4,10 @@
   "totals": {
     "protocols": 127,
     "features": 284,
-    "direct": 148,
+    "direct": 159,
     "linked": 3,
     "failingPaused": 2,
-    "gap": 79,
+    "gap": 68,
     "notTestable": 52
   },
   "gaps": [
@@ -38,34 +38,6 @@
       "key": "lista-liquid-staking",
       "feature": "request unstake",
       "note": "StakeManager.requestWithdraw on the BSC fork."
-    },
-    {
-      "rank": 54,
-      "protocol": "PancakeSwap (DEX)",
-      "key": "pancakeswap--dex",
-      "feature": "swap (V2)",
-      "note": "V2 router swap on the BSC fork."
-    },
-    {
-      "rank": 54,
-      "protocol": "PancakeSwap (DEX)",
-      "key": "pancakeswap--dex",
-      "feature": "add liquidity (V3 NFT)",
-      "note": "NonfungiblePositionManager.mint."
-    },
-    {
-      "rank": 54,
-      "protocol": "PancakeSwap (DEX)",
-      "key": "pancakeswap--dex",
-      "feature": "remove liquidity",
-      "note": "decreaseLiquidity + collect."
-    },
-    {
-      "rank": 54,
-      "protocol": "PancakeSwap (DEX)",
-      "key": "pancakeswap--dex",
-      "feature": "stake CAKE / farm",
-      "note": "MasterChef v3 deposit of the position NFT."
     },
     {
       "rank": 60,
@@ -101,34 +73,6 @@
       "key": "falcon-finance",
       "feature": "unstake cooldown",
       "note": "sUSDf cooldown + time warp."
-    },
-    {
-      "rank": 80,
-      "protocol": "Uniswap (DEX)",
-      "key": "uniswap--dex",
-      "feature": "add liquidity V2",
-      "note": "Router02.addLiquidity, assert LP tokens."
-    },
-    {
-      "rank": 80,
-      "protocol": "Uniswap (DEX)",
-      "key": "uniswap--dex",
-      "feature": "add liquidity V3 (mint NFT)",
-      "note": "NonfungiblePositionManager.mint."
-    },
-    {
-      "rank": 80,
-      "protocol": "Uniswap (DEX)",
-      "key": "uniswap--dex",
-      "feature": "remove liquidity V3",
-      "note": "decreaseLiquidity + collect."
-    },
-    {
-      "rank": 80,
-      "protocol": "Uniswap (DEX)",
-      "key": "uniswap--dex",
-      "feature": "add liquidity V4",
-      "note": "PositionManager.modifyLiquidities."
     },
     {
       "rank": 81,
@@ -332,27 +276,6 @@
       "key": "venus-core-pool",
       "feature": "redeem",
       "note": "redeemUnderlying."
-    },
-    {
-      "rank": 157,
-      "protocol": "Curve DEX",
-      "key": "curve-dex",
-      "feature": "add liquidity",
-      "note": "pool.add_liquidity, assert LP."
-    },
-    {
-      "rank": 157,
-      "protocol": "Curve DEX",
-      "key": "curve-dex",
-      "feature": "remove liquidity",
-      "note": "remove_liquidity_one_coin."
-    },
-    {
-      "rank": 157,
-      "protocol": "Curve DEX",
-      "key": "curve-dex",
-      "feature": "gauge deposit",
-      "note": "LiquidityGauge.deposit."
     },
     {
       "rank": 159,
@@ -1757,10 +1680,10 @@
       "docs": "https://docs.pancakeswap.finance/developers/smart-contracts",
       "counts": {
         "features": 5,
-        "direct": 1,
+        "direct": 5,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 4,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -1774,27 +1697,35 @@
         },
         {
           "feature": "swap (V2)",
-          "status": "gap",
-          "scripts": [],
-          "note": "V2 router swap on the BSC fork."
+          "status": "direct",
+          "scripts": [
+            "fork:pancakeswap:v2-swap"
+          ],
+          "note": null
         },
         {
           "feature": "add liquidity (V3 NFT)",
-          "status": "gap",
-          "scripts": [],
-          "note": "NonfungiblePositionManager.mint."
+          "status": "direct",
+          "scripts": [
+            "fork:pancakeswap:v3-mint"
+          ],
+          "note": null
         },
         {
           "feature": "remove liquidity",
-          "status": "gap",
-          "scripts": [],
-          "note": "decreaseLiquidity + collect."
+          "status": "direct",
+          "scripts": [
+            "fork:pancakeswap:v3-remove"
+          ],
+          "note": null
         },
         {
           "feature": "stake CAKE / farm",
-          "status": "gap",
-          "scripts": [],
-          "note": "MasterChef v3 deposit of the position NFT."
+          "status": "direct",
+          "scripts": [
+            "fork:pancakeswap:farm"
+          ],
+          "note": null
         }
       ]
     },
@@ -2232,10 +2163,10 @@
       "docs": "https://docs.uniswap.org/contracts",
       "counts": {
         "features": 9,
-        "direct": 5,
+        "direct": 9,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 4,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -2281,27 +2212,35 @@
         },
         {
           "feature": "add liquidity V2",
-          "status": "gap",
-          "scripts": [],
-          "note": "Router02.addLiquidity, assert LP tokens."
+          "status": "direct",
+          "scripts": [
+            "fork:uniswap:v2-add"
+          ],
+          "note": null
         },
         {
           "feature": "add liquidity V3 (mint NFT)",
-          "status": "gap",
-          "scripts": [],
-          "note": "NonfungiblePositionManager.mint."
+          "status": "direct",
+          "scripts": [
+            "fork:uniswap:v3-mint"
+          ],
+          "note": null
         },
         {
           "feature": "remove liquidity V3",
-          "status": "gap",
-          "scripts": [],
-          "note": "decreaseLiquidity + collect."
+          "status": "direct",
+          "scripts": [
+            "fork:uniswap:v3-remove"
+          ],
+          "note": null
         },
         {
           "feature": "add liquidity V4",
-          "status": "gap",
-          "scripts": [],
-          "note": "PositionManager.modifyLiquidities."
+          "status": "direct",
+          "scripts": [
+            "fork:uniswap:v4-add"
+          ],
+          "note": null
         }
       ]
     },
@@ -3398,10 +3337,10 @@
       "docs": "https://docs.curve.finance",
       "counts": {
         "features": 5,
-        "direct": 2,
+        "direct": 5,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 3,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -3423,21 +3362,27 @@
         },
         {
           "feature": "add liquidity",
-          "status": "gap",
-          "scripts": [],
-          "note": "pool.add_liquidity, assert LP."
+          "status": "direct",
+          "scripts": [
+            "fork:curve:add"
+          ],
+          "note": null
         },
         {
           "feature": "remove liquidity",
-          "status": "gap",
-          "scripts": [],
-          "note": "remove_liquidity_one_coin."
+          "status": "direct",
+          "scripts": [
+            "fork:curve:remove"
+          ],
+          "note": null
         },
         {
           "feature": "gauge deposit",
-          "status": "gap",
-          "scripts": [],
-          "note": "LiquidityGauge.deposit."
+          "status": "direct",
+          "scripts": [
+            "fork:curve:gauge"
+          ],
+          "note": null
         }
       ]
     },

@@ -823,6 +823,31 @@ module.exports = {
   DOCS,
   BOOK,
   contractsForKeys,
+  // DEX liquidity fork flows (src/simulation/fork/dexLiquidity.js). Sources in that file's header.
+  DEX_LP: {
+    ethereum: {
+      WETH: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      uniV2Router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+      uniV3Npm: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+      uniV3Factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+      uniV4PositionManager: "0xbD216513d74C8cf14cf4747E6AaA6420FF64ee9e",
+      uniV4StateView: "0x7fFE42C4a5DEeA5b0feC41C94C136Cf115597227",
+      permit2: "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      curve3pool: "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7",
+      curve3Crv: "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",
+      curve3poolGauge: "0xbFcF63294aD7105dEa65aA58F8AE5BE2D9d0952A",
+    },
+    bsc: {
+      WBNB: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      USDT: "0x55d398326f99059fF775485246999027B3197955",
+      pancakeV2Router: "0x10ED43C718714eb63d5aA57B78B54704E256024E",
+      pancakeV3Npm: "0x46A15B0b27311cedF172AB29E4f4766fbE7F4364",
+      pancakeV3Factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+      pancakeV3Router: "0x1b81D678ffb9C0263b24A97847620C99d213eB14",
+      pancakeMasterChefV3: "0x556B9306565093C855AEA9AE92A594704c2Cd59e",
+    },
+  },
   PANCAKE_V3: {
     factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
     router: "0x1b81D678ffb9C0263b24A97847620C99d213eB14",
