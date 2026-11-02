@@ -66,6 +66,12 @@ Fixes from the 2026-11-02 top-200 audit. Squash-merged as [#50](https://github.c
 - **Busy X lists are keyword-only.** Routine side, not repo code.
 - **Swell paused, Dolomite markets closing**: `failing-paused` until they reopen.
 
+### Board rebuild (live DefiLlama + keyless CoinGecko, Nansen off, publishSafe)
+- `showcase/data.json` rebuilt 2026-11-02 01:16 UTC (09:16 MYT) from `1ae4258`; replaces the 2026-10-29 build. 10 rows entered / 10 left the top 200.
+- New per-row `protocolStatus` badge (exploited, shut-down, closing, paused, deprecated) from `data/row-status.json`, the fork pre-check list and DefiLlama's deprecated flag. Scores unchanged. This build: Polymarket exploited, Dolomite closing, Base Bridge deprecated; the curated Fence, zkLink, Thruster, Blast and Swell entries are outside the top 200.
+- Build-age indicator on the page; `showcase:check` warns when data is older than 48 h.
+- Fix: `coingeckoUrl` is now written by `toOutputRow` (a fresh build had dropped it and failed `showcase:check`).
+
 ## [2026-11-02]
 
 Mon/Wed/Fri pass: claims from 2026-10-29 21:00Z to ~2026-11-01 21:30Z, the playground batch and the health check. Squash-merged on 2026-11-02 as [#45](https://github.com/xjjda22/defi-scripts/pull/45) (health, `b95b59c`), [#46](https://github.com/xjjda22/defi-scripts/pull/46) (playground, `1caf723`) and [#48](https://github.com/xjjda22/defi-scripts/pull/48) (claims, `5ca6a72`). The claims part stopped before pushing; part 4 finished its regression and gates, pushed it and rebuilt it on `main` after #45/#46 (the first push, [#47](https://github.com/xjjda22/defi-scripts/pull/47), was closed as superseded).

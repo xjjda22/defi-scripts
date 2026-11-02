@@ -420,6 +420,8 @@ function toOutputRow(row, rank, overallRank) {
     xLists: row.xLists || [],
     llamaUrl: row.llamaUrl,
     appUrl: row.appUrl || null,
+    coingeckoUrl: row.coingeckoUrl || null,
+    llamaFlags: row.llamaFlags || null,
     chainTvls: row.chainTvls || [],
     scripts: row.scripts,
     coverage: row.coverage,
@@ -734,6 +736,11 @@ async function main() {
       xLists: mention ? mention.lists : [],
       llamaUrl: `https://defillama.com/protocol/${encodeURIComponent(llamaSlug)}`,
       appUrl: members.map(member => member.protocol && member.protocol.url).find(Boolean) || null,
+      // DefiLlama's own flags; rowStatus turns them into a "deprecated" badge. Scores ignore them.
+      llamaFlags: {
+        deprecated: members.length > 0 && members.every(m => m.protocol && m.protocol.deprecated === true),
+        deadUrl: members.some(m => m.protocol && m.protocol.deadUrl === true),
+      },
       chainTvls: topChainTvl(
         members.reduce((acc, member) => {
           const part = cleanChainTvl(member.protocol && member.protocol.chainTvls);
