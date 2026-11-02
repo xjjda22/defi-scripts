@@ -260,4 +260,4 @@ async function withdrawLoan({ chain, protocol, action, ctx, usdc, market, market
   });
 }
 
-module.exports = { run };
+module.exports = { run, fetchMarketId, ABI: ABI };

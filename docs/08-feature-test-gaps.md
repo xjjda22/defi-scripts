@@ -8,7 +8,7 @@ Rows: pinned snapshot `2026-11-02` plus catalog protocols with fork tests. Ranks
 
 | Protocols | Features | Tested-direct | Linked | Failing-paused | Gap | Not testable |
 | --- | --- | --- | --- | --- | --- | --- |
-| 127 | 284 | 136 | 3 | 2 | 92 | 51 |
+| 127 | 284 | 148 | 3 | 2 | 79 | 52 |
 
 ## Top gaps (priority order)
 
@@ -16,98 +16,85 @@ Top-50 rank first, then rank order; within a protocol, the order its features ar
 
 | # | Rank | Protocol | Feature | How to test |
 | --- | --- | --- | --- | --- |
-| 1 | 2 | Aave | flash loan | Pool.flashLoanSimple with a receiver contract deployed on the fork. |
-| 2 | 2 | Aave | set collateral / e-mode | setUserUseReserveAsCollateral and setUserEMode on a supplied position. |
-| 3 | 2 | Aave | stake AAVE (Umbrella/stkAAVE) | stkAAVE stake + cooldown. |
-| 4 | 3 | SparkLend | liquidate | Aave-fork liquidationCall on a price-shocked position. |
-| 5 | 3 | SparkLend | flash loan | Pool.flashLoanSimple. |
-| 6 | 4 | Morpho | liquidate | Morpho.liquidate after an oracle price override on the fork. |
-| 7 | 4 | Morpho | flash loan | Morpho.flashLoan with a callback contract. |
-| 8 | 6 | Sentora Curator | vault withdraw/redeem | maxDeposit=0 on 2026-11-02, so fork:sentora:deposit runs as a read; redeem needs shares from an open vault or a whale. |
-| 9 | 7 | Veda | withdraw request (AtomicQueue) | AtomicQueue.updateAtomicRequest; solver fill is off-chain. |
-| 10 | 39 | Defi Saver Asset Management | automation / recipes | DSProxy recipe executor over Aave/Maker positions; needs the recipe encoder. |
-| 11 | 42 | Curve Finance (Lending) | create loan (borrow) | LlamaLend Controller.create_loan. |
-| 12 | 42 | Curve Finance (Lending) | repay | Controller.repay. |
-| 13 | 42 | Curve Finance (Lending) | liquidate | Controller.liquidate on a soft-liquidated band after price override. |
-| 14 | 49 | Lista Liquid Staking | request unstake | StakeManager.requestWithdraw on the BSC fork. |
-| 15 | 54 | PancakeSwap (DEX) | swap (V2) | V2 router swap on the BSC fork. |
-| 16 | 54 | PancakeSwap (DEX) | add liquidity (V3 NFT) | NonfungiblePositionManager.mint. |
-| 17 | 54 | PancakeSwap (DEX) | remove liquidity | decreaseLiquidity + collect. |
-| 18 | 54 | PancakeSwap (DEX) | stake CAKE / farm | MasterChef v3 deposit of the position NFT. |
-| 19 | 60 | Lista DAO (Lending) | borrow | Lista Moolah borrow (Morpho-fork) on BSC. |
-| 20 | 72 | StakeWise V3 | mint osETH | Vault.mintOsToken against the staked position. |
-| 21 | 72 | StakeWise V3 | exit queue | enterExitQueue. |
-| 22 | 73 | Avalon Superearn | vault deposit | Ethereum vault deposit; contract address not yet verified against docs. |
-| 23 | 76 | Falcon Finance | unstake cooldown | sUSDf cooldown + time warp. |
-| 24 | 80 | Uniswap (DEX) | add liquidity V2 | Router02.addLiquidity, assert LP tokens. |
-| 25 | 80 | Uniswap (DEX) | add liquidity V3 (mint NFT) | NonfungiblePositionManager.mint. |
-| 26 | 80 | Uniswap (DEX) | remove liquidity V3 | decreaseLiquidity + collect. |
-| 27 | 80 | Uniswap (DEX) | add liquidity V4 | PositionManager.modifyLiquidities. |
-| 28 | 81 | Cooler Loans | repay | MonoCooler.repay. |
-| 29 | 82 | Compound Finance | absorb (liquidate) | Comet.absorb on an underwater account after an oracle override. |
-| 30 | 82 | Compound Finance | buyCollateral | Comet.buyCollateral when reserves are below target. |
-| 31 | 82 | Compound Finance | claim COMP rewards | CometRewards.claim after time warp. |
-| 32 | 84 | ether.fi Liquid | Liquid USD / BTC deposit | Teller deposit into the USD and BTC BoringVaults. |
-| 33 | 92 | Curvance | borrow | Monad market borrow. |
-| 34 | 110 | fx Protocol | mint fxUSD / open position | PoolManager operate(). |
-| 35 | 110 | fx Protocol | stability pool deposit | fxUSD stability pool deposit. |
-| 36 | 111 | EigenCloud | complete withdrawal | completeQueuedWithdrawal after time warp past the delay. |
-| 37 | 111 | EigenCloud | delegate to operator | DelegationManager.delegateTo. |
-| 38 | 112 | mETH Protocol | unstake request | Staking.unstakeRequest. |
-| 39 | 116 | Meta Pool | withdraw request | Withdrawal contract requestWithdraw. |
-| 40 | 119 | Bedrock uniBTC | mint uniBTC from WBTC | Vault.mint with WBTC on Ethereum. |
-| 41 | 122 | Saturn | unstake | Unstake / cooldown. |
-| 42 | 123 | Sky | sUSDS withdraw | ERC-4626 redeem. |
-| 43 | 123 | Sky | PSM swap (USDC <-> USDS) | LitePSM sellGem/buyGem. |
-| 44 | 123 | Sky | open vault / draw USDS | Sky Lockstake or ilk vault. |
-| 45 | 125 | ether.fi Stake | request withdrawal | LiquidityPool.requestWithdraw (WithdrawRequestNFT). |
-| 46 | 126 | Lagoon | ERC-7540 deposit request | requestDeposit on a Lagoon vault. |
-| 47 | 131 | USDD | PSM / mint | Ethereum PSM swap; main TVL on Tron (not forkable). |
-| 48 | 132 | Liquity | open trove | BorrowerOperations.openTrove. |
-| 49 | 132 | Liquity | redeem | redeemCollateral. |
-| 50 | 132 | Liquity | liquidate | liquidate after price override. |
-| 51 | 134 | Avant Protocol | stake avUSD | Avalanche/Ethereum staking vault. |
-| 52 | 136 | Solv Protocol (Stablecoin) | subscribe | BSC vault subscribe. |
-| 53 | 138 | Theo | unstake | Unstake / redeem. |
-| 54 | 139 | CIAN Yield Layer | withdraw request | requestRedeem. |
-| 55 | 143 | Polymarket | split / merge positions (CTF) | ConditionalTokens splitPosition on Polygon. |
-| 56 | 150 | SolvBTC | redeem | Redemption request. |
-| 57 | 152 | Venus Core Pool | borrow | vToken.borrow on BSC. |
-| 58 | 152 | Venus Core Pool | repay | repayBorrow. |
-| 59 | 152 | Venus Core Pool | redeem | redeemUnderlying. |
-| 60 | 157 | Curve DEX | add liquidity | pool.add_liquidity, assert LP. |
-| 61 | 157 | Curve DEX | remove liquidity | remove_liquidity_one_coin. |
-| 62 | 157 | Curve DEX | gauge deposit | LiquidityGauge.deposit. |
-| 63 | 159 | Convex Finance | claim rewards | getReward after time warp. |
-| 64 | 161 | Fluid DEX | swap | FluidDexT1.swapIn on Ethereum. |
-| 65 | 167 | Aster (Bridge) | deposit | Aster deposit vault on BSC. |
-| 66 | 169 | Railgun | shield | RailgunSmartWallet.shield (needs a note commitment). |
-| 67 | 170 | BitFi Basis | deposit | Basis vault deposit on BSC. |
-| 68 | 171 | Benqi Staked Avax | request unlock | requestUnlock + cooldown. |
-| 69 | 172 | Pendle V2 | mint PT/YT | Router mintPyFromToken. |
-| 70 | 172 | Pendle V2 | swap PT | Router swapExactTokenForPt. |
-| 71 | 172 | Pendle V2 | add liquidity | addLiquiditySingleToken. |
-| 72 | 176 | Rocket Pool | burn rETH | rETH.burn against deposit pool liquidity. |
-| 73 | 181 | Fluid Lending | fToken deposit | fUSDC ERC-4626 deposit. |
-| 74 | 181 | Fluid Lending | vault borrow | Fluid vault operate(). |
-| 75 | 191 | Aero (DEX) | add liquidity | Router.addLiquidity. |
-| 76 | 191 | Aero (DEX) | gauge stake | Gauge.deposit. |
-| 77 | 191 | Aero (DEX) | lock AERO (veNFT) | VotingEscrow.createLock. |
-| 78 | 192 | Mellow Core | vault deposit | Mellow vault deposit on Ethereum. |
-| 79 | 195 | USD AI | mint USDai | USDai mint from USDC on Arbitrum. |
-| 80 | - | Axelar | callContract / sendToken | Gateway.sendToken / ITS interchainTransfer on Ethereum. |
-| 81 | - | Balancer | join pool | Vault.joinPool / V3 addLiquidity. |
-| 82 | - | Benqi Lending | borrow | qiToken.borrow on Avalanche. |
-| 83 | - | Benqi Lending | redeem | redeemUnderlying. |
-| 84 | - | Euler | borrow (EVC) | EVC enableController + borrow. |
-| 85 | - | Frax | mint frxETH | frxETHMinter.submit. |
-| 86 | - | Kelp DAO | withdraw request | LRTWithdrawalManager.initiateWithdrawal. |
-| 87 | - | Lyra / Derive | deposit | Socket bridge deposit to Derive chain. |
-| 88 | - | Renzo | withdraw request | WithdrawQueue.withdraw. |
-| 89 | - | Rysk V12 | options trade | HyperEVM/Arbitrum options; chain not configured. |
-| 90 | - | SushiSwap | add liquidity | Router addLiquidity. |
-| 91 | - | Symbiotic | vault deposit | Vault.deposit. |
-| 92 | - | xDai Stake Bridge | relay tokens | Omnibridge relayTokens on Ethereum. |
+| 1 | 6 | Sentora Curator | vault withdraw/redeem | maxDeposit=0 on 2026-11-02, so fork:sentora:deposit runs as a read; redeem needs shares from an open vault or a whale. |
+| 2 | 7 | Veda | withdraw request (AtomicQueue) | AtomicQueue.updateAtomicRequest; solver fill is off-chain. |
+| 3 | 39 | Defi Saver Asset Management | automation / recipes | DSProxy recipe executor over Aave/Maker positions; needs the recipe encoder. |
+| 4 | 49 | Lista Liquid Staking | request unstake | StakeManager.requestWithdraw on the BSC fork. |
+| 5 | 54 | PancakeSwap (DEX) | swap (V2) | V2 router swap on the BSC fork. |
+| 6 | 54 | PancakeSwap (DEX) | add liquidity (V3 NFT) | NonfungiblePositionManager.mint. |
+| 7 | 54 | PancakeSwap (DEX) | remove liquidity | decreaseLiquidity + collect. |
+| 8 | 54 | PancakeSwap (DEX) | stake CAKE / farm | MasterChef v3 deposit of the position NFT. |
+| 9 | 60 | Lista DAO (Lending) | borrow | Lista Moolah borrow (Morpho-fork) on BSC. |
+| 10 | 72 | StakeWise V3 | mint osETH | Vault.mintOsToken against the staked position. |
+| 11 | 72 | StakeWise V3 | exit queue | enterExitQueue. |
+| 12 | 73 | Avalon Superearn | vault deposit | Ethereum vault deposit; contract address not yet verified against docs. |
+| 13 | 76 | Falcon Finance | unstake cooldown | sUSDf cooldown + time warp. |
+| 14 | 80 | Uniswap (DEX) | add liquidity V2 | Router02.addLiquidity, assert LP tokens. |
+| 15 | 80 | Uniswap (DEX) | add liquidity V3 (mint NFT) | NonfungiblePositionManager.mint. |
+| 16 | 80 | Uniswap (DEX) | remove liquidity V3 | decreaseLiquidity + collect. |
+| 17 | 80 | Uniswap (DEX) | add liquidity V4 | PositionManager.modifyLiquidities. |
+| 18 | 81 | Cooler Loans | repay | MonoCooler.repay. |
+| 19 | 84 | ether.fi Liquid | Liquid USD / BTC deposit | Teller deposit into the USD and BTC BoringVaults. |
+| 20 | 92 | Curvance | borrow | Monad market borrow. |
+| 21 | 110 | fx Protocol | mint fxUSD / open position | PoolManager operate(). |
+| 22 | 110 | fx Protocol | stability pool deposit | fxUSD stability pool deposit. |
+| 23 | 111 | EigenCloud | complete withdrawal | completeQueuedWithdrawal after time warp past the delay. |
+| 24 | 111 | EigenCloud | delegate to operator | DelegationManager.delegateTo. |
+| 25 | 112 | mETH Protocol | unstake request | Staking.unstakeRequest. |
+| 26 | 116 | Meta Pool | withdraw request | Withdrawal contract requestWithdraw. |
+| 27 | 119 | Bedrock uniBTC | mint uniBTC from WBTC | Vault.mint with WBTC on Ethereum. |
+| 28 | 122 | Saturn | unstake | Unstake / cooldown. |
+| 29 | 123 | Sky | sUSDS withdraw | ERC-4626 redeem. |
+| 30 | 123 | Sky | PSM swap (USDC <-> USDS) | LitePSM sellGem/buyGem. |
+| 31 | 123 | Sky | open vault / draw USDS | Sky Lockstake or ilk vault. |
+| 32 | 125 | ether.fi Stake | request withdrawal | LiquidityPool.requestWithdraw (WithdrawRequestNFT). |
+| 33 | 126 | Lagoon | ERC-7540 deposit request | requestDeposit on a Lagoon vault. |
+| 34 | 131 | USDD | PSM / mint | Ethereum PSM swap; main TVL on Tron (not forkable). |
+| 35 | 132 | Liquity | open trove | BorrowerOperations.openTrove. |
+| 36 | 132 | Liquity | redeem | redeemCollateral. |
+| 37 | 132 | Liquity | liquidate | liquidate after price override. |
+| 38 | 134 | Avant Protocol | stake avUSD | Avalanche/Ethereum staking vault. |
+| 39 | 136 | Solv Protocol (Stablecoin) | subscribe | BSC vault subscribe. |
+| 40 | 138 | Theo | unstake | Unstake / redeem. |
+| 41 | 139 | CIAN Yield Layer | withdraw request | requestRedeem. |
+| 42 | 143 | Polymarket | split / merge positions (CTF) | ConditionalTokens splitPosition on Polygon. |
+| 43 | 150 | SolvBTC | redeem | Redemption request. |
+| 44 | 152 | Venus Core Pool | borrow | vToken.borrow on BSC. |
+| 45 | 152 | Venus Core Pool | repay | repayBorrow. |
+| 46 | 152 | Venus Core Pool | redeem | redeemUnderlying. |
+| 47 | 157 | Curve DEX | add liquidity | pool.add_liquidity, assert LP. |
+| 48 | 157 | Curve DEX | remove liquidity | remove_liquidity_one_coin. |
+| 49 | 157 | Curve DEX | gauge deposit | LiquidityGauge.deposit. |
+| 50 | 159 | Convex Finance | claim rewards | getReward after time warp. |
+| 51 | 161 | Fluid DEX | swap | FluidDexT1.swapIn on Ethereum. |
+| 52 | 167 | Aster (Bridge) | deposit | Aster deposit vault on BSC. |
+| 53 | 169 | Railgun | shield | RailgunSmartWallet.shield (needs a note commitment). |
+| 54 | 170 | BitFi Basis | deposit | Basis vault deposit on BSC. |
+| 55 | 171 | Benqi Staked Avax | request unlock | requestUnlock + cooldown. |
+| 56 | 172 | Pendle V2 | mint PT/YT | Router mintPyFromToken. |
+| 57 | 172 | Pendle V2 | swap PT | Router swapExactTokenForPt. |
+| 58 | 172 | Pendle V2 | add liquidity | addLiquiditySingleToken. |
+| 59 | 176 | Rocket Pool | burn rETH | rETH.burn against deposit pool liquidity. |
+| 60 | 181 | Fluid Lending | fToken deposit | fUSDC ERC-4626 deposit. |
+| 61 | 181 | Fluid Lending | vault borrow | Fluid vault operate(). |
+| 62 | 191 | Aero (DEX) | add liquidity | Router.addLiquidity. |
+| 63 | 191 | Aero (DEX) | gauge stake | Gauge.deposit. |
+| 64 | 191 | Aero (DEX) | lock AERO (veNFT) | VotingEscrow.createLock. |
+| 65 | 192 | Mellow Core | vault deposit | Mellow vault deposit on Ethereum. |
+| 66 | 195 | USD AI | mint USDai | USDai mint from USDC on Arbitrum. |
+| 67 | - | Axelar | callContract / sendToken | Gateway.sendToken / ITS interchainTransfer on Ethereum. |
+| 68 | - | Balancer | join pool | Vault.joinPool / V3 addLiquidity. |
+| 69 | - | Benqi Lending | borrow | qiToken.borrow on Avalanche. |
+| 70 | - | Benqi Lending | redeem | redeemUnderlying. |
+| 71 | - | Euler | borrow (EVC) | EVC enableController + borrow. |
+| 72 | - | Frax | mint frxETH | frxETHMinter.submit. |
+| 73 | - | Kelp DAO | withdraw request | LRTWithdrawalManager.initiateWithdrawal. |
+| 74 | - | Lyra / Derive | deposit | Socket bridge deposit to Derive chain. |
+| 75 | - | Renzo | withdraw request | WithdrawQueue.withdraw. |
+| 76 | - | Rysk V12 | options trade | HyperEVM/Arbitrum options; chain not configured. |
+| 77 | - | SushiSwap | add liquidity | Router addLiquidity. |
+| 78 | - | Symbiotic | vault deposit | Vault.deposit. |
+| 79 | - | xDai Stake Bridge | relay tokens | Omnibridge relayTokens on Ethereum. |
 
 ## Per protocol
 
@@ -123,7 +110,7 @@ Docs: https://docs.layerzero.network/v2 · 2/3 tested-direct, 0 gap, 1 not testa
 
 ### #2 Aave
 
-Docs: https://aave.com/docs/developers/smart-contracts/pool · 5/8 tested-direct, 3 gap, 0 not testable
+Docs: https://aave.com/docs/developers/smart-contracts/pool · 8/8 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
@@ -132,13 +119,13 @@ Docs: https://aave.com/docs/developers/smart-contracts/pool · 5/8 tested-direct
 | repay | tested-direct | `fork:aave:repay` |  |
 | withdraw | tested-direct | `fork:aave:withdraw` |  |
 | liquidate | tested-direct | `simulate:aave:liquidations` |  |
-| flash loan | **gap** |  | Pool.flashLoanSimple with a receiver contract deployed on the fork. |
-| set collateral / e-mode | **gap** |  | setUserUseReserveAsCollateral and setUserEMode on a supplied position. |
-| stake AAVE (Umbrella/stkAAVE) | **gap** |  | stkAAVE stake + cooldown. |
+| flash loan | tested-direct | `fork:aave:flashloan` |  |
+| set collateral / e-mode | tested-direct | `fork:aave:emode` |  |
+| stake AAVE (Umbrella/stkAAVE) | tested-direct | `fork:aave:stake` |  |
 
 ### #3 SparkLend
 
-Docs: https://docs.spark.fi/dev/sparklend · 4/6 tested-direct, 2 gap, 0 not testable
+Docs: https://docs.spark.fi/dev/sparklend · 6/6 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
@@ -146,12 +133,12 @@ Docs: https://docs.spark.fi/dev/sparklend · 4/6 tested-direct, 2 gap, 0 not tes
 | borrow | tested-direct | `fork:spark:borrow` |  |
 | repay | tested-direct | `fork:spark:repay` |  |
 | withdraw | tested-direct | `fork:spark:withdraw` |  |
-| liquidate | **gap** |  | Aave-fork liquidationCall on a price-shocked position. |
-| flash loan | **gap** |  | Pool.flashLoanSimple. |
+| liquidate | tested-direct | `fork:spark:liquidate` |  |
+| flash loan | tested-direct | `fork:spark:flashloan` |  |
 
 ### #4 Morpho
 
-Docs: https://docs.morpho.org/build/borrow/concepts · 4/7 tested-direct, 2 gap, 0 not testable
+Docs: https://docs.morpho.org/build/borrow/concepts · 6/7 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
@@ -160,8 +147,8 @@ Docs: https://docs.morpho.org/build/borrow/concepts · 4/7 tested-direct, 2 gap,
 | repay + withdraw collateral | tested-direct | `fork:morpho:repay` |  |
 | withdraw (lender) | tested-direct | `fork:morpho:withdraw` |  |
 | MetaMorpho vault deposit | linked | `fork:steakhouse:deposit` | Curated MetaMorpho vault deposit. |
-| liquidate | **gap** |  | Morpho.liquidate after an oracle price override on the fork. |
-| flash loan | **gap** |  | Morpho.flashLoan with a callback contract. |
+| liquidate | tested-direct | `fork:morpho:liquidate` |  |
+| flash loan | tested-direct | `fork:morpho:flashloan` |  |
 
 ### #5 Lido
 
@@ -363,15 +350,15 @@ Docs: https://docs.defisaver.com · 0/1 tested-direct, 1 gap, 0 not testable
 
 ### #42 Curve Finance (Lending)
 
-Docs: https://docs.curve.finance/lending/overview · 2/5 tested-direct, 3 gap, 0 not testable
+Docs: https://docs.curve.finance/lending/overview · 5/5 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | lend (vault deposit) | tested-direct | `fork:llamalend:deposit` |  |
 | lend withdraw/redeem | tested-direct | `fork:llamalend:deposit` |  |
-| create loan (borrow) | **gap** |  | LlamaLend Controller.create_loan. |
-| repay | **gap** |  | Controller.repay. |
-| liquidate | **gap** |  | Controller.liquidate on a soft-liquidated band after price override. |
+| create loan (borrow) | tested-direct | `fork:llamalend:borrow` |  |
+| repay | tested-direct | `fork:llamalend:repay` |  |
+| liquidate | tested-direct | `fork:llamalend:liquidate` |  |
 
 ### #43 World Chain Bridge
 
@@ -590,7 +577,7 @@ Docs: https://docs.olympusdao.finance · 1/2 tested-direct, 1 gap, 0 not testabl
 
 ### #82 Compound Finance
 
-Docs: https://docs.compound.finance · 4/7 tested-direct, 3 gap, 0 not testable
+Docs: https://docs.compound.finance · 6/7 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
@@ -598,9 +585,9 @@ Docs: https://docs.compound.finance · 4/7 tested-direct, 3 gap, 0 not testable
 | borrow | tested-direct | `fork:compound:borrow` |  |
 | repay | tested-direct | `fork:compound:repay` |  |
 | withdraw | tested-direct | `fork:compound:withdraw` |  |
-| absorb (liquidate) | **gap** |  | Comet.absorb on an underwater account after an oracle override. |
-| buyCollateral | **gap** |  | Comet.buyCollateral when reserves are below target. |
-| claim COMP rewards | **gap** |  | CometRewards.claim after time warp. |
+| absorb (liquidate) | tested-direct | `fork:compound:absorb` |  |
+| buyCollateral | tested-direct | `fork:compound:buycollateral` |  |
+| claim COMP rewards | not-testable |  | baseTrackingSupplySpeed and baseTrackingBorrowSpeed are 0 on every Ethereum Comet (cUSDCv3, cWETHv3, cUSDTv3, cUSDSv3) as of 2026-11-02, so claim pays nothing to assert. |
 
 ### #83 Galaxy Curation
 

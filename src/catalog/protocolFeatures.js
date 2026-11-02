@@ -42,21 +42,21 @@ const P = [
   { key: "aave", name: "Aave", docs: "https://aave.com/docs/developers/smart-contracts/pool", features: {
     supply: t("fork:aave:supply"), borrow: t("fork:aave:borrow"), repay: t("fork:aave:repay"), withdraw: t("fork:aave:withdraw"),
     liquidate: t("simulate:aave:liquidations"),
-    "flash loan": g("Pool.flashLoanSimple with a receiver contract deployed on the fork."),
-    "set collateral / e-mode": g("setUserUseReserveAsCollateral and setUserEMode on a supplied position."),
-    "stake AAVE (Umbrella/stkAAVE)": g("stkAAVE stake + cooldown."),
+    "flash loan": t("fork:aave:flashloan"),
+    "set collateral / e-mode": t("fork:aave:emode"),
+    "stake AAVE (Umbrella/stkAAVE)": t("fork:aave:stake"),
   } },
   { key: "sparklend", name: "SparkLend", docs: "https://docs.spark.fi/dev/sparklend", features: {
     supply: t("fork:spark:supply"), borrow: t("fork:spark:borrow"), repay: t("fork:spark:repay"), withdraw: t("fork:spark:withdraw"),
-    liquidate: g("Aave-fork liquidationCall on a price-shocked position."),
-    "flash loan": g("Pool.flashLoanSimple."),
+    liquidate: t("fork:spark:liquidate"),
+    "flash loan": t("fork:spark:flashloan"),
   } },
   { key: "morpho", name: "Morpho", docs: "https://docs.morpho.org/build/borrow/concepts", features: {
     supply: t("fork:morpho:supply"), borrow: t("fork:morpho:borrow"),
     "repay + withdraw collateral": t("fork:morpho:repay"), "withdraw (lender)": t("fork:morpho:withdraw"),
     "MetaMorpho vault deposit": l("fork:steakhouse:deposit", "Curated MetaMorpho vault deposit."),
-    liquidate: g("Morpho.liquidate after an oracle price override on the fork."),
-    "flash loan": g("Morpho.flashLoan with a callback contract."),
+    liquidate: t("fork:morpho:liquidate"),
+    "flash loan": t("fork:morpho:flashloan"),
   } },
   { key: "lido", name: "Lido", docs: "https://docs.lido.fi/contracts/lido", features: {
     "stake ETH (submit)": t("fork:lido:submit"), "wrap stETH -> wstETH": t("fork:lido:wrap"),
@@ -126,9 +126,9 @@ const P = [
   } },
   { key: "curve-finance--lending", name: "Curve Finance (Lending)", docs: "https://docs.curve.finance/lending/overview", features: {
     "lend (vault deposit)": t("fork:llamalend:deposit"), "lend withdraw/redeem": t("fork:llamalend:deposit"),
-    "create loan (borrow)": g("LlamaLend Controller.create_loan."),
-    "repay": g("Controller.repay."),
-    "liquidate": g("Controller.liquidate on a soft-liquidated band after price override."),
+    "create loan (borrow)": t("fork:llamalend:borrow"),
+    "repay": t("fork:llamalend:repay"),
+    "liquidate": t("fork:llamalend:liquidate"),
   } },
   { key: "world-chain-bridge", name: "World Chain Bridge", docs: "https://docs.world.org/world-chain", features: {
     "L1 -> L2 deposit": t("fork:world-chain:deposit"), "L2 -> L1 withdraw": n("OP Stack proof + 7-day window on the L2 fork."),
@@ -204,9 +204,9 @@ const P = [
   { key: "compound-finance", name: "Compound Finance", docs: "https://docs.compound.finance", features: {
     "supply": t("fork:compound:supply"), "borrow": t("fork:compound:borrow"),
     "repay": t("fork:compound:repay"), "withdraw": t("fork:compound:withdraw"),
-    "absorb (liquidate)": g("Comet.absorb on an underwater account after an oracle override."),
-    "buyCollateral": g("Comet.buyCollateral when reserves are below target."),
-    "claim COMP rewards": g("CometRewards.claim after time warp."),
+    "absorb (liquidate)": t("fork:compound:absorb"),
+    "buyCollateral": t("fork:compound:buycollateral"),
+    "claim COMP rewards": n("baseTrackingSupplySpeed and baseTrackingBorrowSpeed are 0 on every Ethereum Comet (cUSDCv3, cWETHv3, cUSDTv3, cUSDSv3) as of 2026-11-02, so claim pays nothing to assert."),
   } },
   { key: "galaxy-curation", name: "Galaxy Curation", docs: "https://docs.morpho.org", features: {
     "vault deposit": t("fork:galaxy:deposit"), "vault withdraw/redeem": t("fork:galaxy:deposit"),
