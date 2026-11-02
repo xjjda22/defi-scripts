@@ -152,6 +152,22 @@ function main() {
   const tabs = Object.entries(data.byCategory)
     .map(([id, rows]) => `${id} ${rows.length}`)
     .join(", ");
+  // Freshness: warn (not fail) when the build is older than SHOWCASE_MAX_AGE_HOURS (48).
+  const maxAge = Number(process.env.SHOWCASE_MAX_AGE_HOURS) || 48;
+  const ageHours = (Date.now() - new Date(data.generatedAt).getTime()) / 3600000;
+  if (!Number.isFinite(ageHours)) console.warn(`WARNING: showcase/data.json generatedAt ${data.generatedAt} is not a date`);
+  else if (ageHours > maxAge) {
+    const msg = `showcase/data.json is ${(ageHours / 24).toFixed(1)} days old (generated ${data.generatedAt}, limit ${maxAge} h); rebuild with npm run showcase:build`;
+    console.warn(`WARNING: ${msg}`);
+    if (process.env.GITHUB_ACTIONS) console.log(`::warning title=Stale showcase data::${msg}`);
+  }
+  const STATES = new Set(["paused", "closing", "exploited", "shut-down", "deprecated"]);
+  for (const row of overall) {
+    if (row.protocolStatus != null && !STATES.has(row.protocolStatus)) {
+      console.error(`${row.id}: protocolStatus ${row.protocolStatus} is not one of ${[...STATES].join(", ")}`);
+      process.exit(1);
+    }
+  }
   const fork = data.stats && data.stats.forkInTop200;
   const apiOnly = data.stats && data.stats.apiOnlyInTop200;
   console.log(

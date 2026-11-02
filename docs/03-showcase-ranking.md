@@ -136,6 +136,10 @@ The table above describes what ships today. What the catch-all actually holds, a
 
 **Disputed data** (`dataDisputed`, `disputes`): rows whose DefiLlama figures a claims run found contradicted are listed in `data/disputes.json` and shown with a "data disputed" badge. Scores are not adjusted; the flag stops the board from presenting those figures as settled. `stats.disputed` counts open disputes and flagged rows.
 
+**Protocol status** (`protocolStatus`, `protocolStatuses`, `stats.protocolStatus`): one of `exploited`, `shut-down`, `closing`, `paused`, `deprecated` (most severe wins; all are kept in `protocolStatuses` with reason, date and source). Sources: curated `data/row-status.json` (claims and health runs), the fork pre-check list in `src/catalog/forkStatus.js` (`kind`), and DefiLlama's `deprecated` flag when every member protocol carries it. Shown as a red badge; score weights are unchanged.
+
+**Freshness:** the page shows the build age next to the generated time and turns amber at 48 h. `npm run showcase:check` prints a warning (a GitHub `::warning` in CI) when `generatedAt` is older than 48 h (`SHOWCASE_MAX_AGE_HOURS` overrides); it does not fail the gate.
+
 **Perps** (`volumeBasis`, `volumeNote`): DefiLlama perp volume (`/summary/derivatives`) is Pro-only, so perps rows have no volume input. `volumeMomentum` is the neutral 0.5 and the score leans on TVL and 30-day fees. Open interest is read by claim monitors only and is not a score input. Nothing is estimated or back-filled.
 
 ## Output
