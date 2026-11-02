@@ -3,6 +3,69 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-11-02] follow-up: devil's-advocate fixes
+
+Fixes from the 2026-11-02 top-200 audit. Squash-merged as [#50](https://github.com/xjjda22/defi-scripts/pull/50) (infra, `a3f790f`) and [#51](https://github.com/xjjda22/defi-scripts/pull/51) (coverage and data integrity, `d01b8f5`). Ranking, scores and `showcase/data.json` `generatedAt` (2026-10-29T16:54Z) are unchanged; only stamps were added.
+
+### Fixed
+
+- **Fork coverage counted paused and borrowed tests as coverage.** Each row now has `testing.status`: `direct`, `linked` (ether.fi Liquid and Nonce Capital via `fork:veda:deposit`), `failing-paused` (`fork:dolomite:supply` with every Ethereum market closing, `fork:swell:deposit`) or `none`. The headline counts `direct` only; `stats.forkInTop200` stays for continuity. World Chain Bridge stays `direct`: `fork:world-chain:deposit` calls World Chain's own L1StandardBridge.
+- **The coverage denominator moved with every rebuild** (101 → 102 → 104). It is now pinned in `data/coverage-snapshot.json` (id `2026-11-02`, 106 forkable rows with Avalanche, 104 on the old chain set). Re-pinning is explicit (`npm run coverage:pin -- <id>`).
+- **`src/utils/prices.js` called CoinGecko keyless.** It now uses the shared `src/utils/coingeckoClient.js` (key and Demo/Pro tier when set, keyless public fallback, one 429 retry); the ranking's attention source uses the same client. `ethBtcRatio` verified live.
+- **Anvil not on `PATH`.** `scripts/lib/anvil.js` finds `ANVIL_BIN`, then `PATH`, then `~/.foundry/bin/anvil`; used by `startFork`, `forkSuite` and `validateForkSimulations`.
+- **CI implied a fork-test pass.** With no RPC URL configured, the `fork-suite` job now writes "SKIPPED: no fork test ran" to the job summary and a warning annotation.
+
+### Changed
+
+- `forkSuite.js`: public RPC fallbacks per chain when the configured upstream cannot start a fork (Optimism, BSC, Arbitrum, Avalanche, Base, Monad; `FORK_RPC_FALLBACK=0` disables, `FORK_PUBLIC_RPC=1` opts in when unset); one retry for RPC-looking failures and known flakes (`fork:velodrome:swap`, `fork:venus:supply`, `fork:rockawayx:deposit`, `fork:etherfi-cash:supply`), labelled "(passed on retry)"; GitHub step summary.
+- Showcase: status badges (fork / linked / protocol paused / API-only), a "data disputed" badge, coverage stats (direct of pinned forkable, linked, failing-paused, top-50 direct, non-forkable). `showcaseCheck` validates `testing.status`.
+- Perps rows carry `volumeBasis` / `volumeNote`: DefiLlama perp volume is Pro-only, so perps have no volume input (neutral 0.5) and lean on TVL and fees. Open interest is read by claim monitors only and is not a score input. No estimated data.
+- Docs: `docs/03` (coverage, disputes, perps), `docs/04` (Avalanche, anvil discovery, fallbacks and retries), new `docs/07-playground-priorities.md`: next playground batches take top-50 gaps first, then forkable `none` rows, then `linked` rows, then the long tail.
+- `CONTRIBUTING.md` and `.github/pull_request_template.md`: every change goes through a PR. Branch protection is unchanged.
+
+### Added
+
+- **Avalanche C-Chain fork support** (`src/config/chains.js`, `AVALANCHE_RPC_URL` with public default `api.avax.network`).
+- `fork:benqi:supply`: 100 native USDC into Benqi qiUSDCn and redeem (Comptroller `mintGuardianPaused` pre-check). Addresses from docs.benqi.fi: Comptroller `0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4`, qiUSDCn `0xB715808a78F6041E46d61Cb123C9B4A27056AE9C`, USDC `0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E`.
+- `fork:benqi:stake`: 1 AVAX into sAVAX `0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE` (`mintingPaused` pre-check).
+- `fork:layerzero:send` (#1 LayerZero V2): OFT send through the USDT0 OApp, asserting the OApp's `endpoint()` is EndpointV2 `0x1a44076050125825900e736c501f859c50fE728c`, `PacketSent` from the configured send library and the outbound nonce +1. Replaces the row's old API-only note.
+- `data/disputes.json`: 16 claim-vs-DefiLlama mismatches (Sky, EURC, Open USD, USDD, Aave V4, Aave V3 weekly TVL, Pendle +43% vs +33.3% and $336K, HyperLend, Hyperliquid, Morpho, plus chain-level Sui, Avalanche, HyperEVM, Beam, Pareto). Rows get `dataDisputed` and `disputes`; `stats.disputed` counts them. Six top-200 rows are flagged: Aave, Morpho, Sky, HyperLend Pooled, Pendle V2, USDD.
+
+### Decisions
+
+- **Coinbase Bridge (#8)**: API-only with a documented reason. It is custodial, TVL sits on Bitcoin, Ripple and Cardano, and only Coinbase mints the wrapped assets.
+- **Fence Finance**: contracts-only. Its Avalanche TranchePool was drained (~$1.01M, 2026-10-27), so a deposit test would be meaningless.
+- **Hyperliquid Bridge and Tornado Cash**: no tests, as recorded before.
+- **Disputes flag rows, not scores.** Adjusting scores on a claim would trust the claim over DefiLlama without a third source.
+- **`308faf0`** re-checked. It is a single github-actions "Refresh showcase/data.json" commit from 2026-10-10 on `fix/gap-audit-2026-10-10`; its parent `bf0193d` is already on `main`. The data is superseded by every later build (and by the 2026-10-29 CoinGecko-era methodology), and nothing in it is salvageable. Dropped; the branch is left for Harry to delete.
+- **Unreviewed pushes recorded, history not rewritten.** The 2026-10-30 showcase commits `e3bd201`…`97d5aab` and `31885fb` (2026-11-02, "Scripts 2026-11-02: driver tables for three families, CoinGecko link on the board", 48 files) landed on `main` without a PR.
+
+### Verified (2026-11-02, live Anvil 1.8.5)
+
+| Check | Result |
+| --- | --- |
+| `fork:benqi:supply` (Avalanche, block 99176378) | PASS: 100 USDC → 3918.31 qiUSDCn → 99.999999 USDC, 0 qiUSDCn left |
+| `fork:benqi:stake` | PASS: 1 AVAX → 0.773325058029912809 sAVAX = pre-tx `getSharesByPooledAvax` |
+| `fork:layerzero:send` (Ethereum, block 26323689) | PASS: EID 30101, nonce 38335 → 38336, PacketSent from SendUln302 `0xbB2Ea70C…` |
+| `CHAINS=avalanche FORK_PUBLIC_RPC=1 npm run fork:all` | 2 PASS |
+| Ethereum subset (layerzero, usdt0, veda, dolomite) | 3 PASS, 1 FAIL (Dolomite, `failing-paused`) |
+| RPC fallback | bad `OPTIMISM_RPC_URL` + `PATH` without Foundry → publicnode fallback, `~/.foundry/bin/anvil` found, `fork:etherfi-cash:supply` PASS |
+| Coverage (snapshot 2026-11-02, 106 forkable) | direct **67**, linked **2**, failing-paused **1**, none 36 |
+| Top 50 | direct **26**, linked 1, none 23 (every forkable top-50 gap documented in `docs/07`) |
+| Top 200 | direct 70, linked 2, failing-paused 1, API-only 127 |
+| Non-forkable top-200 rows | **94**: no chain TVL 35, Solana 22, Bitcoin 14, Hyperliquid L1 5, Tron 4, other 14 |
+| Gates | lint, `catalog:docs` + `catalog:check`, `showcaseCheck`, `showcaseSignalsCheck`; CI green on #50 and #51 |
+
+### Known issues carried forward
+
+- **`showcase/data.json` is three days old** (built 2026-10-29). Scores do not reflect Aave and Compound unfreezing, Dolomite closing, the Polymarket exploit or the Blast shutdown until the next rebuild.
+- **Missing inputs still score a neutral 0.5** (153 rows on `volumeMomentum`, 138 on `attention`). Not changed in this pass.
+- **Non-DeFi and zero-TVL rows** are still ranked (35 rows with no chain TVL). Not changed in this pass.
+- **X-mention bonus near the cutoff** is unchanged (rank 190–200 gap 0.024).
+- **Nansen signal** is off (no key, no redistribution approval).
+- **Busy X lists are keyword-only.** Routine side, not repo code.
+- **Swell paused, Dolomite markets closing**: `failing-paused` until they reopen.
+
 ## [2026-11-02]
 
 Mon/Wed/Fri pass: claims from 2026-10-29 21:00Z to ~2026-11-01 21:30Z, the playground batch and the health check. Squash-merged on 2026-11-02 as [#45](https://github.com/xjjda22/defi-scripts/pull/45) (health, `b95b59c`), [#46](https://github.com/xjjda22/defi-scripts/pull/46) (playground, `1caf723`) and [#48](https://github.com/xjjda22/defi-scripts/pull/48) (claims, `5ca6a72`). The claims part stopped before pushing; part 4 finished its regression and gates, pushed it and rebuilt it on `main` after #45/#46 (the first push, [#47](https://github.com/xjjda22/defi-scripts/pull/47), was closed as superseded).
