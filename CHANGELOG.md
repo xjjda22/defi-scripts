@@ -3,6 +3,37 @@
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
+## [2026-11-02] gap batch 1 (30% target): lending, DEX, staking/vaults
+
+First batch against the `docs/08` gap list, run as three parallel batches. Squash-merged as [#55](https://github.com/xjjda22/defi-scripts/pull/55) (lending, `0d48d48`), [#56](https://github.com/xjjda22/defi-scripts/pull/56) (DEX, `5f0f052`) and [#57](https://github.com/xjjda22/defi-scripts/pull/57) (staking/vaults, `7707c7f`). Every new test passed a live Anvil fork run.
+
+### Added
+
+- Lending (#55, 12 tests): Aave flash loan, e-mode and collateral switch, stkAAVE stake; SparkLend flash loan and liquidation; Morpho Blue flash loan and liquidation; Compound III `absorb` and `buyCollateral`; LlamaLend borrow, repay and liquidate.
+- DEX (#56, 11 tests): Uniswap V2 add liquidity, V3 mint and remove, V4 add liquidity; PancakeSwap V2 swap, V3 mint and remove, MasterChef farm; Curve 3pool add/remove liquidity and gauge deposit.
+- Staking/vaults (#57, 9 tests): Veda withdraw request, Sky redeem and PSM, ether.fi, Kelp, Renzo, Rocket Pool, StakeWise and Lista unstake/exit flows.
+
+### Changed
+
+- Sentora redeem test fixed (no longer a read-only gap).
+- mETH and StakeWise osETH features remapped to their correct scripts.
+- `fork:hyperithm:deposit` flake fixed.
+- Compound COMP reward claim marked not testable: every Ethereum Comet market pays a reward rate of 0.
+
+### Totals (`docs/08`)
+
+| Protocols | Features | Tested-direct | Linked | Failing-paused | Gap | Not testable |
+| --- | --- | --- | --- | --- | --- | --- |
+| 127 | 284 | 171 (was 136) | 3 | 2 | **56** (was 92) | 52 (was 51) |
+
+36 of 92 gaps closed (39%), above the 30% target.
+
+### Known issues
+
+- Defi Saver automation/recipes is still a gap (needs the recipe encoder).
+- Lista DAO (Lending) redeem runs read-only (`maxDeposit` 0); Lista borrow is still a gap.
+- Next gaps from `docs/08` Top gaps: Avalon Superearn deposit, Falcon unstake cooldown, Cooler Loans repay, ether.fi Liquid USD/BTC deposit, Curvance borrow, fx Protocol mint and stability pool, EigenCloud withdrawal and delegation, Meta Pool withdraw request, Liquity open/redeem/liquidate.
+
 ## [2026-11-02] feature x test matrix and first gap batch
 
 Fork and simulation tests are now the top priority: every protocol's every public, permissionless feature is tested locally on an Anvil fork.
