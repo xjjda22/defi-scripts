@@ -67,6 +67,7 @@ async function run() {
     if (protocol === "sky" && action === "sdai") return await skyVault(base, "sDAI", SKY.sdai, SKY.dai, "DAI");
     if (protocol === "ethena" && action === "stake") return await ethenaStake(base);
     if (protocol === "ethena" && action === "cooldown") return await ethenaCooldown(base);
+    if (protocol === "ethena" && action === "unstake") return await ethenaUnstake(base);
     if (protocol === "circle") return await transferOnly(base, "USDC", COMMON_TOKENS.USDC.ethereum, 6, true);
     if (protocol === "tether") return await transferOnly(base, "USDT", COMMON_TOKENS.USDT.ethereum, 6, false);
     if (protocol === "frax") return await fraxRate(base);
@@ -168,6 +169,49 @@ async function ethenaStake(base) {
     key: `sUSDe=${formatUnits(before, 18)}->${formatUnits(after, 18)} rate=${formatUnits(rate, 18)}`,
     detail: `staked ${formatUnits(amount, 18)} USDe\nsUSDe ${formatUnits(before, 18)} -> ${formatUnits(after, 18)}\nconvertToAssets(1) ${formatUnits(rate, 18)} USDe\nUSDe mint is whitelisted and was not called\ntx ${receipt.hash}`,
     error: ok ? null : "sUSDe balance did not increase",
+  });
+}
+
+/** Stake, cool down, advance the fork past cooldownDuration, unstake to the wallet. */
+async function ethenaUnstake(base) {
+  const amount = ethers.parseUnits(process.env.FORK_AMOUNT || "100", 18);
+  const signer = await impersonateFunded(base.chain, "USDe", ETHENA.usde, amount);
+  const user = await signer.getAddress();
+  const provider = getProvider(base.chain);
+  const susde = new ethers.Contract(
+    ETHENA.susde,
+    [
+      ...VAULT,
+      "function cooldownShares(uint256 shares) returns (uint256)",
+      "function cooldownDuration() view returns (uint24)",
+      "function cooldowns(address) view returns (uint104 cooldownEnd, uint152 underlyingAmount)",
+      "function unstake(address receiver)",
+    ],
+    signer
+  );
+  const usde = new ethers.Contract(ETHENA.usde, ["function balanceOf(address) view returns (uint256)"], provider);
+  await approve(ETHENA.usde, signer, ETHENA.susde, amount);
+  const sharesBefore = await susde.balanceOf(user);
+  await (await susde.deposit(amount, user)).wait();
+  const shares = (await susde.balanceOf(user)) - sharesBefore;
+  const duration = await susde.cooldownDuration();
+  if (duration === 0n) return finish({ ...base, ok: false, error: "cooldownDuration is 0; unstake path is ERC4626 redeem, not tested here" });
+  await (await susde.cooldownShares(shares)).wait();
+  const cd = await susde.cooldowns(user);
+  await provider.send("evm_increaseTime", [Number(duration) + 1]);
+  await provider.send("evm_mine", []);
+  const before = await usde.balanceOf(user);
+  const tx = await susde.unstake(user);
+  const receipt = await tx.wait();
+  const after = await usde.balanceOf(user);
+  const cleared = await susde.cooldowns(user);
+  const ok = after - before === cd.underlyingAmount && cd.underlyingAmount > 0n && cleared.underlyingAmount === 0n;
+  return finish({
+    ...base,
+    ok,
+    key: `USDe=${formatUnits(before, 18)}->${formatUnits(after, 18)} cooldown=${duration}s`,
+    detail: `cooled ${formatUnits(shares, 18)} sUSDe, advanced ${duration}s, unstaked ${formatUnits(cd.underlyingAmount, 18)} USDe\ntx ${receipt.hash}`,
+    error: ok ? null : "unstake did not pay out the cooled-down USDe",
   });
 }
 

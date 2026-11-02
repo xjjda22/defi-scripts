@@ -18,6 +18,9 @@ const ABI = [
   "function supply((address loanToken,address collateralToken,address oracle,address irm,uint256 lltv) marketParams, uint256 assets, uint256 shares, address onBehalf, bytes data) returns (uint256, uint256)",
   "function supplyCollateral((address loanToken,address collateralToken,address oracle,address irm,uint256 lltv) marketParams, uint256 assets, address onBehalf, bytes data)",
   "function borrow((address loanToken,address collateralToken,address oracle,address irm,uint256 lltv) marketParams, uint256 assets, uint256 shares, address onBehalf, address receiver) returns (uint256, uint256)",
+  "function repay((address loanToken,address collateralToken,address oracle,address irm,uint256 lltv) marketParams, uint256 assets, uint256 shares, address onBehalf, bytes data) returns (uint256, uint256)",
+  "function withdraw((address loanToken,address collateralToken,address oracle,address irm,uint256 lltv) marketParams, uint256 assets, uint256 shares, address onBehalf, address receiver) returns (uint256, uint256)",
+  "function withdrawCollateral((address loanToken,address collateralToken,address oracle,address irm,uint256 lltv) marketParams, uint256 assets, address onBehalf, address receiver)",
   "function position(bytes32 id, address user) view returns (uint256 supplyShares, uint128 borrowShares, uint128 collateral)",
 ];
 
@@ -113,6 +116,8 @@ async function run() {
   try {
     if (action === "supply") return await supplyLoan({ chain, protocol, action, ctx, usdc, market, marketId, provider });
     if (action === "borrow") return await borrowLoan({ chain, protocol, action, ctx, usdc, weth, market, marketId, provider });
+    if (action === "repay") return await repayLoan({ chain, protocol, action, ctx, usdc, weth, market, marketId, provider });
+    if (action === "withdraw") return await withdrawLoan({ chain, protocol, action, ctx, usdc, weth, market, marketId, provider });
     return finish({ ok: false, protocol, action, chain, block: ctx.forkBlock, error: `Unknown action ${action}` });
   } catch (err) {
     return finish({
@@ -178,6 +183,80 @@ async function borrowLoan({ chain, protocol, action, ctx, usdc, weth, market, ma
     key: `borrowShares=${sharesBefore}->${position.borrowShares} collateral=${formatUnits(position.collateral, 18)}WETH usdc=${formatUnits(before, 6)}->${formatUnits(after, 6)}`,
     detail: `market ${marketId}\ncollateral ${formatUnits(position.collateral, 18)} WETH\nborrowShares ${sharesBefore} -> ${position.borrowShares}\nUSDC ${formatUnits(before, 6)} -> ${formatUnits(after, 6)}\ntx ${receipt.hash}`,
     error: ok ? null : "borrow did not open a position",
+  });
+}
+
+const ERC20 = ["function approve(address,uint256) returns (bool)", "function balanceOf(address) view returns (uint256)"];
+
+/** Open a WETH-collateral USDC borrow, repay half the assets, then withdraw part of the collateral. */
+async function repayLoan({ chain, protocol, action, ctx, usdc, weth, market, marketId, provider }) {
+  const collateral = ethers.parseEther(process.env.FORK_COLLATERAL || "1");
+  const borrow = ethers.parseUnits(process.env.FORK_AMOUNT || "100", 6);
+  const signer = await impersonateFunded(chain, "WETH", weth, collateral);
+  const user = await signer.getAddress();
+  const morphoRead = new ethers.Contract(MORPHO_BLUE, ABI, provider);
+  const morpho = new ethers.Contract(MORPHO_BLUE, ABI, signer);
+  const wethToken = new ethers.Contract(weth, ERC20, signer);
+  const usdcToken = new ethers.Contract(usdc, ERC20, signer);
+  await (await wethToken.approve(MORPHO_BLUE, collateral)).wait();
+  await (await morpho.supplyCollateral(market, collateral, user, "0x")).wait();
+  await (await morpho.borrow(market, borrow, 0, user, user)).wait();
+  const before = await morphoRead.position(marketId, user);
+  const repay = borrow / 2n;
+  await (await usdcToken.approve(MORPHO_BLUE, repay)).wait();
+  const tx = await morpho.repay(market, repay, 0, user, "0x");
+  const receipt = await tx.wait();
+  const mid = await morphoRead.position(marketId, user);
+  const wethBefore = await wethToken.balanceOf(user);
+  const back = collateral / 10n;
+  await (await morpho.withdrawCollateral(market, back, user, user)).wait();
+  const after = await morphoRead.position(marketId, user);
+  const wethAfter = await wethToken.balanceOf(user);
+  const ok =
+    before.borrowShares > 0n &&
+    mid.borrowShares < before.borrowShares &&
+    mid.borrowShares > 0n &&
+    wethAfter - wethBefore === back &&
+    after.collateral === before.collateral - back;
+  return finish({
+    ok,
+    protocol,
+    action,
+    chain,
+    block: ctx.forkBlock,
+    key: `borrowShares=${before.borrowShares}->${mid.borrowShares} collateral=${formatUnits(before.collateral, 18)}->${formatUnits(after.collateral, 18)}WETH`,
+    detail: `market ${marketId}\nrepaid ${formatUnits(repay, 6)} USDC, withdrew ${formatUnits(back, 18)} WETH collateral\ntx ${receipt.hash}`,
+    error: ok ? null : "repay did not cut borrow shares or collateral withdraw failed",
+  });
+}
+
+/** Supply USDC, then withdraw half of it as the lender. */
+async function withdrawLoan({ chain, protocol, action, ctx, usdc, market, marketId, provider }) {
+  const amount = ethers.parseUnits(process.env.FORK_AMOUNT || "1000", 6);
+  const signer = await impersonateFunded(chain, "USDC", usdc, amount);
+  const user = await signer.getAddress();
+  const morphoRead = new ethers.Contract(MORPHO_BLUE, ABI, provider);
+  const morpho = new ethers.Contract(MORPHO_BLUE, ABI, signer);
+  const usdcToken = new ethers.Contract(usdc, ERC20, signer);
+  await (await usdcToken.approve(MORPHO_BLUE, amount)).wait();
+  await (await morpho.supply(market, amount, 0, user, "0x")).wait();
+  const before = (await morphoRead.position(marketId, user)).supplyShares;
+  const walletBefore = await usdcToken.balanceOf(user);
+  const out = amount / 2n;
+  const tx = await morpho.withdraw(market, out, 0, user, user);
+  const receipt = await tx.wait();
+  const after = (await morphoRead.position(marketId, user)).supplyShares;
+  const walletAfter = await usdcToken.balanceOf(user);
+  const ok = walletAfter - walletBefore === out && after < before && after > 0n;
+  return finish({
+    ok,
+    protocol,
+    action,
+    chain,
+    block: ctx.forkBlock,
+    key: `supplyShares=${before}->${after} usdc=${formatUnits(walletBefore, 6)}->${formatUnits(walletAfter, 6)}`,
+    detail: `market ${marketId}\nwithdrew ${formatUnits(out, 6)} of ${formatUnits(amount, 6)} USDC\ntx ${receipt.hash}`,
+    error: ok ? null : "withdraw did not return USDC and burn supply shares",
   });
 }
 
