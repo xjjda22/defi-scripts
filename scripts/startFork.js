@@ -8,7 +8,7 @@
  *   CHAIN=arbitrum node scripts/startFork.js  # Fork Arbitrum
  */
 require("dotenv").config();
-const { spawn, spawnSync } = require("child_process");
+const { spawn } = require("child_process");
 const { CHAINS } = require("../src/config/chains");
 
 const CHAIN = process.env.CHAIN || "ethereum";
@@ -52,21 +52,16 @@ if (FORK_BLOCK) {
   args.push("--fork-block-number", FORK_BLOCK);
 }
 
-function anvilMissing() {
-  const check = spawnSync("anvil", ["--version"], { encoding: "utf8" });
-  return Boolean(check.error) || check.status !== 0;
-}
+const { anvilBin, anvilMissing, printAnvilHelp } = require("./lib/anvil");
 
 if (anvilMissing()) {
-  console.error("anvil was not found on PATH.");
-  console.error("Install Foundry, then open a new shell:");
-  console.error("  curl -L https://foundry.paradigm.xyz | bash && foundryup");
+  printAnvilHelp();
   process.exit(1);
 }
 
 console.log(`Starting Anvil...\n`);
 
-const anvil = spawn("anvil", args, {
+const anvil = spawn(anvilBin(), args, {
   stdio: "inherit",
 });
 
