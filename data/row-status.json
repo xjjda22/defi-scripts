@@ -1,0 +1,12 @@
+{
+  "note": "Per-row protocol state from health and claims runs (/workspace/defi-run/*/health.md, claim monitors, DefiLlama /hacks). Shown as a badge; scores ignore it. Remove or set resolved when the state ends. Fork pause pre-checks in src/catalog/forkStatus.js (PAUSED) and DefiLlama deprecated flags add statuses automatically.",
+  "updatedAt": "2026-11-02",
+  "statuses": [
+    { "rowIds": ["polymarket"], "status": "exploited", "since": "2026-10-29", "reason": "Frontend drain (~$2.6-2.7M) on 2026-10-29; tracked by the 2026-11-02 claims monitor (DefiLlama /hacks).", "source": "claims 2026-11-02 (#48)" },
+    { "rowIds": ["fence-finance", "fence"], "status": "exploited", "since": "2026-10-27", "reason": "Avalanche TranchePool drained, $1.01M (DefiLlama /hacks).", "source": "claims 2026-10-30 (#41)" },
+    { "rowIds": ["zklink-nova", "zklink"], "status": "exploited", "since": "2026-10-28", "reason": "Ethereum bridge drained, $783.10K (DefiLlama /hacks).", "source": "claims 2026-10-30 (#41)" },
+    { "rowIds": ["thruster"], "status": "shut-down", "since": "2026-10-31", "reason": "Blast chain shut down; DefiLlama Thruster TVL $3.9M (10-29) -> $0 (10-31).", "source": "health 2026-11-02 (#45)" },
+    { "rowIds": ["blast", "blast-bridge"], "status": "shut-down", "since": "2026-10-31", "reason": "Blast chain TVL $0 from 2026-10-31; rpc.blast.io returns 'no available nodes'.", "source": "health 2026-11-02 (#45)" },
+    { "rowIds": ["swell-liquid-restaking", "swell-liquid-staking", "swell"], "status": "paused", "since": "2026-10-21", "reason": "Core methods, bot methods and withdrawals paused after the 2026-10-21 incident.", "source": "health 2026-10-28..2026-11-02" }
+  ]
+}

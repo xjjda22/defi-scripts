@@ -11,3 +11,4 @@ data/*
 !data/x-mentions.json
 !data/disputes.json
 !data/coverage-snapshot.json
+!data/row-status.json

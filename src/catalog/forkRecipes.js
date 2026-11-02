@@ -1238,6 +1238,7 @@ function enrichShowcase(data) {
   data.stats.coverage = coverageStats(data);
   applyDisputes(data);
   annotatePerps(data);
+  require("./rowStatus").applyRowStatus(data);
   data.methodology = data.methodology || {};
   data.methodology.testnets = TESTNETS;
   data.methodology.chainlinkFaucet = CHAINLINK;
