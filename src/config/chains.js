@@ -538,6 +538,14 @@ const CHAINS = {
       },
     },
   },
+  // Avalanche C-Chain. Public default so `CHAIN=avalanche node scripts/startFork.js` works
+  // without an env var; set AVALANCHE_RPC_URL for an archive or keyed node.
+  avalanche: {
+    name: "Avalanche C-Chain",
+    chainId: 43114,
+    rpcUrl: process.env.AVALANCHE_RPC_URL || "https://api.avax.network/ext/bc/C/rpc",
+    explorer: "https://snowtrace.io",
+  },
 };
 
 // Common tokens for analysis
