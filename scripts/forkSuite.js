@@ -13,7 +13,7 @@
  */
 
 require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
-const { spawn, spawnSync } = require("child_process");
+const { spawn } = require("child_process");
 const path = require("path");
 const { suitePlans, RPC_ENV } = require("../src/catalog/forkRecipes");
 
@@ -27,8 +27,57 @@ function sleep(ms) {
 
 function upstream(chain) {
   if (chain === "ethereum") return process.env.ETHEREUM_RPC_URL || process.env.ETH_RPC_URL || "";
-  return process.env[RPC_ENV[chain]] || "";
+  const configured = process.env[RPC_ENV[chain]] || "";
+  if (configured) return configured;
+  // FORK_PUBLIC_RPC=1 (local opt-in) forks from the first public endpoint instead of skipping.
+  if (process.env.FORK_PUBLIC_RPC === "1" && PUBLIC_RPCS[chain]) return PUBLIC_RPCS[chain][0];
+  return "";
 }
+
+/**
+ * Public fallbacks, tried in order when the configured upstream cannot start an Anvil
+ * fork (rate limit, archive limit, dead node). Disable with FORK_RPC_FALLBACK=0.
+ * publicnode Base answers "Archive requests require a personal token", so Base uses
+ * the official endpoint only.
+ */
+const PUBLIC_RPCS = {
+  ethereum: ["https://ethereum-rpc.publicnode.com", "https://eth.llamarpc.com"],
+  optimism: ["https://optimism-rpc.publicnode.com", "https://mainnet.optimism.io"],
+  base: ["https://mainnet.base.org"],
+  arbitrum: ["https://arb1.arbitrum.io/rpc", "https://arbitrum-one-rpc.publicnode.com"],
+  bsc: ["https://bsc-rpc.publicnode.com", "https://bsc-dataseed.bnbchain.org"],
+  avalanche: ["https://api.avax.network/ext/bc/C/rpc", "https://avalanche-c-chain-rpc.publicnode.com"],
+  monad: ["https://rpc.monad.xyz"],
+};
+
+function candidates(chain) {
+  const first = upstream(chain);
+  if (!first) return [];
+  const list = [first];
+  if (process.env.FORK_RPC_FALLBACK !== "0") {
+    for (const url of PUBLIC_RPCS[chain] || []) if (!list.includes(url)) list.push(url);
+  }
+  return list;
+}
+
+function hostOf(url) {
+  try {
+    return new URL(url).host;
+  } catch {
+    return "(configured)";
+  }
+}
+
+// A FAIL whose output matches one of these is an RPC problem, not a test result.
+const TRANSIENT = /timeout|timed out|ECONNRESET|ECONNREFUSED|socket hang up|429|Too Many Requests|rate limit|header not found|missing trie node|Archive requests|could not detect network|SERVER_ERROR|502|503|504/i;
+// Tests seen flaking on public RPCs or on protocol liquidity; retried once on any FAIL.
+const RETRY_ONCE = new Set(
+  (process.env.FORK_RETRY_SCRIPTS ||
+    "fork:velodrome:swap,fork:venus:supply,fork:rockawayx:deposit,fork:etherfi-cash:supply")
+    .split(",")
+    .map(item => item.trim())
+    .filter(Boolean)
+);
 
 function selectedChains(plans) {
   const raw = (process.env.CHAINS || "").trim();
@@ -69,7 +118,7 @@ async function waitForRpc(url, timeoutMs) {
 function startAnvil(url, port, forkBlock) {
   const args = ["--fork-url", url, "--port", String(port), "--host", "127.0.0.1"];
   if (forkBlock) args.push("--fork-block-number", String(forkBlock));
-  const proc = spawn("anvil", args, { stdio: ["ignore", "ignore", "pipe"], cwd: ROOT });
+  const proc = spawn(anvilBin(), args, { stdio: ["ignore", "ignore", "pipe"], cwd: ROOT });
   LIVE_ANVILS.add(proc);
   let stderr = "";
   proc.stderr.on("data", chunk => {
@@ -103,16 +152,7 @@ function stopAnvil(proc) {
   }
 }
 
-function anvilMissing() {
-  const check = spawnSync("anvil", ["--version"], { encoding: "utf8" });
-  return Boolean(check.error) || check.status !== 0;
-}
-
-function printAnvilHelp() {
-  console.error("anvil was not found on PATH.");
-  console.error("Install Foundry, then open a new shell:");
-  console.error("  curl -L https://foundry.paradigm.xyz | bash && foundryup");
-}
+const { anvilBin, anvilMissing, printAnvilHelp } = require("./lib/anvil");
 
 const TEST_TIMEOUT_MS = parseInt(process.env.FORK_TEST_TIMEOUT_MS || "180000", 10);
 
@@ -231,18 +271,27 @@ async function main() {
       continue;
     }
 
-    const started = startAnvil(url, port, forkBlock);
-    const forkUrl = `http://127.0.0.1:${port}`;
-    port += 1;
+    let started = null;
+    let forkUrl = "";
     let block = "-";
-    try {
-      block = String(await waitForRpc(forkUrl, ANVIL_READY_MS));
-      console.log(`\nAnvil ${chain} at ${forkUrl} block ${block}`);
-    } catch (err) {
-      stopAnvil(started.proc);
-      const reason = /429|rate limit|Too Many Requests/i.test(started.stderr())
-        ? "upstream RPC rate limit"
-        : err.message;
+    let reason = "";
+    for (const candidate of candidates(chain)) {
+      const attempt = startAnvil(candidate, port, forkBlock);
+      const attemptUrl = `http://127.0.0.1:${port}`;
+      port += 1;
+      try {
+        block = String(await waitForRpc(attemptUrl, ANVIL_READY_MS));
+        started = attempt;
+        forkUrl = attemptUrl;
+        console.log(`\nAnvil ${chain} at ${forkUrl} block ${block} (upstream ${hostOf(candidate)})`);
+        break;
+      } catch (err) {
+        stopAnvil(attempt.proc);
+        reason = /429|rate limit|Too Many Requests/i.test(attempt.stderr()) ? "upstream RPC rate limit" : err.message;
+        console.log(`Anvil ${chain} failed on ${hostOf(candidate)}: ${reason}`);
+      }
+    }
+    if (!started) {
       for (const plan of mine) {
         rows.push({
           script: plan.script,
@@ -261,7 +310,18 @@ async function main() {
 
     for (const plan of mine) {
       process.stdout.write(`→ ${plan.script} `);
-      const result = await runScript(plan.script, chain, forkUrl);
+      let result = await runScript(plan.script, chain, forkUrl);
+      const retry =
+        result.status === "FAIL" &&
+        process.env.FORK_RETRY !== "0" &&
+        (RETRY_ONCE.has(plan.script) || TRANSIENT.test(`${result.key} ${result.tail}`));
+      if (retry) {
+        process.stdout.write(`FAIL (retrying once) `);
+        const again = await runScript(plan.script, chain, forkUrl);
+        again.retried = true;
+        if (again.status === "PASS") again.key = `${again.key} (passed on retry)`.trim();
+        result = again;
+      }
       if (result.block === "-") result.block = block;
       rows.push(result);
       console.log(`${result.status}${result.key ? `  ${result.key}` : ""}`);
@@ -278,7 +338,19 @@ async function main() {
   const failed = rows.filter(row => row.status === "FAIL");
   const passed = rows.filter(row => row.status === "PASS").length;
   const skipped = rows.filter(row => row.status === "SKIP").length;
-  console.log(`\n${passed} PASS, ${failed.length} FAIL, ${skipped} SKIP`);
+  const retried = rows.filter(row => row.retried).length;
+  console.log(`\n${passed} PASS, ${failed.length} FAIL, ${skipped} SKIP${retried ? `, ${retried} retried` : ""}`);
+  if (process.env.GITHUB_STEP_SUMMARY) {
+    const lines = [
+      "## Fork suite",
+      "",
+      `${passed} PASS, ${failed.length} FAIL, ${skipped} SKIP${retried ? `, ${retried} retried` : ""}`,
+      "",
+    ];
+    const skippedChains = [...new Set(rows.filter(row => row.status === "SKIP").map(row => `${row.chain} (${row.tail})`))];
+    if (skippedChains.length) lines.push(`Skipped chains: ${skippedChains.join(", ")}`, "");
+    require("fs").appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
+  }
   if (failed.length) process.exit(1);
 }
 

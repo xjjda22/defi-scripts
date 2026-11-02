@@ -82,7 +82,7 @@ function startAnvil(upstream, port, forkBlock) {
   if (forkBlock && String(forkBlock).trim()) {
     args.push("--fork-block-number", String(forkBlock).trim());
   }
-  const proc = spawn("anvil", args, {
+  const proc = spawn(require("./lib/anvil").anvilBin() || "anvil", args, {
     stdio: ["ignore", "ignore", "pipe"],
     cwd: ROOT,
   });
@@ -271,8 +271,7 @@ async function main() {
     )
   );
 
-  const anvilCheck = spawnSync("anvil", ["--version"], { encoding: "utf8" });
-  if (anvilCheck.error || anvilCheck.status !== 0) {
+  if (require("./lib/anvil").anvilMissing()) {
     console.error(
       chalk.red("anvil not found. Install Foundry: https://book.getfoundry.sh/getting-started/installation")
     );

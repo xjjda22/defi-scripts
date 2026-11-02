@@ -27,21 +27,8 @@ const TTL_MS = Number(process.env.COINGECKO_CACHE_TTL_MS) || 6 * 3600 * 1000;
 const TIMEOUT_MS = Number(process.env.COINGECKO_TIMEOUT_MS) || 20000;
 const MAX_IDS_PER_CALL = 200;
 
-// Demo and Pro keys both use the CG- prefix, so the tier cannot be inferred from
-// the key. Demo is the default; a paid key opts in with COINGECKO_API_TIER=pro.
-function isPro() {
-  return String(process.env.COINGECKO_API_TIER || "demo").toLowerCase() === "pro";
-}
-
-function host() {
-  return isPro() ? "https://pro-api.coingecko.com/api/v3" : "https://api.coingecko.com/api/v3";
-}
-
-function authHeader() {
-  const key = process.env.COINGECKO_API_KEY || "";
-  if (!key) return {};
-  return isPro() ? { "x-cg-pro-api-key": key } : { "x-cg-demo-api-key": key };
-}
+// Host and auth header come from the shared client (Demo default, Pro opt-in).
+const { host, authHeader } = require("../../../utils/coingeckoClient");
 
 function readCache() {
   try {

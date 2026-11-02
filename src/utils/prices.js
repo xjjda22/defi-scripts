@@ -1,14 +1,11 @@
 // Price fetching utilities
-const axios = require("axios");
+// All calls go through the shared CoinGecko client: COINGECKO_API_KEY / COINGECKO_API_TIER
+// when set, keyless public host otherwise.
+const { cgGet } = require("./coingeckoClient");
 
 async function getTokenPrice(coingeckoId) {
   try {
-    const response = await axios.get("https://api.coingecko.com/api/v3/simple/price", {
-      params: {
-        ids: coingeckoId,
-        vs_currencies: "usd",
-      },
-    });
+    const response = await cgGet("/simple/price", { ids: coingeckoId, vs_currencies: "usd" });
     return response.data[coingeckoId]?.usd || 0;
   } catch (error) {
     console.warn(`Failed to fetch price for ${coingeckoId}:`, error.message);
@@ -18,12 +15,7 @@ async function getTokenPrice(coingeckoId) {
 
 async function getTokenPrices(coingeckoIds) {
   try {
-    const response = await axios.get("https://api.coingecko.com/api/v3/simple/price", {
-      params: {
-        ids: coingeckoIds.join(","),
-        vs_currencies: "usd,eth",
-      },
-    });
+    const response = await cgGet("/simple/price", { ids: coingeckoIds.join(","), vs_currencies: "usd,eth" });
     return response.data;
   } catch (error) {
     console.warn(`Failed to fetch prices:`, error.message);
@@ -46,12 +38,10 @@ function formatETH(value, ethPrice) {
  * @returns {Promise<Array<{ date: string, price: number }>>}
  */
 async function getDailyUsdPrices(coingeckoId, days = 60) {
-  const { data } = await axios.get(
-    `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(coingeckoId)}/market_chart`,
-    {
-      params: { vs_currency: "usd", days, interval: "daily" },
-      timeout: 60000,
-    }
+  const { data } = await cgGet(
+    `/coins/${encodeURIComponent(coingeckoId)}/market_chart`,
+    { vs_currency: "usd", days, interval: "daily" },
+    { timeout: 60000 }
   );
   const pts = Array.isArray(data && data.prices) ? data.prices : [];
   const byDate = {};
