@@ -9,3 +9,5 @@ output/*
 # Generated and sensitive files. The X mention counts are committed.
 data/*
 !data/x-mentions.json
+!data/disputes.json
+!data/coverage-snapshot.json
