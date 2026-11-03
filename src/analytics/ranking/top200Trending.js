@@ -528,8 +528,7 @@ function methodology(corpus, weights, signals, universe) {
       (universe
         ? `The candidate pool is the union of DefiLlama's top ${universe.overall} rows by TVL, CoinGecko's top ${universe.overall} tokens by market cap and the top ${universe.perCategory} rows in every category (${universe.candidates} rows); percentiles are computed inside that pool. `
         : "") +
-      `The score is a weighted sum of percentiles across the pool: ${parts.join(", ")}, plus a small bonus ` +
-      "per distinct X post from the user's lists. Percentiles cannot saturate, so a fresh listing cannot jump the board on a " +
+      `The score is a weighted sum of percentiles across the pool: ${parts.join(", ")}. Percentiles cannot saturate, so a fresh listing cannot jump the board on a " +
       "capped growth number. A family with no TVL 180 days ago is marked New: its relative growth is neutral and it is judged on " +
       "the dollars it has gathered." +
       signalNote +

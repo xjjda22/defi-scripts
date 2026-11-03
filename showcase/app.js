@@ -111,13 +111,6 @@ function signalsCell(row) {
   return parts.length ? parts.join("") : '<span class="chg">—</span>';
 }
 
-function mentionBadge(row) {
-  const n = row.xMentions || 0;
-  if (!n) return '<span class="chg">0</span>';
-  const lists = (row.xLists || []).join(", ");
-  return `<span class="badge mentions" title="${esc(`${n} distinct posts${lists ? ` on ${lists}` : ""}`)}">${n}</span>`;
-}
-
 // CoinGecko product page. Falls back to the mapped token id so a data.json built
 // before coingeckoUrl existed still renders the link.
 function geckoUrl(row) {
@@ -422,7 +415,7 @@ function breakdown(row) {
       .filter(Boolean)
       .join(", ");
     parts.push(
-      `<p>Score ${isNum(row.score) ? row.score.toFixed(3) : "—"}. Percentiles: size ${pct(c.size)}, growth ${pct(c.growth)}, TVL added ${pct(c.tvlAdded)}, fees momentum ${pct(c.feesMomentum)}, volume momentum ${pct(c.volumeMomentum)}${signalBits ? `, ${signalBits}` : ""}. X bonus +${isNum(c.mentions) ? c.mentions.toFixed(3) : "0"}.</p>`
+      `<p>Score ${isNum(row.score) ? row.score.toFixed(3) : "—"}. Percentiles: size ${pct(c.size)}, growth ${pct(c.growth)}, TVL added ${pct(c.tvlAdded)}, fees momentum ${pct(c.feesMomentum)}, volume momentum ${pct(c.volumeMomentum)}${signalBits ? `, ${signalBits}` : ""}.</p>`
     );
   }
   const facts = [];
@@ -573,7 +566,6 @@ function renderMethod() {
   const m = state.data.methodology || {};
   const w = m.weights || {};
   const floors = m.floors || {};
-  const corpus = m.mentionCorpus;
   const labels = {
     size: "size",
     growth: "6-month growth",
@@ -586,9 +578,6 @@ function renderMethod() {
   const weightLine = Object.entries(w)
     .map(([key, value]) => `${esc(labels[key] || key)} ${esc(value)}`)
     .join(" · ");
-  const corpusLine = corpus
-    ? `<li>X mentions: ${esc(corpus.posts)} distinct posts from ${esc((corpus.lists || []).length)} lists, ${esc(corpus.from)} to ${esc(corpus.to)}. ${esc(m.mentionBonus || "")}.</li>`
-    : `<li>X mentions: ${esc(m.mentionBonus || "")}.</li>`;
   const sources = (m.sources || [])
     .map(source => {
       const stateLabel = !source.enabled ? "off" : source.available ? `${source.matched} rows` : "unavailable";
@@ -611,7 +600,6 @@ function renderMethod() {
       <li>Weights: ${weightLine}.</li>
       ${sourceLine}
       ${legendLine}
-      ${corpusLine}
       <li>${esc(state.data.stats && state.data.stats.eligible)} protocol rows scored. Floors: TVL ${money(floors.minTvlUsd)}, or 30-day fees ${money(floors.minFees30dUsd)}, or 30-day volume ${money(floors.minVolume30dUsd)}. Excluded: ${esc((m.excluded || []).join(", "))}.</li>
     </ul>`;
 }
@@ -647,7 +635,6 @@ function renderTable() {
         <td class="num" data-label="6-month TVL">${changeCell(row)}</td>
         <td class="num" data-label="6-month added">${addedCell(row.tvlAdded6m)}</td>
         <td class="num" data-label="30d fees">${money(row.fees30d)}</td>
-        <td class="num" data-label="X posts">${mentionBadge(row)}</td>
         <td class="num" data-label="Signals">${signalsCell(row)}</td>
         <td data-label="Contracts">${coverageBadge(row)}</td>
         <td class="scripts" data-label="Scripts">${scriptsCell(row.scripts)}</td>
@@ -790,7 +777,7 @@ async function init() {
       ? "token attention and smart-money flow, "
       : "an external signal, "
     : "";
-  $("lede").textContent = `The top ${stats.overall || 200} DeFi protocols by a six-month trend score: size, TVL growth in percent and in dollars, fees and volume momentum, ${signalText}and a small bonus for posts on the tracked X lists.`;
+  $("lede").textContent = `The top ${stats.overall || 200} DeFi protocols by a six-month trend score: size, TVL growth in percent and in dollars, fees and volume momentum${signalText ? `, ${signalText.trim().replace(/,$/, "")}` : ""}.`;
   $("generated").textContent = generatedLabel(state.data.generatedAt);
   {
     const hours = (Date.now() - new Date(state.data.generatedAt).getTime()) / 3600000;
