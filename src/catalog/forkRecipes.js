@@ -1049,6 +1049,20 @@ const FORK_RECIPES = [
     contractKeys: ["polymarket"],
     tests: [test("fork:polymarket:split", "split", "polygon")],
   }),
+  recipe({
+    keys: ["armitage"],
+    appUrl: "https://armitage.wintermute.com",
+    chain: "ethereum",
+    contractKeys: ["armitage"],
+    tests: [test("fork:armitage:deposit", "deposit", "ethereum")],
+  }),
+  recipe({
+    keys: ["xdai-stake-bridge"],
+    appUrl: "https://www.gnosis.io/",
+    chain: "ethereum",
+    contractKeys: ["xdai-stake-bridge"],
+    tests: [test("fork:xdai-stake-bridge:deposit", "deposit", "ethereum")],
+  }),
 ];
 
 const API_ONLY = [

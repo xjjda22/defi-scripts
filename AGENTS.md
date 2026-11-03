@@ -108,31 +108,39 @@ npm run check:contracts                           # fork contracts match their s
 node scripts/showcaseCheck.js                     # data.json shape + publishSafe
 node scripts/showcaseSignalsCheck.js              # CoinGecko/Nansen plumbing
 npm run fork:all                                  # SKIPPED without RPC is not a pass
+npm run check:fork-deploy                         # local bytecode deploys on every chain fork
+npm run check:venues                              # every configured address has code on its chain
+npm run check:venue-map                           # docs/09 matches chains.js
+npm run check:aave-fork                           # real Aave flash loan through the receiver, per chain fork
 ```
 
 Everything marked `[reviewed]` has no gate. If you add a gate for one, flip its tag in the same PR.
 
-## 6. Snapshot — 2026-11-02 18:06 rebuild (#60)
+## 6. Snapshot — board 2026-11-02 18:06 (#60) + fork wave 4 (2026-11-03)
 
 The four buckets sum to 200. Rows, not scripts: one protocol family is one row.
 
 | | Rows |
 |---|---:|
 | Top 200 | 200 |
-| Bucket 1 — fork-tested | 89 |
+| Bucket 1 — fork-tested | 91 |
 | Bucket 2 — API-only, reason written | 18 |
 | Bucket 3 — not forkable | 91 |
-| Bucket 4 — EVM-forkable, not built | 2 |
+| Bucket 4 — EVM-forkable, not built | 0 |
 | Candidate pool | 268 |
 | Rows with a dedicated monitor | 97 |
 | Ranking-only rows | 103 |
 
-Rebuilt from `showcase/data.json` (`generatedAt` 2026-11-02T18:06Z) after the fork campaign landed:
-fork stamps went 72 → 89, and bucket 4 is down to the two rows nothing has investigated yet —
-Armitage by Wintermute and xDAI Stake Bridge. Bucket 2 is 18: the four rows the campaign proved
-not forkable (Liquid Collective, Solv stablecoin, SoSoValue Indexes, Avalanche Core Bridge) now
-carry `API_ONLY` entries with the on-chain evidence, offset by the board churn of that rebuild —
-14 rows entered and 14 left, so the old 15 is not a base you can add to.
+`showcase/data.json` is the 2026-11-02 18:06 board and still says 89 fork stamps; the numbers
+above are the live config after fork wave 4 (2026-11-03), so they are one rebuild ahead of it.
+Bucket 4 is **empty**: the last two rows closed with `fork:armitage:deposit` (100 USDC into the
+Armitage-curated Morpho Vault V2, asserting shares / `totalSupply` / `totalAssets` deltas) and
+`fork:xdai-stake-bridge:deposit` (`relayTokens` on the USDS lockbox, asserting the bridge's
+collateral and daily-limit deltas). So 89 + 2 = 91, and 91 + 18 + 91 + 0 = 200.
+
+Bucket 2 is 18, not 15 + 4: the four rows the earlier campaign proved infeasible carry
+`API_ONLY` entries with on-chain evidence, but that rebuild churned 14 rows in and 14 out, so the
+old 15 is not a base you can add to.
 
 Bucket 3 is 91, not the 96 that `stats.coverage.nonForkable` reports: that count overlaps
 `API_ONLY`, and the buckets here are disjoint so they sum to 200. Do not add a curated row to

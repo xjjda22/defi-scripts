@@ -1,23 +1,23 @@
 # Fork coverage plan (2026-11-03)
 
-Status: **campaign closed, two rows open.** Fork tests cover 89 of the top 200 rows; 111 do not.
-The queue is down to two rows nothing has investigated: Armitage by Wintermute and xDAI Stake
-Bridge. Figures are the 2026-11-02 18:06 board rebuild — `showcase/data.json` is authoritative
-and these move on every rebuild.
+Status: **campaign closed, queue empty.** Fork tests cover 91 of the top 200 rows; 109 do not.
+The last two rows closed in fork wave 4 (2026-11-03) — Armitage by Wintermute and xDAI Stake
+Bridge. The 2026-11-02 18:06 board still prints 89 for the same reason a photograph is not the
+street: it predates those two tests, and the next `ranking:top200` rebuild will show 91.
 
 ## Both numbers are smaller than they look
 
 | Bucket | Rows | Can a fork test cover it? |
 | --- | ---: | --- |
 | Top 200 | 200 | — |
-| Has a `fork:*` stamp | 89 | — |
-| No fork test | 111 | — |
+| Has a `fork:*` stamp | 91 | — |
+| No fork test | 109 | — |
 | — documented as infeasible in `API_ONLY` | 18 | No, with a written reason |
 | — non-EVM, or no chain TVL (Solana, Bitcoin, Hyperliquid L1, Tron, Sui, Stellar, others) | 91 | No: the suite is EVM-only |
-| **— EVM-forkable, just not built** | **2** | **Yes — the last two rows** |
+| **— EVM-forkable, just not built** | **0** | **Queue empty** |
 
-So "test every protocol's contracts" meant a few dozen tests, not 111. The other 109 already have
-a reason not to exist; that reason is data, not debt, and it is what `API_ONLY` records.
+So "test every protocol's contracts" meant a few dozen tests, not 109. Every remaining row has a
+reason not to exist; that reason is data, not debt, and it is what `API_ONLY` records.
 
 ## What the campaign changed
 

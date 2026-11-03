@@ -60,6 +60,19 @@ function printHeader(title) {
   console.log(chalk.cyan("═".repeat(70) + "\n"));
 }
 
+// A missing venue used to be indistinguishable from an empty pool: both returned null.
+// Say which one it is, once per chain, so a quote that cannot exist reads as a config gap.
+const { venueGap } = require("../config/venues");
+const notedGaps = new Set();
+function noteGap(chainKey, protocol) {
+  const key = `${chainKey}:${protocol}`;
+  if (notedGaps.has(key)) return;
+  const gap = venueGap(chainKey, protocol);
+  if (!gap) return;
+  notedGaps.add(key);
+  console.log(chalk.gray(`  · ${gap}`));
+}
+
 function printSection(title) {
   console.log(chalk.yellow(`\n${title}`));
   console.log(chalk.gray("─".repeat(70)));
@@ -68,7 +81,7 @@ function printSection(title) {
 async function getUniswapV2Quote(chainKey, tokenIn, tokenOut, amountIn) {
   try {
     const chain = CHAINS[chainKey];
-    if (!chain?.uniswap?.v2?.router) return null;
+    if (!chain?.uniswap?.v2?.router) return noteGap(chainKey, "uniswap") ?? null;
     const provider = getProvider(chainKey);
     const router = new ethers.Contract(
       chain.uniswap.v2.router,
@@ -93,7 +106,7 @@ async function getUniswapV3Quote(chainKey, tokenIn, tokenOut, amountIn) {
 
 async function getUniswapV4Quote(chainKey, tokenIn, tokenOut, amountIn) {
   try {
-    if (!CHAINS[chainKey]?.uniswap?.v4?.poolManager) return null;
+    if (!CHAINS[chainKey]?.uniswap?.v4?.poolManager) return noteGap(chainKey, "uniswap") ?? null;
     let best = { amountOut: "0", fee: 3000 };
     for (const fee of FEE_TIERS_V3) {
       try {
@@ -129,7 +142,7 @@ async function getSushiSwapV2Quote(chainKey, tokenIn, tokenOut, amountIn) {
 
 async function getSushiSwapV3QuoteBest(chainKey, tokenIn, tokenOut, amountIn) {
   try {
-    if (!CHAINS[chainKey]?.sushiswap?.v3?.quoter) return null;
+    if (!CHAINS[chainKey]?.sushiswap?.v3?.quoter) return noteGap(chainKey, "sushiswap") ?? null;
     let best = { amountOut: "0", fee: 3000 };
     for (const fee of FEE_TIERS_V3) {
       try {

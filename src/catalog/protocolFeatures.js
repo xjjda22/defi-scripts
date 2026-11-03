@@ -326,11 +326,17 @@ const P = [
   } },
   { key: "sosovalue-indexes", name: "SoSoValue Indexes", docs: "https://sosovalue.com", features: { "mint index": n("Base-only deployment (the row's Ethereum TVL is the ETH leg inside the Base baskets) and the mint is KYB-WLP gated: AssetToken.mint is ISSUER_ROLE, addMintRequest rejects non-participants. Verified 2026-11-03.") } },
   // ---- pinned rows not in the current build ------------------------------------------
-  { key: "armitage-by-wintermute", name: "Armitage by Wintermute", docs: "https://wintermute.com", features: { "vault deposit": n("Permissioned institutional vault.") } },
+  { key: "armitage-by-wintermute", name: "Armitage by Wintermute", docs: "https://armitage.wintermute.com", features: {
+    "vault deposit (Wintermute USDC Select, Morpho Vault V2)": t("fork:armitage:deposit"),
+    "curator / owner functions": n("curator() and owner() are Gnosis Safe proxies; allocation is not permissionless."),
+  } },
   { key: "rysk-v12", name: "Rysk V12", docs: "https://docs.rysk.finance", features: { "options trade": g("HyperEVM/Arbitrum options; chain not configured.") } },
   { key: "axelar", name: "Axelar", docs: "https://docs.axelar.dev", features: { "callContract / sendToken": t("fork:axelar:send-message") } },
   { key: "fraxtal", name: "Fraxtal", docs: "https://docs.frax.com/fraxtal", features: { "L1 ERC-20 deposit (canonical bridge)": t("fork:fraxtal:deposit-erc20"), "L1 ETH deposit": n("Custom gas token chain: depositETH reverts and the bridge holds no ETH.") } },
-  { key: "xdai-stake-bridge", name: "xDai Stake Bridge", docs: "https://docs.gnosischain.com", features: { "relay tokens": g("Omnibridge relayTokens on Ethereum.") } },
+  { key: "xdai-stake-bridge", name: "xDai Stake Bridge", docs: "https://docs.gnosischain.com", features: {
+    "relayTokens (USDS lockbox)": t("fork:xdai-stake-bridge:deposit"),
+    "OmniBridge relayTokens (erc-to-erc sibling)": g("The $239.9M sibling bridge 0x88ad…5671 has its own relayTokens surface; not asserted by the lockbox test."),
+  } },
   { key: "lyra", name: "Lyra / Derive", docs: "https://docs.derive.xyz", features: { "deposit": t("fork:derive-v3:deposit") } },
   { key: "benqi-lending", name: "Benqi Lending", docs: "https://docs.benqi.fi", features: { "supply": t("fork:benqi:supply"), "borrow": g("qiToken.borrow on Avalanche."), "redeem": g("redeemUnderlying.") } },
   // ---- catalog protocols with fork tests, outside the current top 200 -----------------

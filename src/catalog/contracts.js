@@ -110,6 +110,8 @@ const DOCS = {
   olympus: "https://docs.olympusdao.finance/main/contracts/addresses",
   stakeLink: "https://docs.stake.link/resources/contracts-and-integrations",
   fluidLite: "https://lite.guides.instadapp.io/getting-started/vault-receipt-tokens",
+  "xdai-stake-bridgeDoc": "https://github.com/DefiLlama/DefiLlama-Adapters/blob/08239f856c/projects/xdai/index.js",
+  "armitageDoc": "https://armitage.wintermute.com/docs/vaults/select",
   "polymarketDoc": "https://docs.polymarket.com/developers/CTF/overview",
   "hyperliquid-bridgeDoc": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/usdc",
   "avantDoc": "https://docs.avantprotocol.com/security/contract-addresses",
@@ -910,6 +912,23 @@ function contractBook() {
   push(book["polymarket"], "polygon", "CTF Exchange V2", "0xE111180000d2663C0091e4f400237545B87B996B", DOCS['polymarketDoc']);
   push(book["polymarket"], "polygon", "CtfCollateralAdapter V2 (unwraps pUSD to USDC.e and splits the CTF)", "0xADa100874d00e3331D00F2007a9c336a65009718", DOCS['polymarketDoc']);
   push(book["polymarket"], "polygon", "pUSD / Polymarket USD (PMCT, the V2 exchange collateral wrapper)", "0xC011a7E12a19f7B1f670d46F03B03f3342E82DFB", DOCS['polymarketDoc']);
+
+  book["armitage"] = [];
+  push(book["armitage"], "ethereum", "Wintermute USDC Select (Morpho Vault V2, symbol armUSDCs; largest of the seven Armitage-curated vaults)", "0xA2EAaD0D586cF9FD73bb2c09cF6A7E3e187D68cd", DOCS['armitageDoc']);
+  push(book["armitage"], "ethereum", "USDC (Ethereum; asset() of five of the seven vaults)", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", DOCS['armitageDoc']);
+  push(book["armitage"], "ethereum", "Armitage curator (curator() of all seven vaults; a 3-of-6 Gnosis Safe)", "0x4687E45bB5518a995913a24BB2816fe2031d74D8", DOCS['armitageDoc']);
+  push(book["armitage"], "ethereum", "Wintermute USDC Prime (Morpho Vault V2, symbol armUSDCp)", "0x5dc53a23AdC9f2Bed98de6F59F7F309a7c71FF2B", DOCS['armitageDoc']);
+  push(book["armitage"], "ethereum", "Wintermute USDT Prime (Morpho Vault V2, symbol armUSDTp)", "0xBf29043164660C60A2a72Cd15FFe2304e87B6838", DOCS['armitageDoc']);
+  push(book["armitage"], "ethereum", "Wintermute USDT Select (Morpho Vault V2, symbol armUSDTs)", "0x500aE64100D7DbDb640531085C2F5d40cDC8930D", DOCS['armitageDoc']);
+  push(book["armitage"], "ethereum", "Pendle Ecosystem USDC (Morpho Vault V2, symbol pendleUSDC)", "0x55C1B6e461a6334B567bAF0FEb5D728715446f05", DOCS['armitageDoc']);
+  push(book["armitage"], "ethereum", "Pendle Ecosystem High Yield USDC (Morpho Vault V2, symbol pendleUSDChy)", "0xcf609F8327E68b42AF54F9D529b9f65d68038435", DOCS['armitageDoc']);
+  push(book["armitage"], "ethereum", "Wintermute Confidential WBTC (Morpho Vault V2, symbol armcWBTC)", "0x3d5EcCb62974178236A768A7ef14D3ce468Fbe91", DOCS['armitageDoc']);
+
+  book["xdai-stake-bridge"] = [];
+  push(book["xdai-stake-bridge"], "ethereum", "xDAI Stake Bridge, Ethereum side (POA EternalStorageProxy; implementation 0x257bDD093Cab1Bd39eBF837dCB60f33d031d7d49)", "0x4aa42145Aa6Ebf72e164C9bBC74fbD3788045016", DOCS['xdai-stake-bridgeDoc']);
+  push(book["xdai-stake-bridge"], "ethereum", "USDS (the bridge's collateral: erc20token(); locked on Ethereum, xDAI minted on Gnosis)", "0xdC035D45d973E3EC169d2276DDab16f1e407384F", DOCS['xdai-stake-bridgeDoc']);
+  push(book["xdai-stake-bridge"], "ethereum", "Gnosis OmniBridge, Ethereum side (erc-to-erc sibling; holds the bulk of the row's TVL)", "0x88ad09518695c6c3712AC10a214bE5109a655671", DOCS['xdai-stake-bridgeDoc']);
+  push(book["xdai-stake-bridge"], "ethereum", "Retired SAI bridge, Ethereum side (maxPerTx() and dailyLimit() are 0, so it is closed)", "0x7301CFA0e1756B71869E93d4e4Dca5c7d0eb0AA6", DOCS['xdai-stake-bridgeDoc']);
 
   return book;
 }

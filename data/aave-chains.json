@@ -1,0 +1,213 @@
+{
+  "checkedAt": "2026-11-03T00:36:34.958Z",
+  "chains": [
+    {
+      "chain": "ethereum",
+      "chainId": 1,
+      "pool": "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
+      "usdc": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "reserves": 67,
+      "verified": true,
+      "evidence": "source: pool from src/config/chains.js aave.v3.pool, confirmed by Aave address book AaveV3Ethereum.sol POOL (https://github.com/aave/aave-address-book); rpc eth_chainId=1 equals chains.js chainId 1; head block 26330711; eth_getCode(pool)=2400 bytes (non-empty); ADDRESSES_PROVIDER()=0x0542975c -> 0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e (non-zero, so code-only stub rejected); getReservesList()=0xd1946dbc -> 67 reserves; USDC derived on-chain: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 symbol()='USDC' name()='USD Coin' reserveIndex=3 eth_getCode=2186 bytes; map: 6/44 chains verified: ethereum, arbitrum, optimism, base, polygon, avalanche; end-to-end: forge test --match-contract AaveFlashReceiverFork PASSED on a local anvil fork of this chain (eth_chainId asserted = 1, fork-block 26330719, 1000e6 USDC flashLoanSimple through the locally built receiver)"
+    },
+    {
+      "chain": "arbitrum",
+      "chainId": 42161,
+      "pool": "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
+      "usdc": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+      "reserves": 20,
+      "verified": true,
+      "evidence": "source: pool from src/config/chains.js aave.v3.pool, confirmed by Aave address book AaveV3Arbitrum.sol POOL (https://github.com/aave/aave-address-book); rpc eth_chainId=42161 equals chains.js chainId 42161; head block 520724533; eth_getCode(pool)=2400 bytes (non-empty); ADDRESSES_PROVIDER()=0x0542975c -> 0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb (non-zero, so code-only stub rejected); getReservesList()=0xd1946dbc -> 20 reserves; USDC derived on-chain: 0xaf88d065e77c8cC2239327C5EDb3A432268e5831 symbol()='USDC' name()='USD Coin' reserveIndex=12 eth_getCode=1852 bytes; 2 reserves return symbol()='USDC' (2:0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8 name='USD Coin (Arb1)' no Circle FiatTokenProxy impl, 12:0xaf88d065e77c8cC2239327C5EDb3A432268e5831 name='USD Coin' Circle FiatTokenProxy impl set), picked the Circle FiatTokenProxy one: it is the native USDC whose balances mapping sits at slot 9, which the Aave fork test's _fundUsdc storage write requires (verified by eth_getStorageAt on the FiatTokenProxy impl slot); map: 6/44 chains verified: ethereum, arbitrum, optimism, base, polygon, avalanche; end-to-end: forge test --match-contract AaveFlashReceiverFork PASSED on a local anvil fork of this chain (eth_chainId asserted = 42161, fork-block 520724874, 1000e6 USDC flashLoanSimple through the locally built receiver)"
+    },
+    {
+      "chain": "optimism",
+      "chainId": 10,
+      "pool": "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
+      "usdc": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+      "reserves": 14,
+      "verified": true,
+      "evidence": "source: pool from src/config/chains.js aave.v3.pool, confirmed by Aave address book AaveV3Optimism.sol POOL (https://github.com/aave/aave-address-book); rpc eth_chainId=10 equals chains.js chainId 10; head block 159033643; eth_getCode(pool)=2400 bytes (non-empty); ADDRESSES_PROVIDER()=0x0542975c -> 0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb (non-zero, so code-only stub rejected); getReservesList()=0xd1946dbc -> 14 reserves; USDC derived on-chain: 0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85 symbol()='USDC' name()='USD Coin' reserveIndex=13 eth_getCode=1852 bytes; 2 reserves return symbol()='USDC' (2:0x7F5c764cBc14f9669B88837ca1490cCa17c31607 name='USD Coin' no Circle FiatTokenProxy impl, 13:0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85 name='USD Coin' Circle FiatTokenProxy impl set), picked the Circle FiatTokenProxy one: it is the native USDC whose balances mapping sits at slot 9, which the Aave fork test's _fundUsdc storage write requires (verified by eth_getStorageAt on the FiatTokenProxy impl slot); map: 6/44 chains verified: ethereum, arbitrum, optimism, base, polygon, avalanche; end-to-end: forge test --match-contract AaveFlashReceiverFork PASSED on a local anvil fork of this chain (eth_chainId asserted = 10, fork-block 159033695, 1000e6 USDC flashLoanSimple through the locally built receiver)"
+    },
+    {
+      "chain": "base",
+      "chainId": 8453,
+      "pool": "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5",
+      "usdc": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "reserves": 15,
+      "verified": true,
+      "evidence": "source: pool from src/config/chains.js aave.v3.pool, confirmed by Aave address book AaveV3Base.sol POOL (https://github.com/aave/aave-address-book); rpc eth_chainId=8453 equals chains.js chainId 8453; head block 53438358; eth_getCode(pool)=1933 bytes (non-empty); ADDRESSES_PROVIDER()=0x0542975c -> 0xe20fCBdBfFC4Dd138cE8b2E6FBb6CB49777ad64D (non-zero, so code-only stub rejected); getReservesList()=0xd1946dbc -> 15 reserves; USDC derived on-chain: 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913 symbol()='USDC' name()='USD Coin' reserveIndex=4 eth_getCode=1852 bytes; map: 6/44 chains verified: ethereum, arbitrum, optimism, base, polygon, avalanche; end-to-end: forge test --match-contract AaveFlashReceiverFork PASSED on a local anvil fork of this chain (eth_chainId asserted = 8453, fork-block 53438411, 1000e6 USDC flashLoanSimple through the locally built receiver)"
+    },
+    {
+      "chain": "polygon",
+      "chainId": 137,
+      "pool": "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
+      "usdc": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+      "reserves": 21,
+      "verified": true,
+      "evidence": "source: pool from src/config/chains.js aave.v3.pool, confirmed by Aave address book AaveV3Polygon.sol POOL (https://github.com/aave/aave-address-book); rpc eth_chainId=137 equals chains.js chainId 137; head block 96640405; eth_getCode(pool)=2400 bytes (non-empty); ADDRESSES_PROVIDER()=0x0542975c -> 0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb (non-zero, so code-only stub rejected); getReservesList()=0xd1946dbc -> 21 reserves; USDC derived on-chain: 0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359 symbol()='USDC' name()='USD Coin' reserveIndex=20 eth_getCode=1852 bytes; 2 reserves return symbol()='USDC' (2:0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174 name='USD Coin (PoS)' no Circle FiatTokenProxy impl, 20:0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359 name='USD Coin' Circle FiatTokenProxy impl set), picked the Circle FiatTokenProxy one: it is the native USDC whose balances mapping sits at slot 9, which the Aave fork test's _fundUsdc storage write requires (verified by eth_getStorageAt on the FiatTokenProxy impl slot); map: 6/44 chains verified: ethereum, arbitrum, optimism, base, polygon, avalanche; end-to-end: forge test --match-contract AaveFlashReceiverFork PASSED on a local anvil fork of this chain (eth_chainId asserted = 137, fork-block 96640477, 1000e6 USDC flashLoanSimple through the locally built receiver)"
+    },
+    {
+      "chain": "avalanche",
+      "chainId": 43114,
+      "pool": "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
+      "usdc": "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+      "reserves": 18,
+      "verified": true,
+      "evidence": "source: pool is the canonical Aave V3 singleton candidate (0x794a...), confirmed by Aave address book AaveV3Avalanche.sol POOL (https://github.com/aave/aave-address-book); rpc eth_chainId=43114 equals chains.js chainId 43114; head block 99264518; eth_getCode(pool)=2400 bytes (non-empty); ADDRESSES_PROVIDER()=0x0542975c -> 0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb (non-zero, so code-only stub rejected); getReservesList()=0xd1946dbc -> 18 reserves; USDC derived on-chain: 0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E symbol()='USDC' name()='USD Coin' reserveIndex=2 eth_getCode=1852 bytes; map: 6/44 chains verified: ethereum, arbitrum, optimism, base, polygon, avalanche; end-to-end: forge test --match-contract AaveFlashReceiverFork PASSED on a local anvil fork of this chain (eth_chainId asserted = 43114, fork-block 99264629, 1000e6 USDC flashLoanSimple through the locally built receiver)"
+    }
+  ],
+  "skipped": [
+    {
+      "chain": "bsc",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "zksync",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "scroll",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "unichain",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "monad",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "rootstock",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "gnosis",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "sonic",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "opbnb",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "lens",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "frax",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "boba",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "shape",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "worldchain",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "astar",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "flow",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "hyperliquid",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "metis",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "polygonzkevm",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "sei",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "story",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "soneium",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "ronin",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "abstract",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "megaeth",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "mantle",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "zetachain",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "plasma",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "apechain",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "mode",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "arbnova",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "celo",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "ink",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "linea",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "bob",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "berachain",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "blast",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    },
+    {
+      "chain": "zora",
+      "reason": "no candidate pool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD (canonical singleton) -> eth_getCode empty; 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 (canonical singleton) -> eth_getCode empty"
+    }
+  ]
+}

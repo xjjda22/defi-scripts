@@ -319,6 +319,8 @@
     "fork:portal:transfer": "CHAIN=ethereum FORK_TARGET=portal FORK_PROTOCOL=portal FORK_ACTION=transfer node src/simulation/fork/run.js",
     "fork:ccip:send": "CHAIN=ethereum FORK_TARGET=ccip FORK_PROTOCOL=ccip FORK_ACTION=send node src/simulation/fork/run.js",
     "fork:stakewise:deposit": "CHAIN=ethereum FORK_TARGET=stakewise FORK_PROTOCOL=stakewise FORK_ACTION=deposit node src/simulation/fork/run.js",
+    "fork:xdai-stake-bridge:deposit": "CHAIN=ethereum FORK_TARGET=xdai-stake-bridge FORK_PROTOCOL=xdai-stake-bridge FORK_ACTION=deposit node src/simulation/fork/run.js",
+    "fork:armitage:deposit": "CHAIN=ethereum FORK_TARGET=armitage FORK_PROTOCOL=armitage FORK_ACTION=deposit node src/simulation/fork/run.js",
     "fork:polymarket:split": "CHAIN=polygon FORK_TARGET=polymarket FORK_PROTOCOL=polymarket FORK_ACTION=split node src/simulation/fork/run.js",
     "fork:hyperliquid-bridge:deposit": "CHAIN=arbitrum FORK_TARGET=hyperliquid-bridge FORK_PROTOCOL=hyperliquid-bridge FORK_ACTION=deposit node src/simulation/fork/run.js",
     "fork:avant:stake": "CHAIN=avalanche FORK_TARGET=avant FORK_PROTOCOL=avant FORK_ACTION=stake node src/simulation/fork/run.js",
@@ -451,7 +453,15 @@
     "simulate:jupiter:eurc-apy:smoke": "LLAMA_YIELD_SMOKE=1 LLAMA_YIELD_MIN_TVL_USD=1000000 LLAMA_YIELD_POOL=c6d1abbb-1e0a-47a0-99bd-3155b797d7d3 LLAMA_YIELD_LABEL='Jupiter Lend EURC (Solana)' node src/analytics/protocols/llama/llamaYieldPoolMonitor.js",
     "simulate:faroo:tvl:smoke": "SMOKE_SLUG=faroo node src/simulation/api/smokeDefiLlamaProtocol.js",
     "coverage:features": "node scripts/featureGaps.js",
-    "coverage:features:check": "node scripts/featureGaps.js --check"
+    "coverage:features:check": "node scripts/featureGaps.js --check",
+    "chain:probe": "node scripts/alchemyProbe.js",
+    "chain:import": "node scripts/importChainSpecs.js",
+    "check:fork-deploy": "node scripts/forkDeployCheck.js",
+    "check:venues": "node scripts/venueCheck.js",
+    "chain:discover": "node scripts/venueDiscover.js",
+    "docs:venues": "node scripts/venueMap.js",
+    "check:venue-map": "node scripts/venueMap.js --check",
+    "check:aave-fork": "node scripts/forkAaveCheck.js"
   },
   "keywords": [
     "defi",
