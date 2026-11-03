@@ -75,6 +75,20 @@ function argsFor(name, abi) {
   );
 }
 
+async function withDeadline(promise, ms, label) {
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`${label} exceeded ${ms}ms`)), ms);
+  });
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+const CHAIN_ID_EXPECTED = Object.fromEntries(Object.entries(CHAINS).map(([k, v]) => [k, v.chainId]));
+
 async function checkChain(chainKey, index) {
   const chain = CHAINS[chainKey];
   if (!chain) throw new Error(`unknown chain "${chainKey}"`);
@@ -89,6 +103,15 @@ async function checkChain(chainKey, index) {
   const started = Date.now();
   try {
     const { provider, block } = await waitForRpc(url, READY_TIMEOUT_MS);
+
+    // The fork must be the chain we asked for. A stale process on the port answers happily
+    // with a different chain's state, which is how a matrix can be silently wrong.
+    const forkChainId = Number((await provider.getNetwork()).chainId);
+    if (CHAIN_ID_EXPECTED[chainKey] && forkChainId !== CHAIN_ID_EXPECTED[chainKey]) {
+      throw new Error(
+        `port ${port} answers chainId ${forkChainId}, expected ${CHAIN_ID_EXPECTED[chainKey]} (stale anvil?)`
+      );
+    }
     // Anvil signs with its own funded accounts; no key is held here.
     const wallet = await provider.getSigner(0);
     const deployed = [];
@@ -99,6 +122,7 @@ async function checkChain(chainKey, index) {
 
       let address;
       let how;
+      let gasUsed = "0";
       if (art.bytecode) {
         // Normal creation bytecode: deploy it.
         const factory = new ContractFactory(art.abi, art.bytecode, wallet);
@@ -113,6 +137,8 @@ async function checkChain(chainKey, index) {
         }
         await contract.waitForDeployment();
         address = getAddress(await contract.getAddress());
+        const receipt = await contract.deploymentTransaction().wait();
+        gasUsed = receipt.gasUsed.toString();
         how = "deploy";
       } else if (art.deployedBytecode) {
         // Deployed-only artifact (MockPrice): the fork suite installs it with anvil_setCode,
@@ -126,7 +152,7 @@ async function checkChain(chainKey, index) {
 
       const code = await provider.getCode(address);
       if (!code || code === "0x") throw new Error(`${name} installed with empty code`);
-      deployed.push({ name, address, how, codeBytes: (code.length - 2) / 2 });
+      deployed.push({ name, address, how, codeBytes: (code.length - 2) / 2, gasUsed });
     }
 
     // Read-backs: each contract must answer with what it was built with.
@@ -174,7 +200,12 @@ async function main() {
     Array.from({ length: Math.min(CONCURRENCY, keys.length) }, async () => {
       while (next < keys.length) {
         const i = next++;
-        results[i] = await checkChain(keys[i], i);
+        try {
+          results[i] = await withDeadline(checkChain(keys[i], i), 120000, keys[i]);
+        } catch (e) {
+          // A rejected chain must not abort the matrix: record it and keep going.
+          results[i] = { chain: keys[i], ok: false, error: e.message, tookMs: 0 };
+        }
         const r = results[i];
         console.log(`${r.ok ? "PASS" : "FAIL"}  ${r.chain.padEnd(14)} ${r.ok ? `chainId=${r.chainId} block=${r.forkBlock}` : r.error}`);
         fs.writeFileSync(path.join(OUT_DIR, `${r.chain}.json`), JSON.stringify(r, null, 2));

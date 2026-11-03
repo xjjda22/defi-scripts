@@ -113,13 +113,15 @@ async function runChain(chain) {
       child.stderr.on("data", (d) => (text += d));
       child.on("close", (code) => resolve({ code, text }));
     });
-    const passed = /\[PASS\] test_fork_aave_flashloan_roundtrip/.test(out.text);
+    const passLine = (out.text.match(/\[PASS\] test_fork_aave_flashloan_roundtrip\(\) \(gas: (\d+)\)/) || [])[1];
+    const passed = Boolean(passLine);
     return {
       chain,
       ok: out.code === 0 && passed,
       forkBlock: block,
       evidence,
       summary: (out.text.match(/Suite result:.*$/m) || [""])[0],
+      gas: passLine ? Number(passLine) : null,
       error: passed ? undefined : (out.text.match(/\[FAIL[^\]]*\]/) || ["forge test failed"])[0],
     };
   } catch (e) {

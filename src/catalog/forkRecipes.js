@@ -1050,7 +1050,7 @@ const FORK_RECIPES = [
     tests: [test("fork:polymarket:split", "split", "polygon")],
   }),
   recipe({
-    keys: ["armitage"],
+    keys: ["armitage", "armitage-by-wintermute"],
     appUrl: "https://armitage.wintermute.com",
     chain: "ethereum",
     contractKeys: ["armitage"],
