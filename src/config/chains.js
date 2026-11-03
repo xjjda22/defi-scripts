@@ -75,7 +75,6 @@ const CHAINS = {
           name: "tBTC/WBTC",
           version: "V1",
           type: "StableSwap",
-          address: "0xf95aaCB582520f8e5b7dEc1b3c97A4f6B39F9C09",
           lpToken: "0x64eda51d3Ad40D56b9dFc5554E06F94e1Dd786Fd",
           coins: ["tBTC", "WBTC"],
         },
@@ -124,7 +123,7 @@ const CHAINS = {
         },
       },
       v3: {
-        vault: "0xba1333333333a1BA1108E8412f11850A5C319bA9",
+        vault: "0xbA1333333333a1BA1108E8412f11850A5C319bA9",
         // V3 pools (if any configured)
         pools: {},
       },
@@ -151,6 +150,11 @@ const CHAINS = {
         poolDataProvider: "0x7B4EB56E7CD4b454BA8ff71E4518426369a138a3",
       },
     },
+    pancakeswap: {
+      v3: {
+        factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+      },
+    },
   },
   arbitrum: {
     name: "Arbitrum",
@@ -160,7 +164,6 @@ const CHAINS = {
     uniswap: {
       v2: {
         factory: "0xf1D7CC64Fb4452F05c498126312eBE29f30Fbcf9",
-        router: "0x4752ba5DBc23f44D87826288BF4d6A27Cf9A024E",
       },
       v3: {
         factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
@@ -170,7 +173,6 @@ const CHAINS = {
       },
       v4: {
         // V4 - uses same singleton PoolManager address across chains
-        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
       },
     },
     curve: {
@@ -184,7 +186,7 @@ const CHAINS = {
         pools: {},
       },
       v3: {
-        vault: "0xba1333333333a1BA1108E8412f11850A5C319bA9",
+        vault: "0xbA1333333333a1BA1108E8412f11850A5C319bA9",
         pools: {},
       },
     },
@@ -205,6 +207,11 @@ const CHAINS = {
         poolDataProvider: "0x69FA688f1Dc47d4B5d8029D5a35FB7a548310654",
       },
     },
+    pancakeswap: {
+      v3: {
+        factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+      },
+    },
   },
   optimism: {
     name: "Optimism",
@@ -213,8 +220,6 @@ const CHAINS = {
     explorer: "https://optimistic.etherscan.io",
     uniswap: {
       v2: {
-        factory: "0x6eccab422D763aC031210895C81787E87B43A652",
-        router: "0x4a7b5da61326A6739856dB9B4FFeb2baE32C8ACE",
       },
       v3: {
         factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
@@ -224,7 +229,6 @@ const CHAINS = {
       },
       v4: {
         // V4 - uses same singleton PoolManager address across chains
-        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
       },
     },
     curve: {
@@ -238,19 +242,8 @@ const CHAINS = {
         pools: {},
       },
       v3: {
-        vault: "0xba1333333333a1BA1108E8412f11850A5C319bA9",
+        vault: "0xbA1333333333a1BA1108E8412f11850A5C319bA9",
         pools: {},
-      },
-    },
-    sushiswap: {
-      v2: {
-        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
-        router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
-      },
-      v3: {
-        factory: "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e",
-        quoter: "0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1",
-        router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
       },
     },
     // Velodrome Slipstream (Uniswap V3–style periphery) — https://github.com/velodrome-finance/slipstream
@@ -276,7 +269,6 @@ const CHAINS = {
     uniswap: {
       v2: {
         factory: "0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6",
-        router: "0x4752ba5DBc23f44D87826288BF4d6A27Cf9A024E",
       },
       v3: {
         factory: "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
@@ -286,7 +278,6 @@ const CHAINS = {
       },
       v4: {
         // V4 - uses same singleton PoolManager address across chains
-        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
       },
     },
     curve: {
@@ -300,19 +291,8 @@ const CHAINS = {
         pools: {},
       },
       v3: {
-        vault: "0xba1333333333a1BA1108E8412f11850A5C319bA9",
+        vault: "0xbA1333333333a1BA1108E8412f11850A5C319bA9",
         pools: {},
-      },
-    },
-    sushiswap: {
-      v2: {
-        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
-        router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
-      },
-      v3: {
-        factory: "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e",
-        quoter: "0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1",
-        router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
       },
     },
     // Aerodrome Slipstream (Base) — https://github.com/aerodrome-finance/slipstream
@@ -328,6 +308,11 @@ const CHAINS = {
       v3: {
         pool: "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5",
         poolDataProvider: "0x2d8A3C5677189723C4cB8873CfC9C8976FDF38Ac",
+      },
+    },
+    pancakeswap: {
+      v3: {
+        factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
       },
     },
   },
@@ -349,7 +334,6 @@ const CHAINS = {
       },
       v4: {
         // V4 - uses same singleton PoolManager address across chains
-        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
       },
     },
     curve: {
@@ -363,7 +347,6 @@ const CHAINS = {
         pools: {},
       },
       v3: {
-        vault: "0xba1333333333a1BA1108E8412f11850A5C319bA9",
         pools: {},
       },
     },
@@ -373,9 +356,6 @@ const CHAINS = {
         router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
       },
       v3: {
-        factory: "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e",
-        quoter: "0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1",
-        router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
       },
     },
     aave: {
@@ -397,17 +377,13 @@ const CHAINS = {
     uniswap: {
       v2: {
         factory: "0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6",
-        router: "0x4752ba5DBc23f44D87826288BF4d6A27Cf9A024E",
       },
       v3: {
         factory: "0xdB1d10011AD0Ff90774D0C6Bb92e5C5c8b4461F7",
         quoter: "0x78D78E420Da98ad378D7799bE8f4AF69033EB077",
-        router: "0x83c346Ba3d4b36E6Bf6F401e9954B7e8C5e1F18c",
-        nftPositionManager: "0x7b8A07B6356C1ad843c34d0C5baD61160aC36FE3",
       },
       v4: {
         // V4 - uses same singleton PoolManager address across chains
-        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
       },
     },
     curve: {
@@ -421,7 +397,6 @@ const CHAINS = {
         pools: {},
       },
       v3: {
-        vault: "0xba1333333333a1BA1108E8412f11850A5C319bA9",
         pools: {},
       },
     },
@@ -431,9 +406,11 @@ const CHAINS = {
         router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
       },
       v3: {
-        factory: "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e",
-        quoter: "0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1",
-        router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
+      },
+    },
+    pancakeswap: {
+      v3: {
+        factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
       },
     },
   },
@@ -452,22 +429,14 @@ const CHAINS = {
       },
     },
     curve: {
-      addressProvider: "0x0000000022D53366457F9d5E68Ec105046FC4383",
       pools: {},
     },
     balancer: {
-      v2: { vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8", pools: {} },
-      v3: { vault: "0xba1333333333a1BA1108E8412f11850A5C319bA9", pools: {} },
     },
     sushiswap: {
       v2: {
-        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
-        router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
       },
       v3: {
-        factory: "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e",
-        quoter: "0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1",
-        router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
       },
     },
   },
@@ -489,19 +458,15 @@ const CHAINS = {
       addressProvider: "0x0000000022D53366457F9d5E68Ec105046FC4383",
       pools: {},
     },
-    balancer: {
-      v2: { vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8", pools: {} },
-      v3: { vault: "0xba1333333333a1BA1108E8412f11850A5C319bA9", pools: {} },
-    },
     sushiswap: {
       v2: {
-        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
-        router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
       },
       v3: {
-        factory: "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e",
-        quoter: "0x0524E833cCD057e4d7A296e3aaAb9f7675964Ce1",
-        router: "0xF0cBce1942A68BEB3d1b73F0dd86C8DCc363eF49",
+      },
+    },
+    pancakeswap: {
+      v3: {
+        factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
       },
     },
   },
@@ -519,7 +484,6 @@ const CHAINS = {
         nftPositionManager: "0x943e6e07a7e8e791dafc44083e54041d743c46e9",
       },
       v4: {
-        poolManager: "0x000000000004444c5dc75cB358380D2e3dE08A90",
       },
     },
   },
@@ -537,6 +501,11 @@ const CHAINS = {
         nftPositionManager: "0x7197e214c0b767cfb76fb734ab638e2c192f4e53",
       },
     },
+    pancakeswap: {
+      v3: {
+        factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+      },
+    },
   },
   // Avalanche C-Chain. Public default so `CHAIN=avalanche node scripts/startFork.js` works
   // without an env var; set AVALANCHE_RPC_URL for an archive or keyed node.
@@ -545,6 +514,328 @@ const CHAINS = {
     chainId: 43114,
     rpcUrl: process.env.AVALANCHE_RPC_URL || "https://api.avax.network/ext/bc/C/rpc",
     explorer: "https://snowtrace.io",
+    sushiswap: {
+      v2: {
+        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
+        router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
+      },
+    },
+    balancer: {
+      v2: {
+        vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+      },
+    },
+  },
+  rootstock: {
+    name: "Rootstock",
+    chainId: 30,
+    rpcUrl: process.env.ROOTSTOCK_RPC_URL,
+    explorer: "https://explorer.rsk.co",
+    nativeSymbol: "RBTC",
+  },
+  gnosis: {
+    name: "Gnosis",
+    chainId: 100,
+    rpcUrl: process.env.GNOSIS_RPC_URL,
+    explorer: "https://gnosisscan.io",
+    nativeSymbol: "xDAI",
+    sushiswap: {
+      v2: {
+        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
+        router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
+      },
+    },
+    balancer: {
+      v2: {
+        vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+      },
+    },
+  },
+  sonic: {
+    name: "Sonic",
+    chainId: 146,
+    rpcUrl: process.env.SONIC_RPC_URL,
+    explorer: "https://sonicscan.org",
+    nativeSymbol: "S",
+    balancer: {
+      v2: {
+        vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+      },
+    },
+  },
+  opbnb: {
+    name: "opBNB",
+    chainId: 204,
+    rpcUrl: process.env.OPBNB_RPC_URL,
+    explorer: "https://opbnb.bscscan.com",
+    nativeSymbol: "BNB",
+    pancakeswap: {
+      v3: {
+        factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+      },
+    },
+  },
+  lens: {
+    name: "Lens",
+    chainId: 232,
+    rpcUrl: process.env.LENS_RPC_URL,
+    explorer: "https://explorer.lens.xyz",
+    nativeSymbol: "GHO",
+  },
+  frax: {
+    name: "Fraxtal",
+    chainId: 252,
+    rpcUrl: process.env.FRAX_RPC_URL,
+    explorer: "https://fraxscan.com",
+    nativeSymbol: "FRAX",
+    balancer: {
+      v2: {
+        vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+      },
+    },
+  },
+  boba: {
+    name: "Boba",
+    chainId: 288,
+    rpcUrl: process.env.BOBA_RPC_URL,
+    explorer: "https://bobascan.com",
+    nativeSymbol: "ETH",
+    sushiswap: {
+      v2: {
+        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
+        router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
+      },
+    },
+  },
+  shape: {
+    name: "Shape",
+    chainId: 360,
+    rpcUrl: process.env.SHAPE_RPC_URL,
+    explorer: "https://shapescan.xyz",
+    nativeSymbol: "ETH",
+  },
+  worldchain: {
+    name: "World Chain",
+    chainId: 480,
+    rpcUrl: process.env.WORLDCHAIN_RPC_URL,
+    explorer: "https://worldscan.org",
+    nativeSymbol: "ETH",
+    uniswap: {
+      v2: {
+        factory: "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+        router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+      },
+    },
+  },
+  astar: {
+    name: "Astar",
+    chainId: 592,
+    rpcUrl: process.env.ASTAR_RPC_URL,
+    explorer: "https://astar.subscan.io",
+    nativeSymbol: "ASTR",
+  },
+  flow: {
+    name: "Flow",
+    chainId: 747,
+    rpcUrl: process.env.FLOW_RPC_URL,
+    explorer: "https://evm.flowscan.io",
+    nativeSymbol: "FLOW",
+  },
+  hyperliquid: {
+    name: "Hyperliquid",
+    chainId: 999,
+    rpcUrl: process.env.HYPERLIQUID_RPC_URL,
+    explorer: "https://hyperevmscan.io",
+    nativeSymbol: "HYPE",
+  },
+  metis: {
+    name: "Metis",
+    chainId: 1088,
+    rpcUrl: process.env.METIS_RPC_URL,
+    explorer: "https://explorer.metis.io",
+    nativeSymbol: "METIS",
+  },
+  polygonzkevm: {
+    name: "Polygon zkEVM",
+    chainId: 1101,
+    rpcUrl: process.env.POLYGONZKEVM_RPC_URL,
+    explorer: "https://zkevm.polygonscan.com",
+    nativeSymbol: "POL",
+    pancakeswap: {
+      v3: {
+        factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+      },
+    },
+    balancer: {
+      v2: {
+        vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+      },
+    },
+  },
+  sei: {
+    name: "Sei",
+    chainId: 1329,
+    rpcUrl: process.env.SEI_RPC_URL,
+    explorer: "https://seitrace.com",
+    nativeSymbol: "SEI",
+  },
+  story: {
+    name: "Story",
+    chainId: 1514,
+    rpcUrl: process.env.STORY_RPC_URL,
+    explorer: "https://explorer.story.foundation",
+    nativeSymbol: "IP",
+  },
+  soneium: {
+    name: "Soneium",
+    chainId: 1868,
+    rpcUrl: process.env.SONEIUM_RPC_URL,
+    explorer: "https://soneium.blockscout.com",
+    nativeSymbol: "ETH",
+  },
+  ronin: {
+    name: "Ronin",
+    chainId: 2020,
+    rpcUrl: process.env.RONIN_RPC_URL,
+    explorer: "https://explorer.roninchain.com",
+    nativeSymbol: "RON",
+  },
+  abstract: {
+    name: "Abstract",
+    chainId: 2741,
+    rpcUrl: process.env.ABSTRACT_RPC_URL,
+    explorer: "https://abscan.org",
+    nativeSymbol: "ETH",
+  },
+  megaeth: {
+    name: "MegaETH",
+    chainId: 4326,
+    rpcUrl: process.env.MEGAETH_RPC_URL,
+    explorer: "https://megaeth.blockscout.com",
+    nativeSymbol: "ETH",
+  },
+  mantle: {
+    name: "Mantle",
+    chainId: 5000,
+    rpcUrl: process.env.MANTLE_RPC_URL,
+    explorer: "https://explorer.mantle.xyz",
+    nativeSymbol: "MNT",
+  },
+  zetachain: {
+    name: "ZetaChain",
+    chainId: 7000,
+    rpcUrl: process.env.ZETACHAIN_RPC_URL,
+    explorer: "https://zetachain.blockscout.com",
+    nativeSymbol: "ZETA",
+  },
+  plasma: {
+    name: "Plasma",
+    chainId: 9745,
+    rpcUrl: process.env.PLASMA_RPC_URL,
+    explorer: "https://plasmascan.to",
+    nativeSymbol: "XPL",
+    balancer: {
+      v2: {
+        vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+      },
+    },
+  },
+  apechain: {
+    name: "ApeChain",
+    chainId: 33139,
+    rpcUrl: process.env.APECHAIN_RPC_URL,
+    explorer: "https://apescan.io",
+    nativeSymbol: "APE",
+  },
+  mode: {
+    name: "Mode",
+    chainId: 34443,
+    rpcUrl: process.env.MODE_RPC_URL,
+    explorer: "https://explorer.mode.network",
+    nativeSymbol: "ETH",
+    balancer: {
+      v2: {
+        vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+      },
+    },
+  },
+  arbnova: {
+    name: "Arbitrum Nova",
+    chainId: 42170,
+    rpcUrl: process.env.ARBNOVA_RPC_URL,
+    explorer: "https://nova.arbiscan.io",
+    nativeSymbol: "ETH",
+    sushiswap: {
+      v2: {
+        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
+        router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
+      },
+    },
+  },
+  celo: {
+    name: "Celo",
+    chainId: 42220,
+    rpcUrl: process.env.CELO_RPC_URL,
+    explorer: "https://celoscan.io",
+    nativeSymbol: "CELO",
+    sushiswap: {
+      v2: {
+        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
+        router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
+      },
+    },
+  },
+  ink: {
+    name: "Ink",
+    chainId: 57073,
+    rpcUrl: process.env.INK_RPC_URL,
+    explorer: "https://explorer.inkonchain.com",
+    nativeSymbol: "ETH",
+    balancer: {
+      v2: {
+        vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+      },
+    },
+  },
+  linea: {
+    name: "Linea",
+    chainId: 59144,
+    rpcUrl: process.env.LINEA_RPC_URL,
+    explorer: "https://lineascan.build",
+    nativeSymbol: "ETH",
+    pancakeswap: {
+      v3: {
+        factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+      },
+    },
+  },
+  bob: {
+    name: "Bob",
+    chainId: 60808,
+    rpcUrl: process.env.BOB_RPC_URL,
+    explorer: "https://explorer.gobob.xyz",
+    nativeSymbol: "ETH",
+  },
+  berachain: {
+    name: "Berachain",
+    chainId: 80094,
+    rpcUrl: process.env.BERACHAIN_RPC_URL,
+    explorer: "https://berascan.com",
+    nativeSymbol: "BERA",
+  },
+  blast: {
+    name: "Blast",
+    chainId: 81457,
+    rpcUrl: process.env.BLAST_RPC_URL,
+    explorer: "https://blastscan.io",
+    nativeSymbol: "ETH",
+  },
+  zora: {
+    name: "Zora",
+    chainId: 7777777,
+    rpcUrl: process.env.ZORA_RPC_URL,
+    explorer: "https://explorer.zora.energy",
+    nativeSymbol: "ETH",
   },
 };
 
@@ -651,6 +942,20 @@ const COMMON_TOKENS = {
     arbitrum: "0xEC70Dcb4A1EFa46b8F2D97C310C9c4790ba5ffA8",
     optimism: "0x9Bcef72be871e61ED4fBbc7630889beE758eb81D",
     polygon: "0x0266F4F08D82372CF0FcbCCc0Ff74309089c74d1",
+    uniswap: {
+      v3: {
+        factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+        router: "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+        nftPositionManager: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+        quoter: "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6",
+        quoterV2: "0x61fFE014bA17989E743c5F6cB21bF9697530B21e",
+      },
+    },
+    balancer: {
+      v2: {
+        vault: "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+      },
+    },
   },
 };
 

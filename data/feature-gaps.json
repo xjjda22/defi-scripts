@@ -3,8 +3,8 @@
   "rankedFrom": "2026-11-02T18:06:34.663Z",
   "totals": {
     "protocols": 129,
-    "features": 290,
-    "direct": 189,
+    "features": 292,
+    "direct": 191,
     "linked": 3,
     "failingPaused": 2,
     "gap": 42,
@@ -239,8 +239,8 @@
       "rank": 199,
       "protocol": "xDai Stake Bridge",
       "key": "xdai-stake-bridge",
-      "feature": "relay tokens",
-      "note": "Omnibridge relayTokens on Ethereum."
+      "feature": "OmniBridge relayTokens (erc-to-erc sibling)",
+      "note": "The $239.9M sibling bridge 0x88ad…5671 has its own relayTokens surface; not asserted by the lockbox test."
     },
     {
       "rank": null,
@@ -3730,10 +3730,10 @@
       "name": "Armitage by Wintermute",
       "rank": 193,
       "pinned": true,
-      "docs": "https://wintermute.com",
+      "docs": "https://armitage.wintermute.com",
       "counts": {
-        "features": 1,
-        "direct": 0,
+        "features": 2,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
         "gap": 0,
@@ -3741,10 +3741,18 @@
       },
       "features": [
         {
-          "feature": "vault deposit",
+          "feature": "vault deposit (Wintermute USDC Select, Morpho Vault V2)",
+          "status": "direct",
+          "scripts": [
+            "fork:armitage:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "curator / owner functions",
           "status": "not-testable",
           "scripts": [],
-          "note": "Permissioned institutional vault."
+          "note": "curator() and owner() are Gnosis Safe proxies; allocation is not permissionless."
         }
       ]
     },
@@ -3809,8 +3817,8 @@
       "pinned": true,
       "docs": "https://docs.gnosischain.com",
       "counts": {
-        "features": 1,
-        "direct": 0,
+        "features": 2,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
         "gap": 1,
@@ -3818,10 +3826,18 @@
       },
       "features": [
         {
-          "feature": "relay tokens",
+          "feature": "relayTokens (USDS lockbox)",
+          "status": "direct",
+          "scripts": [
+            "fork:xdai-stake-bridge:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "OmniBridge relayTokens (erc-to-erc sibling)",
           "status": "gap",
           "scripts": [],
-          "note": "Omnibridge relayTokens on Ethereum."
+          "note": "The $239.9M sibling bridge 0x88ad…5671 has its own relayTokens surface; not asserted by the lockbox test."
         }
       ]
     },

@@ -8,7 +8,7 @@ Rows: pinned snapshot `2026-11-02` plus catalog protocols with fork tests. Ranks
 
 | Protocols | Features | Tested-direct | Linked | Failing-paused | Gap | Not testable |
 | --- | --- | --- | --- | --- | --- | --- |
-| 129 | 290 | 189 | 3 | 2 | 42 | 54 |
+| 129 | 292 | 191 | 3 | 2 | 42 | 54 |
 
 ## Top gaps (priority order)
 
@@ -48,7 +48,7 @@ Top-50 rank first, then rank order; within a protocol, the order its features ar
 | 30 | 184 | Aero (DEX) | add liquidity | Router.addLiquidity. |
 | 31 | 184 | Aero (DEX) | gauge stake | Gauge.deposit. |
 | 32 | 184 | Aero (DEX) | lock AERO (veNFT) | VotingEscrow.createLock. |
-| 33 | 199 | xDai Stake Bridge | relay tokens | Omnibridge relayTokens on Ethereum. |
+| 33 | 199 | xDai Stake Bridge | OmniBridge relayTokens (erc-to-erc sibling) | The $239.9M sibling bridge 0x88ad…5671 has its own relayTokens surface; not asserted by the lockbox test. |
 | 34 | - | Balancer | join pool | Vault.joinPool / V3 addLiquidity. |
 | 35 | - | Benqi Lending | borrow | qiToken.borrow on Avalanche. |
 | 36 | - | Benqi Lending | redeem | redeemUnderlying. |
@@ -987,11 +987,12 @@ Docs: https://docs.gmx.io · 1/3 tested-direct, 0 gap, 2 not testable
 
 ### #193 Armitage by Wintermute
 
-Docs: https://wintermute.com · 0/1 tested-direct, 0 gap, 1 not testable
+Docs: https://armitage.wintermute.com · 1/2 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| vault deposit | not-testable |  | Permissioned institutional vault. |
+| vault deposit (Wintermute USDC Select, Morpho Vault V2) | tested-direct | `fork:armitage:deposit` |  |
+| curator / owner functions | not-testable |  | curator() and owner() are Gnosis Safe proxies; allocation is not permissionless. |
 
 ### #196 Grove Finance
 
@@ -1012,11 +1013,12 @@ Docs: https://sosovalue.com · 0/1 tested-direct, 0 gap, 1 not testable
 
 ### #199 xDai Stake Bridge
 
-Docs: https://docs.gnosischain.com · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.gnosischain.com · 1/2 tested-direct, 1 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| relay tokens | **gap** |  | Omnibridge relayTokens on Ethereum. |
+| relayTokens (USDS lockbox) | tested-direct | `fork:xdai-stake-bridge:deposit` |  |
+| OmniBridge relayTokens (erc-to-erc sibling) | **gap** |  | The $239.9M sibling bridge 0x88ad…5671 has its own relayTokens surface; not asserted by the lockbox test. |
 
 ### Across
 

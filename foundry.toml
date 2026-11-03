@@ -1,0 +1,10 @@
+# Mirrors the settings scripts/buildContracts.js uses for artifacts.json:
+# solc 0.8.24 (exact pragma), optimizer off, no remappings. The build script
+# does not pin an evm_version, so neither does this profile.
+[profile.default]
+src = "src/simulation/fork/contracts"
+test = "test/contracts"
+out = "output/forge-out"
+cache_path = "output/forge-cache"
+solc = "0.8.24"
+optimizer = false

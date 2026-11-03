@@ -1,0 +1,780 @@
+{
+  "generatedAt": "2026-11-02T18:37:25.944Z",
+  "chains": 44,
+  "withVenue": 24,
+  "withoutVenue": 20,
+  "rows": [
+    {
+      "chain": "ethereum",
+      "name": "Ethereum",
+      "chainId": 1,
+      "explorer": "https://etherscan.io",
+      "venues": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave"
+      ],
+      "gaps": [
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "optimism",
+      "name": "Optimism",
+      "chainId": 10,
+      "explorer": "https://optimistic.etherscan.io",
+      "venues": [
+        "uniswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome"
+      ],
+      "gaps": [
+        "sushiswap",
+        "pancakeswap",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "rootstock",
+      "name": "Rootstock",
+      "chainId": 30,
+      "explorer": "https://explorer.rsk.co",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "bsc",
+      "name": "BSC",
+      "chainId": 56,
+      "explorer": "https://bscscan.com",
+      "venues": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer"
+      ],
+      "gaps": [
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "gnosis",
+      "name": "Gnosis",
+      "chainId": 100,
+      "explorer": "https://gnosisscan.io",
+      "venues": [
+        "sushiswap",
+        "balancer"
+      ],
+      "gaps": [
+        "uniswap",
+        "pancakeswap",
+        "curve",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "unichain",
+      "name": "Unichain",
+      "chainId": 130,
+      "explorer": "https://uniscan.xyz",
+      "venues": [
+        "uniswap"
+      ],
+      "gaps": [
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "polygon",
+      "name": "Polygon",
+      "chainId": 137,
+      "explorer": "https://polygonscan.com",
+      "venues": [
+        "uniswap",
+        "sushiswap",
+        "curve",
+        "balancer",
+        "aave"
+      ],
+      "gaps": [
+        "pancakeswap",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "monad",
+      "name": "Monad",
+      "chainId": 143,
+      "explorer": "https://monadvision.com",
+      "venues": [
+        "uniswap",
+        "pancakeswap"
+      ],
+      "gaps": [
+        "sushiswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "sonic",
+      "name": "Sonic",
+      "chainId": 146,
+      "explorer": "https://sonicscan.org",
+      "venues": [
+        "balancer"
+      ],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "opbnb",
+      "name": "opBNB",
+      "chainId": 204,
+      "explorer": "https://opbnb.bscscan.com",
+      "venues": [
+        "pancakeswap"
+      ],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "lens",
+      "name": "Lens",
+      "chainId": 232,
+      "explorer": "https://explorer.lens.xyz",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "frax",
+      "name": "Fraxtal",
+      "chainId": 252,
+      "explorer": "https://fraxscan.com",
+      "venues": [
+        "balancer"
+      ],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "boba",
+      "name": "Boba",
+      "chainId": 288,
+      "explorer": "https://bobascan.com",
+      "venues": [
+        "sushiswap"
+      ],
+      "gaps": [
+        "uniswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "zksync",
+      "name": "zkSync Era",
+      "chainId": 324,
+      "explorer": "https://explorer.zksync.io",
+      "venues": [
+        "uniswap",
+        "curve",
+        "balancer"
+      ],
+      "gaps": [
+        "sushiswap",
+        "pancakeswap",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "shape",
+      "name": "Shape",
+      "chainId": 360,
+      "explorer": "https://shapescan.xyz",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "worldchain",
+      "name": "World Chain",
+      "chainId": 480,
+      "explorer": "https://worldscan.org",
+      "venues": [
+        "uniswap"
+      ],
+      "gaps": [
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "astar",
+      "name": "Astar",
+      "chainId": 592,
+      "explorer": "https://astar.subscan.io",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "flow",
+      "name": "Flow",
+      "chainId": 747,
+      "explorer": "https://evm.flowscan.io",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "hyperliquid",
+      "name": "Hyperliquid",
+      "chainId": 999,
+      "explorer": "https://hyperevmscan.io",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "metis",
+      "name": "Metis",
+      "chainId": 1088,
+      "explorer": "https://explorer.metis.io",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "polygonzkevm",
+      "name": "Polygon zkEVM",
+      "chainId": 1101,
+      "explorer": "https://zkevm.polygonscan.com",
+      "venues": [
+        "pancakeswap",
+        "balancer"
+      ],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "curve",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "sei",
+      "name": "Sei",
+      "chainId": 1329,
+      "explorer": "https://seitrace.com",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "story",
+      "name": "Story",
+      "chainId": 1514,
+      "explorer": "https://explorer.story.foundation",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "soneium",
+      "name": "Soneium",
+      "chainId": 1868,
+      "explorer": "https://soneium.blockscout.com",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "ronin",
+      "name": "Ronin",
+      "chainId": 2020,
+      "explorer": "https://explorer.roninchain.com",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "abstract",
+      "name": "Abstract",
+      "chainId": 2741,
+      "explorer": "https://abscan.org",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "megaeth",
+      "name": "MegaETH",
+      "chainId": 4326,
+      "explorer": "https://megaeth.blockscout.com",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "mantle",
+      "name": "Mantle",
+      "chainId": 5000,
+      "explorer": "https://explorer.mantle.xyz",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "zetachain",
+      "name": "ZetaChain",
+      "chainId": 7000,
+      "explorer": "https://zetachain.blockscout.com",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "base",
+      "name": "Base",
+      "chainId": 8453,
+      "explorer": "https://basescan.org",
+      "venues": [
+        "uniswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "aerodrome"
+      ],
+      "gaps": [
+        "sushiswap",
+        "velodrome"
+      ]
+    },
+    {
+      "chain": "plasma",
+      "name": "Plasma",
+      "chainId": 9745,
+      "explorer": "https://plasmascan.to",
+      "venues": [
+        "balancer"
+      ],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "apechain",
+      "name": "ApeChain",
+      "chainId": 33139,
+      "explorer": "https://apescan.io",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "mode",
+      "name": "Mode",
+      "chainId": 34443,
+      "explorer": "https://explorer.mode.network",
+      "venues": [
+        "balancer"
+      ],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "arbitrum",
+      "name": "Arbitrum",
+      "chainId": 42161,
+      "explorer": "https://arbiscan.io",
+      "venues": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave"
+      ],
+      "gaps": [
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "arbnova",
+      "name": "Arbitrum Nova",
+      "chainId": 42170,
+      "explorer": "https://nova.arbiscan.io",
+      "venues": [
+        "sushiswap"
+      ],
+      "gaps": [
+        "uniswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "celo",
+      "name": "Celo",
+      "chainId": 42220,
+      "explorer": "https://celoscan.io",
+      "venues": [
+        "sushiswap"
+      ],
+      "gaps": [
+        "uniswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "avalanche",
+      "name": "Avalanche C-Chain",
+      "chainId": 43114,
+      "explorer": "https://snowtrace.io",
+      "venues": [
+        "sushiswap",
+        "balancer"
+      ],
+      "gaps": [
+        "uniswap",
+        "pancakeswap",
+        "curve",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "ink",
+      "name": "Ink",
+      "chainId": 57073,
+      "explorer": "https://explorer.inkonchain.com",
+      "venues": [
+        "balancer"
+      ],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "linea",
+      "name": "Linea",
+      "chainId": 59144,
+      "explorer": "https://lineascan.build",
+      "venues": [
+        "pancakeswap"
+      ],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "bob",
+      "name": "Bob",
+      "chainId": 60808,
+      "explorer": "https://explorer.gobob.xyz",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "berachain",
+      "name": "Berachain",
+      "chainId": 80094,
+      "explorer": "https://berascan.com",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "blast",
+      "name": "Blast",
+      "chainId": 81457,
+      "explorer": "https://blastscan.io",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "scroll",
+      "name": "Scroll",
+      "chainId": 534352,
+      "explorer": "https://scrollscan.com",
+      "venues": [
+        "uniswap",
+        "pancakeswap",
+        "curve"
+      ],
+      "gaps": [
+        "sushiswap",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    },
+    {
+      "chain": "zora",
+      "name": "Zora",
+      "chainId": 7777777,
+      "explorer": "https://explorer.zora.energy",
+      "venues": [],
+      "gaps": [
+        "uniswap",
+        "sushiswap",
+        "pancakeswap",
+        "curve",
+        "balancer",
+        "aave",
+        "velodrome",
+        "aerodrome"
+      ]
+    }
+  ]
+}

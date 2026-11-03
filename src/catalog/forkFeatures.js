@@ -1577,6 +1577,24 @@ const FEATURES = [
     assertion: "splitPosition(USDC, bytes32(0), conditionId, [1,2], 10 USDC) on a prepared, unresolved binary condition from Polymarket's UMA CTF Adapter moves exactly 10.0 USDC out of the fresh account and exactly 10.0 USDC into the ConditionalTokens contract, and the account's YES (indexSet 1) and NO (indexSet 2) CTF position balances each go 0 -> 10.0 (equal and non-zero), with a PositionSplit event carrying the same stakeholder, conditionId and amount",
     group: "polymarket",
   },
+  {
+    script: "fork:armitage:deposit",
+    section: "actions",
+    chain: "ethereum",
+    title: "Deposit 100 USDC into Wintermute USDC Select (Armitage)",
+    action: "`deposit` on Wintermute USDC Select (Morpho Vault V2, symbol armUSDCs; largest of the seven Armitage-curated vaults)",
+    assertion: "deposit(100 USDC, freshAccount) into Wintermute USDC Select (0xA2EA…68cd) is permissionless: it mints shares equal to previewDeposit (drift <= 1e-6 of preview), increases totalSupply by exactly the minted shares, increases totalAssets by 100 USDC plus at most one block of accrued interest, and the minted shares convertToAssets back to ~100 USDC (within 1%)",
+    group: "armitage",
+  },
+  {
+    script: "fork:xdai-stake-bridge:deposit",
+    section: "actions",
+    chain: "ethereum",
+    title: "Bridge 100 USDS into the xDAI Stake Bridge",
+    action: "`deposit` on xDAI Stake Bridge, Ethereum side (POA EternalStorageProxy; implementation 0x257bDD093Cab1Bd39eBF837dCB60f33d031d7d49)",
+    assertion: "relayTokens(freshAccount, 100 USDS) on the Ethereum xDAI bridge (0x4aa42145Aa6Ebf72e164C9bBC74fbD3788045016) is permissionless: the bridge's USDS collateral (USDS.balanceOf(bridge), the exact call the DefiLlama adapter makes) rises by exactly 100 USDS, the bridge's own totalSpentPerDay bucket for the deposit block's day rises by exactly 100 USDS, and the depositor's USDS balance falls by exactly 100 USDS",
+    group: "xdai-stake-bridge",
+  },
 ];
 
 const BY_SCRIPT = new Map(FEATURES.map(feature => [feature.script, feature]));

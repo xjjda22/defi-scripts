@@ -13,3 +13,5 @@ data/*
 !data/coverage-snapshot.json
 !data/row-status.json
 !data/feature-gaps.json
+!data/venue-map.json
+!data/aave-chains.json

@@ -2217,6 +2217,22 @@ const PROTOCOLS = [
     about: "Hyperliquid's Arbitrum USDC escrow; deposits are credited to the HyperCore account off-chain by the L1 validators.",
     data: "On-chain RPC, DefiLlama",
   },
+  {
+    id: "armitage",
+    name: "Armitage by Wintermute",
+    category: "vaults",
+    url: "https://armitage.wintermute.com",
+    about: "Wintermute's vault-curation arm. Its Ethereum TVL is the set of Morpho Vault V2 vaults it curates (seven at the time of writing); the fork test deposits USDC into Wintermute USDC Select, the largest one.",
+    data: "On-chain RPC, DefiLlama",
+  },
+  {
+    id: "xdai-stake-bridge",
+    name: "xDAI Stake Bridge",
+    category: "bridge-chain",
+    url: "https://www.gnosis.io/",
+    about: "Gnosis Chain's canonical xDAI bridge on Ethereum: USDS is locked in the bridge and native xDAI is minted on Gnosis Chain.",
+    data: "On-chain RPC, DefiLlama",
+  },
 ];
 
 /** Script families that span protocols. Same id rule as PROTOCOLS. */
@@ -2286,6 +2302,8 @@ const SCRIPT_DESCRIPTIONS = {
   "fork:avant:stake": "Stakes avUSD into Avant's savUSD ERC-4626 vault and asserts the exact shares minted, supply increase and vault asset delta",
   "fork:hyperliquid-bridge:deposit": "Hyperliquid Bridge: transfer 10 USDC into the Arbitrum escrow on a fork; assert the escrow's USDC delta and the USDC Transfer event",
   "fork:polymarket:split": "Split 10 USDC into a full YES+NO set on a Polygon fork through Polymarket's Conditional Tokens Framework for a live UMA-adapter condition; USDC moves into the CTF and both outcome balances equal the amount",
+  "fork:armitage:deposit": "Armitage by Wintermute: deposit 100 USDC into the Armitage-curated Morpho Vault V2 Wintermute USDC Select on an Ethereum fork; assert the shares minted, the totalSupply delta and the totalAssets delta",
+  "fork:xdai-stake-bridge:deposit": "xDAI Stake Bridge: relayTokens(100 USDS) on an Ethereum fork; assert the bridge's USDS collateral and its daily-limit accounting each rise by exactly the deposit",
   "simulate:chains:fees:smoke": "Fails unless every chain on the board has positive 30d fees",
   "analytics -- morpho:base-btc": "Sum of Morpho Blue borrows against BTC collateral (cbBTC, LBTC, …) on Base, with the largest markets' supply, utilization and borrow APY (Morpho GraphQL)",
   "simulate:morpho:base-btc:smoke": "Fails unless Morpho Base BTC-collateral borrows are above $100M",
