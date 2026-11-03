@@ -75,7 +75,23 @@ function addedCell(value) {
   return `<span class="chg ${dir}">${value > 0 ? "+" : ""}${money(value)}</span>`;
 }
 
+/**
+ * What the repo can prove about this row's contracts, not just whether a monitor exists.
+ * A fork badge carries the counts you would otherwise have to open the panel to find.
+ */
 function coverageBadge(row) {
+  const t = row.testing || {};
+  const contracts = (t.contracts || []).length;
+  const features = (t.features || []).length;
+  if (t.mode === "fork") {
+    const chains = [...new Set((t.contracts || []).map(c => c.chain))];
+    const title = [
+      `${contracts} contract address${contracts === 1 ? "" : "es"} on ${chains.length ? chains.join(", ") : t.chain || "—"}`,
+      `${features} tested feature${features === 1 ? "" : "s"}`,
+    ].join(" · ");
+    return `<span class="badge fork" title="${esc(title)}">Fork · ${features}f/${contracts}c</span>`;
+  }
+  if (t.mode === "api") return `<span class="badge api" title="${esc(t.note || "No permissionless on-chain action.")}">API-only</span>`;
   if (row.coverage === MONITOR) return '<span class="badge monitor">Has monitor</span>';
   return '<span class="badge">Ranking only</span>';
 }
@@ -315,6 +331,15 @@ function detailHtml(row) {
   return `<article class="detail-card">
     ${back}
     <p class="kicker">${esc(labelFor(row.category))} · ${esc(row.slug || "")}</p>
+    ${(t => {
+      const c = (t.contracts || []).length;
+      const f = (t.features || []).length;
+      if (!c && !f) return "";
+      const chains = [...new Set((t.contracts || []).map(x => x.chain))];
+      return `<p class="muted">${c} contract address${c === 1 ? "" : "es"}${
+        chains.length ? ` on ${esc(chains.join(", "))}` : ""
+      } · ${f} tested feature${f === 1 ? "" : "s"}</p>`;
+    })(testing)}
     <h2>${esc(row.name)} ${mode}</h2>
     <div class="links">${links}</div>
     <div class="facts">
@@ -624,7 +649,7 @@ function renderTable() {
         <td class="num" data-label="30d fees">${money(row.fees30d)}</td>
         <td class="num" data-label="X posts">${mentionBadge(row)}</td>
         <td class="num" data-label="Signals">${signalsCell(row)}</td>
-        <td data-label="Monitor">${coverageBadge(row)}</td>
+        <td data-label="Contracts">${coverageBadge(row)}</td>
         <td class="scripts" data-label="Scripts">${scriptsCell(row.scripts)}</td>
       </tr>`;
     })
