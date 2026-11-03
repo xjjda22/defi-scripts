@@ -539,8 +539,6 @@ function coverageBits(coverage) {
   const snap = coverage.snapshot ? ` (snapshot ${coverage.snapshot.id})` : "";
   return [
     [`${f.direct ?? "—"}/${coverage.forkableRows ?? "—"}`, `forkable rows with a direct fork test${snap}`],
-    [f.linked ?? "—", "linked fork tests"],
-    [f["failing-paused"] ?? "—", "failing: protocol paused"],
     [`${(coverage.top50 || {}).direct ?? "—"}/50`, "top 50 direct"],
     [(coverage.nonForkable || {}).rows ?? "—", "on non-forkable chains"],
   ];
@@ -550,7 +548,6 @@ function renderStats() {
   const stats = state.data.stats || {};
   const bits = [
     [stats.overall ?? (state.data.overall || []).length, "in the top 200"],
-    [stats.dedicatedMonitor ?? "—", "with a monitor"],
     ...coverageBits(stats.coverage),
     [stats.rankingOnly ?? "—", "ranking only"],
     [stats.newInTop200 ?? "—", "new in 6 months"],
