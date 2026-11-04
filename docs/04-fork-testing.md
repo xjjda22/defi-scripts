@@ -12,7 +12,7 @@ Install Foundry if `anvil` is missing. `scripts/lib/anvil.js` finds the binary f
 curl -L https://foundry.paradigm.xyz | bash && foundryup
 ```
 
-Copy `sample.env` to `.env` and set the upstream RPC for each chain you fork. Public RPCs work for a latest-block fork. An old `FORK_BLOCK` needs an archive endpoint.
+Copy `.sample.env` to `.env` and set the upstream RPC for each chain you fork. Public RPCs work for a latest-block fork. An old `FORK_BLOCK` needs an archive endpoint.
 
 ```bash
 # terminal 1 — Ethereum mainnet fork, optional pin

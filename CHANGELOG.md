@@ -4,6 +4,30 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
 
+## [2026-11-03] One env contract: `.sample.env` is shared with defi-mev
+
+### Changed
+
+- `sample.env` → `.sample.env`. The top block (core, 44 `*_RPC_URL`, `ETH_RPC_URL` alias note) is
+  now byte-identical in both repos; each repo's own section follows it. Old references in the
+  README, `docs/04-fork-testing.md` and two source comments were updated.
+- The old template listed seven RPC vars twice (named block plus the generated block). Rebuilt
+  once, so every key appears exactly once and the 44 chains are in one canonical order.
+- `.env` was reordered to the same contract. No value changed (verified against a backup); the
+  only rename is the empty `FORK_BLOCK_NUMBER` → canonical `FORK_BLOCK`.
+
+## [2026-11-03] chain:probe stops reaching into defi-mev
+
+### Changed
+
+- `scripts/alchemyProbe.js` — the Alchemy key seed is read from this repo's `.env` only. It no
+  longer falls back to `../defi-mev/.env`, so this repo does not read a sibling checkout (R4.9).
+  Writing a path passed explicitly to `--write` still works. The summary now splits
+  `ok 44 / 72` into Alchemy vs public-fallback counts, so a fallback cannot read as entitlement.
+- `defi-mev/scripts/alchemyProbe.js` + `defi-mev/scripts/venueCheck.js` are the separate versions
+  that own that repo's 39-chain set and `.env`. Same two commands (`chain:probe`,
+  `check:venues`) in each folder, no shared writer.
+
 ## [2026-11-03] The last two top-200 rows closed, and the receivers meet the real protocols
 
 **Local only.** Two fork flows, two specs, one fork test, one chain map.

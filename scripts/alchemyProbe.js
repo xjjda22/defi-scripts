@@ -3,7 +3,11 @@
  * Probe every Alchemy EVM mainnet and write `<CHAIN>_RPC_URL` into the repo `.env`.
  *
  *   node scripts/alchemyProbe.js --dry            # probe only, print the matrix
- *   node scripts/alchemyProbe.js --write ../../defi-mev/.env .env
+ *   node scripts/alchemyProbe.js --write .env     # write this repo's .env
+ *
+ * This repo only: the probe reads and writes its own `.env` and never touches
+ * `../defi-mev`. `defi-mev/scripts/alchemyProbe.js` is the sibling version that
+ * owns that repo's chain set and env file.
  *
  * The key is taken from an existing `*_RPC_URL` that already points at
  * `<network>.g.alchemy.com/v2/<key>`, or from `ALCHEMY_API_KEY`. It is never printed;
@@ -297,7 +301,7 @@ function writeEnv(file, rows, failed, key) {
   const wi = args.indexOf("--write");
   const targets = wi >= 0 ? args.slice(wi + 1).filter((a) => a !== "--dry") : [];
 
-  const seed = readEnv(path.resolve(process.cwd(), ".env")) || readEnv(path.resolve(process.cwd(), "../defi-mev/.env"));
+  const seed = readEnv(path.resolve(process.cwd(), ".env"));
   const key = keyFrom(seed) || process.env.ALCHEMY_API_KEY;
   if (!key) {
     console.error("No Alchemy key found. Set ALCHEMY_API_KEY or keep one existing <chain>.g.alchemy.com URL in .env.");
@@ -312,7 +316,8 @@ function writeEnv(file, rows, failed, key) {
 
   const ok = results.filter((r) => r.ok);
   const bad = results.filter((r) => !r.ok);
-  console.log(`ok ${ok.length} / ${results.length}\n`);
+  const viaAlchemy = ok.filter((r) => r.source === "alchemy").length;
+  console.log(`ok ${ok.length} / ${results.length} (${viaAlchemy} Alchemy, ${ok.length - viaAlchemy} public fallback)\n`);
   for (const r of ok) console.log(`  ${r.varName.padEnd(22)} ${r.id.padEnd(24)} chainId=${r.chainId}`);
   if (bad.length) {
     console.log(`\nnot entitled or unreachable (${bad.length}):`);

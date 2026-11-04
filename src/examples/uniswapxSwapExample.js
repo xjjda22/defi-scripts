@@ -2,7 +2,7 @@
  * UniswapX uses signed orders and a reactor — not pool router swaps.
  *
  * - Monitor fills: npm run analytics -- uniswapx:activity
- * - Simulate replay: npm run simulate:uniswapx:fill (see UNISWAPX_REPLAY_TX in sample.env)
+ * - Simulate replay: npm run simulate:uniswapx:fill (see UNISWAPX_REPLAY_TX in .sample.env)
  * - Deployments: https://docs.uniswap.org/contracts/uniswapx/deployment
  */
 

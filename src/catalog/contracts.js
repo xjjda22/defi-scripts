@@ -415,7 +415,7 @@ function contractBook() {
     push(book[key], eth, "frxUSD", "0xCAcd6fd266aF91b8AeD52aCCc382b4e165586E29", DOCS.frax);
     push(book[key], eth, "sfrxUSD", "0xcf62F905562626CfcDD2261162a51fd02Fc9c5b6", DOCS.frax);
   }
-  // BUIDL address is already in sample.env. https://securitize.io/blackrock/BUIDL
+  // BUIDL address is already in .sample.env. https://securitize.io/blackrock/BUIDL
   for (const key of ["buidl", "securitize", "blackrock-buidl"]) {
     push(book[key], eth, "BUIDL", "0x7712c34205737192402172409a8F7ccef8aA2AEc", DOCS.buidl);
   }
