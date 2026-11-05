@@ -4,6 +4,29 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
 
+## [2026-11-06] X handle pill, and the product links stop being plain text
+
+### Added
+
+- The protocol panel links to the project's X account next to DefiLlama and CoinGecko. The handle
+  comes from DefiLlama's `/protocols` `twitter` field, carried through `applyProtocolMeta`; a board
+  row that is a family aggregate falls back to its first member that has one (Aave's row is the
+  V2/V3/V4 aggregate and the handle lives on `aave-v3`). 197 of 200 rows resolve a handle; the
+  three without one show no X pill rather than a made-up search link.
+- The handle is normalised before use: a bare `aave`, an `@aave`, a full `x.com/aave` URL and a
+  trailing path all produce `https://x.com/aave`, so the field cannot become
+  `https://x.com/https://x.com/...`.
+
+### Changed
+
+- DefiLlama, CoinGecko, X and the official app are pills now: glyph, name, external arrow,
+  border, hover/focus in the accent colour, wrapping row. They were underlined inline text that
+  wrapped badly under the title.
+- `data.json` was refreshed with `enrichShowcaseData` (twitter field plus DefiLlama chain TVL), so
+  `coverage:features` and `flowcharts:docs` were regenerated to follow the new `generatedAt` and
+  ranks.
+
+
 ## [2026-11-05] Every fork recipe has a contract flow, and 12 tests that never ran now do
 
 **Local only.** One generated doc, one data file, one generator, one showcase panel, and a fix to

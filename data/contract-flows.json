@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T22:48:23.922Z",
+  "generatedAt": "2026-11-05T23:08:49.820Z",
   "totals": {
     "recipes": 110,
     "withMatrix": 98,
@@ -66,35 +66,35 @@
       "note": "fxUSD stability pool deposit."
     },
     {
-      "rank": 109,
+      "rank": 108,
       "protocol": "Lista DAO (Lending)",
       "key": "lista-dao--lending",
       "feature": "borrow",
       "note": "Lista Moolah borrow (Morpho-fork) on BSC."
     },
     {
-      "rank": 190,
+      "rank": 188,
       "protocol": "Aero (DEX)",
       "key": "aero-protocol--dex",
       "feature": "add liquidity",
       "note": "Router.addLiquidity."
     },
     {
-      "rank": 190,
+      "rank": 188,
       "protocol": "Aero (DEX)",
       "key": "aero-protocol--dex",
       "feature": "gauge stake",
       "note": "Gauge.deposit."
     },
     {
-      "rank": 190,
+      "rank": 188,
       "protocol": "Aero (DEX)",
       "key": "aero-protocol--dex",
       "feature": "lock AERO (veNFT)",
       "note": "VotingEscrow.createLock."
     },
     {
-      "rank": 191,
+      "rank": 189,
       "protocol": "Rysk V12",
       "key": "rysk-v12",
       "feature": "options trade",
@@ -1869,7 +1869,7 @@
     {
       "key": "sentora",
       "name": "Sentora Curator",
-      "rank": 5,
+      "rank": 6,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://sentora.com",
@@ -2033,7 +2033,7 @@
     {
       "key": "lido",
       "name": "Lido",
-      "rank": 6,
+      "rank": 7,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://stake.lido.fi",
@@ -4229,7 +4229,7 @@
     {
       "key": "concrete",
       "name": "Concrete",
-      "rank": 29,
+      "rank": 31,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://app.concrete.xyz",
@@ -5788,7 +5788,7 @@
     {
       "key": "pancakeswap",
       "name": "PancakeSwap (DEX)",
-      "rank": 49,
+      "rank": 50,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://pancakeswap.finance",
@@ -6689,7 +6689,7 @@
     {
       "key": "obol",
       "name": "Obol",
-      "rank": 56,
+      "rank": 57,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://stake.obol.org",
@@ -7184,7 +7184,7 @@
     {
       "key": "lista-liquid-staking",
       "name": "Lista Liquid Staking",
-      "rank": 60,
+      "rank": 59,
       "chain": "bsc",
       "rpcEnv": "BSC_RPC_URL",
       "appUrl": "https://lista.org",
@@ -8167,7 +8167,7 @@
     {
       "key": "curvance",
       "name": "Curvance",
-      "rank": 74,
+      "rank": 75,
       "chain": "monad",
       "rpcEnv": "MONAD_RPC_URL",
       "appUrl": "https://app.curvance.com",
@@ -9220,7 +9220,7 @@
     {
       "key": "kpk",
       "name": "KPK",
-      "rank": 86,
+      "rank": 85,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://app.morpho.org/ethereum/vault/0x4Ef53d2cAa51C447fdFEEedee8F07FD1962C9ee6",
@@ -9450,7 +9450,7 @@
     {
       "key": "zama",
       "name": "Zama",
-      "rank": 90,
+      "rank": 89,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://www.zama.org/",
@@ -9827,7 +9827,7 @@
     {
       "key": "eigenlayer",
       "name": "EigenCloud",
-      "rank": 101,
+      "rank": 102,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://www.eigenlayer.xyz",
@@ -10285,9 +10285,190 @@
       "matrixKey": "usdt0"
     },
     {
+      "key": "optimism-bridge",
+      "name": "Optimism Bridge",
+      "rank": 109,
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "appUrl": "https://app.optimism.io/bridge",
+      "label": "Source chain only",
+      "recipeNote": "L1StandardBridge.depositETH locks ETH (into the ETHLockbox that OptimismPortal.ethLockbox() reports) and emits ETHDepositInitiated. Destination delivery on OP Mainnet needs the rollup; a single Ethereum fork cannot verify it.",
+      "direction": "LR",
+      "summary": "A pinned Ethereum fork reads the portal's ethLockbox, calls L1StandardBridge.depositETH with 0.05 ETH and asserts bridge, portal and ETHLockbox ETH rises by exactly 0.05 and ETHDepositInitiated fired; the L2 credit is not executed.",
+      "scripts": [
+        {
+          "script": "fork:optimism:deposit",
+          "action": "deposit",
+          "feature": "Bridge ETH to Optimism",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "user",
+          "label": "fresh random account, impersonated and funded by anvil_setBalance",
+          "short": "fresh random account",
+          "kind": "actor",
+          "address": null
+        },
+        {
+          "id": "bridge",
+          "label": "Optimism L1StandardBridge",
+          "short": "Optimism L1StandardBridge",
+          "kind": "contract",
+          "address": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1"
+        },
+        {
+          "id": "portal",
+          "label": "OptimismPortal",
+          "short": "OptimismPortal",
+          "kind": "contract",
+          "address": "0xbEb5Fc579115071764c7423A4f12eDde41f106Ed"
+        },
+        {
+          "id": "lockbox",
+          "label": "ETHLockbox reported by portal.ethLockbox()",
+          "short": "ETHLockbox reported by portal.ethLockbox",
+          "kind": "contract",
+          "address": null
+        },
+        {
+          "id": "l2",
+          "label": "OP Mainnet rollup and L2 credit",
+          "short": "OP Mainnet rollup and L2 credit",
+          "kind": "offchain",
+          "address": null
+        }
+      ],
+      "edges": [
+        {
+          "from": "user",
+          "to": "portal",
+          "label": "ethLockbox()",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "bridge",
+          "label": "depositETH(200000, 0x) with 0.05 ETH",
+          "kind": "call"
+        },
+        {
+          "from": "bridge",
+          "to": "lockbox",
+          "label": "0.05 ETH locked in the ETHLockbox",
+          "kind": "transfer"
+        },
+        {
+          "from": "bridge",
+          "to": "user",
+          "label": "ETHDepositInitiated asserted on the receipt",
+          "kind": "event"
+        },
+        {
+          "from": "bridge",
+          "to": "l2",
+          "label": "message relayed to OP Mainnet (not run)",
+          "kind": "offchain"
+        }
+      ],
+      "graph": {
+        "edges": [
+          {
+            "from": "user",
+            "to": "portal",
+            "kind": "call",
+            "steps": [
+              1
+            ],
+            "labels": [
+              "ethLockbox()"
+            ],
+            "label": "ethLockbox()",
+            "range": "1"
+          },
+          {
+            "from": "user",
+            "to": "bridge",
+            "kind": "call",
+            "steps": [
+              2
+            ],
+            "labels": [
+              "depositETH(200000, 0x) with 0.05 ETH"
+            ],
+            "label": "depositETH(200000, 0x) with 0.05 ETH",
+            "range": "2"
+          },
+          {
+            "from": "bridge",
+            "to": "lockbox",
+            "kind": "transfer",
+            "steps": [
+              3
+            ],
+            "labels": [
+              "0.05 ETH locked in the ETHLockbox"
+            ],
+            "label": "0.05 ETH locked in the ETHLockbox",
+            "range": "3"
+          },
+          {
+            "from": "bridge",
+            "to": "user",
+            "kind": "event",
+            "steps": [
+              4
+            ],
+            "labels": [
+              "ETHDepositInitiated asserted on the receipt"
+            ],
+            "label": "ETHDepositInitiated asserted on the receipt",
+            "range": "4"
+          },
+          {
+            "from": "bridge",
+            "to": "l2",
+            "kind": "offchain",
+            "steps": [
+              5
+            ],
+            "labels": [
+              "message relayed to OP Mainnet (not run)"
+            ],
+            "label": "message relayed to OP Mainnet (not run)",
+            "range": "5"
+          }
+        ]
+      },
+      "notes": [
+        "OP Mainnet keeps the locked ETH in the ETHLockbox the portal reports, so the test sums bridge, portal and lockbox balances.",
+        "The actor is a random address: Anvil impersonates it and sets 100 ETH, so no private key is used.",
+        "Only the source chain is checked; the L2 credit never lands on this fork."
+      ],
+      "features": {
+        "total": 2,
+        "tested": 1,
+        "gap": 0,
+        "notTestable": 1,
+        "failingPaused": 0
+      },
+      "missing": [
+        {
+          "feature": "L2 -> L1 withdraw",
+          "status": "not-testable",
+          "how": "Withdraw on an OP Mainnet fork with L2StandardBridge.withdraw, then on the Ethereum fork call OptimismPortal.proveWithdrawalTransaction and finalizeWithdrawalTransaction after the 7-day window and assert the recipient's ETH balance rises.",
+          "blocker": "Needs a proven L2 output root plus the 7-day challenge window; a single Ethereum fork cannot produce either.",
+          "note": "Proof + 7-day challenge window on the L2 fork."
+        }
+      ],
+      "matrixKey": "optimism-bridge"
+    },
+    {
       "key": "liquity",
       "name": "Liquity",
-      "rank": 107,
+      "rank": 110,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://www.liquity.org/",
@@ -10488,187 +10669,6 @@
       "matrixKey": "liquity"
     },
     {
-      "key": "optimism-bridge",
-      "name": "Optimism Bridge",
-      "rank": 110,
-      "chain": "ethereum",
-      "rpcEnv": "ETHEREUM_RPC_URL",
-      "appUrl": "https://app.optimism.io/bridge",
-      "label": "Source chain only",
-      "recipeNote": "L1StandardBridge.depositETH locks ETH (into the ETHLockbox that OptimismPortal.ethLockbox() reports) and emits ETHDepositInitiated. Destination delivery on OP Mainnet needs the rollup; a single Ethereum fork cannot verify it.",
-      "direction": "LR",
-      "summary": "A pinned Ethereum fork reads the portal's ethLockbox, calls L1StandardBridge.depositETH with 0.05 ETH and asserts bridge, portal and ETHLockbox ETH rises by exactly 0.05 and ETHDepositInitiated fired; the L2 credit is not executed.",
-      "scripts": [
-        {
-          "script": "fork:optimism:deposit",
-          "action": "deposit",
-          "feature": "Bridge ETH to Optimism",
-          "chain": "ethereum",
-          "rpcEnv": "ETHEREUM_RPC_URL"
-        }
-      ],
-      "nodes": [
-        {
-          "id": "user",
-          "label": "fresh random account, impersonated and funded by anvil_setBalance",
-          "short": "fresh random account",
-          "kind": "actor",
-          "address": null
-        },
-        {
-          "id": "bridge",
-          "label": "Optimism L1StandardBridge",
-          "short": "Optimism L1StandardBridge",
-          "kind": "contract",
-          "address": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1"
-        },
-        {
-          "id": "portal",
-          "label": "OptimismPortal",
-          "short": "OptimismPortal",
-          "kind": "contract",
-          "address": "0xbEb5Fc579115071764c7423A4f12eDde41f106Ed"
-        },
-        {
-          "id": "lockbox",
-          "label": "ETHLockbox reported by portal.ethLockbox()",
-          "short": "ETHLockbox reported by portal.ethLockbox",
-          "kind": "contract",
-          "address": null
-        },
-        {
-          "id": "l2",
-          "label": "OP Mainnet rollup and L2 credit",
-          "short": "OP Mainnet rollup and L2 credit",
-          "kind": "offchain",
-          "address": null
-        }
-      ],
-      "edges": [
-        {
-          "from": "user",
-          "to": "portal",
-          "label": "ethLockbox()",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "bridge",
-          "label": "depositETH(200000, 0x) with 0.05 ETH",
-          "kind": "call"
-        },
-        {
-          "from": "bridge",
-          "to": "lockbox",
-          "label": "0.05 ETH locked in the ETHLockbox",
-          "kind": "transfer"
-        },
-        {
-          "from": "bridge",
-          "to": "user",
-          "label": "ETHDepositInitiated asserted on the receipt",
-          "kind": "event"
-        },
-        {
-          "from": "bridge",
-          "to": "l2",
-          "label": "message relayed to OP Mainnet (not run)",
-          "kind": "offchain"
-        }
-      ],
-      "graph": {
-        "edges": [
-          {
-            "from": "user",
-            "to": "portal",
-            "kind": "call",
-            "steps": [
-              1
-            ],
-            "labels": [
-              "ethLockbox()"
-            ],
-            "label": "ethLockbox()",
-            "range": "1"
-          },
-          {
-            "from": "user",
-            "to": "bridge",
-            "kind": "call",
-            "steps": [
-              2
-            ],
-            "labels": [
-              "depositETH(200000, 0x) with 0.05 ETH"
-            ],
-            "label": "depositETH(200000, 0x) with 0.05 ETH",
-            "range": "2"
-          },
-          {
-            "from": "bridge",
-            "to": "lockbox",
-            "kind": "transfer",
-            "steps": [
-              3
-            ],
-            "labels": [
-              "0.05 ETH locked in the ETHLockbox"
-            ],
-            "label": "0.05 ETH locked in the ETHLockbox",
-            "range": "3"
-          },
-          {
-            "from": "bridge",
-            "to": "user",
-            "kind": "event",
-            "steps": [
-              4
-            ],
-            "labels": [
-              "ETHDepositInitiated asserted on the receipt"
-            ],
-            "label": "ETHDepositInitiated asserted on the receipt",
-            "range": "4"
-          },
-          {
-            "from": "bridge",
-            "to": "l2",
-            "kind": "offchain",
-            "steps": [
-              5
-            ],
-            "labels": [
-              "message relayed to OP Mainnet (not run)"
-            ],
-            "label": "message relayed to OP Mainnet (not run)",
-            "range": "5"
-          }
-        ]
-      },
-      "notes": [
-        "OP Mainnet keeps the locked ETH in the ETHLockbox the portal reports, so the test sums bridge, portal and lockbox balances.",
-        "The actor is a random address: Anvil impersonates it and sets 100 ETH, so no private key is used.",
-        "Only the source chain is checked; the L2 credit never lands on this fork."
-      ],
-      "features": {
-        "total": 2,
-        "tested": 1,
-        "gap": 0,
-        "notTestable": 1,
-        "failingPaused": 0
-      },
-      "missing": [
-        {
-          "feature": "L2 -> L1 withdraw",
-          "status": "not-testable",
-          "how": "Withdraw on an OP Mainnet fork with L2StandardBridge.withdraw, then on the Ethereum fork call OptimismPortal.proveWithdrawalTransaction and finalizeWithdrawalTransaction after the 7-day window and assert the recipient's ETH balance rises.",
-          "blocker": "Needs a proven L2 output root plus the 7-day challenge window; a single Ethereum fork cannot produce either.",
-          "note": "Proof + 7-day challenge window on the L2 fork."
-        }
-      ],
-      "matrixKey": "optimism-bridge"
-    },
-    {
       "key": "saturn",
       "name": "Saturn",
       "rank": 112,
@@ -10844,7 +10844,7 @@
     {
       "key": "etherfi",
       "name": "ether.fi Stake",
-      "rank": 115,
+      "rank": 116,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://www.ether.fi",
@@ -11288,7 +11288,7 @@
     {
       "key": "maker",
       "name": "Sky",
-      "rank": 124,
+      "rank": 123,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://sky.money",
@@ -12403,7 +12403,7 @@
     {
       "key": "fluid-dex",
       "name": "Fluid DEX",
-      "rank": 132,
+      "rank": 131,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://fluid.instadapp.io",
@@ -13249,9 +13249,199 @@
       "matrixKey": "bedrock-unibtc"
     },
     {
+      "key": "starknet-bridge",
+      "name": "Starknet Bridge",
+      "rank": 145,
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "appUrl": "https://starkgate.starknet.io",
+      "label": "Source chain only",
+      "recipeNote": "StarkGate locks ETH in the L1 bridge and the Starknet core contract emits LogMessageToL2. The sequencer consumes that message on Starknet; a single Ethereum fork cannot verify the L2 credit.",
+      "direction": "LR",
+      "summary": "StarkGate deposit(ETH, 0.05 ETH, l2Recipient) with msg.value = amount + estimateDepositFeeWei() on a pinned Ethereum fork; the bridge keeps exactly 0.05 ETH, emits Deposit, and the Starknet core contract emits LogMessageToL2. The sequencer's L2 credit is not seen here.",
+      "scripts": [
+        {
+          "script": "fork:starknet:deposit",
+          "action": "deposit",
+          "feature": "Bridge ETH to Starknet",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "user",
+          "label": "fresh impersonated account sending 0.05 ETH",
+          "short": "fresh impersonated account sending 0.05 ETH",
+          "kind": "actor",
+          "address": null
+        },
+        {
+          "id": "bridge",
+          "label": "StarkGate ETH bridge on L1",
+          "short": "StarkGate ETH bridge on L1",
+          "kind": "contract",
+          "address": "0xae0Ee0A63A2cE6BaeEFFE56e7714FB4EFE48D419"
+        },
+        {
+          "id": "eth",
+          "label": "native ETH (StarkGate sentinel token 0x0000...0455448)",
+          "short": "native ETH",
+          "kind": "token",
+          "address": "0x0000000000000000000000000000000000455448"
+        },
+        {
+          "id": "core",
+          "label": "Starknet core contract on L1 (messaging)",
+          "short": "Starknet core contract on L1",
+          "kind": "contract",
+          "address": "0xc662c410C0ECf747543f5bA90660f6ABeBD9C8c4"
+        },
+        {
+          "id": "sn",
+          "label": "Starknet sequencer, Cairo VM (off this machine)",
+          "short": "Starknet sequencer, Cairo VM",
+          "kind": "offchain",
+          "address": null
+        }
+      ],
+      "edges": [
+        {
+          "from": "user",
+          "to": "bridge",
+          "label": "estimateDepositFeeWei()",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "bridge",
+          "label": "deposit(ETH, 0.05 ETH, l2Recipient) value + fee",
+          "kind": "call"
+        },
+        {
+          "from": "eth",
+          "to": "bridge",
+          "label": "0.05 ETH locked, balance asserted +0.05 exactly",
+          "kind": "transfer"
+        },
+        {
+          "from": "bridge",
+          "to": "core",
+          "label": "sendMessageToL2, message fee forwarded",
+          "kind": "call"
+        },
+        {
+          "from": "bridge",
+          "to": "user",
+          "label": "Deposit(from, token, amount, l2Recipient, nonce, fee)",
+          "kind": "event"
+        },
+        {
+          "from": "core",
+          "to": "sn",
+          "label": "LogMessageToL2 consumed on Starknet (not verified)",
+          "kind": "offchain"
+        }
+      ],
+      "graph": {
+        "edges": [
+          {
+            "from": "user",
+            "to": "bridge",
+            "kind": "call",
+            "steps": [
+              1,
+              2
+            ],
+            "labels": [
+              "estimateDepositFeeWei()",
+              "deposit(ETH, 0.05 ETH, l2Recipient) value + fee"
+            ],
+            "label": "estimateDepositFeeWei() (+1 more)",
+            "range": "1–2"
+          },
+          {
+            "from": "eth",
+            "to": "bridge",
+            "kind": "transfer",
+            "steps": [
+              3
+            ],
+            "labels": [
+              "0.05 ETH locked, balance asserted +0.05 exactly"
+            ],
+            "label": "0.05 ETH locked, balance asserted +0.05 exactly",
+            "range": "3"
+          },
+          {
+            "from": "bridge",
+            "to": "core",
+            "kind": "call",
+            "steps": [
+              4
+            ],
+            "labels": [
+              "sendMessageToL2, message fee forwarded"
+            ],
+            "label": "sendMessageToL2, message fee forwarded",
+            "range": "4"
+          },
+          {
+            "from": "bridge",
+            "to": "user",
+            "kind": "event",
+            "steps": [
+              5
+            ],
+            "labels": [
+              "Deposit(from, token, amount, l2Recipient, nonce, fee)"
+            ],
+            "label": "Deposit(from, token, amount, l2Recipient, nonce, fee)",
+            "range": "5"
+          },
+          {
+            "from": "core",
+            "to": "sn",
+            "kind": "offchain",
+            "steps": [
+              6
+            ],
+            "labels": [
+              "LogMessageToL2 consumed on Starknet (not verified)"
+            ],
+            "label": "LogMessageToL2 consumed on Starknet (not verified)",
+            "range": "6"
+          }
+        ]
+      },
+      "notes": [
+        "The L2 recipient is the sender's address reinterpreted as a Starknet felt; the destination credit is not checked.",
+        "The deposit's token argument is StarkGate's ETH sentinel 0x0000...0455448, not a contract; only native ETH moves.",
+        "The message fee travels with sendMessageToL2 to the core contract, so only the bridge's amount is asserted as a balance delta.",
+        "Source chain only: LogMessageToL2 is emitted, but consuming it needs the Cairo VM."
+      ],
+      "features": {
+        "total": 2,
+        "tested": 1,
+        "gap": 0,
+        "notTestable": 1,
+        "failingPaused": 0
+      },
+      "missing": [
+        {
+          "feature": "withdraw",
+          "status": "not-testable",
+          "how": "On a Starknet (Cairo) fork call the L2 StarkGate bridge initiate_token_withdraw(l1_token, l1_recipient, amount) with the ETH sentinel 0x0000...0455448 to burn the ETH and send the L2->L1 message, then after the next L1 state update call the L1 bridge withdraw(token, amount, recipient) (0x69328dec), which consumes the message via the Starknet core contract, and assert the recipient's ETH rose by the amount.",
+          "blocker": "The burn and the L2->L1 message need the Cairo VM, which Anvil cannot fork, and the release also needs a proven Starknet state update recorded on L1.",
+          "note": "Cairo VM on L2 (not EVM)."
+        }
+      ],
+      "matrixKey": "starknet-bridge"
+    },
+    {
       "key": "railgun",
       "name": "Railgun",
-      "rank": 145,
+      "rank": 146,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://railgun.org",
@@ -13505,199 +13695,9 @@
       "matrixKey": "railgun"
     },
     {
-      "key": "starknet-bridge",
-      "name": "Starknet Bridge",
-      "rank": 146,
-      "chain": "ethereum",
-      "rpcEnv": "ETHEREUM_RPC_URL",
-      "appUrl": "https://starkgate.starknet.io",
-      "label": "Source chain only",
-      "recipeNote": "StarkGate locks ETH in the L1 bridge and the Starknet core contract emits LogMessageToL2. The sequencer consumes that message on Starknet; a single Ethereum fork cannot verify the L2 credit.",
-      "direction": "LR",
-      "summary": "StarkGate deposit(ETH, 0.05 ETH, l2Recipient) with msg.value = amount + estimateDepositFeeWei() on a pinned Ethereum fork; the bridge keeps exactly 0.05 ETH, emits Deposit, and the Starknet core contract emits LogMessageToL2. The sequencer's L2 credit is not seen here.",
-      "scripts": [
-        {
-          "script": "fork:starknet:deposit",
-          "action": "deposit",
-          "feature": "Bridge ETH to Starknet",
-          "chain": "ethereum",
-          "rpcEnv": "ETHEREUM_RPC_URL"
-        }
-      ],
-      "nodes": [
-        {
-          "id": "user",
-          "label": "fresh impersonated account sending 0.05 ETH",
-          "short": "fresh impersonated account sending 0.05 ETH",
-          "kind": "actor",
-          "address": null
-        },
-        {
-          "id": "bridge",
-          "label": "StarkGate ETH bridge on L1",
-          "short": "StarkGate ETH bridge on L1",
-          "kind": "contract",
-          "address": "0xae0Ee0A63A2cE6BaeEFFE56e7714FB4EFE48D419"
-        },
-        {
-          "id": "eth",
-          "label": "native ETH (StarkGate sentinel token 0x0000...0455448)",
-          "short": "native ETH",
-          "kind": "token",
-          "address": "0x0000000000000000000000000000000000455448"
-        },
-        {
-          "id": "core",
-          "label": "Starknet core contract on L1 (messaging)",
-          "short": "Starknet core contract on L1",
-          "kind": "contract",
-          "address": "0xc662c410C0ECf747543f5bA90660f6ABeBD9C8c4"
-        },
-        {
-          "id": "sn",
-          "label": "Starknet sequencer, Cairo VM (off this machine)",
-          "short": "Starknet sequencer, Cairo VM",
-          "kind": "offchain",
-          "address": null
-        }
-      ],
-      "edges": [
-        {
-          "from": "user",
-          "to": "bridge",
-          "label": "estimateDepositFeeWei()",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "bridge",
-          "label": "deposit(ETH, 0.05 ETH, l2Recipient) value + fee",
-          "kind": "call"
-        },
-        {
-          "from": "eth",
-          "to": "bridge",
-          "label": "0.05 ETH locked, balance asserted +0.05 exactly",
-          "kind": "transfer"
-        },
-        {
-          "from": "bridge",
-          "to": "core",
-          "label": "sendMessageToL2, message fee forwarded",
-          "kind": "call"
-        },
-        {
-          "from": "bridge",
-          "to": "user",
-          "label": "Deposit(from, token, amount, l2Recipient, nonce, fee)",
-          "kind": "event"
-        },
-        {
-          "from": "core",
-          "to": "sn",
-          "label": "LogMessageToL2 consumed on Starknet (not verified)",
-          "kind": "offchain"
-        }
-      ],
-      "graph": {
-        "edges": [
-          {
-            "from": "user",
-            "to": "bridge",
-            "kind": "call",
-            "steps": [
-              1,
-              2
-            ],
-            "labels": [
-              "estimateDepositFeeWei()",
-              "deposit(ETH, 0.05 ETH, l2Recipient) value + fee"
-            ],
-            "label": "estimateDepositFeeWei() (+1 more)",
-            "range": "1–2"
-          },
-          {
-            "from": "eth",
-            "to": "bridge",
-            "kind": "transfer",
-            "steps": [
-              3
-            ],
-            "labels": [
-              "0.05 ETH locked, balance asserted +0.05 exactly"
-            ],
-            "label": "0.05 ETH locked, balance asserted +0.05 exactly",
-            "range": "3"
-          },
-          {
-            "from": "bridge",
-            "to": "core",
-            "kind": "call",
-            "steps": [
-              4
-            ],
-            "labels": [
-              "sendMessageToL2, message fee forwarded"
-            ],
-            "label": "sendMessageToL2, message fee forwarded",
-            "range": "4"
-          },
-          {
-            "from": "bridge",
-            "to": "user",
-            "kind": "event",
-            "steps": [
-              5
-            ],
-            "labels": [
-              "Deposit(from, token, amount, l2Recipient, nonce, fee)"
-            ],
-            "label": "Deposit(from, token, amount, l2Recipient, nonce, fee)",
-            "range": "5"
-          },
-          {
-            "from": "core",
-            "to": "sn",
-            "kind": "offchain",
-            "steps": [
-              6
-            ],
-            "labels": [
-              "LogMessageToL2 consumed on Starknet (not verified)"
-            ],
-            "label": "LogMessageToL2 consumed on Starknet (not verified)",
-            "range": "6"
-          }
-        ]
-      },
-      "notes": [
-        "The L2 recipient is the sender's address reinterpreted as a Starknet felt; the destination credit is not checked.",
-        "The deposit's token argument is StarkGate's ETH sentinel 0x0000...0455448, not a contract; only native ETH moves.",
-        "The message fee travels with sendMessageToL2 to the core contract, so only the bridge's amount is asserted as a balance delta.",
-        "Source chain only: LogMessageToL2 is emitted, but consuming it needs the Cairo VM."
-      ],
-      "features": {
-        "total": 2,
-        "tested": 1,
-        "gap": 0,
-        "notTestable": 1,
-        "failingPaused": 0
-      },
-      "missing": [
-        {
-          "feature": "withdraw",
-          "status": "not-testable",
-          "how": "On a Starknet (Cairo) fork call the L2 StarkGate bridge initiate_token_withdraw(l1_token, l1_recipient, amount) with the ETH sentinel 0x0000...0455448 to burn the ETH and send the L2->L1 message, then after the next L1 state update call the L1 bridge withdraw(token, amount, recipient) (0x69328dec), which consumes the message via the Starknet core contract, and assert the recipient's ETH rose by the amount.",
-          "blocker": "The burn and the L2->L1 message need the Cairo VM, which Anvil cannot fork, and the release also needs a proven Starknet state update recorded on L1.",
-          "note": "Cairo VM on L2 (not EVM)."
-        }
-      ],
-      "matrixKey": "starknet-bridge"
-    },
-    {
       "key": "pendle",
       "name": "Pendle V2",
-      "rank": 150,
+      "rank": 151,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://pendle.finance",
@@ -13939,7 +13939,7 @@
     {
       "key": "cooler-loans",
       "name": "Cooler Loans",
-      "rank": 153,
+      "rank": 154,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://app.olympusdao.finance/#/lending/cooler",
@@ -14192,7 +14192,7 @@
     {
       "key": "portal",
       "name": "Portal",
-      "rank": 155,
+      "rank": 156,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://portalbridge.com",
@@ -14410,7 +14410,7 @@
     {
       "key": "cian-yield-layer",
       "name": "CIAN Yield Layer",
-      "rank": 156,
+      "rank": 157,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://yieldlayer.cian.app/",
@@ -14655,7 +14655,7 @@
     {
       "key": "polymarket",
       "name": "Polymarket",
-      "rank": 159,
+      "rank": 160,
       "chain": "polygon",
       "rpcEnv": "POLYGON_RPC_URL",
       "appUrl": "https://polymarket.com",
@@ -14925,7 +14925,7 @@
     {
       "key": "dolomite",
       "name": "Dolomite",
-      "rank": 163,
+      "rank": 164,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://app.dolomite.io",
@@ -15203,7 +15203,7 @@
     {
       "key": "convex-finance",
       "name": "Convex Finance",
-      "rank": 164,
+      "rank": 165,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://www.convexfinance.com/",
@@ -15453,7 +15453,7 @@
     {
       "key": "bitfi-basis",
       "name": "BitFi Basis",
-      "rank": 168,
+      "rank": 169,
       "chain": "bsc",
       "rpcEnv": "BSC_RPC_URL",
       "appUrl": "https://www.bitfi.one",
@@ -15592,9 +15592,182 @@
       "matrixKey": "bitfi-basis"
     },
     {
+      "key": "xdai-stake-bridge",
+      "name": "xDai Stake Bridge",
+      "rank": 171,
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "appUrl": "https://www.gnosis.io/",
+      "label": null,
+      "recipeNote": null,
+      "direction": "LR",
+      "summary": "Bridges 100 USDS on an Ethereum fork with relayTokens and asserts the bridge's USDS collateral rises by exactly 100, its totalSpentPerDay bucket for the deposit day rises by exactly 100, and the depositor's USDS falls by exactly 100. The xDAI mint happens on Gnosis Chain and is not observable.",
+      "scripts": [
+        {
+          "script": "fork:xdai-stake-bridge:deposit",
+          "action": "deposit",
+          "feature": "Bridge 100 USDS into the xDAI Stake Bridge",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "user",
+          "label": "fresh impersonated account, funded with USDS",
+          "short": "fresh impersonated account",
+          "kind": "actor",
+          "address": null
+        },
+        {
+          "id": "bridge",
+          "label": "xDAI Stake Bridge, Ethereum side (POA EternalStorageProxy)",
+          "short": "xDAI Stake Bridge, Ethereum side",
+          "kind": "contract",
+          "address": "0x4aa42145Aa6Ebf72e164C9bBC74fbD3788045016"
+        },
+        {
+          "id": "usds",
+          "label": "USDS, the bridge collateral (erc20token())",
+          "short": "USDS, the bridge collateral",
+          "kind": "token",
+          "address": "0xdC035D45d973E3EC169d2276DDab16f1e407384F"
+        },
+        {
+          "id": "gnosis",
+          "label": "Gnosis Chain native xDAI mint (validator confirmations)",
+          "short": "Gnosis Chain native xDAI mint",
+          "kind": "offchain",
+          "address": null
+        }
+      ],
+      "edges": [
+        {
+          "from": "user",
+          "to": "bridge",
+          "label": "erc20token, getBridgeMode, minPerTx, maxPerTx, dailyLimit reads",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "bridge",
+          "label": "totalSpentPerDay(day) read against the daily limit",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "usds",
+          "label": "approve(bridge, 100 USDS)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "bridge",
+          "label": "relayTokens(user, 100 USDS)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "bridge",
+          "label": "100 USDS locked; totalSpentPerDay(day) +100 USDS",
+          "kind": "transfer"
+        },
+        {
+          "from": "bridge",
+          "to": "gnosis",
+          "label": "xDAI minted on Gnosis Chain (not run)",
+          "kind": "offchain"
+        }
+      ],
+      "graph": {
+        "edges": [
+          {
+            "from": "user",
+            "to": "bridge",
+            "kind": "call",
+            "steps": [
+              1,
+              2,
+              4
+            ],
+            "labels": [
+              "erc20token, getBridgeMode, minPerTx, maxPerTx, dailyLimit reads",
+              "totalSpentPerDay(day) read against the daily limit",
+              "relayTokens(user, 100 USDS)"
+            ],
+            "label": "erc20token, getBridgeMode, minPerTx, maxPerTx, dailyLimit reads (+2 more)",
+            "range": "1–4"
+          },
+          {
+            "from": "user",
+            "to": "usds",
+            "kind": "call",
+            "steps": [
+              3
+            ],
+            "labels": [
+              "approve(bridge, 100 USDS)"
+            ],
+            "label": "approve(bridge, 100 USDS)",
+            "range": "3"
+          },
+          {
+            "from": "user",
+            "to": "bridge",
+            "kind": "transfer",
+            "steps": [
+              5
+            ],
+            "labels": [
+              "100 USDS locked; totalSpentPerDay(day) +100 USDS"
+            ],
+            "label": "100 USDS locked; totalSpentPerDay(day) +100 USDS",
+            "range": "5"
+          },
+          {
+            "from": "bridge",
+            "to": "gnosis",
+            "kind": "offchain",
+            "steps": [
+              6
+            ],
+            "labels": [
+              "xDAI minted on Gnosis Chain (not run)"
+            ],
+            "label": "xDAI minted on Gnosis Chain (not run)",
+            "range": "6"
+          }
+        ]
+      },
+      "notes": [
+        "The identity gates are real: erc20token() must be USDS, getBridgeMode() must be the erc-to-native 0x18762d46, validatorContract() must match and isInitialized() must be true, or no tx is sent.",
+        "The amount is also checked against minPerTx, maxPerTx and the remaining dailyLimit before relayTokens is called, so a limit breach is a pre-flight FAIL, not a revert.",
+        "Only the Ethereum lock and the bridge's own accounting are measured; xDAI is minted on Gnosis Chain, which this fork does not run.",
+        "The older SAI bridge 0x7301CFA0e1756B71869E93d4e4Dca5c7d0eb0AA6 (maxPerTx 0) and the OmniBridge sibling are excluded by the erc20token() gate, not by their addresses alone.",
+        "USDS comes from impersonateFunded with an anvil_deal fallback, so no private key and no USDS whale is required."
+      ],
+      "features": {
+        "total": 2,
+        "tested": 1,
+        "gap": 1,
+        "notTestable": 0,
+        "failingPaused": 0
+      },
+      "missing": [
+        {
+          "feature": "OmniBridge relayTokens (erc-to-erc sibling)",
+          "status": "gap",
+          "how": "On an Ethereum fork, approve USDC to the OmniBridge 0x88ad09518695c6c3712AC10a214bE5109a655671, call relayTokens(USDC, freshAccount, amount), and assert the bridge's USDC balance rises by exactly amount and the caller's falls by exactly amount, after asserting its bridge mode and mediator.",
+          "blocker": null,
+          "note": "The $239.9M sibling bridge 0x88ad…5671 has its own relayTokens surface; not asserted by the lockbox test."
+        }
+      ],
+      "matrixKey": "xdai-stake-bridge"
+    },
+    {
       "key": "fluid-lending",
       "name": "Fluid Lending",
-      "rank": 171,
+      "rank": 173,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://fluid.instadapp.io",
@@ -15838,182 +16011,9 @@
       "matrixKey": "fluid-lending"
     },
     {
-      "key": "xdai-stake-bridge",
-      "name": "xDai Stake Bridge",
-      "rank": 172,
-      "chain": "ethereum",
-      "rpcEnv": "ETHEREUM_RPC_URL",
-      "appUrl": "https://www.gnosis.io/",
-      "label": null,
-      "recipeNote": null,
-      "direction": "LR",
-      "summary": "Bridges 100 USDS on an Ethereum fork with relayTokens and asserts the bridge's USDS collateral rises by exactly 100, its totalSpentPerDay bucket for the deposit day rises by exactly 100, and the depositor's USDS falls by exactly 100. The xDAI mint happens on Gnosis Chain and is not observable.",
-      "scripts": [
-        {
-          "script": "fork:xdai-stake-bridge:deposit",
-          "action": "deposit",
-          "feature": "Bridge 100 USDS into the xDAI Stake Bridge",
-          "chain": "ethereum",
-          "rpcEnv": "ETHEREUM_RPC_URL"
-        }
-      ],
-      "nodes": [
-        {
-          "id": "user",
-          "label": "fresh impersonated account, funded with USDS",
-          "short": "fresh impersonated account",
-          "kind": "actor",
-          "address": null
-        },
-        {
-          "id": "bridge",
-          "label": "xDAI Stake Bridge, Ethereum side (POA EternalStorageProxy)",
-          "short": "xDAI Stake Bridge, Ethereum side",
-          "kind": "contract",
-          "address": "0x4aa42145Aa6Ebf72e164C9bBC74fbD3788045016"
-        },
-        {
-          "id": "usds",
-          "label": "USDS, the bridge collateral (erc20token())",
-          "short": "USDS, the bridge collateral",
-          "kind": "token",
-          "address": "0xdC035D45d973E3EC169d2276DDab16f1e407384F"
-        },
-        {
-          "id": "gnosis",
-          "label": "Gnosis Chain native xDAI mint (validator confirmations)",
-          "short": "Gnosis Chain native xDAI mint",
-          "kind": "offchain",
-          "address": null
-        }
-      ],
-      "edges": [
-        {
-          "from": "user",
-          "to": "bridge",
-          "label": "erc20token, getBridgeMode, minPerTx, maxPerTx, dailyLimit reads",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "bridge",
-          "label": "totalSpentPerDay(day) read against the daily limit",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "usds",
-          "label": "approve(bridge, 100 USDS)",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "bridge",
-          "label": "relayTokens(user, 100 USDS)",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "bridge",
-          "label": "100 USDS locked; totalSpentPerDay(day) +100 USDS",
-          "kind": "transfer"
-        },
-        {
-          "from": "bridge",
-          "to": "gnosis",
-          "label": "xDAI minted on Gnosis Chain (not run)",
-          "kind": "offchain"
-        }
-      ],
-      "graph": {
-        "edges": [
-          {
-            "from": "user",
-            "to": "bridge",
-            "kind": "call",
-            "steps": [
-              1,
-              2,
-              4
-            ],
-            "labels": [
-              "erc20token, getBridgeMode, minPerTx, maxPerTx, dailyLimit reads",
-              "totalSpentPerDay(day) read against the daily limit",
-              "relayTokens(user, 100 USDS)"
-            ],
-            "label": "erc20token, getBridgeMode, minPerTx, maxPerTx, dailyLimit reads (+2 more)",
-            "range": "1–4"
-          },
-          {
-            "from": "user",
-            "to": "usds",
-            "kind": "call",
-            "steps": [
-              3
-            ],
-            "labels": [
-              "approve(bridge, 100 USDS)"
-            ],
-            "label": "approve(bridge, 100 USDS)",
-            "range": "3"
-          },
-          {
-            "from": "user",
-            "to": "bridge",
-            "kind": "transfer",
-            "steps": [
-              5
-            ],
-            "labels": [
-              "100 USDS locked; totalSpentPerDay(day) +100 USDS"
-            ],
-            "label": "100 USDS locked; totalSpentPerDay(day) +100 USDS",
-            "range": "5"
-          },
-          {
-            "from": "bridge",
-            "to": "gnosis",
-            "kind": "offchain",
-            "steps": [
-              6
-            ],
-            "labels": [
-              "xDAI minted on Gnosis Chain (not run)"
-            ],
-            "label": "xDAI minted on Gnosis Chain (not run)",
-            "range": "6"
-          }
-        ]
-      },
-      "notes": [
-        "The identity gates are real: erc20token() must be USDS, getBridgeMode() must be the erc-to-native 0x18762d46, validatorContract() must match and isInitialized() must be true, or no tx is sent.",
-        "The amount is also checked against minPerTx, maxPerTx and the remaining dailyLimit before relayTokens is called, so a limit breach is a pre-flight FAIL, not a revert.",
-        "Only the Ethereum lock and the bridge's own accounting are measured; xDAI is minted on Gnosis Chain, which this fork does not run.",
-        "The older SAI bridge 0x7301CFA0e1756B71869E93d4e4Dca5c7d0eb0AA6 (maxPerTx 0) and the OmniBridge sibling are excluded by the erc20token() gate, not by their addresses alone.",
-        "USDS comes from impersonateFunded with an anvil_deal fallback, so no private key and no USDS whale is required."
-      ],
-      "features": {
-        "total": 2,
-        "tested": 1,
-        "gap": 1,
-        "notTestable": 0,
-        "failingPaused": 0
-      },
-      "missing": [
-        {
-          "feature": "OmniBridge relayTokens (erc-to-erc sibling)",
-          "status": "gap",
-          "how": "On an Ethereum fork, approve USDC to the OmniBridge 0x88ad09518695c6c3712AC10a214bE5109a655671, call relayTokens(USDC, freshAccount, amount), and assert the bridge's USDC balance rises by exactly amount and the caller's falls by exactly amount, after asserting its bridge mode and mediator.",
-          "blocker": null,
-          "note": "The $239.9M sibling bridge 0x88ad…5671 has its own relayTokens surface; not asserted by the lockbox test."
-        }
-      ],
-      "matrixKey": "xdai-stake-bridge"
-    },
-    {
       "key": "fraxtal",
       "name": "Fraxtal",
-      "rank": 174,
+      "rank": 178,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://frax.com/",
@@ -16490,7 +16490,7 @@
     {
       "key": "usdd",
       "name": "USDD",
-      "rank": 181,
+      "rank": 182,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://usdd.io",
@@ -17086,7 +17086,7 @@
     {
       "key": "yearn",
       "name": "Yearn",
-      "rank": 198,
+      "rank": 197,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://yearn.fi",

@@ -1418,7 +1418,7 @@ function applyProtocolMeta(data, protocols) {
   for (const protocol of protocols || []) {
     if (!protocol || !protocol.slug) continue;
     const chains = cleanChainTvl(protocol.chainTvls);
-    bySlug.set(protocol.slug, { chains, url: protocol.url || null });
+    bySlug.set(protocol.slug, { chains, url: protocol.url || null, twitter: protocol.twitter || null });
     const parent = String(protocol.parentProtocol || "").replace(/^parent#/, "");
     if (parent) {
       const acc = byParent.get(parent) || {};
@@ -1440,6 +1440,16 @@ function applyProtocolMeta(data, protocols) {
     row.chainTvls = map ? topChainTvl(map) : [];
     const direct = bySlug.get(row.slug);
     if (!row.appUrl && direct && direct.url) row.appUrl = direct.url;
+    // X handle: the row's own DefiLlama entry, else the first member that has one. Aave's board
+    // row is the family aggregate while the handle lives on aave-v3, so the fallback matters.
+    if (!row.twitter) {
+      row.twitter = (direct && direct.twitter) || null;
+      for (const member of row.members || []) {
+        if (row.twitter) break;
+        const found = bySlug.get(member.slug);
+        if (found && found.twitter) row.twitter = found.twitter;
+      }
+    }
   };
   for (const row of data.overall || []) visit(row);
   for (const list of Object.values(data.byCategory || {})) for (const row of list) visit(row);

@@ -39,8 +39,8 @@ A **gap** is a public, permissionless feature with no fork test — the work que
 | #2 | [Aave](#flow-aave) | ethereum | 7 | 8/8 | 0 | 0 |
 | #3 | [SparkLend](#flow-sparklend) | ethereum | 6 | 6/6 | 0 | 0 |
 | #4 | [Morpho](#flow-morpho) | ethereum | 6 | 7/7 | 0 | 0 |
-| #5 | [Sentora Curator](#flow-sentora) | ethereum | 1 | 2/2 | 0 | 0 |
-| #6 | [Lido](#flow-lido) | ethereum | 4 | 4/5 | 0 | 1 |
+| #6 | [Sentora Curator](#flow-sentora) | ethereum | 1 | 2/2 | 0 | 0 |
+| #7 | [Lido](#flow-lido) | ethereum | 4 | 4/5 | 0 | 1 |
 | #8 | [Hyperliquid Bridge](#flow-hyperliquid-bridge) | arbitrum | 1 | 1/2 | 0 | 1 |
 | #10 | [Veda](#flow-veda) | ethereum | 2 | 2/2 | 0 | 0 |
 | #12 | [Ethena](#flow-ethena) | ethereum | 3 | 3/4 | 0 | 1 |
@@ -51,7 +51,7 @@ A **gap** is a public, permissionless feature with no fork test — the work que
 | #22 | [Tornado Cash](#flow-tornado-cash) | ethereum | 1 | 1/2 | 0 | 1 |
 | #25 | [Polygon Bridge](#flow-polygon-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
 | #28 | [Upshift](#flow-upshift) | ethereum | 1 | 2/2 | 0 | 0 |
-| #29 | [Concrete](#flow-concrete) | ethereum | 1 | 1/2 | 0 | 1 |
+| #31 | [Concrete](#flow-concrete) | ethereum | 1 | 1/2 | 0 | 1 |
 | #34 | [Robinhood Chain Bridge](#flow-robinhood-chain-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
 | #35 | [Hyperithm](#flow-hyperithm) | ethereum | 1 | 2/2 | 0 | 0 |
 | #37 | [Lighter Bridge](#flow-lighter-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
@@ -59,55 +59,55 @@ A **gap** is a public, permissionless feature with no fork test — the work que
 | #43 | [Aera](#flow-aera) | base | 1 | 1/2 | 0 | 1 |
 | #46 | [Coinbase Wrapped Staked ETH](#flow-cbeth) | ethereum | 1 | 1/2 | 0 | 1 |
 | #48 | [EtherFi Borrowing Market](#flow-etherfi-borrowing-market) | optimism | 1 | 1/2 | 0 | 1 |
-| #49 | [PancakeSwap (DEX)](#flow-pancakeswap) | ethereum | 5 | 5/5 | 0 | 0 |
+| #50 | [PancakeSwap (DEX)](#flow-pancakeswap) | ethereum | 5 | 5/5 | 0 | 0 |
 | #51 | [Clearstar](#flow-clearstar) | base | 1 | 2/2 | 0 | 0 |
 | #52 | [Fluid Lite](#flow-fluid-lite) | ethereum | 1 | 2/2 | 0 | 0 |
-| #56 | [Obol](#flow-obol) | ethereum | 1 | 1/2 | 0 | 1 |
+| #57 | [Obol](#flow-obol) | ethereum | 1 | 1/2 | 0 | 1 |
 | #58 | [Base Bridge](#flow-base-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
-| #60 | [Lista Liquid Staking](#flow-lista-liquid-staking) | bsc | 2 | 2/2 | 0 | 0 |
+| #59 | [Lista Liquid Staking](#flow-lista-liquid-staking) | bsc | 2 | 2/2 | 0 | 0 |
 | #61 | [World Chain Bridge](#flow-world-chain) | ethereum | 1 | 1/2 | 0 | 1 |
 | #69 | [NEAR Bridge](#flow-near-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
 | #70 | [Falcon Finance](#flow-falcon-finance) | ethereum | 1 | 1/3 | 1 | 1 |
 | #72 | [StakeWise V3](#flow-stakewise-v3) | ethereum | 2 | 3/3 | 0 | 0 |
-| #74 | [Curvance](#flow-curvance) | monad | 1 | 2/3 | 1 | 0 |
+| #75 | [Curvance](#flow-curvance) | monad | 1 | 2/3 | 1 | 0 |
 | #77 | [Galaxy Curation](#flow-galaxy-curation) | ethereum | 1 | 2/2 | 0 | 0 |
 | #79 | [mETH Protocol](#flow-meth-protocol) | ethereum | 1 | 2/2 | 0 | 0 |
 | #81 | [Compound Finance](#flow-compound) | ethereum | 6 | 6/7 | 0 | 1 |
-| #86 | [KPK](#flow-kpk) | ethereum | 1 | 2/2 | 0 | 0 |
-| #90 | [Zama](#flow-zama) | ethereum | 1 | 1/2 | 0 | 1 |
+| #85 | [KPK](#flow-kpk) | ethereum | 1 | 2/2 | 0 | 0 |
+| #89 | [Zama](#flow-zama) | ethereum | 1 | 1/2 | 0 | 1 |
 | #96 | [Arbitrum Bridge](#flow-arbitrum-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
-| #101 | [EigenCloud](#flow-eigenlayer) | ethereum | 2 | 2/4 | 2 | 0 |
+| #102 | [EigenCloud](#flow-eigenlayer) | ethereum | 2 | 2/4 | 2 | 0 |
 | #106 | [USDT0](#flow-usdt0) | ethereum | 1 | 1/2 | 0 | 1 |
-| #107 | [Liquity](#flow-liquity) | ethereum | 1 | 1/4 | 3 | 0 |
-| #110 | [Optimism Bridge](#flow-optimism-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
+| #109 | [Optimism Bridge](#flow-optimism-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
+| #110 | [Liquity](#flow-liquity) | ethereum | 1 | 1/4 | 3 | 0 |
 | #112 | [Saturn](#flow-saturn) | ethereum | 1 | 1/2 | 1 | 0 |
-| #115 | [ether.fi Stake](#flow-etherfi) | ethereum | 3 | 3/3 | 0 | 0 |
+| #116 | [ether.fi Stake](#flow-etherfi) | ethereum | 3 | 3/3 | 0 | 0 |
 | #121 | [Meta Pool](#flow-meta-pool) | ethereum | 1 | 1/2 | 1 | 0 |
-| #124 | [Sky](#flow-maker) | ethereum | 5 | 5/6 | 1 | 0 |
+| #123 | [Sky](#flow-maker) | ethereum | 5 | 5/6 | 1 | 0 |
 | #125 | [Avant Protocol](#flow-avant) | avalanche | 1 | 1/1 | 0 | 0 |
 | #126 | [Curve DEX](#flow-curve) | ethereum | 4 | 5/5 | 0 | 0 |
-| #132 | [Fluid DEX](#flow-fluid-dex) | ethereum | 1 | 1/1 | 0 | 0 |
+| #131 | [Fluid DEX](#flow-fluid-dex) | ethereum | 1 | 1/1 | 0 | 0 |
 | #133 | [Venus Core Pool](#flow-venus-core-pool) | bsc | 1 | 1/4 | 3 | 0 |
 | #134 | [SolvBTC](#flow-solvbtc) | ethereum | 1 | 1/2 | 1 | 0 |
 | #142 | [Bedrock uniBTC](#flow-bedrock-unibtc) | ethereum | 1 | 1/1 | 0 | 0 |
-| #145 | [Railgun](#flow-railgun) | ethereum | 1 | 1/2 | 0 | 1 |
-| #146 | [Starknet Bridge](#flow-starknet-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
-| #150 | [Pendle V2](#flow-pendle) | ethereum | 1 | 2/4 | 2 | 0 |
-| #153 | [Cooler Loans](#flow-cooler-loans) | ethereum | 1 | 1/2 | 1 | 0 |
-| #155 | [Portal](#flow-portal) | ethereum | 1 | 1/2 | 0 | 1 |
-| #156 | [CIAN Yield Layer](#flow-cian-yield-layer) | ethereum | 1 | 0/2 | 2 | 0 |
-| #159 | [Polymarket](#flow-polymarket) | polygon | 1 | 1/2 | 0 | 1 |
-| #163 | [Dolomite](#flow-dolomite) | ethereum | 1 | 0/2 | 1 | 1 |
-| #164 | [Convex Finance](#flow-convex-finance) | ethereum | 1 | 1/2 | 1 | 0 |
-| #168 | [BitFi Basis](#flow-bitfi-basis) | bsc | 1 | 1/1 | 0 | 0 |
-| #171 | [Fluid Lending](#flow-fluid-lending) | ethereum | 1 | 1/2 | 1 | 0 |
-| #172 | [xDai Stake Bridge](#flow-xdai-stake-bridge) | ethereum | 1 | 1/2 | 1 | 0 |
-| #174 | [Fraxtal](#flow-fraxtal) | ethereum | 1 | 1/2 | 0 | 1 |
+| #145 | [Starknet Bridge](#flow-starknet-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
+| #146 | [Railgun](#flow-railgun) | ethereum | 1 | 1/2 | 0 | 1 |
+| #151 | [Pendle V2](#flow-pendle) | ethereum | 1 | 2/4 | 2 | 0 |
+| #154 | [Cooler Loans](#flow-cooler-loans) | ethereum | 1 | 1/2 | 1 | 0 |
+| #156 | [Portal](#flow-portal) | ethereum | 1 | 1/2 | 0 | 1 |
+| #157 | [CIAN Yield Layer](#flow-cian-yield-layer) | ethereum | 1 | 0/2 | 2 | 0 |
+| #160 | [Polymarket](#flow-polymarket) | polygon | 1 | 1/2 | 0 | 1 |
+| #164 | [Dolomite](#flow-dolomite) | ethereum | 1 | 0/2 | 1 | 1 |
+| #165 | [Convex Finance](#flow-convex-finance) | ethereum | 1 | 1/2 | 1 | 0 |
+| #169 | [BitFi Basis](#flow-bitfi-basis) | bsc | 1 | 1/1 | 0 | 0 |
+| #171 | [xDai Stake Bridge](#flow-xdai-stake-bridge) | ethereum | 1 | 1/2 | 1 | 0 |
+| #173 | [Fluid Lending](#flow-fluid-lending) | ethereum | 1 | 1/2 | 1 | 0 |
+| #178 | [Fraxtal](#flow-fraxtal) | ethereum | 1 | 1/2 | 0 | 1 |
 | #180 | [Rocket Pool](#flow-rocketpool) | ethereum | 2 | 2/2 | 0 | 0 |
-| #181 | [USDD](#flow-usdd) | ethereum | 1 | 1/1 | 0 | 0 |
+| #182 | [USDD](#flow-usdd) | ethereum | 1 | 1/1 | 0 | 0 |
 | #192 | [Armitage by Wintermute](#flow-armitage) | ethereum | 1 | 1/2 | 0 | 1 |
 | #194 | [Grove Finance](#flow-grove) | base | 1 | 1/2 | 0 | 1 |
-| #198 | [Yearn](#flow-yearn) | ethereum | 1 | 2/2 | 0 | 0 |
+| #197 | [Yearn](#flow-yearn) | ethereum | 1 | 2/2 | 0 | 0 |
 | — | [Across](#flow-across) | ethereum | 1 | 1/2 | 0 | 1 |
 | — | [Aerodrome](#flow-aerodrome) | base | 1 | — | — | — |
 | — | [Aster (Bridge)](#flow-aster-bridge) | bsc | 1 | 1/1 | 0 | 0 |
@@ -452,7 +452,7 @@ Notes:
 
 <a id="flow-sentora"></a>
 
-### #5 Sentora Curator
+### #6 Sentora Curator
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 2/2 features tested
 
@@ -502,7 +502,7 @@ Notes:
 
 <a id="flow-lido"></a>
 
-### #6 Lido
+### #7 Lido
 
 Chain: **ethereum** · 4 fork tests · `ETHEREUM_RPC_URL` · 4/5 features tested
 
@@ -1118,7 +1118,7 @@ Notes:
 
 <a id="flow-concrete"></a>
 
-### #29 Concrete
+### #31 Concrete
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
 
@@ -1573,7 +1573,7 @@ Notes:
 
 <a id="flow-pancakeswap"></a>
 
-### #49 PancakeSwap (DEX)
+### #50 PancakeSwap (DEX)
 
 Chain: **ethereum** · 5 fork tests · `ETHEREUM_RPC_URL` · 5/5 features tested
 
@@ -1764,7 +1764,7 @@ Notes:
 
 <a id="flow-obol"></a>
 
-### #56 Obol
+### #57 Obol
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
 
@@ -1885,7 +1885,7 @@ Notes:
 
 <a id="flow-lista-liquid-staking"></a>
 
-### #60 Lista Liquid Staking
+### #59 Lista Liquid Staking
 
 Chain: **bsc** · 2 fork tests · `BSC_RPC_URL` · 2/2 features tested
 
@@ -2168,7 +2168,7 @@ Notes:
 
 <a id="flow-curvance"></a>
 
-### #74 Curvance
+### #75 Curvance
 
 Chain: **monad** · 1 fork test · `MONAD_RPC_URL` · 2/3 features tested
 
@@ -2408,7 +2408,7 @@ Notes:
 
 <a id="flow-kpk"></a>
 
-### #86 KPK
+### #85 KPK
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 2/2 features tested
 
@@ -2464,7 +2464,7 @@ Notes:
 
 <a id="flow-zama"></a>
 
-### #90 Zama
+### #89 Zama
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
 
@@ -2579,7 +2579,7 @@ Notes:
 
 <a id="flow-eigenlayer"></a>
 
-### #101 EigenCloud
+### #102 EigenCloud
 
 Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/4 features tested
 
@@ -2699,66 +2699,9 @@ Notes:
 | --- | --- | --- | --- |
 | receive | not-testable | On an Arbitrum fork, take the guid, nonce and encoded message out of the PacketSent payload the Ethereum run produced, impersonate the OApp's configured receive library (EndpointV2.getReceiveLibrary(oapp, 30101) on Arbitrum), and call EndpointV2.lzReceive(origin(srcEid 30101, sender, nonce), oapp, guid, message, extraData); only that library may call lzReceive. The assertion is that the OApp's receive path mints and USDT0.balanceOf(recipient) rises by exactly the amountReceivedLD the Ethereum quoteOFT returned. | lzReceive only accepts a packet the configured DVN has verified, and the executor's destination transaction plus the DVN signatures are produced off this machine. |
 
-<a id="flow-liquity"></a>
-
-### #107 Liquity
-
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/4 features tested
-
-```mermaid
-%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
-flowchart LR
-  user["fresh impersonated account"]
-  pool["Liquity V1 Stability Pool<br/>0x66017D…21bb"]
-  lusd["LUSD<br/>0x5f9880…8bA0"]
-  user -->|"1–9 · lusdToken() pre-check is LUSD (+5 mor…"| pool
-  user -->|"2 · balanceOf(user) before"| lusd
-  lusd ==>|"5 · 1000 LUSD into the Stability Pool"| pool
-  pool ==>|"8 · 1000 LUSD back, 0 deposit left"| user
-  classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
-  classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
-  classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
-  classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
-  classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
-  class user actor
-  class pool contract
-  class lusd token
-```
-
-**What this fork proves.** Liquity V1 on an Ethereum fork: 1000 LUSD into the Stability Pool and straight back out. The test asserts provideToSP pulls exactly 1000 LUSD, getTotalLUSDDeposits rises by 1000 while getCompoundedLUSDDeposit equals 1000, then withdrawFromSP returns all 1000 LUSD, leaves a zero deposit and restores the pool total. No liquidation lands between the two txs.
-
-Run it:
-
-```bash
-CHAIN=ethereum node scripts/startFork.js
-ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:liquity:deposit
-```
-
-| Contract | Address | Chain | Role in the flow |
-| --- | --- | --- | --- |
-| Liquity V1 Stability Pool | `0x66017D22b0f8556afDd19FC67041899Eb65a21bb` | ethereum | contract |
-| LUSD (Liquity USD) | `0x5f98805A4E8be255a32880FDeC7F6728C6568bA0` | ethereum | token |
-
-> Liquity V1: LUSD into the Stability Pool and back. Opening a trove (ETH collateral, 2,000 LUSD minimum debt) is not exercised. Liquity V2 (BOLD, ETH / wstETH / rETH branches) is part of the row; its core contracts are listed for verification.
-
-Notes:
-
-- The pool's lusdToken() is read before any tx and must equal the documented LUSD, otherwise the test FAILs without sending.
-- No trove is opened by this test, so there is no debt position and no ETH collateral leg on the chart.
-- The round trip is exact only because no liquidation lands between provideToSP and withdrawFromSP; the test asserts the compounded deposit is still 1000.
-- Liquity V2 (BOLD, ETH / wstETH / rETH branches) is part of the row but is not exercised; only the V1 Stability Pool runs.
-
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| open trove | **gap** | Fund an impersonated account with anvil_setBalance and call BorrowerOperations.openTrove(0.5e18 max fee, 5 ETH, 2000 LUSD, 0x0 upper hint, 0x0 lower hint), then assert TroveManager.getTroveDebt(user) rose by the 2000 LUSD plus the gas compensation and LUSD.balanceOf(user) rose by 2000e18. |  |
-| redeem | **gap** | Against the 2000 LUSD trove opened above, fund a second impersonated account with 1000 LUSD and call TroveManager.redeemCollateral(1000e18, firstRedemptionHint, upperHint, lowerHint, partialHintNICR, 0, 0.5e18) with the hints from HintHelpers.getRedemptionHints, then assert the redeemer's ETH balance rose by the collateral redeemed, the trove's debt fell by 1000e18 and LUSD.totalSupply() fell by 1000e18. |  |
-| liquidate | **gap** | Open a trove through BorrowerOperations.openTrove(0.5e18, 5e18, 2000e18, address(0), address(0)), deposit 1000 LUSD into the Stability Pool with provideToSP(1000e18, address(0)), then write a sub-110 answer into both the current and previous round of the aggregator PriceFeed.priceAggregator() returns with anvil_setStorageAt, so the >50% deviation check does not fall back to Tellor; call TroveManager.liquidate(user) from a second impersonated account and assert getTroveStatus(user) reads 3 (closedByLiquidation), getTotalLUSDDeposits fell and the liquidator's LUSD balance rose by the 200 LUSD gas compensation. |  |
-
 <a id="flow-optimism-bridge"></a>
 
-### #110 Optimism Bridge
+### #109 Optimism Bridge
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
 
@@ -2812,6 +2755,63 @@ Notes:
 | Feature | Status | How to close it on a fork | Blocker |
 | --- | --- | --- | --- |
 | L2 -> L1 withdraw | not-testable | Withdraw on an OP Mainnet fork with L2StandardBridge.withdraw, then on the Ethereum fork call OptimismPortal.proveWithdrawalTransaction and finalizeWithdrawalTransaction after the 7-day window and assert the recipient's ETH balance rises. | Needs a proven L2 output root plus the 7-day challenge window; a single Ethereum fork cannot produce either. |
+
+<a id="flow-liquity"></a>
+
+### #110 Liquity
+
+Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/4 features tested
+
+```mermaid
+%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
+flowchart LR
+  user["fresh impersonated account"]
+  pool["Liquity V1 Stability Pool<br/>0x66017D…21bb"]
+  lusd["LUSD<br/>0x5f9880…8bA0"]
+  user -->|"1–9 · lusdToken() pre-check is LUSD (+5 mor…"| pool
+  user -->|"2 · balanceOf(user) before"| lusd
+  lusd ==>|"5 · 1000 LUSD into the Stability Pool"| pool
+  pool ==>|"8 · 1000 LUSD back, 0 deposit left"| user
+  classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
+  classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
+  classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
+  classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
+  classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
+  class user actor
+  class pool contract
+  class lusd token
+```
+
+**What this fork proves.** Liquity V1 on an Ethereum fork: 1000 LUSD into the Stability Pool and straight back out. The test asserts provideToSP pulls exactly 1000 LUSD, getTotalLUSDDeposits rises by 1000 while getCompoundedLUSDDeposit equals 1000, then withdrawFromSP returns all 1000 LUSD, leaves a zero deposit and restores the pool total. No liquidation lands between the two txs.
+
+Run it:
+
+```bash
+CHAIN=ethereum node scripts/startFork.js
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:liquity:deposit
+```
+
+| Contract | Address | Chain | Role in the flow |
+| --- | --- | --- | --- |
+| Liquity V1 Stability Pool | `0x66017D22b0f8556afDd19FC67041899Eb65a21bb` | ethereum | contract |
+| LUSD (Liquity USD) | `0x5f98805A4E8be255a32880FDeC7F6728C6568bA0` | ethereum | token |
+
+> Liquity V1: LUSD into the Stability Pool and back. Opening a trove (ETH collateral, 2,000 LUSD minimum debt) is not exercised. Liquity V2 (BOLD, ETH / wstETH / rETH branches) is part of the row; its core contracts are listed for verification.
+
+Notes:
+
+- The pool's lusdToken() is read before any tx and must equal the documented LUSD, otherwise the test FAILs without sending.
+- No trove is opened by this test, so there is no debt position and no ETH collateral leg on the chart.
+- The round trip is exact only because no liquidation lands between provideToSP and withdrawFromSP; the test asserts the compounded deposit is still 1000.
+- Liquity V2 (BOLD, ETH / wstETH / rETH branches) is part of the row but is not exercised; only the V1 Stability Pool runs.
+
+**Missing from the anvil suite.**
+
+| Feature | Status | How to close it on a fork | Blocker |
+| --- | --- | --- | --- |
+| open trove | **gap** | Fund an impersonated account with anvil_setBalance and call BorrowerOperations.openTrove(0.5e18 max fee, 5 ETH, 2000 LUSD, 0x0 upper hint, 0x0 lower hint), then assert TroveManager.getTroveDebt(user) rose by the 2000 LUSD plus the gas compensation and LUSD.balanceOf(user) rose by 2000e18. |  |
+| redeem | **gap** | Against the 2000 LUSD trove opened above, fund a second impersonated account with 1000 LUSD and call TroveManager.redeemCollateral(1000e18, firstRedemptionHint, upperHint, lowerHint, partialHintNICR, 0, 0.5e18) with the hints from HintHelpers.getRedemptionHints, then assert the redeemer's ETH balance rose by the collateral redeemed, the trove's debt fell by 1000e18 and LUSD.totalSupply() fell by 1000e18. |  |
+| liquidate | **gap** | Open a trove through BorrowerOperations.openTrove(0.5e18, 5e18, 2000e18, address(0), address(0)), deposit 1000 LUSD into the Stability Pool with provideToSP(1000e18, address(0)), then write a sub-110 answer into both the current and previous round of the aggregator PriceFeed.priceAggregator() returns with anvil_setStorageAt, so the >50% deviation check does not fall back to Tellor; call TroveManager.liquidate(user) from a second impersonated account and assert getTroveStatus(user) reads 3 (closedByLiquidation), getTotalLUSDDeposits fell and the liquidator's LUSD balance rose by the 200 LUSD gas compensation. |  |
 
 <a id="flow-saturn"></a>
 
@@ -2870,7 +2870,7 @@ Notes:
 
 <a id="flow-etherfi"></a>
 
-### #115 ether.fi Stake
+### #116 ether.fi Stake
 
 Chain: **ethereum** · 3 fork tests · `ETHEREUM_RPC_URL` · 3/3 features tested
 
@@ -2982,7 +2982,7 @@ Notes:
 
 <a id="flow-maker"></a>
 
-### #124 Sky
+### #123 Sky
 
 Chain: **ethereum** · 5 fork tests · `ETHEREUM_RPC_URL` · 5/6 features tested
 
@@ -3180,7 +3180,7 @@ Notes:
 
 <a id="flow-fluid-dex"></a>
 
-### #132 Fluid DEX
+### #131 Fluid DEX
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/1 features tested
 
@@ -3410,66 +3410,9 @@ Notes:
 
 **Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
-<a id="flow-railgun"></a>
-
-### #145 Railgun
-
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
-
-```mermaid
-%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
-flowchart LR
-  user["fresh impersonated account"]
-  wallet["RailgunSmartWallet proxy,<br/>the public shield e…<br/>0xFA7093…A4b9"]
-  usdc["USDC on Ethereum, the<br/>shielded token<br/>0xA0b869…eB48"]
-  treasury["Railgun Treasury, receives<br/>the 0.25% shield d…<br/>0xE8A8B4…FF40"]
-  user -->|"1–15 · hashLeftRight(1, 2) must be circomli…"| wallet
-  user -->|"9 · approve(RailgunSmartWallet, 10 USDC)"| usdc
-  usdc ==>|"11 · 9.975 USDC after the 0.25% deduction"| wallet
-  usdc ==>|"12 · 0.025 USDC shield deduction"| treasury
-  wallet -.->|"13 · Shield(treeNumber, startPosition, comm…"| user
-  classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
-  classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
-  classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
-  classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
-  classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
-  class user actor
-  class wallet,treasury contract
-  class usdc token
-```
-
-**What this fork proves.** Shield 10 USDC into RailgunSmartWallet on an Ethereum fork and assert the post-deduction deltas: the wallet's USDC rises by exactly 9.975, the treasury receives the 0.025 USDC 0.25% deduction, nextLeafIndex advances by exactly 1, and the new merkleRoot is recorded in rootHistory with the Shield event carrying the submitted note preimage.
-
-Run it:
-
-```bash
-CHAIN=ethereum node scripts/startFork.js
-ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:railgun:shield
-```
-
-| Contract | Address | Chain | Role in the flow |
-| --- | --- | --- | --- |
-| RailgunSmartWallet proxy, the public shield entry point | `0xFA7093CDD9EE6932B4eb2c9e1cde7CE00B1FA4b9` | ethereum | contract |
-| USDC on Ethereum, the shielded token | `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48` | ethereum | token |
-| Railgun Treasury, receives the 0.25% shield deduction | `0xE8A8B458BcD1Ececc6b6b58F80929b29cCecFF40` | ethereum | contract |
-
-Notes:
-
-- The leaf is PoseidonT4: the flow calls the deployed wallet's own hashLeftRight/hashCommitment instead of porting circomlib, gated on poseidon([1,2]).
-- shieldFee() and getFee() are read on chain (25 bps at the fork block), so a fee change moves the assertion rather than hardcoding 9.975.
-- The ShieldCiphertext is zeroed because the contract neither validates nor hashes it; that is why the note is unspendable and unshield stays a gap.
-- Funding is impersonateFunded pulling 10 USDC from a USDC whale, with dealErc20 as the fallback; no PRIVATE_KEY anywhere.
-- nextLeafIndex and merkleRoot move with the fork head, so every check is a delta measured inside the run, never an absolute value.
-
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| unshield | not-testable | Call transaction() on RailgunSmartWallet 0xFA7093CDD9EE6932B4eb2c9e1cde7CE00B1FA4b9 with a Groth16 proof that spends a note we own and unshields to a recipient, then assert the recipient's USDC rises by the value minus the 0.25% fee, nextLeafIndex advances by 2 (nullifier and change leaves), and the spent note is marked in nullifiers(treeNumber, nullifier). | Unshield needs a Groth16 zk-SNARK built off-chain over a spendable note; the shield flow zeroes the ShieldCiphertext, so no note can be decrypted or proved, and a fork has no prover. |
-
 <a id="flow-starknet-bridge"></a>
 
-### #146 Starknet Bridge
+### #145 Starknet Bridge
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
 
@@ -3527,9 +3470,66 @@ Notes:
 | --- | --- | --- | --- |
 | withdraw | not-testable | On a Starknet (Cairo) fork call the L2 StarkGate bridge initiate_token_withdraw(l1_token, l1_recipient, amount) with the ETH sentinel 0x0000...0455448 to burn the ETH and send the L2->L1 message, then after the next L1 state update call the L1 bridge withdraw(token, amount, recipient) (0x69328dec), which consumes the message via the Starknet core contract, and assert the recipient's ETH rose by the amount. | The burn and the L2->L1 message need the Cairo VM, which Anvil cannot fork, and the release also needs a proven Starknet state update recorded on L1. |
 
+<a id="flow-railgun"></a>
+
+### #146 Railgun
+
+Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+
+```mermaid
+%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
+flowchart LR
+  user["fresh impersonated account"]
+  wallet["RailgunSmartWallet proxy,<br/>the public shield e…<br/>0xFA7093…A4b9"]
+  usdc["USDC on Ethereum, the<br/>shielded token<br/>0xA0b869…eB48"]
+  treasury["Railgun Treasury, receives<br/>the 0.25% shield d…<br/>0xE8A8B4…FF40"]
+  user -->|"1–15 · hashLeftRight(1, 2) must be circomli…"| wallet
+  user -->|"9 · approve(RailgunSmartWallet, 10 USDC)"| usdc
+  usdc ==>|"11 · 9.975 USDC after the 0.25% deduction"| wallet
+  usdc ==>|"12 · 0.025 USDC shield deduction"| treasury
+  wallet -.->|"13 · Shield(treeNumber, startPosition, comm…"| user
+  classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
+  classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
+  classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
+  classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
+  classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
+  class user actor
+  class wallet,treasury contract
+  class usdc token
+```
+
+**What this fork proves.** Shield 10 USDC into RailgunSmartWallet on an Ethereum fork and assert the post-deduction deltas: the wallet's USDC rises by exactly 9.975, the treasury receives the 0.025 USDC 0.25% deduction, nextLeafIndex advances by exactly 1, and the new merkleRoot is recorded in rootHistory with the Shield event carrying the submitted note preimage.
+
+Run it:
+
+```bash
+CHAIN=ethereum node scripts/startFork.js
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:railgun:shield
+```
+
+| Contract | Address | Chain | Role in the flow |
+| --- | --- | --- | --- |
+| RailgunSmartWallet proxy, the public shield entry point | `0xFA7093CDD9EE6932B4eb2c9e1cde7CE00B1FA4b9` | ethereum | contract |
+| USDC on Ethereum, the shielded token | `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48` | ethereum | token |
+| Railgun Treasury, receives the 0.25% shield deduction | `0xE8A8B458BcD1Ececc6b6b58F80929b29cCecFF40` | ethereum | contract |
+
+Notes:
+
+- The leaf is PoseidonT4: the flow calls the deployed wallet's own hashLeftRight/hashCommitment instead of porting circomlib, gated on poseidon([1,2]).
+- shieldFee() and getFee() are read on chain (25 bps at the fork block), so a fee change moves the assertion rather than hardcoding 9.975.
+- The ShieldCiphertext is zeroed because the contract neither validates nor hashes it; that is why the note is unspendable and unshield stays a gap.
+- Funding is impersonateFunded pulling 10 USDC from a USDC whale, with dealErc20 as the fallback; no PRIVATE_KEY anywhere.
+- nextLeafIndex and merkleRoot move with the fork head, so every check is a delta measured inside the run, never an absolute value.
+
+**Missing from the anvil suite.**
+
+| Feature | Status | How to close it on a fork | Blocker |
+| --- | --- | --- | --- |
+| unshield | not-testable | Call transaction() on RailgunSmartWallet 0xFA7093CDD9EE6932B4eb2c9e1cde7CE00B1FA4b9 with a Groth16 proof that spends a note we own and unshields to a recipient, then assert the recipient's USDC rises by the value minus the 0.25% fee, nextLeafIndex advances by 2 (nullifier and change leaves), and the spent note is marked in nullifiers(treeNumber, nullifier). | Unshield needs a Groth16 zk-SNARK built off-chain over a spendable note; the shield flow zeroes the ShieldCiphertext, so no note can be decrypted or proved, and a fork has no prover. |
+
 <a id="flow-pendle"></a>
 
-### #150 Pendle V2
+### #151 Pendle V2
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 2/4 features tested
 
@@ -3596,7 +3596,7 @@ Notes:
 
 <a id="flow-cooler-loans"></a>
 
-### #153 Cooler Loans
+### #154 Cooler Loans
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
 
@@ -3656,7 +3656,7 @@ Notes:
 
 <a id="flow-portal"></a>
 
-### #155 Portal
+### #156 Portal
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
 
@@ -3716,7 +3716,7 @@ Notes:
 
 <a id="flow-cian-yield-layer"></a>
 
-### #156 CIAN Yield Layer
+### #157 CIAN Yield Layer
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 0/2 features tested
 
@@ -3777,7 +3777,7 @@ Notes:
 
 <a id="flow-polymarket"></a>
 
-### #159 Polymarket
+### #160 Polymarket
 
 Chain: **polygon** · 1 fork test · `POLYGON_RPC_URL` · 1/2 features tested
 
@@ -3843,7 +3843,7 @@ Notes:
 
 <a id="flow-dolomite"></a>
 
-### #163 Dolomite
+### #164 Dolomite
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 0/2 features tested
 
@@ -3904,7 +3904,7 @@ Notes:
 
 <a id="flow-convex-finance"></a>
 
-### #164 Convex Finance
+### #165 Convex Finance
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
 
@@ -3965,7 +3965,7 @@ Notes:
 
 <a id="flow-bitfi-basis"></a>
 
-### #168 BitFi Basis
+### #169 BitFi Basis
 
 Chain: **bsc** · 1 fork test · `BSC_RPC_URL` · 1/1 features tested
 
@@ -4012,9 +4012,65 @@ Notes:
 
 **Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
+<a id="flow-xdai-stake-bridge"></a>
+
+### #171 xDai Stake Bridge
+
+Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+
+```mermaid
+%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
+flowchart LR
+  user["fresh impersonated account"]
+  bridge["xDAI Stake Bridge,<br/>Ethereum side<br/>0x4aa421…5016"]
+  usds["USDS, the bridge<br/>collateral<br/>0xdC035D…384F"]
+  gnosis["Gnosis Chain native xDAI<br/>mint"]
+  user -->|"1–4 · erc20token, getBridgeMode, minPerTx,…"| bridge
+  user -->|"3 · approve(bridge, 100 USDS)"| usds
+  user ==>|"5 · 100 USDS locked; totalSpentPerDay(day)…"| bridge
+  bridge -.->|"6 · xDAI minted on Gnosis Chain (not run)"| gnosis
+  classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
+  classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
+  classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
+  classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
+  classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
+  class user actor
+  class bridge contract
+  class usds token
+  class gnosis offchain
+```
+
+**What this fork proves.** Bridges 100 USDS on an Ethereum fork with relayTokens and asserts the bridge's USDS collateral rises by exactly 100, its totalSpentPerDay bucket for the deposit day rises by exactly 100, and the depositor's USDS falls by exactly 100. The xDAI mint happens on Gnosis Chain and is not observable.
+
+Run it:
+
+```bash
+CHAIN=ethereum node scripts/startFork.js
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:xdai-stake-bridge:deposit
+```
+
+| Contract | Address | Chain | Role in the flow |
+| --- | --- | --- | --- |
+| xDAI Stake Bridge, Ethereum side (POA EternalStorageProxy) | `0x4aa42145Aa6Ebf72e164C9bBC74fbD3788045016` | ethereum | contract |
+| USDS, the bridge collateral (erc20token()) | `0xdC035D45d973E3EC169d2276DDab16f1e407384F` | ethereum | token |
+
+Notes:
+
+- The identity gates are real: erc20token() must be USDS, getBridgeMode() must be the erc-to-native 0x18762d46, validatorContract() must match and isInitialized() must be true, or no tx is sent.
+- The amount is also checked against minPerTx, maxPerTx and the remaining dailyLimit before relayTokens is called, so a limit breach is a pre-flight FAIL, not a revert.
+- Only the Ethereum lock and the bridge's own accounting are measured; xDAI is minted on Gnosis Chain, which this fork does not run.
+- The older SAI bridge 0x7301CFA0e1756B71869E93d4e4Dca5c7d0eb0AA6 (maxPerTx 0) and the OmniBridge sibling are excluded by the erc20token() gate, not by their addresses alone.
+- USDS comes from impersonateFunded with an anvil_deal fallback, so no private key and no USDS whale is required.
+
+**Missing from the anvil suite.**
+
+| Feature | Status | How to close it on a fork | Blocker |
+| --- | --- | --- | --- |
+| OmniBridge relayTokens (erc-to-erc sibling) | **gap** | On an Ethereum fork, approve USDC to the OmniBridge 0x88ad09518695c6c3712AC10a214bE5109a655671, call relayTokens(USDC, freshAccount, amount), and assert the bridge's USDC balance rises by exactly amount and the caller's falls by exactly amount, after asserting its bridge mode and mediator. |  |
+
 <a id="flow-fluid-lending"></a>
 
-### #171 Fluid Lending
+### #173 Fluid Lending
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
 
@@ -4071,65 +4127,9 @@ Notes:
 | --- | --- | --- | --- |
 | vault borrow | **gap** | Call operate() on Fluid's USDC FluidVaultT1 (address from the deployments registry, the vault is the msg.sender of LIQUIDITY.operate() on 0x52Aa899454998Be5b000Ad077a46Bbe360F4e497) to supply collateral and borrow USDC, then assert the borrower's USDC rises by the borrowed amount and the Liquidity contract's USDC balance falls by exactly that amount. |  |
 
-<a id="flow-xdai-stake-bridge"></a>
-
-### #172 xDai Stake Bridge
-
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
-
-```mermaid
-%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
-flowchart LR
-  user["fresh impersonated account"]
-  bridge["xDAI Stake Bridge,<br/>Ethereum side<br/>0x4aa421…5016"]
-  usds["USDS, the bridge<br/>collateral<br/>0xdC035D…384F"]
-  gnosis["Gnosis Chain native xDAI<br/>mint"]
-  user -->|"1–4 · erc20token, getBridgeMode, minPerTx,…"| bridge
-  user -->|"3 · approve(bridge, 100 USDS)"| usds
-  user ==>|"5 · 100 USDS locked; totalSpentPerDay(day)…"| bridge
-  bridge -.->|"6 · xDAI minted on Gnosis Chain (not run)"| gnosis
-  classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
-  classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
-  classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
-  classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
-  classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
-  class user actor
-  class bridge contract
-  class usds token
-  class gnosis offchain
-```
-
-**What this fork proves.** Bridges 100 USDS on an Ethereum fork with relayTokens and asserts the bridge's USDS collateral rises by exactly 100, its totalSpentPerDay bucket for the deposit day rises by exactly 100, and the depositor's USDS falls by exactly 100. The xDAI mint happens on Gnosis Chain and is not observable.
-
-Run it:
-
-```bash
-CHAIN=ethereum node scripts/startFork.js
-ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:xdai-stake-bridge:deposit
-```
-
-| Contract | Address | Chain | Role in the flow |
-| --- | --- | --- | --- |
-| xDAI Stake Bridge, Ethereum side (POA EternalStorageProxy) | `0x4aa42145Aa6Ebf72e164C9bBC74fbD3788045016` | ethereum | contract |
-| USDS, the bridge collateral (erc20token()) | `0xdC035D45d973E3EC169d2276DDab16f1e407384F` | ethereum | token |
-
-Notes:
-
-- The identity gates are real: erc20token() must be USDS, getBridgeMode() must be the erc-to-native 0x18762d46, validatorContract() must match and isInitialized() must be true, or no tx is sent.
-- The amount is also checked against minPerTx, maxPerTx and the remaining dailyLimit before relayTokens is called, so a limit breach is a pre-flight FAIL, not a revert.
-- Only the Ethereum lock and the bridge's own accounting are measured; xDAI is minted on Gnosis Chain, which this fork does not run.
-- The older SAI bridge 0x7301CFA0e1756B71869E93d4e4Dca5c7d0eb0AA6 (maxPerTx 0) and the OmniBridge sibling are excluded by the erc20token() gate, not by their addresses alone.
-- USDS comes from impersonateFunded with an anvil_deal fallback, so no private key and no USDS whale is required.
-
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| OmniBridge relayTokens (erc-to-erc sibling) | **gap** | On an Ethereum fork, approve USDC to the OmniBridge 0x88ad09518695c6c3712AC10a214bE5109a655671, call relayTokens(USDC, freshAccount, amount), and assert the bridge's USDC balance rises by exactly amount and the caller's falls by exactly amount, after asserting its bridge mode and mediator. |  |
-
 <a id="flow-fraxtal"></a>
 
-### #174 Fraxtal
+### #178 Fraxtal
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
 
@@ -4243,7 +4243,7 @@ Notes:
 
 <a id="flow-usdd"></a>
 
-### #181 USDD
+### #182 USDD
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/1 features tested
 
@@ -4409,7 +4409,7 @@ Notes:
 
 <a id="flow-yearn"></a>
 
-### #198 Yearn
+### #197 Yearn
 
 Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 2/2 features tested
 
@@ -6531,11 +6531,11 @@ Notes:
 | #93 | Lagoon | ERC-7540 deposit request | requestDeposit on a Lagoon vault. |
 | #98 | fx Protocol | mint fxUSD / open position | PoolManager operate(). |
 | #98 | fx Protocol | stability pool deposit | fxUSD stability pool deposit. |
-| #109 | Lista DAO (Lending) | borrow | Lista Moolah borrow (Morpho-fork) on BSC. |
-| #190 | Aero (DEX) | add liquidity | Router.addLiquidity. |
-| #190 | Aero (DEX) | gauge stake | Gauge.deposit. |
-| #190 | Aero (DEX) | lock AERO (veNFT) | VotingEscrow.createLock. |
-| #191 | Rysk V12 | options trade | HyperEVM/Arbitrum options; chain not configured. |
+| #108 | Lista DAO (Lending) | borrow | Lista Moolah borrow (Morpho-fork) on BSC. |
+| #188 | Aero (DEX) | add liquidity | Router.addLiquidity. |
+| #188 | Aero (DEX) | gauge stake | Gauge.deposit. |
+| #188 | Aero (DEX) | lock AERO (veNFT) | VotingEscrow.createLock. |
+| #189 | Rysk V12 | options trade | HyperEVM/Arbitrum options; chain not configured. |
 
 ## Recipes with no feature matrix
 

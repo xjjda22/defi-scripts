@@ -801,12 +801,25 @@ function detailHtml(row) {
       ? row.scripts.filter(script => scriptKind(scriptName(script)) !== "fork")
       : row.scripts;
   const gecko = geckoUrl(row);
-  const links = [
-    app ? `<a href="${esc(app)}" target="_blank" rel="noreferrer">Official app</a>` : "",
-    row.llamaUrl ? `<a href="${esc(row.llamaUrl)}" target="_blank" rel="noreferrer">DefiLlama</a>` : "",
-    gecko ? `<a href="${esc(gecko)}" target="_blank" rel="noreferrer">CoinGecko</a>` : "",
-  ]
-    .filter(Boolean)
+  // X handle from DefiLlama (`twitter`), normalised: the field is a bare handle, but a full URL
+  // or an @prefix shows up too and must not become https://x.com/https://x.com/...
+  const handle = String(row.twitter || "")
+    .replace(/^https?:\/\/(www\.)?(x|twitter)\.com\//i, "")
+    .replace(/^@/, "")
+    .replace(/\/.*$/, "")
+    .trim();
+  const xLink = /^[A-Za-z0-9_]{1,15}$/.test(handle) ? `https://x.com/${handle}` : null;
+  const pills = [
+    app ? { href: app, glyph: "⌂", label: "Official app" } : null,
+    row.llamaUrl ? { href: row.llamaUrl, glyph: "◈", label: "DefiLlama" } : null,
+    gecko ? { href: gecko, glyph: "◉", label: "CoinGecko" } : null,
+    xLink ? { href: xLink, glyph: "𝕏", label: `@${handle}` } : null,
+  ].filter(Boolean);
+  const links = pills
+    .map(
+      item =>
+        `<a class="link-pill" href="${esc(item.href)}" target="_blank" rel="noreferrer"><span class="glyph" aria-hidden="true">${item.glyph}</span>${esc(item.label)}<span class="out" aria-hidden="true">↗</span></a>`
+    )
     .join("");
   const commands = fork
     ? `<h3>Fork commands</h3>

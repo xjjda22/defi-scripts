@@ -381,7 +381,34 @@ body.flow-lock { overflow: hidden; }
 .badge.api { background: rgba(240, 153, 122, 0.16); color: var(--down); }
 .badge.fork { background: rgba(223, 242, 106, 0.16); color: var(--accent); }
 .badge.warn { background: rgba(255, 196, 87, 0.16); color: #ffc457; }
-.links { display: flex; flex-wrap: wrap; gap: 14px; margin: 8px 0 18px; }
+.links { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 18px; }
+/* Product links are pills: a glyph, the name, and an external arrow. The old bare underlined
+   text wrapped badly next to the score facts and gave no hint that it leaves the page. */
+.link-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(244, 241, 230, 0.03);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.link-pill:hover, .link-pill:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(223, 242, 106, 0.08);
+  outline: none;
+}
+.link-pill .glyph { color: var(--muted); font-size: 12px; }
+.link-pill:hover .glyph, .link-pill:focus-visible .glyph { color: var(--accent); }
+.link-pill .out { color: var(--muted); font-size: 10px; }
+.link-pill:hover .out { color: var(--accent); }
 .chain-list { margin: 0; padding-left: 18px; color: var(--muted); }
 .chain-list li { margin: 4px 0; }
 .muted { color: var(--muted); }
