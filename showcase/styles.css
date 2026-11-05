@@ -248,10 +248,53 @@ tr:has(.why[open]) td { vertical-align: top; }
 button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .detail {
-  max-width: 880px;
+  /* The test panel is a diagram gallery as much as a text page: 1180px gives the flow graph room
+     instead of forcing it into an 880px column. */
+  max-width: 1180px;
   margin: 8px auto 28px;
   padding: 0 28px;
 }
+
+/* Let the graph use the card's full width (and a bit of the padding), not the text column. */
+.detail-card .flowmap {
+  width: calc(100% + 44px);
+  margin-left: -22px;
+}
+@media (max-width: 760px) {
+  .detail-card .flowmap { width: auto; margin-left: 0; }
+}
+
+.flowmap.is-expanded::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 7, 0.86);
+  z-index: -1;
+}
+.flowmap.is-expanded {
+  position: fixed;
+  inset: 16px;
+  z-index: 60;
+  width: auto;
+  margin: 0;
+  padding: 16px;
+  background: var(--bg);
+  border-color: var(--accent);
+  overflow: auto;
+  box-shadow: var(--shadow);
+}
+body.flow-lock { overflow: hidden; }
+.fm-expand {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.fm-expand:hover { color: var(--ink); border-color: var(--ink); }
+.fm-expand[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 .detail-card {
   background: var(--bg-2);
   border: 1px solid var(--line);
@@ -498,3 +541,136 @@ footer p { margin: 6px 0; font-size: 14px; }
 
 .badge.state { background: rgba(240, 100, 100, 0.18); color: #ff8a8a; text-transform: uppercase; }
 #generated.stale { color: #ffc457; }
+
+/* Contract flow: a real graph (SVG) plus a playable call sequence. Source: data/contract-flows.json */
+.flow-legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 10px; }
+.flow-key {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+.flow-key.actor { border-color: rgba(223, 242, 106, 0.5); color: var(--accent); }
+.flow-key.contract { border-color: rgba(142, 224, 168, 0.45); color: var(--up); }
+.flow-key.offchain { border-style: dashed; border-color: rgba(240, 153, 122, 0.6); color: var(--down); }
+
+.flowmap-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 2px 0 10px; }
+.fm-play {
+  border: 1px solid var(--accent);
+  background: rgba(223, 242, 106, 0.12);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.fm-play:hover { background: rgba(223, 242, 106, 0.22); }
+.fm-play:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.fm-play[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.fm-scroll-hint { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border: 1px dashed var(--line); border-radius: 999px; padding: 2px 8px; }
+.fm-readout {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.flowmap {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background:
+    radial-gradient(420px 200px at 10% 0%, rgba(223, 242, 106, 0.06), transparent 60%),
+    var(--bg-2);
+  padding: 6px;
+  margin: 0 0 10px;
+}
+.flowmap-svg { display: block; max-width: none; }
+.fm-card { fill: #1b1f16; stroke: rgba(244, 241, 230, 0.34); stroke-width: 1.2; filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45)); }
+.fm-label { fill: var(--ink); font-family: var(--sans); font-size: 12.5px; font-weight: 500; }
+.fm-address { fill: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; }
+.fm-stripe { fill: rgba(244, 241, 230, 0.25); }
+.fm-node--actor .fm-card { fill: var(--accent); stroke: var(--accent); }
+.fm-node--actor .fm-label { fill: var(--accent-ink); font-weight: 700; }
+.fm-node--actor .fm-address { fill: rgba(26, 28, 12, 0.65); }
+.fm-node--actor .fm-stripe { fill: rgba(26, 28, 12, 0.4); }
+.fm-node--contract .fm-stripe { fill: var(--up); }
+.fm-node--token .fm-card { stroke-dasharray: 5 3; stroke: rgba(244, 241, 230, 0.4); }
+.fm-node--token .fm-stripe { fill: #c9cfae; }
+.fm-node--external .fm-card { stroke: rgba(185, 190, 172, 0.62); }
+.fm-node--external .fm-stripe { fill: #8a8f7a; }
+.fm-node--offchain .fm-card { stroke: var(--down); stroke-dasharray: 4 3; fill: #1e1712; }
+.fm-node--offchain .fm-stripe { fill: var(--down); }
+.fm-node--offchain .fm-label { fill: #f3c6ad; }
+
+.fm-edge { fill: none; stroke: rgba(244, 241, 230, 0.38); stroke-width: 1.5; stroke-dasharray: 7 5; animation: fm-travel 1.6s linear infinite; }
+.fm-edge--transfer { stroke: rgba(142, 224, 168, 0.55); stroke-width: 2; }
+.fm-edge--event, .fm-edge--offchain { stroke: rgba(240, 153, 122, 0.6); }
+.fm-head { fill: rgba(244, 241, 230, 0.42); }
+.fm-head--transfer { fill: var(--up); }
+.fm-head--event, .fm-head--offchain { fill: var(--down); }
+.fm-hit { fill: none; stroke: transparent; stroke-width: 16; cursor: pointer; }
+.flowmap.is-dense .fm-step-badge { opacity: 0; transition: opacity 0.15s ease; }
+.flowmap.is-dense .fm-link:hover .fm-step-badge,
+.flowmap.is-dense .fm-link.is-active .fm-step-badge { opacity: 1; }
+.fm-link:hover .fm-edge { stroke: var(--accent); stroke-width: 2.4; }
+.fm-link.is-active .fm-edge { stroke: var(--accent); stroke-width: 3; animation-duration: 0.45s; filter: drop-shadow(0 0 6px rgba(223, 242, 106, 0.55)); }
+.fm-step-badge rect { fill: #10130c; stroke: rgba(244, 241, 230, 0.2); }
+.fm-step-badge text { fill: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; text-anchor: middle; }
+.fm-badges { pointer-events: none; }
+.fm-step-badge.is-active rect { fill: var(--accent); stroke: var(--accent); }
+.fm-link.is-active .fm-step-badge text { fill: var(--accent-ink); font-weight: 700; }
+
+.fm-node { transition: opacity 0.15s ease; }
+.fm-node.is-active .fm-card { stroke: var(--accent); stroke-width: 2.5; filter: drop-shadow(0 0 10px rgba(223, 242, 106, 0.45)); }
+.fm-node.is-hot .fm-card { stroke: var(--accent); }
+.flowmap.is-pointing .fm-node:not(.is-hot) { opacity: 0.55; }
+
+@keyframes fm-travel { to { stroke-dashoffset: -24; } }
+@media (prefers-reduced-motion: reduce) {
+  .fm-edge { animation: none; }
+}
+
+.flow-log { margin: 6px 0 10px; border: 1px solid var(--line); border-radius: 12px; background: rgba(0, 0, 0, 0.18); }
+.flow-log summary { cursor: pointer; padding: 9px 12px; font-size: 13px; color: var(--ink); }
+.flow-log summary span { color: var(--muted); font-weight: 400; margin-left: 6px; }
+.flow-log ol { list-style: none; margin: 0; padding: 0 6px 8px; max-height: 340px; overflow: auto; }
+.fm-row {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 2px 10px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+.fm-row:hover { background: rgba(244, 241, 230, 0.05); }
+.fm-row.is-current { background: rgba(223, 242, 106, 0.1); border-left-color: var(--accent); }
+.fm-row-index {
+  grid-row: span 2;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(244, 241, 230, 0.12);
+  color: var(--ink);
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fm-row.is-current .fm-row-index { background: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.fm-row-call { font-size: 12.5px; overflow-wrap: anywhere; }
+.fm-row-ends { font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
+.fm-row-ends code { font-size: 10px; }
+.flow-notes { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
+.flow-notes li { margin: 3px 0; }
+/* ?view=flow: a page with only the diagram, used for deep links and batch screenshots */
+body.flow-only-page .mast, body.flow-only-page footer { display: none; }
+body.flow-only-page .detail { padding-top: 18px; }
+body.flow-only-page .detail-card { margin-top: 0; }

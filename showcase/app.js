@@ -26,6 +26,9 @@ const state = {
   sortKey: "rank",
   sortDir: 1,
   protocol: "",
+  // ?view=flow on the protocol page renders only the contract flow, for deep links and for
+  // screenshotting every diagram in a batch without scrolling a 5,000px page.
+  view: "",
 };
 
 const $ = id => document.getElementById(id);
@@ -85,10 +88,14 @@ function coverageBadge(row) {
   const features = (t.features || []).length;
   if (t.mode === "fork") {
     const chains = [...new Set((t.contracts || []).map(c => c.chain))];
+    const steps = ((t.flow && t.flow.edges) || []).length;
     const title = [
       `${contracts} contract address${contracts === 1 ? "" : "es"} on ${chains.length ? chains.join(", ") : t.chain || "—"}`,
       `${features} tested feature${features === 1 ? "" : "s"}`,
-    ].join(" · ");
+      steps ? `${steps}-step contract flow in the panel` : null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
     return `<span class="badge fork" title="${esc(title)}">Fork · ${features}f/${contracts}c</span>`;
   }
   if (t.mode === "api") return `<span class="badge api" title="${esc(t.note || "No permissionless on-chain action.")}">API-only</span>`;
@@ -257,6 +264,498 @@ function featuresHtml(features) {
     .join("")}</ol>`;
 }
 
+const FLOW_KIND_LABEL = {
+  actor: "actor",
+  contract: "protocol contract",
+  token: "token / position",
+  external: "external contract",
+  offchain: "off this machine",
+};
+const FLOW_ARROW = { call: "→", transfer: "⇒", event: "⇢", offchain: "⇢" };
+const FM = { width: 196, height: 66, row: 92, col: 232, pad: 22 };
+
+/** FNV-ish hash so every protocol gets a stable accent hue without a colour table. */
+function hueOf(text) {
+  let hash = 0;
+  for (const char of String(text)) hash = (hash * 31 + char.charCodeAt(0)) % 360;
+  return hash;
+}
+
+function wrapText(text, max = 24) {
+  const words = String(text || "").split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = "";
+  const push = value => {
+    if (value) lines.push(value);
+  };
+  for (const word of words) {
+    // A long unbroken token ("ADDRESSES_PROVIDER()") must be split, or the clip path cuts it
+    // mid-glyph with no ellipsis.
+    if (word.length > max) {
+      if (line) {
+        push(line);
+        line = "";
+      }
+      let rest = word;
+      while (rest.length > max) {
+        push(rest.slice(0, max));
+        rest = rest.slice(max);
+      }
+      line = rest;
+      continue;
+    }
+    if (line && `${line} ${word}`.length > max) {
+      push(line);
+      line = word;
+    } else {
+      line = line ? `${line} ${word}` : word;
+    }
+  }
+  push(line);
+  if (lines.length <= 2) return lines;
+  const tail = lines.slice(1).join(" ");
+  const cut = tail.length > max - 1 ? `${tail.slice(0, max - 1).trimEnd()}…` : tail;
+  return [lines[0], cut];
+}
+
+/**
+ * Layered left-to-right layout: actors first, then one column per call hop. Cycles are allowed
+ * and drawn as return arcs under the graph, so a supply/withdraw loop reads as a loop instead of
+ * an infinite chain. Positions are deterministic, which matters when 91 diagrams share a style.
+ */
+function layoutFlow(flow) {
+  const edges = flow.graph && flow.graph.edges ? flow.graph.edges : [];
+  const layer = new Map();
+  for (const node of flow.nodes) layer.set(node.id, node.kind === "actor" ? 0 : 1);
+  const pinned = new Set(flow.nodes.filter(node => node.kind === "actor").map(node => node.id));
+  for (let pass = 0; pass < 8; pass += 1) {
+    let changed = false;
+    for (const edge of edges) {
+      if (pinned.has(edge.to)) continue;
+      // 0..2 = three columns (actor -> protocol -> token/off-machine). Four columns force a
+      // 0.77 scale in a 780px panel, which pushes labels under 10px; three keep them legible.
+      const next = Math.min(2, (layer.get(edge.from) || 0) + 1);
+      if (next > (layer.get(edge.to) || 1)) {
+        layer.set(edge.to, next);
+        changed = true;
+      }
+    }
+    if (!changed) break;
+  }
+  const columns = new Map();
+  for (const node of flow.nodes) {
+    const index = layer.get(node.id) || 0;
+    if (!columns.has(index)) columns.set(index, []);
+    columns.get(index).push(node);
+  }
+  const ordered = [...columns.entries()].sort((a, b) => a[0] - b[0]);
+  // One barycenter pass: order each column by the mean row of the nodes that point at it, so a
+  // token sits next to the contract that calls it instead of wherever the author listed it.
+  const placed = new Map();
+  for (const [layerIndex, list] of ordered) {
+    if (layerIndex > 0) {
+      const score = node => {
+        const neighbours = edges
+          .filter(edge => edge.to === node.id && placed.has(edge.from))
+          .map(edge => placed.get(edge.from));
+        return neighbours.length ? neighbours.reduce((sum, value) => sum + value, 0) / neighbours.length : Number.MAX_SAFE_INTEGER;
+      };
+      list.sort((a, b) => score(a) - score(b));
+    }
+    list.forEach((node, index) => placed.set(node.id, index));
+  }
+  const rows = Math.max(...ordered.map(([, list]) => list.length), 1);
+  const positions = new Map();
+  ordered.forEach(([, list], columnIndex) => {
+    // Centre short columns, but never leave more than two empty rows above them: a 9-node
+    // column next to a 1-node actor otherwise creates a dead band half the height of the graph.
+    const offset = Math.min((rows - list.length) / 2, 2);
+    list.forEach((node, rowIndex) => {
+      positions.set(node.id, {
+        x: FM.pad + columnIndex * FM.col,
+        y: FM.pad + (rowIndex + offset) * FM.row,
+      });
+    });
+  });
+  const sameColumnEdges = edges.filter(edge => {
+    const from = positions.get(edge.from);
+    const to = positions.get(edge.to);
+    return from && to && from.x === to.x;
+  });
+  // A cycle travels below the cards, so only those graphs need the bottom gutter.
+  const loops = edges.some(edge => {
+    const from = positions.get(edge.from);
+    const to = positions.get(edge.to);
+    return from && to && to.x <= from.x;
+  });
+  // Size the canvas from what is actually drawn, not from rows * row: centring leaves slack in
+  // short columns and that slack was showing up as a dead band under the graph.
+  const bottom = Math.max(...[...positions.values()].map(at => at.y + FM.height));
+  const widest = Math.max(...[...positions.values()].map(at => at.x + FM.width));
+  const loopRoom = sameColumnEdges.length ? 30 + (sameColumnEdges.length - 1) * 14 + 24 : 0;
+  return {
+    edges,
+    positions,
+    width: Math.max(widest, FM.pad + (ordered.length - 1) * FM.col + FM.width) + loopRoom + 14,
+    height: bottom + (loops ? 44 : 10),
+  };
+}
+
+function edgePath(from, to, mode, index = 0) {
+  const mid = node => node.y + FM.height / 2;
+  // Same column: loop out to the right of the column so the arrow is not hidden behind a card.
+  if (mode === "same") {
+    const sx = from.x + FM.width;
+    const sy = mid(from);
+    const tx = to.x + FM.width;
+    const ty = mid(to);
+    const bulge = 30 + index * 14;
+    return `M ${sx} ${sy} C ${sx + bulge} ${sy}, ${tx + bulge} ${ty}, ${tx} ${ty}`;
+  }
+  // Target is left of the source (a cycle): travel under both cards and come back up.
+  if (mode === "back") {
+    const sx = from.x + FM.width / 2;
+    const tx = to.x + FM.width / 2;
+    const sy = from.y + FM.height;
+    const ty = to.y + FM.height;
+    const depth = 34 + index * 12;
+    return `M ${sx} ${sy} C ${sx} ${sy + depth}, ${tx} ${ty + depth}, ${tx} ${ty}`;
+  }
+  const sx = from.x + FM.width;
+  const sy = mid(from);
+  const tx = to.x - 4;
+  const ty = mid(to);
+  // Short hops need a small control offset or the curve overshoots and loops back on itself.
+  const curve = Math.max(10, Math.min(70, (tx - sx) / 2));
+  return `M ${sx} ${sy} C ${sx + curve} ${sy}, ${tx - curve} ${ty}, ${tx} ${ty}`;
+}
+
+/** The graph itself: nodes are cards, edges are deduped arrows labelled with step ranges. */
+function flowSvg(flow) {
+  const { edges, positions, width, height } = layoutFlow(flow);
+  const marker = kind => `fm-arrow-${kind}`;
+  const defs = `<clipPath id="fm-card-clip"><rect width="${FM.width - 6}" height="${FM.height - 4}" rx="11"/></clipPath>` + ["call", "transfer", "event", "offchain"]
+    .map(
+      kind => `<marker id="${marker(kind)}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" class="fm-head fm-head--${kind}"/>
+      </marker>`
+    )
+    .join("");
+
+  let sameSeen = 0;
+  let backSeen = 0;
+  const badges = [];
+  const paths = edges
+    .map((edge, index) => {
+      const from = positions.get(edge.from);
+      const to = positions.get(edge.to);
+      if (!from || !to) return "";
+      const mode = to.x === from.x ? "same" : to.x < from.x ? "back" : "forward";
+      // Bulges are counted per mode, not by the global edge index: with 28 edges the 27th loop
+      // bulged 400px to the right and ran off the canvas.
+      const modeIndex = mode === "same" ? sameSeen++ : mode === "back" ? backSeen++ : 0;
+      const d = edgePath(from, to, mode, modeIndex);
+      const label = edge.range ? `${edge.range}` : String(index + 1);
+      const many = (edge.steps || []).length > 1;
+      const badgeWidth = Math.max(32, label.length * 6 + 8);
+      badges.push(
+        `<g class="fm-step-badge" data-badge="${esc(edge.from)}->${esc(edge.to)}" transform="translate(${from.x + FM.width - 6} ${from.y + 12})">
+          <rect x="${-badgeWidth / 2}" y="-8" width="${badgeWidth}" height="15" rx="7" />
+          <text x="0" y="3">${esc(label)}</text>
+        </g>`
+      );
+      return `<g class="fm-link" data-edge="${esc(edge.from)}->${esc(edge.to)}" data-kind="${esc(edge.kind)}">
+        <path class="fm-hit" d="${d}" />
+        <path class="fm-edge fm-edge--${esc(edge.kind)}" d="${d}" marker-end="url(#${marker(edge.kind)})" />
+        ${many ? `<title>${esc((edge.labels || []).join(" → ").slice(0, 300))}</title>` : ""}
+      </g>`;
+    })
+    .join("");
+
+  const cards = flow.nodes
+    .map(node => {
+      const at = positions.get(node.id);
+      if (!at) return "";
+      const lines = wrapText(node.short || node.label, 22);
+      const text = lines
+        .map((line, index) => `<tspan x="14" dy="${index === 0 ? 0 : 15}">${esc(line)}</tspan>`)
+        .join("");
+      const address = node.address ? `<text class="fm-address" x="14" y="${FM.height - 12}">${esc(node.address.slice(0, 6))}…${esc(node.address.slice(-4))}</text>` : "";
+      return `<g class="fm-node fm-node--${esc(node.kind)}" data-node="${esc(node.id)}" transform="translate(${at.x} ${at.y})">
+        <rect class="fm-card" width="${FM.width}" height="${FM.height}" rx="12" />
+        <rect class="fm-stripe" width="4" height="${FM.height}" rx="2" />
+        <g clip-path="url(#fm-card-clip)">
+          <text class="fm-label" y="${lines.length > 1 ? 26 : 33}">${text}</text>
+          ${address}
+        </g>
+      </g>`;
+    })
+    .join("");
+
+  const dense = edges.length > 18 ? " is-dense" : "";
+  return `<div class="flowmap${dense}" data-flow="${esc(flow.key)}" style="--fm-hue:${hueOf(flow.key)}">
+    <svg class="flowmap-svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img"
+      aria-label="Contract flow: ${flow.nodes.length} nodes and ${edges.length} calls. Use the call log below for the ordered steps.">
+      <defs>${defs}</defs>
+      <g class="fm-links">${paths}</g>
+      <g class="fm-nodes">${cards}</g>
+      <g class="fm-badges">${badges.join("")}</g>
+    </svg>
+  </div>`;
+}
+
+/** The ordered call log. It is the accessible source of truth and the target of the play head. */
+function flowLog(flow) {
+  const rows = (flow.edges || [])
+    .map(
+      (edge, index) => `<li class="fm-row" data-step="${index + 1}" data-edge="${esc(edge.from)}->${esc(edge.to)}">
+        <span class="fm-row-index">${index + 1}</span>
+        <span class="fm-row-call">${esc(edge.label)}</span>
+        <span class="fm-row-ends"><code>${esc(edge.from)}</code> ${FLOW_ARROW[edge.kind] || "→"} <code>${esc(edge.to)}</code></span>
+      </li>`
+    )
+    .join("");
+  return `<details class="flow-log">
+    <summary>Call log <span>${(flow.edges || []).length} steps, in execution order</span></summary>
+    <ol>${rows}</ol>
+  </details>`;
+}
+
+function flowHtml(flow) {
+  if (!flow || !flow.nodes || !flow.nodes.length) return "";
+  const kinds = [...new Set(flow.nodes.map(node => node.kind))];
+  const legend = kinds.map(kind => `<span class="flow-key ${esc(kind)}">${esc(FLOW_KIND_LABEL[kind] || kind)}</span>`).join("");
+  const steps = (flow.edges || []).length;
+  const notes = (flow.notes || []).length ? `<ul class="flow-notes">${flow.notes.map(note => `<li>${esc(note)}</li>`).join("")}</ul>` : "";
+  const missing = (flow.missing || []).filter(item => item.status === "gap" || item.status === "failing-paused");
+  const gaps = missing.length
+    ? `<p class="muted">${missing.length} feature${missing.length === 1 ? "" : "s"} still without a fork test: ${missing
+        .map(item => `<b>${esc(item.feature)}</b>${item.how ? ` — ${esc(item.how)}` : ""}`)
+        .join("; ")}. Full matrix in <a href="https://github.com/xjjda22/defi-scripts/blob/main/docs/10-contract-flows.md" target="_blank" rel="noreferrer">docs/10</a>.</p>`
+    : "";
+  return `<h3>Contract flow</h3>
+    <p class="muted">${esc(flow.summary || "")}</p>
+    <div class="flow-legend">${legend}</div>
+    <div class="flowmap-bar">
+      <button class="fm-play" type="button" aria-pressed="false" data-play>▶ Play the ${steps}-call sequence</button>
+      <span class="fm-readout" data-readout>${steps} calls · press play</span>
+      <span class="fm-scroll-hint" data-scroll-hint hidden>scroll →</span>
+      <button class="fm-expand" type="button" data-expand aria-pressed="false">⤢ Expand</button>
+    </div>
+    ${flowSvg(flow)}
+    ${flowLog(flow)}
+    ${notes}
+    ${gaps}`;
+}
+
+/**
+ * Size the graph to the panel and place the step badges. Re-runnable: the Expand overlay and a
+ * window resize both change the available width, and the SVG has to re-fit without a reload.
+ * The graph is allowed to grow up to 1.6x natural size (the expanded view) and to shrink to 0.5x
+ * before the panel falls back to horizontal scrolling, so the animation is never cropped by a
+ * narrow column.
+ */
+function fitFlowmap(map) {
+  const svg = map.querySelector("svg");
+  const hint = map.parentElement.querySelector("[data-scroll-hint]");
+  if (!svg) return;
+  const box = svg.viewBox.baseVal;
+  const available = Math.max(320, map.clientWidth - 12);
+  const target = Math.min(box.width * 1.6, Math.max(available, box.width * 0.5));
+  svg.style.width = `${target}px`;
+  svg.style.height = `${(target * box.height) / box.width}px`;
+  if (hint) hint.hidden = map.scrollWidth <= map.clientWidth + 4;
+
+  // Card rects in viewBox units. getBBox() + the transform matrix missed some cards, so measure
+  // the painted rect and rescale it.
+  const svgRect = svg.getBoundingClientRect();
+  if (!svgRect.width) return;
+  const unit = box.width / svgRect.width;
+  const cards = [...map.querySelectorAll(".fm-node")].map(node => {
+    const rect = node.querySelector(".fm-card").getBoundingClientRect();
+    return {
+      x: (rect.left - svgRect.left) * unit,
+      y: (rect.top - svgRect.top) * unit,
+      width: rect.width * unit,
+      height: rect.height * unit,
+    };
+  });
+  const taken = [];
+  const MARGIN = 16;
+  const onCanvas = point => point.x > MARGIN && point.x < box.width - MARGIN && point.y > 12 && point.y < box.height - 12;
+  const offCards = point =>
+    !cards.some(card => point.x > card.x - 26 && point.x < card.x + card.width + 26 && point.y > card.y - 16 && point.y < card.y + card.height + 16);
+  const offBadges = point => !taken.some(other => Math.abs(other.x - point.x) < 34 && Math.abs(other.y - point.y) < 20);
+
+  for (const link of map.querySelectorAll(".fm-link")) {
+    const path = link.querySelector(".fm-edge");
+    const badge = map.querySelector(`[data-badge="${link.dataset.edge}"]`);
+    if (!path || !badge) continue;
+    const total = path.getTotalLength();
+    let chosen = null;
+    for (const ratio of [0.46, 0.58, 0.34, 0.66, 0.26, 0.74, 0.2, 0.8, 0.9, 0.14, 0.86, 0.95]) {
+      const point = path.getPointAtLength(total * ratio);
+      if (onCanvas(point) && offCards(point) && offBadges(point)) {
+        chosen = point;
+        break;
+      }
+    }
+    if (!chosen) {
+      const mid = path.getPointAtLength(total * 0.5);
+      for (const dy of [-16, 16, -32, 32, -48, 48]) {
+        const point = {
+          x: Math.min(Math.max(mid.x, MARGIN), box.width - MARGIN),
+          y: Math.min(Math.max(mid.y + dy, 14), box.height - 14),
+        };
+        if (offCards(point) && offBadges(point)) {
+          chosen = point;
+          break;
+        }
+      }
+    }
+    let point = chosen || path.getPointAtLength(total * 0.5);
+    if (cards.some(card => point.x > card.x && point.x < card.x + card.width && point.y > card.y && point.y < card.y + card.height)) {
+      point = path.getPointAtLength(total * 0.95);
+    }
+    taken.push(point);
+    badge.setAttribute("transform", `translate(${point.x} ${point.y})`);
+  }
+}
+
+/**
+ * Play head for one diagram: steps the ordered call log, highlights the matching arrow and both
+ * endpoints, and prints the call. A second click pauses; prefers-reduced-motion turns the travel
+ * animation off but keeps stepping.
+ */
+function wireFlow(root) {
+  for (const map of root.querySelectorAll(".flowmap")) {
+    const flowKey = map.dataset.flow;
+    const readout = map.parentElement.querySelector("[data-readout]");
+    const play = map.parentElement.querySelector("[data-play]");
+    const log = map.parentElement.querySelector(".flow-log");
+    const flowEl = map.parentElement;
+    const rowFor = step => (log ? log.querySelector(`[data-step="${step}"]`) : null);
+    const linkFor = step => {
+      const row = rowFor(step);
+      return row ? map.querySelector(`[data-edge="${row.dataset.edge}"]`) : null;
+    };
+    let current = 0;
+    let timer = null;
+
+    const focus = step => {
+      map.querySelectorAll(".is-active").forEach(el => el.classList.remove("is-active"));
+      if (log) log.querySelectorAll(".is-current").forEach(el => el.classList.remove("is-current"));
+      if (!step) return;
+      const row = rowFor(step);
+      const link = linkFor(step);
+      const badge = row ? map.querySelector(`.fm-step-badge[data-badge="${row.dataset.edge}"]`) : null;
+      map.querySelectorAll(".fm-step-badge.is-active").forEach(el => el.classList.remove("is-active"));
+      if (badge) badge.classList.add("is-active");
+      if (link) {
+        link.classList.add("is-active");
+        const nodes = String(row.dataset.edge).split("->");
+        for (const id of nodes) {
+          const node = map.querySelector(`[data-node="${id}"]`);
+          if (node) node.classList.add("is-active");
+        }
+      }
+      if (row) {
+        row.classList.add("is-current");
+        if (readout) readout.textContent = `${step} / ${flowEl.querySelectorAll(".fm-row").length} · ${row.querySelector(".fm-row-call").textContent}`;
+        // The highlighted row is the readable half of the animation: open the log and keep the
+        // current step in view inside its scroll box.
+        if (log && !log.open) log.open = true;
+        const list = log && log.querySelector("ol");
+        if (list) list.scrollTop = Math.max(0, row.offsetTop - list.clientHeight / 2);
+      }
+    };
+
+    const stop = message => {
+      if (timer) clearInterval(timer);
+      timer = null;
+      if (play) {
+        play.setAttribute("aria-pressed", "false");
+        play.textContent = `▶ Play the ${flowEl.querySelectorAll(".fm-row").length}-call sequence`;
+      }
+      if (message && readout) readout.textContent = message;
+    };
+
+    if (play) {
+      play.addEventListener("click", () => {
+        if (timer) {
+          stop(`paused at step ${current}`);
+          return;
+        }
+        play.setAttribute("aria-pressed", "true");
+        play.textContent = "❚❚ Pause";
+        current = 0;
+        const total = flowEl.querySelectorAll(".fm-row").length;
+        const tick = () => {
+          current = (current % total) + 1;
+          focus(current);
+          if (readout) readout.textContent = `${current} / ${total} · ${rowFor(current).querySelector(".fm-row-call").textContent}`;
+        };
+        tick();
+        timer = setInterval(tick, 1100);
+      });
+    }
+
+    if (log) {
+      log.addEventListener("click", event => {
+        const row = event.target.closest(".fm-row");
+        if (!row) return;
+        if (timer) stop();
+        current = Number(row.dataset.step);
+        focus(current);
+      });
+    }
+
+    map.addEventListener("mouseover", event => {
+      const node = event.target.closest(".fm-node");
+      map.classList.toggle("is-pointing", Boolean(node));
+      map.querySelectorAll(".fm-node.is-hot").forEach(el => el.classList.remove("is-hot"));
+      if (node) {
+        node.classList.add("is-hot");
+        map.dataset.hot = node.dataset.node;
+      } else {
+        delete map.dataset.hot;
+      }
+    });
+    map.addEventListener("mouseleave", () => {
+      map.classList.remove("is-pointing");
+      delete map.dataset.hot;
+    });
+
+    const expand = map.parentElement.querySelector("[data-expand]");
+    const setExpanded = on => {
+      map.classList.toggle("is-expanded", on);
+      document.body.classList.toggle("flow-lock", on);
+      if (expand) {
+        expand.setAttribute("aria-pressed", String(on));
+        expand.textContent = on ? "✕ Close" : "⤢ Expand";
+      }
+      // The overlay changes the available width; re-fit after layout so badges move with it.
+      requestAnimationFrame(() => fitFlowmap(map));
+    };
+    if (expand) expand.addEventListener("click", () => setExpanded(!map.classList.contains("is-expanded")));
+    map.addEventListener("keydown", event => {
+      if (event.key === "Escape") setExpanded(false);
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && map.classList.contains("is-expanded")) setExpanded(false);
+    });
+
+    let resizeTimer = null;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => fitFlowmap(map), 120);
+    });
+
+    fitFlowmap(map);
+    map.dataset.flowKey = flowKey;
+  }
+}
+
 // Honest fork status: direct, linked (another product's test), failing-paused (fails on
 // purpose while the protocol is paused) or none (API-only).
 const STATUS_LABEL = {
@@ -356,6 +855,7 @@ function detailHtml(row) {
         : `<p class="muted">No fork test is configured for this protocol, so there is nothing to run against a local fork here. The API recipes below are the closest check the repo has.</p>`
     }
     ${scriptGroups(listed)}
+    ${flowHtml(testing.flow)}
     ${commands}
     <h3>Contracts</h3>
     ${contractsHtml(testing.contracts)}
@@ -386,7 +886,22 @@ function renderDetail() {
     return;
   }
   document.title = `${row.name} · Trending DeFi`;
+  if (state.view === "flow") {
+    document.body.classList.add("flow-only-page");
+    if (!row.testing || !row.testing.flow) {
+      host.innerHTML = `<article class="detail-card flow-only"><h2>${esc(row.name)}</h2><p class="muted">No contract flow is configured for this row.</p></article>`;
+      return;
+    }
+    document.title = `${row.name} · Contract flow`;
+    host.innerHTML = `<article class="detail-card flow-only">
+      <p class="kicker">${esc(labelFor(row.category))} · ${esc(row.name)}</p>
+      ${flowHtml(row.testing.flow)}
+    </article>`;
+    wireFlow(host);
+    return;
+  }
   host.innerHTML = detailHtml(row);
+  wireFlow(host);
 }
 
 function scriptsCell(scripts) {
@@ -656,7 +1171,9 @@ function generatedLabel(iso) {
 
 function readHash() {
   if (PROTOCOL_PAGE) {
-    state.protocol = new URLSearchParams(location.search).get("slug") || "";
+    const params = new URLSearchParams(location.search);
+    state.protocol = params.get("slug") || "";
+    state.view = params.get("view") || "";
     return;
   }
   const params = new URLSearchParams(location.hash.replace(/^#/, ""));

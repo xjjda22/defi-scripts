@@ -71,6 +71,18 @@ function checkTesting(row, problems) {
       problems.push(`${row.id}: bad contract address ${contract.address}`);
     }
   }
+  // Contract flow from data/contract-flows.json: the panel draws it as the call path, so a
+  // dangling edge would render an arrow into nothing.
+  const flow = testing.flow;
+  if (flow) {
+    const ids = new Set((flow.nodes || []).map(node => node.id));
+    if (ids.size < 2) problems.push(`${row.id}: testing.flow has ${ids.size} node(s)`);
+    if (!(flow.edges || []).length) problems.push(`${row.id}: testing.flow has no edges`);
+    for (const edge of flow.edges || []) {
+      if (!ids.has(edge.from) || !ids.has(edge.to)) problems.push(`${row.id}: testing.flow edge ${edge.from}->${edge.to} points at a missing node`);
+      if (!edge.label) problems.push(`${row.id}: testing.flow edge ${edge.from}->${edge.to} has no label`);
+    }
+  }
   for (const item of row.chainTvls || []) {
     if (!item || typeof item.tvl !== "number" || !Number.isFinite(item.tvl)) {
       problems.push(`${row.id}: bad chain TVL`);
