@@ -27,6 +27,12 @@ const PAUSED = {
     reason:
       "Dolomite oracle price went to zero after the 2026-10-29 Binance hot-wallet drain; since 2026-11-02 every Ethereum market (WETH, USD1, USDC, LINK) has getMarketIsClosing=true.",
   },
+  "fork:cian:deposit": {
+    kind: "paused",
+    since: "2026-11-06",
+    reason:
+      "CIAN's operator exchange price is stale (remainingUpdateTime 0 on the 2026-11-06 fork): deposit() reverts PriceNotUpdated(), so the pre-check sends no tx.",
+  },
   "fork:swell:deposit": {
     kind: "paused",
     since: "2026-10-21",

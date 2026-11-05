@@ -373,6 +373,15 @@ async function rocketBurn(base) {
   const bal = await reth.balanceOf(user);
   const burnAmt = bal / 2n;
   const ethValue = await reth.getEthValue(burnAmt);
+  // The burn is paid out of the deposit pool's free balance. When there is no excess it pays
+  // dust, which looked like a broken assertion; say why instead and send no tx.
+  const excess = await pool.getExcessBalance();
+  if (excess < ethValue)
+    return finish({
+      ...base,
+      ok: false,
+      error: `deposit pool excess ${formatUnits(excess, 18)} ETH < burn value ${formatUnits(ethValue, 18)}; burn would return dust, no tx sent`,
+    });
   const collateral = await reth.getTotalCollateral();
   if (collateral < ethValue)
     return finish({

@@ -6,6 +6,7 @@
 
 const { contractsForKeys } = require("./contracts");
 const { featuresByScript } = require("./forkFeatures");
+const { flowForKeys } = require("./contractFlows");
 const { TESTNETS, CHAINLINK } = require("./faucets");
 const { statusFor, coverageStats } = require("./forkStatus");
 
@@ -151,6 +152,9 @@ const FORK_RECIPES = [
       test("fork:aave:borrow", "borrow", "ethereum"),
       test("fork:aave:repay", "repay", "ethereum"),
       test("fork:aave:withdraw", "withdraw", "ethereum"),
+      test("fork:aave:flashloan", "flash loan", "ethereum"),
+      test("fork:aave:emode", "set collateral / e-mode", "ethereum"),
+      test("fork:aave:stake", "stake AAVE", "ethereum"),
     ],
   }),
   recipe({
@@ -164,6 +168,8 @@ const FORK_RECIPES = [
       test("fork:spark:borrow", "borrow", "ethereum"),
       test("fork:spark:repay", "repay", "ethereum"),
       test("fork:spark:withdraw", "withdraw", "ethereum"),
+      test("fork:spark:flashloan", "flash loan", "ethereum"),
+      test("fork:spark:liquidate", "liquidate", "ethereum"),
     ],
   }),
   recipe({
@@ -176,6 +182,8 @@ const FORK_RECIPES = [
       test("fork:compound:borrow", "borrow", "ethereum"),
       test("fork:compound:repay", "repay", "ethereum"),
       test("fork:compound:withdraw", "withdraw", "ethereum"),
+      test("fork:compound:absorb", "absorb a liquidatable account", "ethereum"),
+      test("fork:compound:buycollateral", "buy collateral", "ethereum"),
     ],
   }),
   recipe({
@@ -189,6 +197,8 @@ const FORK_RECIPES = [
       test("fork:morpho:borrow", "borrow", "ethereum"),
       test("fork:morpho:repay", "repay", "ethereum"),
       test("fork:morpho:withdraw", "withdraw", "ethereum"),
+      test("fork:morpho:flashloan", "flash loan", "ethereum"),
+      test("fork:morpho:liquidate", "liquidate", "ethereum"),
     ],
   }),
   recipe({
@@ -272,8 +282,13 @@ const FORK_RECIPES = [
     appUrl: "https://www.curve.finance/crvusd/ethereum/markets/",
     chain: "ethereum",
     contractKeys: ["llamalend"],
-    note: "Lends crvUSD into the Llamalend V1 wstETH-long vault (OneWayLendingFactory.vaults(13), ERC-4626) and redeems it. Borrowing against collateral through the market controller is not exercised.",
-    tests: [test("fork:llamalend:deposit", "deposit", "ethereum")],
+    note: "Lends crvUSD into the Llamalend V1 wstETH-long vault (OneWayLendingFactory.vaults(13), ERC-4626) and redeems it, and opens, repays and liquidates a wstETH-collateral loan through the market controller.",
+    tests: [
+      test("fork:llamalend:deposit", "deposit", "ethereum"),
+      test("fork:llamalend:borrow", "borrow", "ethereum"),
+      test("fork:llamalend:repay", "repay", "ethereum"),
+      test("fork:llamalend:liquidate", "liquidate", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["dolomite"],
@@ -1341,9 +1356,13 @@ function attachTesting(row) {
   // What each attached fork test does and asserts. Derived from the tests that
   // are actually on this row, so the panel cannot describe a test that is not here.
   const features = fork ? fork.tests.map(item => featuresByScript().get(item.script)).filter(Boolean) : [];
+  // The flow is keyed by the recipe's first key, not the DefiLlama row id, so ask with the
+  // recipe keys the row was matched through (compound-finance -> compound, cbeth -> ...).
+  const flow = fork ? flowForKeys(fork.keys) : null;
   row.testing = fork
     ? {
         mode: "fork",
+        flow,
         label: fork.label || null,
         note: fork.note,
         appUrl: fork.appUrl || row.appUrl || null,
@@ -1364,6 +1383,7 @@ function attachTesting(row) {
         commands: [],
         tests: [],
         features: [],
+        flow: null,
         contracts: contractsForKeys(keys),
         recipe: categoryRecipe,
       };
@@ -1428,10 +1448,14 @@ function applyProtocolMeta(data, protocols) {
 function enrichShowcase(data) {
   for (const row of data.overall || []) attachTesting(row);
   for (const list of Object.values(data.byCategory || {})) for (const row of list) attachTesting(row);
-  const fork = (data.overall || []).filter(row => row.testing && row.testing.mode === "fork").length;
+  const forkRows = (data.overall || []).filter(row => row.testing && row.testing.mode === "fork");
+  const fork = forkRows.length;
   const apiOnly = (data.overall || []).filter(row => row.testing && row.testing.mode === "api-only").length;
   data.stats = data.stats || {};
   data.stats.forkInTop200 = fork;
+  // Rows whose panel can draw the contract flow (data/contract-flows.json). A fork row without
+  // one keeps its feature cards; the count is a coverage signal, not a UI switch.
+  data.stats.flowInTop200 = forkRows.filter(row => row.testing.flow).length;
   data.stats.apiOnlyInTop200 = apiOnly;
   // forkInTop200 counts every row with a fork recipe. The honest split (direct, linked,
   // failing-paused) and the pinned forkable denominator live in stats.coverage.
