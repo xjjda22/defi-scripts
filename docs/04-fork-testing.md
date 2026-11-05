@@ -4,6 +4,12 @@ Architecture: [`00-architecture.md`](./00-architecture.md). The showcase panel t
 
 `fork:<protocol>:<action>` runs one action on a local Anvil fork. It impersonates or funds a whale, asserts a balance or position change, prints `FORK_RESULT`, and exits non-zero on failure. It does not read `PRIVATE_KEY`.
 
+The contracts each test actually calls — and the features the suite still does **not** cover
+per protocol — are charted in [`10-contract-flows.md`](./10-contract-flows.md), generated from
+`data/contract-flows.json`. `npm run flowcharts:check` (inside `catalog:check`) fails when a
+`FORK_RECIPES` entry has no flow, when a diagram cites an address that is not in the repo, or
+when the doc is stale.
+
 ## Setup
 
 Install Foundry if `anvil` is missing. `scripts/lib/anvil.js` finds the binary from `ANVIL_BIN`, then `PATH`, then `~/.foundry/bin/anvil` (foundryup's default), so a shell without Foundry on `PATH` still works. `node scripts/startFork.js` prints these lines when none is found:
