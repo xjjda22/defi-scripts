@@ -64,7 +64,9 @@ with no record of why.
   is the only meaningful surface, the row is fork-only and that is stated. `[reviewed]`
 - **A fork test is done when** it runs on a pinned block with impersonation or `anvil_deal`,
   needs no `PRIVATE_KEY`, fails on revert, and prints a measured state delta on PASS. A green
-  call with no asserted delta is rejected. `[reviewed]`
+  call with no asserted delta is rejected. It must also be attached to a `FORK_RECIPES` entry
+  (a script that exists only in `package.json` never runs in `fork:all`) and carry a contract
+  flow in `data/contract-flows.json`, which renders to `docs/10-contract-flows.md`. `[checked]`
 - **A row is done when** it is bucket 1, or bucket 2/3 with the reason recorded. Row-level
   backlog: `docs/07-fork-coverage-plan.md`. Feature-level backlog: `docs/08-feature-test-gaps.md`
   — every public permissionless feature gets a fork test, not just one per protocol.
@@ -79,7 +81,8 @@ with no record of why.
   `daily-*claims*` files. `[reviewed]` — there is no automated secret scan yet; CI only reports
   whether RPCs are configured.
 - **R4.3 Registration.** Every script needs a `PROTOCOLS` entry and a `SCRIPT_DESCRIPTIONS` line;
-  run `catalog:docs` before `catalog:check`. `[checked]`
+  a `fork:*` script also needs a `FORK_RECIPES` test and a contract flow. Run `catalog:docs`
+  before `catalog:check`. `[checked]`
 - **R4.4 Naming.** `<family>:<protocol>:<what>` — `analytics:aave:markets`,
   `simulate:kelp:smoke`, `fork:uniswap:v3`. `[reviewed]` — `catalog:check` validates registration,
   not the pattern.
@@ -108,6 +111,7 @@ npm run check:contracts                           # fork contracts match their s
 node scripts/showcaseCheck.js                     # data.json shape + publishSafe
 node scripts/showcaseSignalsCheck.js              # CoinGecko/Nansen plumbing
 npm run fork:all                                  # SKIPPED without RPC is not a pass
+npm run flowcharts:check                          # every recipe has a flow; no address outside the repo; docs/10 current
 npm run check:fork-deploy                         # local bytecode deploys on every chain fork
 npm run check:venues                              # every configured address has code on its chain
 npm run check:venue-map                           # docs/09 matches chains.js
@@ -116,32 +120,22 @@ npm run check:aave-fork                           # real Aave flash loan through
 
 Everything marked `[reviewed]` has no gate. If you add a gate for one, flip its tag in the same PR.
 
-## 6. Snapshot — board 2026-11-02 18:06 (#60) + fork wave 4 (2026-11-03)
+## 6. Snapshot — board 2026-11-05 + fork wave 4 (2026-11-03)
 
-The four buckets sum to 200. Rows, not scripts: one protocol family is one row.
+Rows, not scripts: one protocol family is one row. Rebuild with `npm run ranking:top200`; the
+derived bucket counts live in `stats.coverage`, not here.
 
 | | Rows |
 |---|---:|
 | Top 200 | 200 |
-| Bucket 1 — fork-tested | 91 |
-| Bucket 2 — API-only, reason written | 18 |
-| Bucket 3 — not forkable | 91 |
+| Fork-tested rows | 89 |
+| API-only rows | 111 |
 | Bucket 4 — EVM-forkable, not built | 0 |
 | Candidate pool | 268 |
-| Rows with a dedicated monitor | 97 |
-| Ranking-only rows | 103 |
 
-`showcase/data.json` is the 2026-11-02 18:06 board and still says 89 fork stamps; the numbers
-above are the live config after fork wave 4 (2026-11-03), so they are one rebuild ahead of it.
-Bucket 4 is **empty**: the last two rows closed with `fork:armitage:deposit` (100 USDC into the
-Armitage-curated Morpho Vault V2, asserting shares / `totalSupply` / `totalAssets` deltas) and
-`fork:xdai-stake-bridge:deposit` (`relayTokens` on the USDS lockbox, asserting the bridge's
-collateral and daily-limit deltas). So 89 + 2 = 91, and 91 + 18 + 91 + 0 = 200.
-
-Bucket 2 is 18, not 15 + 4: the four rows the earlier campaign proved infeasible carry
-`API_ONLY` entries with on-chain evidence, but that rebuild churned 14 rows in and 14 out, so the
-old 15 is not a base you can add to.
-
-Bucket 3 is 91, not the 96 that `stats.coverage.nonForkable` reports: that count overlaps
-`API_ONLY`, and the buckets here are disjoint so they sum to 200. Do not add a curated row to
-keep a number looking good; fix the input.
+The 2026-11-02 board printed 91 fork rows and the 2026-11-05 rebuild printed 89, because 10 rows
+churned in and out: six fork rows dropped (Derive v3 Options, Theo, the old Aster row, Kelp,
+Mellow Core, Benqi Staked AVAX) and four joined (Lyra, Aster Bridge, SushiSwap DEX, Axelar). Per
+R0.2 a dropped row keeps its scripts and stops counting toward coverage. `showcase/data.json`
+carries the same numbers (`stats.forkInTop200`, `stats.coverage`); do not add a curated row to make
+a count look better — fix the input.

@@ -1,17 +1,46 @@
-# Fork coverage plan (2026-11-03)
+# Fork coverage plan (2026-11-03, receipts 2026-11-05)
 
-Status: **campaign closed, queue empty.** Fork tests cover 91 of the top 200 rows; 109 do not.
+Status: **campaign closed, queue empty.** On the 2026-11-05 rebuild, fork tests cover **89 of
+the top 200** rows; 111 do not.
+
+> **2026-11-05 — two things the campaign left behind, now fixed and measured.**
+> 1. Twelve fork tests existed as npm scripts and in `forkFeatures.js` but were **not attached to
+>    any `FORK_RECIPES` entry**: `fork:aave:{flashloan,emode,stake}`,
+>    `fork:spark:{flashloan,liquidate}`, `fork:compound:{absorb,buycollateral}`,
+>    `fork:morpho:{flashloan,liquidate}` and `fork:llamalend:{borrow,repay,liquidate}`. `fork:all`
+>    builds its plan from `FORK_RECIPES`, so none of them ran in the suite and none appeared on a
+>    showcase panel. They are attached now: **166 tests in the suite, 166 `fork:*` scripts, no
+>    orphans**. `docs/08` had already counted them as tested, which is why the matrix looked
+>    better than the suite.
+> 2. Every recipe now has a contract flowchart and a per-feature "how to close it on a fork"
+>    note: [`10-contract-flows.md`](./10-contract-flows.md). A fork test without a flow is a
+>    `catalog:check` failure.
 The last two rows closed in fork wave 4 (2026-11-03) — Armitage by Wintermute and xDAI Stake
-Bridge. The 2026-11-02 18:06 board still prints 89 for the same reason a photograph is not the
-street: it predates those two tests, and the next `ranking:top200` rebuild will show 91.
+Bridge — and the 2026-11-05 board then churned 10 rows in and 10 out: six fork rows dropped
+(Derive v3 Options, Theo, the old Aster row, Kelp, Mellow Core, Benqi Staked AVAX) and four joined
+(Lyra, Aster Bridge, SushiSwap DEX, Axelar). Per R0.2 the dropped rows keep their scripts, so the
+count moved from 91 to 89 without deleting a test.
+
+## Full suite receipt (2026-11-06)
+
+First complete `npm run fork:all` after fork wave 4 and the 2026-11-05 board rebuild: **163 PASS,
+3 FAIL, 0 SKIP, 1 retried** across 8 chains (166 tests).
+
+| Test | Result | Reading |
+| --- | --- | --- |
+| `fork:dolomite:supply` | FAIL `marketClosing=true` | Documented `PAUSED` row: every Dolomite Ethereum market is closing since the 2026-10-29 drain. The pre-check sends no tx. |
+| `fork:cian:deposit` | FAIL `remainingUpdateTime 0` | CIAN's operator exchange price is stale, so `deposit()` would revert `PriceNotUpdated()`. Added to `PAUSED` on 2026-11-06; the pre-check sends no tx. |
+| `fork:rocketpool:burn` | FAIL `excess 0.0 ETH` | The Rocket deposit pool has no free ETH, so `burn` pays dust instead of `getEthValue`. The flow now reads `getExcessBalance()` and fails **before** the tx with that number. Protocol state, not a code regression. |
+
+The other 163 tests pass, including the 12 that were wired into `FORK_RECIPES` this week.
 
 ## Both numbers are smaller than they look
 
 | Bucket | Rows | Can a fork test cover it? |
 | --- | ---: | --- |
 | Top 200 | 200 | — |
-| Has a `fork:*` stamp | 91 | — |
-| No fork test | 109 | — |
+| Has a `fork:*` stamp | 89 | — |
+| No fork test | 111 | — |
 | — documented as infeasible in `API_ONLY` | 18 | No, with a written reason |
 | — non-EVM, or no chain TVL (Solana, Bitcoin, Hyperliquid L1, Tron, Sui, Stellar, others) | 91 | No: the suite is EVM-only |
 | **— EVM-forkable, just not built** | **0** | **Queue empty** |
@@ -78,6 +107,24 @@ FORK_TARGET=<target> FORK_PROTOCOL=<protocol> FORK_ACTION=<action> CHAIN=<chain>
 Acceptance: `FORK_RESULT status=PASS` with a key that states the measured delta, and the address
 must have code on the fork (`provider.getCode` non-empty). A green call with no asserted state
 change is rejected.
+
+## Authoring pass: contract flows (2026-11-05)
+
+The same file-ownership contract, applied to documentation instead of tests. The unit is a
+`FORK_RECIPES` entry, not a protocol.
+
+| Stage | Agents | What they own |
+| --- | ---: | --- |
+| Author | 22 | 5 recipes each → `output/flowcharts/<key>.json` (nodes, edges, gap notes) |
+| Review | 22 | the same 5 files, checked against the fork source: call order, contract identity, no overclaim |
+| Merge | 1 (orchestrator) | `npm run flowcharts:docs` → `data/contract-flows.json` + `docs/10-contract-flows.md` |
+
+Agents write **only** their fragment; `data/`, `docs/` and the showcase are written by the
+orchestrator in one serial pass, because parallel writers would collide. Two checks make the
+contract enforceable rather than aspirational: `--verify <key>` is the loop an author runs until
+it prints OK, and the merge rejects any `0x` address that does not already appear in `src/` or
+`output/fork-specs/`. A diagram therefore cannot cite an address no one verified, and a gap note
+cannot name a feature that is not in `protocolFeatures.js` (the merge warns and drops it).
 
 ## Integration pass (serial, by the orchestrator)
 
