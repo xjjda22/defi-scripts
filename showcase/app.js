@@ -120,6 +120,19 @@ function signalsCell(row) {
 
 // CoinGecko product page. Falls back to the mapped token id so a data.json built
 // before coingeckoUrl existed still renders the link.
+/** X handle from DefiLlama's `twitter` field, normalised to a bare handle. */
+function xHandle(row) {
+  return String(row.twitter || "")
+    .replace(/^https?:\/\/(www\.)?(x|twitter)\.com\//i, "")
+    .replace(/^@/, "")
+    .replace(/\/.*$/, "")
+    .trim();
+}
+function xUrl(row) {
+  const handle = xHandle(row);
+  return /^[A-Za-z0-9_]{1,15}$/.test(handle) ? `https://x.com/${handle}` : null;
+}
+
 function geckoUrl(row) {
   if (row.coingeckoUrl) return row.coingeckoUrl;
   const id = row.token && row.token.coingeckoId;
@@ -801,14 +814,8 @@ function detailHtml(row) {
       ? row.scripts.filter(script => scriptKind(scriptName(script)) !== "fork")
       : row.scripts;
   const gecko = geckoUrl(row);
-  // X handle from DefiLlama (`twitter`), normalised: the field is a bare handle, but a full URL
-  // or an @prefix shows up too and must not become https://x.com/https://x.com/...
-  const handle = String(row.twitter || "")
-    .replace(/^https?:\/\/(www\.)?(x|twitter)\.com\//i, "")
-    .replace(/^@/, "")
-    .replace(/\/.*$/, "")
-    .trim();
-  const xLink = /^[A-Za-z0-9_]{1,15}$/.test(handle) ? `https://x.com/${handle}` : null;
+  const handle = xHandle(row);
+  const xLink = xUrl(row);
   const pills = [
     app ? { href: app, glyph: "⌂", label: "Official app" } : null,
     row.llamaUrl ? { href: row.llamaUrl, glyph: "◈", label: "DefiLlama" } : null,
@@ -1144,17 +1151,20 @@ function renderTable() {
   $("rows").innerHTML = rows
     .map(row => {
       const gecko = geckoUrl(row);
+      const x = xUrl(row);
       const link = [
-        row.llamaUrl
-          ? ` <a class="llama" href="${esc(row.llamaUrl)}" target="_blank" rel="noreferrer">DefiLlama</a>`
-          : "",
-        gecko ? ` <a class="gecko" href="${esc(gecko)}" target="_blank" rel="noreferrer">CoinGecko</a>` : "",
-      ].join("");
+        row.llamaUrl ? { href: row.llamaUrl, glyph: "◈", label: "DefiLlama" } : null,
+        gecko ? { href: gecko, glyph: "◉", label: "CoinGecko" } : null,
+        x ? { href: x, glyph: "𝕏", label: `@${xHandle(row)}` } : null,
+      ]
+        .filter(Boolean)
+        .map(item => `<a class="link-chip" href="${esc(item.href)}" target="_blank" rel="noreferrer"><span class="glyph" aria-hidden="true">${item.glyph}</span>${esc(item.label)}</a>`)
+        .join("");
       const overall =
         state.tab !== "overall" && row.overallRank ? `<span class="slug">#${esc(row.overallRank)} overall</span>` : "";
       return `<tr>
         <td data-label="#">${esc(row.rank ?? "—")}</td>
-        <td data-label="Protocol"><a class="name" href="${PROTOCOL_PAGE ? `protocol.html?slug=${encodeURIComponent(row.slug || row.id)}` : `#p=${encodeURIComponent(row.slug || row.id)}`}">${esc(row.name)}</a>${protocolStatusBadge(row)}${disputedBadge(row)}<span class="slug">${esc(row.slug)}${link}</span>${overall}${breakdown(row)}</td>
+        <td data-label="Protocol"><a class="name" href="${PROTOCOL_PAGE ? `protocol.html?slug=${encodeURIComponent(row.slug || row.id)}` : `#p=${encodeURIComponent(row.slug || row.id)}`}">${esc(row.name)}</a>${protocolStatusBadge(row)}${disputedBadge(row)}<span class="meta-line"><span class="slug">${esc(row.slug)}</span><span class="row-links">${link}</span></span>${overall}${breakdown(row)}</td>
         <td class="col-cat" data-label="Category">${esc(labelFor(row.category))}</td>
         <td class="num" data-label="TVL">${money(row.tvl)}</td>
         <td class="num" data-label="6-month TVL">${changeCell(row)}</td>

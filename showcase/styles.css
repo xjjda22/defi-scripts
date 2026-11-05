@@ -196,9 +196,35 @@ th[aria-sort="descending"] button::after { content: " ↓"; color: var(--accent)
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .name { font-weight: 600; color: inherit; text-decoration: none; }
 .name:hover, .name:focus-visible { color: var(--accent); }
-.slug { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
-.llama, .gecko { color: var(--accent); text-decoration: none; font-size: 12px; margin-left: 6px; }
-.llama:hover, .gecko:hover { text-decoration: underline; }
+.slug { color: var(--muted); font-size: 12px; }
+/* Board row links: the same products as the panel, inline with the slug at table density. */
+.meta-line { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; }
+/* The protocol cell carries the slug and three product links; give it room so they stay on one
+   line instead of stacking three chips per row. */
+#board td[data-label="Protocol"] { min-width: 286px; }
+.row-links { display: flex; flex-wrap: wrap; gap: 4px; }
+.link-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: nowrap;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.link-chip .glyph { color: var(--muted); font-size: 10.5px; }
+.link-chip:hover, .link-chip:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(223, 242, 106, 0.08);
+  outline: none;
+}
+.link-chip:hover .glyph, .link-chip:focus-visible .glyph { color: var(--accent); }
 
 .bar {
   display: inline-flex;

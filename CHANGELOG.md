@@ -22,6 +22,10 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 - DefiLlama, CoinGecko, X and the official app are pills now: glyph, name, external arrow,
   border, hover/focus in the accent colour, wrapping row. They were underlined inline text that
   wrapped badly under the title.
+- The board rows carry the same links as chips (DefiLlama, CoinGecko, X) next to the slug. The
+  protocol column got a 286px minimum so the three chips sit on one line for a normal handle; a
+  long handle wraps the X chip instead of squeezing the others. The old `.llama` / `.gecko`
+  inline-accent styles are gone.
 - `data.json` was refreshed with `enrichShowcaseData` (twitter field plus DefiLlama chain TVL), so
   `coverage:features` and `flowcharts:docs` were regenerated to follow the new `generatedAt` and
   ranks.
