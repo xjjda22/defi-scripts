@@ -421,6 +421,7 @@ function toOutputRow(row, rank, overallRank) {
     llamaUrl: row.llamaUrl,
     appUrl: row.appUrl || null,
     coingeckoUrl: row.coingeckoUrl || null,
+    twitter: row.twitter || null,
     llamaFlags: row.llamaFlags || null,
     chainTvls: row.chainTvls || [],
     scripts: row.scripts,
@@ -711,6 +712,9 @@ async function main() {
     }
     const mention = mentionFor(group.id, group.name);
     const llamaSlug = group.slug;
+    // The family aggregate often has no handle of its own, so take the first member that does
+    // (aave -> aave-v3). This keeps X links alive across `ranking:top200` rebuilds.
+    const xHandle = (members.find(member => member.protocol && member.protocol.twitter) || {}).protocol?.twitter || null;
     return {
       id: group.id,
       name: group.name,
@@ -735,6 +739,9 @@ async function main() {
       xLists: mention ? mention.lists : [],
       llamaUrl: `https://defillama.com/protocol/${encodeURIComponent(llamaSlug)}`,
       appUrl: members.map(member => member.protocol && member.protocol.url).find(Boolean) || null,
+      // X handle for the product links. The family aggregate often has none, so fall back to the
+      // first member that does (aave -> aave-v3); a rebuild must not drop it.
+      twitter: xHandle,
       // DefiLlama's own flags; rowStatus turns them into a "deprecated" badge. Scores ignore them.
       llamaFlags: {
         deprecated: members.length > 0 && members.every(m => m.protocol && m.protocol.deprecated === true),

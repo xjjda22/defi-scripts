@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T23:08:49.820Z",
+  "generatedAt": "2026-11-05T23:22:43.596Z",
   "totals": {
     "recipes": 110,
     "withMatrix": 98,
@@ -8577,269 +8577,9 @@
       "matrixKey": "galaxy-curation"
     },
     {
-      "key": "meth-protocol",
-      "name": "mETH Protocol",
-      "rank": 79,
-      "chain": "ethereum",
-      "rpcEnv": "ETHEREUM_RPC_URL",
-      "appUrl": "https://www.mantle.xyz/meth",
-      "label": "Stake + unstake request",
-      "recipeNote": "mETH Protocol (Mantle LST) on Ethereum: stake ETH for mETH through the Staking contract, then file an unstake request that locks the mETH in the UnstakeRequestsManager. Request finalisation follows validator exits and is not waited out. cmETH restaking is not exercised.",
-      "direction": "LR",
-      "summary": "On a pinned Ethereum fork 1 ETH goes through mETH Staking.stake and mints exactly ethToMETH(1 ETH) while the Staking contract's ETH rises by the value, then unstakeRequest locks every mETH in the UnstakeRequestsManager with ethAmount equal to the pre-tx mETHToETH.",
-      "scripts": [
-        {
-          "script": "fork:meth:stake",
-          "action": "stake",
-          "feature": "Stake ETH for mETH and request unstake (mETH Protocol)",
-          "chain": "ethereum",
-          "rpcEnv": "ETHEREUM_RPC_URL"
-        }
-      ],
-      "nodes": [
-        {
-          "id": "user",
-          "label": "fresh impersonated account, 100 ETH set by anvil_setBalance",
-          "short": "fresh impersonated account",
-          "kind": "actor",
-          "address": null
-        },
-        {
-          "id": "staking",
-          "label": "mETH Staking",
-          "short": "mETH Staking",
-          "kind": "contract",
-          "address": "0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f"
-        },
-        {
-          "id": "meth",
-          "label": "mETH on Ethereum",
-          "short": "mETH on Ethereum",
-          "kind": "token",
-          "address": "0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa"
-        },
-        {
-          "id": "manager",
-          "label": "UnstakeRequestsManager",
-          "short": "UnstakeRequestsManager",
-          "kind": "contract",
-          "address": "0x38fDF7b489316e03eD8754ad339cb5c4483FDcf9"
-        },
-        {
-          "id": "pauser",
-          "label": "pauser contract, address read from pauser()",
-          "short": "pauser contract, address read from pauser",
-          "kind": "contract",
-          "address": null
-        },
-        {
-          "id": "eth",
-          "label": "native ETH on Ethereum",
-          "short": "native ETH on Ethereum",
-          "kind": "token",
-          "address": null
-        }
-      ],
-      "edges": [
-        {
-          "from": "user",
-          "to": "staking",
-          "label": "mETH() and unstakeRequestsManager() wiring reads",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "pauser",
-          "label": "isStakingPaused() and isUnstakeRequestsAndClaimsPaused()",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "staking",
-          "label": "isStakingAllowlist() and minimumStakeBound()",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "staking",
-          "label": "ethToMETH(1 ETH) pre-tx expectation",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "staking",
-          "label": "stake(expectedMETH) payable 1 ETH",
-          "kind": "call"
-        },
-        {
-          "from": "eth",
-          "to": "staking",
-          "label": "1 ETH into the Staking contract",
-          "kind": "transfer"
-        },
-        {
-          "from": "staking",
-          "to": "meth",
-          "label": "mint ethToMETH mETH to the staker",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "staking",
-          "label": "mETHToETH(minted) pre-tx ETH owed",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "meth",
-          "label": "approve(Staking, every minted mETH)",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "staking",
-          "label": "unstakeRequest(minted, 99.9% floor)",
-          "kind": "call"
-        },
-        {
-          "from": "meth",
-          "to": "manager",
-          "label": "transferFrom every mETH into the manager",
-          "kind": "transfer"
-        },
-        {
-          "from": "staking",
-          "to": "user",
-          "label": "UnstakeRequested: mETHLocked and ethAmount",
-          "kind": "event"
-        }
-      ],
-      "graph": {
-        "edges": [
-          {
-            "from": "user",
-            "to": "staking",
-            "kind": "call",
-            "steps": [
-              1,
-              3,
-              4,
-              5,
-              8,
-              10
-            ],
-            "labels": [
-              "mETH() and unstakeRequestsManager() wiring reads",
-              "isStakingAllowlist() and minimumStakeBound()",
-              "ethToMETH(1 ETH) pre-tx expectation",
-              "stake(expectedMETH) payable 1 ETH",
-              "mETHToETH(minted) pre-tx ETH owed",
-              "unstakeRequest(minted, 99.9% floor)"
-            ],
-            "label": "mETH() and unstakeRequestsManager() wiring reads (+5 more)",
-            "range": "1–10"
-          },
-          {
-            "from": "user",
-            "to": "pauser",
-            "kind": "call",
-            "steps": [
-              2
-            ],
-            "labels": [
-              "isStakingPaused() and isUnstakeRequestsAndClaimsPaused()"
-            ],
-            "label": "isStakingPaused() and isUnstakeRequestsAndClaimsPaused()",
-            "range": "2"
-          },
-          {
-            "from": "eth",
-            "to": "staking",
-            "kind": "transfer",
-            "steps": [
-              6
-            ],
-            "labels": [
-              "1 ETH into the Staking contract"
-            ],
-            "label": "1 ETH into the Staking contract",
-            "range": "6"
-          },
-          {
-            "from": "staking",
-            "to": "meth",
-            "kind": "call",
-            "steps": [
-              7
-            ],
-            "labels": [
-              "mint ethToMETH mETH to the staker"
-            ],
-            "label": "mint ethToMETH mETH to the staker",
-            "range": "7"
-          },
-          {
-            "from": "user",
-            "to": "meth",
-            "kind": "call",
-            "steps": [
-              9
-            ],
-            "labels": [
-              "approve(Staking, every minted mETH)"
-            ],
-            "label": "approve(Staking, every minted mETH)",
-            "range": "9"
-          },
-          {
-            "from": "meth",
-            "to": "manager",
-            "kind": "transfer",
-            "steps": [
-              11
-            ],
-            "labels": [
-              "transferFrom every mETH into the manager"
-            ],
-            "label": "transferFrom every mETH into the manager",
-            "range": "11"
-          },
-          {
-            "from": "staking",
-            "to": "user",
-            "kind": "event",
-            "steps": [
-              12
-            ],
-            "labels": [
-              "UnstakeRequested: mETHLocked and ethAmount"
-            ],
-            "label": "UnstakeRequested: mETHLocked and ethAmount",
-            "range": "12"
-          }
-        ]
-      },
-      "notes": [
-        "Staking, mETH and UnstakeRequestsManager are the METH spec in contracts.js; mETH() and unstakeRequestsManager() are re-read and must match before any tx is sent.",
-        "The pauser is never hardcoded: its address comes from Staking.pauser(), so that node carries no address.",
-        "Finalisation follows validator exits and the claim is not executed; the test stops at the UnstakeRequested event with the mETH locked in the manager.",
-        "impersonateAccount sets 100 ETH of balance, so a fresh account can pay the 1 ETH stake and gas without a whale.",
-        "The Oracle at 0x8735049F496727f824Cc0f2B174d826f5c408192 is booked for verification only; ethToMETH and mETHToETH are what the test reads, cmETH restaking is out of scope."
-      ],
-      "features": {
-        "total": 2,
-        "tested": 2,
-        "gap": 0,
-        "notTestable": 0,
-        "failingPaused": 0
-      },
-      "missing": [],
-      "matrixKey": "meth-protocol"
-    },
-    {
       "key": "compound",
       "name": "Compound Finance",
-      "rank": 81,
+      "rank": 80,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://app.compound.finance",
@@ -9216,6 +8956,266 @@
         }
       ],
       "matrixKey": "compound-finance"
+    },
+    {
+      "key": "meth-protocol",
+      "name": "mETH Protocol",
+      "rank": 82,
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "appUrl": "https://www.mantle.xyz/meth",
+      "label": "Stake + unstake request",
+      "recipeNote": "mETH Protocol (Mantle LST) on Ethereum: stake ETH for mETH through the Staking contract, then file an unstake request that locks the mETH in the UnstakeRequestsManager. Request finalisation follows validator exits and is not waited out. cmETH restaking is not exercised.",
+      "direction": "LR",
+      "summary": "On a pinned Ethereum fork 1 ETH goes through mETH Staking.stake and mints exactly ethToMETH(1 ETH) while the Staking contract's ETH rises by the value, then unstakeRequest locks every mETH in the UnstakeRequestsManager with ethAmount equal to the pre-tx mETHToETH.",
+      "scripts": [
+        {
+          "script": "fork:meth:stake",
+          "action": "stake",
+          "feature": "Stake ETH for mETH and request unstake (mETH Protocol)",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "user",
+          "label": "fresh impersonated account, 100 ETH set by anvil_setBalance",
+          "short": "fresh impersonated account",
+          "kind": "actor",
+          "address": null
+        },
+        {
+          "id": "staking",
+          "label": "mETH Staking",
+          "short": "mETH Staking",
+          "kind": "contract",
+          "address": "0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f"
+        },
+        {
+          "id": "meth",
+          "label": "mETH on Ethereum",
+          "short": "mETH on Ethereum",
+          "kind": "token",
+          "address": "0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa"
+        },
+        {
+          "id": "manager",
+          "label": "UnstakeRequestsManager",
+          "short": "UnstakeRequestsManager",
+          "kind": "contract",
+          "address": "0x38fDF7b489316e03eD8754ad339cb5c4483FDcf9"
+        },
+        {
+          "id": "pauser",
+          "label": "pauser contract, address read from pauser()",
+          "short": "pauser contract, address read from pauser",
+          "kind": "contract",
+          "address": null
+        },
+        {
+          "id": "eth",
+          "label": "native ETH on Ethereum",
+          "short": "native ETH on Ethereum",
+          "kind": "token",
+          "address": null
+        }
+      ],
+      "edges": [
+        {
+          "from": "user",
+          "to": "staking",
+          "label": "mETH() and unstakeRequestsManager() wiring reads",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "pauser",
+          "label": "isStakingPaused() and isUnstakeRequestsAndClaimsPaused()",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "staking",
+          "label": "isStakingAllowlist() and minimumStakeBound()",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "staking",
+          "label": "ethToMETH(1 ETH) pre-tx expectation",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "staking",
+          "label": "stake(expectedMETH) payable 1 ETH",
+          "kind": "call"
+        },
+        {
+          "from": "eth",
+          "to": "staking",
+          "label": "1 ETH into the Staking contract",
+          "kind": "transfer"
+        },
+        {
+          "from": "staking",
+          "to": "meth",
+          "label": "mint ethToMETH mETH to the staker",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "staking",
+          "label": "mETHToETH(minted) pre-tx ETH owed",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "meth",
+          "label": "approve(Staking, every minted mETH)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "staking",
+          "label": "unstakeRequest(minted, 99.9% floor)",
+          "kind": "call"
+        },
+        {
+          "from": "meth",
+          "to": "manager",
+          "label": "transferFrom every mETH into the manager",
+          "kind": "transfer"
+        },
+        {
+          "from": "staking",
+          "to": "user",
+          "label": "UnstakeRequested: mETHLocked and ethAmount",
+          "kind": "event"
+        }
+      ],
+      "graph": {
+        "edges": [
+          {
+            "from": "user",
+            "to": "staking",
+            "kind": "call",
+            "steps": [
+              1,
+              3,
+              4,
+              5,
+              8,
+              10
+            ],
+            "labels": [
+              "mETH() and unstakeRequestsManager() wiring reads",
+              "isStakingAllowlist() and minimumStakeBound()",
+              "ethToMETH(1 ETH) pre-tx expectation",
+              "stake(expectedMETH) payable 1 ETH",
+              "mETHToETH(minted) pre-tx ETH owed",
+              "unstakeRequest(minted, 99.9% floor)"
+            ],
+            "label": "mETH() and unstakeRequestsManager() wiring reads (+5 more)",
+            "range": "1–10"
+          },
+          {
+            "from": "user",
+            "to": "pauser",
+            "kind": "call",
+            "steps": [
+              2
+            ],
+            "labels": [
+              "isStakingPaused() and isUnstakeRequestsAndClaimsPaused()"
+            ],
+            "label": "isStakingPaused() and isUnstakeRequestsAndClaimsPaused()",
+            "range": "2"
+          },
+          {
+            "from": "eth",
+            "to": "staking",
+            "kind": "transfer",
+            "steps": [
+              6
+            ],
+            "labels": [
+              "1 ETH into the Staking contract"
+            ],
+            "label": "1 ETH into the Staking contract",
+            "range": "6"
+          },
+          {
+            "from": "staking",
+            "to": "meth",
+            "kind": "call",
+            "steps": [
+              7
+            ],
+            "labels": [
+              "mint ethToMETH mETH to the staker"
+            ],
+            "label": "mint ethToMETH mETH to the staker",
+            "range": "7"
+          },
+          {
+            "from": "user",
+            "to": "meth",
+            "kind": "call",
+            "steps": [
+              9
+            ],
+            "labels": [
+              "approve(Staking, every minted mETH)"
+            ],
+            "label": "approve(Staking, every minted mETH)",
+            "range": "9"
+          },
+          {
+            "from": "meth",
+            "to": "manager",
+            "kind": "transfer",
+            "steps": [
+              11
+            ],
+            "labels": [
+              "transferFrom every mETH into the manager"
+            ],
+            "label": "transferFrom every mETH into the manager",
+            "range": "11"
+          },
+          {
+            "from": "staking",
+            "to": "user",
+            "kind": "event",
+            "steps": [
+              12
+            ],
+            "labels": [
+              "UnstakeRequested: mETHLocked and ethAmount"
+            ],
+            "label": "UnstakeRequested: mETHLocked and ethAmount",
+            "range": "12"
+          }
+        ]
+      },
+      "notes": [
+        "Staking, mETH and UnstakeRequestsManager are the METH spec in contracts.js; mETH() and unstakeRequestsManager() are re-read and must match before any tx is sent.",
+        "The pauser is never hardcoded: its address comes from Staking.pauser(), so that node carries no address.",
+        "Finalisation follows validator exits and the claim is not executed; the test stops at the UnstakeRequested event with the mETH locked in the manager.",
+        "impersonateAccount sets 100 ETH of balance, so a fresh account can pay the 1 ETH stake and gas without a whale.",
+        "The Oracle at 0x8735049F496727f824Cc0f2B174d826f5c408192 is booked for verification only; ethToMETH and mETHToETH are what the test reads, cmETH restaking is out of scope."
+      ],
+      "features": {
+        "total": 2,
+        "tested": 2,
+        "gap": 0,
+        "notTestable": 0,
+        "failingPaused": 0
+      },
+      "missing": [],
+      "matrixKey": "meth-protocol"
     },
     {
       "key": "kpk",
@@ -10088,7 +10088,7 @@
     {
       "key": "usdt0",
       "name": "USDT0",
-      "rank": 106,
+      "rank": 105,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://usdt0.to/transfer",
@@ -12403,7 +12403,7 @@
     {
       "key": "fluid-dex",
       "name": "Fluid DEX",
-      "rank": 131,
+      "rank": 132,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://fluid.instadapp.io",
@@ -13939,7 +13939,7 @@
     {
       "key": "cooler-loans",
       "name": "Cooler Loans",
-      "rank": 154,
+      "rank": 153,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://app.olympusdao.finance/#/lending/cooler",
@@ -14190,227 +14190,9 @@
       "matrixKey": "cooler-loans"
     },
     {
-      "key": "portal",
-      "name": "Portal",
-      "rank": 156,
-      "chain": "ethereum",
-      "rpcEnv": "ETHEREUM_RPC_URL",
-      "appUrl": "https://portalbridge.com",
-      "label": "Source chain only",
-      "recipeNote": "Portal is the Wormhole Token Bridge (Wrapped Token Transfers). wrapAndTransferETH keeps WETH in the bridge and the Core Contract publishes the transfer; the Guardians sign it and the destination redeems it off this machine.",
-      "direction": "LR",
-      "summary": "Send 0.05 ETH through the Wormhole Token Bridge's wrapAndTransferETH toward chain 23 (Arbitrum), and assert the bridge's WETH rises by exactly 0.05 and the Core Contract's LogMessagePublished carries a type-1 transfer payload with the amount at 8 decimals, WETH on chain 2 and the recipient; guardian signing is off this machine.",
-      "scripts": [
-        {
-          "script": "fork:portal:transfer",
-          "action": "transfer",
-          "feature": "Bridge ETH via Portal (Wormhole)",
-          "chain": "ethereum",
-          "rpcEnv": "ETHEREUM_RPC_URL"
-        }
-      ],
-      "nodes": [
-        {
-          "id": "user",
-          "label": "fresh impersonated account funded with 100 ETH",
-          "short": "fresh impersonated account",
-          "kind": "actor",
-          "address": null
-        },
-        {
-          "id": "bridge",
-          "label": "Wormhole Token Bridge (WTT)",
-          "short": "Wormhole Token Bridge",
-          "kind": "contract",
-          "address": "0x3ee18B2214AFF97000D974cf647E7C347E8fa585"
-        },
-        {
-          "id": "weth",
-          "label": "WETH",
-          "short": "WETH",
-          "kind": "token",
-          "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
-        },
-        {
-          "id": "core",
-          "label": "Wormhole Core Contract",
-          "short": "Wormhole Core Contract",
-          "kind": "contract",
-          "address": "0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B"
-        },
-        {
-          "id": "guardians",
-          "label": "Wormhole Guardians (VAA signing, off this machine)",
-          "short": "Wormhole Guardians",
-          "kind": "offchain",
-          "address": null
-        }
-      ],
-      "edges": [
-        {
-          "from": "user",
-          "to": "core",
-          "label": "messageFee() read before the call",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "weth",
-          "label": "balanceOf(Token Bridge) before and after",
-          "kind": "call"
-        },
-        {
-          "from": "user",
-          "to": "bridge",
-          "label": "wrapAndTransferETH(23, recipient, 0, 0) with 0.05 ETH + fee",
-          "kind": "call"
-        },
-        {
-          "from": "bridge",
-          "to": "weth",
-          "label": "deposit() wraps 0.05 ETH into WETH",
-          "kind": "call"
-        },
-        {
-          "from": "weth",
-          "to": "bridge",
-          "label": "0.05 WETH kept by the Token Bridge",
-          "kind": "transfer"
-        },
-        {
-          "from": "bridge",
-          "to": "core",
-          "label": "publishMessage(type-1 transfer payload)",
-          "kind": "call"
-        },
-        {
-          "from": "core",
-          "to": "guardians",
-          "label": "LogMessagePublished; the VAA is signed off this machine",
-          "kind": "offchain"
-        }
-      ],
-      "graph": {
-        "edges": [
-          {
-            "from": "user",
-            "to": "core",
-            "kind": "call",
-            "steps": [
-              1
-            ],
-            "labels": [
-              "messageFee() read before the call"
-            ],
-            "label": "messageFee() read before the call",
-            "range": "1"
-          },
-          {
-            "from": "user",
-            "to": "weth",
-            "kind": "call",
-            "steps": [
-              2
-            ],
-            "labels": [
-              "balanceOf(Token Bridge) before and after"
-            ],
-            "label": "balanceOf(Token Bridge) before and after",
-            "range": "2"
-          },
-          {
-            "from": "user",
-            "to": "bridge",
-            "kind": "call",
-            "steps": [
-              3
-            ],
-            "labels": [
-              "wrapAndTransferETH(23, recipient, 0, 0) with 0.05 ETH + fee"
-            ],
-            "label": "wrapAndTransferETH(23, recipient, 0, 0) with 0.05 ETH + fee",
-            "range": "3"
-          },
-          {
-            "from": "bridge",
-            "to": "weth",
-            "kind": "call",
-            "steps": [
-              4
-            ],
-            "labels": [
-              "deposit() wraps 0.05 ETH into WETH"
-            ],
-            "label": "deposit() wraps 0.05 ETH into WETH",
-            "range": "4"
-          },
-          {
-            "from": "weth",
-            "to": "bridge",
-            "kind": "transfer",
-            "steps": [
-              5
-            ],
-            "labels": [
-              "0.05 WETH kept by the Token Bridge"
-            ],
-            "label": "0.05 WETH kept by the Token Bridge",
-            "range": "5"
-          },
-          {
-            "from": "bridge",
-            "to": "core",
-            "kind": "call",
-            "steps": [
-              6
-            ],
-            "labels": [
-              "publishMessage(type-1 transfer payload)"
-            ],
-            "label": "publishMessage(type-1 transfer payload)",
-            "range": "6"
-          },
-          {
-            "from": "core",
-            "to": "guardians",
-            "kind": "offchain",
-            "steps": [
-              7
-            ],
-            "labels": [
-              "LogMessagePublished; the VAA is signed off this machine"
-            ],
-            "label": "LogMessagePublished; the VAA is signed off this machine",
-            "range": "7"
-          }
-        ]
-      },
-      "notes": [
-        "The test sends value + messageFee and reads the fee from the Core Contract, so the bridge keeps exactly the 0.05 ETH that was wrapped, not the fee.",
-        "The payload check decodes the raw bytes: type 1, amount divided by 1e10 for 8 decimals, the WETH address, token chain 2 and recipient chain 23."
-      ],
-      "features": {
-        "total": 2,
-        "tested": 1,
-        "gap": 0,
-        "notTestable": 1,
-        "failingPaused": 0
-      },
-      "missing": [
-        {
-          "feature": "redeem on destination",
-          "status": "not-testable",
-          "how": "On an Arbitrum fork, call completeTransfer(encodedVm) on the destination Wormhole Token Bridge with the VAA the Guardians signed for this sequence, then assert the recipient's WETH balance rises by the 8-decimal amount encoded in the payload and that a second call with the same VAA reverts because it is already consumed.",
-          "blocker": "The VAA must be signed by a supermajority of the Wormhole Guardians after they observe LogMessagePublished; a fork cannot produce those signatures, and the message names Arbitrum, which this Ethereum fork does not contain.",
-          "note": "Needs a guardian-signed VAA."
-        }
-      ],
-      "matrixKey": "portal"
-    },
-    {
       "key": "cian-yield-layer",
       "name": "CIAN Yield Layer",
-      "rank": 157,
+      "rank": 155,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://yieldlayer.cian.app/",
@@ -14651,6 +14433,224 @@
         }
       ],
       "matrixKey": "cian-yield-layer"
+    },
+    {
+      "key": "portal",
+      "name": "Portal",
+      "rank": 158,
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "appUrl": "https://portalbridge.com",
+      "label": "Source chain only",
+      "recipeNote": "Portal is the Wormhole Token Bridge (Wrapped Token Transfers). wrapAndTransferETH keeps WETH in the bridge and the Core Contract publishes the transfer; the Guardians sign it and the destination redeems it off this machine.",
+      "direction": "LR",
+      "summary": "Send 0.05 ETH through the Wormhole Token Bridge's wrapAndTransferETH toward chain 23 (Arbitrum), and assert the bridge's WETH rises by exactly 0.05 and the Core Contract's LogMessagePublished carries a type-1 transfer payload with the amount at 8 decimals, WETH on chain 2 and the recipient; guardian signing is off this machine.",
+      "scripts": [
+        {
+          "script": "fork:portal:transfer",
+          "action": "transfer",
+          "feature": "Bridge ETH via Portal (Wormhole)",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "user",
+          "label": "fresh impersonated account funded with 100 ETH",
+          "short": "fresh impersonated account",
+          "kind": "actor",
+          "address": null
+        },
+        {
+          "id": "bridge",
+          "label": "Wormhole Token Bridge (WTT)",
+          "short": "Wormhole Token Bridge",
+          "kind": "contract",
+          "address": "0x3ee18B2214AFF97000D974cf647E7C347E8fa585"
+        },
+        {
+          "id": "weth",
+          "label": "WETH",
+          "short": "WETH",
+          "kind": "token",
+          "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+        },
+        {
+          "id": "core",
+          "label": "Wormhole Core Contract",
+          "short": "Wormhole Core Contract",
+          "kind": "contract",
+          "address": "0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B"
+        },
+        {
+          "id": "guardians",
+          "label": "Wormhole Guardians (VAA signing, off this machine)",
+          "short": "Wormhole Guardians",
+          "kind": "offchain",
+          "address": null
+        }
+      ],
+      "edges": [
+        {
+          "from": "user",
+          "to": "core",
+          "label": "messageFee() read before the call",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "weth",
+          "label": "balanceOf(Token Bridge) before and after",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "bridge",
+          "label": "wrapAndTransferETH(23, recipient, 0, 0) with 0.05 ETH + fee",
+          "kind": "call"
+        },
+        {
+          "from": "bridge",
+          "to": "weth",
+          "label": "deposit() wraps 0.05 ETH into WETH",
+          "kind": "call"
+        },
+        {
+          "from": "weth",
+          "to": "bridge",
+          "label": "0.05 WETH kept by the Token Bridge",
+          "kind": "transfer"
+        },
+        {
+          "from": "bridge",
+          "to": "core",
+          "label": "publishMessage(type-1 transfer payload)",
+          "kind": "call"
+        },
+        {
+          "from": "core",
+          "to": "guardians",
+          "label": "LogMessagePublished; the VAA is signed off this machine",
+          "kind": "offchain"
+        }
+      ],
+      "graph": {
+        "edges": [
+          {
+            "from": "user",
+            "to": "core",
+            "kind": "call",
+            "steps": [
+              1
+            ],
+            "labels": [
+              "messageFee() read before the call"
+            ],
+            "label": "messageFee() read before the call",
+            "range": "1"
+          },
+          {
+            "from": "user",
+            "to": "weth",
+            "kind": "call",
+            "steps": [
+              2
+            ],
+            "labels": [
+              "balanceOf(Token Bridge) before and after"
+            ],
+            "label": "balanceOf(Token Bridge) before and after",
+            "range": "2"
+          },
+          {
+            "from": "user",
+            "to": "bridge",
+            "kind": "call",
+            "steps": [
+              3
+            ],
+            "labels": [
+              "wrapAndTransferETH(23, recipient, 0, 0) with 0.05 ETH + fee"
+            ],
+            "label": "wrapAndTransferETH(23, recipient, 0, 0) with 0.05 ETH + fee",
+            "range": "3"
+          },
+          {
+            "from": "bridge",
+            "to": "weth",
+            "kind": "call",
+            "steps": [
+              4
+            ],
+            "labels": [
+              "deposit() wraps 0.05 ETH into WETH"
+            ],
+            "label": "deposit() wraps 0.05 ETH into WETH",
+            "range": "4"
+          },
+          {
+            "from": "weth",
+            "to": "bridge",
+            "kind": "transfer",
+            "steps": [
+              5
+            ],
+            "labels": [
+              "0.05 WETH kept by the Token Bridge"
+            ],
+            "label": "0.05 WETH kept by the Token Bridge",
+            "range": "5"
+          },
+          {
+            "from": "bridge",
+            "to": "core",
+            "kind": "call",
+            "steps": [
+              6
+            ],
+            "labels": [
+              "publishMessage(type-1 transfer payload)"
+            ],
+            "label": "publishMessage(type-1 transfer payload)",
+            "range": "6"
+          },
+          {
+            "from": "core",
+            "to": "guardians",
+            "kind": "offchain",
+            "steps": [
+              7
+            ],
+            "labels": [
+              "LogMessagePublished; the VAA is signed off this machine"
+            ],
+            "label": "LogMessagePublished; the VAA is signed off this machine",
+            "range": "7"
+          }
+        ]
+      },
+      "notes": [
+        "The test sends value + messageFee and reads the fee from the Core Contract, so the bridge keeps exactly the 0.05 ETH that was wrapped, not the fee.",
+        "The payload check decodes the raw bytes: type 1, amount divided by 1e10 for 8 decimals, the WETH address, token chain 2 and recipient chain 23."
+      ],
+      "features": {
+        "total": 2,
+        "tested": 1,
+        "gap": 0,
+        "notTestable": 1,
+        "failingPaused": 0
+      },
+      "missing": [
+        {
+          "feature": "redeem on destination",
+          "status": "not-testable",
+          "how": "On an Arbitrum fork, call completeTransfer(encodedVm) on the destination Wormhole Token Bridge with the VAA the Guardians signed for this sequence, then assert the recipient's WETH balance rises by the 8-decimal amount encoded in the payload and that a second call with the same VAA reverts because it is already consumed.",
+          "blocker": "The VAA must be signed by a supermajority of the Wormhole Guardians after they observe LogMessagePublished; a fork cannot produce those signatures, and the message names Arbitrum, which this Ethereum fork does not contain.",
+          "note": "Needs a guardian-signed VAA."
+        }
+      ],
+      "matrixKey": "portal"
     },
     {
       "key": "polymarket",
@@ -16311,7 +16311,7 @@
     {
       "key": "rocketpool",
       "name": "Rocket Pool",
-      "rank": 180,
+      "rank": 181,
       "chain": "ethereum",
       "rpcEnv": "ETHEREUM_RPC_URL",
       "appUrl": "https://stake.rocketpool.net",

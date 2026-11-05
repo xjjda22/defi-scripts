@@ -1,6 +1,6 @@
 {
   "snapshot": "2026-11-02",
-  "rankedFrom": "2026-11-05T22:54:41.395Z",
+  "rankedFrom": "2026-11-05T23:20:41.382Z",
   "totals": {
     "protocols": 129,
     "features": 292,
@@ -173,14 +173,14 @@
       "note": "addLiquiditySingleToken."
     },
     {
-      "rank": 154,
+      "rank": 153,
       "protocol": "Cooler Loans",
       "key": "cooler-loans",
       "feature": "repay",
       "note": "MonoCooler.repay."
     },
     {
-      "rank": 157,
+      "rank": 155,
       "protocol": "CIAN Yield Layer",
       "key": "cian-yield-layer",
       "feature": "withdraw request",
@@ -2151,42 +2151,9 @@
       ]
     },
     {
-      "key": "meth-protocol",
-      "name": "mETH Protocol",
-      "rank": 79,
-      "pinned": true,
-      "docs": "https://docs.mantle.xyz/meth",
-      "counts": {
-        "features": 2,
-        "direct": 2,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "stake ETH -> mETH",
-          "status": "direct",
-          "scripts": [
-            "fork:meth:stake"
-          ],
-          "note": null
-        },
-        {
-          "feature": "unstake request",
-          "status": "direct",
-          "scripts": [
-            "fork:meth:stake"
-          ],
-          "note": null
-        }
-      ]
-    },
-    {
       "key": "compound-finance",
       "name": "Compound Finance",
-      "rank": 81,
+      "rank": 80,
       "pinned": true,
       "docs": "https://docs.compound.finance",
       "counts": {
@@ -2251,6 +2218,39 @@
           "status": "not-testable",
           "scripts": [],
           "note": "baseTrackingSupplySpeed and baseTrackingBorrowSpeed are 0 on every Ethereum Comet (cUSDCv3, cWETHv3, cUSDTv3, cUSDSv3) as of 2026-11-02, so claim pays nothing to assert."
+        }
+      ]
+    },
+    {
+      "key": "meth-protocol",
+      "name": "mETH Protocol",
+      "rank": 82,
+      "pinned": true,
+      "docs": "https://docs.mantle.xyz/meth",
+      "counts": {
+        "features": 2,
+        "direct": 2,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 0
+      },
+      "features": [
+        {
+          "feature": "stake ETH -> mETH",
+          "status": "direct",
+          "scripts": [
+            "fork:meth:stake"
+          ],
+          "note": null
+        },
+        {
+          "feature": "unstake request",
+          "status": "direct",
+          "scripts": [
+            "fork:meth:stake"
+          ],
+          "note": null
         }
       ]
     },
@@ -2449,7 +2449,7 @@
     {
       "key": "usdt0",
       "name": "USDT0",
-      "rank": 106,
+      "rank": 105,
       "pinned": true,
       "docs": "https://docs.usdt0.to",
       "counts": {
@@ -2889,7 +2889,7 @@
     {
       "key": "fluid-dex",
       "name": "Fluid DEX",
-      "rank": 131,
+      "rank": 132,
       "pinned": true,
       "docs": "https://docs.fluid.instadapp.io",
       "counts": {
@@ -3143,7 +3143,7 @@
     {
       "key": "cooler-loans",
       "name": "Cooler Loans",
-      "rank": 154,
+      "rank": 153,
       "pinned": true,
       "docs": "https://docs.olympusdao.finance",
       "counts": {
@@ -3172,40 +3172,9 @@
       ]
     },
     {
-      "key": "portal",
-      "name": "Portal",
-      "rank": 156,
-      "pinned": true,
-      "docs": "https://docs.wormhole.com",
-      "counts": {
-        "features": 2,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "token transfer out",
-          "status": "direct",
-          "scripts": [
-            "fork:portal:transfer"
-          ],
-          "note": null
-        },
-        {
-          "feature": "redeem on destination",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Needs a guardian-signed VAA."
-        }
-      ]
-    },
-    {
       "key": "cian-yield-layer",
       "name": "CIAN Yield Layer",
-      "rank": 157,
+      "rank": 155,
       "pinned": true,
       "docs": "https://docs.cian.app",
       "counts": {
@@ -3230,6 +3199,37 @@
           "status": "gap",
           "scripts": [],
           "note": "requestRedeem."
+        }
+      ]
+    },
+    {
+      "key": "portal",
+      "name": "Portal",
+      "rank": 158,
+      "pinned": true,
+      "docs": "https://docs.wormhole.com",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "token transfer out",
+          "status": "direct",
+          "scripts": [
+            "fork:portal:transfer"
+          ],
+          "note": null
+        },
+        {
+          "feature": "redeem on destination",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Needs a guardian-signed VAA."
         }
       ]
     },
@@ -3530,7 +3530,7 @@
     {
       "key": "rocket-pool",
       "name": "Rocket Pool",
-      "rank": 180,
+      "rank": 181,
       "pinned": true,
       "docs": "https://docs.rocketpool.net",
       "counts": {

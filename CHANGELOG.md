@@ -30,6 +30,13 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
   `coverage:features` and `flowcharts:docs` were regenerated to follow the new `generatedAt` and
   ranks.
 
+### Fixed
+
+- `ranking:top200` writes `twitter` into the output row (first member that has one, so
+  aave -> aave-v3). The X links were coming only from the offline enrichment pass, so a board
+  rebuild silently dropped them — one did, between two commits, and the links vanished until the
+  build learned the field. A rebuild now keeps them.
+
 
 ## [2026-11-05] Every fork recipe has a contract flow, and 12 tests that never ran now do
 
