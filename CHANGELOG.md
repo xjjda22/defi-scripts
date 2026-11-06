@@ -37,6 +37,8 @@ beyond wiring that already existed; RealT Tokens stays API-only with a written G
 
 - RealT Tokens: Gnosis is configured in `chains.js`, but no checksummed/getCode-verified
   fork test was landed; row stays API-only with a written whitelist/impersonation reason.
+- Synced `data/feature-gaps.json` and `docs/08` `rankedFrom` to the latest showcase rebuild
+  so `catalog:check` matches `showcase/data.json` (including the CI showcase-refresh rewrite).
 - No chains or RPCs were added for Robinhood / BSquared / Pharos / Provenance / Anubis / Rise /
   Stellar / Algorand rows.
 

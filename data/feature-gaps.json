@@ -1,6 +1,6 @@
 {
   "snapshot": "2026-11-02",
-  "rankedFrom": "2026-11-06T09:08:24.470Z",
+  "rankedFrom": "2026-11-06T09:15:44.831Z",
   "totals": {
     "protocols": 132,
     "features": 299,
@@ -917,7 +917,7 @@
     {
       "key": "upshift",
       "name": "Upshift",
-      "rank": 29,
+      "rank": 30,
       "pinned": true,
       "docs": "https://docs.upshift.finance",
       "counts": {
@@ -1004,9 +1004,40 @@
       ]
     },
     {
+      "key": "robinhood-chain-bridge",
+      "name": "Robinhood Chain Bridge",
+      "rank": 34,
+      "pinned": true,
+      "docs": "https://docs.robinhood.com/chain",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "L1 -> L2 deposit",
+          "status": "direct",
+          "scripts": [
+            "fork:robinhood:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "L2 -> L1 withdraw",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Needs the L2 fork and a finalized output proof."
+        }
+      ]
+    },
+    {
       "key": "hyperithm",
       "name": "Hyperithm",
-      "rank": 34,
+      "rank": 35,
       "pinned": true,
       "docs": "https://docs.morpho.org",
       "counts": {
@@ -1033,37 +1064,6 @@
             "fork:hyperithm:deposit"
           ],
           "note": null
-        }
-      ]
-    },
-    {
-      "key": "robinhood-chain-bridge",
-      "name": "Robinhood Chain Bridge",
-      "rank": 35,
-      "pinned": true,
-      "docs": "https://docs.robinhood.com/chain",
-      "counts": {
-        "features": 2,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "L1 -> L2 deposit",
-          "status": "direct",
-          "scripts": [
-            "fork:robinhood:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "L2 -> L1 withdraw",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Needs the L2 fork and a finalized output proof."
         }
       ]
     },
@@ -1276,7 +1276,7 @@
     {
       "key": "pancakeswap--dex",
       "name": "PancakeSwap (DEX)",
-      "rank": 48,
+      "rank": 49,
       "pinned": true,
       "docs": "https://docs.pancakeswap.finance/developers/smart-contracts",
       "counts": {
@@ -1420,7 +1420,7 @@
     {
       "key": "world-chain-bridge",
       "name": "World Chain Bridge",
-      "rank": 54,
+      "rank": 53,
       "pinned": true,
       "docs": "https://docs.world.org/world-chain",
       "counts": {
@@ -1474,7 +1474,7 @@
     {
       "key": "lista-liquid-staking",
       "name": "Lista Liquid Staking",
-      "rank": 60,
+      "rank": 59,
       "pinned": true,
       "docs": "https://docs.bsc.lista.org",
       "counts": {
@@ -1505,34 +1505,9 @@
       ]
     },
     {
-      "key": "etherfi-cash-liquid",
-      "name": "EtherFi Cash Liquid",
-      "rank": 61,
-      "pinned": true,
-      "docs": "https://etherfi.gitbook.io/cash",
-      "counts": {
-        "features": 1,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "supply",
-          "status": "direct",
-          "scripts": [
-            "fork:etherfi-cash:supply"
-          ],
-          "note": null
-        }
-      ]
-    },
-    {
       "key": "ether.fi-liquid",
       "name": "ether.fi Liquid",
-      "rank": 62,
+      "rank": 61,
       "pinned": true,
       "docs": "https://etherfi.gitbook.io",
       "counts": {
@@ -1558,6 +1533,31 @@
           "scripts": [
             "fork:veda:liquid-usd",
             "fork:veda:liquid-btc"
+          ],
+          "note": null
+        }
+      ]
+    },
+    {
+      "key": "etherfi-cash-liquid",
+      "name": "EtherFi Cash Liquid",
+      "rank": 62,
+      "pinned": true,
+      "docs": "https://etherfi.gitbook.io/cash",
+      "counts": {
+        "features": 1,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 0
+      },
+      "features": [
+        {
+          "feature": "supply",
+          "status": "direct",
+          "scripts": [
+            "fork:etherfi-cash:supply"
           ],
           "note": null
         }
@@ -1996,7 +1996,7 @@
     {
       "key": "meth-protocol",
       "name": "mETH Protocol",
-      "rank": 83,
+      "rank": 84,
       "pinned": true,
       "docs": "https://docs.mantle.xyz/meth",
       "counts": {
@@ -2027,9 +2027,40 @@
       ]
     },
     {
+      "key": "zama",
+      "name": "Zama",
+      "rank": 88,
+      "pinned": true,
+      "docs": "https://docs.zama.ai/protocol",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "wrap to confidential token",
+          "status": "direct",
+          "scripts": [
+            "fork:zama:wrap"
+          ],
+          "note": null
+        },
+        {
+          "feature": "unwrap / decrypt",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Needs the Zama KMS/gateway decryption off-chain."
+        }
+      ]
+    },
+    {
       "key": "pancakeswap-aggregator",
       "name": "PancakeSwap Aggregator",
-      "rank": 86,
+      "rank": 90,
       "pinned": false,
       "docs": "https://docs.pancakeswap.finance/developers/smart-contracts",
       "counts": {
@@ -2084,40 +2115,34 @@
       ]
     },
     {
-      "key": "zama",
-      "name": "Zama",
-      "rank": 89,
+      "key": "lagoon",
+      "name": "Lagoon",
+      "rank": 92,
       "pinned": true,
-      "docs": "https://docs.zama.ai/protocol",
+      "docs": "https://docs.lagoon.finance",
       "counts": {
-        "features": 2,
+        "features": 1,
         "direct": 1,
         "linked": 0,
         "failingPaused": 0,
         "gap": 0,
-        "notTestable": 1
+        "notTestable": 0
       },
       "features": [
         {
-          "feature": "wrap to confidential token",
+          "feature": "ERC-7540 deposit request",
           "status": "direct",
           "scripts": [
-            "fork:zama:wrap"
+            "fork:lagoon:request-deposit"
           ],
           "note": null
-        },
-        {
-          "feature": "unwrap / decrypt",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Needs the Zama KMS/gateway decryption off-chain."
         }
       ]
     },
     {
       "key": "arbitrum-bridge",
       "name": "Arbitrum Bridge",
-      "rank": 92,
+      "rank": 93,
       "pinned": true,
       "docs": "https://docs.arbitrum.io/build-decentralized-apps/token-bridging",
       "counts": {
@@ -2146,34 +2171,9 @@
       ]
     },
     {
-      "key": "lagoon",
-      "name": "Lagoon",
-      "rank": 93,
-      "pinned": true,
-      "docs": "https://docs.lagoon.finance",
-      "counts": {
-        "features": 1,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "ERC-7540 deposit request",
-          "status": "direct",
-          "scripts": [
-            "fork:lagoon:request-deposit"
-          ],
-          "note": null
-        }
-      ]
-    },
-    {
       "key": "eigencloud",
       "name": "EigenCloud",
-      "rank": 96,
+      "rank": 95,
       "pinned": true,
       "docs": "https://docs.eigenlayer.xyz",
       "counts": {
@@ -2292,9 +2292,40 @@
       ]
     },
     {
+      "key": "optimism-bridge",
+      "name": "Optimism Bridge",
+      "rank": 101,
+      "pinned": true,
+      "docs": "https://docs.optimism.io/app-developers/bridging/standard-bridge",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "L1 -> L2 deposit",
+          "status": "direct",
+          "scripts": [
+            "fork:optimism:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "L2 -> L1 withdraw",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Proof + 7-day challenge window on the L2 fork."
+        }
+      ]
+    },
+    {
       "key": "liquity",
       "name": "Liquity",
-      "rank": 101,
+      "rank": 102,
       "pinned": true,
       "docs": "https://docs.liquity.org",
       "counts": {
@@ -2341,37 +2372,6 @@
       ]
     },
     {
-      "key": "optimism-bridge",
-      "name": "Optimism Bridge",
-      "rank": 102,
-      "pinned": true,
-      "docs": "https://docs.optimism.io/app-developers/bridging/standard-bridge",
-      "counts": {
-        "features": 2,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "L1 -> L2 deposit",
-          "status": "direct",
-          "scripts": [
-            "fork:optimism:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "L2 -> L1 withdraw",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Proof + 7-day challenge window on the L2 fork."
-        }
-      ]
-    },
-    {
       "key": "saturn",
       "name": "Saturn",
       "rank": 107,
@@ -2407,7 +2407,7 @@
     {
       "key": "spark--vaults",
       "name": "Spark (Vaults)",
-      "rank": 110,
+      "rank": 108,
       "pinned": true,
       "docs": "https://docs.spark.fi",
       "counts": {
@@ -2767,7 +2767,7 @@
     {
       "key": "starknet-bridge",
       "name": "Starknet Bridge",
-      "rank": 132,
+      "rank": 129,
       "pinned": true,
       "docs": "https://docs.starknet.io",
       "counts": {
@@ -2798,7 +2798,7 @@
     {
       "key": "aster-bridge",
       "name": "Aster Bridge",
-      "rank": 137,
+      "rank": 136,
       "pinned": false,
       "docs": "https://docs.asterdex.com",
       "counts": {
@@ -3153,7 +3153,7 @@
     {
       "key": "bitfi-basis",
       "name": "BitFi Basis",
-      "rank": 163,
+      "rank": 164,
       "pinned": true,
       "docs": "https://docs.bitfi.org",
       "counts": {
@@ -3248,42 +3248,9 @@
       ]
     },
     {
-      "key": "convex-finance",
-      "name": "Convex Finance",
-      "rank": 168,
-      "pinned": true,
-      "docs": "https://docs.convexfinance.com",
-      "counts": {
-        "features": 2,
-        "direct": 2,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "deposit / stake",
-          "status": "direct",
-          "scripts": [
-            "fork:convex:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "claim rewards",
-          "status": "direct",
-          "scripts": [
-            "fork:convex:claim"
-          ],
-          "note": null
-        }
-      ]
-    },
-    {
       "key": "gmx--perps",
       "name": "GMX (Perps)",
-      "rank": 169,
+      "rank": 168,
       "pinned": true,
       "docs": "https://docs.gmx.io",
       "counts": {
@@ -3320,7 +3287,7 @@
     {
       "key": "fraxtal",
       "name": "Fraxtal",
-      "rank": 170,
+      "rank": 169,
       "pinned": false,
       "docs": "https://docs.frax.com/fraxtal",
       "counts": {
@@ -3351,7 +3318,7 @@
     {
       "key": "liquid-collective",
       "name": "Liquid Collective",
-      "rank": 172,
+      "rank": 171,
       "pinned": true,
       "docs": "https://docs.liquidcollective.io",
       "counts": {
@@ -3368,6 +3335,39 @@
           "status": "not-testable",
           "scripts": [],
           "note": "Permissioned: KYC/whitelist gate on mint and redeem."
+        }
+      ]
+    },
+    {
+      "key": "convex-finance",
+      "name": "Convex Finance",
+      "rank": 172,
+      "pinned": true,
+      "docs": "https://docs.convexfinance.com",
+      "counts": {
+        "features": 2,
+        "direct": 2,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 0
+      },
+      "features": [
+        {
+          "feature": "deposit / stake",
+          "status": "direct",
+          "scripts": [
+            "fork:convex:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "claim rewards",
+          "status": "direct",
+          "scripts": [
+            "fork:convex:claim"
+          ],
+          "note": null
         }
       ]
     },
@@ -3498,7 +3498,7 @@
     {
       "key": "sosovalue-indexes",
       "name": "SoSoValue Indexes",
-      "rank": 184,
+      "rank": 183,
       "pinned": true,
       "docs": "https://sosovalue.com",
       "counts": {
@@ -3521,7 +3521,7 @@
     {
       "key": "aero-protocol--dex",
       "name": "Aero (DEX)",
-      "rank": 186,
+      "rank": 185,
       "pinned": true,
       "docs": "https://aerodrome.finance/docs",
       "counts": {
@@ -3576,7 +3576,7 @@
     {
       "key": "dolomite",
       "name": "Dolomite",
-      "rank": 188,
+      "rank": 187,
       "pinned": true,
       "docs": "https://docs.dolomite.io",
       "counts": {
@@ -3607,7 +3607,7 @@
     {
       "key": "armitage-by-wintermute",
       "name": "Armitage by Wintermute",
-      "rank": 189,
+      "rank": 190,
       "pinned": true,
       "docs": "https://armitage.wintermute.com",
       "counts": {
@@ -3636,9 +3636,32 @@
       ]
     },
     {
+      "key": "rysk-v12",
+      "name": "Rysk V12",
+      "rank": 195,
+      "pinned": true,
+      "docs": "https://docs.rysk.finance",
+      "counts": {
+        "features": 1,
+        "direct": 0,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "options trade",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "RFQ only: each trade needs a market maker's EIP-712 signed quote from Rysk's off-chain service. The contracts are live on Ethereum and HyperEVM, but a fork cannot produce the quote."
+        }
+      ]
+    },
+    {
       "key": "axelar-network",
       "name": "Axelar Network",
-      "rank": 193,
+      "rank": 198,
       "pinned": false,
       "docs": "https://docs.axelar.dev",
       "counts": {
@@ -3657,29 +3680,6 @@
             "fork:axelar:send-message"
           ],
           "note": null
-        }
-      ]
-    },
-    {
-      "key": "rysk-v12",
-      "name": "Rysk V12",
-      "rank": 196,
-      "pinned": true,
-      "docs": "https://docs.rysk.finance",
-      "counts": {
-        "features": 1,
-        "direct": 0,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "options trade",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "RFQ only: each trade needs a market maker's EIP-712 signed quote from Rysk's off-chain service. The contracts are live on Ethereum and HyperEVM, but a fork cannot produce the quote."
         }
       ]
     },
