@@ -149,6 +149,7 @@ const CATALOG_ALIASES = {
   polymarket: ["polymarket-international", "polymarket-us"],
   ondo: ["ondo-global-markets", "ondo-yield-assets"],
   jito: ["jito-liquid-staking"],
+  "marinade-finance": ["marinade-native", "marinade-liquid-staking", "marinade-select", "marinade"],
   aerodrome: ["aerodrome-v1", "aerodrome-slipstream"],
   velodrome: ["velodrome-v1", "velodrome-v2", "velodrome-v3"],
   lighter: ["lighter-perps", "lighter-robinhood-perps"],

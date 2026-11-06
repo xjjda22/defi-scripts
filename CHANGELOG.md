@@ -8,18 +8,19 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 
 Branch `feat/top200-showcase-and-coverage-2026-11-06`. Integrates the parallel showcase,
 catalog-key, API-only-notes, and monitor workstreams on top of #65. No new Anvil fork tests
-beyond wiring that already existed; RealT Tokens stays an open Gnosis candidate.
+beyond wiring that already existed; RealT Tokens stays API-only with a written Gnosis reason.
 
 ### Added
 
-- Written `API_ONLY` reasons for 91 previously generic top-200 API-only rows (Solana, Bitcoin,
+- Written `API_ONLY` reasons for the previously generic top-200 API-only rows (Solana, Bitcoin,
   HyperCore, Tron, unsupported EVM chains, off-chain/custodial/aggregator, plus M0, Aster USDF,
-  Rysk V12, Valos). Pinksale and Bedrock uniETH (new board churn after the notes batch) also get
-  written reasons. RealT Tokens is intentionally left generic.
-- DefiLlama `MONITOR_TARGETS` + `simulate:<id>:smoke` + `PROTOCOLS` registrations for 83
-  previously empty API-only rows (generic `dexProtocolMonitor` / `smokeDefiLlamaProtocol` only;
-  no new source files). Combined rows use child slugs (`sunswap-v2`, `jupiter-perpetual-exchange`,
-  `chainlink-staking`, `solv-basis-trading`). Ember reuses its existing registry id.
+  Rysk V12, Valos). Pinksale and Bedrock uniETH (board churn after the notes batch) also get
+  written reasons. RealT Tokens now has a written Gnosis/whitelist reason instead of the generic note.
+- DefiLlama `MONITOR_TARGETS` + `simulate:<id>:smoke` + `PROTOCOLS` registrations for previously
+  empty API-only rows (generic `dexProtocolMonitor` / `smokeDefiLlamaProtocol` only;
+  no new source files), including Pinksale. Combined rows use child slugs (`sunswap-v2`,
+  `jupiter-perpetual-exchange`, `chainlink-staking`, `solv-basis-trading`). Ember reuses its
+  existing registry id. RealT Tokens also gets a monitor + smoke. Marinade family slugs (`marinade-native`, `marinade-liquid-staking`, `marinade-select`) are aliased so the existing monitor attaches.
 
 ### Changed
 
@@ -34,8 +35,8 @@ beyond wiring that already existed; RealT Tokens stays an open Gnosis candidate.
 
 ### Caveats
 
-- RealT Tokens (#131): Gnosis is configured in `chains.js`, but no checksummed/getCode-verified
-  fork test was landed; row stays API-only with the generic note on purpose.
+- RealT Tokens: Gnosis is configured in `chains.js`, but no checksummed/getCode-verified
+  fork test was landed; row stays API-only with a written whitelist/impersonation reason.
 - No chains or RPCs were added for Robinhood / BSquared / Pharos / Provenance / Anubis / Rise /
   Stellar / Algorand rows.
 

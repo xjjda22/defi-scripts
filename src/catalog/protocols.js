@@ -2939,6 +2939,22 @@ const PROTOCOLS = [
   about: "HyperFlow on DefiLlama (`hyperflow`). No meaningful TVL; smoke checks 30d aggregator volume. Analytics via the generic `monitor:dex` DefiLlama helper.",
   data: "DefiLlama",
 },
+  {
+  id: "pinksale",
+  name: "PinkSale",
+  category: "other",
+  url: "https://www.pinksale.finance",
+  about: "PinkSale on DefiLlama (`pinksale`). Launchpad with no chain TVL map; smoke checks 24h fees (TVL may be $0). Analytics via the generic `monitor:dex` DefiLlama helper.",
+  data: "DefiLlama",
+},
+  {
+  id: "realt-tokens",
+  name: "RealT Tokens",
+  category: "stable-rwa",
+  url: "https://realt.co",
+  about: "RealT Tokens on DefiLlama (`realt-tokens`). Smoke checks positive TVL. Analytics via the generic `monitor:dex` DefiLlama helper. Transfers on Gnosis are whitelist-gated; there is no fork test yet.",
+  data: "DefiLlama",
+},
 ];
 
 /** Script families that span protocols. Same id rule as PROTOCOLS. */

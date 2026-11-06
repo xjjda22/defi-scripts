@@ -239,6 +239,8 @@ const MONITOR_TARGETS = [
   { id: "ember", action: "rwa", slug: "ember", label: "Ember" },
   { id: "omenx", action: "pred", slug: "omenx", label: "OmenX", env: {"DEFILLAMA_VOLUME":"dexs"} },
   { id: "hyperflow", action: "aggregator", slug: "hyperflow", label: "HyperFlow", env: {"DEFILLAMA_VOLUME":"aggregators"} },
+  { id: "pinksale", action: "launchpad", slug: "pinksale", label: "PinkSale", env: {"DEFILLAMA_FEES":1} },
+  { id: "realt-tokens", action: "rwa", slug: "realt-tokens", label: "RealT Tokens" },
 ];
 
 module.exports = { MONITOR_TARGETS };

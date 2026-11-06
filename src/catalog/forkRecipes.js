@@ -1766,6 +1766,12 @@ const API_ONLY = [
   },
 
   {
+    keys: ["realt-tokens", "realt"],
+    category: "stable-rwa",
+    appUrl: "https://realt.co",
+    note: "RealT Tokens are tokenized U.S. real-estate shares on Gnosis (xDAI). Gnosis is configured in src/config/chains.js (chain 100, GNOSIS_RPC_URL, no public fallback). Transfers require per-property address whitelisting (faq.realt.co: YAM secondary market and transferring from a compromised address); unapproved transfers revert, but already-whitelisted holders can transfer to another approved address. No impersonated transfer has been EIP-55/getCode-verified and measured on a pinned fork here, so the row stays API-only rather than shipping an unproven test.",
+  },
+  {
     keys: ["pinksale"],
     category: "other",
     appUrl: "https://www.pinksale.finance",

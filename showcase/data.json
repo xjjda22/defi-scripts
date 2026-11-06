@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-06T09:04:17.199Z",
+ "generatedAt": "2026-11-06T09:09:40.246Z",
  "methodology": {
   "windowDays": 180,
   "weights": {
@@ -48,7 +48,7 @@
     "enabled": true,
     "available": true,
     "endpoint": "GET api.coingecko.com/api/v3/coins/markets",
-    "asOf": "2026-11-06T09:04:17.946Z",
+    "asOf": "2026-11-06T09:09:40.714Z",
     "matched": 70,
     "name": "CoinGecko",
     "attribution": "Token market data by CoinGecko",
@@ -310,7 +310,7 @@
    "id": "staking",
    "label": "Liquid staking",
    "source": "defillama",
-   "count": 41,
+   "count": 40,
    "scored": 34,
    "eligible": 34,
    "inTop200": 27,
@@ -30360,8 +30360,19 @@
      "tvl": 622430698
     }
    ],
-   "scripts": [],
-   "coverage": "ranking only",
+   "scripts": [
+    {
+     "name": "monitor:dex -- marinade-finance:staking",
+     "file": "src/analytics/protocols/llama/dexProtocolMonitor.js",
+     "kind": "analytics"
+    },
+    {
+     "name": "simulate:marinade-finance:smoke",
+     "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
+     "kind": "smoke"
+    }
+   ],
+   "coverage": "covered by a dedicated monitor",
    "token": {
     "coingeckoId": "marinade",
     "symbol": "MNDE",
@@ -35070,7 +35081,7 @@
    "xMentions": 0,
    "xLists": [],
    "llamaUrl": "https://defillama.com/protocol/realt-tokens",
-   "appUrl": null,
+   "appUrl": "https://realt.co",
    "coingeckoUrl": null,
    "twitter": "RealTPlatform",
    "llamaFlags": {
@@ -35083,8 +35094,19 @@
      "tvl": 155031224
     }
    ],
-   "scripts": [],
-   "coverage": "ranking only",
+   "scripts": [
+    {
+     "name": "monitor:dex -- realt-tokens:rwa",
+     "file": "src/analytics/protocols/llama/dexProtocolMonitor.js",
+     "kind": "analytics"
+    },
+    {
+     "name": "simulate:realt-tokens:smoke",
+     "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
+     "kind": "smoke"
+    }
+   ],
+   "coverage": "covered by a dedicated monitor",
    "token": null,
    "signals": null,
    "score": 0.4909,
@@ -35099,8 +35121,8 @@
    },
    "testing": {
     "mode": "api-only",
-    "note": "No fork test for this protocol.",
-    "appUrl": null,
+    "note": "RealT Tokens are tokenized U.S. real-estate shares on Gnosis (xDAI). Gnosis is configured in src/config/chains.js (chain 100, GNOSIS_RPC_URL, no public fallback). Transfers require per-property address whitelisting (faq.realt.co: YAM secondary market and transferring from a compromised address); unapproved transfers revert, but already-whitelisted holders can transfer to another approved address. No impersonated transfer has been EIP-55/getCode-verified and measured on a pinned fork here, so the row stays API-only rather than shipping an unproven test.",
+    "appUrl": "https://realt.co",
     "chain": "ethereum",
     "rpcEnv": "ETHEREUM_RPC_URL",
     "commands": [],
@@ -44277,8 +44299,19 @@
      "tvl": 907
     }
    ],
-   "scripts": [],
-   "coverage": "ranking only",
+   "scripts": [
+    {
+     "name": "monitor:dex -- pinksale:launchpad",
+     "file": "src/analytics/protocols/llama/dexProtocolMonitor.js",
+     "kind": "analytics"
+    },
+    {
+     "name": "simulate:pinksale:smoke",
+     "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
+     "kind": "smoke"
+    }
+   ],
+   "coverage": "covered by a dedicated monitor",
    "token": null,
    "signals": null,
    "score": 0.4337,
@@ -91920,8 +91953,19 @@
       "tvl": 622430698
      }
     ],
-    "scripts": [],
-    "coverage": "ranking only",
+    "scripts": [
+     {
+      "name": "monitor:dex -- marinade-finance:staking",
+      "file": "src/analytics/protocols/llama/dexProtocolMonitor.js",
+      "kind": "analytics"
+     },
+     {
+      "name": "simulate:marinade-finance:smoke",
+      "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
+      "kind": "smoke"
+     }
+    ],
+    "coverage": "covered by a dedicated monitor",
     "token": {
      "coingeckoId": "marinade",
      "symbol": "MNDE",
@@ -95506,75 +95550,6 @@
      ],
      "recipe": null,
      "status": "direct"
-    },
-    "dataDisputed": false,
-    "disputes": [],
-    "protocolStatus": null,
-    "protocolStatuses": []
-   },
-   {
-    "rank": 41,
-    "overallRank": null,
-    "id": "marinade-finance",
-    "name": "Marinade",
-    "slug": "marinade-finance",
-    "category": "staking",
-    "llamaCategories": [],
-    "members": null,
-    "tvl": null,
-    "tvl6mAgo": null,
-    "tvlAdded6m": null,
-    "tvlChange6m": null,
-    "isNew": false,
-    "ageDays": null,
-    "fees30d": null,
-    "feesChange30d": null,
-    "volume30d": null,
-    "volumeChange30d": null,
-    "xMentions": 0,
-    "xLists": [],
-    "llamaUrl": null,
-    "appUrl": "https://app.marinade.finance/",
-    "chainTvls": [],
-    "scripts": [
-     {
-      "name": "monitor:dex -- marinade-finance:staking",
-      "file": "src/analytics/protocols/llama/dexProtocolMonitor.js",
-      "kind": "analytics"
-     },
-     {
-      "name": "simulate:marinade-finance:smoke",
-      "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
-      "kind": "smoke"
-     }
-    ],
-    "coverage": "covered by a dedicated monitor",
-    "token": null,
-    "signals": null,
-    "score": null,
-    "components": null,
-    "catalogOnly": true,
-    "testing": {
-     "mode": "api-only",
-     "note": "Marinade (mSOL) is Solana liquid staking. Deposit and delayed unstake are Solana program calls; Anvil cannot fork Solana. App: https://app.marinade.finance.",
-     "appUrl": "https://app.marinade.finance/",
-     "chain": "ethereum",
-     "rpcEnv": "ETHEREUM_RPC_URL",
-     "commands": [],
-     "tests": [],
-     "features": [],
-     "flow": null,
-     "contracts": [],
-     "recipe": {
-      "title": "Generic liquid-staking fork",
-      "chain": "ethereum",
-      "commands": [
-       "CHAIN=ethereum node scripts/startFork.js",
-       "ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lido:submit"
-      ],
-      "note": "No dedicated fork script. Lido submit on an Ethereum fork is the staking recipe."
-     },
-     "status": "none"
     },
     "dataDisputed": false,
     "disputes": [],
@@ -103054,7 +103029,7 @@
     "xMentions": 0,
     "xLists": [],
     "llamaUrl": "https://defillama.com/protocol/realt-tokens",
-    "appUrl": null,
+    "appUrl": "https://realt.co",
     "coingeckoUrl": null,
     "twitter": "RealTPlatform",
     "llamaFlags": {
@@ -103067,8 +103042,19 @@
       "tvl": 155031224
      }
     ],
-    "scripts": [],
-    "coverage": "ranking only",
+    "scripts": [
+     {
+      "name": "monitor:dex -- realt-tokens:rwa",
+      "file": "src/analytics/protocols/llama/dexProtocolMonitor.js",
+      "kind": "analytics"
+     },
+     {
+      "name": "simulate:realt-tokens:smoke",
+      "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
+      "kind": "smoke"
+     }
+    ],
+    "coverage": "covered by a dedicated monitor",
     "token": null,
     "signals": null,
     "score": 0.4909,
@@ -103083,8 +103069,8 @@
     },
     "testing": {
      "mode": "api-only",
-     "note": "No fork test for this protocol.",
-     "appUrl": null,
+     "note": "RealT Tokens are tokenized U.S. real-estate shares on Gnosis (xDAI). Gnosis is configured in src/config/chains.js (chain 100, GNOSIS_RPC_URL, no public fallback). Transfers require per-property address whitelisting (faq.realt.co: YAM secondary market and transferring from a compromised address); unapproved transfers revert, but already-whitelisted holders can transfer to another approved address. No impersonated transfer has been EIP-55/getCode-verified and measured on a pinned fork here, so the row stays API-only rather than shipping an unproven test.",
+     "appUrl": "https://realt.co",
      "chain": "ethereum",
      "rpcEnv": "ETHEREUM_RPC_URL",
      "commands": [],
@@ -121296,8 +121282,19 @@
       "tvl": 907
      }
     ],
-    "scripts": [],
-    "coverage": "ranking only",
+    "scripts": [
+     {
+      "name": "monitor:dex -- pinksale:launchpad",
+      "file": "src/analytics/protocols/llama/dexProtocolMonitor.js",
+      "kind": "analytics"
+     },
+     {
+      "name": "simulate:pinksale:smoke",
+      "file": "src/simulation/api/smokeDefiLlamaProtocol.js",
+      "kind": "smoke"
+     }
+    ],
+    "coverage": "covered by a dedicated monitor",
     "token": null,
     "signals": null,
     "score": 0.4337,
@@ -124355,8 +124352,8 @@
   "eligibleProtocols": 1143,
   "eligible": 270,
   "overall": 200,
-  "dedicatedMonitor": 181,
-  "rankingOnly": 19,
+  "dedicatedMonitor": 184,
+  "rankingOnly": 16,
   "newInTop200": 15,
   "historyMisses": 0,
   "mentionedNames": 42,
