@@ -69,11 +69,14 @@ function hostOf(url) {
 }
 
 // A FAIL whose output matches one of these is an RPC problem, not a test result.
-const TRANSIENT = /timeout|timed out|ECONNRESET|ECONNREFUSED|socket hang up|429|Too Many Requests|rate limit|header not found|missing trie node|Archive requests|could not detect network|SERVER_ERROR|502|503|504/i;
+const TRANSIENT =
+  /timeout|timed out|ECONNRESET|ECONNREFUSED|socket hang up|429|Too Many Requests|rate limit|header not found|missing trie node|Archive requests|could not detect network|SERVER_ERROR|502|503|504/i;
 // Tests seen flaking on public RPCs or on protocol liquidity; retried once on any FAIL.
 const RETRY_ONCE = new Set(
-  (process.env.FORK_RETRY_SCRIPTS ||
-    "fork:velodrome:swap,fork:venus:supply,fork:rockawayx:deposit,fork:etherfi-cash:supply")
+  (
+    process.env.FORK_RETRY_SCRIPTS ||
+    "fork:velodrome:swap,fork:venus:supply,fork:rockawayx:deposit,fork:etherfi-cash:supply"
+  )
     .split(",")
     .map(item => item.trim())
     .filter(Boolean)
@@ -157,7 +160,12 @@ const { anvilBin, anvilMissing, printAnvilHelp } = require("./lib/anvil");
 const TEST_TIMEOUT_MS = parseInt(process.env.FORK_TEST_TIMEOUT_MS || "180000", 10);
 
 // Chains whose upstream prunes state faster than a chain-wide run takes.
-const RESTART_CHAINS = new Set((process.env.FORK_RESTART_CHAINS || "bsc").split(",").map(c => c.trim()).filter(Boolean));
+const RESTART_CHAINS = new Set(
+  (process.env.FORK_RESTART_CHAINS || "bsc")
+    .split(",")
+    .map(c => c.trim())
+    .filter(Boolean)
+);
 
 /**
  * Run one npm fork script in its own process group with a hard deadline.
@@ -215,7 +223,11 @@ function runScript(script, chain, forkUrl) {
       let status = fields.status || (code === 0 ? "PASS" : "FAIL");
       if (timedOut) status = "FAIL";
       if (status === "PASS" && code !== 0) status = "FAIL";
-      const keyText = timedOut ? `timeout after ${TEST_TIMEOUT_MS + 15000} ms` : (match ? match[1].replace(/^.*?block=\S+\s*/, "") : "");
+      const keyText = timedOut
+        ? `timeout after ${TEST_TIMEOUT_MS + 15000} ms`
+        : match
+          ? match[1].replace(/^.*?block=\S+\s*/, "")
+          : "";
       resolve({
         script,
         chain,
@@ -277,7 +289,7 @@ async function main() {
       .map(item => item.trim())
       .filter(Boolean)
   );
-  const plans = suitePlans().filter(plan => !only.size || only.has(plan.script));
+  const plans = suitePlans({ only }).filter(plan => !only.size || only.has(plan.script));
   const chains = selectedChains(plans);
   const forkBlock = (process.env.FORK_BLOCK || process.env.FORK_BLOCK_NUMBER || "").trim();
   const rows = [];
@@ -368,7 +380,10 @@ async function main() {
         }
       }
       process.stdout.write(`→ ${plan.script} `);
-      const run = () => (process.env.FORK_ISOLATE === "0" ? runScript(plan.script, chain, forkUrl) : isolate(forkUrl, () => runScript(plan.script, chain, forkUrl)));
+      const run = () =>
+        process.env.FORK_ISOLATE === "0"
+          ? runScript(plan.script, chain, forkUrl)
+          : isolate(forkUrl, () => runScript(plan.script, chain, forkUrl));
       let result = await run();
       const retry =
         result.status === "FAIL" &&
@@ -406,7 +421,9 @@ async function main() {
       `${passed} PASS, ${failed.length} FAIL, ${skipped} SKIP${retried ? `, ${retried} retried` : ""}`,
       "",
     ];
-    const skippedChains = [...new Set(rows.filter(row => row.status === "SKIP").map(row => `${row.chain} (${row.tail})`))];
+    const skippedChains = [
+      ...new Set(rows.filter(row => row.status === "SKIP").map(row => `${row.chain} (${row.tail})`)),
+    ];
     if (skippedChains.length) lines.push(`Skipped chains: ${skippedChains.join(", ")}`, "");
     require("fs").appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
   }

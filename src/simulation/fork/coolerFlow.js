@@ -130,6 +130,9 @@ async function run() {
   }
   try {
     if (action === "borrow") return await borrowRoundTrip(base);
+    // repay: same position lifecycle; PASS requires MonoCooler.repay(MAX) to clear accountDebt to 0
+    // and debit the wallet >= the borrowed USDS (principal + accrued interest).
+    if (action === "repay") return await borrowRoundTrip(base);
     return finish({ ...base, ok: false, error: `Unknown Cooler action ${action}` });
   } catch (err) {
     // A revert is a FAIL. Nothing here is downgraded to read-only.
