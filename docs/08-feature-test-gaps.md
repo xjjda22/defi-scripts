@@ -8,7 +8,7 @@ Rows: pinned snapshot `2026-11-02` plus catalog protocols with fork tests. Ranks
 
 | Protocols | Features | Tested-direct | Linked | Failing-paused | Gap | Not testable |
 | --- | --- | --- | --- | --- | --- | --- |
-| 129 | 292 | 190 | 3 | 3 | 42 | 54 |
+| 129 | 292 | 227 | 3 | 3 | 0 | 59 |
 
 ## Top gaps (priority order)
 
@@ -16,48 +16,6 @@ Top-50 rank first, then rank order; within a protocol, the order its features ar
 
 | # | Rank | Protocol | Feature | How to test |
 | --- | --- | --- | --- | --- |
-| 1 | 32 | Defi Saver Asset Management | automation / recipes | DSProxy recipe executor over Aave/Maker positions; needs the recipe encoder. |
-| 2 | 68 | ether.fi Liquid | Liquid USD / BTC deposit | Teller deposit into the USD and BTC BoringVaults. |
-| 3 | 70 | Falcon Finance | unstake cooldown | sUSDf cooldown + time warp. |
-| 4 | 73 | Avalon Superearn | vault deposit | Ethereum vault deposit; contract address not yet verified against docs. |
-| 5 | 75 | Curvance | borrow | Monad market borrow. |
-| 6 | 93 | Lagoon | ERC-7540 deposit request | requestDeposit on a Lagoon vault. |
-| 7 | 98 | fx Protocol | mint fxUSD / open position | PoolManager operate(). |
-| 8 | 98 | fx Protocol | stability pool deposit | fxUSD stability pool deposit. |
-| 9 | 102 | EigenCloud | complete withdrawal | completeQueuedWithdrawal after time warp past the delay. |
-| 10 | 102 | EigenCloud | delegate to operator | DelegationManager.delegateTo. |
-| 11 | 108 | Lista DAO (Lending) | borrow | Lista Moolah borrow (Morpho-fork) on BSC. |
-| 12 | 110 | Liquity | open trove | BorrowerOperations.openTrove. |
-| 13 | 110 | Liquity | redeem | redeemCollateral. |
-| 14 | 110 | Liquity | liquidate | liquidate after price override. |
-| 15 | 112 | Saturn | unstake | Unstake / cooldown. |
-| 16 | 121 | Meta Pool | withdraw request | Withdrawal contract requestWithdraw. |
-| 17 | 123 | Sky | open vault / draw USDS | Sky Lockstake or ilk vault. |
-| 18 | 133 | Venus Core Pool | borrow | vToken.borrow on BSC. |
-| 19 | 133 | Venus Core Pool | repay | repayBorrow. |
-| 20 | 133 | Venus Core Pool | redeem | redeemUnderlying. |
-| 21 | 134 | SolvBTC | redeem | Redemption request. |
-| 22 | 151 | Pendle V2 | mint PT/YT | Router mintPyFromToken. |
-| 23 | 151 | Pendle V2 | add liquidity | addLiquiditySingleToken. |
-| 24 | 153 | Cooler Loans | repay | MonoCooler.repay. |
-| 25 | 155 | CIAN Yield Layer | withdraw request | requestRedeem. |
-| 26 | 165 | Convex Finance | claim rewards | getReward after time warp. |
-| 27 | 171 | xDai Stake Bridge | OmniBridge relayTokens (erc-to-erc sibling) | The $239.9M sibling bridge 0x88ad…5671 has its own relayTokens surface; not asserted by the lockbox test. |
-| 28 | 173 | Fluid Lending | vault borrow | Fluid vault operate(). |
-| 29 | 188 | Aero (DEX) | add liquidity | Router.addLiquidity. |
-| 30 | 188 | Aero (DEX) | gauge stake | Gauge.deposit. |
-| 31 | 188 | Aero (DEX) | lock AERO (veNFT) | VotingEscrow.createLock. |
-| 32 | 189 | Rysk V12 | options trade | HyperEVM/Arbitrum options; chain not configured. |
-| 33 | - | Balancer | join pool | Vault.joinPool / V3 addLiquidity. |
-| 34 | - | Benqi Lending | borrow | qiToken.borrow on Avalanche. |
-| 35 | - | Benqi Lending | redeem | redeemUnderlying. |
-| 36 | - | Benqi Staked Avax | request unlock | requestUnlock + cooldown. |
-| 37 | - | Euler | borrow (EVC) | EVC enableController + borrow. |
-| 38 | - | Frax | mint frxETH | frxETHMinter.submit. |
-| 39 | - | SushiSwap | add liquidity | Router addLiquidity. |
-| 40 | - | Symbiotic | vault deposit | Vault.deposit. |
-| 41 | - | Theo | unstake | Unstake / redeem. |
-| 42 | - | USD AI | mint USDai | USDai mint from USDC on Arbitrum. |
 
 ## Per protocol
 
@@ -288,11 +246,11 @@ Docs: https://docs.concrete.xyz · 1/2 tested-direct, 0 gap, 1 not testable
 
 ### #32 Defi Saver Asset Management
 
-Docs: https://docs.defisaver.com · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.defisaver.com · 1/1 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| automation / recipes | **gap** |  | DSProxy recipe executor over Aave/Maker positions; needs the recipe encoder. |
+| automation / recipes | tested-direct | `fork:defisaver:recipe` |  |
 
 ### #34 Robinhood Chain Bridge
 
@@ -485,12 +443,12 @@ Docs: https://docs.uniswap.org/contracts · 9/9 tested-direct, 0 gap, 0 not test
 
 ### #68 ether.fi Liquid
 
-Docs: https://etherfi.gitbook.io · 0/2 tested-direct, 1 gap, 0 not testable
+Docs: https://etherfi.gitbook.io · 1/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | Liquid ETH deposit | linked | `fork:veda:deposit` | Same Veda Teller recipe. |
-| Liquid USD / BTC deposit | **gap** |  | Teller deposit into the USD and BTC BoringVaults. |
+| Liquid USD / BTC deposit | tested-direct | `fork:veda:liquid-usd`, `fork:veda:liquid-btc` |  |
 
 ### #69 NEAR Bridge
 
@@ -503,13 +461,13 @@ Docs: https://docs.near.org · 1/2 tested-direct, 0 gap, 1 not testable
 
 ### #70 Falcon Finance
 
-Docs: https://docs.falcon.finance · 1/3 tested-direct, 1 gap, 1 not testable
+Docs: https://docs.falcon.finance · 1/3 tested-direct, 0 gap, 2 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | stake USDf -> sUSDf | tested-direct | `fork:falcon:stake` |  |
 | mint USDf | not-testable |  | Permissioned: KYC/whitelist gate on mint and redeem. |
-| unstake cooldown | **gap** |  | sUSDf cooldown + time warp. |
+| unstake cooldown | not-testable |  | sUSDf cooldownDuration() is 0 on Ethereum (2026-11-06): the cooldown is switched off and exits are instant, so there is no cooldown to exercise. |
 
 ### #72 StakeWise V3
 
@@ -523,21 +481,21 @@ Docs: https://docs.stakewise.io · 3/3 tested-direct, 0 gap, 0 not testable
 
 ### #73 Avalon Superearn
 
-Docs: https://docs.avalonfinance.xyz · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.avalonfinance.xyz · 0/1 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| vault deposit | **gap** |  | Ethereum vault deposit; contract address not yet verified against docs. |
+| vault deposit | not-testable |  | The Ethereum SuperEarn router reverts Unauthorized for public callers (keeper-only); user deposits go through SuperEarnRouter on Kaia (chain 8217), which this repo does not fork. |
 
 ### #75 Curvance
 
-Docs: https://docs.curvance.com · 2/3 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.curvance.com · 2/3 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | deposit | tested-direct | `fork:curvance:deposit` |  |
 | redeem | tested-direct | `fork:curvance:deposit` |  |
-| borrow | **gap** |  | Monad market borrow. |
+| borrow | not-testable |  | Monad OracleManager.getPrice(USDC) returns (0, err=2) on the 2026-11-06 fork, so every borrow fails the collateral check. Harness in lendingBorrowExtras.curvanceBorrow; retest when the USDC oracle recovers. |
 
 ### #77 Galaxy Curation
 
@@ -591,11 +549,11 @@ Docs: https://docs.zama.ai/protocol · 1/2 tested-direct, 0 gap, 1 not testable
 
 ### #93 Lagoon
 
-Docs: https://docs.lagoon.finance · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.lagoon.finance · 1/1 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| ERC-7540 deposit request | **gap** |  | requestDeposit on a Lagoon vault. |
+| ERC-7540 deposit request | tested-direct | `fork:lagoon:request-deposit` |  |
 
 ### #96 Arbitrum Bridge
 
@@ -608,23 +566,23 @@ Docs: https://docs.arbitrum.io/build-decentralized-apps/token-bridging · 1/2 te
 
 ### #98 fx Protocol
 
-Docs: https://docs.aladdin.club/f-x-protocol · 0/2 tested-direct, 2 gap, 0 not testable
+Docs: https://docs.aladdin.club/f-x-protocol · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| mint fxUSD / open position | **gap** |  | PoolManager operate(). |
-| stability pool deposit | **gap** |  | fxUSD stability pool deposit. |
+| mint fxUSD / open position | tested-direct | `fork:fx:operate` |  |
+| stability pool deposit | tested-direct | `fork:fx:stability-deposit` |  |
 
 ### #102 EigenCloud
 
-Docs: https://docs.eigenlayer.xyz · 2/4 tested-direct, 2 gap, 0 not testable
+Docs: https://docs.eigenlayer.xyz · 4/4 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | deposit LST into strategy | tested-direct | `fork:eigenlayer:deposit` |  |
 | queue withdrawal | tested-direct | `fork:eigenlayer:queue` |  |
-| complete withdrawal | **gap** |  | completeQueuedWithdrawal after time warp past the delay. |
-| delegate to operator | **gap** |  | DelegationManager.delegateTo. |
+| complete withdrawal | tested-direct | `fork:eigenlayer:complete` |  |
+| delegate to operator | tested-direct | `fork:eigenlayer:delegate` |  |
 
 ### #105 USDT0
 
@@ -637,13 +595,13 @@ Docs: https://docs.usdt0.to · 1/2 tested-direct, 0 gap, 1 not testable
 
 ### #108 Lista DAO (Lending)
 
-Docs: https://docs.bsc.lista.org · 2/3 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.bsc.lista.org · 3/3 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | vault deposit | tested-direct | `fork:lista-dao:deposit` |  |
 | vault redeem | tested-direct | `fork:lista-dao:deposit` |  |
-| borrow | **gap** |  | Lista Moolah borrow (Morpho-fork) on BSC. |
+| borrow | tested-direct | `fork:lista-dao:borrow` |  |
 
 ### #109 Optimism Bridge
 
@@ -656,23 +614,23 @@ Docs: https://docs.optimism.io/app-developers/bridging/standard-bridge · 1/2 te
 
 ### #110 Liquity
 
-Docs: https://docs.liquity.org · 1/4 tested-direct, 3 gap, 0 not testable
+Docs: https://docs.liquity.org · 4/4 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | stability pool deposit | tested-direct | `fork:liquity:deposit` |  |
-| open trove | **gap** |  | BorrowerOperations.openTrove. |
-| redeem | **gap** |  | redeemCollateral. |
-| liquidate | **gap** |  | liquidate after price override. |
+| open trove | tested-direct | `fork:liquity:open` |  |
+| redeem | tested-direct | `fork:liquity:redeem` |  |
+| liquidate | tested-direct | `fork:liquity:liquidate` |  |
 
 ### #112 Saturn
 
-Docs: https://saturncredit.gitbook.io/saturn-docs · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://saturncredit.gitbook.io/saturn-docs · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | stake USDat | tested-direct | `fork:saturn:stake` |  |
-| unstake | **gap** |  | Unstake / cooldown. |
+| unstake | tested-direct | `fork:saturn:unstake` |  |
 
 ### #116 ether.fi Stake
 
@@ -686,16 +644,16 @@ Docs: https://etherfi.gitbook.io · 3/3 tested-direct, 0 gap, 0 not testable
 
 ### #121 Meta Pool
 
-Docs: https://docs.metapool.app · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.metapool.app · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | deposit ETH -> mpETH | tested-direct | `fork:meta-pool:deposit` |  |
-| withdraw request | **gap** |  | Withdrawal contract requestWithdraw. |
+| withdraw request | tested-direct | `fork:meta-pool:withdraw-request` |  |
 
 ### #123 Sky
 
-Docs: https://developers.sky.money · 5/6 tested-direct, 1 gap, 0 not testable
+Docs: https://developers.sky.money · 6/6 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
@@ -704,7 +662,7 @@ Docs: https://developers.sky.money · 5/6 tested-direct, 1 gap, 0 not testable
 | sDAI deposit | tested-direct | `fork:sky:sdai` |  |
 | sUSDS withdraw | tested-direct | `fork:sky:redeem` |  |
 | PSM swap (USDC <-> USDS) | tested-direct | `fork:sky:psm` |  |
-| open vault / draw USDS | **gap** |  | Sky Lockstake or ilk vault. |
+| open vault / draw USDS | tested-direct | `fork:sky:vault` |  |
 
 ### #125 Avant Protocol
 
@@ -752,23 +710,23 @@ Docs: https://docs.fluid.instadapp.io · 1/1 tested-direct, 0 gap, 0 not testabl
 
 ### #133 Venus Core Pool
 
-Docs: https://docs-v4.venus.io · 1/4 tested-direct, 3 gap, 0 not testable
+Docs: https://docs-v4.venus.io · 4/4 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | supply | tested-direct | `fork:venus:supply` |  |
-| borrow | **gap** |  | vToken.borrow on BSC. |
-| repay | **gap** |  | repayBorrow. |
-| redeem | **gap** |  | redeemUnderlying. |
+| borrow | tested-direct | `fork:venus:borrow` |  |
+| repay | tested-direct | `fork:venus:repay` |  |
+| redeem | tested-direct | `fork:venus:redeem` |  |
 
 ### #134 SolvBTC
 
-Docs: https://docs.solv.finance · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.solv.finance · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | subscribe | tested-direct | `fork:solvbtc:subscribe` |  |
-| redeem | **gap** |  | Redemption request. |
+| redeem | tested-direct | `fork:solvbtc:redeem` |  |
 
 ### #142 Bedrock uniBTC
 
@@ -806,32 +764,32 @@ Docs: https://docs.railgun.org · 1/2 tested-direct, 0 gap, 1 not testable
 
 ### #151 Pendle V2
 
-Docs: https://docs.pendle.finance · 2/4 tested-direct, 2 gap, 0 not testable
+Docs: https://docs.pendle.finance · 4/4 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | markets read | tested-direct | `simulate:eth:pendle-markets:smoke` |  |
-| mint PT/YT | **gap** |  | Router mintPyFromToken. |
+| mint PT/YT | tested-direct | `fork:pendle:mint-py` |  |
 | swap PT | tested-direct | `fork:pendle:buy-pt` |  |
-| add liquidity | **gap** |  | addLiquiditySingleToken. |
+| add liquidity | tested-direct | `fork:pendle:add-liquidity` |  |
 
 ### #153 Cooler Loans
 
-Docs: https://docs.olympusdao.finance · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.olympusdao.finance · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | borrow against gOHM | tested-direct | `fork:cooler:borrow` |  |
-| repay | **gap** |  | MonoCooler.repay. |
+| repay | tested-direct | `fork:cooler:repay` |  |
 
 ### #155 CIAN Yield Layer
 
-Docs: https://docs.cian.app · 0/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.cian.app · 1/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | vault deposit | failing-paused | `fork:cian:deposit` |  |
-| withdraw request | **gap** |  | requestRedeem. |
+| withdraw request | tested-direct | `fork:cian:withdraw-request` |  |
 
 ### #158 Portal
 
@@ -870,12 +828,12 @@ Docs: https://docs.dolomite.io · 0/2 tested-direct, 0 gap, 1 not testable
 
 ### #165 Convex Finance
 
-Docs: https://docs.convexfinance.com · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.convexfinance.com · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | deposit / stake | tested-direct | `fork:convex:deposit` |  |
-| claim rewards | **gap** |  | getReward after time warp. |
+| claim rewards | tested-direct | `fork:convex:claim` |  |
 
 ### #167 GMX (Perps)
 
@@ -905,21 +863,21 @@ Docs: https://docs.bitfi.org · 1/1 tested-direct, 0 gap, 0 not testable
 
 ### #171 xDai Stake Bridge
 
-Docs: https://docs.gnosischain.com · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.gnosischain.com · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | relayTokens (USDS lockbox) | tested-direct | `fork:xdai-stake-bridge:deposit` |  |
-| OmniBridge relayTokens (erc-to-erc sibling) | **gap** |  | The $239.9M sibling bridge 0x88ad…5671 has its own relayTokens surface; not asserted by the lockbox test. |
+| OmniBridge relayTokens (erc-to-erc sibling) | tested-direct | `fork:xdai-stake-bridge:relay` |  |
 
 ### #173 Fluid Lending
 
-Docs: https://docs.fluid.instadapp.io · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.fluid.instadapp.io · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | fToken deposit | tested-direct | `fork:fluid-lending:deposit` |  |
-| vault borrow | **gap** |  | Fluid vault operate(). |
+| vault borrow | tested-direct | `fork:fluid-lending:borrow` |  |
 
 ### #178 Fraxtal
 
@@ -949,23 +907,23 @@ Docs: https://docs.usdd.io · 1/1 tested-direct, 0 gap, 0 not testable
 
 ### #188 Aero (DEX)
 
-Docs: https://aerodrome.finance/docs · 2/5 tested-direct, 3 gap, 0 not testable
+Docs: https://aerodrome.finance/docs · 4/5 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | swap (Aerodrome) | tested-direct | `fork:aerodrome:swap` |  |
 | swap (Velodrome) | tested-direct | `fork:velodrome:swap` |  |
-| add liquidity | **gap** |  | Router.addLiquidity. |
-| gauge stake | **gap** |  | Gauge.deposit. |
-| lock AERO (veNFT) | **gap** |  | VotingEscrow.createLock. |
+| add liquidity | tested-direct | `fork:aerodrome:add-liquidity` |  |
+| gauge stake | not-testable |  | Every legacy Aerodrome gauge reverts NotAlive since the 2026-10-22 Aero migration, and the new Aero Voter has no on-chain pool-to-gauge lookup, so no live gauge can be derived on a fork. |
+| lock AERO (veNFT) | tested-direct | `fork:aerodrome:lock` |  |
 
 ### #189 Rysk V12
 
-Docs: https://docs.rysk.finance · 0/1 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.rysk.finance · 0/1 tested-direct, 0 gap, 1 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
-| options trade | **gap** |  | HyperEVM/Arbitrum options; chain not configured. |
+| options trade | not-testable |  | RFQ only: each trade needs a market maker's EIP-712 signed quote from Rysk's off-chain service. The contracts are live on Ethereum and HyperEVM, but a fork cannot produce the quote. |
 
 ### #190 SoSoValue Indexes
 
@@ -1029,31 +987,31 @@ Docs: https://docs.axelar.dev · 1/1 tested-direct, 0 gap, 0 not testable
 
 ### Balancer
 
-Docs: https://docs.balancer.fi · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.balancer.fi · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | swap | tested-direct | `fork:balancer:swap` |  |
-| join pool | **gap** |  | Vault.joinPool / V3 addLiquidity. |
+| join pool | tested-direct | `fork:balancer:join` |  |
 
 ### Benqi Lending
 
-Docs: https://docs.benqi.fi · 1/3 tested-direct, 2 gap, 0 not testable
+Docs: https://docs.benqi.fi · 3/3 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | supply | tested-direct | `fork:benqi:supply` |  |
-| borrow | **gap** |  | qiToken.borrow on Avalanche. |
-| redeem | **gap** |  | redeemUnderlying. |
+| borrow | tested-direct | `fork:benqi:borrow` |  |
+| redeem | tested-direct | `fork:benqi:redeem` |  |
 
 ### Benqi Staked Avax
 
-Docs: https://docs.benqi.fi · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.benqi.fi · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | stake AVAX -> sAVAX | tested-direct | `fork:benqi:stake` |  |
-| request unlock | **gap** |  | requestUnlock + cooldown. |
+| request unlock | tested-direct | `fork:benqi:unlock` |  |
 
 ### BlackRock BUIDL
 
@@ -1092,22 +1050,22 @@ Docs: https://docs.ember.so · 1/1 tested-direct, 0 gap, 0 not testable
 
 ### Euler
 
-Docs: https://docs.euler.finance · 2/3 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.euler.finance · 3/3 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | vault deposit | tested-direct | `fork:euler:deposit` |  |
 | vault redeem | tested-direct | `fork:euler:deposit` |  |
-| borrow (EVC) | **gap** |  | EVC enableController + borrow. |
+| borrow (EVC) | tested-direct | `fork:euler:borrow` |  |
 
 ### Frax
 
-Docs: https://docs.frax.finance · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.frax.finance · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | sfrxETH rate | tested-direct | `fork:frax:rate` |  |
-| mint frxETH | **gap** |  | frxETHMinter.submit. |
+| mint frxETH | tested-direct | `fork:frax:mint-frxeth` |  |
 
 ### Kelp DAO
 
@@ -1188,13 +1146,13 @@ Docs: https://docs.superstate.co · 1/2 tested-direct, 0 gap, 1 not testable
 
 ### SushiSwap
 
-Docs: https://docs.sushi.com · 2/3 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.sushi.com · 3/3 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | swap V2 | tested-direct | `fork:sushiswap:v2` |  |
 | swap V3 | tested-direct | `fork:sushiswap:v3` |  |
-| add liquidity | **gap** |  | Router addLiquidity. |
+| add liquidity | tested-direct | `fork:sushiswap:add-liquidity` |  |
 
 ### Swell
 
@@ -1206,12 +1164,12 @@ Docs: https://docs.swellnetwork.io · 0/1 tested-direct, 0 gap, 0 not testable
 
 ### Symbiotic
 
-Docs: https://docs.symbiotic.fi · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.symbiotic.fi · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | vault read | tested-direct | `fork:symbiotic:read` |  |
-| vault deposit | **gap** |  | Vault.deposit. |
+| vault deposit | tested-direct | `fork:symbiotic:deposit` |  |
 
 ### Tether USDT
 
@@ -1224,12 +1182,12 @@ Docs: https://tether.to · 1/2 tested-direct, 0 gap, 1 not testable
 
 ### Theo
 
-Docs: https://docs.theo.xyz · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.theo.xyz · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | stake | tested-direct | `fork:theo:stake` |  |
-| unstake | **gap** |  | Unstake / redeem. |
+| unstake | tested-direct | `fork:theo:unstake` |  |
 
 ### Uniswap V3 on Monad
 
@@ -1241,12 +1199,12 @@ Docs: https://docs.uniswap.org · 1/1 tested-direct, 0 gap, 0 not testable
 
 ### USD AI
 
-Docs: https://docs.usd.ai · 1/2 tested-direct, 1 gap, 0 not testable
+Docs: https://docs.usd.ai · 2/2 tested-direct, 0 gap, 0 not testable
 
 | Feature | Status | Scripts | Note |
 | --- | --- | --- | --- |
 | stake USDai | tested-direct | `fork:usdai:stake` |  |
-| mint USDai | **gap** |  | USDai mint from USDC on Arbitrum. |
+| mint USDai | tested-direct | `fork:usdai:mint` |  |
 
 ### Vesper
 
