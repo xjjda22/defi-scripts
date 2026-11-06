@@ -801,8 +801,8 @@ const FORK_RECIPES = [
     tests: [test("fork:fluid-lite:deposit", "deposit", "ethereum")],
   }),
   recipe({
-    keys: ["ember-protocol"],
-    category: "vaults",
+    keys: ["ember-protocol", "ember"],
+    category: "stable-rwa",
     label: "Deposit + queued exit",
     appUrl: "https://ember.so/",
     chain: "ethereum",
@@ -1306,6 +1306,482 @@ const API_ONLY = [
     category: "bridge-chain",
     appUrl: "https://core.app/bridge",
     note: "No fork test: Intel SGX warden custody. The bridge releases funds on Avalanche only after a quorum of wardens signs the withdrawal off-chain, so there is no permissionless on-chain action to assert on a single-chain fork. Recorded 2026-11-03.",
+  },
+
+  // Written reasons for remaining top-200 API-only rows (2026-11-06).
+  {
+    keys: ["sun--dex"],
+    category: "dex",
+    note: "SUN (SunSwap V1–V4) is a Tron DEX. Its pools and routers live on Tron's TVM, which Anvil cannot fork; the EVM fork suite has no Tron RPC or recipe. Ranking and volume stay on DefiLlama (defillama.com/protocol/sun). App: https://sunswap.com.",
+  },
+  {
+    keys: ["sanctum-validator-lsts"],
+    category: "staking",
+    note: "Sanctum Validator LSTs are Solana stake-pool tokens. Mint and redeem go through Sanctum programs on Solana; Anvil is EVM-only and cannot fork Solana, so this row stays API-only. App: https://www.sanctum.so.",
+  },
+  {
+    keys: ["kraken-bitcoin"],
+    category: "bridge-chain",
+    note: "Kraken Bitcoin (kBTC) is Kraken's wrapped BTC. BTC is held in Kraken custody on Bitcoin; mint and burn are custodial, not a permissionless EVM action Anvil can fork. App: https://www.kraken.com/kbtc.",
+  },
+  {
+    keys: ["hyperliquid-earn"],
+    category: "lending",
+    note: "Hyperliquid Earn holds balances on HyperCore (Hyperliquid L1), not HyperEVM. Deposits and yield settle on HyperCore's non-EVM L1; Anvil cannot fork HyperCore (perps/HyperCore coverage is closed by decision). App: https://app.hyperliquid.xyz/earn.",
+  },
+  {
+    keys: ["nexus-btc"],
+    category: "bridge-chain",
+    note: "Nexus BTC (bit.com) wraps Bitcoin under exchange custody. The BTC leg settles on Bitcoin / custodian rails; Anvil cannot fork Bitcoin or exercise that mint. App: https://www.bit.com.",
+  },
+  {
+    keys: ["jupiter-lend"],
+    category: "lending",
+    note: "Jupiter Lend is a Solana lending market in the Jupiter stack. Supply and borrow settle in Solana programs; the fork suite is EVM-only, so Anvil cannot run a Jupiter Lend deposit. App: https://jup.ag.",
+  },
+  {
+    keys: ["pump--other"],
+    category: "other",
+    note: "Pump (Other) is Pump.fun fees/volume with no chain TVL on DefiLlama. Activity is Solana bonding-curve / off-board volume; there is nothing for Anvil to fork. App: https://www.pump.fun.",
+  },
+  {
+    keys: ["hive-protocol"],
+    category: "bridge-chain",
+    note: "Hive Protocol bridges on BSquared (hive.bsquared.network). BSquared is not in src/config/chains.js, so there is no Anvil RPC or fork recipe for this row.",
+  },
+  {
+    keys: ["kalshi"],
+    category: "other",
+    note: "Kalshi is a CFTC-regulated prediction exchange (kalshi.com), not an on-chain AMM. There is no chain TVL on DefiLlama and no EVM contract Anvil can fork for a user trade.",
+  },
+  {
+    keys: ["onre"],
+    category: "stable-rwa",
+    note: "OnRe is an RWA/stable product on Solana (app.onre.finance). User actions settle in Solana programs; Anvil cannot fork Solana, so there is no EVM fork test for this row.",
+  },
+  {
+    keys: ["ripple-usd"],
+    category: "stable-rwa",
+    note: "Ripple USD (RLUSD) is issued by Ripple; mint and redeem are issuer/custodial flows (ripple.com/solutions/stablecoin). DefiLlama shows no chain TVL to fork; Anvil cannot exercise RLUSD issuance.",
+  },
+  {
+    keys: ["r25"],
+    category: "stable-rwa",
+    note: "R25 is an RWA/stable product with TVL on Pharos (and Sui). Pharos is not configured in src/config/chains.js, and Sui is Move VM—neither is Anvil-forkable here. App: https://www.r25.xyz.",
+  },
+  {
+    keys: ["dfdv-staked-sol"],
+    category: "staking",
+    note: "DFDV Staked SOL is a Solana liquid-staking token from DeFi Development Corp. Stake and redeem are Solana program calls; Anvil cannot fork Solana. App: https://defidevcorp.com.",
+  },
+  {
+    keys: ["kinetiq--staking"],
+    category: "staking",
+    note: "Kinetiq staking (kinetiq.xyz) stakes on Hyperliquid L1 / HyperCore. Stake and unstake are HyperCore actions; Anvil cannot fork HyperCore. App: https://kinetiq.xyz/stake.",
+  },
+  {
+    keys: ["jito-liquid-staking"],
+    category: "staking",
+    note: "Jito Liquid Staking (jitoSOL) stakes SOL through Jito's Solana stake pool. Anvil cannot fork Solana, so stake/unstake cannot be asserted here. App: https://jito.network.",
+  },
+  {
+    keys: ["figure-markets-prime"],
+    category: "lending",
+    note: "Figure Markets Prime is crypto-backed lending on Provenance (figure.com). Provenance is not an EVM chain in src/config/chains.js; Anvil cannot fork it. App: https://www.figure.com/crypto-backed-loan/.",
+  },
+  {
+    keys: ["rhea-lend"],
+    category: "lending",
+    note: "Rhea Lend is a NEAR lending market (lending.rhea.finance). Markets live on NEAR, not EVM; Anvil cannot fork NEAR. App: https://lending.rhea.finance.",
+  },
+  {
+    keys: ["world-liberty-financial"],
+    category: "lending",
+    note: "World Liberty Financial is listed with no chain TVL on DefiLlama (fees/volume-style row). There is no forkable on-chain market in this suite; coverage stays API-only. App: https://worldlibertyfinancial.com.",
+  },
+  {
+    keys: ["lighter--perps"],
+    category: "perps",
+    note: "Lighter Perps trade on Robinhood Chain / zkLighter (robinhoodchain.lighter.xyz). That EVM chain is not in src/config/chains.js (no RPC or fork recipe), so Anvil cannot fork Lighter here. Repo docs also mark Lighter withdraw as not-testable (L1 proof). Docs: https://docs.lighter.xyz.",
+  },
+  {
+    keys: ["dflow-aggregator"],
+    category: "aggregator",
+    note: "DFlow Aggregator is a Solana intent/RFQ aggregator (dflow.net). Quotes and fills are off the EVM fork suite and DefiLlama shows no chain TVL; Anvil cannot assert a DFlow swap.",
+  },
+  {
+    keys: ["rocketswap-anubis"],
+    category: "dex",
+    note: "RocketSwap Anubis is a DEX on the Anubis chain. Anubis is not in src/config/chains.js (no RPC or fork recipe), and the row has no appUrl in the board, so Anvil cannot fork it.",
+  },
+  {
+    keys: ["0x-aggregator"],
+    category: "aggregator",
+    note: "0x Aggregator is the 0x swap API / intent layer (0x.org). Routing is off-chain quote + fill; DefiLlama has no chain TVL for this row, so Anvil has nothing protocol-owned to fork beyond generic DEX venues already covered elsewhere.",
+  },
+  {
+    keys: ["gtbtc"],
+    category: "restaking",
+    note: "GTBTC is Gate's Bitcoin staking / wrapped-BTC product. BTC is locked or custodied off Anvil's EVM forks; there is no permissionless Bitcoin action to assert here. App: https://www.gate.com/staking/BTC.",
+  },
+  {
+    keys: ["forward-industries-sol"],
+    category: "staking",
+    note: "Forward Industries SOL is Solana-staked SOL under Forward Industries. The stake path is Solana-native; Anvil's EVM forks cannot exercise it. App: https://www.forwardindustries.com.",
+  },
+  {
+    keys: ["pumpswap"],
+    category: "dex",
+    note: "PumpSwap is the Pump.fun Solana AMM (swap.pump.fun). Swaps and LP live in Solana programs; Anvil cannot fork Solana, so this DEX row stays API-only.",
+  },
+  {
+    keys: ["chainlink--other"],
+    category: "other",
+    note: "Chainlink (Other) is DefiLlama's fees/other bucket for Chainlink services, not a single forkable pool. Oracle and CCIP legs that are forkable are covered under Chainlink CCIP recipes; this row has no chain TVL to fork.",
+  },
+  {
+    keys: ["justcryptos"],
+    category: "bridge-chain",
+    note: "JustCryptos wraps assets on Tron (JUST network). Mint and redeem settle on TVM, not an EVM chain Anvil can fork, so there is no permissionless action to assert in this suite. App: https://just.network/token.",
+  },
+  {
+    keys: ["bitget-bgbtc"],
+    category: "bridge-chain",
+    note: "Bitget bgBTC is Bitget's wrapped Bitcoin. BTC custody and mint/burn are exchange-side on Bitcoin rails; Anvil cannot fork that path. App: https://www.bitget.com.",
+  },
+  {
+    keys: ["binance-bitcoin"],
+    category: "bridge-chain",
+    note: "Binance Bitcoin (BTCB and related collateral BTC tokens) is Binance-custodied BTC. Mint and redeem are custodial; Anvil cannot fork Bitcoin or Binance's minter. App: https://www.binance.com/en/collateral-btokens.",
+  },
+  {
+    keys: ["orca-dex"],
+    category: "dex",
+    note: "Orca is a Solana (and Eclipse) concentrated-liquidity DEX. Whirlpool swaps are Solana program calls; Anvil cannot fork Solana, so there is no Orca fork recipe. App: https://www.orca.so.",
+  },
+  {
+    keys: ["wbtc"],
+    category: "bridge-chain",
+    note: "WBTC is minted by merchants against BTC locked with custodians on Bitcoin (wbtc.network). The BTC lock and merchant mint are off Anvil; a fork can only move existing WBTC, not exercise the wrap. App: https://wbtc.network.",
+  },
+  {
+    keys: ["uniswap-aggregator"],
+    category: "aggregator",
+    note: "Uniswap Aggregator is the Uniswap Trading API / aggregator surface, not Uniswap v2/v3/v4 pools. Those pools already have fork tests; this fees-only aggregator row has no chain TVL and no extra Anvil target. App: https://app.uniswap.org.",
+  },
+  {
+    keys: ["justlend-strx"],
+    category: "staking",
+    note: "JustLend sTRX is liquid-staked TRX on JustLend DAO. Stake and unstake run on Tron TVM; Anvil cannot fork Tron, so this row stays API-only. App: https://app.justlend.org/strx.",
+  },
+  {
+    keys: ["liquidmesh"],
+    category: "aggregator",
+    note: "LiquidMesh is a cross-venue aggregator (liquidmesh.io). DefiLlama shows no chain TVL; fills are routed off a single forkable pool, so Anvil cannot assert a LiquidMesh-specific action.",
+  },
+  {
+    keys: ["nordstern.finance"],
+    category: "aggregator",
+    note: "Nordstern.Finance is listed as an aggregator with no chain TVL on DefiLlama. There is no Nordstern pool for Anvil to fork; ranking stays API-only. App: http://nordstern.finance.",
+  },
+  {
+    keys: ["binance-wallet"],
+    category: "other",
+    note: "Binance Wallet (web3.binance.com) is a custodial/wallet product whose DefiLlama row has no chain TVL. Wallet flows are off Anvil; there is no permissionless protocol action to fork.",
+  },
+  {
+    keys: ["flashnet"],
+    category: "dex",
+    note: "Flashnet is a Bitcoin Lightning / Spark-style DEX (flashnet.xyz). It is not an EVM AMM and has no chain TVL on DefiLlama for Anvil to fork.",
+  },
+  {
+    keys: ["bebop-aggregator"],
+    category: "aggregator",
+    note: "Bebop Aggregator is an RFQ/aggregator (bebop.xyz). Quotes come from makers off-chain; DefiLlama shows no chain TVL, so Anvil cannot produce a Bebop fill without their quote service.",
+  },
+  {
+    keys: ["binance-staked-sol"],
+    category: "staking",
+    note: "Binance Staked SOL (BNSOL) is minted and redeemed through Binance's Solana staking product. Custody and stake sit on Solana / Binance; Anvil cannot fork that path. App: https://www.binance.com/en/solana-staking.",
+  },
+  {
+    keys: ["jupiter-staked-sol"],
+    category: "staking",
+    note: "Jupiter Staked SOL (JupSOL) is Jupiter's Solana LST. Stake and unstake are Solana program actions; Anvil is EVM-only. App: https://jup.ag.",
+  },
+  {
+    keys: ["titan-exchange"],
+    category: "aggregator",
+    note: "Titan Exchange is a Solana aggregator (titan.exchange). Routing is Solana/off-chain with no DefiLlama chain TVL; Anvil cannot fork Titan.",
+  },
+  {
+    keys: ["jupiter--perps"],
+    category: "perps",
+    note: "Jupiter Perps are perpetual markets on Solana via Jupiter. Open/close settle in Solana programs; Anvil cannot fork Solana, so this perps row stays API-only. App: https://jup.ag.",
+  },
+  {
+    keys: ["lorenzo-enzobtc"],
+    category: "bridge-chain",
+    note: "Lorenzo enzoBTC is a Bitcoin liquid-staking / wrap product (lorenzo-protocol.xyz). The BTC stake leg is on Bitcoin; Anvil cannot fork Bitcoin to assert mint or redeem.",
+  },
+  {
+    keys: ["meteora-dynamic-bonding-curve"],
+    category: "other",
+    note: "Meteora Dynamic Bonding Curve is a Solana Meteora product surface tracked without chain TVL on this DefiLlama row. Meteora programs are Solana-native; Anvil cannot fork them. App: https://www.meteora.ag.",
+  },
+  {
+    keys: ["sthype"],
+    category: "staking",
+    note: "stHYPE is liquid-staked HYPE on Hyperliquid L1 (Valantis app). The stake path is HyperCore, not HyperEVM; Anvil cannot fork it. App: https://app.valantis.xyz.",
+  },
+  {
+    keys: ["phantom-sol"],
+    category: "staking",
+    note: "Phantom SOL is Phantom wallet's Solana liquid staking. Stake flows through Solana programs and Phantom custody UX; Anvil cannot fork Solana. App: https://phantom.com.",
+  },
+  {
+    keys: ["marinade-finance"],
+    category: "staking",
+    note: "Marinade (mSOL) is Solana liquid staking. Deposit and delayed unstake are Solana program calls; Anvil cannot fork Solana. App: https://app.marinade.finance.",
+  },
+  {
+    keys: ["exsat-staking-btc"],
+    category: "bridge-chain",
+    note: "exSat Staking BTC bridges and stakes BTC via exSat (exsat.network). The stake and bridge legs settle on Bitcoin / exSat, not an Anvil-forkable EVM user action.",
+  },
+  {
+    keys: ["solfi-v2"],
+    category: "dex",
+    note: "SolFi V2 is a Solana AMM (@SolFiAMM). DefiLlama lists it without chain TVL in this board snapshot; Anvil cannot fork Solana anyway, so the row stays API-only.",
+  },
+  {
+    keys: ["bybit-staked-sol"],
+    category: "staking",
+    note: "Bybit Staked SOL (bbSOL) is Bybit's Solana staking product. Mint/redeem are Solana-side and custodial via Bybit; Anvil cannot fork that path. App: https://www.bybit.com/en/web3/staking/BybitSOL.",
+  },
+  {
+    keys: ["justlend-v1"],
+    category: "lending",
+    note: "JustLend V1 is Tron's primary lending market (supply/borrow TRX and TRC-20s). Markets live on TVM; Anvil has no Tron fork path, so coverage is DefiLlama TVL only. App: https://justlend.org.",
+  },
+  {
+    keys: ["zerofi"],
+    category: "dex",
+    note: "ZeroFi is listed as a DEX with no chain TVL and no appUrl on the board. There is no ZeroFi pool address in this repo for Anvil to fork; coverage is ranking-only.",
+  },
+  {
+    keys: ["drift-staked-sol"],
+    category: "staking",
+    note: "Drift Staked SOL is Drift's Solana LST tied to the Drift protocol. Stake actions are Solana programs; Anvil cannot fork Solana. App: https://app.drift.trade.",
+  },
+  {
+    keys: ["risex"],
+    category: "perps",
+    note: "RISEx is a perps venue on RISE (rise.trade). RISE is not configured in src/config/chains.js, so Anvil has no fork path for RISEx. App: https://www.rise.trade/en.",
+  },
+  {
+    keys: ["bitget-wallet-x"],
+    category: "aggregator",
+    note: "Bitget Wallet X is a wallet/aggregator product (web3.bitget.com) with no DefiLlama chain TVL. Custodial wallet flows are not Anvil-forkable protocol actions.",
+  },
+  {
+    keys: ["b14g"],
+    category: "restaking",
+    note: "b14g is Bitcoin restaking across Bitcoin, CORE, and Babylon Genesis (b14g.xyz). Restake settles on those non-EVM / Bitcoin rails; Anvil cannot fork them.",
+  },
+  {
+    keys: ["kamino-lend"],
+    category: "lending",
+    note: "Kamino Lend is a Solana lending market (kLend). Supply and borrow settle on Solana; Anvil's EVM fork suite cannot exercise Kamino. App: https://kamino.com.",
+  },
+  {
+    keys: ["edgex-spot"],
+    category: "dex",
+    note: "edgeX Spot is a centralized/hybrid spot venue (pro.edgex.exchange). DefiLlama shows no chain TVL; trades are not permissionless EVM pool swaps Anvil can fork.",
+  },
+  {
+    keys: ["babylon-protocol"],
+    category: "restaking",
+    note: "Babylon Protocol restakes BTC on Bitcoin for PoS security (babylonlabs.io). Staking locks BTC on Bitcoin; Anvil cannot fork Bitcoin, so this row stays API-only.",
+  },
+  {
+    keys: ["bittensor-dtao"],
+    category: "dex",
+    note: "Bittensor dTAO is a Bittensor (subnet/tao) market, not EVM. Anvil cannot fork Bittensor; coverage is DefiLlama ranking only. App: https://bittensor.com.",
+  },
+  {
+    keys: ["redotpay-card"],
+    category: "other",
+    note: "RedotPay Card is a crypto card product (redotpay.com/card), not an on-chain protocol. No chain TVL; Anvil cannot fork card issuance or spend.",
+  },
+  {
+    keys: ["enso"],
+    category: "aggregator",
+    note: "Enso is a shared-network / shortcut aggregator (enso.build). DefiLlama has no chain TVL for this row; shortcuts are routed off a single forkable venue owned by Enso.",
+  },
+  {
+    keys: ["tbtc"],
+    category: "staking",
+    note: "tBTC (Threshold) mints against BTC locked in a Threshold wallet on Bitcoin. The BTC deposit and redemption proofs are Bitcoin-side; Anvil cannot complete a tBTC mint on an EVM fork alone. App: https://threshold.network.",
+  },
+  {
+    keys: ["hyperliquid-spot-orderbook"],
+    category: "dex",
+    note: "Hyperliquid Spot Orderbook is the HyperCore CLOB. Spot trades settle on Hyperliquid L1, not an EVM chain Anvil can fork; HyperCore coverage is closed by decision. App: https://app.hyperliquid.xyz.",
+  },
+  {
+    keys: ["defi-app-aggregator"],
+    category: "aggregator",
+    note: "Defi App Aggregator (app.defi.app) routes across venues. The row has no chain TVL on DefiLlama; Anvil already covers the underlying DEXes, not this aggregator shell.",
+  },
+  {
+    keys: ["arcus-perps"],
+    category: "perps",
+    note: "Arcus Perps are perpetual markets on Robinhood Chain (arcus.xyz). Robinhood Chain is not configured in src/config/chains.js, so there is no Anvil fork recipe for Arcus Perps.",
+  },
+  {
+    keys: ["merlins-seal"],
+    category: "bridge-chain",
+    note: "Merlin's Seal is Merlin Chain's Bitcoin bridge/staking product. BTC is locked on Bitcoin; Anvil cannot fork Bitcoin to assert seal or unseal. App: https://merlinchain.io/bridge/staking.",
+  },
+  {
+    keys: ["m0"],
+    category: "stable-rwa",
+    note: "M0 ($M) minting is permissioned: only governance-approved, activated Minters can proposeMint/mintM against off-chain SPV collateral verified by Validators (docs.m0.org/protocol/roles, docs.m0.org/protocol/minting-burning). Anvil cannot act as an approved Minter or supply validator attestations, so mint stays not-testable; ordinary $M transfers are not the product action this row ranks. App: https://www.m0.org.",
+  },
+  {
+    keys: ["humidifi"],
+    category: "dex",
+    note: "HumidiFi is tracked without chain TVL on DefiLlama in this snapshot (humidifi.xyz). There is no HumidiFi pool recipe in the fork suite; the row stays API-only.",
+  },
+  {
+    keys: ["rialto-prop-amm"],
+    category: "dex",
+    note: "Rialto Prop AMM (rialto.xyz/swap) is a proprietary/AMM surface with no DefiLlama chain TVL in this board. Without a published EVM pool in chains.js venues, Anvil has nothing to fork.",
+  },
+  {
+    keys: ["tokenlon-agg"],
+    category: "aggregator",
+    note: "Tokenlon Agg is Tokenlon's aggregator (tokenlon.im). Aggregator routing is quote-driven; this DefiLlama row has no chain TVL for Anvil to pin a Tokenlon-owned pool test to.",
+  },
+  {
+    keys: ["lofty"],
+    category: "stable-rwa",
+    note: "Lofty tokenizes real-estate on Algorand (lofty.ai). Algorand is not EVM; Anvil cannot fork it despite the coverage snapshot wording 'EVM not configured'. App: https://www.lofty.ai.",
+  },
+  {
+    keys: ["0x"],
+    category: "aggregator",
+    note: "0x (protocol/API row distinct from 0x Aggregator) is the 0x exchange/API surface (0x.org). Settlements need off-chain orders; DefiLlama shows no chain TVL for this row to fork as a pool.",
+  },
+  {
+    keys: ["function-fbtc"],
+    category: "bridge-chain",
+    note: "Function FBTC wraps Bitcoin under Function's custody model (fxn.xyz). The BTC leg is off EVM; Anvil cannot fork the wrap. App: https://www.fxn.xyz.",
+  },
+  {
+    keys: ["nexo-card"],
+    category: "other",
+    note: "Nexo Card is a custodial crypto card (nexo.com/crypto-card). Spend and credit are off-chain; Anvil cannot fork card transactions.",
+  },
+  {
+    keys: ["stellar-defi-hub"],
+    category: "other",
+    note: "Stellar DeFi Hub aggregates Stellar DeFi. Stellar is not EVM (the nonForkable reason text saying 'EVM not configured' is misleading); Anvil cannot fork Stellar. App: https://stellardefihub.com.",
+  },
+  {
+    keys: ["aster-spot"],
+    category: "dex",
+    note: "Aster Spot is Aster's spot trading surface (asterdex.com). This DefiLlama row has no chain TVL; spot matching is venue-side, not a permissionless Anvil pool swap. (Aster Bridge has a separate fork test.)",
+  },
+  {
+    keys: ["betmoar.fun"],
+    category: "other",
+    note: "Betmoar.fun is a betting/prediction product (betmoar.fun) with no DefiLlama chain TVL. There is no forkable on-chain market recipe for this row.",
+  },
+  {
+    keys: ["cetus-aggregator"],
+    category: "aggregator",
+    note: "Cetus Aggregator routes on Sui (cetus.zone). Sui is Move VM and this row has no chain TVL on DefiLlama; Anvil cannot fork Cetus.",
+  },
+  {
+    keys: ["aster-usdf"],
+    category: "stable-rwa",
+    note: "Aster USDF mints 1:1 with USDT on Aster, then moves USDT into Ceffu custody and delta-neutral strategies on Binance (docs.asterdex.com/usdf-stablecoin/overview/how-usdf-works). The yield and backing leg are custodial/off-exchange; Anvil cannot fork Ceffu or Binance MirrorX, so USDF mint/redeem is not a meaningful local fork test. App: https://www.asterdex.com/en/usdf.",
+  },
+  {
+    keys: ["the-vault-liquid-staking"],
+    category: "staking",
+    note: "The Vault Liquid Staking is a Solana LST product (thevault.finance). Stake/unstake are Solana-native; Anvil cannot fork Solana.",
+  },
+  {
+    keys: ["suilend"],
+    category: "lending",
+    note: "Suilend is a Sui Move lending market (suilend.fi). Sui's Move VM is not EVM; Anvil cannot fork Sui. App: https://www.suilend.fi.",
+  },
+  {
+    keys: ["blend-pools-v2"],
+    category: "lending",
+    note: "Blend Pools V2 is lending on Stellar (blend.capital). Stellar is not EVM; Anvil cannot fork Blend. App: https://www.blend.capital.",
+  },
+  {
+    keys: ["magicmarkets"],
+    category: "other",
+    note: "MagicMarkets (magicmarkets.com) is listed without chain TVL on DefiLlama. There is no MagicMarkets EVM pool in this repo for Anvil to fork.",
+  },
+  {
+    keys: ["arcus-aggregator"],
+    category: "aggregator",
+    note: "Arcus Aggregator (arcus.xyz) is the aggregator shell for Arcus. DefiLlama shows no chain TVL; Robinhood Chain perps for Arcus are separately marked chain-not-configured.",
+  },
+  {
+    keys: ["rysk-v12"],
+    category: "perps",
+    note: "Rysk V12 options trades are RFQ-only: each trade needs a market maker's EIP-712 signed quote from Rysk's off-chain service (docs.rysk.finance; data/feature-gaps.json). Contracts are on Ethereum and HyperEVM, but a fork cannot produce the quote, so options trade is not-testable.",
+  },
+  {
+    keys: ["valos"],
+    category: "stable-rwa",
+    note: "Valos is an institutional credit vault on Monad (AUSD deposits via Accountable/YieldApp). Vault access requires identity verification / AML screening before deposit (YieldApp vault page; Monad launch notes for institutional allocators). Anvil cannot satisfy that gate, so deposit is not a permissionless fork test. App: https://valos.io; vault: https://yield.accountable.capital/vaults/143/0x8dCE15fc6a98484C995Fc702cBfBdA14A30454af.",
+  },
+  {
+    keys: ["papertrade"],
+    category: "perps",
+    note: "Papertrade is a perps product on Hyperliquid L1 (papertrade.xyz). Trading settles on HyperCore; Anvil cannot fork HyperCore, so this row stays API-only.",
+  },
+  {
+    keys: ["kyros"],
+    category: "restaking",
+    note: "Kyros is Solana restaking (kyros.fi). Restake and withdraw run on Solana programs; Anvil cannot fork Solana, so this row stays API-only.",
+  },
+  {
+    keys: ["omenx"],
+    category: "other",
+    note: "OmenX (omenx.com) is listed with no DefiLlama chain TVL. There is no OmenX contract recipe in the fork suite; the row stays API-only.",
+  },
+  {
+    keys: ["hyperflow"],
+    category: "aggregator",
+    note: "HyperFlow (hyperflow.fun) is an aggregator/flow product with no DefiLlama chain TVL. Anvil cannot fork a HyperFlow-owned pool that is not listed in chains.js venues.",
+  },
+
+  {
+    keys: ["realt-tokens", "realt"],
+    category: "stable-rwa",
+    appUrl: "https://realt.co",
+    note: "RealT Tokens are tokenized U.S. real-estate shares on Gnosis (xDAI). Gnosis is configured in src/config/chains.js (chain 100, GNOSIS_RPC_URL, no public fallback). Transfers require per-property address whitelisting (faq.realt.co: YAM secondary market and transferring from a compromised address); unapproved transfers revert, but already-whitelisted holders can transfer to another approved address. No impersonated transfer has been EIP-55/getCode-verified and measured on a pinned fork here, so the row stays API-only rather than shipping an unproven test.",
+  },
+  {
+    keys: ["pinksale"],
+    category: "other",
+    appUrl: "https://www.pinksale.finance",
+    note: "PinkSale is a multi-chain token launchpad (pinksale.finance). This DefiLlama row has no chain TVL map on the board, and there is no single permissionless pool or sale contract in this repo to assert on an Anvil fork; coverage stays API-only until a dedicated recipe exists.",
+  },
+  {
+    keys: ["bedrock-unieth"],
+    category: "restaking",
+    appUrl: "https://bedrock.rockx.com/unieth",
+    note: "Bedrock uniETH is Bedrock's ETH liquid-staking / restaking product. The suite already forks Bedrock uniBTC mint (`fork:bedrock-unibtc:mint`); uniETH deposit/mint is not registered as its own fork recipe yet, so this board row stays API-only rather than claiming the uniBTC test.",
   },
 ];
 
