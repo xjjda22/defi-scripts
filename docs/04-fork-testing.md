@@ -149,6 +149,44 @@ The tables below, and the "Test it" panel on each protocol page, are both genera
 | `fork:polymarket:split` | Polygon | `split` on ConditionalTokens (Gnosis CTF, Polymarket deployment) | splitPosition(USDC, bytes32(0), conditionId, [1,2], 10 USDC) on a prepared, unresolved binary condition from Polymarket's UMA CTF Adapter moves exactly 10.0 USDC out of the fresh account and exactly 10.0 USDC into the ConditionalTokens contract, and the account's YES (indexSet 1) and NO (indexSet 2) CTF position balances each go 0 -> 10.0 (equal and non-zero), with a PositionSplit event carrying the same stakeholder, conditionId and amount |
 | `fork:armitage:deposit` | Ethereum | `deposit` on Wintermute USDC Select (Morpho Vault V2, symbol armUSDCs; largest of the seven Armitage-curated vaults) | deposit(100 USDC, freshAccount) into Wintermute USDC Select (0xA2EA…68cd) is permissionless: it mints shares equal to previewDeposit (drift <= 1e-6 of preview), increases totalSupply by exactly the minted shares, increases totalAssets by 100 USDC plus at most one block of accrued interest, and the minted shares convertToAssets back to ~100 USDC (within 1%) |
 | `fork:xdai-stake-bridge:deposit` | Ethereum | `deposit` on xDAI Stake Bridge, Ethereum side (POA EternalStorageProxy; implementation 0x257bDD093Cab1Bd39eBF837dCB60f33d031d7d49) | relayTokens(freshAccount, 100 USDS) on the Ethereum xDAI bridge (0x4aa42145Aa6Ebf72e164C9bBC74fbD3788045016) is permissionless: the bridge's USDS collateral (USDS.balanceOf(bridge), the exact call the DefiLlama adapter makes) rises by exactly 100 USDS, the bridge's own totalSpentPerDay bucket for the deposit block's day rises by exactly 100 USDS, and the depositor's USDS balance falls by exactly 100 USDS |
+| `fork:lista-dao:borrow` | Bsc | supplyCollateral 0.01 BTCB into the BTCB/USDT Moolah market, then borrow 100 USDT | USDT balance rises by the borrowed amount and borrow shares > 0 |
+| `fork:liquity:open` | Ethereum | BorrowerOperations.openTrove with 2 ETH and walked SortedTroves hints | trove opens and LUSD balance rises by the requested debt |
+| `fork:liquity:redeem` | Ethereum | TroveManager.redeemCollateral of 100 LUSD with partial-redemption hints | LUSD burned and ETH balance rises |
+| `fork:liquity:liquidate` | Ethereum | open a thin trove, crash PriceFeed 50% with MockPrice, TroveManager.liquidate | trove status goes 1 (active) to 3 (closed by liquidation) |
+| `fork:venus:borrow` | Bsc | mint vUSDC collateral, enterMarkets, vUSDC.borrow 100 USDC | borrowBalance goes 0 to 100 USDC and USDC received |
+| `fork:venus:repay` | Bsc | borrow then repayBorrow(type(uint256).max) | borrowBalance returns to 0 |
+| `fork:venus:redeem` | Bsc | mint vUSDC then redeemUnderlying | USDC received equals the redeemed amount |
+| `fork:fluid-lending:borrow` | Ethereum | vault.operate(nftId 0, +1 ETH collateral, +100 USDC debt) on the ETH/USDC vault | position NFT minted and USDC balance rises by 100 |
+| `fork:benqi:borrow` | Avalanche | qiAVAX.mint, enterMarkets, qiUSDCn.borrow 100 USDC | borrowBalance goes 0 to 100 USDC |
+| `fork:benqi:redeem` | Avalanche | mint qiUSDCn then redeemUnderlying | USDC received equals the redeemed amount |
+| `fork:euler:borrow` | Ethereum | deposit WETH into K3 Prime eWETH, EVC enableCollateral + enableController, eUSDC.borrow | USDC debt goes 0 to 100 and USDC received |
+| `fork:veda:liquid-usd` | Ethereum | Teller.deposit 100 USDC into the Liquid USD BoringVault | liquidUSD minted equals amount / Accountant rate and vault USDC +100 |
+| `fork:veda:liquid-btc` | Ethereum | Teller.deposit 0.01 WBTC into the Liquid BTC BoringVault | liquidBTC minted at the Accountant rate |
+| `fork:lagoon:request-deposit` | Ethereum | create a USDC vault from the official Factory (logic v0.5.0, whitelist off), then requestDeposit | pendingDepositRequest equals the assets and USDC moves to the pending silo |
+| `fork:eigenlayer:complete` | Ethereum | deposit stETH, queueWithdrawals, mine past minWithdrawalDelayBlocks, completeQueuedWithdrawal | stETH returned to the staker; slow (~25 min), excluded from default fork:all |
+| `fork:eigenlayer:delegate` | Ethereum | register a fresh operator, deposit stETH, DelegationManager.delegateTo | operatorShares rise by the staker's shares |
+| `fork:saturn:unstake` | Ethereum | sUSDat.deposit then requestRedeem(all) | shares escrowed in the Withdraw contract and a request NFT minted |
+| `fork:meta-pool:withdraw-request` | Ethereum | spETH.depositETH then redeem(all) into the Withdrawal queue | pendingWithdraws records the request for the next epoch |
+| `fork:solvbtc:redeem` | Ethereum | Router.createSubscription with WBTC, then createRedemption(all) | SolvBTC burned and a redemption share id issued |
+| `fork:cian:withdraw-request` | Ethereum | vault.requestRedeem(all, rsETH); shares are dealt because deposit is paused (stale price) | shares move to the RedeemOperator |
+| `fork:benqi:unlock` | Avalanche | sAVAX.requestUnlock(all), warp the 15-day cooldown, redeem(index) | early redeem reverts; after the cooldown AVAX is paid back |
+| `fork:frax:mint-frxeth` | Ethereum | frxETHMinter.submit{1 ETH} on the original minter | frxETH minted 1:1 |
+| `fork:symbiotic:deposit` | Ethereum | scan VaultFactory for a public wstETH vault with room, Vault.deposit | activeBalanceOf rises by the deposit |
+| `fork:theo:unstake` | Ethereum | initiateRedeem(all), early redeem reverts, warp 5-day lockup, redeem | redeem pays the booked thUSD |
+| `fork:aerodrome:add-liquidity` | Base | transfer AERO + USDC pro-rata to the AERO/USDC v2 pool and mint | LP minted equals totalSupply delta and reserves rise by the inputs |
+| `fork:aerodrome:lock` | Base | VotingEscrow.createStake(1000 AERO, 52 weeks) | stake NFT owned by the user, supply +1000 and voting power > 0 |
+| `fork:balancer:join` | Ethereum | Vault.joinPool EXACT_TOKENS_IN_FOR_BPT_OUT with 1 WETH into B-80BAL-20WETH | BPT > 0, WETH -1 and pool WETH balance +1 |
+| `fork:sushiswap:add-liquidity` | Ethereum | Router.addLiquidity WETH/USDC | SLP > 0 and both legs debited |
+| `fork:pendle:mint-py` | Ethereum | Router V4 mintPyFromToken with 1 wstETH | PT and YT deltas equal the static preview |
+| `fork:pendle:add-liquidity` | Ethereum | Router V4 addLiquiditySingleToken with 1 wstETH | LP >= 99.5% of the static preview |
+| `fork:fx:operate` | Ethereum | PoolManager.operate on the wstETH pool: 2 wstETH collateral, 2000 fxUSD debt | position owned by the user and fxUSD minted net of fee |
+| `fork:fx:stability-deposit` | Ethereum | FxUSDBasePool.deposit 1000 fxUSD | shares equal previewDeposit and fxUSD -1000 |
+| `fork:cooler:repay` | Ethereum | addCollateral 1 gOHM, borrow 1500 USDS, repay(MAX), withdrawCollateral | debt goes to 0 and repaid >= principal |
+| `fork:convex:claim` | Ethereum | deposit 3Crv (pid 9), earmarkRewards, warp, BaseRewardPool.getReward | CRV received >= earned and earned resets to 0 |
+| `fork:usdai:mint` | Arbitrum | USDai.deposit with its baseToken PYUSD (USDC is rejected on-chain) | PYUSD -1000, USDai +1000 and supply +1000 |
+| `fork:sky:vault` | Ethereum | WETH join, Vat.frob(ETH-A), USDS_JOIN.exit 8000 USDS | USDS +8000 and the urn's ink/art rise |
+| `fork:xdai-stake-bridge:relay` | Ethereum | OmniBridge.relayTokens(USDC, receiver, 1000) | mediator USDC +1000 and TokensBridgingInitiated emitted |
+| `fork:defisaver:recipe` | Ethereum | build a DSProxy, execute RecipeExecutor: AaveV3Supply 5 WETH + AaveV3Borrow 1000 USDC | user USDC +1000, proxy holds aWETH and USDC debt, health factor > 1 |
 <!-- /features:actions -->
 
 ## Perps
