@@ -1,11 +1,12 @@
 /**
  * Benqi on Avalanche C-Chain.
- * - benqi:supply  Core Markets qiUSDCn (Compound V2-style): mint with native USDC, then redeem
- *                 every qiToken. Pre-check: Comptroller mintGuardianPaused(qiUSDCn).
- * - benqi:stake   Liquid Staking sAVAX: submit() 1 AVAX; shares must equal the pre-tx
- *                 getSharesByPooledAvax. Unstaking is a 15-day requestUnlock, not exercised.
- *                 Pre-check: mintingPaused().
+ * - benqi:supply  Core Markets qiUSDCn mint + redeem
+ * - benqi:stake   sAVAX submit
+ * - benqi:borrow  mint qiAVAX (native) as collateral, enterMarkets, borrow USDC from qiUSDCn
+ * - benqi:redeem  mint qiUSDCn then redeemUnderlying
+ *
  * Addresses: https://docs.benqi.fi/resources/contracts (src/catalog/contracts.js BENQI).
+ * qiAVAX: 0x5C0401e81Bc07Ca70fAD469b451682c0d747Ef1c (native AVAX market)
  */
 
 const { ethers } = require("ethers");
@@ -14,7 +15,8 @@ const { BENQI } = require("../../catalog/contracts");
 const { requireFork, impersonateFunded, formatUnits, finish } = require("./runtime");
 const { impersonateAccount } = require("../../utils/impersonate");
 
-const GAS = { gasLimit: 1_500_000n };
+const QI_AVAX = "0x5C0401e81Bc07Ca70fAD469b451682c0d747Ef1c";
+const GAS = { gasLimit: 2_000_000n };
 const ERC = [
   "function balanceOf(address) view returns (uint256)",
   "function approve(address,uint256) returns (bool)",
@@ -22,11 +24,20 @@ const ERC = [
 const QI_ABI = [
   ...ERC,
   "function mint(uint256) returns (uint256)",
+  "function mint() payable",
   "function redeem(uint256) returns (uint256)",
+  "function redeemUnderlying(uint256) returns (uint256)",
+  "function borrow(uint256) returns (uint256)",
   "function underlying() view returns (address)",
   "function exchangeRateStored() view returns (uint256)",
+  "function borrowBalanceStored(address) view returns (uint256)",
 ];
-const COMPTROLLER_ABI = ["function mintGuardianPaused(address) view returns (bool)"];
+const COMPTROLLER_ABI = [
+  "function mintGuardianPaused(address) view returns (bool)",
+  "function borrowGuardianPaused(address) view returns (bool)",
+  "function enterMarkets(address[]) returns (uint256[])",
+  "function checkMembership(address,address) view returns (bool)",
+];
 const SAVAX_ABI = [
   "function balanceOf(address) view returns (uint256)",
   "function submit() payable returns (uint256)",
@@ -103,6 +114,78 @@ async function stake(base) {
   });
 }
 
+async function borrow(base) {
+  const provider = getProvider(base.chain);
+  const comptroller = new ethers.Contract(BENQI.comptroller, COMPTROLLER_ABI, provider);
+  if (await comptroller.borrowGuardianPaused(BENQI.qiUsdcn)) {
+    return finish({ ...base, ok: false, key: "paused=borrow", error: "Benqi Comptroller has qiUSDCn borrowing paused" });
+  }
+  if (await comptroller.mintGuardianPaused(QI_AVAX)) {
+    return finish({ ...base, ok: false, key: "paused=mint", error: "Benqi Comptroller has qiAVAX minting paused" });
+  }
+  const collateral = ethers.parseEther(process.env.FORK_COLLATERAL || "50");
+  const borrowAmt = ethers.parseUnits(process.env.FORK_AMOUNT || "100", 6);
+  const signer = await impersonateAccount(ethers.Wallet.createRandom().address, base.chain);
+  const user = await signer.getAddress();
+  await provider.send("anvil_setBalance", [user, ethers.toQuantity(collateral + ethers.parseEther("2"))]);
+  const qiAvax = new ethers.Contract(QI_AVAX, QI_ABI, signer);
+  await (await qiAvax["mint()"]({ ...GAS, value: collateral })).wait();
+  const shares = await qiAvax.balanceOf(user);
+  if (shares === 0n) return finish({ ...base, ok: false, error: "qiAVAX mint minted 0 shares" });
+  const c = new ethers.Contract(BENQI.comptroller, COMPTROLLER_ABI, signer);
+  await (await c.enterMarkets([QI_AVAX], GAS)).wait();
+  if (!(await c.checkMembership(user, QI_AVAX))) {
+    return finish({ ...base, ok: false, error: "enterMarkets did not list qiAVAX" });
+  }
+  const qiUsdc = new ethers.Contract(BENQI.qiUsdcn, QI_ABI, signer);
+  const usdc = new ethers.Contract(BENQI.usdc, ERC, provider);
+  const balBefore = await usdc.balanceOf(user);
+  const debtBefore = await qiUsdc.borrowBalanceStored(user);
+  const borrowCode = await qiUsdc.borrow.staticCall(borrowAmt, GAS);
+  if (borrowCode !== 0n) return finish({ ...base, ok: false, error: `qiUSDCn.borrow staticCall returned ${borrowCode}` });
+  const receipt = await (await qiUsdc.borrow(borrowAmt, GAS)).wait();
+  const balAfter = await usdc.balanceOf(user);
+  const debtAfter = await qiUsdc.borrowBalanceStored(user);
+  const ok = balAfter - balBefore === borrowAmt && debtAfter > debtBefore;
+  return finish({
+    ...base,
+    ok,
+    key: `qiAVAX=${formatUnits(shares, 8)} borrowed=${formatUnits(borrowAmt, 6)} debt=${formatUnits(debtBefore, 6)}->${formatUnits(debtAfter, 6)}`,
+    detail: `minted qiAVAX with ${formatUnits(collateral, 18)} AVAX (${formatUnits(shares, 8)} shares), enterMarkets, borrowed ${formatUnits(borrowAmt, 6)} USDC from qiUSDCn\nUSDC ${formatUnits(balBefore, 6)} -> ${formatUnits(balAfter, 6)}, debt ${formatUnits(debtBefore, 6)} -> ${formatUnits(debtAfter, 6)}\ntx ${receipt.hash}`,
+    error: ok ? null : "Benqi borrow did not credit USDC / raise debt",
+  });
+}
+
+async function redeem(base) {
+  const provider = getProvider(base.chain);
+  const comptroller = new ethers.Contract(BENQI.comptroller, COMPTROLLER_ABI, provider);
+  if (await comptroller.mintGuardianPaused(BENQI.qiUsdcn)) {
+    return finish({ ...base, ok: false, key: "paused=mint", error: "Benqi Comptroller has qiUSDCn minting paused" });
+  }
+  const amount = ethers.parseUnits(process.env.FORK_AMOUNT || "100", 6);
+  const signer = await impersonateFunded(base.chain, "USDC", BENQI.usdc, amount);
+  const user = await signer.getAddress();
+  const usdc = new ethers.Contract(BENQI.usdc, ERC, signer);
+  const qi = new ethers.Contract(BENQI.qiUsdcn, QI_ABI, signer);
+  await (await usdc.approve(BENQI.qiUsdcn, amount)).wait();
+  await (await qi.mint(amount, GAS)).wait();
+  const shares = await qi.balanceOf(user);
+  const balMid = await usdc.balanceOf(user);
+  const redeemAmt = amount - amount / 1000n;
+  const receipt = await (await qi.redeemUnderlying(redeemAmt, GAS)).wait();
+  const balAfter = await usdc.balanceOf(user);
+  const sharesAfter = await qi.balanceOf(user);
+  const got = balAfter - balMid;
+  const ok = got === redeemAmt && sharesAfter < shares;
+  return finish({
+    ...base,
+    ok,
+    key: `redeemUnderlying=${formatUnits(redeemAmt, 6)} got=${formatUnits(got, 6)} shares=${formatUnits(shares, 8)}->${formatUnits(sharesAfter, 8)}`,
+    detail: `minted ${formatUnits(amount, 6)} USDC into qiUSDCn, redeemUnderlying(${formatUnits(redeemAmt, 6)}): got ${formatUnits(got, 6)} USDC, shares ${formatUnits(shares, 8)} -> ${formatUnits(sharesAfter, 8)}\ntx ${receipt.hash}`,
+    error: ok ? null : "Benqi redeemUnderlying did not return the requested USDC",
+  });
+}
+
 async function run() {
   const chain = "avalanche";
   const protocol = process.env.FORK_PROTOCOL || "benqi";
@@ -117,6 +200,8 @@ async function run() {
   try {
     if (action === "supply") return await supply(base);
     if (action === "stake") return await stake(base);
+    if (action === "borrow") return await borrow(base);
+    if (action === "redeem") return await redeem(base);
     return finish({ ...base, ok: false, error: `Unknown Benqi action ${action}` });
   } catch (err) {
     return finish({ ...base, ok: false, error: err.shortMessage || err.message });
