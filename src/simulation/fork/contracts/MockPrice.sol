@@ -11,4 +11,7 @@ contract MockPrice {
     function latestRoundData() external view returns (uint80, int256, uint256, uint256, uint80) { return (1, int256(_p()), block.timestamp, block.timestamp, 1); }
     function price() external view returns (uint256) { return _p(); }
     function price_w() external returns (uint256) { return _p(); }
+    /// Liquity V1 PriceFeed and similar oracles.
+    function fetchPrice() external view returns (uint256) { return _p(); }
 }
+

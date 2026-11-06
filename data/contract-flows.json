@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-11-05T23:22:43.596Z",
+  "generatedAt": "2026-11-06T01:52:10.369Z",
   "totals": {
-    "recipes": 110,
-    "withMatrix": 98,
-    "features": 237,
-    "tested": 165,
-    "gap": 31,
-    "notTestable": 38,
+    "recipes": 114,
+    "withMatrix": 102,
+    "features": 246,
+    "tested": 202,
+    "gap": 0,
+    "notTestable": 41,
     "failingPaused": 3,
-    "scripts": 166,
+    "scripts": 204,
     "chains": [
       "arbitrum",
       "avalanche",
@@ -19,88 +19,10 @@
       "optimism",
       "polygon"
     ],
-    "gapOutsideRecipes": 11,
-    "gapAllRows": 42
+    "gapOutsideRecipes": 0,
+    "gapAllRows": 0
   },
-  "outsideGaps": [
-    {
-      "rank": 32,
-      "protocol": "Defi Saver Asset Management",
-      "key": "defi-saver-asset-management",
-      "feature": "automation / recipes",
-      "note": "DSProxy recipe executor over Aave/Maker positions; needs the recipe encoder."
-    },
-    {
-      "rank": 68,
-      "protocol": "ether.fi Liquid",
-      "key": "ether.fi-liquid",
-      "feature": "Liquid USD / BTC deposit",
-      "note": "Teller deposit into the USD and BTC BoringVaults."
-    },
-    {
-      "rank": 73,
-      "protocol": "Avalon Superearn",
-      "key": "avalon-superearn",
-      "feature": "vault deposit",
-      "note": "Ethereum vault deposit; contract address not yet verified against docs."
-    },
-    {
-      "rank": 93,
-      "protocol": "Lagoon",
-      "key": "lagoon",
-      "feature": "ERC-7540 deposit request",
-      "note": "requestDeposit on a Lagoon vault."
-    },
-    {
-      "rank": 98,
-      "protocol": "fx Protocol",
-      "key": "fx-protocol",
-      "feature": "mint fxUSD / open position",
-      "note": "PoolManager operate()."
-    },
-    {
-      "rank": 98,
-      "protocol": "fx Protocol",
-      "key": "fx-protocol",
-      "feature": "stability pool deposit",
-      "note": "fxUSD stability pool deposit."
-    },
-    {
-      "rank": 108,
-      "protocol": "Lista DAO (Lending)",
-      "key": "lista-dao--lending",
-      "feature": "borrow",
-      "note": "Lista Moolah borrow (Morpho-fork) on BSC."
-    },
-    {
-      "rank": 188,
-      "protocol": "Aero (DEX)",
-      "key": "aero-protocol--dex",
-      "feature": "add liquidity",
-      "note": "Router.addLiquidity."
-    },
-    {
-      "rank": 188,
-      "protocol": "Aero (DEX)",
-      "key": "aero-protocol--dex",
-      "feature": "gauge stake",
-      "note": "Gauge.deposit."
-    },
-    {
-      "rank": 188,
-      "protocol": "Aero (DEX)",
-      "key": "aero-protocol--dex",
-      "feature": "lock AERO (veNFT)",
-      "note": "VotingEscrow.createLock."
-    },
-    {
-      "rank": 189,
-      "protocol": "Rysk V12",
-      "key": "rysk-v12",
-      "feature": "options trade",
-      "note": "HyperEVM/Arbitrum options; chain not configured."
-    }
-  ],
+  "outsideGaps": [],
   "flows": [
     {
       "key": "layerzero-v2",
@@ -2534,7 +2456,7 @@
       "label": "Deposit only",
       "recipeNote": "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false. The ether.fi Liquid row and the Nonce Capital row (the curator of the ether.fi Liquid vaults, veda.tech/ecosystem/nonce-capital) share this vault; Liquid USD, Liquid BTC and Nonce's OP Mainnet Midas tokens are not exercised.",
       "direction": "LR",
-      "summary": "Deposits WETH through the Veda Teller into the ether.fi Liquid ETH BoringVault and, in the request test, queues every share through BoringOnChainQueue: the first asserts liquidETH was minted, the second that all shares moved to the queue and exactly one requestId was added.",
+      "summary": "Deposits WETH through the Veda Teller into the ether.fi Liquid ETH BoringVault and, in the request test, queues every share through BoringOnChainQueue: the first asserts liquidETH was minted, the second that all shares moved to the queue and exactly one requestId was added. Also: fork:veda:liquid-usd, fork:veda:liquid-btc.",
       "scripts": [
         {
           "script": "fork:veda:deposit",
@@ -2547,6 +2469,20 @@
           "script": "fork:veda:request",
           "action": "request",
           "feature": "Queue a Veda Liquid ETH withdrawal",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:veda:liquid-usd",
+          "action": "Liquid USD deposit",
+          "feature": "Deposit into ether.fi Liquid USD",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:veda:liquid-btc",
+          "action": "Liquid BTC deposit",
+          "feature": "Deposit into ether.fi Liquid BTC",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -2593,6 +2529,20 @@
           "short": "off-chain solver that fills queue requests",
           "kind": "offchain",
           "address": null
+        },
+        {
+          "id": "ether-fi-liquid-usd-teller",
+          "label": "ether.fi Liquid USD Teller",
+          "short": "ether.fi Liquid USD Teller",
+          "kind": "contract",
+          "address": "0x4DE413a26fC24c3FC27Cc983be70aA9c5C299387"
+        },
+        {
+          "id": "ether-fi-liquid-btc-teller",
+          "label": "ether.fi Liquid BTC Teller",
+          "short": "ether.fi Liquid BTC Teller",
+          "kind": "contract",
+          "address": "0x8Ea0B382D054dbEBeB1d0aE47ee4AC433C730353"
         }
       ],
       "edges": [
@@ -2649,6 +2599,18 @@
           "to": "solver",
           "label": "solver fill after maturity, not run on the fork",
           "kind": "offchain"
+        },
+        {
+          "from": "user",
+          "to": "ether-fi-liquid-usd-teller",
+          "label": "etherfi-liquid:deposit-usd: Teller.deposit(100 USDC)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "ether-fi-liquid-btc-teller",
+          "label": "etherfi-liquid:deposit-btc: Teller.deposit(0.01 WBTC)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -2747,6 +2709,32 @@
             ],
             "label": "solver fill after maturity, not run on the fork",
             "range": "9"
+          },
+          {
+            "from": "user",
+            "to": "ether-fi-liquid-usd-teller",
+            "kind": "call",
+            "steps": [
+              10
+            ],
+            "labels": [
+              "etherfi-liquid:deposit-usd: Teller.deposit(100 USDC)"
+            ],
+            "label": "etherfi-liquid:deposit-usd: Teller.deposit(100 USDC)",
+            "range": "10"
+          },
+          {
+            "from": "user",
+            "to": "ether-fi-liquid-btc-teller",
+            "kind": "call",
+            "steps": [
+              11
+            ],
+            "labels": [
+              "etherfi-liquid:deposit-btc: Teller.deposit(0.01 WBTC)"
+            ],
+            "label": "etherfi-liquid:deposit-btc: Teller.deposit(0.01 WBTC)",
+            "range": "11"
           }
         ]
       },
@@ -4417,6 +4405,104 @@
         }
       ],
       "matrixKey": "concrete"
+    },
+    {
+      "key": "defi-saver-asset-management",
+      "name": "Defi Saver Asset Management",
+      "rank": 32,
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "appUrl": "https://defisaver.com/",
+      "label": "Recipe through a DSProxy",
+      "recipeNote": "Builds a fresh DSProxy and runs a two-action DeFi Saver recipe through RecipeExecutor: AaveV3Supply 5 WETH, then AaveV3Borrow 1,000 USDC. Registry and executor from defisaver-v3-contracts addresses/mainnet.json. Automation (strategy triggers run by DeFi Saver bots) is not exercised.",
+      "direction": "LR",
+      "summary": "Builds a fresh DSProxy and runs a two-action DeFi Saver recipe through RecipeExecutor: AaveV3Supply 5 WETH, then AaveV3Borrow 1,000 USDC. Registry and executor from defisaver-v3-contracts addresses/mainnet.json. Automation (strategy triggers run by DeFi Saver bots) is not exercised.",
+      "scripts": [
+        {
+          "script": "fork:defisaver:recipe",
+          "action": "automation / recipes",
+          "feature": "Run a DeFi Saver recipe",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "user",
+          "label": "fresh impersonated account, funded on the fork",
+          "short": "fresh impersonated account",
+          "kind": "actor",
+          "address": null
+        },
+        {
+          "id": "defi-saver-dfsregistry",
+          "label": "DeFi Saver DFSRegistry",
+          "short": "DeFi Saver DFSRegistry",
+          "kind": "contract",
+          "address": "0x287778F121F134C66212FB16c9b53eC991D32f5b"
+        },
+        {
+          "id": "defi-saver-recipeexecutor",
+          "label": "DeFi Saver RecipeExecutor",
+          "short": "DeFi Saver RecipeExecutor",
+          "kind": "contract",
+          "address": "0xbc3Fc959FeF3F12a41738f406c02198cdeE7481F"
+        }
+      ],
+      "edges": [
+        {
+          "from": "user",
+          "to": "defi-saver-dfsregistry",
+          "label": "defisaver:recipe: ProxyFactory.build + DSProxy.execute",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "defi-saver-recipeexecutor",
+          "label": "defisaver:recipe: executeRecipe(supply WETH, borrow USDC)",
+          "kind": "call"
+        }
+      ],
+      "graph": {
+        "edges": [
+          {
+            "from": "user",
+            "to": "defi-saver-dfsregistry",
+            "kind": "call",
+            "steps": [
+              1
+            ],
+            "labels": [
+              "defisaver:recipe: ProxyFactory.build + DSProxy.execute"
+            ],
+            "label": "defisaver:recipe: ProxyFactory.build + DSProxy.execute",
+            "range": "1"
+          },
+          {
+            "from": "user",
+            "to": "defi-saver-recipeexecutor",
+            "kind": "call",
+            "steps": [
+              2
+            ],
+            "labels": [
+              "defisaver:recipe: executeRecipe(supply WETH, borrow USDC)"
+            ],
+            "label": "defisaver:recipe: executeRecipe(supply WETH, borrow USDC)",
+            "range": "2"
+          }
+        ]
+      },
+      "notes": [],
+      "features": {
+        "total": 1,
+        "tested": 1,
+        "gap": 0,
+        "notTestable": 0,
+        "failingPaused": 0
+      },
+      "missing": [],
+      "matrixKey": "defi-saver-asset-management"
     },
     {
       "key": "robinhood-chain-bridge",
@@ -7893,8 +7979,8 @@
       "features": {
         "total": 3,
         "tested": 1,
-        "gap": 1,
-        "notTestable": 1,
+        "gap": 0,
+        "notTestable": 2,
         "failingPaused": 0
       },
       "missing": [
@@ -7907,10 +7993,10 @@
         },
         {
           "feature": "unstake cooldown",
-          "status": "gap",
+          "status": "not-testable",
           "how": "Reuse the sUSDf round trip and add the timed exit: after deposit(100 USDf) at 0xc8CF6D7991f15525488b2A83Df53468D682Ba4B0 call cooldownShares(sUSDf.balanceOf(user)) and snapshot cooldowns(user).underlyingAmount, evm_increaseTime(cooldownDuration() + 1) plus evm_mine, then call unstake(user) and assert sUSDf.balanceOf(user) is 0 and USDf.balanceOf(user) rose by exactly the snapshotted underlyingAmount; cooldownShares and unstake are StakedUSDF selectors not in the repo ABI, so read them from the implementation.",
           "blocker": null,
-          "note": "sUSDf cooldown + time warp."
+          "note": "sUSDf cooldownDuration() is 0 on Ethereum (2026-11-06): the cooldown is switched off and exits are instant, so there is no cooldown to exercise."
         }
       ],
       "matrixKey": "falcon-finance"
@@ -8331,17 +8417,17 @@
       "features": {
         "total": 3,
         "tested": 2,
-        "gap": 1,
-        "notTestable": 0,
+        "gap": 0,
+        "notTestable": 1,
         "failingPaused": 0
       },
       "missing": [
         {
           "feature": "borrow",
-          "status": "gap",
+          "status": "not-testable",
           "how": "Deposit WMON into cWMON, post those shares as collateral (cWMON.postCollateral) so collateralPosted(user) rises, then borrow USDC through cUSDC 0x8EE9FC28B8Da872c38A496e9dDB9700bb7261774 and assert the user's USDC balance rises by the drawn amount while cUSDC's debt for the account and MarketManager.statusOf(user) both report it; the 20-minute hold period blocks a same-block repay, so warp first.",
           "blocker": null,
-          "note": "Monad market borrow."
+          "note": "Monad OracleManager.getPrice(USDC) returns (0, err=2) on the 2026-11-06 fork, so every borrow fails the collateral check. Harness in lendingBorrowExtras.curvanceBorrow; retest when the USDC oracle recovers."
         }
       ],
       "matrixKey": "curvance"
@@ -9671,6 +9757,104 @@
       "matrixKey": "zama"
     },
     {
+      "key": "lagoon",
+      "name": "Lagoon",
+      "rank": 93,
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "appUrl": "https://app.lagoon.finance/",
+      "label": "ERC-7540 deposit request",
+      "recipeNote": "Lagoon docs name no reference vault, so the test creates one from the official Ethereum Factory (vault logic v0.5.0, USDC, whitelist off) and asserts the ERC-7540 requestDeposit: pendingDepositRequest equals the assets. Settlement needs the curator's valuation and is not exercised.",
+      "direction": "LR",
+      "summary": "Lagoon docs name no reference vault, so the test creates one from the official Ethereum Factory (vault logic v0.5.0, USDC, whitelist off) and asserts the ERC-7540 requestDeposit: pendingDepositRequest equals the assets. Settlement needs the curator's valuation and is not exercised.",
+      "scripts": [
+        {
+          "script": "fork:lagoon:request-deposit",
+          "action": "ERC-7540 deposit request",
+          "feature": "Lagoon ERC-7540 deposit request",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "user",
+          "label": "fresh impersonated account, funded on the fork",
+          "short": "fresh impersonated account",
+          "kind": "actor",
+          "address": null
+        },
+        {
+          "id": "lagoon-vault-factory",
+          "label": "Lagoon Vault Factory",
+          "short": "Lagoon Vault Factory",
+          "kind": "contract",
+          "address": "0x8D6f5479B14348186faE9BC7E636e947c260f9B1"
+        },
+        {
+          "id": "test-created-lagoon-vault-lo",
+          "label": "test-created Lagoon vault (logic v0.5.0)",
+          "short": "test-created Lagoon vault",
+          "kind": "contract",
+          "address": "0xE50554ec802375C9c3F9c087a8a7bb8C26d3DEDf"
+        }
+      ],
+      "edges": [
+        {
+          "from": "user",
+          "to": "lagoon-vault-factory",
+          "label": "lagoon:request-deposit: createVaultProxy(logic v0.5.0, USDC)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "test-created-lagoon-vault-lo",
+          "label": "lagoon:request-deposit: requestDeposit(USDC)",
+          "kind": "call"
+        }
+      ],
+      "graph": {
+        "edges": [
+          {
+            "from": "user",
+            "to": "lagoon-vault-factory",
+            "kind": "call",
+            "steps": [
+              1
+            ],
+            "labels": [
+              "lagoon:request-deposit: createVaultProxy(logic v0.5.0, USDC)"
+            ],
+            "label": "lagoon:request-deposit: createVaultProxy(logic v0.5.0, USDC)",
+            "range": "1"
+          },
+          {
+            "from": "user",
+            "to": "test-created-lagoon-vault-lo",
+            "kind": "call",
+            "steps": [
+              2
+            ],
+            "labels": [
+              "lagoon:request-deposit: requestDeposit(USDC)"
+            ],
+            "label": "lagoon:request-deposit: requestDeposit(USDC)",
+            "range": "2"
+          }
+        ]
+      },
+      "notes": [],
+      "features": {
+        "total": 1,
+        "tested": 1,
+        "gap": 0,
+        "notTestable": 0,
+        "failingPaused": 0
+      },
+      "missing": [],
+      "matrixKey": "lagoon"
+    },
+    {
       "key": "arbitrum-bridge",
       "name": "Arbitrum Bridge",
       "rank": 96,
@@ -9825,6 +10009,111 @@
       "matrixKey": "arbitrum-bridge"
     },
     {
+      "key": "fx-protocol",
+      "name": "fx Protocol",
+      "rank": 98,
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "appUrl": "https://fx.aladdin.club",
+      "label": "Open position + stability pool",
+      "recipeNote": "f(x) Protocol V2 on Ethereum: PoolManager.operate opens a wstETH position minting fxUSD, and FxUSDBasePool takes a 1,000 fxUSD stability-pool deposit (fxUSD funded by a storage write).",
+      "direction": "LR",
+      "summary": "f(x) Protocol V2 on Ethereum: PoolManager.operate opens a wstETH position minting fxUSD, and FxUSDBasePool takes a 1,000 fxUSD stability-pool deposit (fxUSD funded by a storage write).",
+      "scripts": [
+        {
+          "script": "fork:fx:operate",
+          "action": "mint fxUSD / open position",
+          "feature": "Open an f(x) position",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:fx:stability-deposit",
+          "action": "stability pool deposit",
+          "feature": "Deposit into the f(x) stability pool",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "user",
+          "label": "fresh impersonated account, funded on the fork",
+          "short": "fresh impersonated account",
+          "kind": "actor",
+          "address": null
+        },
+        {
+          "id": "f-x-poolmanager",
+          "label": "f(x) PoolManager",
+          "short": "f(x) PoolManager",
+          "kind": "contract",
+          "address": "0x250893CA4Ba5d05626C785e8da758026928FCD24"
+        },
+        {
+          "id": "f-x-fxusdbasepool-stability-",
+          "label": "f(x) FxUSDBasePool (stability pool)",
+          "short": "f",
+          "kind": "contract",
+          "address": "0x65C9A641afCEB9C0E6034e558A319488FA0FA3be"
+        }
+      ],
+      "edges": [
+        {
+          "from": "user",
+          "to": "f-x-poolmanager",
+          "label": "fx:operate: operate(wstETH pool, +2 wstETH, +2000 fxUSD)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "f-x-fxusdbasepool-stability-",
+          "label": "fx:stability-deposit: deposit(1000 fxUSD)",
+          "kind": "call"
+        }
+      ],
+      "graph": {
+        "edges": [
+          {
+            "from": "user",
+            "to": "f-x-poolmanager",
+            "kind": "call",
+            "steps": [
+              1
+            ],
+            "labels": [
+              "fx:operate: operate(wstETH pool, +2 wstETH, +2000 fxUSD)"
+            ],
+            "label": "fx:operate: operate(wstETH pool, +2 wstETH, +2000 fxUSD)",
+            "range": "1"
+          },
+          {
+            "from": "user",
+            "to": "f-x-fxusdbasepool-stability-",
+            "kind": "call",
+            "steps": [
+              2
+            ],
+            "labels": [
+              "fx:stability-deposit: deposit(1000 fxUSD)"
+            ],
+            "label": "fx:stability-deposit: deposit(1000 fxUSD)",
+            "range": "2"
+          }
+        ]
+      },
+      "notes": [],
+      "features": {
+        "total": 2,
+        "tested": 2,
+        "gap": 0,
+        "notTestable": 0,
+        "failingPaused": 0
+      },
+      "missing": [],
+      "matrixKey": "fx-protocol"
+    },
+    {
       "key": "eigenlayer",
       "name": "EigenCloud",
       "rank": 102,
@@ -9834,7 +10123,7 @@
       "label": null,
       "recipeNote": "StrategyManager.depositIntoStrategy on the stETH strategy, then DelegationManager.queueWithdrawals. The withdrawal delay is not advanced, so completion is not asserted.",
       "direction": "LR",
-      "summary": "Approve and deposit stETH into the EigenLayer stETH strategy through the StrategyManager, then queue that position for withdrawal on the DelegationManager. The fork asserts the deposit-share delta and that exactly one withdrawal is queued (cumulativeWithdrawalsQueued +1) while the staker's deposit shares return to their starting value.",
+      "summary": "Approve and deposit stETH into the EigenLayer stETH strategy through the StrategyManager, then queue that position for withdrawal on the DelegationManager. The fork asserts the deposit-share delta and that exactly one withdrawal is queued (cumulativeWithdrawalsQueued +1) while the staker's deposit shares return to their starting value. Also: fork:eigenlayer:complete, fork:eigenlayer:delegate.",
       "scripts": [
         {
           "script": "fork:eigenlayer:deposit",
@@ -9847,6 +10136,20 @@
           "script": "fork:eigenlayer:queue",
           "action": "queue",
           "feature": "Queue an EigenLayer withdrawal",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:eigenlayer:complete",
+          "action": "complete withdrawal",
+          "feature": "Complete an EigenLayer withdrawal",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:eigenlayer:delegate",
+          "action": "delegate to operator",
+          "feature": "Delegate to an EigenLayer operator",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -9961,6 +10264,18 @@
           "to": "manager",
           "label": "stakerDepositShares after queue: back to start",
           "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "delegation",
+          "label": "eigenlayer:complete: queueWithdrawals + completeQueuedWithdrawal",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "delegation",
+          "label": "eigenlayer:delegate: registerAsOperator + delegateTo(operator)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -10043,15 +10358,19 @@
             "steps": [
               8,
               9,
-              10
+              10,
+              12,
+              13
             ],
             "labels": [
               "cumulativeWithdrawalsQueued(user) before",
               "queueWithdrawals([stETH strategy], [shares])",
-              "cumulativeWithdrawalsQueued after: +1"
+              "cumulativeWithdrawalsQueued after: +1",
+              "eigenlayer:complete: queueWithdrawals + completeQueuedWithdrawal",
+              "eigenlayer:delegate: registerAsOperator + delegateTo(operator)"
             ],
-            "label": "cumulativeWithdrawalsQueued(user) before (+2 more)",
-            "range": "8–10"
+            "label": "cumulativeWithdrawalsQueued(user) before (+4 more)",
+            "range": "8–13"
           }
         ]
       },
@@ -10062,27 +10381,12 @@
       ],
       "features": {
         "total": 4,
-        "tested": 2,
-        "gap": 2,
+        "tested": 4,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "complete withdrawal",
-          "status": "gap",
-          "how": "After queueWithdrawals, read the queued Withdrawal back with DelegationManager.getQueuedWithdrawals(user), anvil_mine(minWithdrawalDelayBlocks() + 1), then call completeQueuedWithdrawal(withdrawal, [stETH], receiveAsTokens=true) as the withdrawer and assert the withdrawer's stETH balance rose by the strategy's sharesToUnderlyingView(queuedShares) within 2 wei and the withdrawal is no longer queued.",
-          "blocker": null,
-          "note": "completeQueuedWithdrawal after time warp past the delay."
-        },
-        {
-          "feature": "delegate to operator",
-          "status": "gap",
-          "how": "Pick an operator that DelegationManager.isOperator(operator) confirms and whose operatorDetails(operator).delegationApprover is address(0), then call delegateTo(operator, SignatureWithExpiry({signature: '0x', expiry: 0}), bytes32(0)) from the staker and assert isDelegated(staker) is true and delegatedTo(staker) == operator.",
-          "blocker": null,
-          "note": "DelegationManager.delegateTo."
-        }
-      ],
+      "missing": [],
       "matrixKey": "eigencloud"
     },
     {
@@ -10483,6 +10787,27 @@
           "feature": "Deposit LUSD into the Liquity V1 Stability Pool and withdraw",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:liquity:open",
+          "action": "open trove",
+          "feature": "Open a Liquity trove",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:liquity:redeem",
+          "action": "redeem",
+          "feature": "Redeem LUSD for ETH",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:liquity:liquidate",
+          "action": "liquidate",
+          "feature": "Liquidate a Liquity trove",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
         }
       ],
       "nodes": [
@@ -10506,6 +10831,27 @@
           "short": "LUSD",
           "kind": "token",
           "address": "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0"
+        },
+        {
+          "id": "liquity-borroweroperations",
+          "label": "Liquity BorrowerOperations",
+          "short": "Liquity BorrowerOperations",
+          "kind": "contract",
+          "address": "0x24179CD81c9e782A4096035f7eC97fB8B783e007"
+        },
+        {
+          "id": "liquity-trovemanager",
+          "label": "Liquity TroveManager",
+          "short": "Liquity TroveManager",
+          "kind": "contract",
+          "address": "0xA39739EF8b0231DbFA0DcdA07d7e29faAbCf4bb2"
+        },
+        {
+          "id": "liquity-pricefeed-mocked",
+          "label": "Liquity PriceFeed (mocked)",
+          "short": "Liquity PriceFeed",
+          "kind": "external",
+          "address": "0x4c517D4e2C851CA76d7eC94B805269Df0f2201De"
         }
       ],
       "edges": [
@@ -10561,6 +10907,30 @@
           "from": "user",
           "to": "pool",
           "label": "getTotalLUSDDeposits() restored to before",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "liquity-borroweroperations",
+          "label": "liquity:open: openTrove{2 ETH} with SortedTroves hints",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "liquity-trovemanager",
+          "label": "liquity:redeem: redeemCollateral(100 LUSD, hints)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "liquity-pricefeed-mocked",
+          "label": "liquity:liquidate: anvil_setCode MockPrice: fetchPrice -50%",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "liquity-trovemanager",
+          "label": "liquity:liquidate: liquidate(borrower)",
           "kind": "call"
         }
       ],
@@ -10627,6 +10997,47 @@
             ],
             "label": "1000 LUSD back, 0 deposit left",
             "range": "8"
+          },
+          {
+            "from": "user",
+            "to": "liquity-borroweroperations",
+            "kind": "call",
+            "steps": [
+              10
+            ],
+            "labels": [
+              "liquity:open: openTrove{2 ETH} with SortedTroves hints"
+            ],
+            "label": "liquity:open: openTrove{2 ETH} with SortedTroves hints",
+            "range": "10"
+          },
+          {
+            "from": "user",
+            "to": "liquity-trovemanager",
+            "kind": "call",
+            "steps": [
+              11,
+              13
+            ],
+            "labels": [
+              "liquity:redeem: redeemCollateral(100 LUSD, hints)",
+              "liquity:liquidate: liquidate(borrower)"
+            ],
+            "label": "liquity:redeem: redeemCollateral(100 LUSD, hints) (+1 more)",
+            "range": "11–13"
+          },
+          {
+            "from": "user",
+            "to": "liquity-pricefeed-mocked",
+            "kind": "call",
+            "steps": [
+              12
+            ],
+            "labels": [
+              "liquity:liquidate: anvil_setCode MockPrice: fetchPrice -50%"
+            ],
+            "label": "liquity:liquidate: anvil_setCode MockPrice: fetchPrice -50%",
+            "range": "12"
           }
         ]
       },
@@ -10638,34 +11049,12 @@
       ],
       "features": {
         "total": 4,
-        "tested": 1,
-        "gap": 3,
+        "tested": 4,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "open trove",
-          "status": "gap",
-          "how": "Fund an impersonated account with anvil_setBalance and call BorrowerOperations.openTrove(0.5e18 max fee, 5 ETH, 2000 LUSD, 0x0 upper hint, 0x0 lower hint), then assert TroveManager.getTroveDebt(user) rose by the 2000 LUSD plus the gas compensation and LUSD.balanceOf(user) rose by 2000e18.",
-          "blocker": null,
-          "note": "BorrowerOperations.openTrove."
-        },
-        {
-          "feature": "redeem",
-          "status": "gap",
-          "how": "Against the 2000 LUSD trove opened above, fund a second impersonated account with 1000 LUSD and call TroveManager.redeemCollateral(1000e18, firstRedemptionHint, upperHint, lowerHint, partialHintNICR, 0, 0.5e18) with the hints from HintHelpers.getRedemptionHints, then assert the redeemer's ETH balance rose by the collateral redeemed, the trove's debt fell by 1000e18 and LUSD.totalSupply() fell by 1000e18.",
-          "blocker": null,
-          "note": "redeemCollateral."
-        },
-        {
-          "feature": "liquidate",
-          "status": "gap",
-          "how": "Open a trove through BorrowerOperations.openTrove(0.5e18, 5e18, 2000e18, address(0), address(0)), deposit 1000 LUSD into the Stability Pool with provideToSP(1000e18, address(0)), then write a sub-110 answer into both the current and previous round of the aggregator PriceFeed.priceAggregator() returns with anvil_setStorageAt, so the >50% deviation check does not fall back to Tellor; call TroveManager.liquidate(user) from a second impersonated account and assert getTroveStatus(user) reads 3 (closedByLiquidation), getTotalLUSDDeposits fell and the liquidator's LUSD balance rose by the 200 LUSD gas compensation.",
-          "blocker": null,
-          "note": "liquidate after price override."
-        }
-      ],
+      "missing": [],
       "matrixKey": "liquity"
     },
     {
@@ -10678,12 +11067,19 @@
       "label": "Deposit only",
       "recipeNote": "Saturn sUSDat (StakedUSDat, ERC-4626 over USDat). Staking is open with a deposit fee (25 bps on 2026-10-26) that previewDeposit prices in. Unstaking is request, processing and claim through WithdrawalQueueERC721, run by Saturn's processor, so the fork test deposits only. Minting USDat itself goes through Saturn's swap facility and is not tested.",
       "direction": "LR",
-      "summary": "Stakes USDat into sUSDat, Saturn's ERC-4626 vault over USDat, on an Ethereum fork, asserting the vault pulled exactly the amount, the shares equal the pre-tx previewDeposit (which prices the deposit fee) and the Deposit event reports the same assets, shares and owner.",
+      "summary": "Stakes USDat into sUSDat, Saturn's ERC-4626 vault over USDat, on an Ethereum fork, asserting the vault pulled exactly the amount, the shares equal the pre-tx previewDeposit (which prices the deposit fee) and the Deposit event reports the same assets, shares and owner. Also: fork:saturn:unstake.",
       "scripts": [
         {
           "script": "fork:saturn:stake",
           "action": "stake",
           "feature": "Stake USDat into sUSDat (Saturn)",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:saturn:unstake",
+          "action": "unstake",
+          "feature": "Request a Saturn unstake",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -10753,6 +11149,12 @@
           "to": "user",
           "label": "shares minted, asserted against the Deposit event",
           "kind": "event"
+        },
+        {
+          "from": "user",
+          "to": "susdat",
+          "label": "saturn:unstake: requestRedeem(all sUSDat)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -10765,16 +11167,18 @@
               1,
               2,
               4,
-              5
+              5,
+              8
             ],
             "labels": [
               "paused() pre-check",
               "maxDeposit(probe) must cover the amount",
               "previewDeposit(amount) before the tx",
-              "deposit(amount, user)"
+              "deposit(amount, user)",
+              "saturn:unstake: requestRedeem(all sUSDat)"
             ],
-            "label": "paused() pre-check (+3 more)",
-            "range": "1–5"
+            "label": "paused() pre-check (+4 more)",
+            "range": "1–8"
           },
           {
             "from": "user",
@@ -10825,20 +11229,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "unstake",
-          "status": "gap",
-          "how": "After the deposit, call sUSDat.requestRedeem(shares, minUsdatReceived); assert the shares are burned and WithdrawalQueueERC721 at 0x4Bc9FEC04F0F95e9b42a3EF18F3C96fB57923D2e mints a request NFT whose getRequest(tokenId) records those shares, then claim(tokenId) pays the USDat once the processor has run processRequests.",
-          "blocker": "Saturn's processor has to run WithdrawalQueueERC721.processRequests before claim, so a pinned fork can open the request but never reach the USDat payout.",
-          "note": "Unstake / cooldown."
-        }
-      ],
+      "missing": [],
       "matrixKey": "saturn"
     },
     {
@@ -11158,12 +11554,19 @@
       "label": null,
       "recipeNote": "Meta Pool spETH (Ethereum) is ERC-4626; depositETH may be filled from the Liquid Unstake Pool. Most of this row's TVL is NEAR staking (stNEAR), which the repo cannot fork. The older mpETH contract is paused.",
       "direction": "LR",
-      "summary": "Deposit 0.1 ETH through spETH's payable depositETH(receiver) and assert the shares minted match the ERC-4626 Deposit event and sit within 1 bp of the pre-tx previewDeposit, while spETH plus the Liquid Unstake Pool hold exactly 0.1 ETH more because the fill may come from the pool instead of a mint.",
+      "summary": "Deposit 0.1 ETH through spETH's payable depositETH(receiver) and assert the shares minted match the ERC-4626 Deposit event and sit within 1 bp of the pre-tx previewDeposit, while spETH plus the Liquid Unstake Pool hold exactly 0.1 ETH more because the fill may come from the pool instead of a mint. Also: fork:meta-pool:withdraw-request.",
       "scripts": [
         {
           "script": "fork:meta-pool:deposit",
           "action": "deposit",
           "feature": "Stake ETH for Meta Pool spETH",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:meta-pool:withdraw-request",
+          "action": "withdraw request",
+          "feature": "Request a Meta Pool withdrawal",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -11189,6 +11592,13 @@
           "short": "Meta Pool Liquid Unstake Pool",
           "kind": "contract",
           "address": "0xdF261F967E87B2aa44e18a22f4aCE5d7f74f03Cc"
+        },
+        {
+          "id": "meta-pool-withdrawal-contrac",
+          "label": "Meta Pool Withdrawal contract",
+          "short": "Meta Pool Withdrawal contract",
+          "kind": "contract",
+          "address": "0xE55E5fDe6C25ac4AD75D867817D2d8a45836Af49"
         }
       ],
       "edges": [
@@ -11214,6 +11624,12 @@
           "from": "speth",
           "to": "user",
           "label": "delivers previewDeposit shares and emits Deposit(assets, shares)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "meta-pool-withdrawal-contrac",
+          "label": "meta-pool:withdraw-request: redeem(all) -> requestWithdraw",
           "kind": "call"
         }
       ],
@@ -11259,6 +11675,19 @@
             ],
             "label": "delivers previewDeposit shares and emits Deposit(assets, shares)",
             "range": "4"
+          },
+          {
+            "from": "user",
+            "to": "meta-pool-withdrawal-contrac",
+            "kind": "call",
+            "steps": [
+              5
+            ],
+            "labels": [
+              "meta-pool:withdraw-request: redeem(all) -> requestWithdraw"
+            ],
+            "label": "meta-pool:withdraw-request: redeem(all) -> requestWithdraw",
+            "range": "5"
           }
         ]
       },
@@ -11269,20 +11698,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "withdraw request",
-          "status": "gap",
-          "how": "Mint spETH with depositETH, then take the 2-9 day queue path: call spETH.withdraw(assets, receiver, owner) at 0xD06f6a56c5f599cB375B616DF306f32B7F6f4A0E (requestWithdraw on the Withdrawal contract is onlyStaking, so the Staking burns the shares and queues the request), advance the fork past the next epoch start plus validatorsDisassembleTime with evm_increaseTime and evm_mine, call completeWithdraw() on the Withdrawal contract spETH.withdrawal() returns, and assert the receiver's ETH rises by exactly the requested amount while that contract's ETH falls by it.",
-          "blocker": null,
-          "note": "Withdrawal contract requestWithdraw."
-        }
-      ],
+      "missing": [],
       "matrixKey": "meta-pool"
     },
     {
@@ -11295,7 +11716,7 @@
       "label": null,
       "recipeNote": "Permissionless Sky routes: DAI↔USDS on the official converter, USDS↔sUSDS and DAI↔sDAI through the ERC-4626 vaults.",
       "direction": "LR",
-      "summary": "Five permissionless Sky routes on one pinned Ethereum fork: DAI to USDS and back 1:1 on the converter, USDS into sUSDS and DAI into sDAI with a full redeem, a 1-day sUSDS redeem that leaves 0 sUSDS and pays at least previewRedeem and the deposit, and a USDC to USDS LitePSM round trip whose amounts must equal tin/tout.",
+      "summary": "Five permissionless Sky routes on one pinned Ethereum fork: DAI to USDS and back 1:1 on the converter, USDS into sUSDS and DAI into sDAI with a full redeem, a 1-day sUSDS redeem that leaves 0 sUSDS and pays at least previewRedeem and the deposit, and a USDC to USDS LitePSM round trip whose amounts must equal tin/tout. Also: fork:sky:vault.",
       "scripts": [
         {
           "script": "fork:sky:convert",
@@ -11329,6 +11750,13 @@
           "script": "fork:sky:psm",
           "action": "psm",
           "feature": "Swap USDC ↔ USDS through the Sky LitePSM",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:sky:vault",
+          "action": "open vault / draw USDS",
+          "feature": "Open a Sky ETH-A vault",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -11389,6 +11817,27 @@
           "short": "USDC",
           "kind": "token",
           "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+        },
+        {
+          "id": "mcd-join-eth-a",
+          "label": "MCD_JOIN_ETH_A",
+          "short": "MCD_JOIN_ETH_A",
+          "kind": "contract",
+          "address": "0x2F0b23f53734252Bda2277357e97e1517d6B042A"
+        },
+        {
+          "id": "mcd-vat",
+          "label": "MCD_VAT",
+          "short": "MCD_VAT",
+          "kind": "contract",
+          "address": "0x35D1b3F3D7966A1DFe207aa4514C12a259A0492B"
+        },
+        {
+          "id": "usds-join",
+          "label": "USDS_JOIN",
+          "short": "USDS_JOIN",
+          "kind": "contract",
+          "address": "0x3C0f895007CA717Aa01c8693e59DF1e8C3777FEB"
         }
       ],
       "edges": [
@@ -11553,6 +12002,24 @@
           "to": "usdc",
           "label": "USDC out at tout",
           "kind": "transfer"
+        },
+        {
+          "from": "user",
+          "to": "mcd-join-eth-a",
+          "label": "sky:vault: join(10 WETH)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "mcd-vat",
+          "label": "sky:vault: frob(ETH-A, +ink, +art)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "usds-join",
+          "label": "sky:vault: exit(8000 USDS)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -11775,6 +12242,45 @@
             ],
             "label": "USDC out at tout",
             "range": "27"
+          },
+          {
+            "from": "user",
+            "to": "mcd-join-eth-a",
+            "kind": "call",
+            "steps": [
+              28
+            ],
+            "labels": [
+              "sky:vault: join(10 WETH)"
+            ],
+            "label": "sky:vault: join(10 WETH)",
+            "range": "28"
+          },
+          {
+            "from": "user",
+            "to": "mcd-vat",
+            "kind": "call",
+            "steps": [
+              29
+            ],
+            "labels": [
+              "sky:vault: frob(ETH-A, +ink, +art)"
+            ],
+            "label": "sky:vault: frob(ETH-A, +ink, +art)",
+            "range": "29"
+          },
+          {
+            "from": "user",
+            "to": "usds-join",
+            "kind": "call",
+            "steps": [
+              30
+            ],
+            "labels": [
+              "sky:vault: exit(8000 USDS)"
+            ],
+            "label": "sky:vault: exit(8000 USDS)",
+            "range": "30"
           }
         ]
       },
@@ -11786,20 +12292,12 @@
       ],
       "features": {
         "total": 6,
-        "tested": 5,
-        "gap": 1,
+        "tested": 6,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "open vault / draw USDS",
-          "status": "gap",
-          "how": "Impersonate the account, call Sky Vat.frob(ilk, urn, account, account, 0, dart) to draw dart of internal DAI, then DaiJoin.exit(account, dart) and convert that DAI to USDS 1:1 on SKY.converter; assert the wallet USDS rises by exactly dart and Vat.urns(ilk, urn).art rises by the same.",
-          "blocker": null,
-          "note": "Sky Lockstake or ilk vault."
-        }
-      ],
+      "missing": [],
       "matrixKey": "maker"
     },
     {
@@ -12612,12 +13110,33 @@
       "label": null,
       "recipeNote": "Venus Core Pool vUSDC mint and redeem on BSC (Compound V2-style). Borrow is not exercised.",
       "direction": "LR",
-      "summary": "Mints 100 BSC USDC into vUSDC on a Venus Core Pool fork and redeems every share: the test asserts mint pulled exactly 100e18 USDC, vUSDC shares were minted, redeem burned all of them and returned the USDC within 100e18/1000 + 2 wei dust.",
+      "summary": "Mints 100 BSC USDC into vUSDC on a Venus Core Pool fork and redeems every share: the test asserts mint pulled exactly 100e18 USDC, vUSDC shares were minted, redeem burned all of them and returned the USDC within 100e18/1000 + 2 wei dust. Also: fork:venus:borrow, fork:venus:repay, fork:venus:redeem.",
       "scripts": [
         {
           "script": "fork:venus:supply",
           "action": "supply",
           "feature": "Supply USDC to Venus Core Pool",
+          "chain": "bsc",
+          "rpcEnv": "BSC_RPC_URL"
+        },
+        {
+          "script": "fork:venus:borrow",
+          "action": "borrow",
+          "feature": "Borrow on Venus",
+          "chain": "bsc",
+          "rpcEnv": "BSC_RPC_URL"
+        },
+        {
+          "script": "fork:venus:repay",
+          "action": "repay",
+          "feature": "Repay on Venus",
+          "chain": "bsc",
+          "rpcEnv": "BSC_RPC_URL"
+        },
+        {
+          "script": "fork:venus:redeem",
+          "action": "redeem",
+          "feature": "Redeem on Venus",
           "chain": "bsc",
           "rpcEnv": "BSC_RPC_URL"
         }
@@ -12643,6 +13162,13 @@
           "short": "USDC on BSC",
           "kind": "token",
           "address": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d"
+        },
+        {
+          "id": "venus-unitroller-comptroller",
+          "label": "Venus Unitroller (Comptroller)",
+          "short": "Venus Unitroller",
+          "kind": "contract",
+          "address": "0xfD36E2c2a6789Db23113685031d7F16329158384"
         }
       ],
       "edges": [
@@ -12681,6 +13207,30 @@
           "to": "usdc",
           "label": "100e18 USDC back within dust",
           "kind": "transfer"
+        },
+        {
+          "from": "user",
+          "to": "venus-unitroller-comptroller",
+          "label": "venus:borrow: enterMarkets([vUSDC])",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "vusdc",
+          "label": "venus:borrow: borrow(100 USDC)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "vusdc",
+          "label": "venus:repay: repayBorrow(MaxUint256)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "vusdc",
+          "label": "venus:redeem: redeemUnderlying(99.9 USDC)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -12692,15 +13242,21 @@
             "steps": [
               1,
               3,
-              5
+              5,
+              8,
+              9,
+              10
             ],
             "labels": [
               "underlying() must return BSC USDC",
               "mint(100e18 USDC)",
-              "redeem(all minted shares)"
+              "redeem(all minted shares)",
+              "venus:borrow: borrow(100 USDC)",
+              "venus:repay: repayBorrow(MaxUint256)",
+              "venus:redeem: redeemUnderlying(99.9 USDC)"
             ],
-            "label": "underlying() must return BSC USDC (+2 more)",
-            "range": "1–5"
+            "label": "underlying() must return BSC USDC (+5 more)",
+            "range": "1–10"
           },
           {
             "from": "user",
@@ -12740,6 +13296,19 @@
             ],
             "label": "100e18 USDC back within dust",
             "range": "6"
+          },
+          {
+            "from": "user",
+            "to": "venus-unitroller-comptroller",
+            "kind": "call",
+            "steps": [
+              7
+            ],
+            "labels": [
+              "venus:borrow: enterMarkets([vUSDC])"
+            ],
+            "label": "venus:borrow: enterMarkets([vUSDC])",
+            "range": "7"
           }
         ]
       },
@@ -12750,34 +13319,12 @@
       ],
       "features": {
         "total": 4,
-        "tested": 1,
-        "gap": 3,
+        "tested": 4,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "borrow",
-          "status": "gap",
-          "how": "Mint vUSDC with 100 USDC, call Comptroller.enterMarkets([vUSDC]) so the vTokens count as collateral, then vUSDC.borrow(50e18) and assert the wallet's USDC balance rose by exactly 50e18 and vUSDC.borrowBalanceStored(user) reads 50e18 in the same block.",
-          "blocker": null,
-          "note": "vToken.borrow on BSC."
-        },
-        {
-          "feature": "repay",
-          "status": "gap",
-          "how": "After Comptroller.enterMarkets([vUSDC]) and vUSDC.borrow(50e18), approve 50e18 USDC to vUSDC and call vUSDC.repayBorrow(50e18); assert the wallet's USDC fell by exactly 50e18 and vUSDC.borrowBalanceStored(user) is below 0.001 USDC, because repaying exactly 50e18 cannot clear the interest accrued between the borrow and the repay.",
-          "blocker": null,
-          "note": "repayBorrow."
-        },
-        {
-          "feature": "redeem",
-          "status": "gap",
-          "how": "Mint vUSDC with 100 USDC then call vUSDC.redeemUnderlying(50e18); assert exactly 50e18 USDC reached the wallet and vUSDC.balanceOf(user) fell by the shares that amount represents at exchangeRateStored(), i.e. 50e18 * 1e18 / exchangeRateStored() rounded up.",
-          "blocker": null,
-          "note": "redeemUnderlying."
-        }
-      ],
+      "missing": [],
       "matrixKey": "venus-core-pool"
     },
     {
@@ -12790,12 +13337,19 @@
       "label": "Mint SolvBTC",
       "recipeNote": "Most of the row is BTC on Bitcoin, which the repo does not fork. On Ethereum, the SolvBTC Router mints SolvBTC from WBTC through the permissionless WBTC storage pool; the test does that. Redemption is an Open Fund request Solv settles and is not run. xSolvBTC and the LST router are listed for verification.",
       "direction": "LR",
-      "summary": "SolvBTC on an Ethereum fork: 0.01 WBTC approved to the SolvBTC Router and minted through the permissionless WBTC storage pool. createSubscription is static-called first, then asserted to take exactly the WBTC, mint the quoted SolvBTC (within 1% of 1:1 after Solv's fee), raise SolvBTC totalSupply by the same amount and emit CreateSubscription.",
+      "summary": "SolvBTC on an Ethereum fork: 0.01 WBTC approved to the SolvBTC Router and minted through the permissionless WBTC storage pool. createSubscription is static-called first, then asserted to take exactly the WBTC, mint the quoted SolvBTC (within 1% of 1:1 after Solv's fee), raise SolvBTC totalSupply by the same amount and emit CreateSubscription. Also: fork:solvbtc:redeem.",
       "scripts": [
         {
           "script": "fork:solvbtc:subscribe",
           "action": "subscribe",
           "feature": "Mint SolvBTC with WBTC through the SolvBTC Router",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:solvbtc:redeem",
+          "action": "redeem",
+          "feature": "Request a SolvBTC redemption",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -12897,6 +13451,12 @@
           "to": "openfund",
           "label": "redemption is an Open Fund request Solv settles (not run)",
           "kind": "offchain"
+        },
+        {
+          "from": "user",
+          "to": "router",
+          "label": "solvbtc:redeem: createRedemption(WBTC pool, all)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -12908,15 +13468,17 @@
             "steps": [
               1,
               4,
-              5
+              5,
+              11
             ],
             "labels": [
               "checkPoolPermission(WBTC pool) is true for the account",
               "createSubscription.staticCall(WBTC pool, 0.01) gives expected",
-              "createSubscription(WBTC pool, 0.01 WBTC)"
+              "createSubscription(WBTC pool, 0.01 WBTC)",
+              "solvbtc:redeem: createRedemption(WBTC pool, all)"
             ],
-            "label": "checkPoolPermission(WBTC pool) is true for the account (+2 more)",
-            "range": "1–5"
+            "label": "checkPoolPermission(WBTC pool) is true for the account (+3 more)",
+            "range": "1–11"
           },
           {
             "from": "user",
@@ -13020,20 +13582,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "redeem",
-          "status": "gap",
-          "how": "Add fork:solvbtc:redeem: submit the redemption request for the WBTC pool 0x716db7dc196abe78d5349c7166896f674ab978af26ada3e5b3ea74c5a1b48307 through the SolvBTC Router at 0x1fF7d7C0A7D8E94046708C611DeC5056A9d2B823, which is the caller Solv's Open Fund market accepts, then assert SolvBTC.balanceOf(user) fell by exactly the requested amount and the request is recorded.",
-          "blocker": "Redemption is an Open Fund request that Solv settles off this machine, and the tested router ABI declares only createSubscription and checkPoolPermission, so the redemption selector has to be read from the deployed router before the call can be wired.",
-          "note": "Redemption request."
-        }
-      ],
+      "missing": [],
       "matrixKey": "solvbtc"
     },
     {
@@ -13712,6 +14266,20 @@
           "feature": "Pendle V2 - buy PT with wstETH",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:pendle:mint-py",
+          "action": "mint PT/YT",
+          "feature": "Mint PT + YT on Pendle",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:pendle:add-liquidity",
+          "action": "add liquidity",
+          "feature": "Add liquidity on Pendle",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
         }
       ],
       "nodes": [
@@ -13807,6 +14375,18 @@
           "to": "pt",
           "label": "PT out of the market, must equal netPtOut",
           "kind": "transfer"
+        },
+        {
+          "from": "user",
+          "to": "router",
+          "label": "pendle:mint-py: mintPyFromToken(1 wstETH)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "router",
+          "label": "pendle:add-liquidity: addLiquiditySingleToken(1 wstETH)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -13842,13 +14422,17 @@
             "to": "router",
             "kind": "call",
             "steps": [
-              3
+              3,
+              8,
+              9
             ],
             "labels": [
-              "swapExactTokenForPt(user, market, minPtOut, guessPtOut)"
+              "swapExactTokenForPt(user, market, minPtOut, guessPtOut)",
+              "pendle:mint-py: mintPyFromToken(1 wstETH)",
+              "pendle:add-liquidity: addLiquiditySingleToken(1 wstETH)"
             ],
-            "label": "swapExactTokenForPt(user, market, minPtOut, guessPtOut)",
-            "range": "3"
+            "label": "swapExactTokenForPt(user, market, minPtOut, guessPtOut) (+2 more)",
+            "range": "3–9"
           },
           {
             "from": "router",
@@ -13913,27 +14497,12 @@
       ],
       "features": {
         "total": 4,
-        "tested": 2,
-        "gap": 2,
+        "tested": 4,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "mint PT/YT",
-          "status": "gap",
-          "how": "On the same fork call Pendle Router V4 mintPyFromToken(receiver, YT, minPyOut, TokenInput(wstETH, 1e18), empty LimitOrderData) on the PT-stETH market, then assert the YT balance rises by netPyOut, the PT balance rises by the same PY amount and netSyInterm > 0.",
-          "blocker": null,
-          "note": "Router mintPyFromToken."
-        },
-        {
-          "feature": "add liquidity",
-          "status": "gap",
-          "how": "On the same fork call Router V4 addLiquiditySingleToken(receiver, market, minLpOut, guessPtReceivedFromSy, TokenInput(wstETH, 1e18), empty limit) and assert the market LP balance rises by netLpOut and market.totalSupply() rises by the same netLpOut.",
-          "blocker": null,
-          "note": "addLiquiditySingleToken."
-        }
-      ],
+      "missing": [],
       "matrixKey": "pendle-v2"
     },
     {
@@ -13946,12 +14515,19 @@
       "label": null,
       "recipeNote": "Olympus Cooler V2 (MonoCooler): gOHM collateral, USDS debt at a fixed rate. The test posts gOHM, borrows USDS, repays in full and withdraws the collateral. gOHM comes from the DLGTE module listed in the Olympus docs, because anvil_deal is unavailable.",
       "direction": "LR",
-      "summary": "Posts gOHM collateral, borrows 1500 USDS, repays in full and withdraws the collateral on Olympus Cooler V2 (MonoCooler) on an Ethereum fork, asserting accountCollateral and the wallet move by the posted gOHM, the USDS arrives and accountDebt equals it, the repay clears the debt plus per-second interest, and every gOHM comes back.",
+      "summary": "Posts gOHM collateral, borrows 1500 USDS, repays in full and withdraws the collateral on Olympus Cooler V2 (MonoCooler) on an Ethereum fork, asserting accountCollateral and the wallet move by the posted gOHM, the USDS arrives and accountDebt equals it, the repay clears the debt plus per-second interest, and every gOHM comes back. Also: fork:cooler:repay.",
       "scripts": [
         {
           "script": "fork:cooler:borrow",
           "action": "borrow",
           "feature": "Borrow USDS against gOHM (Olympus Cooler V2)",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:cooler:repay",
+          "action": "repay",
+          "feature": "Repay a Cooler V2 loan",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -14058,6 +14634,12 @@
           "to": "user",
           "label": "every gOHM of collateral back",
           "kind": "transfer"
+        },
+        {
+          "from": "user",
+          "to": "cooler",
+          "label": "cooler:repay: repay(MAX)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -14072,7 +14654,8 @@
               4,
               6,
               9,
-              11
+              11,
+              13
             ],
             "labels": [
               "collateralToken() and debtToken() must match the catalog",
@@ -14080,10 +14663,11 @@
               "addCollateral(collateral, user, [])",
               "borrow(1500 USDS, user, user)",
               "repay(type(uint128).max, user)",
-              "withdrawCollateral(max, user, user, [])"
+              "withdrawCollateral(max, user, user, [])",
+              "cooler:repay: repay(MAX)"
             ],
-            "label": "collateralToken() and debtToken() must match the catalog (+5 more)",
-            "range": "1–11"
+            "label": "collateralToken() and debtToken() must match the catalog (+6 more)",
+            "range": "1–13"
           },
           {
             "from": "user",
@@ -14173,20 +14757,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "repay",
-          "status": "gap",
-          "how": "Add a partial-repay test: after borrow, warp a day so interest accrues, call MonoCooler.repay(1 USDS, user) and assert accountDebt falls by exactly the USDS transferred while the position stays open, then close it with repay(type(uint128).max); today the borrow round trip only repays in full.",
-          "blocker": null,
-          "note": "MonoCooler.repay."
-        }
-      ],
+      "missing": [],
       "matrixKey": "cooler-loans"
     },
     {
@@ -14199,12 +14775,19 @@
       "label": "Deposit + redeem request",
       "recipeNote": "CIAN rsETH Yield Layer on Ethereum, the largest public Yield Layer vault in CIAN's vault API. The test deposits rsETH and queues a redemption with the RedeemOperator, which CIAN's operator settles. The stETH Yield Layer is listed for verification; Mantle and other chains are not forked.",
       "direction": "LR",
-      "summary": "CIAN's rsETH Yield Layer on an Ethereum fork: 1 rsETH deposited for exactly previewDeposit shares with totalSupply rising by the same amount, then requestRedeem(shares, rsETH) moves every share into the documented RedeemOperator queue. CIAN settles that queue off the fork, so the rsETH payout is not asserted.",
+      "summary": "CIAN's rsETH Yield Layer on an Ethereum fork: 1 rsETH deposited for exactly previewDeposit shares with totalSupply rising by the same amount, then requestRedeem(shares, rsETH) moves every share into the documented RedeemOperator queue. CIAN settles that queue off the fork, so the rsETH payout is not asserted. Also: fork:cian:withdraw-request.",
       "scripts": [
         {
           "script": "fork:cian:deposit",
           "action": "deposit",
           "feature": "Deposit rsETH into the CIAN rsETH Yield Layer and request redemption",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:cian:withdraw-request",
+          "action": "withdraw request",
+          "feature": "Request a CIAN withdrawal",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -14318,6 +14901,12 @@
           "to": "settlement",
           "label": "queue settled and rsETH paid out off the fork (not run)",
           "kind": "offchain"
+        },
+        {
+          "from": "user",
+          "to": "vault",
+          "label": "cian:withdraw-request: requestRedeem(all, rsETH)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -14334,7 +14923,8 @@
               7,
               8,
               9,
-              11
+              11,
+              13
             ],
             "labels": [
               "asset() is rsETH and paused() false",
@@ -14344,10 +14934,11 @@
               "shares equal previewDeposit, supply rises by shares",
               "balanceOf(RedeemOperator) before the request",
               "requestRedeem(shares, rsETH)",
-              "balanceOf(user) 0 and operator shares up by shares"
+              "balanceOf(user) 0 and operator shares up by shares",
+              "cian:withdraw-request: requestRedeem(all, rsETH)"
             ],
-            "label": "asset() is rsETH and paused() false (+7 more)",
-            "range": "1–11"
+            "label": "asset() is rsETH and paused() false (+8 more)",
+            "range": "1–13"
           },
           {
             "from": "user",
@@ -14411,8 +15002,8 @@
       ],
       "features": {
         "total": 2,
-        "tested": 0,
-        "gap": 1,
+        "tested": 1,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 1
       },
@@ -14423,13 +15014,6 @@
           "how": null,
           "blocker": null,
           "note": null
-        },
-        {
-          "feature": "withdraw request",
-          "status": "gap",
-          "how": "Add fork:cian:claim: after deposit(1 rsETH, user) call vault.requestRedeem(shares, rsETH), have the RedeemOperator call the vault's redeem for the settled queue, then assert rsETH.balanceOf(user) rose by the queued assets and the operator's share balance fell by shares.",
-          "blocker": "The RedeemOperator at 0x47DBD71Db64617f6cBD45eB9D9Ba876F40ED239E is operated by CIAN off this machine; nothing on an Ethereum fork makes it settle the queue, so the rsETH payout cannot be produced on demand.",
-          "note": "requestRedeem."
         }
       ],
       "matrixKey": "cian-yield-layer"
@@ -15210,12 +15794,19 @@
       "label": "Booster deposit + withdraw",
       "recipeNote": "Convex for Curve on Ethereum: deposit Curve LP through the Booster with stake=true and withdraw it from the pool's BaseRewardPool. Pid 9 (Curve 3pool) by default; CONVEX_PID picks another pool. cvxCRV staking and vlCVX locking are not exercised; their contracts are listed for verification.",
       "direction": "LR",
-      "summary": "Convex on an Ethereum fork: 100 Curve 3pool LP go through the Booster with stake=true into pid 9 and come back out with withdrawAndUnwrap. The test asserts the wallet LP falls by exactly 100, the Curve gauge LP and the BaseRewardPool totalSupply rise by 100, no loose reward token is left, and the withdrawal restores the gauge balance and clears the stake.",
+      "summary": "Convex on an Ethereum fork: 100 Curve 3pool LP go through the Booster with stake=true into pid 9 and come back out with withdrawAndUnwrap. The test asserts the wallet LP falls by exactly 100, the Curve gauge LP and the BaseRewardPool totalSupply rise by 100, no loose reward token is left, and the withdrawal restores the gauge balance and clears the stake. Also: fork:convex:claim.",
       "scripts": [
         {
           "script": "fork:convex:deposit",
           "action": "deposit",
           "feature": "Deposit Curve 3pool LP into Convex and withdraw",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:convex:claim",
+          "action": "claim rewards",
+          "feature": "Claim Convex rewards",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -15329,6 +15920,18 @@
           "to": "rewards",
           "label": "balanceOf(user) 0 after the withdrawal",
           "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "booster",
+          "label": "convex:claim: earmarkRewards(9)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "rewards",
+          "label": "convex:claim: getReward()",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -15340,15 +15943,17 @@
             "steps": [
               1,
               2,
-              5
+              5,
+              13
             ],
             "labels": [
               "poolInfo(9) gives LP token, gauge and BaseRewardPool",
               "isShutdown() false and poolInfo.shutdown false",
-              "deposit(9, 100 3Crv, true)"
+              "deposit(9, 100 3Crv, true)",
+              "convex:claim: earmarkRewards(9)"
             ],
-            "label": "poolInfo(9) gives LP token, gauge and BaseRewardPool (+2 more)",
-            "range": "1–5"
+            "label": "poolInfo(9) gives LP token, gauge and BaseRewardPool (+3 more)",
+            "range": "1–13"
           },
           {
             "from": "user",
@@ -15374,15 +15979,17 @@
             "steps": [
               4,
               9,
-              12
+              12,
+              14
             ],
             "labels": [
               "totalSupply() before the deposit",
               "withdrawAndUnwrap(100, false)",
-              "balanceOf(user) 0 after the withdrawal"
+              "balanceOf(user) 0 after the withdrawal",
+              "convex:claim: getReward()"
             ],
-            "label": "totalSupply() before the deposit (+2 more)",
-            "range": "4–12"
+            "label": "totalSupply() before the deposit (+3 more)",
+            "range": "4–14"
           },
           {
             "from": "lptoken",
@@ -15434,20 +16041,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "claim rewards",
-          "status": "gap",
-          "how": "After deposit(9, 100 3Crv, true), advance the fork with evm_increaseTime past the BaseRewardPool reward period and evm_mine, then call getReward(user, true) on the BaseRewardPool 0x689440f2Ff927E1f24c72F1087E1FAF471eCe1c8 and assert the account's CRV balance rose and its reward debt was reset to 0.",
-          "blocker": null,
-          "note": "getReward after time warp."
-        }
-      ],
+      "missing": [],
       "matrixKey": "convex-finance"
     },
     {
@@ -15601,12 +16200,19 @@
       "label": null,
       "recipeNote": null,
       "direction": "LR",
-      "summary": "Bridges 100 USDS on an Ethereum fork with relayTokens and asserts the bridge's USDS collateral rises by exactly 100, its totalSpentPerDay bucket for the deposit day rises by exactly 100, and the depositor's USDS falls by exactly 100. The xDAI mint happens on Gnosis Chain and is not observable.",
+      "summary": "Bridges 100 USDS on an Ethereum fork with relayTokens and asserts the bridge's USDS collateral rises by exactly 100, its totalSpentPerDay bucket for the deposit day rises by exactly 100, and the depositor's USDS falls by exactly 100. The xDAI mint happens on Gnosis Chain and is not observable. Also: fork:xdai-stake-bridge:relay.",
       "scripts": [
         {
           "script": "fork:xdai-stake-bridge:deposit",
           "action": "deposit",
           "feature": "Bridge 100 USDS into the xDAI Stake Bridge",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:xdai-stake-bridge:relay",
+          "action": "OmniBridge relayTokens (erc-to-erc sibling)",
+          "feature": "Relay USDC through the sibling OmniBridge",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -15639,6 +16245,13 @@
           "short": "Gnosis Chain native xDAI mint",
           "kind": "offchain",
           "address": null
+        },
+        {
+          "id": "sibling-omnibridge-mediator",
+          "label": "sibling OmniBridge mediator",
+          "short": "sibling OmniBridge mediator",
+          "kind": "contract",
+          "address": "0x88ad09518695c6c3712AC10a214bE5109a655671"
         }
       ],
       "edges": [
@@ -15677,6 +16290,12 @@
           "to": "gnosis",
           "label": "xDAI minted on Gnosis Chain (not run)",
           "kind": "offchain"
+        },
+        {
+          "from": "user",
+          "to": "sibling-omnibridge-mediator",
+          "label": "xdai-stake-bridge:relay: relayTokens(USDC, receiver, 1000)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -15736,6 +16355,19 @@
             ],
             "label": "xDAI minted on Gnosis Chain (not run)",
             "range": "6"
+          },
+          {
+            "from": "user",
+            "to": "sibling-omnibridge-mediator",
+            "kind": "call",
+            "steps": [
+              7
+            ],
+            "labels": [
+              "xdai-stake-bridge:relay: relayTokens(USDC, receiver, 1000)"
+            ],
+            "label": "xdai-stake-bridge:relay: relayTokens(USDC, receiver, 1000)",
+            "range": "7"
           }
         ]
       },
@@ -15748,20 +16380,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "OmniBridge relayTokens (erc-to-erc sibling)",
-          "status": "gap",
-          "how": "On an Ethereum fork, approve USDC to the OmniBridge 0x88ad09518695c6c3712AC10a214bE5109a655671, call relayTokens(USDC, freshAccount, amount), and assert the bridge's USDC balance rises by exactly amount and the caller's falls by exactly amount, after asserting its bridge mode and mediator.",
-          "blocker": null,
-          "note": "The $239.9M sibling bridge 0x88ad…5671 has its own relayTokens surface; not asserted by the lockbox test."
-        }
-      ],
+      "missing": [],
       "matrixKey": "xdai-stake-bridge"
     },
     {
@@ -15774,12 +16398,19 @@
       "label": null,
       "recipeNote": null,
       "direction": "LR",
-      "summary": "Deposit 100 USDC into Fluid's fUSDC on an Ethereum fork and assert the ERC-4626 outcome: minted shares equal previewDeposit, totalSupply rises by exactly the mint, totalAssets by ~100 USDC, exactly 100 USDC lands in the Fluid Liquidity contract that holds all fToken underlying, and the fToken emits Deposit.",
+      "summary": "Deposit 100 USDC into Fluid's fUSDC on an Ethereum fork and assert the ERC-4626 outcome: minted shares equal previewDeposit, totalSupply rises by exactly the mint, totalAssets by ~100 USDC, exactly 100 USDC lands in the Fluid Liquidity contract that holds all fToken underlying, and the fToken emits Deposit. Also: fork:fluid-lending:borrow.",
       "scripts": [
         {
           "script": "fork:fluid-lending:deposit",
           "action": "deposit",
           "feature": "Fluid Lending — fUSDC ERC-4626 deposit",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:fluid-lending:borrow",
+          "action": "vault borrow",
+          "feature": "Borrow from a Fluid vault",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -15812,6 +16443,13 @@
           "short": "USDC on Ethereum, the fUSDC underlying",
           "kind": "token",
           "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+        },
+        {
+          "id": "fluid-vault-eth-usdc-11",
+          "label": "Fluid Vault ETH/USDC #11",
+          "short": "Fluid Vault ETH/USDC #11",
+          "kind": "contract",
+          "address": "0x0C8C77B7FF4c2aF7F6CEBbe67350A490E3DD6cB3"
         }
       ],
       "edges": [
@@ -15879,6 +16517,12 @@
           "from": "user",
           "to": "usdc",
           "label": "balanceOf(Liquidity) is +100 USDC at the block",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "fluid-vault-eth-usdc-11",
+          "label": "fluid-lending:borrow: operate(0, +1 ETH, +100 USDC debt)",
           "kind": "call"
         }
       ],
@@ -15982,6 +16626,19 @@
             ],
             "label": "Deposit(sender, owner, 100 USDC, shares)",
             "range": "9"
+          },
+          {
+            "from": "user",
+            "to": "fluid-vault-eth-usdc-11",
+            "kind": "call",
+            "steps": [
+              12
+            ],
+            "labels": [
+              "fluid-lending:borrow: operate(0, +1 ETH, +100 USDC debt)"
+            ],
+            "label": "fluid-lending:borrow: operate(0, +1 ETH, +100 USDC debt)",
+            "range": "12"
           }
         ]
       },
@@ -15994,20 +16651,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "vault borrow",
-          "status": "gap",
-          "how": "Call operate() on Fluid's USDC FluidVaultT1 (address from the deployments registry, the vault is the msg.sender of LIQUIDITY.operate() on 0x52Aa899454998Be5b000Ad077a46Bbe360F4e497) to supply collateral and borrow USDC, then assert the borrower's USDC rises by the borrowed amount and the Liquidity contract's USDC balance falls by exactly that amount.",
-          "blocker": null,
-          "note": "Fluid vault operate()."
-        }
-      ],
+      "missing": [],
       "matrixKey": "fluid-lending"
     },
     {
@@ -16726,6 +17375,119 @@
       },
       "missing": [],
       "matrixKey": "usdd"
+    },
+    {
+      "key": "aero-protocol--dex",
+      "name": "Aero (DEX)",
+      "rank": 188,
+      "chain": "base",
+      "rpcEnv": "BASE_RPC_URL",
+      "appUrl": "https://aero.finance",
+      "label": "Add liquidity + lock (Aero)",
+      "recipeNote": "Aero (Aerodrome rebranded 2026-10-22) on Base: mints LP on the AERO/USDC v2 pool and locks 1,000 AERO for 52 weeks in the Aero VotingEscrow. Addresses come from docs.iaero.finance (secondary docs; Aero has not yet published an official address page) and are checked on the fork. Gauge staking is not testable: legacy gauges are NotAlive and the new Voter has no pool-to-gauge lookup.",
+      "direction": "LR",
+      "summary": "Aero (Aerodrome rebranded 2026-10-22) on Base: mints LP on the AERO/USDC v2 pool and locks 1,000 AERO for 52 weeks in the Aero VotingEscrow. Addresses come from docs.iaero.finance (secondary docs; Aero has not yet published an official address page) and are checked on the fork. Gauge staking is not testable: legacy gauges are NotAlive and the new Voter has no pool-to-gauge lookup.",
+      "scripts": [
+        {
+          "script": "fork:aerodrome:add-liquidity",
+          "action": "add liquidity",
+          "feature": "Add liquidity on Aero",
+          "chain": "base",
+          "rpcEnv": "BASE_RPC_URL"
+        },
+        {
+          "script": "fork:aerodrome:lock",
+          "action": "lock AERO (veNFT)",
+          "feature": "Lock AERO",
+          "chain": "base",
+          "rpcEnv": "BASE_RPC_URL"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "user",
+          "label": "fresh impersonated account, funded on the fork",
+          "short": "fresh impersonated account",
+          "kind": "actor",
+          "address": null
+        },
+        {
+          "id": "aero-aero-usdc-v2-pool",
+          "label": "Aero AERO/USDC v2 pool",
+          "short": "Aero AERO/USDC v2 pool",
+          "kind": "contract",
+          "address": "0x8E6a9FCd1d638CC760Ffba397605Fe3355dE76D2"
+        },
+        {
+          "id": "aero-votingescrow",
+          "label": "Aero VotingEscrow",
+          "short": "Aero VotingEscrow",
+          "kind": "contract",
+          "address": "0xBF7977E1521e9a3032bf7243Ee4712f311f13915"
+        }
+      ],
+      "edges": [
+        {
+          "from": "user",
+          "to": "aero-aero-usdc-v2-pool",
+          "label": "aero:add-liquidity: transfer AERO + USDC, mint(user)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "aero-votingescrow",
+          "label": "aero:lock: createStake(1000 AERO, 52 weeks)",
+          "kind": "call"
+        }
+      ],
+      "graph": {
+        "edges": [
+          {
+            "from": "user",
+            "to": "aero-aero-usdc-v2-pool",
+            "kind": "call",
+            "steps": [
+              1
+            ],
+            "labels": [
+              "aero:add-liquidity: transfer AERO + USDC, mint(user)"
+            ],
+            "label": "aero:add-liquidity: transfer AERO + USDC, mint(user)",
+            "range": "1"
+          },
+          {
+            "from": "user",
+            "to": "aero-votingescrow",
+            "kind": "call",
+            "steps": [
+              2
+            ],
+            "labels": [
+              "aero:lock: createStake(1000 AERO, 52 weeks)"
+            ],
+            "label": "aero:lock: createStake(1000 AERO, 52 weeks)",
+            "range": "2"
+          }
+        ]
+      },
+      "notes": [],
+      "features": {
+        "total": 5,
+        "tested": 4,
+        "gap": 0,
+        "notTestable": 1,
+        "failingPaused": 0
+      },
+      "missing": [
+        {
+          "feature": "gauge stake",
+          "status": "not-testable",
+          "how": null,
+          "blocker": null,
+          "note": "Every legacy Aerodrome gauge reverts NotAlive since the 2026-10-22 Aero migration, and the new Aero Voter has no on-chain pool-to-gauge lookup, so no live gauge can be derived on a fork."
+        }
+      ],
+      "matrixKey": "aero-protocol--dex"
     },
     {
       "key": "armitage",
@@ -17937,12 +18699,19 @@
       "label": null,
       "recipeNote": null,
       "direction": "LR",
-      "summary": "One pinned Ethereum-fork swap through the Balancer V2 Vault: queryBatchSwap on the configured WETH/USDC 50/50 pool returns the quote, then swap() with GIVEN_IN executes it; the test asserts the fresh account's USDC balance increased after 0.1 WETH in.",
+      "summary": "One pinned Ethereum-fork swap through the Balancer V2 Vault: queryBatchSwap on the configured WETH/USDC 50/50 pool returns the quote, then swap() with GIVEN_IN executes it; the test asserts the fresh account's USDC balance increased after 0.1 WETH in. Also: fork:balancer:join.",
       "scripts": [
         {
           "script": "fork:balancer:swap",
           "action": "swap",
           "feature": "Swap WETH → USDC (V2 Vault)",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:balancer:join",
+          "action": "join pool",
+          "feature": "Join a Balancer V2 pool",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -18007,6 +18776,12 @@
           "to": "user",
           "label": "USDC out",
           "kind": "transfer"
+        },
+        {
+          "from": "user",
+          "to": "vault",
+          "label": "balancer:join: joinPool(B-80BAL-20WETH, 1 WETH)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -18017,14 +18792,16 @@
             "kind": "call",
             "steps": [
               1,
-              3
+              3,
+              6
             ],
             "labels": [
               "queryBatchSwap(GIVEN_IN, WETH/USDC 50/50 pool)",
-              "swap(GIVEN_IN, WETH to USDC)"
+              "swap(GIVEN_IN, WETH to USDC)",
+              "balancer:join: joinPool(B-80BAL-20WETH, 1 WETH)"
             ],
-            "label": "queryBatchSwap(GIVEN_IN, WETH/USDC 50/50 pool) (+1 more)",
-            "range": "1–3"
+            "label": "queryBatchSwap(GIVEN_IN, WETH/USDC 50/50 pool) (+2 more)",
+            "range": "1–6"
           },
           {
             "from": "user",
@@ -18073,20 +18850,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "join pool",
-          "status": "gap",
-          "how": "Approve WETH and USDC to the V2 Vault 0xBA12222222228d8Ba445958a75a0704d566BF2C8, call joinPool(poolId, user, user, JoinPoolRequest([WETH, USDC], [maxWeth, maxUsdc], abi.encode(uint256(1), amountsIn), false)) on the configured WETH/USDC 50/50 pool (kind 1 = EXACT_TOKENS_IN_FOR_BPT_OUT), then assert the pool's BPT balanceOf(user) rose by the BPT minted and Vault.getPoolTokens(poolId).balances grew by exactly the assets deposited.",
-          "blocker": null,
-          "note": "Vault.joinPool / V3 addLiquidity."
-        }
-      ],
+      "missing": [],
       "matrixKey": "catalog:balancer"
     },
     {
@@ -18105,6 +18874,20 @@
           "script": "fork:benqi:supply",
           "action": "supply",
           "feature": "Supply native USDC to Benqi qiUSDCn and redeem",
+          "chain": "avalanche",
+          "rpcEnv": "AVALANCHE_RPC_URL"
+        },
+        {
+          "script": "fork:benqi:borrow",
+          "action": "borrow",
+          "feature": "Borrow on Benqi",
+          "chain": "avalanche",
+          "rpcEnv": "AVALANCHE_RPC_URL"
+        },
+        {
+          "script": "fork:benqi:redeem",
+          "action": "redeem",
+          "feature": "Redeem on Benqi",
           "chain": "avalanche",
           "rpcEnv": "AVALANCHE_RPC_URL"
         }
@@ -18137,6 +18920,13 @@
           "short": "native USDC on Avalanche C-Chain",
           "kind": "token",
           "address": "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"
+        },
+        {
+          "id": "benqi-qiavax",
+          "label": "Benqi qiAVAX",
+          "short": "Benqi qiAVAX",
+          "kind": "contract",
+          "address": "0x5C0401e81Bc07Ca70fAD469b451682c0d747Ef1c"
         }
       ],
       "edges": [
@@ -18193,6 +18983,24 @@
           "to": "user",
           "label": "100 USDC within 1 bp, 0 qiUSDCn left",
           "kind": "transfer"
+        },
+        {
+          "from": "user",
+          "to": "benqi-qiavax",
+          "label": "benqi:borrow: mint{value: AVAX}",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "qi",
+          "label": "benqi:borrow: borrow(100 USDC)",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "qi",
+          "label": "benqi:redeem: redeemUnderlying(99.9 USDC)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -18219,17 +19027,21 @@
               4,
               5,
               7,
-              8
+              8,
+              11,
+              12
             ],
             "labels": [
               "underlying() pre-check is native USDC",
               "mint.staticCall(100 USDC) returns code 0",
               "mint(100 USDC)",
               "balanceOf / exchangeRateStored value the qiTokens",
-              "redeem(all qiUSDCn)"
+              "redeem(all qiUSDCn)",
+              "benqi:borrow: borrow(100 USDC)",
+              "benqi:redeem: redeemUnderlying(99.9 USDC)"
             ],
-            "label": "underlying() pre-check is native USDC (+4 more)",
-            "range": "2–8"
+            "label": "underlying() pre-check is native USDC (+6 more)",
+            "range": "2–12"
           },
           {
             "from": "user",
@@ -18269,6 +19081,19 @@
             ],
             "label": "100 USDC within 1 bp, 0 qiUSDCn left",
             "range": "9"
+          },
+          {
+            "from": "user",
+            "to": "benqi-qiavax",
+            "kind": "call",
+            "steps": [
+              10
+            ],
+            "labels": [
+              "benqi:borrow: mint{value: AVAX}"
+            ],
+            "label": "benqi:borrow: mint{value: AVAX}",
+            "range": "10"
           }
         ]
       },
@@ -18280,27 +19105,12 @@
       ],
       "features": {
         "total": 3,
-        "tested": 1,
-        "gap": 2,
+        "tested": 3,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "borrow",
-          "status": "gap",
-          "how": "After mint(100 USDC) into qiUSDCn, call Comptroller.enterMarkets([qiUSDCn]) so the minted qiTokens count as collateral, then qiUSDCn.borrow(50e6) and assert the user's native USDC balance rises by exactly 50e6 and qiUSDCn.borrowBalanceStored(user) reads 50e6 in that same block, before the next accrueInterest folds in interest.",
-          "blocker": null,
-          "note": "qiToken.borrow on Avalanche."
-        },
-        {
-          "feature": "redeem",
-          "status": "gap",
-          "how": "After mint(100 USDC), call qiUSDCn.redeemUnderlying(50e6) and assert the user's native USDC balance rises by exactly 50e6 while qiUSDCn.balanceOf(user) falls by the matching amount at exchangeRateStored; the shipped test only exercises redeem(shares).",
-          "blocker": null,
-          "note": "redeemUnderlying."
-        }
-      ],
+      "missing": [],
       "matrixKey": "benqi-lending"
     },
     {
@@ -18313,12 +19123,19 @@
       "label": "Stake",
       "recipeNote": "Benqi Liquid Staking: submit() AVAX for sAVAX; shares must equal the pre-tx getSharesByPooledAvax and totalPooledAvax must rise by the amount. Unstaking is a 15-day requestUnlock cooldown and is not exercised.",
       "direction": "LR",
-      "summary": "Benqi Liquid Staking on an Avalanche fork: a fresh account funded by anvil_setBalance calls sAVAX.submit() with 1 AVAX after mintingPaused() is checked false. The test asserts the account receives exactly the pre-tx getSharesByPooledAvax(1e18) sAVAX and totalPooledAvax rises by exactly 1 AVAX; the 15-day requestUnlock exit is not exercised.",
+      "summary": "Benqi Liquid Staking on an Avalanche fork: a fresh account funded by anvil_setBalance calls sAVAX.submit() with 1 AVAX after mintingPaused() is checked false. The test asserts the account receives exactly the pre-tx getSharesByPooledAvax(1e18) sAVAX and totalPooledAvax rises by exactly 1 AVAX; the 15-day requestUnlock exit is not exercised. Also: fork:benqi:unlock.",
       "scripts": [
         {
           "script": "fork:benqi:stake",
           "action": "stake",
           "feature": "Stake AVAX for Benqi sAVAX",
+          "chain": "avalanche",
+          "rpcEnv": "AVALANCHE_RPC_URL"
+        },
+        {
+          "script": "fork:benqi:unlock",
+          "action": "request unlock",
+          "feature": "Unlock sAVAX",
           "chain": "avalanche",
           "rpcEnv": "AVALANCHE_RPC_URL"
         }
@@ -18382,6 +19199,12 @@
           "to": "savax",
           "label": "balanceOf(user) equals the previewed shares",
           "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "savax",
+          "label": "benqi:unlock: requestUnlock + warp 15d + redeem",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -18395,17 +19218,19 @@
               2,
               3,
               4,
-              6
+              6,
+              7
             ],
             "labels": [
               "mintingPaused() pre-check is false",
               "getSharesByPooledAvax(1 AVAX) previews the shares",
               "totalPooledAvax() before the stake",
               "submit() with 1 AVAX",
-              "balanceOf(user) equals the previewed shares"
+              "balanceOf(user) equals the previewed shares",
+              "benqi:unlock: requestUnlock + warp 15d + redeem"
             ],
-            "label": "mintingPaused() pre-check is false (+4 more)",
-            "range": "1–6"
+            "label": "mintingPaused() pre-check is false (+5 more)",
+            "range": "1–7"
           },
           {
             "from": "avax",
@@ -18430,20 +19255,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "request unlock",
-          "status": "gap",
-          "how": "After submit(), call sAVAX.requestUnlock(shares) from the same account and assert sAVAX.balanceOf(user) is 0 and getUnlockRequestCount(user) is 1; then evm_increaseTime by cooldownPeriod(), mine a block, call sAVAX.redeem() and assert the account's native AVAX balance rises by the getPooledAvaxByShares(shares) previewed before the unlock.",
-          "blocker": null,
-          "note": "requestUnlock + cooldown."
-        }
-      ],
+      "missing": [],
       "matrixKey": "benqi-staked-avax"
     },
     {
@@ -19735,12 +20552,19 @@
       "label": "Euler Earn vault only",
       "recipeNote": "Euler Earn is ERC-4626. Deposit and redeem USDC on the first non-deprecated Ethereum vault in euler-labels (K3 Capital Earn USDC).",
       "direction": "LR",
-      "summary": "Deposits 100 USDC into the Euler Earn vault K3 Capital Earn USDC (the first non-deprecated Ethereum vault in euler-labels) and redeems every share, asserting the vault pulled exactly the amount, minted shares and returned the USDC within rounding dust.",
+      "summary": "Deposits 100 USDC into the Euler Earn vault K3 Capital Earn USDC (the first non-deprecated Ethereum vault in euler-labels) and redeems every share, asserting the vault pulled exactly the amount, minted shares and returned the USDC within rounding dust. Also: fork:euler:borrow.",
       "scripts": [
         {
           "script": "fork:euler:deposit",
           "action": "deposit",
           "feature": "Deposit and redeem (Euler Earn)",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:euler:borrow",
+          "action": "borrow (EVC)",
+          "feature": "Borrow through the Euler EVC",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -19766,6 +20590,20 @@
           "short": "USDC",
           "kind": "token",
           "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+        },
+        {
+          "id": "euler-evc",
+          "label": "Euler EVC",
+          "short": "Euler EVC",
+          "kind": "contract",
+          "address": "0x0C9a3dd6b8F28529d72d7f9cE918D493519EE383"
+        },
+        {
+          "id": "euler-eusdc-k3-prime",
+          "label": "Euler eUSDC (K3 Prime)",
+          "short": "Euler eUSDC",
+          "kind": "contract",
+          "address": "0x797DD80692c3b2dAdabCe8e30C07fDE5307D48a9"
         }
       ],
       "edges": [
@@ -19804,6 +20642,18 @@
           "to": "user",
           "label": "USDC back within rounding dust",
           "kind": "transfer"
+        },
+        {
+          "from": "user",
+          "to": "euler-evc",
+          "label": "euler:borrow: enableCollateral + enableController",
+          "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "euler-eusdc-k3-prime",
+          "label": "euler:borrow: borrow(100 USDC)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -19863,6 +20713,32 @@
             ],
             "label": "USDC back within rounding dust",
             "range": "6"
+          },
+          {
+            "from": "user",
+            "to": "euler-evc",
+            "kind": "call",
+            "steps": [
+              7
+            ],
+            "labels": [
+              "euler:borrow: enableCollateral + enableController"
+            ],
+            "label": "euler:borrow: enableCollateral + enableController",
+            "range": "7"
+          },
+          {
+            "from": "user",
+            "to": "euler-eusdc-k3-prime",
+            "kind": "call",
+            "steps": [
+              8
+            ],
+            "labels": [
+              "euler:borrow: borrow(100 USDC)"
+            ],
+            "label": "euler:borrow: borrow(100 USDC)",
+            "range": "8"
           }
         ]
       },
@@ -19873,20 +20749,12 @@
       ],
       "features": {
         "total": 3,
-        "tested": 2,
-        "gap": 1,
+        "tested": 3,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "borrow (EVC)",
-          "status": "gap",
-          "how": "Add a fork test: deposit collateral into a borrowable Euler eVault from euler-labels, call EVC.enableController(account, eVault) from the account, then eVault.borrow(amount, receiver); assert eVault.debtOf(account) rises by exactly amount and the receiver's balance of the borrowed asset rises by the same wei, then eVault.repay(amount, account) and assert debtOf(account) is back to 0.",
-          "blocker": null,
-          "note": "EVC enableController + borrow."
-        }
-      ],
+      "missing": [],
       "matrixKey": "catalog:euler"
     },
     {
@@ -19899,12 +20767,19 @@
       "label": "Read-only",
       "recipeNote": "Ethereum sfrxUSD maxDeposit is 0, so there is no local permissionless deposit. The fork test reads convertToAssets. Stake and unstake on Ethereum go through a Fraxtal lockbox.",
       "direction": "LR",
-      "summary": "Read-only on a pinned Ethereum fork: sfrxUSD.convertToAssets(1e18) is asserted above 1 frxUSD, and maxDeposit(0x0) is read and printed as 0, which is why no Ethereum deposit is attempted. Nothing moves; only the vault rate is measured.",
+      "summary": "Read-only on a pinned Ethereum fork: sfrxUSD.convertToAssets(1e18) is asserted above 1 frxUSD, and maxDeposit(0x0) is read and printed as 0, which is why no Ethereum deposit is attempted. Nothing moves; only the vault rate is measured. Also: fork:frax:mint-frxeth.",
       "scripts": [
         {
           "script": "fork:frax:rate",
           "action": "rate",
           "feature": "Read the sfrxUSD rate",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:frax:mint-frxeth",
+          "action": "mint frxETH",
+          "feature": "Mint frxETH",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -19923,6 +20798,13 @@
           "short": "sfrxUSD",
           "kind": "token",
           "address": "0xcf62F905562626CfcDD2261162a51fd02Fc9c5b6"
+        },
+        {
+          "id": "frxethminter-original",
+          "label": "frxETHMinter (original)",
+          "short": "frxETHMinter",
+          "kind": "contract",
+          "address": "0xbAFA44EFE7901E04E39Dad13167D089C559c1138"
         }
       ],
       "edges": [
@@ -19936,6 +20818,12 @@
           "from": "caller",
           "to": "sfrxusd",
           "label": "maxDeposit(0x0)",
+          "kind": "call"
+        },
+        {
+          "from": "caller",
+          "to": "frxethminter-original",
+          "label": "frax:mint-frxeth: submit{value: 1 ETH}",
           "kind": "call"
         }
       ],
@@ -19955,6 +20843,19 @@
             ],
             "label": "convertToAssets(1e18) (+1 more)",
             "range": "1–2"
+          },
+          {
+            "from": "caller",
+            "to": "frxethminter-original",
+            "kind": "call",
+            "steps": [
+              3
+            ],
+            "labels": [
+              "frax:mint-frxeth: submit{value: 1 ETH}"
+            ],
+            "label": "frax:mint-frxeth: submit{value: 1 ETH}",
+            "range": "3"
           }
         ]
       },
@@ -19966,20 +20867,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "mint frxETH",
-          "status": "gap",
-          "how": "Call frxETHMinter.submit{value: 1 ether}() from the impersonated account on a mainnet fork, then assert frxETH.balanceOf(user) rose by ~1e18 and frxETH totalSupply rose by the same amount.",
-          "blocker": null,
-          "note": "frxETHMinter.submit."
-        }
-      ],
+      "missing": [],
       "matrixKey": "catalog:frax"
     },
     {
@@ -20509,12 +21402,19 @@
       "label": null,
       "recipeNote": "Lista MoolahVault (USDT) is ERC-4626. Deposit USDT and redeem on a BSC fork.",
       "direction": "LR",
-      "summary": "Deposits 100 USDT into Lista's MoolahVault (USDT), the ERC-4626 vGauntletUSDT vault, then redeems every share on a pinned BSC fork, asserting the deposit pulled exactly the amount, shares were minted, the redeem burned every share and the USDT came back within rounding.",
+      "summary": "Deposits 100 USDT into Lista's MoolahVault (USDT), the ERC-4626 vGauntletUSDT vault, then redeems every share on a pinned BSC fork, asserting the deposit pulled exactly the amount, shares were minted, the redeem burned every share and the USDT came back within rounding. Also: fork:lista-dao:borrow.",
       "scripts": [
         {
           "script": "fork:lista-dao:deposit",
           "action": "deposit",
           "feature": "Deposit USDT into Lista Moolah vault",
+          "chain": "bsc",
+          "rpcEnv": "BSC_RPC_URL"
+        },
+        {
+          "script": "fork:lista-dao:borrow",
+          "action": "borrow",
+          "feature": "Borrow USDT on Lista Moolah",
           "chain": "bsc",
           "rpcEnv": "BSC_RPC_URL"
         }
@@ -20540,6 +21440,13 @@
           "short": "USDT on BSC",
           "kind": "token",
           "address": "0x55d398326f99059fF775485246999027B3197955"
+        },
+        {
+          "id": "lista-moolah-morpho-fork",
+          "label": "Lista Moolah (Morpho fork)",
+          "short": "Lista Moolah",
+          "kind": "contract",
+          "address": "0x8F73b65B4caAf64FBA2aF91cC5D4a2A1318E5D8C"
         }
       ],
       "edges": [
@@ -20584,6 +21491,12 @@
           "to": "user",
           "label": "100 USDT back within dust, shares burned",
           "kind": "transfer"
+        },
+        {
+          "from": "user",
+          "to": "lista-moolah-morpho-fork",
+          "label": "lista-dao:borrow: supplyCollateral(BTCB) then borrow(USDT)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -20645,6 +21558,19 @@
             ],
             "label": "100 USDT back within dust, shares burned",
             "range": "7"
+          },
+          {
+            "from": "user",
+            "to": "lista-moolah-morpho-fork",
+            "kind": "call",
+            "steps": [
+              8
+            ],
+            "labels": [
+              "lista-dao:borrow: supplyCollateral(BTCB) then borrow(USDT)"
+            ],
+            "label": "lista-dao:borrow: supplyCollateral(BTCB) then borrow(USDT)",
+            "range": "8"
           }
         ]
       },
@@ -22314,7 +23240,7 @@
       "label": null,
       "recipeNote": null,
       "direction": "LR",
-      "summary": "Two pinned Ethereum-fork swaps: SushiSwap V2 quotes with the router's getAmountsOut then calls swapExactTokensForTokens, SushiSwap V3 scans fee tiers on QuoterV2 then calls SwapRouter.exactInputSingle; each asserts the fresh account's USDC balance increased after 0.1 WETH in.",
+      "summary": "Two pinned Ethereum-fork swaps: SushiSwap V2 quotes with the router's getAmountsOut then calls swapExactTokensForTokens, SushiSwap V3 scans fee tiers on QuoterV2 then calls SwapRouter.exactInputSingle; each asserts the fresh account's USDC balance increased after 0.1 WETH in. Also: fork:sushiswap:add-liquidity.",
       "scripts": [
         {
           "script": "fork:sushiswap:v2",
@@ -22327,6 +23253,13 @@
           "script": "fork:sushiswap:v3",
           "action": "swap",
           "feature": "Swap WETH → USDC (V3)",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:sushiswap:add-liquidity",
+          "action": "add liquidity",
+          "feature": "Add liquidity on SushiSwap V2",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -22435,6 +23368,12 @@
           "to": "user",
           "label": "USDC out",
           "kind": "transfer"
+        },
+        {
+          "from": "user",
+          "to": "v2router",
+          "label": "sushiswap:add-liquidity: addLiquidity(WETH, USDC)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -22445,14 +23384,16 @@
             "kind": "call",
             "steps": [
               1,
-              3
+              3,
+              11
             ],
             "labels": [
               "getAmountsOut(WETH, USDC, 0.1)",
-              "swapExactTokensForTokens(0.1 WETH)"
+              "swapExactTokensForTokens(0.1 WETH)",
+              "sushiswap:add-liquidity: addLiquidity(WETH, USDC)"
             ],
-            "label": "getAmountsOut(WETH, USDC, 0.1) (+1 more)",
-            "range": "1–3"
+            "label": "getAmountsOut(WETH, USDC, 0.1) (+2 more)",
+            "range": "1–11"
           },
           {
             "from": "user",
@@ -22555,20 +23496,12 @@
       ],
       "features": {
         "total": 3,
-        "tested": 2,
-        "gap": 1,
+        "tested": 3,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "add liquidity",
-          "status": "gap",
-          "how": "Approve WETH and USDC to the SushiSwap V2 router 0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F, call addLiquidity(WETH, USDC, amountA, amountB, 0, 0, user, deadline), then assert the pair's balanceOf(user) LP rose and getReserves grew by exactly the two amounts used, the way fork:uniswap:v2-add already does on the Uniswap router.",
-          "blocker": null,
-          "note": "Router addLiquidity."
-        }
-      ],
+      "missing": [],
       "matrixKey": "catalog:sushiswap"
     },
     {
@@ -22725,12 +23658,19 @@
       "label": "Read-only",
       "recipeNote": "Official docs publish VaultFactory, not a permissionless vault. Curator vaults set their own deposit whitelist. The fork test reads the factory and does not deposit.",
       "direction": "LR",
-      "summary": "Read-only: the fork fetches the Symbiotic VaultFactory bytecode on a pinned Ethereum block and asserts the code length is non-zero (factoryCode > 0), because the docs publish no permissionless vault and each curator vault whitelists its depositors.",
+      "summary": "Read-only: the fork fetches the Symbiotic VaultFactory bytecode on a pinned Ethereum block and asserts the code length is non-zero (factoryCode > 0), because the docs publish no permissionless vault and each curator vault whitelists its depositors. Also: fork:symbiotic:deposit.",
       "scripts": [
         {
           "script": "fork:symbiotic:read",
           "action": "read",
           "feature": "Read the Symbiotic VaultFactory",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:symbiotic:deposit",
+          "action": "vault deposit",
+          "feature": "Deposit into a Symbiotic vault",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -22757,6 +23697,12 @@
           "to": "factory",
           "label": "getCode(VaultFactory) -> byte length",
           "kind": "call"
+        },
+        {
+          "from": "reader",
+          "to": "factory",
+          "label": "symbiotic:deposit: entity(i) scan for a public wstETH vault",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -22766,13 +23712,15 @@
             "to": "factory",
             "kind": "call",
             "steps": [
-              1
+              1,
+              2
             ],
             "labels": [
-              "getCode(VaultFactory) -> byte length"
+              "getCode(VaultFactory) -> byte length",
+              "symbiotic:deposit: entity(i) scan for a public wstETH vault"
             ],
-            "label": "getCode(VaultFactory) -> byte length",
-            "range": "1"
+            "label": "getCode(VaultFactory) -> byte length (+1 more)",
+            "range": "1–2"
           }
         ]
       },
@@ -22782,20 +23730,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "vault deposit",
-          "status": "gap",
-          "how": "Impersonate an address the chosen vault's deposit whitelist already admits, call that vault's deposit with FORK_AMOUNT of its collateral, and assert the depositor's share balance rises by the minted shares while the vault's totalAssets() rises by exactly the deposited amount.",
-          "blocker": "The official address list publishes VaultFactory only, and every curator vault sets its own deposit whitelist, so a fresh account has no permissionless vault to deposit into.",
-          "note": "Vault.deposit."
-        }
-      ],
+      "missing": [],
       "matrixKey": "catalog:symbiotic"
     },
     {
@@ -22952,12 +23892,19 @@
       "label": "Stake + lockup redeem",
       "recipeNote": "Theo thUSD / sthUSD on Ethereum. Minting thUSD and thBILL goes through whitelisted signed orders, so the test stakes thUSD into sthUSD (open to anyone), requests the redemption and claims it after the 5-day lockup, which it advances on the fork. thBILL and the minters are listed for verification.",
       "direction": "LR",
-      "summary": "Theo on an Ethereum fork: 100 thUSD deposited into the sthUSD ERC-4626 vault for exactly previewDeposit shares, then initiateRedeem books the lot at the pre-tx convertToAssets, the 5-day lockup is advanced locally, and redeem pays back exactly the booked thUSD and clears the request.",
+      "summary": "Theo on an Ethereum fork: 100 thUSD deposited into the sthUSD ERC-4626 vault for exactly previewDeposit shares, then initiateRedeem books the lot at the pre-tx convertToAssets, the 5-day lockup is advanced locally, and redeem pays back exactly the booked thUSD and clears the request. Also: fork:theo:unstake.",
       "scripts": [
         {
           "script": "fork:theo:stake",
           "action": "stake",
           "feature": "Stake thUSD into sthUSD, request and claim the redemption (Theo)",
+          "chain": "ethereum",
+          "rpcEnv": "ETHEREUM_RPC_URL"
+        },
+        {
+          "script": "fork:theo:unstake",
+          "action": "unstake",
+          "feature": "Unstake from Theo",
           "chain": "ethereum",
           "rpcEnv": "ETHEREUM_RPC_URL"
         }
@@ -23082,6 +24029,12 @@
           "to": "clock",
           "label": "evm_revert back to the pre-warp snapshot",
           "kind": "offchain"
+        },
+        {
+          "from": "user",
+          "to": "sthusd",
+          "label": "theo:unstake: initiateRedeem + warp 5d + redeem",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -23098,7 +24051,8 @@
               8,
               10,
               12,
-              14
+              14,
+              16
             ],
             "labels": [
               "asset() is thUSD and paused() false",
@@ -23108,10 +24062,11 @@
               "initiateRedeem(shares, user)",
               "currentRedeemRequest(user) within 1 bp of the booking",
               "redeem(request.shares, user, user)",
-              "currentRedeemRequest(user) cleared to 0"
+              "currentRedeemRequest(user) cleared to 0",
+              "theo:unstake: initiateRedeem + warp 5d + redeem"
             ],
-            "label": "asset() is thUSD and paused() false (+7 more)",
-            "range": "1–14"
+            "label": "asset() is thUSD and paused() false (+8 more)",
+            "range": "1–16"
           },
           {
             "from": "user",
@@ -23193,20 +24148,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "unstake",
-          "status": "gap",
-          "how": "Add fork:theo:unstake: deposit 100 thUSD for shares, call sthUSD.initiateRedeem(shares, owner), evm_increaseTime past lockupPeriod(), then call sthUSD.redeem(shares, receiver, owner) and assert thUSD.balanceOf(receiver) rose by exactly currentRedeemRequest(receiver).assets and the request cleared to zero.",
-          "blocker": null,
-          "note": "Unstake / redeem."
-        }
-      ],
+      "missing": [],
       "matrixKey": "theo"
     },
     {
@@ -24043,12 +24990,19 @@
       "label": null,
       "recipeNote": "Protocol mint/redeem of USDai is whitelisted (docs.usd.ai). The fork stakes USDai into sUSDai (ERC-4626). Redeem is a 30-day queue, so the test does not redeem.",
       "direction": "LR",
-      "summary": "Stakes up to 100 USDai into the sUSDai ERC-4626 vault on an Arbitrum fork, asserting deposit pulled exactly the amount and minted sUSDai shares; the 30-day redeem queue is not exercised. asset() and maxDeposit are pre-checked before any transaction.",
+      "summary": "Stakes up to 100 USDai into the sUSDai ERC-4626 vault on an Arbitrum fork, asserting deposit pulled exactly the amount and minted sUSDai shares; the 30-day redeem queue is not exercised. asset() and maxDeposit are pre-checked before any transaction. Also: fork:usdai:mint.",
       "scripts": [
         {
           "script": "fork:usdai:stake",
           "action": "stake",
           "feature": "Stake USDai → sUSDai",
+          "chain": "arbitrum",
+          "rpcEnv": "ARBITRUM_RPC_URL"
+        },
+        {
+          "script": "fork:usdai:mint",
+          "action": "mint USDai",
+          "feature": "Mint USDai",
           "chain": "arbitrum",
           "rpcEnv": "ARBITRUM_RPC_URL"
         }
@@ -24112,6 +25066,12 @@
           "to": "susdai",
           "label": "balanceOf(user): sUSDai shares minted",
           "kind": "call"
+        },
+        {
+          "from": "user",
+          "to": "usdai",
+          "label": "usdai:mint: deposit(PYUSD, 1000) (USDC reverts)",
+          "kind": "call"
         }
       ],
       "graph": {
@@ -24140,13 +25100,15 @@
             "to": "usdai",
             "kind": "call",
             "steps": [
-              3
+              3,
+              7
             ],
             "labels": [
-              "approve(sUSDai, amount)"
+              "approve(sUSDai, amount)",
+              "usdai:mint: deposit(PYUSD, 1000) (USDC reverts)"
             ],
-            "label": "approve(sUSDai, amount)",
-            "range": "3"
+            "label": "approve(sUSDai, amount) (+1 more)",
+            "range": "3–7"
           },
           {
             "from": "usdai",
@@ -24171,20 +25133,12 @@
       ],
       "features": {
         "total": 2,
-        "tested": 1,
-        "gap": 1,
+        "tested": 2,
+        "gap": 0,
         "notTestable": 0,
         "failingPaused": 0
       },
-      "missing": [
-        {
-          "feature": "mint USDai",
-          "status": "gap",
-          "how": "Impersonate a funded PYUSD holder, approve PYUSD to USDai 0x0A1a1A107E45b7Ced86833863f482BC5f4ed82EF, call USDai.deposit(depositAmount, usdaiAmountMinimum) and assert USDai.balanceOf(user) and totalSupply rise by the minted amount.",
-          "blocker": null,
-          "note": "USDai mint from USDC on Arbitrum."
-        }
-      ],
+      "missing": [],
       "matrixKey": "usd-ai"
     },
     {

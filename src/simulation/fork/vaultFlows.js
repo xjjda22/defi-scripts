@@ -492,6 +492,15 @@ async function run() {
   const base = await forkOrFail(protocol, action);
   if (!base) return;
   try {
+    if (action === "borrow" && protocol === "lista-dao") {
+      return await require("./listaMoolahFlow").borrow(base);
+    }
+    if (action === "borrow" && protocol === "curvance") {
+      return await require("./lendingBorrowExtras").curvanceBorrow(base);
+    }
+    if (action === "borrow" && (protocol === "euler" || protocol === "catalog:euler")) {
+      return await require("./lendingBorrowExtras").eulerBorrow(base);
+    }
     if (protocol === "steakhouse") return await erc4626(base, VAULTS.steakhouse);
     if (protocol === "gauntlet") return await erc4626(base, VAULTS.gauntlet);
     // Sentora RLUSD Main is a Morpho Vault V2 (maxDeposit is always 0), so gates are the pre-check.

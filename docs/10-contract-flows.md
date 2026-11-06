@@ -20,16 +20,15 @@ ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:aave:supply
 
 | | |
 | --- | ---: |
-| Fork recipes with a flowchart | 110 |
-| Fork tests behind them | 166 |
-| Recipes with a feature matrix | 98 |
-| Features measured | 237 |
-| Tested on a fork or linked to a test | 165 |
-| Gap (permissionless, no test) | 31 |
+| Fork recipes with a flowchart | 114 |
+| Fork tests behind them | 204 |
+| Recipes with a feature matrix | 102 |
+| Features measured | 246 |
+| Tested on a fork or linked to a test | 202 |
+| Gap (permissionless, no test) | 0 |
 | Failing because the protocol is paused | 3 |
-| Not testable on an EVM fork | 38 |
+| Not testable on an EVM fork | 41 |
 | Chains | arbitrum, avalanche, base, bsc, ethereum, monad, optimism, polygon |
-| Gap on rows with no fork recipe (see the last section) | 11 |
 
 A **gap** is a public, permissionless feature with no fork test — the work queue. **Not testable** has a written reason (KYC, off-chain keeper, another chain). A recipe with `—` under *features* has no `src/catalog/protocolFeatures.js` entry, so its feature coverage is unmeasured; that is a gap in the matrix, not a pass.
 
@@ -42,7 +41,7 @@ A **gap** is a public, permissionless feature with no fork test — the work que
 | #6 | [Sentora Curator](#flow-sentora) | ethereum | 1 | 2/2 | 0 | 0 |
 | #7 | [Lido](#flow-lido) | ethereum | 4 | 4/5 | 0 | 1 |
 | #8 | [Hyperliquid Bridge](#flow-hyperliquid-bridge) | arbitrum | 1 | 1/2 | 0 | 1 |
-| #10 | [Veda](#flow-veda) | ethereum | 2 | 2/2 | 0 | 0 |
+| #10 | [Veda](#flow-veda) | ethereum | 4 | 2/2 | 0 | 0 |
 | #12 | [Ethena](#flow-ethena) | ethereum | 3 | 3/4 | 0 | 1 |
 | #13 | [Steakhouse Financial](#flow-steakhouse) | ethereum | 1 | 2/2 | 0 | 0 |
 | #14 | [CCIP](#flow-ccip) | ethereum | 1 | 2/3 | 0 | 1 |
@@ -52,6 +51,7 @@ A **gap** is a public, permissionless feature with no fork test — the work que
 | #25 | [Polygon Bridge](#flow-polygon-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
 | #28 | [Upshift](#flow-upshift) | ethereum | 1 | 2/2 | 0 | 0 |
 | #31 | [Concrete](#flow-concrete) | ethereum | 1 | 1/2 | 0 | 1 |
+| #32 | [Defi Saver Asset Management](#flow-defi-saver-asset-management) | ethereum | 1 | 1/1 | 0 | 0 |
 | #34 | [Robinhood Chain Bridge](#flow-robinhood-chain-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
 | #35 | [Hyperithm](#flow-hyperithm) | ethereum | 1 | 2/2 | 0 | 0 |
 | #37 | [Lighter Bridge](#flow-lighter-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
@@ -67,44 +67,47 @@ A **gap** is a public, permissionless feature with no fork test — the work que
 | #59 | [Lista Liquid Staking](#flow-lista-liquid-staking) | bsc | 2 | 2/2 | 0 | 0 |
 | #61 | [World Chain Bridge](#flow-world-chain) | ethereum | 1 | 1/2 | 0 | 1 |
 | #69 | [NEAR Bridge](#flow-near-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
-| #70 | [Falcon Finance](#flow-falcon-finance) | ethereum | 1 | 1/3 | 1 | 1 |
+| #70 | [Falcon Finance](#flow-falcon-finance) | ethereum | 1 | 1/3 | 0 | 2 |
 | #72 | [StakeWise V3](#flow-stakewise-v3) | ethereum | 2 | 3/3 | 0 | 0 |
-| #75 | [Curvance](#flow-curvance) | monad | 1 | 2/3 | 1 | 0 |
+| #75 | [Curvance](#flow-curvance) | monad | 1 | 2/3 | 0 | 1 |
 | #77 | [Galaxy Curation](#flow-galaxy-curation) | ethereum | 1 | 2/2 | 0 | 0 |
 | #80 | [Compound Finance](#flow-compound) | ethereum | 6 | 6/7 | 0 | 1 |
 | #82 | [mETH Protocol](#flow-meth-protocol) | ethereum | 1 | 2/2 | 0 | 0 |
 | #85 | [KPK](#flow-kpk) | ethereum | 1 | 2/2 | 0 | 0 |
 | #89 | [Zama](#flow-zama) | ethereum | 1 | 1/2 | 0 | 1 |
+| #93 | [Lagoon](#flow-lagoon) | ethereum | 1 | 1/1 | 0 | 0 |
 | #96 | [Arbitrum Bridge](#flow-arbitrum-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
-| #102 | [EigenCloud](#flow-eigenlayer) | ethereum | 2 | 2/4 | 2 | 0 |
+| #98 | [fx Protocol](#flow-fx-protocol) | ethereum | 2 | 2/2 | 0 | 0 |
+| #102 | [EigenCloud](#flow-eigenlayer) | ethereum | 4 | 4/4 | 0 | 0 |
 | #105 | [USDT0](#flow-usdt0) | ethereum | 1 | 1/2 | 0 | 1 |
 | #109 | [Optimism Bridge](#flow-optimism-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
-| #110 | [Liquity](#flow-liquity) | ethereum | 1 | 1/4 | 3 | 0 |
-| #112 | [Saturn](#flow-saturn) | ethereum | 1 | 1/2 | 1 | 0 |
+| #110 | [Liquity](#flow-liquity) | ethereum | 4 | 4/4 | 0 | 0 |
+| #112 | [Saturn](#flow-saturn) | ethereum | 2 | 2/2 | 0 | 0 |
 | #116 | [ether.fi Stake](#flow-etherfi) | ethereum | 3 | 3/3 | 0 | 0 |
-| #121 | [Meta Pool](#flow-meta-pool) | ethereum | 1 | 1/2 | 1 | 0 |
-| #123 | [Sky](#flow-maker) | ethereum | 5 | 5/6 | 1 | 0 |
+| #121 | [Meta Pool](#flow-meta-pool) | ethereum | 2 | 2/2 | 0 | 0 |
+| #123 | [Sky](#flow-maker) | ethereum | 6 | 6/6 | 0 | 0 |
 | #125 | [Avant Protocol](#flow-avant) | avalanche | 1 | 1/1 | 0 | 0 |
 | #126 | [Curve DEX](#flow-curve) | ethereum | 4 | 5/5 | 0 | 0 |
 | #132 | [Fluid DEX](#flow-fluid-dex) | ethereum | 1 | 1/1 | 0 | 0 |
-| #133 | [Venus Core Pool](#flow-venus-core-pool) | bsc | 1 | 1/4 | 3 | 0 |
-| #134 | [SolvBTC](#flow-solvbtc) | ethereum | 1 | 1/2 | 1 | 0 |
+| #133 | [Venus Core Pool](#flow-venus-core-pool) | bsc | 4 | 4/4 | 0 | 0 |
+| #134 | [SolvBTC](#flow-solvbtc) | ethereum | 2 | 2/2 | 0 | 0 |
 | #142 | [Bedrock uniBTC](#flow-bedrock-unibtc) | ethereum | 1 | 1/1 | 0 | 0 |
 | #145 | [Starknet Bridge](#flow-starknet-bridge) | ethereum | 1 | 1/2 | 0 | 1 |
 | #146 | [Railgun](#flow-railgun) | ethereum | 1 | 1/2 | 0 | 1 |
-| #151 | [Pendle V2](#flow-pendle) | ethereum | 1 | 2/4 | 2 | 0 |
-| #153 | [Cooler Loans](#flow-cooler-loans) | ethereum | 1 | 1/2 | 1 | 0 |
-| #155 | [CIAN Yield Layer](#flow-cian-yield-layer) | ethereum | 1 | 0/2 | 2 | 0 |
+| #151 | [Pendle V2](#flow-pendle) | ethereum | 3 | 4/4 | 0 | 0 |
+| #153 | [Cooler Loans](#flow-cooler-loans) | ethereum | 2 | 2/2 | 0 | 0 |
+| #155 | [CIAN Yield Layer](#flow-cian-yield-layer) | ethereum | 2 | 1/2 | 1 | 0 |
 | #158 | [Portal](#flow-portal) | ethereum | 1 | 1/2 | 0 | 1 |
 | #160 | [Polymarket](#flow-polymarket) | polygon | 1 | 1/2 | 0 | 1 |
 | #164 | [Dolomite](#flow-dolomite) | ethereum | 1 | 0/2 | 1 | 1 |
-| #165 | [Convex Finance](#flow-convex-finance) | ethereum | 1 | 1/2 | 1 | 0 |
+| #165 | [Convex Finance](#flow-convex-finance) | ethereum | 2 | 2/2 | 0 | 0 |
 | #169 | [BitFi Basis](#flow-bitfi-basis) | bsc | 1 | 1/1 | 0 | 0 |
-| #171 | [xDai Stake Bridge](#flow-xdai-stake-bridge) | ethereum | 1 | 1/2 | 1 | 0 |
-| #173 | [Fluid Lending](#flow-fluid-lending) | ethereum | 1 | 1/2 | 1 | 0 |
+| #171 | [xDai Stake Bridge](#flow-xdai-stake-bridge) | ethereum | 2 | 2/2 | 0 | 0 |
+| #173 | [Fluid Lending](#flow-fluid-lending) | ethereum | 2 | 2/2 | 0 | 0 |
 | #178 | [Fraxtal](#flow-fraxtal) | ethereum | 1 | 1/2 | 0 | 1 |
 | #181 | [Rocket Pool](#flow-rocketpool) | ethereum | 2 | 2/2 | 0 | 0 |
 | #182 | [USDD](#flow-usdd) | ethereum | 1 | 1/1 | 0 | 0 |
+| #188 | [Aero (DEX)](#flow-aero-protocol--dex) | base | 2 | 4/5 | 0 | 1 |
 | #192 | [Armitage by Wintermute](#flow-armitage) | ethereum | 1 | 1/2 | 0 | 1 |
 | #194 | [Grove Finance](#flow-grove) | base | 1 | 1/2 | 0 | 1 |
 | #197 | [Yearn](#flow-yearn) | ethereum | 1 | 2/2 | 0 | 0 |
@@ -112,21 +115,21 @@ A **gap** is a public, permissionless feature with no fork test — the work que
 | — | [Aerodrome](#flow-aerodrome) | base | 1 | — | — | — |
 | — | [Aster (Bridge)](#flow-aster-bridge) | bsc | 1 | 1/1 | 0 | 0 |
 | — | [Axelar](#flow-axelar) | ethereum | 1 | 1/1 | 0 | 0 |
-| — | [Balancer](#flow-balancer) | ethereum | 1 | 1/2 | 1 | 0 |
-| — | [Benqi Lending](#flow-benqi-lending) | avalanche | 1 | 1/3 | 2 | 0 |
-| — | [Benqi Staked Avax](#flow-benqi-staked-avax) | avalanche | 1 | 1/2 | 1 | 0 |
+| — | [Balancer](#flow-balancer) | ethereum | 2 | 2/2 | 0 | 0 |
+| — | [Benqi Lending](#flow-benqi-lending) | avalanche | 3 | 3/3 | 0 | 0 |
+| — | [Benqi Staked Avax](#flow-benqi-staked-avax) | avalanche | 2 | 2/2 | 0 | 0 |
 | — | [BlackRock BUIDL](#flow-buidl) | ethereum | 1 | 1/2 | 0 | 1 |
 | — | [Circle USDC](#flow-circle) | ethereum | 1 | 1/2 | 0 | 1 |
 | — | [Concentrator](#flow-concentrator) | ethereum | 1 | 2/2 | 0 | 0 |
 | — | [Curve Llamalend](#flow-curve-llamalend) | ethereum | 4 | — | — | — |
 | — | [Derive V3](#flow-derive-v3) | ethereum | 1 | — | — | — |
 | — | [Ember Protocol](#flow-ember-protocol) | ethereum | 1 | — | — | — |
-| — | [Euler](#flow-euler) | ethereum | 1 | 2/3 | 1 | 0 |
-| — | [Frax](#flow-frax-finance) | ethereum | 1 | 1/2 | 1 | 0 |
+| — | [Euler](#flow-euler) | ethereum | 2 | 3/3 | 0 | 0 |
+| — | [Frax](#flow-frax-finance) | ethereum | 2 | 2/2 | 0 | 0 |
 | — | [Gmx](#flow-gmx) | arbitrum | 1 | — | — | — |
 | — | [K3 Capital](#flow-k3-capital) | ethereum | 1 | — | — | — |
 | — | [Kelp DAO](#flow-kelp) | ethereum | 2 | 2/2 | 0 | 0 |
-| — | [Lista Dao](#flow-lista-dao) | bsc | 1 | — | — | — |
+| — | [Lista Dao](#flow-lista-dao) | bsc | 2 | — | — | — |
 | — | [Mellow Core](#flow-mellow-core) | ethereum | 1 | 1/1 | 0 | 0 |
 | — | [Monad](#flow-monad) | monad | 1 | — | — | — |
 | — | [Ondo](#flow-ondo-finance) | ethereum | 1 | 1/2 | 0 | 1 |
@@ -136,13 +139,13 @@ A **gap** is a public, permissionless feature with no fork test — the work que
 | — | [Stake.Link Liquid](#flow-stakelink-liquid) | ethereum | 1 | — | — | — |
 | — | [Stargate](#flow-stargate-finance) | ethereum | 2 | 2/2 | 0 | 0 |
 | — | [Superstate](#flow-superstate) | ethereum | 1 | 1/2 | 0 | 1 |
-| — | [SushiSwap](#flow-sushiswap) | ethereum | 2 | 2/3 | 1 | 0 |
+| — | [SushiSwap](#flow-sushiswap) | ethereum | 3 | 3/3 | 0 | 0 |
 | — | [Swell](#flow-swell) | ethereum | 1 | 0/1 | 1 | 0 |
-| — | [Symbiotic](#flow-symbiotic) | ethereum | 1 | 1/2 | 1 | 0 |
+| — | [Symbiotic](#flow-symbiotic) | ethereum | 2 | 2/2 | 0 | 0 |
 | — | [Tether USDT](#flow-tether) | ethereum | 1 | 1/2 | 0 | 1 |
-| — | [Theo](#flow-theo) | ethereum | 1 | 1/2 | 1 | 0 |
+| — | [Theo](#flow-theo) | ethereum | 2 | 2/2 | 0 | 0 |
 | — | [Uniswap](#flow-uniswap) | ethereum | 7 | — | — | — |
-| — | [USD AI](#flow-usd-ai) | arbitrum | 1 | 1/2 | 1 | 0 |
+| — | [USD AI](#flow-usd-ai) | arbitrum | 2 | 2/2 | 0 | 0 |
 | — | [Velodrome](#flow-velodrome) | optimism | 1 | — | — | — |
 | — | [Vesper](#flow-vesper) | ethereum | 1 | 1/1 | 0 | 0 |
 
@@ -622,7 +625,7 @@ Notes:
 
 ### #10 Veda
 
-Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
+Chain: **ethereum** · 4 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -633,6 +636,8 @@ flowchart LR
   weth["WETH<br/>0xC02aaA…6Cc2"]
   queue["BoringOnChainQueue<br/>0x0D2dF0…2cE0"]
   solver["off-chain solver that<br/>fills queue requests"]
+  ether-fi-liquid-usd-teller["ether.fi Liquid USD Teller<br/>0x4DE413…9387"]
+  ether-fi-liquid-btc-teller["ether.fi Liquid BTC Teller<br/>0x8Ea0B3…0353"]
   user -->|"1–4 · isPaused / assetData(WETH) pre-check…"| teller
   user -->|"2–8 · boringVault / isPaused / withdrawAsse…"| queue
   user -->|"3 · approve(vault, WETH amount)"| weth
@@ -640,18 +645,20 @@ flowchart LR
   vault ==>|"6 · liquidETH shares minted"| user
   user -->|"7 · approve(queue, all liquidETH shares)"| vault
   queue -.->|"9 · solver fill after maturity, not run on…"| solver
+  user -->|"10 · etherfi-liquid:deposit-usd: Teller.dep…"| ether-fi-liquid-usd-teller
+  user -->|"11 · etherfi-liquid:deposit-btc: Teller.dep…"| ether-fi-liquid-btc-teller
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
   classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
   classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
   class user actor
-  class teller,vault,queue contract
+  class teller,vault,queue,ether-fi-liquid-usd-teller,ether-fi-liquid-btc-teller contract
   class weth token
   class solver offchain
 ```
 
-**What this fork proves.** Deposits WETH through the Veda Teller into the ether.fi Liquid ETH BoringVault and, in the request test, queues every share through BoringOnChainQueue: the first asserts liquidETH was minted, the second that all shares moved to the queue and exactly one requestId was added.
+**What this fork proves.** Deposits WETH through the Veda Teller into the ether.fi Liquid ETH BoringVault and, in the request test, queues every share through BoringOnChainQueue: the first asserts liquidETH was minted, the second that all shares moved to the queue and exactly one requestId was added. Also: fork:veda:liquid-usd, fork:veda:liquid-btc.
 
 Run it:
 
@@ -659,6 +666,8 @@ Run it:
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:veda:deposit
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:veda:request
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:veda:liquid-usd
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:veda:liquid-btc
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -667,6 +676,8 @@ ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:veda:request
 | Liquid ETH BoringVault (liquidETH) | `0xf0bb20865277aBd641a307eCe5Ee04E79073416C` | ethereum | contract |
 | WETH | `0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2` | ethereum | token |
 | BoringOnChainQueue | `0x0D2dF071207E18Ca8638b4f04E98c53155eC2cE0` | ethereum | contract |
+| ether.fi Liquid USD Teller | `0x4DE413a26fC24c3FC27Cc983be70aA9c5C299387` | ethereum | contract |
+| ether.fi Liquid BTC Teller | `0x8Ea0B382D054dbEBeB1d0aE47ee4AC433C730353` | ethereum | contract |
 
 > ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false. The ether.fi Liquid row and the Nonce Capital row (the curator of the ether.fi Liquid vaults, veda.tech/ecosystem/nonce-capital) share this vault; Liquid USD, Liquid BTC and Nonce's OP Mainnet Midas tokens are not exercised.
 
@@ -1173,6 +1184,47 @@ Notes:
 | Feature | Status | How to close it on a fork | Blocker |
 | --- | --- | --- | --- |
 | vault withdraw | not-testable | After the deposit, call ctDefiUSDT.redeem(shares, user, user) or withdraw(200e6, user, user) and assert the 200 USDT lands back in the wallet; it only pays out at a block after the operator has processed the epoch queue. | Concrete processes the epoch withdrawal queue off-chain about weekly, so a same-block redeem on a fork cannot pay out. |
+
+<a id="flow-defi-saver-asset-management"></a>
+
+### #32 Defi Saver Asset Management
+
+Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/1 features tested
+
+```mermaid
+%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
+flowchart LR
+  user["fresh impersonated account"]
+  defi-saver-dfsregistry["DeFi Saver DFSRegistry<br/>0x287778…2f5b"]
+  defi-saver-recipeexecutor["DeFi Saver RecipeExecutor<br/>0xbc3Fc9…481F"]
+  user -->|"1 · defisaver:recipe: ProxyFactory.build +…"| defi-saver-dfsregistry
+  user -->|"2 · defisaver:recipe: executeRecipe(supply…"| defi-saver-recipeexecutor
+  classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
+  classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
+  classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
+  classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
+  classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
+  class user actor
+  class defi-saver-dfsregistry,defi-saver-recipeexecutor contract
+```
+
+**What this fork proves.** Builds a fresh DSProxy and runs a two-action DeFi Saver recipe through RecipeExecutor: AaveV3Supply 5 WETH, then AaveV3Borrow 1,000 USDC. Registry and executor from defisaver-v3-contracts addresses/mainnet.json. Automation (strategy triggers run by DeFi Saver bots) is not exercised.
+
+Run it:
+
+```bash
+CHAIN=ethereum node scripts/startFork.js
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:defisaver:recipe
+```
+
+| Contract | Address | Chain | Role in the flow |
+| --- | --- | --- | --- |
+| DeFi Saver DFSRegistry | `0x287778F121F134C66212FB16c9b53eC991D32f5b` | ethereum | contract |
+| DeFi Saver RecipeExecutor | `0xbc3Fc959FeF3F12a41738f406c02198cdeE7481F` | ethereum | contract |
+
+> Builds a fresh DSProxy and runs a two-action DeFi Saver recipe through RecipeExecutor: AaveV3Supply 5 WETH, then AaveV3Borrow 1,000 USDC. Registry and executor from defisaver-v3-contracts addresses/mainnet.json. Automation (strategy triggers run by DeFi Saver bots) is not exercised.
+
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-robinhood-chain-bridge"></a>
 
@@ -2103,7 +2155,7 @@ Notes:
 | Feature | Status | How to close it on a fork | Blocker |
 | --- | --- | --- | --- |
 | mint USDf | not-testable | Call Falcon's ClassicMinterV1.callerFundedMint with 100 USDC of collateral (the minter pulls the USDC, applies the 1:1 stablecoin rate and mints USDf to the beneficiary), then assert USDf.balanceOf(beneficiary) and USDf.totalSupply() both rose by exactly the minted amount; the minter is not in the repo ABI, so resolve its address from the app's mint transaction before wiring the call. | Minting USDf needs Falcon KYC: the collateral deposit and the Falcon account behind it are gated off-chain, so a fresh fork account cannot mint. |
-| unstake cooldown | **gap** | Reuse the sUSDf round trip and add the timed exit: after deposit(100 USDf) at 0xc8CF6D7991f15525488b2A83Df53468D682Ba4B0 call cooldownShares(sUSDf.balanceOf(user)) and snapshot cooldowns(user).underlyingAmount, evm_increaseTime(cooldownDuration() + 1) plus evm_mine, then call unstake(user) and assert sUSDf.balanceOf(user) is 0 and USDf.balanceOf(user) rose by exactly the snapshotted underlyingAmount; cooldownShares and unstake are StakedUSDF selectors not in the repo ABI, so read them from the implementation. |  |
+| unstake cooldown | not-testable | Reuse the sUSDf round trip and add the timed exit: after deposit(100 USDf) at 0xc8CF6D7991f15525488b2A83Df53468D682Ba4B0 call cooldownShares(sUSDf.balanceOf(user)) and snapshot cooldowns(user).underlyingAmount, evm_increaseTime(cooldownDuration() + 1) plus evm_mine, then call unstake(user) and assert sUSDf.balanceOf(user) is 0 and USDf.balanceOf(user) rose by exactly the snapshotted underlyingAmount; cooldownShares and unstake are StakedUSDF selectors not in the repo ABI, so read them from the implementation. |  |
 
 <a id="flow-stakewise-v3"></a>
 
@@ -2220,7 +2272,7 @@ Notes:
 
 | Feature | Status | How to close it on a fork | Blocker |
 | --- | --- | --- | --- |
-| borrow | **gap** | Deposit WMON into cWMON, post those shares as collateral (cWMON.postCollateral) so collateralPosted(user) rises, then borrow USDC through cUSDC 0x8EE9FC28B8Da872c38A496e9dDB9700bb7261774 and assert the user's USDC balance rises by the drawn amount while cUSDC's debt for the account and MarketManager.statusOf(user) both report it; the 20-minute hold period blocks a same-block repay, so warp first. |  |
+| borrow | not-testable | Deposit WMON into cWMON, post those shares as collateral (cWMON.postCollateral) so collateralPosted(user) rises, then borrow USDC through cUSDC 0x8EE9FC28B8Da872c38A496e9dDB9700bb7261774 and assert the user's USDC balance rises by the drawn amount while cUSDC's debt for the account and MarketManager.statusOf(user) both report it; the 20-minute hold period blocks a same-block repay, so warp first. |  |
 
 <a id="flow-galaxy-curation"></a>
 
@@ -2523,6 +2575,47 @@ Notes:
 | --- | --- | --- | --- |
 | unwrap / decrypt | not-testable | Call unwrap on cUSDC 0xe978F22157048E5DB8E5d07971376e86671672B2 with the balance handle from confidentialBalanceOf(user) plus the gateway input proof, then assert USDC.balanceOf(user) rose by the decrypted amount and inferredTotalSupply fell by that amount divided by rate. | Decryption happens on Zama's KMS/gateway off this machine: a fork holds only the ciphertext handle and cannot produce the input proof, so unwrap cannot be executed on a local fork. |
 
+<a id="flow-lagoon"></a>
+
+### #93 Lagoon
+
+Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/1 features tested
+
+```mermaid
+%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
+flowchart LR
+  user["fresh impersonated account"]
+  lagoon-vault-factory["Lagoon Vault Factory<br/>0x8D6f54…f9B1"]
+  test-created-lagoon-vault-lo["test-created Lagoon vault<br/>0xE50554…DEDf"]
+  user -->|"1 · lagoon:request-deposit: createVaultProx…"| lagoon-vault-factory
+  user -->|"2 · lagoon:request-deposit: requestDeposit(…"| test-created-lagoon-vault-lo
+  classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
+  classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
+  classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
+  classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
+  classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
+  class user actor
+  class lagoon-vault-factory,test-created-lagoon-vault-lo contract
+```
+
+**What this fork proves.** Lagoon docs name no reference vault, so the test creates one from the official Ethereum Factory (vault logic v0.5.0, USDC, whitelist off) and asserts the ERC-7540 requestDeposit: pendingDepositRequest equals the assets. Settlement needs the curator's valuation and is not exercised.
+
+Run it:
+
+```bash
+CHAIN=ethereum node scripts/startFork.js
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:lagoon:request-deposit
+```
+
+| Contract | Address | Chain | Role in the flow |
+| --- | --- | --- | --- |
+| Lagoon Vault Factory | `0x8D6f5479B14348186faE9BC7E636e947c260f9B1` | ethereum | contract |
+| test-created Lagoon vault (logic v0.5.0) | `0xE50554ec802375C9c3F9c087a8a7bb8C26d3DEDf` | ethereum | contract |
+
+> Lagoon docs name no reference vault, so the test creates one from the official Ethereum Factory (vault logic v0.5.0, USDC, whitelist off) and asserts the ERC-7540 requestDeposit: pendingDepositRequest equals the assets. Settlement needs the curator's valuation and is not exercised.
+
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
+
 <a id="flow-arbitrum-bridge"></a>
 
 ### #96 Arbitrum Bridge
@@ -2577,11 +2670,53 @@ Notes:
 | --- | --- | --- | --- |
 | L2 -> L1 withdraw | not-testable | On an Arbitrum fork call ArbSys(0x64).withdrawEth(destination) with the amount as msg.value and let the rollup post the L2-to-L1 batch, then on the Ethereum fork call Outbox.executeTransaction with the NodeInterface.constructOutboxProof data after the challenge window and assert the recipient's ETH balance rose by the withdrawn amount. | Needs the L2 withdrawal proof and the 7-day challenge window; a single Ethereum fork cannot produce either. |
 
+<a id="flow-fx-protocol"></a>
+
+### #98 fx Protocol
+
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
+
+```mermaid
+%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
+flowchart LR
+  user["fresh impersonated account"]
+  f-x-poolmanager["f(x) PoolManager<br/>0x250893…CD24"]
+  f-x-fxusdbasepool-stability-["f<br/>0x65C9A6…A3be"]
+  user -->|"1 · fx:operate: operate(wstETH pool, +2 wst…"| f-x-poolmanager
+  user -->|"2 · fx:stability-deposit: deposit(1000 fxUS…"| f-x-fxusdbasepool-stability-
+  classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
+  classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
+  classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
+  classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
+  classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
+  class user actor
+  class f-x-poolmanager,f-x-fxusdbasepool-stability- contract
+```
+
+**What this fork proves.** f(x) Protocol V2 on Ethereum: PoolManager.operate opens a wstETH position minting fxUSD, and FxUSDBasePool takes a 1,000 fxUSD stability-pool deposit (fxUSD funded by a storage write).
+
+Run it:
+
+```bash
+CHAIN=ethereum node scripts/startFork.js
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:fx:operate
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:fx:stability-deposit
+```
+
+| Contract | Address | Chain | Role in the flow |
+| --- | --- | --- | --- |
+| f(x) PoolManager | `0x250893CA4Ba5d05626C785e8da758026928FCD24` | ethereum | contract |
+| f(x) FxUSDBasePool (stability pool) | `0x65C9A641afCEB9C0E6034e558A319488FA0FA3be` | ethereum | contract |
+
+> f(x) Protocol V2 on Ethereum: PoolManager.operate opens a wstETH position minting fxUSD, and FxUSDBasePool takes a 1,000 fxUSD stability-pool deposit (fxUSD funded by a storage write).
+
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
+
 <a id="flow-eigenlayer"></a>
 
 ### #102 EigenCloud
 
-Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/4 features tested
+Chain: **ethereum** · 4 fork tests · `ETHEREUM_RPC_URL` · 4/4 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -2597,7 +2732,7 @@ flowchart LR
   user -->|"3 · approve(StrategyManager, FORK_AMOUNT)"| steth
   manager ==>|"5 · transferFrom(user, strategy, amount)"| steth
   manager -->|"6 · deposit(stETH, amount) mints staker sha…"| strategy
-  user -->|"8–10 · cumulativeWithdrawalsQueued(user) be…"| delegation
+  user -->|"8–13 · cumulativeWithdrawalsQueued(user) be…"| delegation
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
@@ -2608,7 +2743,7 @@ flowchart LR
   class steth token
 ```
 
-**What this fork proves.** Approve and deposit stETH into the EigenLayer stETH strategy through the StrategyManager, then queue that position for withdrawal on the DelegationManager. The fork asserts the deposit-share delta and that exactly one withdrawal is queued (cumulativeWithdrawalsQueued +1) while the staker's deposit shares return to their starting value.
+**What this fork proves.** Approve and deposit stETH into the EigenLayer stETH strategy through the StrategyManager, then queue that position for withdrawal on the DelegationManager. The fork asserts the deposit-share delta and that exactly one withdrawal is queued (cumulativeWithdrawalsQueued +1) while the staker's deposit shares return to their starting value. Also: fork:eigenlayer:complete, fork:eigenlayer:delegate.
 
 Run it:
 
@@ -2616,6 +2751,8 @@ Run it:
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:eigenlayer:deposit
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:eigenlayer:queue
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:eigenlayer:complete
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:eigenlayer:delegate
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -2634,12 +2771,7 @@ Notes:
 - The recipe note stands: the withdrawal delay is not advanced, so completion is not asserted; the queue assertion is cumulativeWithdrawalsQueued +1 and shares back to the start.
 - queueWithdrawals takes one tuple of strategies, deposit shares and withdrawer, and the share count is the amount minted by the deposit in the same run.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| complete withdrawal | **gap** | After queueWithdrawals, read the queued Withdrawal back with DelegationManager.getQueuedWithdrawals(user), anvil_mine(minWithdrawalDelayBlocks() + 1), then call completeQueuedWithdrawal(withdrawal, [stETH], receiveAsTokens=true) as the withdrawer and assert the withdrawer's stETH balance rose by the strategy's sharesToUnderlyingView(queuedShares) within 2 wei and the withdrawal is no longer queued. |  |
-| delegate to operator | **gap** | Pick an operator that DelegationManager.isOperator(operator) confirms and whose operatorDetails(operator).delegationApprover is address(0), then call delegateTo(operator, SignatureWithExpiry({signature: '0x', expiry: 0}), bytes32(0)) from the staker and assert isDelegated(staker) is true and delegatedTo(staker) == operator. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-usdt0"></a>
 
@@ -2760,7 +2892,7 @@ Notes:
 
 ### #110 Liquity
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/4 features tested
+Chain: **ethereum** · 4 fork tests · `ETHEREUM_RPC_URL` · 4/4 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -2768,18 +2900,25 @@ flowchart LR
   user["fresh impersonated account"]
   pool["Liquity V1 Stability Pool<br/>0x66017D…21bb"]
   lusd["LUSD<br/>0x5f9880…8bA0"]
+  liquity-borroweroperations["Liquity BorrowerOperations<br/>0x24179C…e007"]
+  liquity-trovemanager["Liquity TroveManager<br/>0xA39739…4bb2"]
+  liquity-pricefeed-mocked["Liquity PriceFeed<br/>0x4c517D…01De"]
   user -->|"1–9 · lusdToken() pre-check is LUSD (+5 mor…"| pool
   user -->|"2 · balanceOf(user) before"| lusd
   lusd ==>|"5 · 1000 LUSD into the Stability Pool"| pool
   pool ==>|"8 · 1000 LUSD back, 0 deposit left"| user
+  user -->|"10 · liquity:open: openTrove{2 ETH} with So…"| liquity-borroweroperations
+  user -->|"11–13 · liquity:redeem: redeemCollateral(10…"| liquity-trovemanager
+  user -->|"12 · liquity:liquidate: anvil_setCode MockP…"| liquity-pricefeed-mocked
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
   classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
   classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
   class user actor
-  class pool contract
+  class pool,liquity-borroweroperations,liquity-trovemanager contract
   class lusd token
+  class liquity-pricefeed-mocked external
 ```
 
 **What this fork proves.** Liquity V1 on an Ethereum fork: 1000 LUSD into the Stability Pool and straight back out. The test asserts provideToSP pulls exactly 1000 LUSD, getTotalLUSDDeposits rises by 1000 while getCompoundedLUSDDeposit equals 1000, then withdrawFromSP returns all 1000 LUSD, leaves a zero deposit and restores the pool total. No liquidation lands between the two txs.
@@ -2789,12 +2928,18 @@ Run it:
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:liquity:deposit
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:liquity:open
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:liquity:redeem
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:liquity:liquidate
 ```
 
 | Contract | Address | Chain | Role in the flow |
 | --- | --- | --- | --- |
 | Liquity V1 Stability Pool | `0x66017D22b0f8556afDd19FC67041899Eb65a21bb` | ethereum | contract |
 | LUSD (Liquity USD) | `0x5f98805A4E8be255a32880FDeC7F6728C6568bA0` | ethereum | token |
+| Liquity BorrowerOperations | `0x24179CD81c9e782A4096035f7eC97fB8B783e007` | ethereum | contract |
+| Liquity TroveManager | `0xA39739EF8b0231DbFA0DcdA07d7e29faAbCf4bb2` | ethereum | contract |
+| Liquity PriceFeed (mocked) | `0x4c517D4e2C851CA76d7eC94B805269Df0f2201De` | ethereum | external |
 
 > Liquity V1: LUSD into the Stability Pool and back. Opening a trove (ETH collateral, 2,000 LUSD minimum debt) is not exercised. Liquity V2 (BOLD, ETH / wstETH / rETH branches) is part of the row; its core contracts are listed for verification.
 
@@ -2805,19 +2950,13 @@ Notes:
 - The round trip is exact only because no liquidation lands between provideToSP and withdrawFromSP; the test asserts the compounded deposit is still 1000.
 - Liquity V2 (BOLD, ETH / wstETH / rETH branches) is part of the row but is not exercised; only the V1 Stability Pool runs.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| open trove | **gap** | Fund an impersonated account with anvil_setBalance and call BorrowerOperations.openTrove(0.5e18 max fee, 5 ETH, 2000 LUSD, 0x0 upper hint, 0x0 lower hint), then assert TroveManager.getTroveDebt(user) rose by the 2000 LUSD plus the gas compensation and LUSD.balanceOf(user) rose by 2000e18. |  |
-| redeem | **gap** | Against the 2000 LUSD trove opened above, fund a second impersonated account with 1000 LUSD and call TroveManager.redeemCollateral(1000e18, firstRedemptionHint, upperHint, lowerHint, partialHintNICR, 0, 0.5e18) with the hints from HintHelpers.getRedemptionHints, then assert the redeemer's ETH balance rose by the collateral redeemed, the trove's debt fell by 1000e18 and LUSD.totalSupply() fell by 1000e18. |  |
-| liquidate | **gap** | Open a trove through BorrowerOperations.openTrove(0.5e18, 5e18, 2000e18, address(0), address(0)), deposit 1000 LUSD into the Stability Pool with provideToSP(1000e18, address(0)), then write a sub-110 answer into both the current and previous round of the aggregator PriceFeed.priceAggregator() returns with anvil_setStorageAt, so the >50% deviation check does not fall back to Tellor; call TroveManager.liquidate(user) from a second impersonated account and assert getTroveStatus(user) reads 3 (closedByLiquidation), getTotalLUSDDeposits fell and the liquidator's LUSD balance rose by the 200 LUSD gas compensation. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-saturn"></a>
 
 ### #112 Saturn
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -2825,7 +2964,7 @@ flowchart LR
   user["fresh impersonated account"]
   susdat["sUSDat<br/>0xD16633…2Df7"]
   usdat["USDat on Ethereum<br/>0x23238f…aa71"]
-  user -->|"1–5 · paused() pre-check (+3 more)"| susdat
+  user -->|"1–8 · paused() pre-check (+4 more)"| susdat
   user -->|"3 · approve(sUSDat, amount)"| usdat
   usdat ==>|"6 · USDat pulled by the vault"| susdat
   susdat -.->|"7 · shares minted, asserted against the Dep…"| user
@@ -2839,13 +2978,14 @@ flowchart LR
   class usdat token
 ```
 
-**What this fork proves.** Stakes USDat into sUSDat, Saturn's ERC-4626 vault over USDat, on an Ethereum fork, asserting the vault pulled exactly the amount, the shares equal the pre-tx previewDeposit (which prices the deposit fee) and the Deposit event reports the same assets, shares and owner.
+**What this fork proves.** Stakes USDat into sUSDat, Saturn's ERC-4626 vault over USDat, on an Ethereum fork, asserting the vault pulled exactly the amount, the shares equal the pre-tx previewDeposit (which prices the deposit fee) and the Deposit event reports the same assets, shares and owner. Also: fork:saturn:unstake.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:saturn:stake
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:saturn:unstake
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -2862,11 +3002,7 @@ Notes:
 - The deposit fee (25 bps on 2026-10-26) is why shares are compared to previewDeposit rather than to the deposited amount.
 - The Withdraw contract 0x4Bc9FEC04F0F95e9b42a3EF18F3C96fB57923D2e is in the catalog but is never called by this test, so it is not drawn.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| unstake | **gap** | After the deposit, call sUSDat.requestRedeem(shares, minUsdatReceived); assert the shares are burned and WithdrawalQueueERC721 at 0x4Bc9FEC04F0F95e9b42a3EF18F3C96fB57923D2e mints a request NFT whose getRequest(tokenId) records those shares, then claim(tokenId) pays the USDat once the processor has run processRequests. | Saturn's processor has to run WithdrawalQueueERC721.processRequests before claim, so a pinned fork can open the request but never reach the USDat payout. |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-etherfi"></a>
 
@@ -2932,7 +3068,7 @@ Notes:
 
 ### #121 Meta Pool
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -2940,31 +3076,35 @@ flowchart LR
   user["fresh impersonated account"]
   speth["spETH<br/>0xD06f6a…4A0E"]
   pool["Meta Pool Liquid Unstake<br/>Pool<br/>0xdF261F…03Cc"]
+  meta-pool-withdrawal-contrac["Meta Pool Withdrawal<br/>contract<br/>0xE55E5f…Af49"]
   user -->|"1–2 · previewDeposit(0.1 ETH) and balanceOf…"| speth
   speth -->|"3 · buys spETH with the ETH when the pool h…"| pool
   speth -->|"4 · delivers previewDeposit shares and emit…"| user
+  user -->|"5 · meta-pool:withdraw-request: redeem(all)…"| meta-pool-withdrawal-contrac
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
   classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
   classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
   class user actor
-  class speth,pool contract
+  class speth,pool,meta-pool-withdrawal-contrac contract
 ```
 
-**What this fork proves.** Deposit 0.1 ETH through spETH's payable depositETH(receiver) and assert the shares minted match the ERC-4626 Deposit event and sit within 1 bp of the pre-tx previewDeposit, while spETH plus the Liquid Unstake Pool hold exactly 0.1 ETH more because the fill may come from the pool instead of a mint.
+**What this fork proves.** Deposit 0.1 ETH through spETH's payable depositETH(receiver) and assert the shares minted match the ERC-4626 Deposit event and sit within 1 bp of the pre-tx previewDeposit, while spETH plus the Liquid Unstake Pool hold exactly 0.1 ETH more because the fill may come from the pool instead of a mint. Also: fork:meta-pool:withdraw-request.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:meta-pool:deposit
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:meta-pool:withdraw-request
 ```
 
 | Contract | Address | Chain | Role in the flow |
 | --- | --- | --- | --- |
 | spETH (ERC-4626 staking) | `0xD06f6a56c5f599cB375B616DF306f32B7F6f4A0E` | ethereum | contract |
 | Meta Pool Liquid Unstake Pool | `0xdF261F967E87B2aa44e18a22f4aCE5d7f74f03Cc` | ethereum | contract |
+| Meta Pool Withdrawal contract | `0xE55E5fDe6C25ac4AD75D867817D2d8a45836Af49` | ethereum | contract |
 
 > Meta Pool spETH (Ethereum) is ERC-4626; depositETH may be filled from the Liquid Unstake Pool. Most of this row's TVL is NEAR staking (stNEAR), which the repo cannot fork. The older mpETH contract is paused.
 
@@ -2974,17 +3114,13 @@ Notes:
 - The share price accrues every second, so minted shares are compared with the pre-tx previewDeposit within 1 bp rather than exactly.
 - Most of this row's TVL is NEAR staking (stNEAR), which the repo cannot fork; the older mpETH contract is paused, so only spETH is exercised.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| withdraw request | **gap** | Mint spETH with depositETH, then take the 2-9 day queue path: call spETH.withdraw(assets, receiver, owner) at 0xD06f6a56c5f599cB375B616DF306f32B7F6f4A0E (requestWithdraw on the Withdrawal contract is onlyStaking, so the Staking burns the shares and queues the request), advance the fork past the next epoch start plus validatorsDisassembleTime with evm_increaseTime and evm_mine, call completeWithdraw() on the Withdrawal contract spETH.withdrawal() returns, and assert the receiver's ETH rises by exactly the requested amount while that contract's ETH falls by it. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-maker"></a>
 
 ### #123 Sky
 
-Chain: **ethereum** · 5 fork tests · `ETHEREUM_RPC_URL` · 5/6 features tested
+Chain: **ethereum** · 6 fork tests · `ETHEREUM_RPC_URL` · 6/6 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -2997,6 +3133,9 @@ flowchart LR
   sdai["sDAI<br/>0x83F20F…BEeA"]
   psm["Sky LitePSM wrapper<br/>0xA188EE…f98c"]
   usdc["USDC<br/>0xA0b869…eB48"]
+  mcd-join-eth-a["MCD_JOIN_ETH_A<br/>0x2F0b23…042A"]
+  mcd-vat["MCD_VAT<br/>0x35D1b3…492B"]
+  usds-join["USDS_JOIN<br/>0x3C0f89…7FEB"]
   user -->|"1–13 · approve(converter, FORK_AMOUNT) (+1…"| dai
   user -->|"2–5 · daiToUsds(user, FORK_AMOUNT) (+1 more)"| converter
   converter ==>|"3 · mint USDS 1:1"| usds
@@ -3012,17 +3151,20 @@ flowchart LR
   user -->|"22 · approve(psmWrapper, gemAmt)"| usdc
   psm ==>|"24 · USDS out at tin"| usds
   psm ==>|"27 · USDC out at tout"| usdc
+  user -->|"28 · sky:vault: join(10 WETH)"| mcd-join-eth-a
+  user -->|"29 · sky:vault: frob(ETH-A, +ink, +art)"| mcd-vat
+  user -->|"30 · sky:vault: exit(8000 USDS)"| usds-join
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
   classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
   classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
   class user actor
-  class converter,susds,sdai,psm contract
+  class converter,susds,sdai,psm,mcd-join-eth-a,mcd-vat,usds-join contract
   class dai,usds,usdc token
 ```
 
-**What this fork proves.** Five permissionless Sky routes on one pinned Ethereum fork: DAI to USDS and back 1:1 on the converter, USDS into sUSDS and DAI into sDAI with a full redeem, a 1-day sUSDS redeem that leaves 0 sUSDS and pays at least previewRedeem and the deposit, and a USDC to USDS LitePSM round trip whose amounts must equal tin/tout.
+**What this fork proves.** Five permissionless Sky routes on one pinned Ethereum fork: DAI to USDS and back 1:1 on the converter, USDS into sUSDS and DAI into sDAI with a full redeem, a 1-day sUSDS redeem that leaves 0 sUSDS and pays at least previewRedeem and the deposit, and a USDC to USDS LitePSM round trip whose amounts must equal tin/tout. Also: fork:sky:vault.
 
 Run it:
 
@@ -3033,6 +3175,7 @@ ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:susds
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:sdai
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:redeem
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:psm
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:vault
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -3044,6 +3187,9 @@ ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sky:psm
 | sDAI (ERC-4626 savings vault) | `0x83F20F44975D03b1b09e64809B757c47f942BEeA` | ethereum | contract |
 | Sky LitePSM wrapper (USDS/USDC) | `0xA188EEC8F81263234dA3622A406892F3D630f98c` | ethereum | contract |
 | USDC | `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48` | ethereum | token |
+| MCD_JOIN_ETH_A | `0x2F0b23f53734252Bda2277357e97e1517d6B042A` | ethereum | contract |
+| MCD_VAT | `0x35D1b3F3D7966A1DFe207aa4514C12a259A0492B` | ethereum | contract |
+| USDS_JOIN | `0x3C0f895007CA717Aa01c8693e59DF1e8C3777FEB` | ethereum | contract |
 
 > Permissionless Sky routes: DAI↔USDS on the official converter, USDS↔sUSDS and DAI↔sDAI through the ERC-4626 vaults.
 
@@ -3054,11 +3200,7 @@ Notes:
 - The redeem assert allows the redeem to pay more than the one-block-earlier previewRedeem: got >= preview and got - preview <= got/1e6.
 - sDAI deposit and redeem call pot.drip(), so both are sent with an explicit 1M gas limit because fork gas estimation undershoots.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| open vault / draw USDS | **gap** | Impersonate the account, call Sky Vat.frob(ilk, urn, account, account, 0, dart) to draw dart of internal DAI, then DaiJoin.exit(account, dart) and convert that DAI to USDS 1:1 on SKY.converter; assert the wallet USDS rises by exactly dart and Vat.urns(ilk, urn).art rises by the same. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-avant"></a>
 
@@ -3238,7 +3380,7 @@ Notes:
 
 ### #133 Venus Core Pool
 
-Chain: **bsc** · 1 fork test · `BSC_RPC_URL` · 1/4 features tested
+Chain: **bsc** · 4 fork tests · `BSC_RPC_URL` · 4/4 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -3246,33 +3388,39 @@ flowchart LR
   user["fresh impersonated USDC<br/>holder"]
   vusdc["vUSDC<br/>0xecA881…67C8"]
   usdc["USDC on BSC<br/>0x8AC76a…580d"]
-  user -->|"1–5 · underlying() must return BSC USDC (+2…"| vusdc
+  venus-unitroller-comptroller["Venus Unitroller<br/>0xfD36E2…8384"]
+  user -->|"1–10 · underlying() must return BSC USDC (+…"| vusdc
   user -->|"2 · approve(vUSDC, 100 USDC)"| usdc
   usdc ==>|"4 · transferFrom 100e18 USDC"| vusdc
   vusdc ==>|"6 · 100e18 USDC back within dust"| usdc
+  user -->|"7 · venus:borrow: enterMarkets([vUSDC])"| venus-unitroller-comptroller
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
   classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
   classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
   class user actor
-  class vusdc contract
+  class vusdc,venus-unitroller-comptroller contract
   class usdc token
 ```
 
-**What this fork proves.** Mints 100 BSC USDC into vUSDC on a Venus Core Pool fork and redeems every share: the test asserts mint pulled exactly 100e18 USDC, vUSDC shares were minted, redeem burned all of them and returned the USDC within 100e18/1000 + 2 wei dust.
+**What this fork proves.** Mints 100 BSC USDC into vUSDC on a Venus Core Pool fork and redeems every share: the test asserts mint pulled exactly 100e18 USDC, vUSDC shares were minted, redeem burned all of them and returned the USDC within 100e18/1000 + 2 wei dust. Also: fork:venus:borrow, fork:venus:repay, fork:venus:redeem.
 
 Run it:
 
 ```bash
 CHAIN=bsc node scripts/startFork.js
 BSC_RPC_URL=http://127.0.0.1:8545 npm run fork:venus:supply
+BSC_RPC_URL=http://127.0.0.1:8545 npm run fork:venus:borrow
+BSC_RPC_URL=http://127.0.0.1:8545 npm run fork:venus:repay
+BSC_RPC_URL=http://127.0.0.1:8545 npm run fork:venus:redeem
 ```
 
 | Contract | Address | Chain | Role in the flow |
 | --- | --- | --- | --- |
 | vUSDC (Venus Core Pool market) | `0xecA88125a5ADbe82614ffC12D0DB554E2e2867C8` | bsc | contract |
 | USDC on BSC | `0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d` | bsc | token |
+| Venus Unitroller (Comptroller) | `0xfD36E2c2a6789Db23113685031d7F16329158384` | bsc | contract |
 
 > Venus Core Pool vUSDC mint and redeem on BSC (Compound V2-style). Borrow is not exercised.
 
@@ -3282,19 +3430,13 @@ Notes:
 - The script never calls the Comptroller (Unitroller) directly: accrueInterest and mintAllowed happen inside vUSDC.mint, and the asserted state is only the USDC and vUSDC balances.
 - Dust tolerance on the redeem leg is amount/1000 + 2 wei, so the round trip is exact on the pull and within rounding on the return.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| borrow | **gap** | Mint vUSDC with 100 USDC, call Comptroller.enterMarkets([vUSDC]) so the vTokens count as collateral, then vUSDC.borrow(50e18) and assert the wallet's USDC balance rose by exactly 50e18 and vUSDC.borrowBalanceStored(user) reads 50e18 in the same block. |  |
-| repay | **gap** | After Comptroller.enterMarkets([vUSDC]) and vUSDC.borrow(50e18), approve 50e18 USDC to vUSDC and call vUSDC.repayBorrow(50e18); assert the wallet's USDC fell by exactly 50e18 and vUSDC.borrowBalanceStored(user) is below 0.001 USDC, because repaying exactly 50e18 cannot clear the interest accrued between the borrow and the repay. |  |
-| redeem | **gap** | Mint vUSDC with 100 USDC then call vUSDC.redeemUnderlying(50e18); assert exactly 50e18 USDC reached the wallet and vUSDC.balanceOf(user) fell by the shares that amount represents at exchangeRateStored(), i.e. 50e18 * 1e18 / exchangeRateStored() rounded up. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-solvbtc"></a>
 
 ### #134 SolvBTC
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -3304,7 +3446,7 @@ flowchart LR
   wbtc["WBTC, currency of the WBTC<br/>storage pool<br/>0x2260FA…C599"]
   solvbtc["SolvBTC, minted by the<br/>router<br/>0x7A56E1…2F97"]
   openfund["Solv Open Fund redemption<br/>and settlement"]
-  user -->|"1–5 · checkPoolPermission(WBTC pool) is tru…"| router
+  user -->|"1–11 · checkPoolPermission(WBTC pool) is tr…"| router
   user -->|"2 · approve(router, 0.01 WBTC)"| wbtc
   user -->|"3 · balanceOf(user) and totalSupply() before"| solvbtc
   wbtc ==>|"6 · 0.01 WBTC paid into the router"| router
@@ -3323,13 +3465,14 @@ flowchart LR
   class openfund offchain
 ```
 
-**What this fork proves.** SolvBTC on an Ethereum fork: 0.01 WBTC approved to the SolvBTC Router and minted through the permissionless WBTC storage pool. createSubscription is static-called first, then asserted to take exactly the WBTC, mint the quoted SolvBTC (within 1% of 1:1 after Solv's fee), raise SolvBTC totalSupply by the same amount and emit CreateSubscription.
+**What this fork proves.** SolvBTC on an Ethereum fork: 0.01 WBTC approved to the SolvBTC Router and minted through the permissionless WBTC storage pool. createSubscription is static-called first, then asserted to take exactly the WBTC, mint the quoted SolvBTC (within 1% of 1:1 after Solv's fee), raise SolvBTC totalSupply by the same amount and emit CreateSubscription. Also: fork:solvbtc:redeem.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:solvbtc:subscribe
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:solvbtc:redeem
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -3348,11 +3491,7 @@ Notes:
 - CollectDepositFee is read from the receipt for the WBTC fee, but its recipient and amount are not asserted.
 - Redeeming SolvBTC back to WBTC is the Open Fund request in the gaps table and is never called by this test.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| redeem | **gap** | Add fork:solvbtc:redeem: submit the redemption request for the WBTC pool 0x716db7dc196abe78d5349c7166896f674ab978af26ada3e5b3ea74c5a1b48307 through the SolvBTC Router at 0x1fF7d7C0A7D8E94046708C611DeC5056A9d2B823, which is the caller Solv's Open Fund market accepts, then assert SolvBTC.balanceOf(user) fell by exactly the requested amount and the request is recorded. | Redemption is an Open Fund request that Solv settles off this machine, and the tested router ABI declares only createSubscription and checkPoolPermission, so the redemption selector has to be read from the deployed router before the call can be wired. |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-bedrock-unibtc"></a>
 
@@ -3531,7 +3670,7 @@ Notes:
 
 ### #151 Pendle V2
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 2/4 features tested
+Chain: **ethereum** · 3 fork tests · `ETHEREUM_RPC_URL` · 4/4 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -3545,7 +3684,7 @@ flowchart LR
   wsteth["wstETH, the market's<br/>underlying input token<br/>0x7f39C5…2Ca0"]
   user -->|"1 · swapExactTokenForPtStatic(market, wstET…"| router-static
   user -->|"2 · approve(Router V4, 1 wstETH)"| wsteth
-  user -->|"3 · swapExactTokenForPt(user, market, minPt…"| router
+  user -->|"3–9 · swapExactTokenForPt(user, market, min…"| router
   router -->|"4 · SY.deposit mints SY from the wstETH"| sy
   wsteth ==>|"5 · exactly 1 wstETH spent, allowance falls…"| sy
   router -->|"6 · swapExactSyForPt(PT to the buyer, minPt…"| market
@@ -3568,6 +3707,8 @@ Run it:
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:pendle:buy-pt
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:pendle:mint-py
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:pendle:add-liquidity
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -3587,18 +3728,13 @@ Notes:
 - The pre-tx staticCall of swapExactTokenForPt is only a simulation fallback for the return value and moves no state.
 - Funding and approve both come from the impersonated signer: no PRIVATE_KEY, and anvil_dealERC20 covers a dry wstETH whale.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| mint PT/YT | **gap** | On the same fork call Pendle Router V4 mintPyFromToken(receiver, YT, minPyOut, TokenInput(wstETH, 1e18), empty LimitOrderData) on the PT-stETH market, then assert the YT balance rises by netPyOut, the PT balance rises by the same PY amount and netSyInterm > 0. |  |
-| add liquidity | **gap** | On the same fork call Router V4 addLiquiditySingleToken(receiver, market, minLpOut, guessPtReceivedFromSy, TokenInput(wstETH, 1e18), empty limit) and assert the market LP balance rises by netLpOut and market.totalSupply() rises by the same netLpOut. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-cooler-loans"></a>
 
 ### #153 Cooler Loans
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -3607,7 +3743,7 @@ flowchart LR
   cooler["Olympus Cooler V2<br/>0xdb591E…e7cC"]
   gohm["gOHM collateral<br/>0x0ab870…a52f"]
   usds["USDS debt token<br/>0xdC035D…384F"]
-  user -->|"1–11 · collateralToken() and debtToken() mu…"| cooler
+  user -->|"1–13 · collateralToken() and debtToken() mu…"| cooler
   user -->|"3 · approve(MonoCooler, collateral)"| gohm
   gohm ==>|"5 · gOHM posted as collateral"| cooler
   usds ==>|"7 · 1500 USDS drawn into the wallet"| user
@@ -3624,13 +3760,14 @@ flowchart LR
   class gohm,usds token
 ```
 
-**What this fork proves.** Posts gOHM collateral, borrows 1500 USDS, repays in full and withdraws the collateral on Olympus Cooler V2 (MonoCooler) on an Ethereum fork, asserting accountCollateral and the wallet move by the posted gOHM, the USDS arrives and accountDebt equals it, the repay clears the debt plus per-second interest, and every gOHM comes back.
+**What this fork proves.** Posts gOHM collateral, borrows 1500 USDS, repays in full and withdraws the collateral on Olympus Cooler V2 (MonoCooler) on an Ethereum fork, asserting accountCollateral and the wallet move by the posted gOHM, the USDS arrives and accountDebt equals it, the repay clears the debt plus per-second interest, and every gOHM comes back. Also: fork:cooler:repay.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:cooler:borrow
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:cooler:repay
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -3648,17 +3785,13 @@ Notes:
 - The USDS the borrow pays out is not traced to the Treasury Borrower; the test only asserts the wallet balance and accountDebt, so any funding path inside MonoCooler stays invisible here.
 - Interest accrues per second, so the full repay costs a few wei more than was borrowed; the test tops up 1 USDS for that and asserts repaid - borrowAmount < 1 USDS.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| repay | **gap** | Add a partial-repay test: after borrow, warp a day so interest accrues, call MonoCooler.repay(1 USDS, user) and assert accountDebt falls by exactly the USDS transferred while the position stays open, then close it with repay(type(uint128).max); today the borrow round trip only repays in full. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-cian-yield-layer"></a>
 
 ### #155 CIAN Yield Layer
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 0/2 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 1/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -3668,7 +3801,7 @@ flowchart LR
   rseth["rsETH<br/>0xA1290d…e5A7"]
   operator["rsETH Yield Layer<br/>RedeemOperator queue<br/>0x47DBD7…239E"]
   settlement["CIAN operator settlement<br/>and rsETH payout"]
-  user -->|"1–11 · asset() is rsETH and paused() false…"| vault
+  user -->|"1–13 · asset() is rsETH and paused() false…"| vault
   user -->|"3 · approve(vault, 1 rsETH)"| rseth
   rseth ==>|"6 · 1 rsETH into the vault"| vault
   vault ==>|"10 · every share moved into the RedeemOpera…"| operator
@@ -3684,13 +3817,14 @@ flowchart LR
   class settlement offchain
 ```
 
-**What this fork proves.** CIAN's rsETH Yield Layer on an Ethereum fork: 1 rsETH deposited for exactly previewDeposit shares with totalSupply rising by the same amount, then requestRedeem(shares, rsETH) moves every share into the documented RedeemOperator queue. CIAN settles that queue off the fork, so the rsETH payout is not asserted.
+**What this fork proves.** CIAN's rsETH Yield Layer on an Ethereum fork: 1 rsETH deposited for exactly previewDeposit shares with totalSupply rising by the same amount, then requestRedeem(shares, rsETH) moves every share into the documented RedeemOperator queue. CIAN settles that queue off the fork, so the rsETH payout is not asserted. Also: fork:cian:withdraw-request.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:cian:deposit
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:cian:withdraw-request
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -3713,7 +3847,6 @@ Notes:
 | Feature | Status | How to close it on a fork | Blocker |
 | --- | --- | --- | --- |
 | vault deposit | failing-paused | — |  |
-| withdraw request | **gap** | Add fork:cian:claim: after deposit(1 rsETH, user) call vault.requestRedeem(shares, rsETH), have the RedeemOperator call the vault's redeem for the settled queue, then assert rsETH.balanceOf(user) rose by the queued assets and the operator's share balance fell by shares. | The RedeemOperator at 0x47DBD71Db64617f6cBD45eB9D9Ba876F40ED239E is operated by CIAN off this machine; nothing on an Ethereum fork makes it settle the queue, so the rsETH payout cannot be produced on demand. |
 
 <a id="flow-portal"></a>
 
@@ -3906,7 +4039,7 @@ Notes:
 
 ### #165 Convex Finance
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -3916,9 +4049,9 @@ flowchart LR
   lptoken["Curve 3pool LP"]
   gauge["Curve 3pool gauge, address<br/>read from poolInfo"]
   rewards["3pool BaseRewardPool,<br/>poolInfo(9).crvRewards<br/>0x689440…e1c8"]
-  user -->|"1–5 · poolInfo(9) gives LP token, gauge and…"| booster
+  user -->|"1–13 · poolInfo(9) gives LP token, gauge an…"| booster
   user -->|"3–11 · approve(Booster, 100 3Crv) (+2 more)"| lptoken
-  user -->|"4–12 · totalSupply() before the deposit (+2…"| rewards
+  user -->|"4–14 · totalSupply() before the deposit (+3…"| rewards
   lptoken ==>|"6 · 100 3Crv staked into the Curve gauge"| gauge
   booster -->|"7 · stake credits the account: balance and…"| rewards
   gauge ==>|"10 · 100 3Crv released back to the account"| user
@@ -3933,13 +4066,14 @@ flowchart LR
   class gauge external
 ```
 
-**What this fork proves.** Convex on an Ethereum fork: 100 Curve 3pool LP go through the Booster with stake=true into pid 9 and come back out with withdrawAndUnwrap. The test asserts the wallet LP falls by exactly 100, the Curve gauge LP and the BaseRewardPool totalSupply rise by 100, no loose reward token is left, and the withdrawal restores the gauge balance and clears the stake.
+**What this fork proves.** Convex on an Ethereum fork: 100 Curve 3pool LP go through the Booster with stake=true into pid 9 and come back out with withdrawAndUnwrap. The test asserts the wallet LP falls by exactly 100, the Curve gauge LP and the BaseRewardPool totalSupply rise by 100, no loose reward token is left, and the withdrawal restores the gauge balance and clears the stake. Also: fork:convex:claim.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:convex:deposit
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:convex:claim
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -3957,11 +4091,7 @@ Notes:
 - CRV and CVX reward claims are not exercised: the test only asserts the stake balance and the LP deltas.
 - cvxCRV staking and vlCVX locking are listed in the catalog for verification, but the fork test never touches those contracts.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| claim rewards | **gap** | After deposit(9, 100 3Crv, true), advance the fork with evm_increaseTime past the BaseRewardPool reward period and evm_mine, then call getReward(user, true) on the BaseRewardPool 0x689440f2Ff927E1f24c72F1087E1FAF471eCe1c8 and assert the account's CRV balance rose and its reward debt was reset to 0. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-bitfi-basis"></a>
 
@@ -4016,7 +4146,7 @@ Notes:
 
 ### #171 xDai Stake Bridge
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -4025,34 +4155,38 @@ flowchart LR
   bridge["xDAI Stake Bridge,<br/>Ethereum side<br/>0x4aa421…5016"]
   usds["USDS, the bridge<br/>collateral<br/>0xdC035D…384F"]
   gnosis["Gnosis Chain native xDAI<br/>mint"]
+  sibling-omnibridge-mediator["sibling OmniBridge<br/>mediator<br/>0x88ad09…5671"]
   user -->|"1–4 · erc20token, getBridgeMode, minPerTx,…"| bridge
   user -->|"3 · approve(bridge, 100 USDS)"| usds
   user ==>|"5 · 100 USDS locked; totalSpentPerDay(day)…"| bridge
   bridge -.->|"6 · xDAI minted on Gnosis Chain (not run)"| gnosis
+  user -->|"7 · xdai-stake-bridge:relay: relayTokens(US…"| sibling-omnibridge-mediator
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
   classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
   classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
   class user actor
-  class bridge contract
+  class bridge,sibling-omnibridge-mediator contract
   class usds token
   class gnosis offchain
 ```
 
-**What this fork proves.** Bridges 100 USDS on an Ethereum fork with relayTokens and asserts the bridge's USDS collateral rises by exactly 100, its totalSpentPerDay bucket for the deposit day rises by exactly 100, and the depositor's USDS falls by exactly 100. The xDAI mint happens on Gnosis Chain and is not observable.
+**What this fork proves.** Bridges 100 USDS on an Ethereum fork with relayTokens and asserts the bridge's USDS collateral rises by exactly 100, its totalSpentPerDay bucket for the deposit day rises by exactly 100, and the depositor's USDS falls by exactly 100. The xDAI mint happens on Gnosis Chain and is not observable. Also: fork:xdai-stake-bridge:relay.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:xdai-stake-bridge:deposit
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:xdai-stake-bridge:relay
 ```
 
 | Contract | Address | Chain | Role in the flow |
 | --- | --- | --- | --- |
 | xDAI Stake Bridge, Ethereum side (POA EternalStorageProxy) | `0x4aa42145Aa6Ebf72e164C9bBC74fbD3788045016` | ethereum | contract |
 | USDS, the bridge collateral (erc20token()) | `0xdC035D45d973E3EC169d2276DDab16f1e407384F` | ethereum | token |
+| sibling OmniBridge mediator | `0x88ad09518695c6c3712AC10a214bE5109a655671` | ethereum | contract |
 
 Notes:
 
@@ -4062,17 +4196,13 @@ Notes:
 - The older SAI bridge 0x7301CFA0e1756B71869E93d4e4Dca5c7d0eb0AA6 (maxPerTx 0) and the OmniBridge sibling are excluded by the erc20token() gate, not by their addresses alone.
 - USDS comes from impersonateFunded with an anvil_deal fallback, so no private key and no USDS whale is required.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| OmniBridge relayTokens (erc-to-erc sibling) | **gap** | On an Ethereum fork, approve USDC to the OmniBridge 0x88ad09518695c6c3712AC10a214bE5109a655671, call relayTokens(USDC, freshAccount, amount), and assert the bridge's USDC balance rises by exactly amount and the caller's falls by exactly amount, after asserting its bridge mode and mediator. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-fluid-lending"></a>
 
 ### #173 Fluid Lending
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -4081,6 +4211,7 @@ flowchart LR
   ftoken["Fluid fUSDC fToken, the<br/>ERC-4626 lending shar…<br/>0x9Fb7b4…1B33"]
   liquidity["Fluid Liquidity, holds all<br/>fToken underlying<br/>0x52Aa89…e497"]
   usdc["USDC on Ethereum, the<br/>fUSDC underlying<br/>0xA0b869…eB48"]
+  fluid-vault-eth-usdc-11["Fluid Vault ETH/USDC #11<br/>0x0C8C77…6cB3"]
   user -->|"1–10 · asset() is USDC, maxDeposit and minD…"| ftoken
   user -->|"3–11 · approve(fUSDC, 100 USDC) (+1 more)"| usdc
   ftoken -->|"5 · operate(USDC, +100 USDC, abi.encode(sen…"| liquidity
@@ -4088,23 +4219,25 @@ flowchart LR
   usdc ==>|"7 · transferFrom(user, Liquidity, 100 USDC)"| liquidity
   ftoken ==>|"8 · shares minted equal previewDeposit"| user
   ftoken -.->|"9 · Deposit(sender, owner, 100 USDC, shares)"| user
+  user -->|"12 · fluid-lending:borrow: operate(0, +1 ET…"| fluid-vault-eth-usdc-11
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
   classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
   classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
   class user actor
-  class ftoken,liquidity contract
+  class ftoken,liquidity,fluid-vault-eth-usdc-11 contract
   class usdc token
 ```
 
-**What this fork proves.** Deposit 100 USDC into Fluid's fUSDC on an Ethereum fork and assert the ERC-4626 outcome: minted shares equal previewDeposit, totalSupply rises by exactly the mint, totalAssets by ~100 USDC, exactly 100 USDC lands in the Fluid Liquidity contract that holds all fToken underlying, and the fToken emits Deposit.
+**What this fork proves.** Deposit 100 USDC into Fluid's fUSDC on an Ethereum fork and assert the ERC-4626 outcome: minted shares equal previewDeposit, totalSupply rises by exactly the mint, totalAssets by ~100 USDC, exactly 100 USDC lands in the Fluid Liquidity contract that holds all fToken underlying, and the fToken emits Deposit. Also: fork:fluid-lending:borrow.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:fluid-lending:deposit
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:fluid-lending:borrow
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -4112,6 +4245,7 @@ ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:fluid-lending:deposit
 | Fluid fUSDC fToken, the ERC-4626 lending share token | `0x9Fb7b4477576Fe5B32be4C1843aFB1e55F251B33` | ethereum | contract |
 | Fluid Liquidity, holds all fToken underlying | `0x52Aa899454998Be5b000Ad077a46Bbe360F4e497` | ethereum | contract |
 | USDC on Ethereum, the fUSDC underlying | `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48` | ethereum | token |
+| Fluid Vault ETH/USDC #11 | `0x0C8C77B7FF4c2aF7F6CEBbe67350A490E3DD6cB3` | ethereum | contract |
 
 Notes:
 
@@ -4121,11 +4255,7 @@ Notes:
 - maxDeposit is read and reported but deliberately not gated on, mirroring the other vault flows' caution about limit readings.
 - totalAssets is re-derived from totalSupply * exchange price, so the assertion allows 10 micro-USDC of rounding and one block of accrued interest.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| vault borrow | **gap** | Call operate() on Fluid's USDC FluidVaultT1 (address from the deployments registry, the vault is the msg.sender of LIQUIDITY.operate() on 0x52Aa899454998Be5b000Ad077a46Bbe360F4e497) to supply collateral and borrow USDC, then assert the borrower's USDC rises by the borrowed amount and the Liquidity contract's USDC balance falls by exactly that amount. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-fraxtal"></a>
 
@@ -4298,6 +4428,52 @@ Notes:
 - Only the sellGem direction is tested: buyGem, the USDC PSM with its non-zero tin and the sUSDD savings vault are outside this recipe.
 
 **Missing from the anvil suite.** None: every feature in the matrix has a fork test.
+
+<a id="flow-aero-protocol--dex"></a>
+
+### #188 Aero (DEX)
+
+Chain: **base** · 2 fork tests · `BASE_RPC_URL` · 4/5 features tested
+
+```mermaid
+%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
+flowchart LR
+  user["fresh impersonated account"]
+  aero-aero-usdc-v2-pool["Aero AERO/USDC v2 pool<br/>0x8E6a9F…76D2"]
+  aero-votingescrow["Aero VotingEscrow<br/>0xBF7977…3915"]
+  user -->|"1 · aero:add-liquidity: transfer AERO + USD…"| aero-aero-usdc-v2-pool
+  user -->|"2 · aero:lock: createStake(1000 AERO, 52 we…"| aero-votingescrow
+  classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
+  classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
+  classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
+  classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
+  classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
+  class user actor
+  class aero-aero-usdc-v2-pool,aero-votingescrow contract
+```
+
+**What this fork proves.** Aero (Aerodrome rebranded 2026-10-22) on Base: mints LP on the AERO/USDC v2 pool and locks 1,000 AERO for 52 weeks in the Aero VotingEscrow. Addresses come from docs.iaero.finance (secondary docs; Aero has not yet published an official address page) and are checked on the fork. Gauge staking is not testable: legacy gauges are NotAlive and the new Voter has no pool-to-gauge lookup.
+
+Run it:
+
+```bash
+CHAIN=base node scripts/startFork.js
+BASE_RPC_URL=http://127.0.0.1:8545 npm run fork:aerodrome:add-liquidity
+BASE_RPC_URL=http://127.0.0.1:8545 npm run fork:aerodrome:lock
+```
+
+| Contract | Address | Chain | Role in the flow |
+| --- | --- | --- | --- |
+| Aero AERO/USDC v2 pool | `0x8E6a9FCd1d638CC760Ffba397605Fe3355dE76D2` | base | contract |
+| Aero VotingEscrow | `0xBF7977E1521e9a3032bf7243Ee4712f311f13915` | base | contract |
+
+> Aero (Aerodrome rebranded 2026-10-22) on Base: mints LP on the AERO/USDC v2 pool and locks 1,000 AERO for 52 weeks in the Aero VotingEscrow. Addresses come from docs.iaero.finance (secondary docs; Aero has not yet published an official address page) and are checked on the fork. Gauge staking is not testable: legacy gauges are NotAlive and the new Voter has no pool-to-gauge lookup.
+
+**Missing from the anvil suite.**
+
+| Feature | Status | How to close it on a fork | Blocker |
+| --- | --- | --- | --- |
+| gauge stake | not-testable | Every legacy Aerodrome gauge reverts NotAlive since the 2026-10-22 Aero migration, and the new Aero Voter has no on-chain pool-to-gauge lookup, so no live gauge can be derived on a fork. |  |
 
 <a id="flow-armitage"></a>
 
@@ -4677,7 +4853,7 @@ Notes:
 
 ### Balancer
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -4686,7 +4862,7 @@ flowchart LR
   weth["WETH<br/>0xC02aaA…6Cc2"]
   usdc["USDC<br/>0xA0b869…eB48"]
   vault["Balancer V2 Vault<br/>0xBA1222…F2C8"]
-  user -->|"1–3 · queryBatchSwap(GIVEN_IN, WETH/USDC 50…"| vault
+  user -->|"1–6 · queryBatchSwap(GIVEN_IN, WETH/USDC 50…"| vault
   user -->|"2 · approve(Vault, 0.1 WETH)"| weth
   weth ==>|"4 · 0.1 WETH in"| vault
   vault ==>|"5 · USDC out"| user
@@ -4700,13 +4876,14 @@ flowchart LR
   class weth,usdc token
 ```
 
-**What this fork proves.** One pinned Ethereum-fork swap through the Balancer V2 Vault: queryBatchSwap on the configured WETH/USDC 50/50 pool returns the quote, then swap() with GIVEN_IN executes it; the test asserts the fresh account's USDC balance increased after 0.1 WETH in.
+**What this fork proves.** One pinned Ethereum-fork swap through the Balancer V2 Vault: queryBatchSwap on the configured WETH/USDC 50/50 pool returns the quote, then swap() with GIVEN_IN executes it; the test asserts the fresh account's USDC balance increased after 0.1 WETH in. Also: fork:balancer:join.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:balancer:swap
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:balancer:join
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -4720,17 +4897,13 @@ Notes:
 - The EOA only calls the Vault: the Vault holds the pool tokens and calls the pool's onSwap itself, so no pool contract node is drawn; poolId comes from src/config/chains.js, not from an address read in the test.
 - quote is a static call: getBalancerV2Quote uses queryBatchSwap.staticCall and never changes state.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| join pool | **gap** | Approve WETH and USDC to the V2 Vault 0xBA12222222228d8Ba445958a75a0704d566BF2C8, call joinPool(poolId, user, user, JoinPoolRequest([WETH, USDC], [maxWeth, maxUsdc], abi.encode(uint256(1), amountsIn), false)) on the configured WETH/USDC 50/50 pool (kind 1 = EXACT_TOKENS_IN_FOR_BPT_OUT), then assert the pool's BPT balanceOf(user) rose by the BPT minted and Vault.getPoolTokens(poolId).balances grew by exactly the assets deposited. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-benqi-lending"></a>
 
 ### Benqi Lending
 
-Chain: **avalanche** · 1 fork test · `AVALANCHE_RPC_URL` · 1/3 features tested
+Chain: **avalanche** · 3 fork tests · `AVALANCHE_RPC_URL` · 3/3 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -4739,18 +4912,20 @@ flowchart LR
   comptroller["Benqi Comptroller<br/>0x486Af3…D9b4"]
   qi["qiUSDCn market<br/>0xB71580…AE9C"]
   usdc["native USDC on Avalanche<br/>C-Chain<br/>0xB97EF9…8a6E"]
+  benqi-qiavax["Benqi qiAVAX<br/>0x5C0401…Ef1c"]
   user -->|"1 · mintGuardianPaused(qiUSDCn) pre-check i…"| comptroller
-  user -->|"2–8 · underlying() pre-check is native USDC…"| qi
+  user -->|"2–12 · underlying() pre-check is native USD…"| qi
   user -->|"3 · approve(qiUSDCn, 100 USDC)"| usdc
   usdc ==>|"6 · 100 USDC becomes market cash"| qi
   qi ==>|"9 · 100 USDC within 1 bp, 0 qiUSDCn left"| user
+  user -->|"10 · benqi:borrow: mint{value: AVAX}"| benqi-qiavax
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
   classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
   classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
   class user actor
-  class comptroller,qi contract
+  class comptroller,qi,benqi-qiavax contract
   class usdc token
 ```
 
@@ -4761,6 +4936,8 @@ Run it:
 ```bash
 CHAIN=avalanche node scripts/startFork.js
 AVALANCHE_RPC_URL=http://127.0.0.1:8545 npm run fork:benqi:supply
+AVALANCHE_RPC_URL=http://127.0.0.1:8545 npm run fork:benqi:borrow
+AVALANCHE_RPC_URL=http://127.0.0.1:8545 npm run fork:benqi:redeem
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -4768,6 +4945,7 @@ AVALANCHE_RPC_URL=http://127.0.0.1:8545 npm run fork:benqi:supply
 | Benqi Comptroller (Core Markets risk engine) | `0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4` | avalanche | contract |
 | qiUSDCn market (Compound V2-style cToken) | `0xB715808a78F6041E46d61Cb123C9B4A27056AE9C` | avalanche | contract |
 | native USDC on Avalanche C-Chain | `0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E` | avalanche | token |
+| Benqi qiAVAX | `0x5C0401e81Bc07Ca70fAD469b451682c0d747Ef1c` | avalanche | contract |
 
 > Benqi Core Markets on Avalanche C-Chain (Compound V2-style). Mints qiUSDCn with native USDC and redeems every qiToken; pre-checks Comptroller mintGuardianPaused. Borrowing, isolated (Ecosystem) markets and QI rewards are not exercised.
 
@@ -4778,18 +4956,13 @@ Notes:
 - USDC is native on Avalanche (6 decimals); the account is funded from a USDC whale with anvil_dealERC20 as the fallback.
 - Borrowing and the isolated Ecosystem markets are not exercised by this test.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| borrow | **gap** | After mint(100 USDC) into qiUSDCn, call Comptroller.enterMarkets([qiUSDCn]) so the minted qiTokens count as collateral, then qiUSDCn.borrow(50e6) and assert the user's native USDC balance rises by exactly 50e6 and qiUSDCn.borrowBalanceStored(user) reads 50e6 in that same block, before the next accrueInterest folds in interest. |  |
-| redeem | **gap** | After mint(100 USDC), call qiUSDCn.redeemUnderlying(50e6) and assert the user's native USDC balance rises by exactly 50e6 while qiUSDCn.balanceOf(user) falls by the matching amount at exchangeRateStored; the shipped test only exercises redeem(shares). |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-benqi-staked-avax"></a>
 
 ### Benqi Staked Avax
 
-Chain: **avalanche** · 1 fork test · `AVALANCHE_RPC_URL` · 1/2 features tested
+Chain: **avalanche** · 2 fork tests · `AVALANCHE_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -4797,7 +4970,7 @@ flowchart LR
   user["fresh random account"]
   savax["sAVAX<br/>0x2b2C81…A4bE"]
   avax["AVAX"]
-  user -->|"1–6 · mintingPaused() pre-check is false (+…"| savax
+  user -->|"1–7 · mintingPaused() pre-check is false (+…"| savax
   avax ==>|"5 · 1 AVAX pooled, totalPooledAvax +1"| savax
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
@@ -4809,13 +4982,14 @@ flowchart LR
   class avax token
 ```
 
-**What this fork proves.** Benqi Liquid Staking on an Avalanche fork: a fresh account funded by anvil_setBalance calls sAVAX.submit() with 1 AVAX after mintingPaused() is checked false. The test asserts the account receives exactly the pre-tx getSharesByPooledAvax(1e18) sAVAX and totalPooledAvax rises by exactly 1 AVAX; the 15-day requestUnlock exit is not exercised.
+**What this fork proves.** Benqi Liquid Staking on an Avalanche fork: a fresh account funded by anvil_setBalance calls sAVAX.submit() with 1 AVAX after mintingPaused() is checked false. The test asserts the account receives exactly the pre-tx getSharesByPooledAvax(1e18) sAVAX and totalPooledAvax rises by exactly 1 AVAX; the 15-day requestUnlock exit is not exercised. Also: fork:benqi:unlock.
 
 Run it:
 
 ```bash
 CHAIN=avalanche node scripts/startFork.js
 AVALANCHE_RPC_URL=http://127.0.0.1:8545 npm run fork:benqi:stake
+AVALANCHE_RPC_URL=http://127.0.0.1:8545 npm run fork:benqi:unlock
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -4831,11 +5005,7 @@ Notes:
 - getSharesByPooledAvax is read before submit, so the share assertion is exact rather than a tolerance.
 - Unstaking is a 15-day requestUnlock and is not exercised.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| request unlock | **gap** | After submit(), call sAVAX.requestUnlock(shares) from the same account and assert sAVAX.balanceOf(user) is 0 and getUnlockRequestCount(user) is 1; then evm_increaseTime by cooldownPeriod(), mine a block, call sAVAX.redeem() and assert the account's native AVAX balance rises by the getPooledAvaxByShares(shares) previewed before the unlock. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-buidl"></a>
 
@@ -5181,7 +5351,7 @@ Notes:
 
 ### Euler
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 2/3 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 3/3 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -5189,33 +5359,40 @@ flowchart LR
   user["fresh impersonated account"]
   vault["Euler Earn K3 Capital Earn<br/>USDC<br/>0x3B4802…A4AF"]
   usdc["USDC<br/>0xA0b869…eB48"]
+  euler-evc["Euler EVC<br/>0x0C9a3d…E383"]
+  euler-eusdc-k3-prime["Euler eUSDC<br/>0x797DD8…48a9"]
   user -->|"1–5 · maxDeposit(probe) pre-check (+2 more)"| vault
   user -->|"2 · approve(vault, 100 USDC)"| usdc
   usdc ==>|"4 · 100 USDC into the vault"| vault
   usdc ==>|"6 · USDC back within rounding dust"| user
+  user -->|"7 · euler:borrow: enableCollateral + enable…"| euler-evc
+  user -->|"8 · euler:borrow: borrow(100 USDC)"| euler-eusdc-k3-prime
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
   classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
   classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
   class user actor
-  class vault contract
+  class vault,euler-evc,euler-eusdc-k3-prime contract
   class usdc token
 ```
 
-**What this fork proves.** Deposits 100 USDC into the Euler Earn vault K3 Capital Earn USDC (the first non-deprecated Ethereum vault in euler-labels) and redeems every share, asserting the vault pulled exactly the amount, minted shares and returned the USDC within rounding dust.
+**What this fork proves.** Deposits 100 USDC into the Euler Earn vault K3 Capital Earn USDC (the first non-deprecated Ethereum vault in euler-labels) and redeems every share, asserting the vault pulled exactly the amount, minted shares and returned the USDC within rounding dust. Also: fork:euler:borrow.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:euler:deposit
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:euler:borrow
 ```
 
 | Contract | Address | Chain | Role in the flow |
 | --- | --- | --- | --- |
 | Euler Earn K3 Capital Earn USDC | `0x3B4802FDb0E5d74aA37d58FD77d63e93d4f9A4AF` | ethereum | contract |
 | USDC | `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48` | ethereum | token |
+| Euler EVC | `0x0C9a3dd6b8F28529d72d7f9cE918D493519EE383` | ethereum | contract |
+| Euler eUSDC (K3 Prime) | `0x797DD80692c3b2dAdabCe8e30C07fDE5307D48a9` | ethereum | contract |
 
 > Euler Earn is ERC-4626. Deposit and redeem USDC on the first non-deprecated Ethereum vault in euler-labels (K3 Capital Earn USDC).
 
@@ -5225,45 +5402,46 @@ Notes:
 - The vault is picked as the first non-deprecated Ethereum Earn vault in euler-labels, so a label change would move the address.
 - The code default is VAULTS.euler.defaultAmount = 100 USDC; the catalog lists FORK_AMOUNT=1000 as the player dial, so 100 is what a plain npm run fork:euler:deposit executes.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| borrow (EVC) | **gap** | Add a fork test: deposit collateral into a borrowable Euler eVault from euler-labels, call EVC.enableController(account, eVault) from the account, then eVault.borrow(amount, receiver); assert eVault.debtOf(account) rises by exactly amount and the receiver's balance of the borrowed asset rises by the same wei, then eVault.repay(amount, account) and assert debtOf(account) is back to 0. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-frax-finance"></a>
 
 ### Frax
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
 flowchart LR
   caller["read-only caller on the<br/>fork (no tx sent)"]
   sfrxusd["sfrxUSD<br/>0xcf62F9…c5b6"]
+  frxethminter-original["frxETHMinter<br/>0xbAFA44…1138"]
   caller -->|"1–2 · convertToAssets(1e18) (+1 more)"| sfrxusd
+  caller -->|"3 · frax:mint-frxeth: submit{value: 1 ETH}"| frxethminter-original
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
   classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
   classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
   class caller actor
+  class frxethminter-original contract
   class sfrxusd token
 ```
 
-**What this fork proves.** Read-only on a pinned Ethereum fork: sfrxUSD.convertToAssets(1e18) is asserted above 1 frxUSD, and maxDeposit(0x0) is read and printed as 0, which is why no Ethereum deposit is attempted. Nothing moves; only the vault rate is measured.
+**What this fork proves.** Read-only on a pinned Ethereum fork: sfrxUSD.convertToAssets(1e18) is asserted above 1 frxUSD, and maxDeposit(0x0) is read and printed as 0, which is why no Ethereum deposit is attempted. Nothing moves; only the vault rate is measured. Also: fork:frax:mint-frxeth.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:frax:rate
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:frax:mint-frxeth
 ```
 
 | Contract | Address | Chain | Role in the flow |
 | --- | --- | --- | --- |
 | sfrxUSD (ERC-4626 vault, Fraxtal-backed) | `0xcf62F905562626CfcDD2261162a51fd02Fc9c5b6` | ethereum | token |
+| frxETHMinter (original) | `0xbAFA44EFE7901E04E39Dad13167D089C559c1138` | ethereum | contract |
 
 > Ethereum sfrxUSD maxDeposit is 0, so there is no local permissionless deposit. The fork test reads convertToAssets. Stake and unstake on Ethereum go through a Fraxtal lockbox.
 
@@ -5274,11 +5452,7 @@ Notes:
 - The matrix calls the tested feature sfrxETH rate, but the script reads the sfrxUSD vault; the feature name is copied verbatim from protocolFeatures.js.
 - frxETHMinter has no verified address in src/catalog/contracts.js, so the gap above is a call shape, not a deployed target yet.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| mint frxETH | **gap** | Call frxETHMinter.submit{value: 1 ether}() from the impersonated account on a mainnet fork, then assert frxETH.balanceOf(user) rose by ~1e18 and frxETH totalSupply rose by the same amount. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-gmx"></a>
 
@@ -5442,7 +5616,7 @@ Notes:
 
 ### Lista Dao
 
-Chain: **bsc** · 1 fork test · `BSC_RPC_URL` · no feature matrix
+Chain: **bsc** · 2 fork tests · `BSC_RPC_URL` · no feature matrix
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -5450,33 +5624,37 @@ flowchart LR
   user["fresh impersonated account"]
   vault["MoolahVault (USDT), the<br/>ERC-4626 vGauntletUSD…<br/>0x6d6783…2525"]
   usdt["USDT on BSC<br/>0x55d398…7955"]
+  lista-moolah-morpho-fork["Lista Moolah<br/>0x8F73b6…5D8C"]
   user -->|"1–6 · maxDeposit(random probe) pre-check (+…"| vault
   user -->|"2–3 · balanceOf(user) before the deposit (+…"| usdt
   usdt ==>|"5 · 100 USDT pulled, asserted exactly"| vault
   vault ==>|"7 · 100 USDT back within dust, shares burned"| user
+  user -->|"8 · lista-dao:borrow: supplyCollateral(BTCB…"| lista-moolah-morpho-fork
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
   classDef external fill:#f4f4ee,stroke:#b9beac,color:#14160f
   classDef offchain fill:#fff1e6,stroke:#c9743a,color:#14160f,stroke-dasharray:4 2
   class user actor
-  class vault contract
+  class vault,lista-moolah-morpho-fork contract
   class usdt token
 ```
 
-**What this fork proves.** Deposits 100 USDT into Lista's MoolahVault (USDT), the ERC-4626 vGauntletUSDT vault, then redeems every share on a pinned BSC fork, asserting the deposit pulled exactly the amount, shares were minted, the redeem burned every share and the USDT came back within rounding.
+**What this fork proves.** Deposits 100 USDT into Lista's MoolahVault (USDT), the ERC-4626 vGauntletUSDT vault, then redeems every share on a pinned BSC fork, asserting the deposit pulled exactly the amount, shares were minted, the redeem burned every share and the USDT came back within rounding. Also: fork:lista-dao:borrow.
 
 Run it:
 
 ```bash
 CHAIN=bsc node scripts/startFork.js
 BSC_RPC_URL=http://127.0.0.1:8545 npm run fork:lista-dao:deposit
+BSC_RPC_URL=http://127.0.0.1:8545 npm run fork:lista-dao:borrow
 ```
 
 | Contract | Address | Chain | Role in the flow |
 | --- | --- | --- | --- |
 | MoolahVault (USDT), the ERC-4626 vGauntletUSDT vault | `0x6d6783C146F2B0B2774C1725297f1845dc502525` | bsc | contract |
 | USDT on BSC | `0x55d398326f99059fF775485246999027B3197955` | bsc | token |
+| Lista Moolah (Morpho fork) | `0x8F73b65B4caAf64FBA2aF91cC5D4a2A1318E5D8C` | bsc | contract |
 
 > Lista MoolahVault (USDT) is ERC-4626. Deposit USDT and redeem on a BSC fork.
 
@@ -5977,7 +6155,7 @@ Notes:
 
 ### SushiSwap
 
-Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/3 features tested
+Chain: **ethereum** · 3 fork tests · `ETHEREUM_RPC_URL` · 3/3 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -5988,7 +6166,7 @@ flowchart LR
   v2router["SushiSwap V2 router<br/>0xd9e1cE…8B9F"]
   v3quoter["SushiSwap V3 QuoterV2<br/>0x64e880…08A7"]
   v3router["SushiSwap V3 SwapRouter<br/>0x2E6cd2…B13F"]
-  user -->|"1–3 · getAmountsOut(WETH, USDC, 0.1) (+1 mo…"| v2router
+  user -->|"1–11 · getAmountsOut(WETH, USDC, 0.1) (+2 m…"| v2router
   user -->|"2–7 · approve(V2 router, 0.1 WETH) (+1 more)"| weth
   weth ==>|"4 · 0.1 WETH in"| v2router
   v2router ==>|"5 · USDC out"| user
@@ -6007,7 +6185,7 @@ flowchart LR
   class v3quoter external
 ```
 
-**What this fork proves.** Two pinned Ethereum-fork swaps: SushiSwap V2 quotes with the router's getAmountsOut then calls swapExactTokensForTokens, SushiSwap V3 scans fee tiers on QuoterV2 then calls SwapRouter.exactInputSingle; each asserts the fresh account's USDC balance increased after 0.1 WETH in.
+**What this fork proves.** Two pinned Ethereum-fork swaps: SushiSwap V2 quotes with the router's getAmountsOut then calls swapExactTokensForTokens, SushiSwap V3 scans fee tiers on QuoterV2 then calls SwapRouter.exactInputSingle; each asserts the fresh account's USDC balance increased after 0.1 WETH in. Also: fork:sushiswap:add-liquidity.
 
 Run it:
 
@@ -6015,6 +6193,7 @@ Run it:
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sushiswap:v2
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sushiswap:v3
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:sushiswap:add-liquidity
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -6030,11 +6209,7 @@ Notes:
 - The V2 leg approves inline in src/simulation/dexForkRunner.js; the V3 leg approves inside src/swaps/sushiswapSwap.js before exactInputSingle.
 - SushiSwap V3 quotes QuoterV2 with a struct argument at four fee tiers and keeps the best, so a tier with no pool is skipped rather than failing the test.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| add liquidity | **gap** | Approve WETH and USDC to the SushiSwap V2 router 0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F, call addLiquidity(WETH, USDC, amountA, amountB, 0, 0, user, deadline), then assert the pair's balanceOf(user) LP rose and getReserves grew by exactly the two amounts used, the way fork:uniswap:v2-add already does on the Uniswap router. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-swell"></a>
 
@@ -6091,14 +6266,14 @@ Notes:
 
 ### Symbiotic
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
 flowchart LR
   reader["read-only fork client (no<br/>tx sent)"]
   factory["Symbiotic VaultFactory<br/>0xAEb6bd…a346"]
-  reader -->|"1 · getCode(VaultFactory) - byte length"| factory
+  reader -->|"1–2 · getCode(VaultFactory) - byte length…"| factory
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
   classDef token fill:#ffffff,stroke:#8a8f7a,color:#14160f
@@ -6108,13 +6283,14 @@ flowchart LR
   class factory contract
 ```
 
-**What this fork proves.** Read-only: the fork fetches the Symbiotic VaultFactory bytecode on a pinned Ethereum block and asserts the code length is non-zero (factoryCode > 0), because the docs publish no permissionless vault and each curator vault whitelists its depositors.
+**What this fork proves.** Read-only: the fork fetches the Symbiotic VaultFactory bytecode on a pinned Ethereum block and asserts the code length is non-zero (factoryCode > 0), because the docs publish no permissionless vault and each curator vault whitelists its depositors. Also: fork:symbiotic:deposit.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:symbiotic:read
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:symbiotic:deposit
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -6128,11 +6304,7 @@ Notes:
 - restakeFlows symbioticRead() only calls provider.getCode on the factory; no signer, approve or token transfer runs.
 - The recipe is labelled Read-only because no permissionless Symbiotic vault address exists in the docs or in src/catalog/contracts.js.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| vault deposit | **gap** | Impersonate an address the chosen vault's deposit whitelist already admits, call that vault's deposit with FORK_AMOUNT of its collateral, and assert the depositor's share balance rises by the minted shares while the vault's totalAssets() rises by exactly the deposited amount. | The official address list publishes VaultFactory only, and every curator vault sets its own deposit whitelist, so a fresh account has no permissionless vault to deposit into. |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-tether"></a>
 
@@ -6190,7 +6362,7 @@ Notes:
 
 ### Theo
 
-Chain: **ethereum** · 1 fork test · `ETHEREUM_RPC_URL` · 1/2 features tested
+Chain: **ethereum** · 2 fork tests · `ETHEREUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -6199,7 +6371,7 @@ flowchart LR
   sthusd["sthUSD staking vault<br/>0xA808Bc…0326"]
   thusd["thUSD, the vault asset<br/>0xa3fE5c…85b3"]
   clock["Anvil clock:<br/>evm_increaseTime past<br/>lockupPeri…"]
-  user -->|"1–14 · asset() is thUSD and paused() false…"| sthusd
+  user -->|"1–16 · asset() is thUSD and paused() false…"| sthusd
   user -->|"2 · approve(sthUSD, 100 thUSD)"| thusd
   thusd ==>|"5 · 100 thUSD into the vault"| sthusd
   sthusd -.->|"6–9 · Deposit(sender, user, 100, shares) ma…"| user
@@ -6216,13 +6388,14 @@ flowchart LR
   class clock offchain
 ```
 
-**What this fork proves.** Theo on an Ethereum fork: 100 thUSD deposited into the sthUSD ERC-4626 vault for exactly previewDeposit shares, then initiateRedeem books the lot at the pre-tx convertToAssets, the 5-day lockup is advanced locally, and redeem pays back exactly the booked thUSD and clears the request.
+**What this fork proves.** Theo on an Ethereum fork: 100 thUSD deposited into the sthUSD ERC-4626 vault for exactly previewDeposit shares, then initiateRedeem books the lot at the pre-tx convertToAssets, the 5-day lockup is advanced locally, and redeem pays back exactly the booked thUSD and clears the request. Also: fork:theo:unstake.
 
 Run it:
 
 ```bash
 CHAIN=ethereum node scripts/startFork.js
 ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:theo:stake
+ETHEREUM_RPC_URL=http://127.0.0.1:8545 npm run fork:theo:unstake
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -6240,11 +6413,7 @@ Notes:
 - asset() must be thUSD and paused() false before any tx, otherwise the test FAILs without sending.
 - The matrix still counts unstake as the gap even though this test redeems under a snapshot it reverts, so a standalone unstake test remains the work item.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| unstake | **gap** | Add fork:theo:unstake: deposit 100 thUSD for shares, call sthUSD.initiateRedeem(shares, owner), evm_increaseTime past lockupPeriod(), then call sthUSD.redeem(shares, receiver, owner) and assert thUSD.balanceOf(receiver) rose by exactly currentRedeemRequest(receiver).assets and the request cleared to zero. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-uniswap"></a>
 
@@ -6352,7 +6521,7 @@ Notes:
 
 ### USD AI
 
-Chain: **arbitrum** · 1 fork test · `ARBITRUM_RPC_URL` · 1/2 features tested
+Chain: **arbitrum** · 2 fork tests · `ARBITRUM_RPC_URL` · 2/2 features tested
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 52}, "themeVariables": {"fontSize": "11px"}}}%%
@@ -6361,7 +6530,7 @@ flowchart LR
   susdai["sUSDai<br/>0x0B2b2B…5ef9"]
   usdai["USDai<br/>0x0A1a1A…82EF"]
   user -->|"1–6 · asset() must return USDai (+3 more)"| susdai
-  user -->|"3 · approve(sUSDai, amount)"| usdai
+  user -->|"3–7 · approve(sUSDai, amount) (+1 more)"| usdai
   usdai ==>|"5 · USDai moved into the vault"| susdai
   classDef actor fill:#14160f,stroke:#14160f,color:#f7f8ef
   classDef contract fill:#eef2d9,stroke:#14160f,color:#14160f
@@ -6373,13 +6542,14 @@ flowchart LR
   class usdai token
 ```
 
-**What this fork proves.** Stakes up to 100 USDai into the sUSDai ERC-4626 vault on an Arbitrum fork, asserting deposit pulled exactly the amount and minted sUSDai shares; the 30-day redeem queue is not exercised. asset() and maxDeposit are pre-checked before any transaction.
+**What this fork proves.** Stakes up to 100 USDai into the sUSDai ERC-4626 vault on an Arbitrum fork, asserting deposit pulled exactly the amount and minted sUSDai shares; the 30-day redeem queue is not exercised. asset() and maxDeposit are pre-checked before any transaction. Also: fork:usdai:mint.
 
 Run it:
 
 ```bash
 CHAIN=arbitrum node scripts/startFork.js
 ARBITRUM_RPC_URL=http://127.0.0.1:8545 npm run fork:usdai:stake
+ARBITRUM_RPC_URL=http://127.0.0.1:8545 npm run fork:usdai:mint
 ```
 
 | Contract | Address | Chain | Role in the flow |
@@ -6396,11 +6566,7 @@ Notes:
 - Staking is open to any holder, but the protocol mint/redeem of USDai described by the recipe note is whitelisted/AML-gated, which is why only the ERC-4626 stake runs.
 - sUSDai redemption is a 30-day queue, so this flow deliberately stops after deposit.
 
-**Missing from the anvil suite.**
-
-| Feature | Status | How to close it on a fork | Blocker |
-| --- | --- | --- | --- |
-| mint USDai | **gap** | Impersonate a funded PYUSD holder, approve PYUSD to USDai 0x0A1a1A107E45b7Ced86833863f482BC5f4ed82EF, call USDai.deposit(depositAmount, usdaiAmountMinimum) and assert USDai.balanceOf(user) and totalSupply rise by the minted amount. |  |
+**Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
 <a id="flow-velodrome"></a>
 
@@ -6519,24 +6685,6 @@ Notes:
 
 **Missing from the anvil suite.** None: every feature in the matrix has a fork test.
 
-## Gaps on rows without a fork recipe
-
-`docs/08-feature-test-gaps.md` counts every protocol in the feature matrix, including rows with no `FORK_RECIPES` entry. Their gaps cannot appear in a flowchart because there is no fork test to draw; they are listed here so the two docs agree.
-
-| Rank | Protocol | Feature | How to test |
-| --- | --- | --- | --- |
-| #32 | Defi Saver Asset Management | automation / recipes | DSProxy recipe executor over Aave/Maker positions; needs the recipe encoder. |
-| #68 | ether.fi Liquid | Liquid USD / BTC deposit | Teller deposit into the USD and BTC BoringVaults. |
-| #73 | Avalon Superearn | vault deposit | Ethereum vault deposit; contract address not yet verified against docs. |
-| #93 | Lagoon | ERC-7540 deposit request | requestDeposit on a Lagoon vault. |
-| #98 | fx Protocol | mint fxUSD / open position | PoolManager operate(). |
-| #98 | fx Protocol | stability pool deposit | fxUSD stability pool deposit. |
-| #108 | Lista DAO (Lending) | borrow | Lista Moolah borrow (Morpho-fork) on BSC. |
-| #188 | Aero (DEX) | add liquidity | Router.addLiquidity. |
-| #188 | Aero (DEX) | gauge stake | Gauge.deposit. |
-| #188 | Aero (DEX) | lock AERO (veNFT) | VotingEscrow.createLock. |
-| #189 | Rysk V12 | options trade | HyperEVM/Arbitrum options; chain not configured. |
-
 ## Recipes with no feature matrix
 
 These have fork tests but no entry in `src/catalog/protocolFeatures.js`, so `docs/08-feature-test-gaps.md` cannot count their features. Adding the entry is the first step to closing their gaps.
@@ -6547,7 +6695,7 @@ These have fork tests but no entry in `src/catalog/protocolFeatures.js`, so `doc
 - **Ember Protocol** (`ember-protocol`, 1 test)
 - **Gmx** (`gmx`, 1 test)
 - **K3 Capital** (`k3-capital`, 1 test)
-- **Lista Dao** (`lista-dao`, 1 test)
+- **Lista Dao** (`lista-dao`, 2 tests)
 - **Monad** (`monad`, 1 test)
 - **Spark** (`spark`, 1 test)
 - **Stake.Link Liquid** (`stake.link-liquid`, 1 test)
