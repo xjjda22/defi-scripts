@@ -4,6 +4,62 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
 
+## [2026-11-06] Anvil feature gaps: 37 of 42 tested, 5 not-testable with evidence
+
+Branch `feat/gaps-anvil-2026-11-06`, merged from four parallel batches (`feat/gaps-anvil-lending`,
+`-staking`, `-dex`, `-special`). Every new test runs on a pinned Anvil fork (Ethereum 26352216,
+Avalanche 99541760, Base 53673175, Arbitrum 521637010, BSC latest), needs no `PRIVATE_KEY`, fails
+on revert and asserts a measured delta. Each one is attached to a `FORK_RECIPES` entry, mapped in
+`forkFeatures.js` / `protocolFeatures.js`, and has a contract flow in `data/contract-flows.json`.
+`docs/08-feature-test-gaps.md` now shows **0 gaps** (227 tested-direct, 59 not-testable).
+
+### Added
+
+- **Lending (11):** `fork:lista-dao:borrow`, `fork:liquity:open`, `fork:liquity:redeem`,
+  `fork:liquity:liquidate` (MockPrice gained `fetchPrice()` for the PriceFeed shock),
+  `fork:venus:borrow`, `fork:venus:repay`, `fork:venus:redeem`, `fork:fluid-lending:borrow`,
+  `fork:benqi:borrow`, `fork:benqi:redeem`, `fork:euler:borrow`. The `liquity` fork target now
+  runs `liquityFlow.js`.
+- **Staking / vaults (13):** `fork:veda:liquid-usd`, `fork:veda:liquid-btc` (ether.fi Liquid),
+  `fork:lagoon:request-deposit`, `fork:eigenlayer:complete`, `fork:eigenlayer:delegate`,
+  `fork:saturn:unstake`, `fork:meta-pool:withdraw-request`, `fork:solvbtc:redeem`,
+  `fork:cian:withdraw-request`, `fork:benqi:unlock`, `fork:frax:mint-frxeth`,
+  `fork:symbiotic:deposit`, `fork:theo:unstake` (all via `FORK_TARGET=staking-gaps`).
+- **DEX / structured (11):** `fork:aerodrome:add-liquidity`, `fork:aerodrome:lock`,
+  `fork:balancer:join`, `fork:sushiswap:add-liquidity`, `fork:pendle:mint-py`,
+  `fork:pendle:add-liquidity`, `fork:fx:operate`, `fork:fx:stability-deposit`,
+  `fork:cooler:repay`, `fork:convex:claim`, `fork:usdai:mint`.
+- **Special (3):** `fork:sky:vault`, `fork:xdai-stake-bridge:relay`, `fork:defisaver:recipe`.
+- New recipes for Aero (`aero-protocol--dex`), DeFi Saver, f(x) Protocol and Lagoon, which move
+  off the API-only list; registry entries for `lagoon` and `defisaver`.
+
+### Changed
+
+- `fork:eigenlayer:complete` is registered but marked `slow` (about 25 minutes: it mines the
+  14-day withdrawal delay), so the default `fork:all` skips it. Run it with `FORK_SLOW=1` or
+  `FORK_ONLY=fork:eigenlayer:complete`. `fork:all` plans 203 tests by default, 204 with slow.
+- Five features are now `not-testable` with on-chain evidence instead of gaps: Curvance borrow
+  (Monad `OracleManager.getPrice(USDC)` returns err=2), Falcon unstake cooldown
+  (`cooldownDuration` is 0, exits are instant), Avalon SuperEarn deposit (Ethereum router is
+  keeper-only, `Unauthorized`; user deposits are on Kaia), Aero gauge stake (legacy gauges
+  `NotAlive`, new Voter has no pool-to-gauge lookup), Rysk V12 trades (need an off-chain
+  market-maker EIP-712 quote).
+
+### Caveats
+
+- Aero addresses come from docs.iaero.finance, a secondary source; Aero has not published an
+  official address page since the 2026-10-22 rebrand. They are checked on the fork, not by docs.
+- `fork:frax:mint-frxeth` uses the original frxETHMinter `0xbAFA44EF…1138`.
+- `fork:lagoon:request-deposit` creates its own vault from the official Factory (logic v0.5.0);
+  Lagoon names no reference vault.
+- `fork:usdai:mint` mints from PYUSD, the contract's `baseToken`; minting from USDC reverts
+  on-chain, and the test asserts that too.
+- `fork:cian:withdraw-request` deals ylrsETH shares because `fork:cian:deposit` is still paused
+  (stale operator price).
+- `showcase/data.json` was not rebuilt; the new fork rows appear on the board at the next
+  `showcase:build`.
+
+
 ## [2026-11-06] X handle pill, and the product links stop being plain text
 
 ### Added

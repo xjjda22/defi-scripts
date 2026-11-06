@@ -4,308 +4,13 @@
   "totals": {
     "protocols": 129,
     "features": 292,
-    "direct": 190,
+    "direct": 227,
     "linked": 3,
     "failingPaused": 3,
-    "gap": 42,
-    "notTestable": 54
+    "gap": 0,
+    "notTestable": 59
   },
-  "gaps": [
-    {
-      "rank": 32,
-      "protocol": "Defi Saver Asset Management",
-      "key": "defi-saver-asset-management",
-      "feature": "automation / recipes",
-      "note": "DSProxy recipe executor over Aave/Maker positions; needs the recipe encoder."
-    },
-    {
-      "rank": 68,
-      "protocol": "ether.fi Liquid",
-      "key": "ether.fi-liquid",
-      "feature": "Liquid USD / BTC deposit",
-      "note": "Teller deposit into the USD and BTC BoringVaults."
-    },
-    {
-      "rank": 70,
-      "protocol": "Falcon Finance",
-      "key": "falcon-finance",
-      "feature": "unstake cooldown",
-      "note": "sUSDf cooldown + time warp."
-    },
-    {
-      "rank": 73,
-      "protocol": "Avalon Superearn",
-      "key": "avalon-superearn",
-      "feature": "vault deposit",
-      "note": "Ethereum vault deposit; contract address not yet verified against docs."
-    },
-    {
-      "rank": 75,
-      "protocol": "Curvance",
-      "key": "curvance",
-      "feature": "borrow",
-      "note": "Monad market borrow."
-    },
-    {
-      "rank": 93,
-      "protocol": "Lagoon",
-      "key": "lagoon",
-      "feature": "ERC-7540 deposit request",
-      "note": "requestDeposit on a Lagoon vault."
-    },
-    {
-      "rank": 98,
-      "protocol": "fx Protocol",
-      "key": "fx-protocol",
-      "feature": "mint fxUSD / open position",
-      "note": "PoolManager operate()."
-    },
-    {
-      "rank": 98,
-      "protocol": "fx Protocol",
-      "key": "fx-protocol",
-      "feature": "stability pool deposit",
-      "note": "fxUSD stability pool deposit."
-    },
-    {
-      "rank": 102,
-      "protocol": "EigenCloud",
-      "key": "eigencloud",
-      "feature": "complete withdrawal",
-      "note": "completeQueuedWithdrawal after time warp past the delay."
-    },
-    {
-      "rank": 102,
-      "protocol": "EigenCloud",
-      "key": "eigencloud",
-      "feature": "delegate to operator",
-      "note": "DelegationManager.delegateTo."
-    },
-    {
-      "rank": 108,
-      "protocol": "Lista DAO (Lending)",
-      "key": "lista-dao--lending",
-      "feature": "borrow",
-      "note": "Lista Moolah borrow (Morpho-fork) on BSC."
-    },
-    {
-      "rank": 110,
-      "protocol": "Liquity",
-      "key": "liquity",
-      "feature": "open trove",
-      "note": "BorrowerOperations.openTrove."
-    },
-    {
-      "rank": 110,
-      "protocol": "Liquity",
-      "key": "liquity",
-      "feature": "redeem",
-      "note": "redeemCollateral."
-    },
-    {
-      "rank": 110,
-      "protocol": "Liquity",
-      "key": "liquity",
-      "feature": "liquidate",
-      "note": "liquidate after price override."
-    },
-    {
-      "rank": 112,
-      "protocol": "Saturn",
-      "key": "saturn",
-      "feature": "unstake",
-      "note": "Unstake / cooldown."
-    },
-    {
-      "rank": 121,
-      "protocol": "Meta Pool",
-      "key": "meta-pool",
-      "feature": "withdraw request",
-      "note": "Withdrawal contract requestWithdraw."
-    },
-    {
-      "rank": 123,
-      "protocol": "Sky",
-      "key": "maker",
-      "feature": "open vault / draw USDS",
-      "note": "Sky Lockstake or ilk vault."
-    },
-    {
-      "rank": 133,
-      "protocol": "Venus Core Pool",
-      "key": "venus-core-pool",
-      "feature": "borrow",
-      "note": "vToken.borrow on BSC."
-    },
-    {
-      "rank": 133,
-      "protocol": "Venus Core Pool",
-      "key": "venus-core-pool",
-      "feature": "repay",
-      "note": "repayBorrow."
-    },
-    {
-      "rank": 133,
-      "protocol": "Venus Core Pool",
-      "key": "venus-core-pool",
-      "feature": "redeem",
-      "note": "redeemUnderlying."
-    },
-    {
-      "rank": 134,
-      "protocol": "SolvBTC",
-      "key": "solvbtc",
-      "feature": "redeem",
-      "note": "Redemption request."
-    },
-    {
-      "rank": 151,
-      "protocol": "Pendle V2",
-      "key": "pendle-v2",
-      "feature": "mint PT/YT",
-      "note": "Router mintPyFromToken."
-    },
-    {
-      "rank": 151,
-      "protocol": "Pendle V2",
-      "key": "pendle-v2",
-      "feature": "add liquidity",
-      "note": "addLiquiditySingleToken."
-    },
-    {
-      "rank": 153,
-      "protocol": "Cooler Loans",
-      "key": "cooler-loans",
-      "feature": "repay",
-      "note": "MonoCooler.repay."
-    },
-    {
-      "rank": 155,
-      "protocol": "CIAN Yield Layer",
-      "key": "cian-yield-layer",
-      "feature": "withdraw request",
-      "note": "requestRedeem."
-    },
-    {
-      "rank": 165,
-      "protocol": "Convex Finance",
-      "key": "convex-finance",
-      "feature": "claim rewards",
-      "note": "getReward after time warp."
-    },
-    {
-      "rank": 171,
-      "protocol": "xDai Stake Bridge",
-      "key": "xdai-stake-bridge",
-      "feature": "OmniBridge relayTokens (erc-to-erc sibling)",
-      "note": "The $239.9M sibling bridge 0x88ad…5671 has its own relayTokens surface; not asserted by the lockbox test."
-    },
-    {
-      "rank": 173,
-      "protocol": "Fluid Lending",
-      "key": "fluid-lending",
-      "feature": "vault borrow",
-      "note": "Fluid vault operate()."
-    },
-    {
-      "rank": 188,
-      "protocol": "Aero (DEX)",
-      "key": "aero-protocol--dex",
-      "feature": "add liquidity",
-      "note": "Router.addLiquidity."
-    },
-    {
-      "rank": 188,
-      "protocol": "Aero (DEX)",
-      "key": "aero-protocol--dex",
-      "feature": "gauge stake",
-      "note": "Gauge.deposit."
-    },
-    {
-      "rank": 188,
-      "protocol": "Aero (DEX)",
-      "key": "aero-protocol--dex",
-      "feature": "lock AERO (veNFT)",
-      "note": "VotingEscrow.createLock."
-    },
-    {
-      "rank": 189,
-      "protocol": "Rysk V12",
-      "key": "rysk-v12",
-      "feature": "options trade",
-      "note": "HyperEVM/Arbitrum options; chain not configured."
-    },
-    {
-      "rank": null,
-      "protocol": "Balancer",
-      "key": "catalog:balancer",
-      "feature": "join pool",
-      "note": "Vault.joinPool / V3 addLiquidity."
-    },
-    {
-      "rank": null,
-      "protocol": "Benqi Lending",
-      "key": "benqi-lending",
-      "feature": "borrow",
-      "note": "qiToken.borrow on Avalanche."
-    },
-    {
-      "rank": null,
-      "protocol": "Benqi Lending",
-      "key": "benqi-lending",
-      "feature": "redeem",
-      "note": "redeemUnderlying."
-    },
-    {
-      "rank": null,
-      "protocol": "Benqi Staked Avax",
-      "key": "benqi-staked-avax",
-      "feature": "request unlock",
-      "note": "requestUnlock + cooldown."
-    },
-    {
-      "rank": null,
-      "protocol": "Euler",
-      "key": "catalog:euler",
-      "feature": "borrow (EVC)",
-      "note": "EVC enableController + borrow."
-    },
-    {
-      "rank": null,
-      "protocol": "Frax",
-      "key": "catalog:frax",
-      "feature": "mint frxETH",
-      "note": "frxETHMinter.submit."
-    },
-    {
-      "rank": null,
-      "protocol": "SushiSwap",
-      "key": "catalog:sushiswap",
-      "feature": "add liquidity",
-      "note": "Router addLiquidity."
-    },
-    {
-      "rank": null,
-      "protocol": "Symbiotic",
-      "key": "catalog:symbiotic",
-      "feature": "vault deposit",
-      "note": "Vault.deposit."
-    },
-    {
-      "rank": null,
-      "protocol": "Theo",
-      "key": "theo",
-      "feature": "unstake",
-      "note": "Unstake / redeem."
-    },
-    {
-      "rank": null,
-      "protocol": "USD AI",
-      "key": "usd-ai",
-      "feature": "mint USDai",
-      "note": "USDai mint from USDC on Arbitrum."
-    }
-  ],
+  "gaps": [],
   "protocols": [
     {
       "key": "layerzero-v2",
@@ -1190,18 +895,20 @@
       "docs": "https://docs.defisaver.com",
       "counts": {
         "features": 1,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "automation / recipes",
-          "status": "gap",
-          "scripts": [],
-          "note": "DSProxy recipe executor over Aave/Maker positions; needs the recipe encoder."
+          "status": "direct",
+          "scripts": [
+            "fork:defisaver:recipe"
+          ],
+          "note": null
         }
       ]
     },
@@ -1923,10 +1630,10 @@
       "docs": "https://etherfi.gitbook.io",
       "counts": {
         "features": 2,
-        "direct": 0,
+        "direct": 1,
         "linked": 1,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -1940,9 +1647,12 @@
         },
         {
           "feature": "Liquid USD / BTC deposit",
-          "status": "gap",
-          "scripts": [],
-          "note": "Teller deposit into the USD and BTC BoringVaults."
+          "status": "direct",
+          "scripts": [
+            "fork:veda:liquid-usd",
+            "fork:veda:liquid-btc"
+          ],
+          "note": null
         }
       ]
     },
@@ -1988,8 +1698,8 @@
         "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
-        "notTestable": 1
+        "gap": 0,
+        "notTestable": 2
       },
       "features": [
         {
@@ -2008,9 +1718,9 @@
         },
         {
           "feature": "unstake cooldown",
-          "status": "gap",
+          "status": "not-testable",
           "scripts": [],
-          "note": "sUSDf cooldown + time warp."
+          "note": "sUSDf cooldownDuration() is 0 on Ethereum (2026-11-06): the cooldown is switched off and exits are instant, so there is no cooldown to exercise."
         }
       ]
     },
@@ -2066,15 +1776,15 @@
         "direct": 0,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
-        "notTestable": 0
+        "gap": 0,
+        "notTestable": 1
       },
       "features": [
         {
           "feature": "vault deposit",
-          "status": "gap",
+          "status": "not-testable",
           "scripts": [],
-          "note": "Ethereum vault deposit; contract address not yet verified against docs."
+          "note": "The Ethereum SuperEarn router reverts Unauthorized for public callers (keeper-only); user deposits go through SuperEarnRouter on Kaia (chain 8217), which this repo does not fork."
         }
       ]
     },
@@ -2089,8 +1799,8 @@
         "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
-        "notTestable": 0
+        "gap": 0,
+        "notTestable": 1
       },
       "features": [
         {
@@ -2111,9 +1821,9 @@
         },
         {
           "feature": "borrow",
-          "status": "gap",
+          "status": "not-testable",
           "scripts": [],
-          "note": "Monad market borrow."
+          "note": "Monad OracleManager.getPrice(USDC) returns (0, err=2) on the 2026-11-06 fork, so every borrow fails the collateral check. Harness in lendingBorrowExtras.curvanceBorrow; retest when the USDC oracle recovers."
         }
       ]
     },
@@ -2326,18 +2036,20 @@
       "docs": "https://docs.lagoon.finance",
       "counts": {
         "features": 1,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "ERC-7540 deposit request",
-          "status": "gap",
-          "scripts": [],
-          "note": "requestDeposit on a Lagoon vault."
+          "status": "direct",
+          "scripts": [
+            "fork:lagoon:request-deposit"
+          ],
+          "note": null
         }
       ]
     },
@@ -2380,24 +2092,28 @@
       "docs": "https://docs.aladdin.club/f-x-protocol",
       "counts": {
         "features": 2,
-        "direct": 0,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 2,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
         {
           "feature": "mint fxUSD / open position",
-          "status": "gap",
-          "scripts": [],
-          "note": "PoolManager operate()."
+          "status": "direct",
+          "scripts": [
+            "fork:fx:operate"
+          ],
+          "note": null
         },
         {
           "feature": "stability pool deposit",
-          "status": "gap",
-          "scripts": [],
-          "note": "fxUSD stability pool deposit."
+          "status": "direct",
+          "scripts": [
+            "fork:fx:stability-deposit"
+          ],
+          "note": null
         }
       ]
     },
@@ -2409,10 +2125,10 @@
       "docs": "https://docs.eigenlayer.xyz",
       "counts": {
         "features": 4,
-        "direct": 2,
+        "direct": 4,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 2,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -2434,15 +2150,19 @@
         },
         {
           "feature": "complete withdrawal",
-          "status": "gap",
-          "scripts": [],
-          "note": "completeQueuedWithdrawal after time warp past the delay."
+          "status": "direct",
+          "scripts": [
+            "fork:eigenlayer:complete"
+          ],
+          "note": null
         },
         {
           "feature": "delegate to operator",
-          "status": "gap",
-          "scripts": [],
-          "note": "DelegationManager.delegateTo."
+          "status": "direct",
+          "scripts": [
+            "fork:eigenlayer:delegate"
+          ],
+          "note": null
         }
       ]
     },
@@ -2485,10 +2205,10 @@
       "docs": "https://docs.bsc.lista.org",
       "counts": {
         "features": 3,
-        "direct": 2,
+        "direct": 3,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -2510,9 +2230,11 @@
         },
         {
           "feature": "borrow",
-          "status": "gap",
-          "scripts": [],
-          "note": "Lista Moolah borrow (Morpho-fork) on BSC."
+          "status": "direct",
+          "scripts": [
+            "fork:lista-dao:borrow"
+          ],
+          "note": null
         }
       ]
     },
@@ -2555,10 +2277,10 @@
       "docs": "https://docs.liquity.org",
       "counts": {
         "features": 4,
-        "direct": 1,
+        "direct": 4,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 3,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -2572,21 +2294,27 @@
         },
         {
           "feature": "open trove",
-          "status": "gap",
-          "scripts": [],
-          "note": "BorrowerOperations.openTrove."
+          "status": "direct",
+          "scripts": [
+            "fork:liquity:open"
+          ],
+          "note": null
         },
         {
           "feature": "redeem",
-          "status": "gap",
-          "scripts": [],
-          "note": "redeemCollateral."
+          "status": "direct",
+          "scripts": [
+            "fork:liquity:redeem"
+          ],
+          "note": null
         },
         {
           "feature": "liquidate",
-          "status": "gap",
-          "scripts": [],
-          "note": "liquidate after price override."
+          "status": "direct",
+          "scripts": [
+            "fork:liquity:liquidate"
+          ],
+          "note": null
         }
       ]
     },
@@ -2598,10 +2326,10 @@
       "docs": "https://saturncredit.gitbook.io/saturn-docs",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -2615,9 +2343,11 @@
         },
         {
           "feature": "unstake",
-          "status": "gap",
-          "scripts": [],
-          "note": "Unstake / cooldown."
+          "status": "direct",
+          "scripts": [
+            "fork:saturn:unstake"
+          ],
+          "note": null
         }
       ]
     },
@@ -2670,10 +2400,10 @@
       "docs": "https://docs.metapool.app",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -2687,9 +2417,11 @@
         },
         {
           "feature": "withdraw request",
-          "status": "gap",
-          "scripts": [],
-          "note": "Withdrawal contract requestWithdraw."
+          "status": "direct",
+          "scripts": [
+            "fork:meta-pool:withdraw-request"
+          ],
+          "note": null
         }
       ]
     },
@@ -2701,10 +2433,10 @@
       "docs": "https://developers.sky.money",
       "counts": {
         "features": 6,
-        "direct": 5,
+        "direct": 6,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -2750,9 +2482,11 @@
         },
         {
           "feature": "open vault / draw USDS",
-          "status": "gap",
-          "scripts": [],
-          "note": "Sky Lockstake or ilk vault."
+          "status": "direct",
+          "scripts": [
+            "fork:sky:vault"
+          ],
+          "note": null
         }
       ]
     },
@@ -2919,10 +2653,10 @@
       "docs": "https://docs-v4.venus.io",
       "counts": {
         "features": 4,
-        "direct": 1,
+        "direct": 4,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 3,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -2936,21 +2670,27 @@
         },
         {
           "feature": "borrow",
-          "status": "gap",
-          "scripts": [],
-          "note": "vToken.borrow on BSC."
+          "status": "direct",
+          "scripts": [
+            "fork:venus:borrow"
+          ],
+          "note": null
         },
         {
           "feature": "repay",
-          "status": "gap",
-          "scripts": [],
-          "note": "repayBorrow."
+          "status": "direct",
+          "scripts": [
+            "fork:venus:repay"
+          ],
+          "note": null
         },
         {
           "feature": "redeem",
-          "status": "gap",
-          "scripts": [],
-          "note": "redeemUnderlying."
+          "status": "direct",
+          "scripts": [
+            "fork:venus:redeem"
+          ],
+          "note": null
         }
       ]
     },
@@ -2962,10 +2702,10 @@
       "docs": "https://docs.solv.finance",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -2979,9 +2719,11 @@
         },
         {
           "feature": "redeem",
-          "status": "gap",
-          "scripts": [],
-          "note": "Redemption request."
+          "status": "direct",
+          "scripts": [
+            "fork:solvbtc:redeem"
+          ],
+          "note": null
         }
       ]
     },
@@ -3103,10 +2845,10 @@
       "docs": "https://docs.pendle.finance",
       "counts": {
         "features": 4,
-        "direct": 2,
+        "direct": 4,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 2,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -3120,9 +2862,11 @@
         },
         {
           "feature": "mint PT/YT",
-          "status": "gap",
-          "scripts": [],
-          "note": "Router mintPyFromToken."
+          "status": "direct",
+          "scripts": [
+            "fork:pendle:mint-py"
+          ],
+          "note": null
         },
         {
           "feature": "swap PT",
@@ -3134,9 +2878,11 @@
         },
         {
           "feature": "add liquidity",
-          "status": "gap",
-          "scripts": [],
-          "note": "addLiquiditySingleToken."
+          "status": "direct",
+          "scripts": [
+            "fork:pendle:add-liquidity"
+          ],
+          "note": null
         }
       ]
     },
@@ -3148,10 +2894,10 @@
       "docs": "https://docs.olympusdao.finance",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -3165,9 +2911,11 @@
         },
         {
           "feature": "repay",
-          "status": "gap",
-          "scripts": [],
-          "note": "MonoCooler.repay."
+          "status": "direct",
+          "scripts": [
+            "fork:cooler:repay"
+          ],
+          "note": null
         }
       ]
     },
@@ -3179,10 +2927,10 @@
       "docs": "https://docs.cian.app",
       "counts": {
         "features": 2,
-        "direct": 0,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 1,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -3196,9 +2944,11 @@
         },
         {
           "feature": "withdraw request",
-          "status": "gap",
-          "scripts": [],
-          "note": "requestRedeem."
+          "status": "direct",
+          "scripts": [
+            "fork:cian:withdraw-request"
+          ],
+          "note": null
         }
       ]
     },
@@ -3326,10 +3076,10 @@
       "docs": "https://docs.convexfinance.com",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -3343,9 +3093,11 @@
         },
         {
           "feature": "claim rewards",
-          "status": "gap",
-          "scripts": [],
-          "note": "getReward after time warp."
+          "status": "direct",
+          "scripts": [
+            "fork:convex:claim"
+          ],
+          "note": null
         }
       ]
     },
@@ -3442,10 +3194,10 @@
       "docs": "https://docs.gnosischain.com",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -3459,9 +3211,11 @@
         },
         {
           "feature": "OmniBridge relayTokens (erc-to-erc sibling)",
-          "status": "gap",
-          "scripts": [],
-          "note": "The $239.9M sibling bridge 0x88ad…5671 has its own relayTokens surface; not asserted by the lockbox test."
+          "status": "direct",
+          "scripts": [
+            "fork:xdai-stake-bridge:relay"
+          ],
+          "note": null
         }
       ]
     },
@@ -3473,10 +3227,10 @@
       "docs": "https://docs.fluid.instadapp.io",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -3490,9 +3244,11 @@
         },
         {
           "feature": "vault borrow",
-          "status": "gap",
-          "scripts": [],
-          "note": "Fluid vault operate()."
+          "status": "direct",
+          "scripts": [
+            "fork:fluid-lending:borrow"
+          ],
+          "note": null
         }
       ]
     },
@@ -3593,11 +3349,11 @@
       "docs": "https://aerodrome.finance/docs",
       "counts": {
         "features": 5,
-        "direct": 2,
+        "direct": 4,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 3,
-        "notTestable": 0
+        "gap": 0,
+        "notTestable": 1
       },
       "features": [
         {
@@ -3618,21 +3374,25 @@
         },
         {
           "feature": "add liquidity",
-          "status": "gap",
-          "scripts": [],
-          "note": "Router.addLiquidity."
+          "status": "direct",
+          "scripts": [
+            "fork:aerodrome:add-liquidity"
+          ],
+          "note": null
         },
         {
           "feature": "gauge stake",
-          "status": "gap",
+          "status": "not-testable",
           "scripts": [],
-          "note": "Gauge.deposit."
+          "note": "Every legacy Aerodrome gauge reverts NotAlive since the 2026-10-22 Aero migration, and the new Aero Voter has no on-chain pool-to-gauge lookup, so no live gauge can be derived on a fork."
         },
         {
           "feature": "lock AERO (veNFT)",
-          "status": "gap",
-          "scripts": [],
-          "note": "VotingEscrow.createLock."
+          "status": "direct",
+          "scripts": [
+            "fork:aerodrome:lock"
+          ],
+          "note": null
         }
       ]
     },
@@ -3647,15 +3407,15 @@
         "direct": 0,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
-        "notTestable": 0
+        "gap": 0,
+        "notTestable": 1
       },
       "features": [
         {
           "feature": "options trade",
-          "status": "gap",
+          "status": "not-testable",
           "scripts": [],
-          "note": "HyperEVM/Arbitrum options; chain not configured."
+          "note": "RFQ only: each trade needs a market maker's EIP-712 signed quote from Rysk's off-chain service. The contracts are live on Ethereum and HyperEVM, but a fork cannot produce the quote."
         }
       ]
     },
@@ -3866,10 +3626,10 @@
       "docs": "https://docs.balancer.fi",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -3883,9 +3643,11 @@
         },
         {
           "feature": "join pool",
-          "status": "gap",
-          "scripts": [],
-          "note": "Vault.joinPool / V3 addLiquidity."
+          "status": "direct",
+          "scripts": [
+            "fork:balancer:join"
+          ],
+          "note": null
         }
       ]
     },
@@ -3897,10 +3659,10 @@
       "docs": "https://docs.benqi.fi",
       "counts": {
         "features": 3,
-        "direct": 1,
+        "direct": 3,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 2,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -3914,15 +3676,19 @@
         },
         {
           "feature": "borrow",
-          "status": "gap",
-          "scripts": [],
-          "note": "qiToken.borrow on Avalanche."
+          "status": "direct",
+          "scripts": [
+            "fork:benqi:borrow"
+          ],
+          "note": null
         },
         {
           "feature": "redeem",
-          "status": "gap",
-          "scripts": [],
-          "note": "redeemUnderlying."
+          "status": "direct",
+          "scripts": [
+            "fork:benqi:redeem"
+          ],
+          "note": null
         }
       ]
     },
@@ -3934,10 +3700,10 @@
       "docs": "https://docs.benqi.fi",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -3951,9 +3717,11 @@
         },
         {
           "feature": "request unlock",
-          "status": "gap",
-          "scripts": [],
-          "note": "requestUnlock + cooldown."
+          "status": "direct",
+          "scripts": [
+            "fork:benqi:unlock"
+          ],
+          "note": null
         }
       ]
     },
@@ -4085,10 +3853,10 @@
       "docs": "https://docs.euler.finance",
       "counts": {
         "features": 3,
-        "direct": 2,
+        "direct": 3,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -4110,9 +3878,11 @@
         },
         {
           "feature": "borrow (EVC)",
-          "status": "gap",
-          "scripts": [],
-          "note": "EVC enableController + borrow."
+          "status": "direct",
+          "scripts": [
+            "fork:euler:borrow"
+          ],
+          "note": null
         }
       ]
     },
@@ -4124,10 +3894,10 @@
       "docs": "https://docs.frax.finance",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -4141,9 +3911,11 @@
         },
         {
           "feature": "mint frxETH",
-          "status": "gap",
-          "scripts": [],
-          "note": "frxETHMinter.submit."
+          "status": "direct",
+          "scripts": [
+            "fork:frax:mint-frxeth"
+          ],
+          "note": null
         }
       ]
     },
@@ -4414,10 +4186,10 @@
       "docs": "https://docs.sushi.com",
       "counts": {
         "features": 3,
-        "direct": 2,
+        "direct": 3,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -4439,9 +4211,11 @@
         },
         {
           "feature": "add liquidity",
-          "status": "gap",
-          "scripts": [],
-          "note": "Router addLiquidity."
+          "status": "direct",
+          "scripts": [
+            "fork:sushiswap:add-liquidity"
+          ],
+          "note": null
         }
       ]
     },
@@ -4478,10 +4252,10 @@
       "docs": "https://docs.symbiotic.fi",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -4495,9 +4269,11 @@
         },
         {
           "feature": "vault deposit",
-          "status": "gap",
-          "scripts": [],
-          "note": "Vault.deposit."
+          "status": "direct",
+          "scripts": [
+            "fork:symbiotic:deposit"
+          ],
+          "note": null
         }
       ]
     },
@@ -4540,10 +4316,10 @@
       "docs": "https://docs.theo.xyz",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -4557,9 +4333,11 @@
         },
         {
           "feature": "unstake",
-          "status": "gap",
-          "scripts": [],
-          "note": "Unstake / redeem."
+          "status": "direct",
+          "scripts": [
+            "fork:theo:unstake"
+          ],
+          "note": null
         }
       ]
     },
@@ -4596,10 +4374,10 @@
       "docs": "https://docs.usd.ai",
       "counts": {
         "features": 2,
-        "direct": 1,
+        "direct": 2,
         "linked": 0,
         "failingPaused": 0,
-        "gap": 1,
+        "gap": 0,
         "notTestable": 0
       },
       "features": [
@@ -4613,9 +4391,11 @@
         },
         {
           "feature": "mint USDai",
-          "status": "gap",
-          "scripts": [],
-          "note": "USDai mint from USDC on Arbitrum."
+          "status": "direct",
+          "scripts": [
+            "fork:usdai:mint"
+          ],
+          "note": null
         }
       ]
     },

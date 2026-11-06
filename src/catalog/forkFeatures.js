@@ -134,7 +134,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Add liquidity (Uniswap V2)",
     action: "Buy USDC on Router02, then `addLiquidity` USDC/WETH",
-    assertion: "LP minted = staticCall preview, within 0.1% of the reserve-share formula; reserves grow by the amounts used",
+    assertion:
+      "LP minted = staticCall preview, within 0.1% of the reserve-share formula; reserves grow by the amounts used",
     params: [],
   },
   {
@@ -161,7 +162,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Add liquidity (Uniswap V4)",
     action: "`PositionManager.modifyLiquidities` MINT_POSITION + SETTLE_PAIR + SWEEP, ETH/USDC 0.05% via Permit2",
-    assertion: "`getPositionLiquidity` = requested liquidity, NFT owned by the minter, ETH and USDC both spent, excess ETH swept back",
+    assertion:
+      "`getPositionLiquidity` = requested liquidity, NFT owned by the minter, ETH and USDC both spent, excess ETH swept back",
     params: [],
   },
   {
@@ -284,8 +286,10 @@ const FEATURES = [
     section: "actions",
     chain: "ethereum",
     title: "Aave V3 flash loan",
-    action: "`flashLoanSimple` 100k USDC into a receiver deployed on the fork (`src/simulation/fork/contracts/FlashReceivers.sol`)",
-    assertion: "the callback saw the full amount, the premium equals `FLASHLOAN_PREMIUM_TOTAL`, the receiver paid exactly the premium and the aToken's USDC rose by it",
+    action:
+      "`flashLoanSimple` 100k USDC into a receiver deployed on the fork (`src/simulation/fork/contracts/FlashReceivers.sol`)",
+    assertion:
+      "the callback saw the full amount, the premium equals `FLASHLOAN_PREMIUM_TOTAL`, the receiver paid exactly the premium and the aToken's USDC rose by it",
     params: amount("100000", "USDC"),
     group: "aave",
   },
@@ -295,7 +299,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Aave V3 collateral toggle and e-mode",
     action: "Supply 1 WETH, `setUserUseReserveAsCollateral` off then on, `setUserEMode(1)` then 0",
-    assertion: "the user-config collateral bit and collateral base go off and back on, `getUserEMode` reads 1 then 0 and the LTV changes with the category",
+    assertion:
+      "the user-config collateral bit and collateral base go off and back on, `getUserEMode` reads 1 then 0 and the LTV changes with the category",
     group: "aave",
   },
   {
@@ -354,7 +359,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "SparkLend flash loan",
     action: "`flashLoanSimple` 100k USDC into a receiver deployed on the fork",
-    assertion: "the callback saw the full amount, the premium equals `FLASHLOAN_PREMIUM_TOTAL` (0 today) and the receiver paid exactly that",
+    assertion:
+      "the callback saw the full amount, the premium equals `FLASHLOAN_PREMIUM_TOTAL` (0 today) and the receiver paid exactly that",
     params: amount("100000", "USDC"),
     group: "spark",
   },
@@ -363,8 +369,10 @@ const FEATURES = [
     section: "actions",
     chain: "ethereum",
     title: "Liquidate a SparkLend position",
-    action: "1 WETH collateral, borrow 95% of the limit in USDC, swap the oracle's WETH source for a mock at 70% of price, `liquidationCall` half the debt",
-    assertion: "health factor goes from above 1 to below 1, debt falls and the liquidator receives WETH; the real price source is restored after",
+    action:
+      "1 WETH collateral, borrow 95% of the limit in USDC, swap the oracle's WETH source for a mock at 70% of price, `liquidationCall` half the debt",
+    assertion:
+      "health factor goes from above 1 to below 1, debt falls and the liquidator receives WETH; the real price source is restored after",
     group: "spark",
   },
   {
@@ -386,7 +394,8 @@ const FEATURES = [
     assertion: "base balance or borrow balance increases",
     params: amount("100", "USDC"),
     group: "compound",
-  },  {
+  },
+  {
     script: "fork:compound:repay",
     section: "actions",
     chain: "ethereum",
@@ -412,7 +421,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Absorb an underwater Compound III account",
     action: "1 WETH collateral, borrow 95% of the limit, mock the ETH/USD feed at 70%, `absorb`",
-    assertion: "`isLiquidatable` is true, the debt goes to 0, the user's WETH goes to 0 and protocol WETH reserves rise by exactly 1",
+    assertion:
+      "`isLiquidatable` is true, the debt goes to 0, the user's WETH goes to 0 and protocol WETH reserves rise by exactly 1",
     group: "compound",
   },
   {
@@ -420,8 +430,10 @@ const FEATURES = [
     section: "actions",
     chain: "ethereum",
     title: "Buy absorbed collateral from Compound III",
-    action: "Absorb a shocked position (feed restored), then `buyCollateral(WETH)` for 500 USDC while reserves are below target",
-    assertion: "the buyer gets exactly `quoteCollateral`, WETH reserves fall by that and base reserves rise by the USDC paid",
+    action:
+      "Absorb a shocked position (feed restored), then `buyCollateral(WETH)` for 500 USDC while reserves are below target",
+    assertion:
+      "the buyer gets exactly `quoteCollateral`, WETH reserves fall by that and base reserves rise by the USDC paid",
     group: "compound",
   },
 
@@ -451,7 +463,8 @@ const FEATURES = [
       { env: "MORPHO_MARKET_ID", label: "Market id", default: "", unit: "" },
     ],
     group: "morpho",
-  },  {
+  },
+  {
     script: "fork:morpho:repay",
     section: "actions",
     chain: "ethereum",
@@ -477,7 +490,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Morpho Blue flash loan",
     action: "`Morpho.flashLoan` 100k USDC through an `onMorphoFlashLoan` receiver deployed on the fork",
-    assertion: "the callback held exactly the amount, Morpho's USDC balance is unchanged (fee-free) and the receiver ends empty",
+    assertion:
+      "the callback held exactly the amount, Morpho's USDC balance is unchanged (fee-free) and the receiver ends empty",
     params: amount("100000", "USDC"),
     group: "morpho",
   },
@@ -486,8 +500,10 @@ const FEATURES = [
     section: "actions",
     chain: "ethereum",
     title: "Liquidate a Morpho Blue position",
-    action: "WETH/USDC market: 1 WETH collateral, borrow 95% of LLTV, mock the market oracle at 70%, `liquidate` seizing 0.5 WETH",
-    assertion: "borrower collateral falls by exactly the seized amount, borrow shares fall and the liquidator receives that WETH; the oracle is restored after",
+    action:
+      "WETH/USDC market: 1 WETH collateral, borrow 95% of LLTV, mock the market oracle at 70%, `liquidate` seizing 0.5 WETH",
+    assertion:
+      "borrower collateral falls by exactly the seized amount, borrow shares fall and the liquidator receives that WETH; the oracle is restored after",
     group: "morpho",
   },
 
@@ -525,7 +541,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Liquidate a Curve Llamalend loan",
     action: "Borrow 95% of `max_borrowable`, mock the AMM price oracle at 60%, `liquidate(user, 0)`",
-    assertion: "health goes from positive to negative, the loan is closed with 0 debt and the liquidator receives the wstETH; the oracle is restored after",
+    assertion:
+      "health goes from positive to negative, the loan is closed with 0 debt and the liquidator receives the wstETH; the oracle is restored after",
     group: "llamalend",
   },
   {
@@ -533,7 +550,8 @@ const FEATURES = [
     section: "actions",
     chain: "ethereum",
     title: "Supply and withdraw USDC on Dolomite",
-    action: "`DepositWithdrawalRouter.depositWei` into account 0, then `withdrawWei` of the full balance with `BalanceCheckFlag.From`",
+    action:
+      "`DepositWithdrawalRouter.depositWei` into account 0, then `withdrawWei` of the full balance with `BalanceCheckFlag.From`",
     assertion:
       "the deposit pulled the full amount, `DolomiteMargin.getAccountWei` rose by it, the withdraw left the account at 0 and the USDC came back",
     params: amount("100", "USDC"),
@@ -598,7 +616,8 @@ const FEATURES = [
     chain: "bsc",
     title: "Supply USDC to Venus Core Pool",
     action: "`vUSDC.mint` then `redeem` on the BSC Core Pool",
-    assertion: "the mint pulled the full USDC, vUSDC shares were minted, the redeem burned every share and USDC came back within rounding",
+    assertion:
+      "the mint pulled the full USDC, vUSDC shares were minted, the redeem burned every share and USDC came back within rounding",
     params: amount("100", "USDC"),
   },
   {
@@ -607,7 +626,8 @@ const FEATURES = [
     chain: "bsc",
     title: "Deposit USDT into Lista Moolah vault",
     action: "USDT into the Lista MoolahVault (USDT) (ERC-4626), then redeem",
-    assertion: "the deposit pulled the full amount, shares were minted, the redeem burned every share and USDT came back within rounding",
+    assertion:
+      "the deposit pulled the full amount, shares were minted, the redeem burned every share and USDT came back within rounding",
     params: amount("100", "USDT"),
   },
 
@@ -631,7 +651,8 @@ const FEATURES = [
     assertion: "stETH, then wstETH, increases",
     params: [{ env: "LIDO_SUBMIT_WEI", label: "Amount (wei)", default: "", unit: "wei" }],
     group: "lido",
-  },  {
+  },
+  {
     script: "fork:lido:request",
     section: "actions",
     chain: "ethereum",
@@ -640,7 +661,8 @@ const FEATURES = [
     assertion: "one unstETH NFT minted to the user for the stETH amount; request not finalized; pause is a FAIL",
     params: amount("0.1", "ETH"),
     group: "lido",
-  },  {
+  },
+  {
     script: "fork:lido:unwrap",
     section: "actions",
     chain: "ethereum",
@@ -650,7 +672,6 @@ const FEATURES = [
     params: amount("0.1", "ETH"),
     group: "lido",
   },
-
 
   {
     script: "fork:rocketpool:deposit",
@@ -806,7 +827,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Mint wBETH with ETH",
     action: "wBETH `deposit(referral)` with native ETH",
-    assertion: "wBETH minted equals `value × 1e18 / exchangeRate()` (1 wei rounding) and the contract holds exactly the deposited ETH. Unwrap goes through Binance, so there is no redeem",
+    assertion:
+      "wBETH minted equals `value × 1e18 / exchangeRate()` (1 wei rounding) and the contract holds exactly the deposited ETH. Unwrap goes through Binance, so there is no redeem",
     params: amount("0.1", "ETH"),
   },
   {
@@ -814,8 +836,10 @@ const FEATURES = [
     section: "actions",
     chain: "ethereum",
     title: "Stake ETH for mETH and request unstake (mETH Protocol)",
-    action: "mETH `Staking.stake(minMETHAmount)` with native ETH, then `unstakeRequest` of every mETH minted. Pre-checks: `mETH()` and `unstakeRequestsManager()` are the documented contracts, staking and unstake requests are not paused, the staking allowlist is off, and the amount is above `minimumStakeBound()`",
-    assertion: "mETH minted equals the pre-tx `ethToMETH(value)` exactly and the Staking contract holds exactly the ETH; `unstakeRequest` moves every mETH into the UnstakeRequestsManager and emits `UnstakeRequested` for the user with `mETHLocked` = the minted mETH and `ethAmount` = the pre-tx `mETHToETH`. Finalisation and the claim are not waited out",
+    action:
+      "mETH `Staking.stake(minMETHAmount)` with native ETH, then `unstakeRequest` of every mETH minted. Pre-checks: `mETH()` and `unstakeRequestsManager()` are the documented contracts, staking and unstake requests are not paused, the staking allowlist is off, and the amount is above `minimumStakeBound()`",
+    assertion:
+      "mETH minted equals the pre-tx `ethToMETH(value)` exactly and the Staking contract holds exactly the ETH; `unstakeRequest` moves every mETH into the UnstakeRequestsManager and emits `UnstakeRequested` for the user with `mETHLocked` = the minted mETH and `ethAmount` = the pre-tx `mETHToETH`. Finalisation and the claim are not waited out",
     params: amount("1", "ETH"),
   },
   {
@@ -823,8 +847,10 @@ const FEATURES = [
     section: "actions",
     chain: "ethereum",
     title: "Stake ETH for Meta Pool spETH",
-    action: "spETH `depositETH(receiver)` (ERC-4626). The Staking contract may fill from the Liquid Unstake Pool instead of minting",
-    assertion: "spETH + Liquid Unstake Pool hold exactly the deposited ETH more, the ERC-4626 `Deposit` event reports assets = deposit and shares = the user's gain, and shares are within 1 bp of the pre-tx `previewDeposit`. Unstake is a pool swap or a 2-9 day queue, so there is no redeem",
+    action:
+      "spETH `depositETH(receiver)` (ERC-4626). The Staking contract may fill from the Liquid Unstake Pool instead of minting",
+    assertion:
+      "spETH + Liquid Unstake Pool hold exactly the deposited ETH more, the ERC-4626 `Deposit` event reports assets = deposit and shares = the user's gain, and shares are within 1 bp of the pre-tx `previewDeposit`. Unstake is a pool swap or a 2-9 day queue, so there is no redeem",
     params: amount("0.1", "ETH"),
   },
   {
@@ -832,7 +858,8 @@ const FEATURES = [
     section: "actions",
     chain: "ethereum",
     title: "Stake ETH and mint osETH (StakeWise V3)",
-    action: "Genesis Vault `depositAndMintOsToken` with native ETH, minting osETH worth half the deposit. Pre-checks: no pending keeper state update and room under `capacity()`",
+    action:
+      "Genesis Vault `depositAndMintOsToken` with native ETH, minting osETH worth half the deposit. Pre-checks: no pending keeper state update and room under `capacity()`",
     assertion:
       "vault `totalAssets` rises by exactly the deposit, the `Deposited` event reports assets = deposit and shares = the user's gain (within 1 wei of the pre-tx `convertToShares`), and the user holds exactly the requested osETH, which equals the vault's osToken position. Exits use the validator exit queue, so there is no redeem",
     params: amount("0.1", "ETH"),
@@ -851,7 +878,8 @@ const FEATURES = [
     section: "actions",
     chain: "optimism",
     title: "Supply and withdraw USDC (ether.fi Cash lending)",
-    action: "USDC `supply` into reserve 0 of the ether.fi Cash Spoke (ether.fi-managed Aave V4 on OP Mainnet), then `withdraw` the full supplied balance. Pre-checks: reserve 0 is native USDC on the documented Liquidity Hub and is neither paused nor frozen",
+    action:
+      "USDC `supply` into reserve 0 of the ether.fi Cash Spoke (ether.fi-managed Aave V4 on OP Mainnet), then `withdraw` the full supplied balance. Pre-checks: reserve 0 is native USDC on the documented Liquidity Hub and is neither paused nor frozen",
     assertion:
       "the user's USDC and the Hub's USDC move by exactly the amount, supply shares are minted and `getUserSuppliedAssets` is the amount within 1 wei; the withdraw returns exactly the supplied assets from the Hub and leaves 0 shares. Borrowing is limited to ether.fi Safes and is not called",
     params: amount("100", "USDC"),
@@ -882,8 +910,7 @@ const FEATURES = [
     section: "vaults",
     chain: "ethereum",
     title: "Deposit and redeem (Gauntlet USDC Prime)",
-    assertion:
-      "Same on MetaMorpho Gauntlet USDC Prime (V1). V2 `maxDeposit` is 0, so V2 is not deposited into",
+    assertion: "Same on MetaMorpho Gauntlet USDC Prime (V1). V2 `maxDeposit` is 0, so V2 is not deposited into",
     params: amount("1000", "USDC"),
   },
   {
@@ -891,8 +918,10 @@ const FEATURES = [
     section: "vaults",
     chain: "ethereum",
     title: "Deposit into and redeem from Sentora RLUSD Main",
-    action: "Morpho Vault V2: check the four gates are unset (V2 `maxDeposit` is always 0), `deposit` RLUSD, then exit (full `redeem` with a liquidity adapter, else `withdraw` of the deposited assets)",
-    assertion: "deposit pulls exactly the amount and mints shares; the exit returns every RLUSD and leaves at most interest-dust shares. A set gate makes it a labelled read",
+    action:
+      "Morpho Vault V2: check the four gates are unset (V2 `maxDeposit` is always 0), `deposit` RLUSD, then exit (full `redeem` with a liquidity adapter, else `withdraw` of the deposited assets)",
+    assertion:
+      "deposit pulls exactly the amount and mints shares; the exit returns every RLUSD and leaves at most interest-dust shares. A set gate makes it a labelled read",
     params: amount("100", "RLUSD"),
     group: "sentora",
   },
@@ -910,8 +939,10 @@ const FEATURES = [
     section: "vaults",
     chain: "ethereum",
     title: "Queue a Veda Liquid ETH withdrawal",
-    action: "Teller `deposit(WETH)`, then BoringOnChainQueue `requestOnChainWithdraw` for every share (first open payout asset, weETH today)",
-    assertion: "all shares move from the user to the queue and exactly one request is added; a paused queue or closed payout assets is a FAIL",
+    action:
+      "Teller `deposit(WETH)`, then BoringOnChainQueue `requestOnChainWithdraw` for every share (first open payout asset, weETH today)",
+    assertion:
+      "all shares move from the user to the queue and exactly one request is added; a paused queue or closed payout assets is a FAIL",
     params: amount("0.1", "WETH"),
   },
   {
@@ -954,7 +985,8 @@ const FEATURES = [
     section: "vaults",
     chain: "ethereum",
     title: "Deposit and redeem (Spark Savings USDC)",
-    assertion: "USDC into Spark Savings spUSDC (ERC-4626), then redeem. Idle liquidity caps redeem; the round trip asserts within idle balance",
+    assertion:
+      "USDC into Spark Savings spUSDC (ERC-4626), then redeem. Idle liquidity caps redeem; the round trip asserts within idle balance",
     params: amount("100", "USDC"),
   },
   {
@@ -1096,7 +1128,8 @@ const FEATURES = [
     section: "stables",
     chain: "arbitrum",
     title: "Stake USDai → sUSDai",
-    assertion: "USDai→sUSDai via ERC-4626 deposit. Protocol mint of USDai is whitelisted and is not called. Redeem is a 30-day queue, so this does not redeem",
+    assertion:
+      "USDai→sUSDai via ERC-4626 deposit. Protocol mint of USDai is whitelisted and is not called. Redeem is a 30-day queue, so this does not redeem",
     params: amount("100", "USDai"),
     gated: true,
   },
@@ -1107,12 +1140,14 @@ const FEATURES = [
     title: "Start the sUSDe cooldown",
     assertion: "Start the sUSDe cooldown. Completing the unstake waits out `cooldownDuration`",
     gated: true,
-  },  {
+  },
+  {
     script: "fork:ethena:unstake",
     section: "stables",
     chain: "ethereum",
     title: "Unstake sUSDe after the cooldown",
-    assertion: "Stake, `cooldownShares`, advance the fork by `cooldownDuration`, `unstake`: wallet USDe rises by exactly the cooled amount and the cooldown clears",
+    assertion:
+      "Stake, `cooldownShares`, advance the fork by `cooldownDuration`, `unstake`: wallet USDe rises by exactly the cooled amount and the cooldown clears",
   },
 
   {
@@ -1120,8 +1155,7 @@ const FEATURES = [
     section: "stables",
     chain: "ethereum",
     title: "Transfer USDC (mint/redeem are off-chain)",
-    assertion:
-      "Transfer only. Mint and redeem are off-chain or KYC'd. The panel says **Transfer / read-only**",
+    assertion: "Transfer only. Mint and redeem are off-chain or KYC'd. The panel says **Transfer / read-only**",
     params: amount("100", "USDC"),
     readOnly: true,
     group: "circle-tether",
@@ -1131,8 +1165,7 @@ const FEATURES = [
     section: "stables",
     chain: "ethereum",
     title: "Transfer USDT (mint/redeem are off-chain)",
-    assertion:
-      "Transfer only. Mint and redeem are off-chain or KYC'd. The panel says **Transfer / read-only**",
+    assertion: "Transfer only. Mint and redeem are off-chain or KYC'd. The panel says **Transfer / read-only**",
     params: amount("100", "USDT"),
     readOnly: true,
     group: "circle-tether",
@@ -1256,7 +1289,8 @@ const FEATURES = [
     section: "stables",
     chain: "ethereum",
     title: "Bridge ETH to Polygon PoS",
-    assertion: "`RootChainManager.depositEtherFor`. The EtherPredicate holds exactly the deposit more ETH and emits `LockedEther`",
+    assertion:
+      "`RootChainManager.depositEtherFor`. The EtherPredicate holds exactly the deposit more ETH and emits `LockedEther`",
     params: amount("0.05", "ETH"),
   },
   {
@@ -1274,7 +1308,7 @@ const FEATURES = [
     chain: "ethereum",
     title: "Bridge ETH to NEAR (Omni Bridge)",
     assertion:
-      "Omni Bridge `initTransfer(address(0), amount, 0, 0, \"near:…\", \"\")` with native ETH. The bridge holds exactly the deposit more ETH and emits `InitTransfer` with the same sender, token, amount, zero fees and recipient. The NEAR light client side is off this machine",
+      'Omni Bridge `initTransfer(address(0), amount, 0, 0, "near:…", "")` with native ETH. The bridge holds exactly the deposit more ETH and emits `InitTransfer` with the same sender, token, amount, zero fees and recipient. The NEAR light client side is off this machine',
     params: amount("0.05", "ETH"),
   },
   {
@@ -1421,7 +1455,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Deposit 0.1 ETH into Tornado Cash",
     action: "Tornado Cash Classic 0.1 ETH pool: `deposit(bytes32 commitment)` payable with exactly `denomination()`",
-    assertion: "the pool's ETH balance rises by exactly 0.1 ETH, `Deposit` is emitted for the submitted commitment and `commitments[commitment]` flips to true",
+    assertion:
+      "the pool's ETH balance rises by exactly 0.1 ETH, `Deposit` is emitted for the submitted commitment and `commitments[commitment]` flips to true",
     group: "tornado-cash",
   },
   {
@@ -1430,7 +1465,8 @@ const FEATURES = [
     chain: "base",
     title: "Deposit USDC into Grove x Steakhouse",
     action: "ERC-4626 `deposit(100 USDC)` into Grove's Base Morpho vault (owner = Grove Base Executor)",
-    assertion: "shares minted equal `previewDeposit`, `totalSupply` rises by exactly the shares and `totalAssets` by 100 USDC",
+    assertion:
+      "shares minted equal `previewDeposit`, `totalSupply` rises by exactly the shares and `totalAssets` by 100 USDC",
     group: "grove",
   },
   {
@@ -1439,7 +1475,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Swap 1 WETH to USDC on Fluid DEX",
     action: "`swapIn` on Fluid's USDC/native-ETH Dex pool (Fluid has no router)",
-    assertion: "WETH drops by exactly 1, USDC received equals the pool's `Swap` amountOut and is within 0.01% of the DexResolver quote",
+    assertion:
+      "WETH drops by exactly 1, USDC received equals the pool's `Swap` amountOut and is within 0.01% of the DexResolver quote",
     group: "fluid-dex",
   },
   {
@@ -1448,7 +1485,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Stake OBOL for stOBOL",
     action: "`stake` on stOBOL (FixedStakedObol, non-rebasing staked OBOL)",
-    assertion: "stake(1000 OBOL) on stOBOL from a fresh, unfunded address is permissionless and moves exactly 1000.0 OBOL out of the caller; the stOBOL minted equals the pre-tx stake() quote exactly (796.819915503418444951 stOBOL at block 26328390, i.e. 1.25498871268574598 OBOL per stOBOL, not 1:1); stOBOL totalSupply rises by the minted shares (a +1 wei share-rounding tolerance) and rstOBOL totalSupply, ObolStaker.totalStaked and the default deposit's balance each rise by exactly 1000.0 OBOL; the receipt carries Fixed(caller, 1000e18) from stOBOL, Staked(stOBOL, 1000e18) from rstOBOL, StakeDeposited(rstOBOL, deposit 1, 1000e18) from ObolStaker and the stOBOLTransfer(0x0 -> caller, minted) mint.",
+    assertion:
+      "stake(1000 OBOL) on stOBOL from a fresh, unfunded address is permissionless and moves exactly 1000.0 OBOL out of the caller; the stOBOL minted equals the pre-tx stake() quote exactly (796.819915503418444951 stOBOL at block 26328390, i.e. 1.25498871268574598 OBOL per stOBOL, not 1:1); stOBOL totalSupply rises by the minted shares (a +1 wei share-rounding tolerance) and rstOBOL totalSupply, ObolStaker.totalStaked and the default deposit's balance each rise by exactly 1000.0 OBOL; the receipt carries Fixed(caller, 1000e18) from stOBOL, Staked(stOBOL, 1000e18) from rstOBOL, StakeDeposited(rstOBOL, deposit 1, 1000e18) from ObolStaker and the stOBOLTransfer(0x0 -> caller, minted) mint.",
     group: "obol",
   },
   {
@@ -1457,7 +1495,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Mint USDD with USDT through the PSM",
     action: "`mint` on USDD PSM — MCD_PSM_USDT_A (UsddPsm, DssPsm fork)",
-    assertion: "sellGem(user, 100 USDT) on the USDD PSM (ilk PSM-USDT-A, tin 0) mints USDD at 1:1: the caller's USDD balance rises by exactly 100 USDD, USDD totalSupply rises by exactly 100 USDD, the caller's USDT falls by exactly 100 USDT, and the PSM emits SellGem(user, 100e6, 0)",
+    assertion:
+      "sellGem(user, 100 USDT) on the USDD PSM (ilk PSM-USDT-A, tin 0) mints USDD at 1:1: the caller's USDD balance rises by exactly 100 USDD, USDD totalSupply rises by exactly 100 USDD, the caller's USDT falls by exactly 100 USDT, and the PSM emits SellGem(user, 100e6, 0)",
     group: "usdd",
   },
   {
@@ -1466,7 +1505,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Pendle V2 - buy PT with wstETH",
     action: "`buy-pt` on Pendle Router V4",
-    assertion: "Buying PT with 1 wstETH through Pendle Router V4 swapExactTokenForPt on the PT-stETH-30DEC2027 market: the user's wstETH falls by exactly 1.0 (and the router's allowance is fully consumed), the PT balance rises by exactly the router's own netPtOut return value from the mined tx (1.280734577840052519 PT > 0 at block 26328420), netSyInterm > 0 proves SY was minted from the wstETH, and the PT received is within 0.5% of RouterStatic.swapExactTokenForPtStatic (quote 1.280650765635385731 PT, drift 6/1e5).",
+    assertion:
+      "Buying PT with 1 wstETH through Pendle Router V4 swapExactTokenForPt on the PT-stETH-30DEC2027 market: the user's wstETH falls by exactly 1.0 (and the router's allowance is fully consumed), the PT balance rises by exactly the router's own netPtOut return value from the mined tx (1.280734577840052519 PT > 0 at block 26328420), netSyInterm > 0 proves SY was minted from the wstETH, and the PT received is within 0.5% of RouterStatic.swapExactTokenForPtStatic (quote 1.280650765635385731 PT, drift 6/1e5).",
     group: "pendle",
   },
   {
@@ -1475,7 +1515,8 @@ const FEATURES = [
     chain: "bsc",
     title: "Deposit 0.5 BNB into Aster (Bridge)",
     action: "`deposit-native` on Aster Deposit Bridge (AstherusVault, ERC-1967 proxy)",
-    assertion: "depositNative(0) with exactly 0.5 BNB on Aster's own BSC deposit bridge: the vault's own BNB balance rises by exactly 0.5 BNB, the vault emits Deposit(account=depositor, currency=NATIVE, isNative=true, amount=0.5 BNB, broker=0), and the depositor pays exactly 0.5 BNB plus gas",
+    assertion:
+      "depositNative(0) with exactly 0.5 BNB on Aster's own BSC deposit bridge: the vault's own BNB balance rises by exactly 0.5 BNB, the vault emits Deposit(account=depositor, currency=NATIVE, isNative=true, amount=0.5 BNB, broker=0), and the depositor pays exactly 0.5 BNB plus gas",
     group: "aster-bridge",
   },
   {
@@ -1484,7 +1525,8 @@ const FEATURES = [
     chain: "bsc",
     title: "Deposit BTCB into BitFi Basis (bfBTC) on BSC",
     action: "`deposit` on bfBTC (BitFi Bitcoin, the BSC basis vault)",
-    assertion: "deposit(0.01 BTCB, minAmount = previewDeposit * 0.99) on BitFi's own bfBTC basis vault on BSC, from a fresh impersonated address: measured delta is bfBTC minted 0.00895896 (exactly equal to previewDeposit(0.01 BTCB)), vault totalSupply +0.00895896 bfBTC (equal to the mint), depositor BTCB -0.01 exactly, and the minted bfBTC values back to 0.009999991182019973 BTCB at currentRatio (0.01% tolerance)",
+    assertion:
+      "deposit(0.01 BTCB, minAmount = previewDeposit * 0.99) on BitFi's own bfBTC basis vault on BSC, from a fresh impersonated address: measured delta is bfBTC minted 0.00895896 (exactly equal to previewDeposit(0.01 BTCB)), vault totalSupply +0.00895896 bfBTC (equal to the mint), depositor BTCB -0.01 exactly, and the minted bfBTC values back to 0.009999991182019973 BTCB at currentRatio (0.01% tolerance)",
     group: "bitfi-basis",
   },
   {
@@ -1493,7 +1535,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Mint uniBTC with WBTC through the Bedrock Vault",
     action: "`mint` on Bedrock Vault (TransparentUpgradeableProxy) — the permissionless wrapped-BTC mint",
-    assertion: "Vault.mint(WBTC, 0.1 WBTC) on Bedrock's own Vault mints uniBTC 1:1: the caller's uniBTC balance rises by exactly 0.1 uniBTC, uniBTC.totalSupply() rises by exactly 0.1, the caller's WBTC falls by exactly 0.1 WBTC, the Vault's WBTC balance rises by exactly 0.1 WBTC, and the Vault emits Minted(WBTC, 10000000)",
+    assertion:
+      "Vault.mint(WBTC, 0.1 WBTC) on Bedrock's own Vault mints uniBTC 1:1: the caller's uniBTC balance rises by exactly 0.1 uniBTC, uniBTC.totalSupply() rises by exactly 0.1, the caller's WBTC falls by exactly 0.1 WBTC, the Vault's WBTC balance rises by exactly 0.1 WBTC, and the Vault emits Minted(WBTC, 10000000)",
     group: "bedrock-unibtc",
   },
   {
@@ -1502,7 +1545,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Deposit 100 USDC into Derive V3 (new subaccount)",
     action: "`deposit` on Derive v3 ACTION_MANAGER (OnchainActionManager proxy; depositToNewSubaccount)",
-    assertion: "depositToNewSubaccount(USDC spot label 0x57B03E14d409ADC7fAb6CFc44b5886CAD2D5f02b, 100 USDC, managerId 1) from a fresh address moves exactly 100.0 USDC: the depositor's USDC falls by 100.0 and SPOT_VAULT's USDC rises by 100.0 in the deposit block, and the OnchainActionManager queues one public action of type 2 (DEPOSIT_TO_NEW_SUBACCOUNT_TYPE) whose 76-byte payload encodes the USDC label, 100.0 USDC, managerId 1 and the depositor, advancing publicActionsAcc; the new subaccount itself is credited asynchronously by the zk batch, which a fork cannot run",
+    assertion:
+      "depositToNewSubaccount(USDC spot label 0x57B03E14d409ADC7fAb6CFc44b5886CAD2D5f02b, 100 USDC, managerId 1) from a fresh address moves exactly 100.0 USDC: the depositor's USDC falls by 100.0 and SPOT_VAULT's USDC rises by 100.0 in the deposit block, and the OnchainActionManager queues one public action of type 2 (DEPOSIT_TO_NEW_SUBACCOUNT_TYPE) whose 76-byte payload encodes the USDC label, 100.0 USDC, managerId 1 and the depositor, advancing publicActionsAcc; the new subaccount itself is credited asynchronously by the zk batch, which a fork cannot run",
     group: "derive-v3",
   },
   {
@@ -1511,7 +1555,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Shield USDC into a private RAILGUN balance",
     action: "`shield` on RailgunSmartWallet (Ethereum proxy, EIP-1967)",
-    assertion: "shield() with one 10 USDC ShieldRequest (preimage npk = poseidon([masterPublicKey, 16-byte random]), TokenData(ERC20, USDC, 0), uint120 value 10000000) on RailgunSmartWallet: the wallet contract's USDC balance rises by exactly the post-deduction 9.975 USDC, the treasury receives exactly the 0.025 USDC documented 0.25% deduction, nextLeafIndex advances by exactly 1 from the Shield event's startPosition, merkleRoot changes to a root recorded in rootHistory(treeNumber, root), and the Shield event carries our preimage (npk, USDC, 9975000) whose PoseidonT4 leaf hash is poseidon([npk, tokenID, valueAfterFee])",
+    assertion:
+      "shield() with one 10 USDC ShieldRequest (preimage npk = poseidon([masterPublicKey, 16-byte random]), TokenData(ERC20, USDC, 0), uint120 value 10000000) on RailgunSmartWallet: the wallet contract's USDC balance rises by exactly the post-deduction 9.975 USDC, the treasury receives exactly the 0.025 USDC documented 0.25% deduction, nextLeafIndex advances by exactly 1 from the Shield event's startPosition, merkleRoot changes to a root recorded in rootHistory(treeNumber, root), and the Shield event carries our preimage (npk, USDC, 9975000) whose PoseidonT4 leaf hash is poseidon([npk, tokenID, valueAfterFee])",
     group: "railgun",
   },
   {
@@ -1520,7 +1565,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Fluid Lending — fUSDC ERC-4626 deposit",
     action: "`deposit` on Fluid fUSDC (fToken_fUSDC, ERC-4626 lending token)",
-    assertion: "deposit(100 USDC, freshAccount) on Fluid's fUSDC fToken is permissionless and mints exactly previewDeposit(100 USDC) shares (a same-second deposit matches exactly; a deposit that lands in a later second may only round at most 1e-6 relative below preview because the exchange price is monotonic), increases fUSDC.totalSupply by exactly the minted shares, increases fUSDC.totalAssets by 100 USDC (within 10 micro-USDC of share/exchange-price rounding and at most one block of accrued interest), moves exactly 100 USDC into the Fluid Liquidity contract that holds all fToken underlying (the fToken itself never holds funds), and the fToken emits Deposit(sender=freshAccount, owner=freshAccount, assets=100 USDC, shares=minted)",
+    assertion:
+      "deposit(100 USDC, freshAccount) on Fluid's fUSDC fToken is permissionless and mints exactly previewDeposit(100 USDC) shares (a same-second deposit matches exactly; a deposit that lands in a later second may only round at most 1e-6 relative below preview because the exchange price is monotonic), increases fUSDC.totalSupply by exactly the minted shares, increases fUSDC.totalAssets by 100 USDC (within 10 micro-USDC of share/exchange-price rounding and at most one block of accrued interest), moves exactly 100 USDC into the Fluid Liquidity contract that holds all fToken underlying (the fToken itself never holds funds), and the fToken emits Deposit(sender=freshAccount, owner=freshAccount, assets=100 USDC, shares=minted)",
     group: "fluid-lending",
   },
   {
@@ -1529,7 +1575,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Deposit 100 USDC into Lido Earn USD (Mellow Core)",
     action: "`deposit` on Lido Earn USD (earnUSD), a Mellow Core Vault / MetaVault",
-    assertion: "deposit(100 USDC) from a fresh impersonated address on the earnUSD Mellow Core Vault through its USDC SyncDepositQueue: measured delta is 96.253508847487042426 shares minted, exactly equal to previewDeposit = 100 USDC * oracle price 962535088474870424260645342946 / 1e18 (penaltyD6 0, depositFeeD6 0), ShareManager totalShares +96.253508847487042426 (equal to the mint), the vault's total assets (Mellow Collector totalBase = totalShares * 1e18 / priceD18) +100.000000 USDC (56,754,285.912745 -> 56,754,385.912745 USDC), and the depositor's USDC -100.000000 exactly",
+    assertion:
+      "deposit(100 USDC) from a fresh impersonated address on the earnUSD Mellow Core Vault through its USDC SyncDepositQueue: measured delta is 96.253508847487042426 shares minted, exactly equal to previewDeposit = 100 USDC * oracle price 962535088474870424260645342946 / 1e18 (penaltyD6 0, depositFeeD6 0), ShareManager totalShares +96.253508847487042426 (equal to the mint), the vault's total assets (Mellow Collector totalBase = totalShares * 1e18 / priceD18) +100.000000 USDC (56,754,285.912745 -> 56,754,385.912745 USDC), and the depositor's USDC -100.000000 exactly",
     group: "mellow-core",
   },
   {
@@ -1538,7 +1585,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Send an Axelar message: 0.01 ETH gas payment + Gateway callContract",
     action: "`send-message` on AxelarGateway (Ethereum)",
-    assertion: "payNativeGasForContractCall{value: 0.01 ETH}(sender, \"Polygon\", 0xB5FB4BE02232B1bBA4dC8f81dc24C26980dE9e3C, payload, sender) on the AxelarGasService, then callContract(\"Polygon\", 0xB5FB4BE02232B1bBA4dC8f81dc24C26980dE9e3C, payload) on the AxelarGateway: the gas service's own ETH balance rises by exactly 0.01 ETH, the gas service emits NativeGasPaidForContractCall with sender/destinationChain/destinationAddress/keccak256(payload)/0.01 ETH/refundAddress and the gateway emits ContractCall with the same payloadHash and the exact payload bytes, and the caller's ETH spend equals exactly 0.01 ETH + gas",
+    assertion:
+      'payNativeGasForContractCall{value: 0.01 ETH}(sender, "Polygon", 0xB5FB4BE02232B1bBA4dC8f81dc24C26980dE9e3C, payload, sender) on the AxelarGasService, then callContract("Polygon", 0xB5FB4BE02232B1bBA4dC8f81dc24C26980dE9e3C, payload) on the AxelarGateway: the gas service\'s own ETH balance rises by exactly 0.01 ETH, the gas service emits NativeGasPaidForContractCall with sender/destinationChain/destinationAddress/keccak256(payload)/0.01 ETH/refundAddress and the gateway emits ContractCall with the same payloadHash and the exact payload bytes, and the caller\'s ETH spend equals exactly 0.01 ETH + gas',
     group: "axelar",
   },
   {
@@ -1547,7 +1595,8 @@ const FEATURES = [
     chain: "ethereum",
     title: "Deposit 100 frxUSD into Fraxtal",
     action: "`deposit-erc20` on Fraxtal L1StandardBridgeProxy",
-    assertion: "depositERC20(100 frxUSD, l2Token 0xFc00000000000000000000000000000000000001, minGasLimit 200000, extraData 0x) on the Fraxtal L1StandardBridge is permissionless and locks exactly 100 frxUSD: the bridge's frxUSD balance rises by exactly 100 frxUSD (99,488,625.39670378616664868 -> 99,488,725.39670378616664868), the depositor's frxUSD drops by exactly 100, the bridge emits ERC20DepositInitiated(l1Token=0x853d955aCEf822Db058eb8505911ED77F175b99e, l2Token=0xFc00000000000000000000000000000000000001, from=to=depositor, amount=100e18, extraData=0x) and the OptimismPortal emits TransactionDeposited for the enqueued L2 message; native ETH is provably NOT bridgeable - depositETH reverts with \"StandardBridge: cannot bridge ETH with custom gas token\" because Fraxtal is a custom-gas-token chain",
+    assertion:
+      "depositERC20(100 frxUSD, l2Token 0xFc00000000000000000000000000000000000001, minGasLimit 200000, extraData 0x) on the Fraxtal L1StandardBridge is permissionless and locks exactly 100 frxUSD: the bridge's frxUSD balance rises by exactly 100 frxUSD (99,488,625.39670378616664868 -> 99,488,725.39670378616664868), the depositor's frxUSD drops by exactly 100, the bridge emits ERC20DepositInitiated(l1Token=0x853d955aCEf822Db058eb8505911ED77F175b99e, l2Token=0xFc00000000000000000000000000000000000001, from=to=depositor, amount=100e18, extraData=0x) and the OptimismPortal emits TransactionDeposited for the enqueued L2 message; native ETH is provably NOT bridgeable - depositETH reverts with \"StandardBridge: cannot bridge ETH with custom gas token\" because Fraxtal is a custom-gas-token chain",
     group: "fraxtal",
   },
   {
@@ -1556,7 +1605,8 @@ const FEATURES = [
     chain: "avalanche",
     title: "Stake avUSD for savUSD",
     action: "`stake` on savUSD (Staked avUSD — ERC-4626 vault, symbol savUSD, asset avUSD)",
-    assertion: "deposit(100 avUSD, freshAccount) on savUSD at Avalanche fork block 99237527 is permissionless (maxDeposit = 2^256-1, no whitelist/role on the deposit path) and mints exactly 82.425633865240743429 savUSD, equal to previewDeposit(100e18) with 0 wei drift; savUSD totalSupply rises by exactly 82.425633865240743429; the caller's avUSD balance falls by exactly 100.0; the vault's avUSD balance and totalAssets each rise by exactly 100.0 avUSD (unvested 0 before and after); the receipt carries Transfer(0x0 -> caller, 82.425633865240743429) from savUSD and Transfer(caller -> vault, 100e18) from avUSD.",
+    assertion:
+      "deposit(100 avUSD, freshAccount) on savUSD at Avalanche fork block 99237527 is permissionless (maxDeposit = 2^256-1, no whitelist/role on the deposit path) and mints exactly 82.425633865240743429 savUSD, equal to previewDeposit(100e18) with 0 wei drift; savUSD totalSupply rises by exactly 82.425633865240743429; the caller's avUSD balance falls by exactly 100.0; the vault's avUSD balance and totalAssets each rise by exactly 100.0 avUSD (unvested 0 before and after); the receipt carries Transfer(0x0 -> caller, 82.425633865240743429) from savUSD and Transfer(caller -> vault, 100e18) from avUSD.",
     group: "avant",
   },
   {
@@ -1565,7 +1615,8 @@ const FEATURES = [
     chain: "arbitrum",
     title: "Deposit 10 USDC into Hyperliquid Bridge",
     action: "`deposit` on Hyperliquid Bridge (Bridge2, Arbitrum USDC escrow)",
-    assertion: "Escrow's USDC balance rises by exactly 10.0 USDC (197,413,197.707209 -> 197,413,207.707209 at fork block 520631025) and the receipt carries USDC Transfer(from=depositor, to=escrow, value=10.0 USDC), while the depositor's USDC falls by exactly 10.0. The escrow's own storage does not move: the deposit path is a plain ERC-20 transfer, not a contract call.",
+    assertion:
+      "Escrow's USDC balance rises by exactly 10.0 USDC (197,413,197.707209 -> 197,413,207.707209 at fork block 520631025) and the receipt carries USDC Transfer(from=depositor, to=escrow, value=10.0 USDC), while the depositor's USDC falls by exactly 10.0. The escrow's own storage does not move: the deposit path is a plain ERC-20 transfer, not a contract call.",
     group: "hyperliquid-bridge",
   },
   {
@@ -1574,7 +1625,8 @@ const FEATURES = [
     chain: "polygon",
     title: "Polymarket - split USDC into YES+NO",
     action: "`split` on ConditionalTokens (Gnosis CTF, Polymarket deployment)",
-    assertion: "splitPosition(USDC, bytes32(0), conditionId, [1,2], 10 USDC) on a prepared, unresolved binary condition from Polymarket's UMA CTF Adapter moves exactly 10.0 USDC out of the fresh account and exactly 10.0 USDC into the ConditionalTokens contract, and the account's YES (indexSet 1) and NO (indexSet 2) CTF position balances each go 0 -> 10.0 (equal and non-zero), with a PositionSplit event carrying the same stakeholder, conditionId and amount",
+    assertion:
+      "splitPosition(USDC, bytes32(0), conditionId, [1,2], 10 USDC) on a prepared, unresolved binary condition from Polymarket's UMA CTF Adapter moves exactly 10.0 USDC out of the fresh account and exactly 10.0 USDC into the ConditionalTokens contract, and the account's YES (indexSet 1) and NO (indexSet 2) CTF position balances each go 0 -> 10.0 (equal and non-zero), with a PositionSplit event carrying the same stakeholder, conditionId and amount",
     group: "polymarket",
   },
   {
@@ -1582,8 +1634,10 @@ const FEATURES = [
     section: "actions",
     chain: "ethereum",
     title: "Deposit 100 USDC into Wintermute USDC Select (Armitage)",
-    action: "`deposit` on Wintermute USDC Select (Morpho Vault V2, symbol armUSDCs; largest of the seven Armitage-curated vaults)",
-    assertion: "deposit(100 USDC, freshAccount) into Wintermute USDC Select (0xA2EA…68cd) is permissionless: it mints shares equal to previewDeposit (drift <= 1e-6 of preview), increases totalSupply by exactly the minted shares, increases totalAssets by 100 USDC plus at most one block of accrued interest, and the minted shares convertToAssets back to ~100 USDC (within 1%)",
+    action:
+      "`deposit` on Wintermute USDC Select (Morpho Vault V2, symbol armUSDCs; largest of the seven Armitage-curated vaults)",
+    assertion:
+      "deposit(100 USDC, freshAccount) into Wintermute USDC Select (0xA2EA…68cd) is permissionless: it mints shares equal to previewDeposit (drift <= 1e-6 of preview), increases totalSupply by exactly the minted shares, increases totalAssets by 100 USDC plus at most one block of accrued interest, and the minted shares convertToAssets back to ~100 USDC (within 1%)",
     group: "armitage",
   },
   {
@@ -1591,9 +1645,316 @@ const FEATURES = [
     section: "actions",
     chain: "ethereum",
     title: "Bridge 100 USDS into the xDAI Stake Bridge",
-    action: "`deposit` on xDAI Stake Bridge, Ethereum side (POA EternalStorageProxy; implementation 0x257bDD093Cab1Bd39eBF837dCB60f33d031d7d49)",
-    assertion: "relayTokens(freshAccount, 100 USDS) on the Ethereum xDAI bridge (0x4aa42145Aa6Ebf72e164C9bBC74fbD3788045016) is permissionless: the bridge's USDS collateral (USDS.balanceOf(bridge), the exact call the DefiLlama adapter makes) rises by exactly 100 USDS, the bridge's own totalSpentPerDay bucket for the deposit block's day rises by exactly 100 USDS, and the depositor's USDS balance falls by exactly 100 USDS",
+    action:
+      "`deposit` on xDAI Stake Bridge, Ethereum side (POA EternalStorageProxy; implementation 0x257bDD093Cab1Bd39eBF837dCB60f33d031d7d49)",
+    assertion:
+      "relayTokens(freshAccount, 100 USDS) on the Ethereum xDAI bridge (0x4aa42145Aa6Ebf72e164C9bBC74fbD3788045016) is permissionless: the bridge's USDS collateral (USDS.balanceOf(bridge), the exact call the DefiLlama adapter makes) rises by exactly 100 USDS, the bridge's own totalSpentPerDay bucket for the deposit block's day rises by exactly 100 USDS, and the depositor's USDS balance falls by exactly 100 USDS",
     group: "xdai-stake-bridge",
+  },
+  // ---- 2026-11-06 Anvil feature-gap batch (lending / staking / DEX / special) ----
+  {
+    script: "fork:lista-dao:borrow",
+    section: "actions",
+    chain: "bsc",
+    title: "Borrow USDT on Lista Moolah",
+    action: "supplyCollateral 0.01 BTCB into the BTCB/USDT Moolah market, then borrow 100 USDT",
+    assertion: "USDT balance rises by the borrowed amount and borrow shares > 0",
+  },
+  {
+    script: "fork:liquity:open",
+    section: "actions",
+    chain: "ethereum",
+    title: "Open a Liquity trove",
+    action: "BorrowerOperations.openTrove with 2 ETH and walked SortedTroves hints",
+    assertion: "trove opens and LUSD balance rises by the requested debt",
+  },
+  {
+    script: "fork:liquity:redeem",
+    section: "actions",
+    chain: "ethereum",
+    title: "Redeem LUSD for ETH",
+    action: "TroveManager.redeemCollateral of 100 LUSD with partial-redemption hints",
+    assertion: "LUSD burned and ETH balance rises",
+  },
+  {
+    script: "fork:liquity:liquidate",
+    section: "actions",
+    chain: "ethereum",
+    title: "Liquidate a Liquity trove",
+    action: "open a thin trove, crash PriceFeed 50% with MockPrice, TroveManager.liquidate",
+    assertion: "trove status goes 1 (active) to 3 (closed by liquidation)",
+  },
+  {
+    script: "fork:venus:borrow",
+    section: "actions",
+    chain: "bsc",
+    title: "Borrow on Venus",
+    action: "mint vUSDC collateral, enterMarkets, vUSDC.borrow 100 USDC",
+    assertion: "borrowBalance goes 0 to 100 USDC and USDC received",
+  },
+  {
+    script: "fork:venus:repay",
+    section: "actions",
+    chain: "bsc",
+    title: "Repay on Venus",
+    action: "borrow then repayBorrow(type(uint256).max)",
+    assertion: "borrowBalance returns to 0",
+  },
+  {
+    script: "fork:venus:redeem",
+    section: "actions",
+    chain: "bsc",
+    title: "Redeem on Venus",
+    action: "mint vUSDC then redeemUnderlying",
+    assertion: "USDC received equals the redeemed amount",
+  },
+  {
+    script: "fork:fluid-lending:borrow",
+    section: "actions",
+    chain: "ethereum",
+    title: "Borrow from a Fluid vault",
+    action: "vault.operate(nftId 0, +1 ETH collateral, +100 USDC debt) on the ETH/USDC vault",
+    assertion: "position NFT minted and USDC balance rises by 100",
+  },
+  {
+    script: "fork:benqi:borrow",
+    section: "actions",
+    chain: "avalanche",
+    title: "Borrow on Benqi",
+    action: "qiAVAX.mint, enterMarkets, qiUSDCn.borrow 100 USDC",
+    assertion: "borrowBalance goes 0 to 100 USDC",
+  },
+  {
+    script: "fork:benqi:redeem",
+    section: "actions",
+    chain: "avalanche",
+    title: "Redeem on Benqi",
+    action: "mint qiUSDCn then redeemUnderlying",
+    assertion: "USDC received equals the redeemed amount",
+  },
+  {
+    script: "fork:euler:borrow",
+    section: "actions",
+    chain: "ethereum",
+    title: "Borrow through the Euler EVC",
+    action: "deposit WETH into K3 Prime eWETH, EVC enableCollateral + enableController, eUSDC.borrow",
+    assertion: "USDC debt goes 0 to 100 and USDC received",
+  },
+  {
+    script: "fork:veda:liquid-usd",
+    section: "actions",
+    chain: "ethereum",
+    title: "Deposit into ether.fi Liquid USD",
+    action: "Teller.deposit 100 USDC into the Liquid USD BoringVault",
+    assertion: "liquidUSD minted equals amount / Accountant rate and vault USDC +100",
+  },
+  {
+    script: "fork:veda:liquid-btc",
+    section: "actions",
+    chain: "ethereum",
+    title: "Deposit into ether.fi Liquid BTC",
+    action: "Teller.deposit 0.01 WBTC into the Liquid BTC BoringVault",
+    assertion: "liquidBTC minted at the Accountant rate",
+  },
+  {
+    script: "fork:lagoon:request-deposit",
+    section: "actions",
+    chain: "ethereum",
+    title: "Lagoon ERC-7540 deposit request",
+    action: "create a USDC vault from the official Factory (logic v0.5.0, whitelist off), then requestDeposit",
+    assertion: "pendingDepositRequest equals the assets and USDC moves to the pending silo",
+  },
+  {
+    script: "fork:eigenlayer:complete",
+    section: "actions",
+    chain: "ethereum",
+    title: "Complete an EigenLayer withdrawal",
+    action: "deposit stETH, queueWithdrawals, mine past minWithdrawalDelayBlocks, completeQueuedWithdrawal",
+    assertion: "stETH returned to the staker; slow (~25 min), excluded from default fork:all",
+  },
+  {
+    script: "fork:eigenlayer:delegate",
+    section: "actions",
+    chain: "ethereum",
+    title: "Delegate to an EigenLayer operator",
+    action: "register a fresh operator, deposit stETH, DelegationManager.delegateTo",
+    assertion: "operatorShares rise by the staker's shares",
+  },
+  {
+    script: "fork:saturn:unstake",
+    section: "actions",
+    chain: "ethereum",
+    title: "Request a Saturn unstake",
+    action: "sUSDat.deposit then requestRedeem(all)",
+    assertion: "shares escrowed in the Withdraw contract and a request NFT minted",
+  },
+  {
+    script: "fork:meta-pool:withdraw-request",
+    section: "actions",
+    chain: "ethereum",
+    title: "Request a Meta Pool withdrawal",
+    action: "spETH.depositETH then redeem(all) into the Withdrawal queue",
+    assertion: "pendingWithdraws records the request for the next epoch",
+  },
+  {
+    script: "fork:solvbtc:redeem",
+    section: "actions",
+    chain: "ethereum",
+    title: "Request a SolvBTC redemption",
+    action: "Router.createSubscription with WBTC, then createRedemption(all)",
+    assertion: "SolvBTC burned and a redemption share id issued",
+  },
+  {
+    script: "fork:cian:withdraw-request",
+    section: "actions",
+    chain: "ethereum",
+    title: "Request a CIAN withdrawal",
+    action: "vault.requestRedeem(all, rsETH); shares are dealt because deposit is paused (stale price)",
+    assertion: "shares move to the RedeemOperator",
+  },
+  {
+    script: "fork:benqi:unlock",
+    section: "actions",
+    chain: "avalanche",
+    title: "Unlock sAVAX",
+    action: "sAVAX.requestUnlock(all), warp the 15-day cooldown, redeem(index)",
+    assertion: "early redeem reverts; after the cooldown AVAX is paid back",
+  },
+  {
+    script: "fork:frax:mint-frxeth",
+    section: "actions",
+    chain: "ethereum",
+    title: "Mint frxETH",
+    action: "frxETHMinter.submit{1 ETH} on the original minter",
+    assertion: "frxETH minted 1:1",
+  },
+  {
+    script: "fork:symbiotic:deposit",
+    section: "actions",
+    chain: "ethereum",
+    title: "Deposit into a Symbiotic vault",
+    action: "scan VaultFactory for a public wstETH vault with room, Vault.deposit",
+    assertion: "activeBalanceOf rises by the deposit",
+  },
+  {
+    script: "fork:theo:unstake",
+    section: "actions",
+    chain: "ethereum",
+    title: "Unstake from Theo",
+    action: "initiateRedeem(all), early redeem reverts, warp 5-day lockup, redeem",
+    assertion: "redeem pays the booked thUSD",
+  },
+  {
+    script: "fork:aerodrome:add-liquidity",
+    section: "actions",
+    chain: "base",
+    title: "Add liquidity on Aero",
+    action: "transfer AERO + USDC pro-rata to the AERO/USDC v2 pool and mint",
+    assertion: "LP minted equals totalSupply delta and reserves rise by the inputs",
+  },
+  {
+    script: "fork:aerodrome:lock",
+    section: "actions",
+    chain: "base",
+    title: "Lock AERO",
+    action: "VotingEscrow.createStake(1000 AERO, 52 weeks)",
+    assertion: "stake NFT owned by the user, supply +1000 and voting power > 0",
+  },
+  {
+    script: "fork:balancer:join",
+    section: "actions",
+    chain: "ethereum",
+    title: "Join a Balancer V2 pool",
+    action: "Vault.joinPool EXACT_TOKENS_IN_FOR_BPT_OUT with 1 WETH into B-80BAL-20WETH",
+    assertion: "BPT > 0, WETH -1 and pool WETH balance +1",
+  },
+  {
+    script: "fork:sushiswap:add-liquidity",
+    section: "actions",
+    chain: "ethereum",
+    title: "Add liquidity on SushiSwap V2",
+    action: "Router.addLiquidity WETH/USDC",
+    assertion: "SLP > 0 and both legs debited",
+  },
+  {
+    script: "fork:pendle:mint-py",
+    section: "actions",
+    chain: "ethereum",
+    title: "Mint PT + YT on Pendle",
+    action: "Router V4 mintPyFromToken with 1 wstETH",
+    assertion: "PT and YT deltas equal the static preview",
+  },
+  {
+    script: "fork:pendle:add-liquidity",
+    section: "actions",
+    chain: "ethereum",
+    title: "Add liquidity on Pendle",
+    action: "Router V4 addLiquiditySingleToken with 1 wstETH",
+    assertion: "LP >= 99.5% of the static preview",
+  },
+  {
+    script: "fork:fx:operate",
+    section: "actions",
+    chain: "ethereum",
+    title: "Open an f(x) position",
+    action: "PoolManager.operate on the wstETH pool: 2 wstETH collateral, 2000 fxUSD debt",
+    assertion: "position owned by the user and fxUSD minted net of fee",
+  },
+  {
+    script: "fork:fx:stability-deposit",
+    section: "actions",
+    chain: "ethereum",
+    title: "Deposit into the f(x) stability pool",
+    action: "FxUSDBasePool.deposit 1000 fxUSD",
+    assertion: "shares equal previewDeposit and fxUSD -1000",
+  },
+  {
+    script: "fork:cooler:repay",
+    section: "actions",
+    chain: "ethereum",
+    title: "Repay a Cooler V2 loan",
+    action: "addCollateral 1 gOHM, borrow 1500 USDS, repay(MAX), withdrawCollateral",
+    assertion: "debt goes to 0 and repaid >= principal",
+  },
+  {
+    script: "fork:convex:claim",
+    section: "actions",
+    chain: "ethereum",
+    title: "Claim Convex rewards",
+    action: "deposit 3Crv (pid 9), earmarkRewards, warp, BaseRewardPool.getReward",
+    assertion: "CRV received >= earned and earned resets to 0",
+  },
+  {
+    script: "fork:usdai:mint",
+    section: "actions",
+    chain: "arbitrum",
+    title: "Mint USDai",
+    action: "USDai.deposit with its baseToken PYUSD (USDC is rejected on-chain)",
+    assertion: "PYUSD -1000, USDai +1000 and supply +1000",
+  },
+  {
+    script: "fork:sky:vault",
+    section: "actions",
+    chain: "ethereum",
+    title: "Open a Sky ETH-A vault",
+    action: "WETH join, Vat.frob(ETH-A), USDS_JOIN.exit 8000 USDS",
+    assertion: "USDS +8000 and the urn's ink/art rise",
+  },
+  {
+    script: "fork:xdai-stake-bridge:relay",
+    section: "actions",
+    chain: "ethereum",
+    title: "Relay USDC through the sibling OmniBridge",
+    action: "OmniBridge.relayTokens(USDC, receiver, 1000)",
+    assertion: "mediator USDC +1000 and TokensBridgingInitiated emitted",
+  },
+  {
+    script: "fork:defisaver:recipe",
+    section: "actions",
+    chain: "ethereum",
+    title: "Run a DeFi Saver recipe",
+    action: "build a DSProxy, execute RecipeExecutor: AaveV3Supply 5 WETH + AaveV3Borrow 1000 USDC",
+    assertion: "user USDC +1000, proxy holds aWETH and USDC debt, health factor > 1",
   },
 ];
 

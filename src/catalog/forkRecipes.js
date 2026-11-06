@@ -72,14 +72,18 @@ const FORK_RECIPES = [
     appUrl: "https://www.sushi.com/swap",
     chain: "ethereum",
     contractKeys: ["sushiswap"],
-    tests: [test("fork:sushiswap:v2", "swap", "ethereum"), test("fork:sushiswap:v3", "swap", "ethereum")],
+    tests: [
+      test("fork:sushiswap:v2", "swap", "ethereum"),
+      test("fork:sushiswap:v3", "swap", "ethereum"),
+      test("fork:sushiswap:add-liquidity", "add liquidity", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["balancer", "balancer-v2", "balancer-v3"],
     appUrl: "https://balancer.fi",
     chain: "ethereum",
     contractKeys: ["balancer"],
-    tests: [test("fork:balancer:swap", "swap", "ethereum")],
+    tests: [test("fork:balancer:swap", "swap", "ethereum"), test("fork:balancer:join", "join pool", "ethereum")],
   }),
   recipe({
     keys: ["curve", "curve-dex"],
@@ -237,7 +241,12 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["veda"],
     note: "ether.fi Liquid ETH is a Veda BoringVault. The test deposits WETH through the Teller and asserts shares. Teller bulkWithdraw is not a public capability, so it does not redeem. WETH allowWithdraws was false. The ether.fi Liquid row and the Nonce Capital row (the curator of the ether.fi Liquid vaults, veda.tech/ecosystem/nonce-capital) share this vault; Liquid USD, Liquid BTC and Nonce's OP Mainnet Midas tokens are not exercised.",
-    tests: [test("fork:veda:deposit", "deposit", "ethereum"), test("fork:veda:request", "request", "ethereum")],
+    tests: [
+      test("fork:veda:deposit", "deposit", "ethereum"),
+      test("fork:veda:request", "request", "ethereum"),
+      test("fork:veda:liquid-usd", "Liquid USD deposit", "ethereum"),
+      test("fork:veda:liquid-btc", "Liquid BTC deposit", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["upshift"],
@@ -264,7 +273,7 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["euler"],
     note: "Euler Earn is ERC-4626. Deposit and redeem USDC on the first non-deprecated Ethereum vault in euler-labels (K3 Capital Earn USDC).",
-    tests: [test("fork:euler:deposit", "deposit", "ethereum")],
+    tests: [test("fork:euler:deposit", "deposit", "ethereum"), test("fork:euler:borrow", "borrow (EVC)", "ethereum")],
   }),
   recipe({
     keys: ["rockawayx"],
@@ -333,7 +342,11 @@ const FORK_RECIPES = [
     appUrl: "https://www.ether.fi",
     chain: "ethereum",
     contractKeys: ["etherfi"],
-    tests: [test("fork:etherfi:deposit", "deposit", "ethereum"), test("fork:etherfi:wrap", "wrap", "ethereum"), test("fork:etherfi:request", "request", "ethereum")],
+    tests: [
+      test("fork:etherfi:deposit", "deposit", "ethereum"),
+      test("fork:etherfi:wrap", "wrap", "ethereum"),
+      test("fork:etherfi:request", "request", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["kelp"],
@@ -358,7 +371,20 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["eigenlayer"],
     note: "StrategyManager.depositIntoStrategy on the stETH strategy, then DelegationManager.queueWithdrawals. The withdrawal delay is not advanced, so completion is not asserted.",
-    tests: [test("fork:eigenlayer:deposit", "deposit", "ethereum"), test("fork:eigenlayer:queue", "queue", "ethereum")],
+    tests: [
+      test("fork:eigenlayer:deposit", "deposit", "ethereum"),
+      test("fork:eigenlayer:queue", "queue", "ethereum"),
+      {
+        ...test(
+          "fork:eigenlayer:complete",
+          "complete withdrawal",
+          "ethereum",
+          "Slow (~25 min: mines the 14-day withdrawal delay). Left out of the default fork:all; run with FORK_SLOW=1 or FORK_ONLY."
+        ),
+        slow: true,
+      },
+      test("fork:eigenlayer:delegate", "delegate to operator", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["symbiotic"],
@@ -368,7 +394,10 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["symbiotic"],
     note: "Official docs publish VaultFactory, not a permissionless vault. Curator vaults set their own deposit whitelist. The fork test reads the factory and does not deposit.",
-    tests: [test("fork:symbiotic:read", "read", "ethereum")],
+    tests: [
+      test("fork:symbiotic:read", "read", "ethereum"),
+      test("fork:symbiotic:deposit", "vault deposit", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["swell", "swell-liquid-restaking"],
@@ -401,6 +430,7 @@ const FORK_RECIPES = [
       test("fork:sky:sdai", "sdai", "ethereum"),
       test("fork:sky:redeem", "redeem", "ethereum"),
       test("fork:sky:psm", "psm", "ethereum"),
+      test("fork:sky:vault", "open vault / draw USDS", "ethereum"),
     ],
   }),
   recipe({
@@ -445,7 +475,7 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["frax"],
     note: "Ethereum sfrxUSD maxDeposit is 0, so there is no local permissionless deposit. The fork test reads convertToAssets. Stake and unstake on Ethereum go through a Fraxtal lockbox.",
-    tests: [test("fork:frax:rate", "rate", "ethereum")],
+    tests: [test("fork:frax:rate", "rate", "ethereum"), test("fork:frax:mint-frxeth", "mint frxETH", "ethereum")],
   }),
   recipe({
     keys: ["buidl", "blackrock-buidl", "securitize"],
@@ -541,7 +571,12 @@ const FORK_RECIPES = [
     chain: "bsc",
     contractKeys: ["venus-core-pool"],
     note: "Venus Core Pool vUSDC mint and redeem on BSC (Compound V2-style). Borrow is not exercised.",
-    tests: [test("fork:venus:supply", "supply", "bsc")],
+    tests: [
+      test("fork:venus:supply", "supply", "bsc"),
+      test("fork:venus:borrow", "borrow", "bsc"),
+      test("fork:venus:repay", "repay", "bsc"),
+      test("fork:venus:redeem", "redeem", "bsc"),
+    ],
   }),
   recipe({
     keys: ["usd-ai", "usdai"],
@@ -549,7 +584,7 @@ const FORK_RECIPES = [
     chain: "arbitrum",
     contractKeys: ["usd-ai"],
     note: "Protocol mint/redeem of USDai is whitelisted (docs.usd.ai). The fork stakes USDai into sUSDai (ERC-4626). Redeem is a 30-day queue, so the test does not redeem.",
-    tests: [test("fork:usdai:stake", "stake", "arbitrum")],
+    tests: [test("fork:usdai:stake", "stake", "arbitrum"), test("fork:usdai:mint", "mint USDai", "arbitrum")],
   }),
   recipe({
     keys: ["spark"],
@@ -566,7 +601,7 @@ const FORK_RECIPES = [
     chain: "bsc",
     contractKeys: ["lista-dao"],
     note: "Lista MoolahVault (USDT) is ERC-4626. Deposit USDT and redeem on a BSC fork.",
-    tests: [test("fork:lista-dao:deposit", "deposit", "bsc")],
+    tests: [test("fork:lista-dao:deposit", "deposit", "bsc"), test("fork:lista-dao:borrow", "borrow", "bsc")],
   }),
   recipe({
     keys: ["world-chain", "world-chain-bridge"],
@@ -632,7 +667,10 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["meta-pool"],
     note: "Meta Pool spETH (Ethereum) is ERC-4626; depositETH may be filled from the Liquid Unstake Pool. Most of this row's TVL is NEAR staking (stNEAR), which the repo cannot fork. The older mpETH contract is paused.",
-    tests: [test("fork:meta-pool:deposit", "deposit", "ethereum")],
+    tests: [
+      test("fork:meta-pool:deposit", "deposit", "ethereum"),
+      test("fork:meta-pool:withdraw-request", "withdraw request", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["near-bridge"],
@@ -724,7 +762,7 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["saturn"],
     note: "Saturn sUSDat (StakedUSDat, ERC-4626 over USDat). Staking is open with a deposit fee (25 bps on 2026-10-26) that previewDeposit prices in. Unstaking is request, processing and claim through WithdrawalQueueERC721, run by Saturn's processor, so the fork test deposits only. Minting USDat itself goes through Saturn's swap facility and is not tested.",
-    tests: [test("fork:saturn:stake", "stake", "ethereum")],
+    tests: [test("fork:saturn:stake", "stake", "ethereum"), test("fork:saturn:unstake", "unstake", "ethereum")],
   }),
   recipe({
     keys: ["concentrator"],
@@ -742,7 +780,7 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["cooler-loans"],
     note: "Olympus Cooler V2 (MonoCooler): gOHM collateral, USDS debt at a fixed rate. The test posts gOHM, borrows USDS, repays in full and withdraws the collateral. gOHM comes from the DLGTE module listed in the Olympus docs, because anvil_deal is unavailable.",
-    tests: [test("fork:cooler:borrow", "borrow", "ethereum")],
+    tests: [test("fork:cooler:borrow", "borrow", "ethereum"), test("fork:cooler:repay", "repay", "ethereum")],
   }),
   recipe({
     keys: ["stake.link-liquid", "stake.link"],
@@ -866,7 +904,11 @@ const FORK_RECIPES = [
     chain: "avalanche",
     contractKeys: ["benqi-lending"],
     note: "Benqi Core Markets on Avalanche C-Chain (Compound V2-style). Mints qiUSDCn with native USDC and redeems every qiToken; pre-checks Comptroller mintGuardianPaused. Borrowing, isolated (Ecosystem) markets and QI rewards are not exercised.",
-    tests: [test("fork:benqi:supply", "supply", "avalanche")],
+    tests: [
+      test("fork:benqi:supply", "supply", "avalanche"),
+      test("fork:benqi:borrow", "borrow", "avalanche"),
+      test("fork:benqi:redeem", "redeem", "avalanche"),
+    ],
   }),
   recipe({
     keys: ["benqi-staked-avax"],
@@ -876,7 +918,7 @@ const FORK_RECIPES = [
     chain: "avalanche",
     contractKeys: ["benqi-staked-avax"],
     note: "Benqi Liquid Staking: submit() AVAX for sAVAX; shares must equal the pre-tx getSharesByPooledAvax and totalPooledAvax must rise by the amount. Unstaking is a 15-day requestUnlock cooldown and is not exercised.",
-    tests: [test("fork:benqi:stake", "stake", "avalanche")],
+    tests: [test("fork:benqi:stake", "stake", "avalanche"), test("fork:benqi:unlock", "request unlock", "avalanche")],
   }),
   recipe({
     keys: ["liquity"],
@@ -886,7 +928,12 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["liquity"],
     note: "Liquity V1: LUSD into the Stability Pool and back. Opening a trove (ETH collateral, 2,000 LUSD minimum debt) is not exercised. Liquity V2 (BOLD, ETH / wstETH / rETH branches) is part of the row; its core contracts are listed for verification.",
-    tests: [test("fork:liquity:deposit", "deposit", "ethereum")],
+    tests: [
+      test("fork:liquity:deposit", "deposit", "ethereum"),
+      test("fork:liquity:open", "open trove", "ethereum"),
+      test("fork:liquity:redeem", "redeem", "ethereum"),
+      test("fork:liquity:liquidate", "liquidate", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["convex-finance"],
@@ -896,7 +943,7 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["convex-finance"],
     note: "Convex for Curve on Ethereum: deposit Curve LP through the Booster with stake=true and withdraw it from the pool's BaseRewardPool. Pid 9 (Curve 3pool) by default; CONVEX_PID picks another pool. cvxCRV staking and vlCVX locking are not exercised; their contracts are listed for verification.",
-    tests: [test("fork:convex:deposit", "deposit", "ethereum")],
+    tests: [test("fork:convex:deposit", "deposit", "ethereum"), test("fork:convex:claim", "claim rewards", "ethereum")],
   }),
   recipe({
     keys: ["theo"],
@@ -906,7 +953,7 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["theo"],
     note: "Theo thUSD / sthUSD on Ethereum. Minting thUSD and thBILL goes through whitelisted signed orders, so the test stakes thUSD into sthUSD (open to anyone), requests the redemption and claims it after the 5-day lockup, which it advances on the fork. thBILL and the minters are listed for verification.",
-    tests: [test("fork:theo:stake", "stake", "ethereum")],
+    tests: [test("fork:theo:stake", "stake", "ethereum"), test("fork:theo:unstake", "unstake", "ethereum")],
   }),
   recipe({
     keys: ["cian-yield-layer"],
@@ -916,7 +963,10 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["cian-yield-layer"],
     note: "CIAN rsETH Yield Layer on Ethereum, the largest public Yield Layer vault in CIAN's vault API. The test deposits rsETH and queues a redemption with the RedeemOperator, which CIAN's operator settles. The stETH Yield Layer is listed for verification; Mantle and other chains are not forked.",
-    tests: [test("fork:cian:deposit", "deposit", "ethereum")],
+    tests: [
+      test("fork:cian:deposit", "deposit", "ethereum"),
+      test("fork:cian:withdraw-request", "withdraw request", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["solvbtc"],
@@ -926,7 +976,7 @@ const FORK_RECIPES = [
     chain: "ethereum",
     contractKeys: ["solvbtc"],
     note: "Most of the row is BTC on Bitcoin, which the repo does not fork. On Ethereum, the SolvBTC Router mints SolvBTC from WBTC through the permissionless WBTC storage pool; the test does that. Redemption is an Open Fund request Solv settles and is not run. xSolvBTC and the LST router are listed for verification.",
-    tests: [test("fork:solvbtc:subscribe", "subscribe", "ethereum")],
+    tests: [test("fork:solvbtc:subscribe", "subscribe", "ethereum"), test("fork:solvbtc:redeem", "redeem", "ethereum")],
   }),
   recipe({
     keys: ["zama"],
@@ -978,7 +1028,11 @@ const FORK_RECIPES = [
     appUrl: "https://pendle.finance",
     chain: "ethereum",
     contractKeys: ["pendle"],
-    tests: [test("fork:pendle:buy-pt", "buy-pt", "ethereum")],
+    tests: [
+      test("fork:pendle:buy-pt", "buy-pt", "ethereum"),
+      test("fork:pendle:mint-py", "mint PT/YT", "ethereum"),
+      test("fork:pendle:add-liquidity", "add liquidity", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["aster-bridge", "astherus--bridge-chain"],
@@ -1020,7 +1074,10 @@ const FORK_RECIPES = [
     appUrl: "https://fluid.instadapp.io",
     chain: "ethereum",
     contractKeys: ["fluid-lending"],
-    tests: [test("fork:fluid-lending:deposit", "deposit", "ethereum")],
+    tests: [
+      test("fork:fluid-lending:deposit", "deposit", "ethereum"),
+      test("fork:fluid-lending:borrow", "vault borrow", "ethereum"),
+    ],
   }),
   recipe({
     keys: ["mellow-core"],
@@ -1076,7 +1133,56 @@ const FORK_RECIPES = [
     appUrl: "https://www.gnosis.io/",
     chain: "ethereum",
     contractKeys: ["xdai-stake-bridge"],
-    tests: [test("fork:xdai-stake-bridge:deposit", "deposit", "ethereum")],
+    tests: [
+      test("fork:xdai-stake-bridge:deposit", "deposit", "ethereum"),
+      test("fork:xdai-stake-bridge:relay", "OmniBridge relayTokens (erc-to-erc sibling)", "ethereum"),
+    ],
+  }),
+  recipe({
+    keys: ["lagoon"],
+    category: "vaults",
+    label: "ERC-7540 deposit request",
+    appUrl: "https://app.lagoon.finance/",
+    chain: "ethereum",
+    contractKeys: ["lagoon"],
+    note: "Lagoon docs name no reference vault, so the test creates one from the official Ethereum Factory (vault logic v0.5.0, USDC, whitelist off) and asserts the ERC-7540 requestDeposit: pendingDepositRequest equals the assets. Settlement needs the curator's valuation and is not exercised.",
+    tests: [test("fork:lagoon:request-deposit", "ERC-7540 deposit request", "ethereum")],
+  }),
+  recipe({
+    keys: ["aero-protocol--dex", "aero"],
+    category: "dex",
+    label: "Add liquidity + lock (Aero)",
+    appUrl: "https://aero.finance",
+    chain: "base",
+    contractKeys: ["aero-protocol--dex"],
+    note: "Aero (Aerodrome rebranded 2026-10-22) on Base: mints LP on the AERO/USDC v2 pool and locks 1,000 AERO for 52 weeks in the Aero VotingEscrow. Addresses come from docs.iaero.finance (secondary docs; Aero has not yet published an official address page) and are checked on the fork. Gauge staking is not testable: legacy gauges are NotAlive and the new Voter has no pool-to-gauge lookup.",
+    tests: [
+      test("fork:aerodrome:add-liquidity", "add liquidity", "base"),
+      test("fork:aerodrome:lock", "lock AERO (veNFT)", "base"),
+    ],
+  }),
+  recipe({
+    keys: ["fx-protocol", "fx"],
+    category: "stable-rwa",
+    label: "Open position + stability pool",
+    appUrl: "https://fx.aladdin.club",
+    chain: "ethereum",
+    contractKeys: ["fx-protocol"],
+    note: "f(x) Protocol V2 on Ethereum: PoolManager.operate opens a wstETH position minting fxUSD, and FxUSDBasePool takes a 1,000 fxUSD stability-pool deposit (fxUSD funded by a storage write).",
+    tests: [
+      test("fork:fx:operate", "mint fxUSD / open position", "ethereum"),
+      test("fork:fx:stability-deposit", "stability pool deposit", "ethereum"),
+    ],
+  }),
+  recipe({
+    keys: ["defi-saver-asset-management"],
+    category: "lending",
+    label: "Recipe through a DSProxy",
+    appUrl: "https://defisaver.com/",
+    chain: "ethereum",
+    contractKeys: ["defi-saver-asset-management"],
+    note: "Builds a fresh DSProxy and runs a two-action DeFi Saver recipe through RecipeExecutor: AaveV3Supply 5 WETH, then AaveV3Borrow 1,000 USDC. Registry and executor from defisaver-v3-contracts addresses/mainnet.json. Automation (strategy triggers run by DeFi Saver bots) is not exercised.",
+    tests: [test("fork:defisaver:recipe", "automation / recipes", "ethereum")],
   }),
 ];
 
@@ -1126,13 +1232,7 @@ const API_ONLY = [
     keys: ["maple"],
     category: "lending",
     appUrl: "https://www.maple.finance",
-    note: "Permissioned: no fork test. syrupUSDC and syrupUSDT deposits must go through SyrupRouter, which enforces PoolPermissionManager \"P:deposit\"; a first deposit needs an authorization signature from Maple, and withdrawals are a queued requestRedeem that Maple processes (docs.maple.finance smart-contract integration). monitor:dex -- maple:lending covers TVL and fees.",
-  },
-  {
-    keys: ["fx-protocol", "fx"],
-    category: "stable-rwa",
-    appUrl: "https://fx.aladdin.club",
-    note: "No fork deposit test: f(x) leveraged mint markets need a collateral deposit path with oracle-priced debt (docs.aladdin.club/f-x-protocol/contracts), and the arUSD ERC-4626 vault is over rUSD, a protocol-native stable with no liquid whale the Anvil suite can fund (anvil_deal is unavailable on this Foundry build). Contracts for fxUSD, rUSD, arUSD and the stETH Market are listed for verification.",
+    note: 'Permissioned: no fork test. syrupUSDC and syrupUSDT deposits must go through SyrupRouter, which enforces PoolPermissionManager "P:deposit"; a first deposit needs an authorization signature from Maple, and withdrawals are a queued requestRedeem that Maple processes (docs.maple.finance smart-contract integration). monitor:dex -- maple:lending covers TVL and fees.',
   },
   {
     keys: ["fusion-by-ipor"],
@@ -1166,12 +1266,6 @@ const API_ONLY = [
     note: "No fork test: the Lombard DeFi Vault (LBTCv) is a Veda BoringVault entered through a Teller, and Lombard's contract page (docs.lombard.finance smart contracts) does not publish that Teller; the only source for it is a third-party repo, which this repo does not take addresses from. Withdrawals are a queue of up to 14 days. LBTCv, BTCe and LBTC from the official page are listed for verification.",
   },
   {
-    keys: ["defi-saver-asset-management"],
-    category: "lending",
-    appUrl: "https://defisaver.com/",
-    note: "No fork test: this row is positions held in users' own DeFi Saver smart wallets (Safe or DSProxy) on Aave, Spark, Maker/Sky, Compound and others. There is no pooled DeFi Saver contract to deposit into; recipes run through RecipeExecutor from the user's wallet, and the underlying markets already have their own fork tests (fork:aave:*, fork:spark:*, fork:compound:*). The core registry and executor are listed for verification.",
-  },
-  {
     keys: ["enzyme-finance"],
     category: "vaults",
     appUrl: "https://app.enzyme.finance/",
@@ -1188,12 +1282,6 @@ const API_ONLY = [
     category: "staking",
     appUrl: "https://app.ssv.network/",
     note: "No fork test: the row is ETH staked in validators run by SSV operator clusters. Registering a validator needs a real validator key split into operator-encrypted key shares and a 32 ETH beacon-chain deposit, and its effect (validator duties) happens on the consensus layer, not in an EVM contract a fork can assert on. The SSV Network and SSV Network Views contracts are listed for verification.",
-  },
-  {
-    keys: ["lagoon"],
-    category: "vaults",
-    appUrl: "https://app.lagoon.finance/",
-    note: "No fork test: Lagoon vaults are each deployed by their curator from the Factory, with their own whitelist, valuation manager and settlement schedule. Deposits are ERC-7540 requests that only turn into shares when the curator settles a valuation, and Lagoon's docs do not name a reference vault, so there is no single protocol-level vault behind this row to assert on. The Ethereum Factory, ProtocolRegistry and vault logic from the official addresses page are listed for verification.",
   },
   {
     keys: ["liquid-collective"],
@@ -1302,7 +1390,8 @@ function rowKeys(row) {
   for (const script of row.scripts || []) {
     const parts = String(script.name || "").split(":");
     if (script.file === "src/simulation/fork/run.js") continue;
-    if (parts[0] === "simulate" || parts[0] === "analytics" || parts[0] === "swap" || parts[0] === "fork") keys.push(parts[1]);
+    if (parts[0] === "simulate" || parts[0] === "analytics" || parts[0] === "swap" || parts[0] === "fork")
+      keys.push(parts[1]);
   }
   return keys.filter(Boolean).map(key => String(key).toLowerCase());
 }
@@ -1325,7 +1414,8 @@ function scriptKind(name) {
   if (script.startsWith("analytics -- ") || script.startsWith("crosschain -- ")) return "analytics";
   if (script.startsWith("analytics:") || script.startsWith("crosschain:")) return "analytics";
   if (script.includes(":smoke")) return "smoke";
-  if (/^simulate:(uniswapx:fill|aave:(v3:fork|liquidations|versions)|morpho:fork|lido:fork)/.test(script)) return "fork";
+  if (/^simulate:(uniswapx:fill|aave:(v3:fork|liquidations|versions)|morpho:fork|lido:fork)/.test(script))
+    return "fork";
   if (script.startsWith("simulate:")) return "quote";
   return "other";
 }
@@ -1487,7 +1577,9 @@ function enrichShowcase(data) {
 function applyDisputes(data) {
   let file = null;
   try {
-    file = JSON.parse(require("fs").readFileSync(require("path").join(__dirname, "..", "..", "data", "disputes.json"), "utf8"));
+    file = JSON.parse(
+      require("fs").readFileSync(require("path").join(__dirname, "..", "..", "data", "disputes.json"), "utf8")
+    );
   } catch {
     return;
   }
@@ -1496,7 +1588,15 @@ function applyDisputes(data) {
   for (const item of open) {
     for (const id of item.rowIds || []) {
       if (!byRow.has(id)) byRow.set(id, []);
-      byRow.get(id).push({ id: item.id, metric: item.metric, claim: item.claim, defillama: item.defillama, recorded: item.recorded });
+      byRow
+        .get(id)
+        .push({
+          id: item.id,
+          metric: item.metric,
+          claim: item.claim,
+          defillama: item.defillama,
+          recorded: item.recorded,
+        });
     }
   }
   const visit = row => {
@@ -1511,7 +1611,8 @@ function applyDisputes(data) {
     rowsInTop200: (data.overall || []).filter(row => row.dataDisputed).length,
     chainLevel: open.filter(item => !(item.rowIds || []).length).length,
   };
-  data.methodology.disputes = "data/disputes.json: claim-vs-DefiLlama mismatches. Flagged rows show 'data disputed'; scores are not adjusted.";
+  data.methodology.disputes =
+    "data/disputes.json: claim-vs-DefiLlama mismatches. Flagged rows show 'data disputed'; scores are not adjusted.";
 }
 
 /**
@@ -1526,7 +1627,10 @@ const PERPS_NOTE =
 function annotatePerps(data) {
   const visit = row => {
     if (row.category !== "perps") return;
-    row.volumeBasis = row.components && row.components.volumeMomentum !== 0.5 ? "spot/aggregator/options volume" : "none (perp volume paywalled)";
+    row.volumeBasis =
+      row.components && row.components.volumeMomentum !== 0.5
+        ? "spot/aggregator/options volume"
+        : "none (perp volume paywalled)";
     row.volumeNote = PERPS_NOTE;
   };
   for (const row of data.overall || []) visit(row);
@@ -1534,13 +1638,17 @@ function annotatePerps(data) {
   data.methodology.perps = PERPS_NOTE;
 }
 
-function suitePlans() {
+function suitePlans(options = {}) {
+  // Slow tests (slow: true) stay registered but are left out of the default fork:all.
+  // FORK_SLOW=1 or naming one in FORK_ONLY brings it back.
+  const includeSlow = options.includeSlow || /^(1|true|yes)$/i.test(process.env.FORK_SLOW || "");
   const plans = [];
   const seen = new Set();
   for (const entry of FORK_RECIPES) {
     for (const item of entry.tests) {
       if (seen.has(item.script)) continue;
       seen.add(item.script);
+      if (item.slow && !includeSlow && !(options.only && options.only.has(item.script))) continue;
       plans.push(item);
     }
   }
