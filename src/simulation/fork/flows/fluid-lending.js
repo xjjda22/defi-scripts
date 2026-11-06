@@ -225,6 +225,55 @@ async function deposit(base) {
   });
 }
 
+
+// ---------- Vault borrow (T1 operate) ----------
+// ETH/USDC vault #11 has live borrow room (vaults 1-10 are at hard borrow caps).
+// https://docs.fluid.instadapp.io/fluid-integration/borrow/write/deposit-borrow-t1.html
+// https://api.fluid.instadapp.io/v2/1/vaults id=11
+const VAULT_ETH_USDC = "0x0C8C77B7FF4c2aF7F6CEBbe67350A490E3DD6cB3";
+const VAULT_ABI = [
+  "function operate(uint256 nftId_, int256 newCol_, int256 newDebt_, address to_) payable returns (uint256 nftId, int256 supplyAmt, int256 borrowAmt)",
+  "function constantsView() view returns (address liquidity, address factory, address adminImplementation, address secondaryImplementation, address supplyToken)",
+];
+
+async function vaultBorrow(base) {
+  const provider = getProvider(base.chain);
+  const { impersonateAccount } = require("../../../utils/impersonate");
+  const vaultCode = await provider.getCode(VAULT_ETH_USDC);
+  if (vaultCode === "0x") {
+    return finish({ ...base, ok: false, error: `Fluid vault ${VAULT_ETH_USDC} has no code` });
+  }
+  const vaultRead = new ethers.Contract(VAULT_ETH_USDC, VAULT_ABI, provider);
+  const constants = await vaultRead.constantsView();
+  if (constants.supplyToken.toLowerCase() !== "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
+    return finish({ ...base, ok: false, error: `Expected native ETH supply token, got ${constants.supplyToken}` });
+  }
+  const coll = ethers.parseEther(process.env.FORK_COLLATERAL || "1");
+  const debt = ethers.parseUnits(process.env.FORK_AMOUNT || "100", 6); // 100 USDC
+  const signer = await impersonateAccount(ethers.Wallet.createRandom().address, base.chain);
+  const user = await signer.getAddress();
+  await provider.send("anvil_setBalance", [user, ethers.toQuantity(coll + ethers.parseEther("1"))]);
+  const usdc = new ethers.Contract(USDC, ERC20, provider);
+  const vault = new ethers.Contract(VAULT_ETH_USDC, VAULT_ABI, signer);
+  const usdcBefore = await usdc.balanceOf(user);
+  const ethBefore = await provider.getBalance(user);
+  // nftId=0 opens a new position; positive newCol deposits ETH; positive newDebt borrows USDC.
+  const tx = await vault.operate(0, coll, debt, user, { ...GAS, value: coll });
+  const receipt = await tx.wait();
+  const usdcAfter = await usdc.balanceOf(user);
+  const ethAfter = await provider.getBalance(user);
+  const borrowed = usdcAfter - usdcBefore;
+  const ok = borrowed === debt && ethBefore - ethAfter >= coll;
+  return finish({
+    ...base,
+    ok,
+    key: `coll=${formatUnits(coll, 18)}ETH borrowed=${formatUnits(borrowed, 6)}USDC`,
+    detail: `Fluid vault operate(nftId=0, +${formatUnits(coll, 18)} ETH, +${formatUnits(debt, 6)} USDC) on ${VAULT_ETH_USDC}\nUSDC ${formatUnits(usdcBefore, 6)} -> ${formatUnits(usdcAfter, 6)}\nETH spent >= ${formatUnits(coll, 18)} (gas inclusive)\ntx ${receipt.hash}`,
+    error: ok ? null : "Fluid vault operate() did not credit the borrowed USDC",
+  });
+}
+
+
 async function run() {
   const chain = process.env.CHAIN || CHAIN;
   const protocol = process.env.FORK_PROTOCOL || "fluid-lending";
@@ -240,7 +289,9 @@ async function run() {
     return finish({ ...base, ok: false, error: `Fluid Lending fUSDC is wired for ${CHAIN} only (got ${chain})` });
   }
   try {
-    return await deposit(base);
+    if (action === "deposit") return await deposit(base);
+    if (action === "borrow" || action === "vault-borrow") return await vaultBorrow(base);
+    return finish({ ...base, ok: false, error: `Unknown Fluid Lending action ${action}` });
   } catch (err) {
     // A revert is a FAIL.
     return finish({ ...base, ok: false, error: explain(err) });
