@@ -107,7 +107,7 @@ function main() {
   const overall = Array.isArray(data.overall) ? data.overall : [];
   if (overall.length !== 200) problems.push(`overall has ${overall.length} rows, expected 200`);
   const categoryIds = new Set((data.categories || []).map(cat => cat.id));
-  if (categoryIds.size !== 12) problems.push(`expected 12 categories, found ${categoryIds.size}`);
+  if (categoryIds.size !== 10) problems.push(`expected 10 categories, found ${categoryIds.size}`);
 
   const seen = new Set();
   overall.forEach((row, idx) => {

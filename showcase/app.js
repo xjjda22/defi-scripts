@@ -1040,8 +1040,10 @@ function visibleRows() {
   return rows.slice().sort((a, b) => compare(a, b, state.sortKey) || (a.rank || 0) - (b.rank || 0));
 }
 
-// Tabs use short labels so all twelve fit without clipping; the table and the
-// detail panel still show the full category name.
+// Tabs use short labels so the ten protocol categories plus Top 200 fit without
+// clipping; the table and the detail panel still show the full category name.
+// Boards / tooling are catalog extras, not showcase tabs.
+const HIDDEN_TABS = new Set(["boards", "tooling"]);
 const TAB_LABELS = {
   dex: "Spot DEX",
   aggregator: "Aggregators",
@@ -1053,17 +1055,17 @@ const TAB_LABELS = {
   "stable-rwa": "Stablecoins & RWA",
   "bridge-chain": "Bridges & chains",
   other: "Launchpads & other",
-  boards: "Boards",
-  tooling: "Tooling",
 };
 
 function tabList() {
   return [{ id: "overall", label: "Top 200", count: null }].concat(
-    (state.data.categories || []).map(cat => ({
-      id: cat.id,
-      label: TAB_LABELS[cat.id] || cat.label,
-      count: cat.count,
-    }))
+    (state.data.categories || [])
+      .filter(cat => !HIDDEN_TABS.has(cat.id))
+      .map(cat => ({
+        id: cat.id,
+        label: TAB_LABELS[cat.id] || cat.label,
+        count: cat.count,
+      }))
   );
 }
 
@@ -1217,7 +1219,9 @@ function readHash() {
   }
   const params = new URLSearchParams(location.hash.replace(/^#/, ""));
   const tab = params.get("tab");
-  if (tab && tabList().some(t => t.id === tab)) state.tab = tab;
+  // Boards / tooling tabs were removed; old #tab=boards|#tab=tooling links fall back to Top 200.
+  if (tab && !HIDDEN_TABS.has(tab) && tabList().some(t => t.id === tab)) state.tab = tab;
+  else if (tab && HIDDEN_TABS.has(tab)) state.tab = "overall";
   state.query = params.get("q") || "";
   state.protocol = params.get("p") || "";
   const search = $("search");
