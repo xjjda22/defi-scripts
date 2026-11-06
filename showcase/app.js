@@ -139,6 +139,22 @@ function geckoUrl(row) {
   return id ? `https://www.coingecko.com/en/coins/${encodeURIComponent(id)}` : null;
 }
 
+
+/** CoinGecko icon beside the protocol name, or a monogram when none matched. */
+function protocolMonogram(row) {
+  const label = String(row && row.name ? row.name : "?").trim();
+  return (label.charAt(0) || "?").toUpperCase();
+}
+function protocolIcon(row, sizeClass) {
+  const cls = sizeClass ? `proto-icon ${sizeClass}` : "proto-icon";
+  const mono = protocolMonogram(row);
+  const url = row && row.icon && row.icon.url;
+  if (url) {
+    return `<img class="${cls}" src="${esc(url)}" alt="" width="20" height="20" loading="lazy" decoding="async" data-mono="${esc(mono)}" onerror="this.onerror=null;const s=document.createElement('span');s.className=this.className+' monogram';s.setAttribute('aria-hidden','true');s.textContent=this.dataset.mono||'?';this.replaceWith(s);" />`;
+  }
+  return `<span class="${cls} monogram" aria-hidden="true">${esc(mono)}</span>`;
+}
+
 function scriptKind(name) {
   const script = String(name || "");
   if (script.startsWith("fork:")) return "fork";
@@ -852,7 +868,7 @@ function detailHtml(row) {
         chains.length ? ` on ${esc(chains.join(", "))}` : ""
       } · ${f} tested feature${f === 1 ? "" : "s"}</p>`;
     })(testing)}
-    <h2>${esc(row.name)} ${mode}</h2>
+    <h2 class="detail-title">${protocolIcon(row, "proto-icon-lg")}<span>${esc(row.name)}</span> ${mode}</h2>
     <div class="links">${links}</div>
     <div class="facts">
       <div class="fact"><b>${esc(money(row.tvl))}</b><span>TVL</span></div>
@@ -909,7 +925,7 @@ function renderDetail() {
   if (state.view === "flow") {
     document.body.classList.add("flow-only-page");
     if (!row.testing || !row.testing.flow) {
-      host.innerHTML = `<article class="detail-card flow-only"><h2>${esc(row.name)}</h2><p class="muted">No contract flow is configured for this row.</p></article>`;
+      host.innerHTML = `<article class="detail-card flow-only"><h2 class="detail-title">${protocolIcon(row, "proto-icon-lg")}<span>${esc(row.name)}</span></h2><p class="muted">No contract flow is configured for this row.</p></article>`;
       return;
     }
     document.title = `${row.name} · Contract flow`;
@@ -1164,7 +1180,7 @@ function renderTable() {
         state.tab !== "overall" && row.overallRank ? `<span class="slug">#${esc(row.overallRank)} overall</span>` : "";
       return `<tr>
         <td data-label="#">${esc(row.rank ?? "—")}</td>
-        <td data-label="Protocol"><a class="name" href="${PROTOCOL_PAGE ? `protocol.html?slug=${encodeURIComponent(row.slug || row.id)}` : `#p=${encodeURIComponent(row.slug || row.id)}`}">${esc(row.name)}</a>${protocolStatusBadge(row)}${disputedBadge(row)}<span class="meta-line"><span class="slug">${esc(row.slug)}</span><span class="row-links">${link}</span></span>${overall}${breakdown(row)}</td>
+        <td data-label="Protocol"><span class="proto"><a class="name" href="${PROTOCOL_PAGE ? `protocol.html?slug=${encodeURIComponent(row.slug || row.id)}` : `#p=${encodeURIComponent(row.slug || row.id)}`}">${protocolIcon(row)}${esc(row.name)}</a>${protocolStatusBadge(row)}${disputedBadge(row)}</span><span class="meta-line"><span class="slug">${esc(row.slug)}</span><span class="row-links">${link}</span></span>${overall}${breakdown(row)}</td>
         <td class="col-cat" data-label="Category">${esc(labelFor(row.category))}</td>
         <td class="num" data-label="TVL">${money(row.tvl)}</td>
         <td class="num" data-label="6-month TVL">${changeCell(row)}</td>

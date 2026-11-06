@@ -4,6 +4,27 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
 
+## [2026-11-06] CoinGecko icons on the top-200 showcase
+
+Branch `feat/showcase-coingecko-icons-2026-11-06`. Adds a CoinGecko icon beside each top-200
+protocol name on the board and detail page. Ranking scores, weights, eligibility, and the
+attention signal are unchanged — icon lookups are image-only and do not expand `token-map.json`.
+
+### Added
+
+- `icon: { url, source: "coingecko", coingeckoId }` on each scored showcase row, resolved from
+  CoinGecko `/coins/markets` images (mapped tokens first), then DefiLlama `gecko_id`, then a
+  conservative `/coins/list` id/name match. Unmatched rows stay `null` and render a monogram.
+- Board + detail UI: small rounded CoinGecko avatar next to the protocol name, with a monogram
+  fallback when the URL 404s or no honest match exists.
+- `src/analytics/ranking/sources/coingeckoIcons.js` (image resolver + cache under `data/cache/`).
+
+### Changed
+
+- `parseMarkets` keeps the CoinGecko `image` field; `showcase:build` / Showcase refresh write icons
+  into `showcase/data.json`. `showcaseCheck` validates icon shape when present.
+- `docs/03-showcase-ranking.md` documents the `icon` field.
+
 ## [2026-11-06] Top-200 showcase rebuild, API-only reasons, and monitor coverage
 
 Branch `feat/top200-showcase-and-coverage-2026-11-06`. Integrates the parallel showcase,

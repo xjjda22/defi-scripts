@@ -83,6 +83,8 @@ function parseMarkets(body) {
       priceChange30d: Number.isFinite(Number(coin.price_change_percentage_30d_in_currency))
         ? Number(coin.price_change_percentage_30d_in_currency)
         : null,
+      // Image URL for the showcase board; ignored by attention scoring.
+      image: typeof coin.image === "string" && coin.image ? coin.image : null,
       updatedAt: coin.last_updated || null,
     };
   }
@@ -158,11 +160,11 @@ async function collect(targets) {
   if (process.env.SIGNALS_OFF === "1") {
     meta.enabled = false;
     meta.note = "Disabled with SIGNALS_OFF=1.";
-    return { byRow: new Map(), topIds: [], meta };
+    return { byRow: new Map(), topIds: [], imagesById: {}, meta };
   }
   if (!targets.length) {
     meta.note = "No row in token-map.json is in this build.";
-    return { byRow: new Map(), topIds: [], meta };
+    return { byRow: new Map(), topIds: [], imagesById: {}, meta };
   }
 
   const ids = [...new Set(targets.map(target => target.token.coingeckoId))];
@@ -185,16 +187,21 @@ async function collect(targets) {
     } catch (err) {
       console.warn(`coingecko: top-${TOP_LIMIT} list failed (${err.message}) — universe uses TVL + category floor only`);
     }
+    const imagesById = {};
+    for (const [id, coin] of Object.entries(coins)) {
+      if (coin && coin.image) imagesById[id] = coin.image;
+    }
     meta.available = true;
     meta.asOf = new Date().toISOString();
     meta.matched = byRow.size;
     meta.topIds = topIds.length;
+    meta.images = Object.keys(imagesById).length;
     if (!process.env.COINGECKO_API_KEY) meta.note += " No API key: the public host is IP-throttled.";
-    return { byRow, topIds, meta };
+    return { byRow, topIds, imagesById, meta };
   } catch (err) {
     meta.note = `Call failed (${err.message}); signal stays neutral.`;
     console.warn(`coingecko: ${err.message} — attention stays neutral`);
-    return { byRow: new Map(), topIds: [], meta };
+    return { byRow: new Map(), topIds: [], imagesById: {}, meta };
   }
 }
 

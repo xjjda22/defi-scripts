@@ -34,6 +34,17 @@ function checkSignals(row, label, problems) {
     }
     if (!row.token.coingeckoId) problems.push(`${label}/${row.id}: token without coingeckoId`);
   }
+  // Icons are optional (placeholder when CoinGecko has no honest match), but a present
+  // icon must be a CoinGecko image URL tied to a coingeckoId.
+  if (row.icon != null) {
+    if (!row.icon.url || typeof row.icon.url !== "string") {
+      problems.push(`${label}/${row.id}: icon.url missing`);
+    } else if (!/coingecko\.com\/coins\/images\//i.test(row.icon.url) && !/coin-images\.coingecko\.com\//i.test(row.icon.url)) {
+      problems.push(`${label}/${row.id}: icon.url is not a CoinGecko image (${row.icon.url})`);
+    }
+    if (row.icon.source !== "coingecko") problems.push(`${label}/${row.id}: icon.source is ${row.icon.source}`);
+    if (!row.icon.coingeckoId) problems.push(`${label}/${row.id}: icon without coingeckoId`);
+  }
   // Product links: every scored row carries its DefiLlama page, and the CoinGecko page
   // when a token is mapped. Catalog-only rows (appended to a tab, no DefiLlama row and
   // no score) legitimately have neither.
