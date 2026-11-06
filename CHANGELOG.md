@@ -4,6 +4,20 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
 
+## [2026-11-06] Remove Boards and Tooling tabs from the showcase
+
+Branch `feat/showcase-remove-boards-tooling-tabs-2026-11-06`. The showcase no longer shows the
+Boards (13) and Tooling (9) category tabs. Those were repo catalog extras, not DefiLlama-ranked
+protocols. Catalog `BOARDS` / `BOARD_GROUPS`, npm scripts, and the protocol catalog stay intact.
+
+### Changed
+
+- `categoryMap` / `top200Trending` emit only the ten protocol categories on the board; catalog
+  boards are not pushed into `byCategory`.
+- Showcase UI drops Boards / Tooling from `TAB_LABELS` and filters them from the tab list; old
+  `#tab=boards` / `#tab=tooling` hashes fall back to Top 200.
+- `showcaseCheck` expects 10 categories. Docs (`03`, `06`, README) updated accordingly.
+
 ## [2026-11-06] CoinGecko icons on the top-200 showcase
 
 Branch `feat/showcase-coingecko-icons-2026-11-06`. Adds a CoinGecko icon beside each top-200

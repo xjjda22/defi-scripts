@@ -1,6 +1,6 @@
 {
   "snapshot": "2026-11-02",
-  "rankedFrom": "2026-11-06T11:20:28.047Z",
+  "rankedFrom": "2026-11-06T13:58:24.461Z",
   "totals": {
     "protocols": 132,
     "features": 299,
@@ -318,42 +318,9 @@
       ]
     },
     {
-      "key": "sentora-curator",
-      "name": "Sentora Curator",
-      "rank": 6,
-      "pinned": true,
-      "docs": "https://docs.morpho.org",
-      "counts": {
-        "features": 2,
-        "direct": 2,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "vault deposit",
-          "status": "direct",
-          "scripts": [
-            "fork:sentora:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "vault withdraw/redeem",
-          "status": "direct",
-          "scripts": [
-            "fork:sentora:deposit"
-          ],
-          "note": null
-        }
-      ]
-    },
-    {
       "key": "lido",
       "name": "Lido",
-      "rank": 7,
+      "rank": 6,
       "pinned": true,
       "docs": "https://docs.lido.fi/contracts/lido",
       "counts": {
@@ -400,6 +367,39 @@
           "status": "direct",
           "scripts": [
             "fork:lido:unwrap"
+          ],
+          "note": null
+        }
+      ]
+    },
+    {
+      "key": "sentora-curator",
+      "name": "Sentora Curator",
+      "rank": 7,
+      "pinned": true,
+      "docs": "https://docs.morpho.org",
+      "counts": {
+        "features": 2,
+        "direct": 2,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 0
+      },
+      "features": [
+        {
+          "feature": "vault deposit",
+          "status": "direct",
+          "scripts": [
+            "fork:sentora:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "vault withdraw/redeem",
+          "status": "direct",
+          "scripts": [
+            "fork:sentora:deposit"
           ],
           "note": null
         }
@@ -470,32 +470,9 @@
       ]
     },
     {
-      "key": "unit",
-      "name": "Unit",
-      "rank": 12,
-      "pinned": true,
-      "docs": "https://docs.hyperunit.xyz",
-      "counts": {
-        "features": 1,
-        "direct": 0,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "bridge deposit / withdraw",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "MPC/TSS guardian custody; BTC/ETH/SOL legs settle off-EVM."
-        }
-      ]
-    },
-    {
       "key": "steakhouse-financial",
       "name": "Steakhouse Financial",
-      "rank": 13,
+      "rank": 12,
       "pinned": true,
       "docs": "https://docs.morpho.org",
       "counts": {
@@ -522,6 +499,29 @@
             "fork:steakhouse:deposit"
           ],
           "note": null
+        }
+      ]
+    },
+    {
+      "key": "unit",
+      "name": "Unit",
+      "rank": 13,
+      "pinned": true,
+      "docs": "https://docs.hyperunit.xyz",
+      "counts": {
+        "features": 1,
+        "direct": 0,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "bridge deposit / withdraw",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "MPC/TSS guardian custody; BTC/ETH/SOL legs settle off-EVM."
         }
       ]
     },
@@ -619,7 +619,7 @@
     {
       "key": "binance-staked-eth",
       "name": "Binance staked ETH",
-      "rank": 18,
+      "rank": 17,
       "pinned": true,
       "docs": "https://www.binance.com/en/wbeth",
       "counts": {
@@ -712,9 +712,40 @@
       ]
     },
     {
+      "key": "tornado-cash",
+      "name": "Tornado Cash",
+      "rank": 22,
+      "pinned": true,
+      "docs": "https://docs.tornado.ws",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "deposit",
+          "status": "direct",
+          "scripts": [
+            "fork:tornado-cash:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "withdraw",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Needs the secret/nullifier preimage behind the commitment; the deposit test discards it by design."
+        }
+      ]
+    },
+    {
       "key": "plume-vaults",
       "name": "Plume Vaults",
-      "rank": 22,
+      "rank": 23,
       "pinned": true,
       "docs": "https://docs.plume.org",
       "counts": {
@@ -737,7 +768,7 @@
     {
       "key": "nonce-capital",
       "name": "Nonce Capital",
-      "rank": 23,
+      "rank": 24,
       "pinned": true,
       "docs": "https://docs.veda.tech",
       "counts": {
@@ -762,7 +793,7 @@
     {
       "key": "tether",
       "name": "Tether",
-      "rank": 24,
+      "rank": 25,
       "pinned": false,
       "docs": "https://tether.to",
       "counts": {
@@ -793,7 +824,7 @@
     {
       "key": "ondo-finance",
       "name": "Ondo Finance",
-      "rank": 25,
+      "rank": 26,
       "pinned": false,
       "docs": "https://docs.ondo.finance",
       "counts": {
@@ -822,11 +853,11 @@
       ]
     },
     {
-      "key": "lighter-bridge",
-      "name": "Lighter Bridge",
-      "rank": 26,
+      "key": "base-bridge",
+      "name": "Base Bridge",
+      "rank": 27,
       "pinned": true,
-      "docs": "https://docs.lighter.xyz",
+      "docs": "https://docs.base.org/chain/bridges",
       "counts": {
         "features": 2,
         "direct": 1,
@@ -837,25 +868,25 @@
       },
       "features": [
         {
-          "feature": "bridge deposit",
+          "feature": "L1 -> L2 deposit",
           "status": "direct",
           "scripts": [
-            "fork:lighter-bridge:deposit"
+            "fork:base:deposit"
           ],
           "note": null
         },
         {
-          "feature": "withdraw",
+          "feature": "L2 -> L1 withdraw",
           "status": "not-testable",
           "scripts": [],
-          "note": "Released by the Lighter zk-rollup proof on L1."
+          "note": "Proof + challenge window on the L2 fork."
         }
       ]
     },
     {
       "key": "upshift",
       "name": "Upshift",
-      "rank": 28,
+      "rank": 29,
       "pinned": true,
       "docs": "https://docs.upshift.finance",
       "counts": {
@@ -888,7 +919,7 @@
     {
       "key": "concrete",
       "name": "Concrete",
-      "rank": 29,
+      "rank": 30,
       "pinned": true,
       "docs": "https://docs.concrete.xyz",
       "counts": {
@@ -917,11 +948,11 @@
       ]
     },
     {
-      "key": "base-bridge",
-      "name": "Base Bridge",
+      "key": "lighter-bridge",
+      "name": "Lighter Bridge",
       "rank": 31,
       "pinned": true,
-      "docs": "https://docs.base.org/chain/bridges",
+      "docs": "https://docs.lighter.xyz",
       "counts": {
         "features": 2,
         "direct": 1,
@@ -932,25 +963,25 @@
       },
       "features": [
         {
-          "feature": "L1 -> L2 deposit",
+          "feature": "bridge deposit",
           "status": "direct",
           "scripts": [
-            "fork:base:deposit"
+            "fork:lighter-bridge:deposit"
           ],
           "note": null
         },
         {
-          "feature": "L2 -> L1 withdraw",
+          "feature": "withdraw",
           "status": "not-testable",
           "scripts": [],
-          "note": "Proof + challenge window on the L2 fork."
+          "note": "Released by the Lighter zk-rollup proof on L1."
         }
       ]
     },
     {
       "key": "defi-saver-asset-management",
       "name": "Defi Saver Asset Management",
-      "rank": 32,
+      "rank": 33,
       "pinned": true,
       "docs": "https://docs.defisaver.com",
       "counts": {
@@ -973,9 +1004,40 @@
       ]
     },
     {
+      "key": "robinhood-chain-bridge",
+      "name": "Robinhood Chain Bridge",
+      "rank": 34,
+      "pinned": true,
+      "docs": "https://docs.robinhood.com/chain",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "L1 -> L2 deposit",
+          "status": "direct",
+          "scripts": [
+            "fork:robinhood:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "L2 -> L1 withdraw",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Needs the L2 fork and a finalized output proof."
+        }
+      ]
+    },
+    {
       "key": "hyperithm",
       "name": "Hyperithm",
-      "rank": 33,
+      "rank": 35,
       "pinned": true,
       "docs": "https://docs.morpho.org",
       "counts": {
@@ -1006,71 +1068,9 @@
       ]
     },
     {
-      "key": "tornado-cash",
-      "name": "Tornado Cash",
-      "rank": 34,
-      "pinned": true,
-      "docs": "https://docs.tornado.ws",
-      "counts": {
-        "features": 2,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "deposit",
-          "status": "direct",
-          "scripts": [
-            "fork:tornado-cash:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "withdraw",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Needs the secret/nullifier preimage behind the commitment; the deposit test discards it by design."
-        }
-      ]
-    },
-    {
-      "key": "robinhood-chain-bridge",
-      "name": "Robinhood Chain Bridge",
-      "rank": 35,
-      "pinned": true,
-      "docs": "https://docs.robinhood.com/chain",
-      "counts": {
-        "features": 2,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "L1 -> L2 deposit",
-          "status": "direct",
-          "scripts": [
-            "fork:robinhood:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "L2 -> L1 withdraw",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Needs the L2 fork and a finalized output proof."
-        }
-      ]
-    },
-    {
       "key": "gauntlet",
       "name": "Gauntlet",
-      "rank": 38,
+      "rank": 36,
       "pinned": true,
       "docs": "https://docs.morpho.org",
       "counts": {
@@ -1155,40 +1155,9 @@
       ]
     },
     {
-      "key": "coinbase-wrapped-staked-eth",
-      "name": "Coinbase Wrapped Staked ETH",
-      "rank": 44,
-      "pinned": true,
-      "docs": "https://www.coinbase.com/cbeth",
-      "counts": {
-        "features": 2,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "exchange rate read",
-          "status": "direct",
-          "scripts": [
-            "fork:cbeth:rate"
-          ],
-          "note": null
-        },
-        {
-          "feature": "mint / redeem cbETH",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Coinbase-only minter."
-        }
-      ]
-    },
-    {
       "key": "curve-finance--lending",
       "name": "Curve Finance (Lending)",
-      "rank": 45,
+      "rank": 44,
       "pinned": true,
       "docs": "https://docs.curve.finance/lending/overview",
       "counts": {
@@ -1239,6 +1208,37 @@
             "fork:llamalend:liquidate"
           ],
           "note": null
+        }
+      ]
+    },
+    {
+      "key": "coinbase-wrapped-staked-eth",
+      "name": "Coinbase Wrapped Staked ETH",
+      "rank": 45,
+      "pinned": true,
+      "docs": "https://www.coinbase.com/cbeth",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "exchange rate read",
+          "status": "direct",
+          "scripts": [
+            "fork:cbeth:rate"
+          ],
+          "note": null
+        },
+        {
+          "feature": "mint / redeem cbETH",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Coinbase-only minter."
         }
       ]
     },
@@ -1418,7 +1418,7 @@
     {
       "key": "clearstar",
       "name": "Clearstar",
-      "rank": 55,
+      "rank": 54,
       "pinned": true,
       "docs": "https://docs.morpho.org",
       "counts": {
@@ -1474,7 +1474,7 @@
     {
       "key": "lista-liquid-staking",
       "name": "Lista Liquid Staking",
-      "rank": 59,
+      "rank": 60,
       "pinned": true,
       "docs": "https://docs.bsc.lista.org",
       "counts": {
@@ -1507,7 +1507,7 @@
     {
       "key": "ether.fi-liquid",
       "name": "ether.fi Liquid",
-      "rank": 60,
+      "rank": 63,
       "pinned": true,
       "docs": "https://etherfi.gitbook.io",
       "counts": {
@@ -1564,40 +1564,9 @@
       ]
     },
     {
-      "key": "near-bridge",
-      "name": "NEAR Bridge",
-      "rank": 67,
-      "pinned": true,
-      "docs": "https://docs.near.org",
-      "counts": {
-        "features": 2,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "lock on Ethereum",
-          "status": "direct",
-          "scripts": [
-            "fork:near-bridge:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "unlock",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Settles on a non-EVM chain that Anvil cannot fork."
-        }
-      ]
-    },
-    {
       "key": "falcon-finance",
       "name": "Falcon Finance",
-      "rank": 68,
+      "rank": 67,
       "pinned": true,
       "docs": "https://docs.falcon.finance",
       "counts": {
@@ -1632,55 +1601,14 @@
       ]
     },
     {
-      "key": "stakewise-v3",
-      "name": "StakeWise V3",
-      "rank": 69,
+      "key": "near-bridge",
+      "name": "NEAR Bridge",
+      "rank": 68,
       "pinned": true,
-      "docs": "https://docs.stakewise.io",
+      "docs": "https://docs.near.org",
       "counts": {
-        "features": 3,
-        "direct": 3,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "vault deposit (osETH)",
-          "status": "direct",
-          "scripts": [
-            "fork:stakewise:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "mint osETH",
-          "status": "direct",
-          "scripts": [
-            "fork:stakewise:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "exit queue",
-          "status": "direct",
-          "scripts": [
-            "fork:stakewise:exit"
-          ],
-          "note": null
-        }
-      ]
-    },
-    {
-      "key": "avalon-superearn",
-      "name": "Avalon Superearn",
-      "rank": 71,
-      "pinned": true,
-      "docs": "https://docs.avalonfinance.xyz",
-      "counts": {
-        "features": 1,
-        "direct": 0,
+        "features": 2,
+        "direct": 1,
         "linked": 0,
         "failingPaused": 0,
         "gap": 0,
@@ -1688,50 +1616,25 @@
       },
       "features": [
         {
-          "feature": "vault deposit",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "The Ethereum SuperEarn router reverts Unauthorized for public callers (keeper-only); user deposits go through SuperEarnRouter on Kaia (chain 8217), which this repo does not fork."
-        }
-      ]
-    },
-    {
-      "key": "fluid-lite",
-      "name": "Fluid Lite",
-      "rank": 72,
-      "pinned": true,
-      "docs": "https://docs.fluid.instadapp.io",
-      "counts": {
-        "features": 2,
-        "direct": 2,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "vault deposit",
+          "feature": "lock on Ethereum",
           "status": "direct",
           "scripts": [
-            "fork:fluid-lite:deposit"
+            "fork:near-bridge:deposit"
           ],
           "note": null
         },
         {
-          "feature": "withdraw/redeem (net of fee)",
-          "status": "direct",
-          "scripts": [
-            "fork:fluid-lite:deposit"
-          ],
-          "note": null
+          "feature": "unlock",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Settles on a non-EVM chain that Anvil cannot fork."
         }
       ]
     },
     {
       "key": "uniswap--dex",
       "name": "Uniswap (DEX)",
-      "rank": 74,
+      "rank": 69,
       "pinned": true,
       "docs": "https://docs.uniswap.org/contracts",
       "counts": {
@@ -1818,6 +1721,103 @@
       ]
     },
     {
+      "key": "stakewise-v3",
+      "name": "StakeWise V3",
+      "rank": 71,
+      "pinned": true,
+      "docs": "https://docs.stakewise.io",
+      "counts": {
+        "features": 3,
+        "direct": 3,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 0
+      },
+      "features": [
+        {
+          "feature": "vault deposit (osETH)",
+          "status": "direct",
+          "scripts": [
+            "fork:stakewise:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "mint osETH",
+          "status": "direct",
+          "scripts": [
+            "fork:stakewise:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "exit queue",
+          "status": "direct",
+          "scripts": [
+            "fork:stakewise:exit"
+          ],
+          "note": null
+        }
+      ]
+    },
+    {
+      "key": "fluid-lite",
+      "name": "Fluid Lite",
+      "rank": 72,
+      "pinned": true,
+      "docs": "https://docs.fluid.instadapp.io",
+      "counts": {
+        "features": 2,
+        "direct": 2,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 0
+      },
+      "features": [
+        {
+          "feature": "vault deposit",
+          "status": "direct",
+          "scripts": [
+            "fork:fluid-lite:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "withdraw/redeem (net of fee)",
+          "status": "direct",
+          "scripts": [
+            "fork:fluid-lite:deposit"
+          ],
+          "note": null
+        }
+      ]
+    },
+    {
+      "key": "avalon-superearn",
+      "name": "Avalon Superearn",
+      "rank": 73,
+      "pinned": true,
+      "docs": "https://docs.avalonfinance.xyz",
+      "counts": {
+        "features": 1,
+        "direct": 0,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "vault deposit",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "The Ethereum SuperEarn router reverts Unauthorized for public callers (keeper-only); user deposits go through SuperEarnRouter on Kaia (chain 8217), which this repo does not fork."
+        }
+      ]
+    },
+    {
       "key": "galaxy-curation",
       "name": "Galaxy Curation",
       "rank": 76,
@@ -1853,7 +1853,7 @@
     {
       "key": "curvance",
       "name": "Curvance",
-      "rank": 77,
+      "rank": 78,
       "pinned": true,
       "docs": "https://docs.curvance.com",
       "counts": {
@@ -1963,7 +1963,7 @@
     {
       "key": "kpk",
       "name": "KPK",
-      "rank": 82,
+      "rank": 81,
       "pinned": true,
       "docs": "https://docs.morpho.org",
       "counts": {
@@ -1994,40 +1994,9 @@
       ]
     },
     {
-      "key": "zama",
-      "name": "Zama",
-      "rank": 83,
-      "pinned": true,
-      "docs": "https://docs.zama.ai/protocol",
-      "counts": {
-        "features": 2,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "wrap to confidential token",
-          "status": "direct",
-          "scripts": [
-            "fork:zama:wrap"
-          ],
-          "note": null
-        },
-        {
-          "feature": "unwrap / decrypt",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Needs the Zama KMS/gateway decryption off-chain."
-        }
-      ]
-    },
-    {
       "key": "meth-protocol",
       "name": "mETH Protocol",
-      "rank": 88,
+      "rank": 83,
       "pinned": true,
       "docs": "https://docs.mantle.xyz/meth",
       "counts": {
@@ -2060,7 +2029,7 @@
     {
       "key": "pancakeswap-aggregator",
       "name": "PancakeSwap Aggregator",
-      "rank": 89,
+      "rank": 85,
       "pinned": false,
       "docs": "https://docs.pancakeswap.finance/developers/smart-contracts",
       "counts": {
@@ -2115,9 +2084,40 @@
       ]
     },
     {
+      "key": "zama",
+      "name": "Zama",
+      "rank": 89,
+      "pinned": true,
+      "docs": "https://docs.zama.ai/protocol",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "wrap to confidential token",
+          "status": "direct",
+          "scripts": [
+            "fork:zama:wrap"
+          ],
+          "note": null
+        },
+        {
+          "feature": "unwrap / decrypt",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Needs the Zama KMS/gateway decryption off-chain."
+        }
+      ]
+    },
+    {
       "key": "arbitrum-bridge",
       "name": "Arbitrum Bridge",
-      "rank": 92,
+      "rank": 91,
       "pinned": true,
       "docs": "https://docs.arbitrum.io/build-decentralized-apps/token-bridging",
       "counts": {
@@ -2251,42 +2251,9 @@
       ]
     },
     {
-      "key": "spark--vaults",
-      "name": "Spark (Vaults)",
-      "rank": 101,
-      "pinned": true,
-      "docs": "https://docs.spark.fi",
-      "counts": {
-        "features": 2,
-        "direct": 2,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "vault deposit",
-          "status": "direct",
-          "scripts": [
-            "fork:spark-vaults:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "withdraw/redeem",
-          "status": "direct",
-          "scripts": [
-            "fork:spark-vaults:deposit"
-          ],
-          "note": null
-        }
-      ]
-    },
-    {
       "key": "lista-dao--lending",
       "name": "Lista DAO (Lending)",
-      "rank": 102,
+      "rank": 101,
       "pinned": true,
       "docs": "https://docs.bsc.lista.org",
       "counts": {
@@ -2327,7 +2294,7 @@
     {
       "key": "liquity",
       "name": "Liquity",
-      "rank": 105,
+      "rank": 102,
       "pinned": true,
       "docs": "https://docs.liquity.org",
       "counts": {
@@ -2376,7 +2343,7 @@
     {
       "key": "saturn",
       "name": "Saturn",
-      "rank": 107,
+      "rank": 110,
       "pinned": true,
       "docs": "https://saturncredit.gitbook.io/saturn-docs",
       "counts": {
@@ -2401,6 +2368,39 @@
           "status": "direct",
           "scripts": [
             "fork:saturn:unstake"
+          ],
+          "note": null
+        }
+      ]
+    },
+    {
+      "key": "spark--vaults",
+      "name": "Spark (Vaults)",
+      "rank": 111,
+      "pinned": true,
+      "docs": "https://docs.spark.fi",
+      "counts": {
+        "features": 2,
+        "direct": 2,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 0
+      },
+      "features": [
+        {
+          "feature": "vault deposit",
+          "status": "direct",
+          "scripts": [
+            "fork:spark-vaults:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "withdraw/redeem",
+          "status": "direct",
+          "scripts": [
+            "fork:spark-vaults:deposit"
           ],
           "note": null
         }
@@ -2473,7 +2473,7 @@
     {
       "key": "optimism-bridge",
       "name": "Optimism Bridge",
-      "rank": 115,
+      "rank": 114,
       "pinned": true,
       "docs": "https://docs.optimism.io/app-developers/bridging/standard-bridge",
       "counts": {
@@ -2504,7 +2504,7 @@
     {
       "key": "meta-pool",
       "name": "Meta Pool",
-      "rank": 116,
+      "rank": 115,
       "pinned": true,
       "docs": "https://docs.metapool.app",
       "counts": {
@@ -2537,7 +2537,7 @@
     {
       "key": "curve-dex",
       "name": "Curve DEX",
-      "rank": 117,
+      "rank": 119,
       "pinned": true,
       "docs": "https://docs.curve.finance",
       "counts": {
@@ -2592,31 +2592,6 @@
       ]
     },
     {
-      "key": "avant-protocol",
-      "name": "Avant Protocol",
-      "rank": 119,
-      "pinned": true,
-      "docs": "https://docs.avantprotocol.com",
-      "counts": {
-        "features": 1,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "stake avUSD",
-          "status": "direct",
-          "scripts": [
-            "fork:avant:stake"
-          ],
-          "note": null
-        }
-      ]
-    },
-    {
       "key": "fx-protocol",
       "name": "fx Protocol",
       "rank": 121,
@@ -2650,9 +2625,34 @@
       ]
     },
     {
+      "key": "avant-protocol",
+      "name": "Avant Protocol",
+      "rank": 122,
+      "pinned": true,
+      "docs": "https://docs.avantprotocol.com",
+      "counts": {
+        "features": 1,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 0
+      },
+      "features": [
+        {
+          "feature": "stake avUSD",
+          "status": "direct",
+          "scripts": [
+            "fork:avant:stake"
+          ],
+          "note": null
+        }
+      ]
+    },
+    {
       "key": "lyra",
       "name": "Lyra / Derive",
-      "rank": 123,
+      "rank": 125,
       "pinned": true,
       "docs": "https://docs.derive.xyz",
       "counts": {
@@ -2677,7 +2677,7 @@
     {
       "key": "maker",
       "name": "Sky",
-      "rank": 124,
+      "rank": 127,
       "pinned": true,
       "docs": "https://developers.sky.money",
       "counts": {
@@ -2767,7 +2767,7 @@
     {
       "key": "starknet-bridge",
       "name": "Starknet Bridge",
-      "rank": 131,
+      "rank": 129,
       "pinned": true,
       "docs": "https://docs.starknet.io",
       "counts": {
@@ -2823,7 +2823,7 @@
     {
       "key": "bedrock-unibtc",
       "name": "Bedrock uniBTC",
-      "rank": 139,
+      "rank": 140,
       "pinned": true,
       "docs": "https://docs.bedrock.technology",
       "counts": {
@@ -2846,9 +2846,32 @@
       ]
     },
     {
+      "key": "ssv-network",
+      "name": "SSV Network",
+      "rank": 142,
+      "pinned": true,
+      "docs": "https://docs.ssv.network",
+      "counts": {
+        "features": 1,
+        "direct": 0,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "register validator",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Needs validator keyshares from the SSV operator set."
+        }
+      ]
+    },
+    {
       "key": "railgun",
       "name": "Railgun",
-      "rank": 141,
+      "rank": 143,
       "pinned": true,
       "docs": "https://docs.railgun.org",
       "counts": {
@@ -2879,7 +2902,7 @@
     {
       "key": "solvbtc",
       "name": "SolvBTC",
-      "rank": 142,
+      "rank": 145,
       "pinned": true,
       "docs": "https://docs.solv.finance",
       "counts": {
@@ -2910,32 +2933,40 @@
       ]
     },
     {
-      "key": "ssv-network",
-      "name": "SSV Network",
-      "rank": 143,
+      "key": "dolomite",
+      "name": "Dolomite",
+      "rank": 148,
       "pinned": true,
-      "docs": "https://docs.ssv.network",
+      "docs": "https://docs.dolomite.io",
       "counts": {
-        "features": 1,
+        "features": 2,
         "direct": 0,
         "linked": 0,
-        "failingPaused": 0,
+        "failingPaused": 1,
         "gap": 0,
         "notTestable": 1
       },
       "features": [
         {
-          "feature": "register validator",
+          "feature": "supply",
+          "status": "failing-paused",
+          "scripts": [
+            "fork:dolomite:supply"
+          ],
+          "note": null
+        },
+        {
+          "feature": "borrow",
           "status": "not-testable",
           "scripts": [],
-          "note": "Needs validator keyshares from the SSV operator set."
+          "note": "Markets closing since 2026-11-02 (getMarketIsClosing=true)."
         }
       ]
     },
     {
       "key": "pendle-v2",
       "name": "Pendle V2",
-      "rank": 148,
+      "rank": 149,
       "pinned": true,
       "docs": "https://docs.pendle.finance",
       "counts": {
@@ -2982,40 +3013,9 @@
       ]
     },
     {
-      "key": "dolomite",
-      "name": "Dolomite",
-      "rank": 150,
-      "pinned": true,
-      "docs": "https://docs.dolomite.io",
-      "counts": {
-        "features": 2,
-        "direct": 0,
-        "linked": 0,
-        "failingPaused": 1,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "supply",
-          "status": "failing-paused",
-          "scripts": [
-            "fork:dolomite:supply"
-          ],
-          "note": null
-        },
-        {
-          "feature": "borrow",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Markets closing since 2026-11-02 (getMarketIsClosing=true)."
-        }
-      ]
-    },
-    {
       "key": "cooler-loans",
       "name": "Cooler Loans",
-      "rank": 153,
+      "rank": 152,
       "pinned": true,
       "docs": "https://docs.olympusdao.finance",
       "counts": {
@@ -3046,9 +3046,63 @@
       ]
     },
     {
+      "key": "avalanche-core-bridge",
+      "name": "Avalanche Core Bridge",
+      "rank": 156,
+      "pinned": true,
+      "docs": "https://core.app/bridge",
+      "counts": {
+        "features": 1,
+        "direct": 0,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "bridge",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Intel SGX warden custody; releases signed off-chain."
+        }
+      ]
+    },
+    {
+      "key": "portal",
+      "name": "Portal",
+      "rank": 157,
+      "pinned": true,
+      "docs": "https://docs.wormhole.com",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "token transfer out",
+          "status": "direct",
+          "scripts": [
+            "fork:portal:transfer"
+          ],
+          "note": null
+        },
+        {
+          "feature": "redeem on destination",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Needs a guardian-signed VAA."
+        }
+      ]
+    },
+    {
       "key": "venus-core-pool",
       "name": "Venus Core Pool",
-      "rank": 156,
+      "rank": 159,
       "pinned": true,
       "docs": "https://docs-v4.venus.io",
       "counts": {
@@ -3095,60 +3149,6 @@
       ]
     },
     {
-      "key": "avalanche-core-bridge",
-      "name": "Avalanche Core Bridge",
-      "rank": 158,
-      "pinned": true,
-      "docs": "https://core.app/bridge",
-      "counts": {
-        "features": 1,
-        "direct": 0,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "bridge",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Intel SGX warden custody; releases signed off-chain."
-        }
-      ]
-    },
-    {
-      "key": "portal",
-      "name": "Portal",
-      "rank": 161,
-      "pinned": true,
-      "docs": "https://docs.wormhole.com",
-      "counts": {
-        "features": 2,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "token transfer out",
-          "status": "direct",
-          "scripts": [
-            "fork:portal:transfer"
-          ],
-          "note": null
-        },
-        {
-          "feature": "redeem on destination",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Needs a guardian-signed VAA."
-        }
-      ]
-    },
-    {
       "key": "bitfi-basis",
       "name": "BitFi Basis",
       "rank": 163,
@@ -3174,73 +3174,9 @@
       ]
     },
     {
-      "key": "xdai-stake-bridge",
-      "name": "xDai Stake Bridge",
-      "rank": 165,
-      "pinned": true,
-      "docs": "https://docs.gnosischain.com",
-      "counts": {
-        "features": 2,
-        "direct": 2,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "relayTokens (USDS lockbox)",
-          "status": "direct",
-          "scripts": [
-            "fork:xdai-stake-bridge:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "OmniBridge relayTokens (erc-to-erc sibling)",
-          "status": "direct",
-          "scripts": [
-            "fork:xdai-stake-bridge:relay"
-          ],
-          "note": null
-        }
-      ]
-    },
-    {
-      "key": "polymarket",
-      "name": "Polymarket",
-      "rank": 166,
-      "pinned": true,
-      "docs": "https://docs.polymarket.com",
-      "counts": {
-        "features": 2,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "split / merge positions (CTF)",
-          "status": "direct",
-          "scripts": [
-            "fork:polymarket:split"
-          ],
-          "note": null
-        },
-        {
-          "feature": "trade",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "CLOB orders are matched off-chain by the operator; exploited 2026-10."
-        }
-      ]
-    },
-    {
       "key": "sushi--dex",
       "name": "Sushi (DEX)",
-      "rank": 167,
+      "rank": 165,
       "pinned": false,
       "docs": "https://docs.sushi.com",
       "counts": {
@@ -3279,9 +3215,73 @@
       ]
     },
     {
+      "key": "xdai-stake-bridge",
+      "name": "xDai Stake Bridge",
+      "rank": 166,
+      "pinned": true,
+      "docs": "https://docs.gnosischain.com",
+      "counts": {
+        "features": 2,
+        "direct": 2,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 0
+      },
+      "features": [
+        {
+          "feature": "relayTokens (USDS lockbox)",
+          "status": "direct",
+          "scripts": [
+            "fork:xdai-stake-bridge:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "OmniBridge relayTokens (erc-to-erc sibling)",
+          "status": "direct",
+          "scripts": [
+            "fork:xdai-stake-bridge:relay"
+          ],
+          "note": null
+        }
+      ]
+    },
+    {
+      "key": "polymarket",
+      "name": "Polymarket",
+      "rank": 167,
+      "pinned": true,
+      "docs": "https://docs.polymarket.com",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "split / merge positions (CTF)",
+          "status": "direct",
+          "scripts": [
+            "fork:polymarket:split"
+          ],
+          "note": null
+        },
+        {
+          "feature": "trade",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "CLOB orders are matched off-chain by the operator; exploited 2026-10."
+        }
+      ]
+    },
+    {
       "key": "liquid-collective",
       "name": "Liquid Collective",
-      "rank": 169,
+      "rank": 168,
       "pinned": true,
       "docs": "https://docs.liquidcollective.io",
       "counts": {
@@ -3302,9 +3302,42 @@
       ]
     },
     {
+      "key": "fluid-lending",
+      "name": "Fluid Lending",
+      "rank": 170,
+      "pinned": true,
+      "docs": "https://docs.fluid.instadapp.io",
+      "counts": {
+        "features": 2,
+        "direct": 2,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 0
+      },
+      "features": [
+        {
+          "feature": "fToken deposit",
+          "status": "direct",
+          "scripts": [
+            "fork:fluid-lending:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "vault borrow",
+          "status": "direct",
+          "scripts": [
+            "fork:fluid-lending:borrow"
+          ],
+          "note": null
+        }
+      ]
+    },
+    {
       "key": "convex-finance",
       "name": "Convex Finance",
-      "rank": 170,
+      "rank": 171,
       "pinned": true,
       "docs": "https://docs.convexfinance.com",
       "counts": {
@@ -3337,7 +3370,7 @@
     {
       "key": "gmx--perps",
       "name": "GMX (Perps)",
-      "rank": 171,
+      "rank": 173,
       "pinned": true,
       "docs": "https://docs.gmx.io",
       "counts": {
@@ -3368,39 +3401,6 @@
           "status": "not-testable",
           "scripts": [],
           "note": "Keeper-executed deposit with signed prices."
-        }
-      ]
-    },
-    {
-      "key": "fluid-lending",
-      "name": "Fluid Lending",
-      "rank": 172,
-      "pinned": true,
-      "docs": "https://docs.fluid.instadapp.io",
-      "counts": {
-        "features": 2,
-        "direct": 2,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "fToken deposit",
-          "status": "direct",
-          "scripts": [
-            "fork:fluid-lending:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "vault borrow",
-          "status": "direct",
-          "scripts": [
-            "fork:fluid-lending:borrow"
-          ],
-          "note": null
         }
       ]
     },
@@ -3436,9 +3436,65 @@
       ]
     },
     {
+      "key": "cian-yield-layer",
+      "name": "CIAN Yield Layer",
+      "rank": 178,
+      "pinned": true,
+      "docs": "https://docs.cian.app",
+      "counts": {
+        "features": 2,
+        "direct": 1,
+        "linked": 0,
+        "failingPaused": 1,
+        "gap": 0,
+        "notTestable": 0
+      },
+      "features": [
+        {
+          "feature": "vault deposit",
+          "status": "failing-paused",
+          "scripts": [
+            "fork:cian:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "withdraw request",
+          "status": "direct",
+          "scripts": [
+            "fork:cian:withdraw-request"
+          ],
+          "note": null
+        }
+      ]
+    },
+    {
+      "key": "sosovalue-indexes",
+      "name": "SoSoValue Indexes",
+      "rank": 179,
+      "pinned": true,
+      "docs": "https://sosovalue.com",
+      "counts": {
+        "features": 1,
+        "direct": 0,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "mint index",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "Base-only deployment (the row's Ethereum TVL is the ETH leg inside the Base baskets) and the mint is KYB-WLP gated: AssetToken.mint is ISSUER_ROLE, addMintRequest rejects non-participants. Verified 2026-11-03."
+        }
+      ]
+    },
+    {
       "key": "aero-protocol--dex",
       "name": "Aero (DEX)",
-      "rank": 177,
+      "rank": 180,
       "pinned": true,
       "docs": "https://aerodrome.finance/docs",
       "counts": {
@@ -3491,62 +3547,6 @@
       ]
     },
     {
-      "key": "cian-yield-layer",
-      "name": "CIAN Yield Layer",
-      "rank": 178,
-      "pinned": true,
-      "docs": "https://docs.cian.app",
-      "counts": {
-        "features": 2,
-        "direct": 1,
-        "linked": 0,
-        "failingPaused": 1,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "vault deposit",
-          "status": "failing-paused",
-          "scripts": [
-            "fork:cian:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "withdraw request",
-          "status": "direct",
-          "scripts": [
-            "fork:cian:withdraw-request"
-          ],
-          "note": null
-        }
-      ]
-    },
-    {
-      "key": "sosovalue-indexes",
-      "name": "SoSoValue Indexes",
-      "rank": 182,
-      "pinned": true,
-      "docs": "https://sosovalue.com",
-      "counts": {
-        "features": 1,
-        "direct": 0,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "mint index",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "Base-only deployment (the row's Ethereum TVL is the ETH leg inside the Base baskets) and the mint is KYB-WLP gated: AssetToken.mint is ISSUER_ROLE, addMintRequest rejects non-participants. Verified 2026-11-03."
-        }
-      ]
-    },
-    {
       "key": "rocket-pool",
       "name": "Rocket Pool",
       "rank": 184,
@@ -3582,7 +3582,7 @@
     {
       "key": "usdd",
       "name": "USDD",
-      "rank": 186,
+      "rank": 187,
       "pinned": true,
       "docs": "https://docs.usdd.io",
       "counts": {
@@ -3605,9 +3605,42 @@
       ]
     },
     {
+      "key": "yearn",
+      "name": "Yearn",
+      "rank": 189,
+      "pinned": true,
+      "docs": "https://docs.yearn.fi",
+      "counts": {
+        "features": 2,
+        "direct": 2,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 0
+      },
+      "features": [
+        {
+          "feature": "vault deposit",
+          "status": "direct",
+          "scripts": [
+            "fork:yearn:deposit"
+          ],
+          "note": null
+        },
+        {
+          "feature": "withdraw/redeem",
+          "status": "direct",
+          "scripts": [
+            "fork:yearn:deposit"
+          ],
+          "note": null
+        }
+      ]
+    },
+    {
       "key": "armitage-by-wintermute",
       "name": "Armitage by Wintermute",
-      "rank": 190,
+      "rank": 191,
       "pinned": true,
       "docs": "https://armitage.wintermute.com",
       "counts": {
@@ -3638,7 +3671,7 @@
     {
       "key": "axelar-network",
       "name": "Axelar Network",
-      "rank": 198,
+      "rank": 193,
       "pinned": false,
       "docs": "https://docs.axelar.dev",
       "counts": {
@@ -3688,29 +3721,6 @@
           "status": "not-testable",
           "scripts": [],
           "note": "RELAYER/CONTROLLER-only; no permissionless entry point."
-        }
-      ]
-    },
-    {
-      "key": "rysk-v12",
-      "name": "Rysk V12",
-      "rank": 200,
-      "pinned": true,
-      "docs": "https://docs.rysk.finance",
-      "counts": {
-        "features": 1,
-        "direct": 0,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 1
-      },
-      "features": [
-        {
-          "feature": "options trade",
-          "status": "not-testable",
-          "scripts": [],
-          "note": "RFQ only: each trade needs a market maker's EIP-712 signed quote from Rysk's off-chain service. The contracts are live on Ethereum and HyperEVM, but a fork cannot produce the quote."
         }
       ]
     },
@@ -4236,6 +4246,29 @@
       ]
     },
     {
+      "key": "rysk-v12",
+      "name": "Rysk V12",
+      "rank": null,
+      "pinned": true,
+      "docs": "https://docs.rysk.finance",
+      "counts": {
+        "features": 1,
+        "direct": 0,
+        "linked": 0,
+        "failingPaused": 0,
+        "gap": 0,
+        "notTestable": 1
+      },
+      "features": [
+        {
+          "feature": "options trade",
+          "status": "not-testable",
+          "scripts": [],
+          "note": "RFQ only: each trade needs a market maker's EIP-712 signed quote from Rysk's off-chain service. The contracts are live on Ethereum and HyperEVM, but a fork cannot produce the quote."
+        }
+      ]
+    },
+    {
       "key": "catalog:stakelink",
       "name": "stake.link",
       "rank": null,
@@ -4493,39 +4526,6 @@
           "status": "direct",
           "scripts": [
             "fork:vesper:deposit"
-          ],
-          "note": null
-        }
-      ]
-    },
-    {
-      "key": "yearn",
-      "name": "Yearn",
-      "rank": null,
-      "pinned": true,
-      "docs": "https://docs.yearn.fi",
-      "counts": {
-        "features": 2,
-        "direct": 2,
-        "linked": 0,
-        "failingPaused": 0,
-        "gap": 0,
-        "notTestable": 0
-      },
-      "features": [
-        {
-          "feature": "vault deposit",
-          "status": "direct",
-          "scripts": [
-            "fork:yearn:deposit"
-          ],
-          "note": null
-        },
-        {
-          "feature": "withdraw/redeem",
-          "status": "direct",
-          "scripts": [
-            "fork:yearn:deposit"
           ],
           "note": null
         }

@@ -51,7 +51,6 @@ const { installCliSafeStdout } = require("../utils/cliSafeOutput");
 const { fetchLlamaProtocols, fetchLlamaJson, fetchDefiLlamaProtocol } = require("../utils/defiLlamaProtocol");
 const { createTable, formatCurrency } = require("../utils/displayHelpers");
 const { buildCatalog } = require("../../catalog/catalog");
-const { BOARDS } = require("../../catalog/protocols");
 const {
   EXCLUDED_LLAMA_CATEGORIES,
   LLAMA_TO_CATEGORY,
@@ -882,10 +881,6 @@ async function main() {
     if (matchedCatalogIds.has(entry.id)) continue;
     const extra = catalogExtra(entry, mentionFor);
     (byCategory[extra.category] || (byCategory[extra.category] = [])).push(extra);
-  }
-  for (const entry of BOARDS) {
-    const group = entry.group === "tooling" ? "tooling" : "boards";
-    byCategory[group].push(catalogExtra(entry, mentionFor));
   }
   for (const list of Object.values(byCategory)) {
     let next = list.reduce((max, row) => Math.max(max, row.rank || 0), 0);

@@ -1,6 +1,6 @@
 # Category coverage audit
 
-Status: **proposal, not shipped.** The board still renders the twelve tabs described in
+Status: **proposal, not shipped.** The board still renders the ten protocol-category tabs described in
 [03-showcase-ranking.md](./03-showcase-ranking.md). This page records what the catch-all holds, which
 buckets are large enough to deserve their own tab, and what changing the taxonomy would touch.
 
@@ -92,7 +92,7 @@ Adding a tab is not only a label; the following move together:
    catch-all and into the new ids.
 3. `showcase/app.js` — add short tab labels; the tab bar currently wraps to two rows at desktop width.
 4. `scripts/showcaseCheck.js` — the hard-coded `12` category count.
-5. `docs/03`, `README.md` — the “twelve categories” wording and the category table.
+5. `docs/03`, `README.md` — the “ten categories” wording and the category table.
 6. `docs/02-protocol-catalog.md` and the README catalog block — regenerate with `npm run catalog:docs`, and
    reassign the fourteen catalog cards currently filed under `other` (pump.fun, Polymarket, Kalshi,
    UNCX, Metaplex, ORE, X100, Zama, Bitget, StonkFun, Collector Crypt, Umia, Pons, AlpsCon AI Trade Hub)

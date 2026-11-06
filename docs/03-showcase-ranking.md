@@ -1,6 +1,6 @@
 # Trending showcase
 
-A static top-200 board of DeFi protocols trending over the last six months, plus the same score broken out across the twelve catalog categories. The page is `showcase/index.html`. The numbers are `showcase/data.json`, produced by `npm run ranking:top200` (the same script as `npm run showcase:build`).
+A static top-200 board of DeFi protocols trending over the last six months, plus the same score broken out across the ten protocol categories. The page is `showcase/index.html`. The numbers are `showcase/data.json`, produced by `npm run ranking:top200` (the same script as `npm run showcase:build`).
 
 Architecture: [`00-architecture.md`](./00-architecture.md). Category ids match [`src/catalog/protocols.js`](../src/catalog/protocols.js).
 
@@ -121,10 +121,8 @@ The catalog card's category is only a fallback for a Llama category the map does
 | `stable-rwa` | Stablecoins & RWA | RWA, Stablecoin Issuer / Wrapper, Algo-Stables, Dual-Token and Partially Algorithmic Stablecoins, Reserve Currency, Basis Trading |
 | `bridge-chain` | Bridges & chains | Bridge, Canonical Bridge, Cross Chain Bridge, Cross Chain, Chain |
 | `other` | Launchpads, prediction & other | Launchpad, Prediction Market, Farm, NFT, Gaming, Privacy, Services, Interface, Trading App, Telegram Bot, MEV, Block Builders, Oracle, Wallets, Payments, Insurance, CeDeFi, Crypto Card Issuer, and the rest |
-| `boards` | Market boards (cross-protocol) | Catalog `BOARDS` with `group: "boards"` |
-| `tooling` | Swap & simulation tooling | Catalog `BOARDS` with `group: "tooling"` |
 
-The last two tabs are not DefiLlama protocols. They list the repo's cross-protocol boards and swap/simulation commands in catalog order. Each category tab lists its pool rows (20-62 in the last build), then appends catalog protocols that did not clear the floor, so every monitor stays visible.
+Catalog `BOARD_GROUPS` (Market boards / Swap & simulation tooling) stay in the protocol catalog and npm scripts; they are not showcase tabs. Each category tab lists its pool rows (20-62 in the last build), then appends catalog protocols that did not clear the floor, so every monitor stays visible.
 
 The table above describes what ships today. What the catch-all actually holds, and the case for promoting Launchpads and Prediction markets (plus splitting Stablecoins/RWA) into their own tabs, is recorded in [06-category-coverage.md](./06-category-coverage.md). Those changes are proposals and would change the category count, the catalog cards and the docs — the score is unaffected.
 

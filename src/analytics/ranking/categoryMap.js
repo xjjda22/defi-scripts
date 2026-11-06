@@ -1,17 +1,16 @@
 /**
- * Twelve showcase categories. Ids and labels match `src/catalog/protocols.js`
- * (`CATEGORIES` + `BOARD_GROUPS`) so a protocol filed in the catalog stays in
- * the same bucket here.
+ * Ten showcase protocol categories. Ids and labels match `src/catalog/protocols.js`
+ * (`CATEGORIES`) so a protocol filed in the catalog stays in the same bucket here.
+ * Catalog `BOARD_GROUPS` (boards / tooling) stay in the catalog and npm scripts;
+ * they are not showcase tabs.
  *
  * DefiLlama's own category decides, through `LLAMA_TO_CATEGORY`. `SLUG_OVERRIDES`
  * is the short, commented exception list. The catalog card's category is only
  * a fallback for a Llama category this map does not know yet. Catalog links
  * (slug, name, alias) attach npm scripts; they do not move a row.
- * The last two categories are not Llama protocols; the ranking script fills
- * them from catalog boards.
  */
 
-const { CATEGORIES, BOARD_GROUPS } = require("../../catalog/protocols");
+const { CATEGORIES } = require("../../catalog/protocols");
 
 const LLAMA_TO_CATEGORY = {
   Dexs: "dex",
@@ -43,7 +42,7 @@ const LLAMA_TO_CATEGORY = {
   "Liquidity Automation": "vaults",
   "Treasury Manager": "vaults",
   Indexes: "vaults",
-  // No separate yield category in the twelve. Yield markets sit with vaults;
+  // No separate yield category among the ten. Yield markets sit with vaults;
   // incentive farms stay in the catch-all.
   Yield: "vaults",
 
@@ -205,9 +204,6 @@ const EXCLUDED_LLAMA_CATEGORIES = new Set([
 const CATEGORY_BY_ID = new Map();
 for (const cat of CATEGORIES) {
   CATEGORY_BY_ID.set(cat.id, { id: cat.id, label: cat.label, source: "defillama" });
-}
-for (const group of BOARD_GROUPS) {
-  CATEGORY_BY_ID.set(group.id, { id: group.id, label: group.label, source: "repo" });
 }
 
 function categoryMeta(id) {
