@@ -269,6 +269,18 @@ const P = [
     },
   },
   {
+    key: "tether",
+    name: "Tether",
+    docs: "https://tether.to",
+    features: { transfer: t("fork:tether:transfer"), "mint / redeem": n("Tether-only issuer.") },
+  },
+  {
+    key: "ondo-finance",
+    name: "Ondo Finance",
+    docs: "https://docs.ondo.finance",
+    features: { "rate read": t("fork:ondo:rate"), "mint / redeem": n(KYC) },
+  },
+  {
     key: "gauntlet",
     name: "Gauntlet",
     docs: "https://docs.morpho.org",
@@ -352,6 +364,18 @@ const P = [
   {
     key: "pancakeswap--dex",
     name: "PancakeSwap (DEX)",
+    docs: "https://docs.pancakeswap.finance/developers/smart-contracts",
+    features: {
+      "swap (V3)": t("fork:pancakeswap:v3"),
+      "swap (V2)": t("fork:pancakeswap:v2-swap"),
+      "add liquidity (V3 NFT)": t("fork:pancakeswap:v3-mint"),
+      "remove liquidity": t("fork:pancakeswap:v3-remove"),
+      "stake CAKE / farm": t("fork:pancakeswap:farm"),
+    },
+  },
+  {
+    key: "pancakeswap-aggregator",
+    name: "PancakeSwap Aggregator",
     docs: "https://docs.pancakeswap.finance/developers/smart-contracts",
     features: {
       "swap (V3)": t("fork:pancakeswap:v3"),
@@ -827,6 +851,12 @@ const P = [
     features: { deposit: t("fork:aster-bridge:deposit-native") },
   },
   {
+    key: "aster-bridge",
+    name: "Aster Bridge",
+    docs: "https://docs.asterdex.com",
+    features: { deposit: t("fork:aster-bridge:deposit-native") },
+  },
+  {
     key: "railgun",
     name: "Railgun",
     docs: "https://docs.railgun.org",
@@ -954,6 +984,12 @@ const P = [
     features: { "callContract / sendToken": t("fork:axelar:send-message") },
   },
   {
+    key: "axelar-network",
+    name: "Axelar Network",
+    docs: "https://docs.axelar.dev",
+    features: { "callContract / sendToken": t("fork:axelar:send-message") },
+  },
+  {
     key: "fraxtal",
     name: "Fraxtal",
     docs: "https://docs.frax.com/fraxtal",
@@ -972,6 +1008,16 @@ const P = [
     },
   },
   {
+    key: "sushi--dex",
+    name: "Sushi (DEX)",
+    docs: "https://docs.sushi.com",
+    features: {
+      "swap V2": t("fork:sushiswap:v2"),
+      "swap V3": t("fork:sushiswap:v3"),
+      "add liquidity": t("fork:sushiswap:add-liquidity"),
+    },
+  },
+  {
     key: "lyra",
     name: "Lyra / Derive",
     docs: "https://docs.derive.xyz",
@@ -984,16 +1030,6 @@ const P = [
     features: { supply: t("fork:benqi:supply"), borrow: t("fork:benqi:borrow"), redeem: t("fork:benqi:redeem") },
   },
   // ---- catalog protocols with fork tests, outside the current top 200 -----------------
-  {
-    key: "catalog:sushiswap",
-    name: "SushiSwap",
-    docs: "https://docs.sushi.com",
-    features: {
-      "swap V2": t("fork:sushiswap:v2"),
-      "swap V3": t("fork:sushiswap:v3"),
-      "add liquidity": t("fork:sushiswap:add-liquidity"),
-    },
-  },
   {
     key: "catalog:balancer",
     name: "Balancer",
@@ -1049,12 +1085,6 @@ const P = [
     features: { read: t("fork:buidl:read"), subscribe: n(KYC) },
   },
   {
-    key: "catalog:ondo",
-    name: "Ondo",
-    docs: "https://docs.ondo.finance",
-    features: { "rate read": t("fork:ondo:rate"), "mint / redeem": n(KYC) },
-  },
-  {
     key: "catalog:superstate",
     name: "Superstate",
     docs: "https://docs.superstate.co",
@@ -1065,12 +1095,6 @@ const P = [
     name: "Circle USDC",
     docs: "https://developers.circle.com",
     features: { transfer: t("fork:circle:transfer"), "mint / redeem": n("Circle-only minters.") },
-  },
-  {
-    key: "catalog:tether",
-    name: "Tether USDT",
-    docs: "https://tether.to",
-    features: { transfer: t("fork:tether:transfer"), "mint / redeem": n("Tether-only issuer.") },
   },
   {
     key: "catalog:across",

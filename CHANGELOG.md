@@ -4,6 +4,41 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
 
+## [2026-11-06] Top-200 showcase rebuild, API-only reasons, and monitor coverage
+
+Branch `feat/top200-showcase-and-coverage-2026-11-06`. Integrates the parallel showcase,
+catalog-key, API-only-notes, and monitor workstreams on top of #65. No new Anvil fork tests
+beyond wiring that already existed; RealT Tokens stays an open Gnosis candidate.
+
+### Added
+
+- Written `API_ONLY` reasons for 91 previously generic top-200 API-only rows (Solana, Bitcoin,
+  HyperCore, Tron, unsupported EVM chains, off-chain/custodial/aggregator, plus M0, Aster USDF,
+  Rysk V12, Valos). Pinksale and Bedrock uniETH (new board churn after the notes batch) also get
+  written reasons. RealT Tokens is intentionally left generic.
+- DefiLlama `MONITOR_TARGETS` + `simulate:<id>:smoke` + `PROTOCOLS` registrations for 83
+  previously empty API-only rows (generic `dexProtocolMonitor` / `smokeDefiLlamaProtocol` only;
+  no new source files). Combined rows use child slugs (`sunswap-v2`, `jupiter-perpetual-exchange`,
+  `chainlink-staking`, `solv-basis-trading`). Ember reuses its existing registry id.
+
+### Changed
+
+- Showcase rebuilt from live DefiLlama + CoinGecko (`publishSafe` true). Fork rows in the top 200
+  go 89 → 92, API-only 111 → 108. Lagoon, Defi Saver, and fx Protocol show as fork (from #65);
+  Ember now matches its existing `fork:ember:deposit` recipe (`keys` include board id `ember`,
+  category `stable-rwa`) and carries its contract flow.
+- Feature catalog keys aligned to current board ids: `tether`, `ondo-finance`, `sushi--dex`
+  renamed from `catalog:*`; siblings `pancakeswap-aggregator`, `aster-bridge`, `axelar-network`
+  added while pinned/off-board keys are kept. `docs/08` regenerated: 132 protocols, 299 features,
+  234 tested-direct, 0 gaps.
+
+### Caveats
+
+- RealT Tokens (#131): Gnosis is configured in `chains.js`, but no checksummed/getCode-verified
+  fork test was landed; row stays API-only with the generic note on purpose.
+- No chains or RPCs were added for Robinhood / BSquared / Pharos / Provenance / Anubis / Rise /
+  Stellar / Algorand rows.
+
 ## [2026-11-06] Anvil feature gaps: 37 of 42 tested, 5 not-testable with evidence
 
 Branch `feat/gaps-anvil-2026-11-06`, merged from four parallel batches (`feat/gaps-anvil-lending`,
