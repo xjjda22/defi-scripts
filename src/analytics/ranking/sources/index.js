@@ -58,7 +58,14 @@ async function collectSignals(rows) {
   const external = [cg.meta, nan.meta].filter(meta => meta.enabled && meta.available).map(meta => meta.name || meta.id);
   console.log(`sources: DefiLlama core${external.length ? ` + ${external.join(" + ")}` : " (no external signal)"}`);
 
-  return { byId, topTokenIds: cg.topIds || [], sources: [cg.meta, nan.meta], publishSafe, mapped: targets.length };
+  return {
+    byId,
+    topTokenIds: cg.topIds || [],
+    imagesById: cg.imagesById || {},
+    sources: [cg.meta, nan.meta],
+    publishSafe,
+    mapped: targets.length,
+  };
 }
 
 module.exports = { collectSignals, mergeSignals };

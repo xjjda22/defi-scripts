@@ -62,6 +62,7 @@ const {
 } = require("./categoryMap");
 const { countProtocolMentions, toPublicMentions, loadPublicMentions } = require("./mentions");
 const { collectSignals } = require("./sources");
+const { resolveIcons } = require("./sources/coingeckoIcons");
 const { CORE_WEIGHTS, SIGNAL_WEIGHTS, activeWeights, roundWeights } = require("./weights");
 const { selectUniverse } = require("./universe");
 const { buildCoverageIndex, linkCatalog, scriptLinks, MONITOR, RANKING_ONLY, enrichShowcase, cleanChainTvl, topChainTvl } = require("./coverage");
@@ -427,6 +428,8 @@ function toOutputRow(row, rank, overallRank) {
     scripts: row.scripts,
     coverage: row.coverage,
     token: row.token || null,
+    // CoinGecko icon only; scoring token is unchanged. Null → UI monogram.
+    icon: row.icon || null,
     signals: row.signalPercentiles || null,
     score: roundTo(row.score, 4),
     components: row.components,
@@ -462,6 +465,7 @@ function catalogExtra(entry, mentionFor) {
     scripts: scriptLinks(entry),
     coverage: MONITOR,
     token: null,
+    icon: null,
     signals: null,
     score: null,
     components: null,
@@ -572,8 +576,10 @@ async function main() {
     ...overviewRows(dexBody),
   ]);
   const parentNames = new Map();
+  const parentGecko = new Map();
   for (const parent of (liteBody && liteBody.parentProtocols) || []) {
     if (parent && parent.id && parent.name) parentNames.set(parent.id, parent.name);
+    if (parent && parent.id && parent.gecko_id) parentGecko.set(parent.id, parent.gecko_id);
   }
 
   const catalog = buildCatalog();
@@ -616,6 +622,20 @@ async function main() {
   candidates.sort((a, b) => a.protocol.slug.localeCompare(b.protocol.slug));
 
   const groups = buildGroups(candidates, parentNames);
+  for (const group of groups) {
+    const ids = [];
+    const seen = new Set();
+    const add = id => {
+      if (!id || seen.has(id)) return;
+      seen.add(id);
+      ids.push(id);
+    };
+    if (group.parent) add(parentGecko.get(group.parent));
+    for (const member of group.members) {
+      add(member.protocol && member.protocol.gecko_id);
+    }
+    group.llamaGeckoIds = ids;
+  }
   const historyCache = new Map();
   let historyMisses = 0;
 
@@ -757,6 +777,8 @@ async function main() {
       scripts,
       coverage: scripts.length ? MONITOR : RANKING_ONLY,
       catalogIds: links.map(link => link.id),
+      // DefiLlama gecko_id hints for icon lookup only — not used for scoring.
+      llamaGeckoIds: group.llamaGeckoIds || [],
       sizeBasis: tvl != null && tvl >= MIN_TVL_USD ? "tvl" : fees30d != null && fees30d > 0 ? "fees" : "volume",
       inputs: {
         size: null,
@@ -821,6 +843,27 @@ async function main() {
   });
 
   scored.sort(compareScore);
+
+  // Icons are image-only: resolve after scoring so attention / token-map stay untouched.
+  const iconResult = await resolveIcons(scored, { imagesById: signals.imagesById || {} });
+  for (const row of scored) {
+    const icon = iconResult.byId.get(row.id);
+    row.icon = icon
+      ? { url: icon.url, source: icon.source, coingeckoId: icon.coingeckoId }
+      : null;
+  }
+  console.log(
+    chalk.gray(
+      `icons: ${iconResult.matched}/${scored.length} CoinGecko` +
+        (iconResult.unmatched.length ? ` · ${iconResult.unmatched.length} placeholder` : "") +
+        (Object.keys(iconResult.via).length
+          ? ` · via ${Object.entries(iconResult.via)
+              .map(([k, v]) => `${k}=${v}`)
+              .join(", ")}`
+          : "")
+    )
+  );
+
   const overall = scored.slice(0, TOP_N).map((row, index) => toOutputRow(row, index + 1, index + 1));
   const overallRankById = new Map(overall.map(row => [row.id, row.rank]));
 
@@ -894,6 +937,8 @@ async function main() {
       mentionedNames: mentionResult.rows.length,
       signalCoverage: signals.byId.size,
       signalsEnabled: signals.sources.filter(source => source.enabled && source.available).map(source => source.id),
+      iconsMatched: overall.filter(row => row.icon && row.icon.url).length,
+      iconsMissing: overall.filter(row => !(row.icon && row.icon.url)).map(row => row.id),
       universe: universe.meta,
       excluded: excludedCounts,
     },
