@@ -4,6 +4,48 @@ Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
 
+## [2026-11-07] Foundry contract-test plan and W0 pilot
+
+**Local only.** W0 is built; the full queue is 99 `.t.sol` files.
+
+### Added
+
+- `docs/11-foundry-contract-plan.md` — the Foundry `.t.sol` queue. 99 files: 98 parity rows
+  (addresses exist, no Foundry test) and 1 discovery row (Bedrock uniETH). The other 99 rows are
+  non-EVM (48), have no chain TVL (33), sit on an EVM chain outside the fork RPC map (8), or
+  carry a documented no-fork reason (10).
+- `scripts/buildAddressBook.js` + generated `test/contracts/protocols/_shared/Addresses.sol`
+  (157 libraries, 515 constants; `--check` gated). `build:address-book` / `check:address-book`
+  are npm scripts and the check runs in CI.
+- `test/contracts/protocols/_shared/ProtocolTestBase.sol` — fork/skip/code harness on the
+  existing local `Vm`.
+- Four protocol `.t.sol` tests: Aave V3 USDC supply, Uniswap V3 WETH→USDC swap, Lido `submit`,
+  and Bedrock uniETH read-only proxy checks. W0 receipt: **4 PASS** at Ethereum block 26,363,300;
+  **4 SKIP** without `ETHEREUM_RPC_URL`.
+- npm scripts `test:contracts` and `test:contracts:fork`; the no-RPC compile runs in the `check`
+  CI job.
+
+### Changed
+
+- `test/contracts/helpers/TestBase.sol`: `Vm` gains the native-ETH `deal`, `load`, `startPrank`,
+  `stopPrank`, `warp`, `roll` and `expectEmit` declarations; `TestBase` gains a string `assertEq`.
+- `src/catalog/contracts.js`: the Uniswap V3 factory joins BOOK (it was only in `chains.js`), and
+  `bedrock-unieth` joins BOOK with the proxy, EIP-1967 implementation and proxy admin, cited to
+  `docs.bedrock.technology`.
+- `docs/04-fork-testing.md` and `docs/07-fork-coverage-plan.md` link the Foundry follow-up.
+
+### Fixed
+
+- Checksummed four BOOK addresses that solc rejected in raw casing: hyperliquid-bridge, the Pendle
+  PT-stETH market, and the two Bedrock uniETH implementation/admin addresses.
+
+### Notes
+
+- Aave V3 books USDC at LTV 0 at block 26,363,300, so the supply test asserts the aUSDC balance
+  (999,999,999 for 1,000 USDC, one wei of share rounding) rather than collateral.
+- Lido `submit` returns shares, not stETH. The test asserts
+  `stETH delta == getPooledEthByShares(minted)` plus a ≤2 wei bound against the 1 ETH deposited.
+
 ## [2026-11-06] Remove Boards and Tooling tabs from the showcase
 
 Branch `feat/showcase-remove-boards-tooling-tabs-2026-11-06`. The showcase no longer shows the

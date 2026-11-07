@@ -2,6 +2,9 @@
 
 Architecture: [`00-architecture.md`](./00-architecture.md). The showcase panel that lists these commands is [`03-showcase-ranking.md`](./03-showcase-ranking.md).
 
+This page covers the JS/Anvil `fork:*` suite. Foundry `.t.sol` coverage of the protocol contracts
+is a separate queue: [`11-foundry-contract-plan.md`](./11-foundry-contract-plan.md).
+
 `fork:<protocol>:<action>` runs one action on a local Anvil fork. It impersonates or funds a whale, asserts a balance or position change, prints `FORK_RESULT`, and exits non-zero on failure. It does not read `PRIVATE_KEY`.
 
 The contracts each test actually calls — and the features the suite still does **not** cover
