@@ -23,6 +23,14 @@ library Aera {
     address internal constant PRICEANDFEECALCULATOR_GTUSDA_FEECALCULATOR = 0xa90fd5C2020DBf19c6c29609dF85F7e4DBAC30db;
 }
 
+library AeroProtocolDex {
+    address internal constant AERO_TOKEN_POST_MIGRATION = 0x3f5bF3EdAc59d650D8fDf9657a71F2f904A3a4Ee;
+    address internal constant AERO_V2_POOLFACTORY = 0x8E6a9FCd1d638CC760Ffba397605Fe3355dE76D2;
+    address internal constant AERO_V2_AERO_USDC_POOL = 0xF634058dC94e6BF8e828E27621320C423bC8B18E;
+    address internal constant AERO_VOTINGESCROW_AERO_FUNDING_FIXTURE = 0xBF7977E1521e9a3032bf7243Ee4712f311f13915;
+    address internal constant NATIVE_USDC_AERO_V2_POOL_ASSET = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913;
+}
+
 library Aerodrome {
     address internal constant SLIPSTREAM_ROUTER = 0xBE6D8f0d05cC4be24d5167a3eF062215bE6D18a5;
 }
@@ -140,6 +148,7 @@ library CianYieldLayer {
     address internal constant RSETH_YIELD_LAYER_REDEEMOPERATOR = 0x47DBD71Db64617f6cBD45eB9D9Ba876F40ED239E;
     address internal constant STETH_YIELD_LAYER_VAULT_YLSTETH = 0xB13aa2d0345b0439b064f26B82D8dCf3f508775d;
     address internal constant STETH_YIELD_LAYER_REDEEMOPERATOR = 0xdAc6748CbB7CD9DA1868eB7aD598273122f012db;
+    address internal constant RSETH_ASSET_OF_THE_RSETH_YIELD_LAYER = 0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7;
 }
 
 library Circle {
@@ -195,6 +204,11 @@ library Curvance {
 
 library Curve {
     address internal constant A_3POOL = 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7;
+}
+
+library CurveDex {
+    address internal constant CURVE_3POOL = 0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7;
+    address internal constant CURVE_3CRV_LP_TOKEN = 0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490;
 }
 
 library CurveLlamalend {
@@ -304,6 +318,7 @@ library FalconFinance {
 
 library FluidDex {
     address internal constant FLUID_DEX_USDC_NATIVE_ETH_POOL = 0x836951EB21F3Df98273517B7249dCEFF270d34bf;
+    address internal constant FLUID_DEX_RESOLVER = 0x11D80CfF056Cef4F9E6d23da8672fE9873e5cC07;
 }
 
 library FluidLending {
@@ -342,6 +357,9 @@ library Fx {
     address internal constant RUSD = 0x65D72AA8DA931F047169112fcf34f52DbaAE7D18;
     address internal constant ARUSD_4626 = 0x07D1718fF05a8C53C8F05aDAEd57C0d672945f9a;
     address internal constant MARKET_STETH_BETA_0_1 = 0xe7b9c7c9cA85340b8c06fb805f7775e3015108dB;
+    address internal constant F_X_V2_POOLMANAGER = 0x250893CA4Ba5d05626C785e8da758026928FCD24;
+    address internal constant F_X_V2_WSTETH_POOL = 0x6Ecfa38FeE8a5277B91eFdA204c235814F0122E8;
+    address internal constant WSTETH_F_X_COLLATERAL = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0;
 }
 
 library FxProtocol {
@@ -349,6 +367,9 @@ library FxProtocol {
     address internal constant RUSD = 0x65D72AA8DA931F047169112fcf34f52DbaAE7D18;
     address internal constant ARUSD_4626 = 0x07D1718fF05a8C53C8F05aDAEd57C0d672945f9a;
     address internal constant MARKET_STETH_BETA_0_1 = 0xe7b9c7c9cA85340b8c06fb805f7775e3015108dB;
+    address internal constant F_X_V2_POOLMANAGER = 0x250893CA4Ba5d05626C785e8da758026928FCD24;
+    address internal constant F_X_V2_WSTETH_POOL = 0x6Ecfa38FeE8a5277B91eFdA204c235814F0122E8;
+    address internal constant WSTETH_F_X_COLLATERAL = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0;
 }
 
 library GalaxyCuration {
@@ -409,6 +430,7 @@ library Lagoon {
     address internal constant VAULT_FACTORY = 0x8D6f5479B14348186faE9BC7E636e947c260f9B1;
     address internal constant PROTOCOLREGISTRY = 0x6dA4D1859bA1d02D095D2246142CdAd52233e27C;
     address internal constant VAULT_LOGIC_V0_6_0 = 0x6C77c47FB8168E22976C3B0338CB1769c952249f;
+    address internal constant VAULT_LOGIC_V0_5_0 = 0xE50554ec802375C9c3F9c087a8a7bb8C26d3DEDf;
 }
 
 library LayerzeroV2 {
@@ -528,6 +550,7 @@ library Obol {
 
 library Ondo {
     address internal constant USDY = 0x96F6eF951840721AdBF46Ac996b59E0235CB985C;
+    address internal constant RUSDY_REBASING_USDY = 0xaf37c1167910ebC994e266949387d2c7C326b879;
     address internal constant USDY_ORACLE = 0x87b126e5518b6a1Bb8465779b4607C45C643DF90;
     address internal constant OUSG = 0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92;
     address internal constant ONDO_ORACLE = 0x9Cad45a8BF0Ed41Ff33074449B357C7a1fAb4094;
@@ -535,6 +558,7 @@ library Ondo {
 
 library OndoFinance {
     address internal constant USDY = 0x96F6eF951840721AdBF46Ac996b59E0235CB985C;
+    address internal constant RUSDY_REBASING_USDY = 0xaf37c1167910ebC994e266949387d2c7C326b879;
     address internal constant USDY_ORACLE = 0x87b126e5518b6a1Bb8465779b4607C45C643DF90;
     address internal constant OUSG = 0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92;
     address internal constant ONDO_ORACLE = 0x9Cad45a8BF0Ed41Ff33074449B357C7a1fAb4094;
@@ -600,6 +624,7 @@ library Polymarket {
 library Portal {
     address internal constant TOKEN_BRIDGE_WTT = 0x3ee18B2214AFF97000D974cf647E7C347E8fa585;
     address internal constant WORMHOLE_CORE = 0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B;
+    address internal constant WETH_WRAPPED_BY_WRAPANDTRANSFERETH_AND_HELD_BY_THE_TOKEN_BRIDGE = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
 }
 
 library Puffer {

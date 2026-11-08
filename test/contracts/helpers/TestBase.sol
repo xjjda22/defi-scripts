@@ -10,6 +10,7 @@ interface Vm {
     function parseJsonString(string calldata json, string calldata key) external pure returns (string memory);
     function toString(uint256 value) external pure returns (string memory);
     function prank(address sender) external;
+    function prank(address msgSender, address txOrigin) external;
     function expectRevert(bytes calldata revertData) external;
     function store(address target, bytes32 slot, bytes32 value) external;
     function load(address target, bytes32 slot) external view returns (bytes32);

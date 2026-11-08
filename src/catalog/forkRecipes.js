@@ -494,7 +494,7 @@ const FORK_RECIPES = [
     appUrl: "https://ondo.finance",
     chain: "ethereum",
     contractKeys: ["ondo"],
-    note: "KYC-gated: read-only. USDY and OUSG mints are allowlisted. The fork test reads the USDY and OUSG oracles and does not mint.",
+    note: "KYC-gated: read-only. USDY and OUSG issuer mints are allowlisted. The JS fork test reads the oracles and does not mint; the Foundry row separately proves the public rUSDY unwrap path without claiming issuer subscription.",
     tests: [test("fork:ondo:rate", "rate", "ethereum")],
   }),
   recipe({
@@ -1281,7 +1281,7 @@ const API_ONLY = [
     keys: ["ssv-network"],
     category: "staking",
     appUrl: "https://app.ssv.network/",
-    note: "No fork test: the row is ETH staked in validators run by SSV operator clusters. Registering a validator needs a real validator key split into operator-encrypted key shares and a 32 ETH beacon-chain deposit, and its effect (validator duties) happens on the consensus layer, not in an EVM contract a fork can assert on. The SSV Network and SSV Network Views contracts are listed for verification.",
+    note: "No JS validator fork: the row is ETH staked in validators run by SSV operator clusters. Registering a validator needs a real validator key split into operator-encrypted key shares and a 32 ETH beacon-chain deposit, and its effect (validator duties) happens on the consensus layer. The Foundry row covers the separate permissionless public operator registration, not validator registration.",
   },
   {
     keys: ["liquid-collective"],

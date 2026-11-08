@@ -166,11 +166,14 @@ test("test execution PASS is separate from blocked primitive acceptance", () => 
   assert.equal(cbeth.status, "passing");
   assert.equal(cbeth.coverageStatus, "blocked");
   assert.ok(cbeth.coverageReason);
-  for (const slug of ["ondo-finance"]) {
+  const ondo = rows.find(r => r.slug === "ondo-finance");
+  assert.match(ondo.file, /OndoFinance\.fork\.t\.sol$/);
+  assert.equal(ondo.status, "passing");
+  assert.equal(ondo.coverageStatus, "accepted");
+  for (const slug of ["avalon-superearn", "pancakeswap-aggregator", "gmx"]) {
     const row = rows.find(r => r.slug === slug);
     assert.equal(row.file, null);
     assert.equal(row.status, "planned");
-    assert.equal(row.coverageStatus, "blocked");
   }
   const sentora = rows.find(r => r.slug === "sentora-curator");
   assert.equal(sentora.status, "passing");

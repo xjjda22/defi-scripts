@@ -195,6 +195,7 @@ function contractBook() {
     balancer: [],
     sushiswap: [],
     aerodrome: [],
+    "aero-protocol--dex": [],
     velodrome: [],
     pancakeswap: [],
     aave: [],
@@ -342,6 +343,13 @@ function contractBook() {
   push(book.sushiswap, eth, "V2 router", CHAINS.ethereum.sushiswap.v2.router, "https://docs.sushi.com/contracts/route-processor");
   push(book.sushiswap, eth, "V3 router", CHAINS.ethereum.sushiswap.v3.router, "https://docs.sushi.com/contracts/route-processor");
   push(book.aerodrome, "base", "Slipstream router", CHAINS.base.aerodrome?.v3?.router, "https://github.com/aerodrome-finance/slipstream");
+  // Aero's post-migration v2 pool used by the existing fork:aerodrome:add-liquidity flow.
+  // The deployment references are linked from https://docs.iaero.finance/getting-started/aero-migration.
+  push(book["aero-protocol--dex"], "base", "AERO token (post-migration)", "0x3f5bF3EdAc59d650D8fDf9657a71F2f904A3a4Ee", "https://app.aero.xyz/docs/security");
+  push(book["aero-protocol--dex"], "base", "Aero v2 PoolFactory", "0x8E6a9FCd1d638CC760Ffba397605Fe3355dE76D2", "https://app.aero.xyz/docs/security");
+  push(book["aero-protocol--dex"], "base", "Aero v2 AERO/USDC pool", "0xF634058dC94e6BF8e828E27621320C423bC8B18E", "https://app.aero.xyz/docs/security");
+  push(book["aero-protocol--dex"], "base", "Aero VotingEscrow (AERO funding fixture)", "0xBF7977E1521e9a3032bf7243Ee4712f311f13915", "https://app.aero.xyz/docs/security");
+  push(book["aero-protocol--dex"], "base", "Native USDC (Aero v2 pool asset)", "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", DOCS.usdc);
   push(book.velodrome, "optimism", "Slipstream router", CHAINS.optimism.velodrome?.v3?.router, "https://github.com/velodrome-finance/slipstream");
 
   // https://developer.pancakeswap.finance/contracts/v3/addresses — same CREATE2 addresses on BSC and Ethereum
@@ -424,6 +432,7 @@ function contractBook() {
   // https://docs.ondo.finance/addresses
   for (const key of ["ondo", "ondo-finance"]) {
     push(book[key], eth, "USDY", "0x96F6eF951840721AdBF46Ac996b59E0235CB985C", DOCS.ondo);
+    push(book[key], eth, "rUSDY (rebasing USDY)", "0xaf37c1167910ebC994e266949387d2c7C326b879", DOCS.ondo);
     push(book[key], eth, "USDY oracle", "0x87b126e5518b6a1Bb8465779b4607C45C643DF90", DOCS.ondo);
     push(book[key], eth, "OUSG", "0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92", DOCS.ondo);
     push(book[key], eth, "Ondo oracle", "0x9Cad45a8BF0Ed41Ff33074449B357C7a1fAb4094", DOCS.ondo);
@@ -597,6 +606,9 @@ function contractBook() {
     push(book[key], eth, "rUSD", "0x65D72AA8DA931F047169112fcf34f52DbaAE7D18", DOCS.fx);
     push(book[key], eth, "arUSD (4626)", "0x07D1718fF05a8C53C8F05aDAEd57C0d672945f9a", DOCS.fx);
     push(book[key], eth, "Market (stETH beta=0.1)", "0xe7b9c7c9cA85340b8c06fb805f7775e3015108dB", DOCS.fx);
+    push(book[key], eth, "f(x) V2 PoolManager", "0x250893CA4Ba5d05626C785e8da758026928FCD24", DOCS.fx);
+    push(book[key], eth, "f(x) V2 wstETH pool", "0x6Ecfa38FeE8a5277B91eFdA204c235814F0122E8", DOCS.fx);
+    push(book[key], eth, "wstETH (f(x) collateral)", "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0", DOCS.fx);
   }
   // IPOR Fusion factory only — curator vaults are cloned per deployment.
   // https://docs.ipor.io/build-on-fusion/developer-guide/addresses
@@ -646,6 +658,7 @@ function contractBook() {
   // Portal = Wormhole Wrapped Token Transfers (Token Bridge) + the Core Contract that publishes its messages.
   push(book.portal, eth, "Token Bridge (WTT)", "0x3ee18B2214AFF97000D974cf647E7C347E8fa585", DOCS.wormhole);
   push(book.portal, eth, "Wormhole Core", "0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B", DOCS.wormhole);
+  push(book.portal, eth, "WETH (wrapped by wrapAndTransferETH and held by the Token Bridge)", COMMON_TOKENS.WETH.ethereum, DOCS.wormhole);
   // Chainlink CCIP on Ethereum (chain selector 5009297550715157269).
   push(book.ccip, eth, "Router", "0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D", DOCS.ccip);
   push(book.ccip, eth, "TokenAdminRegistry", "0xb22764f98dD05c789929716D677382Df22C05Cb6", DOCS.ccip);
@@ -794,6 +807,7 @@ function contractBook() {
   push(book["cian-yield-layer"], eth, "rsETH Yield Layer RedeemOperator", "0x47DBD71Db64617f6cBD45eB9D9Ba876F40ED239E", DOCS.cian);
   push(book["cian-yield-layer"], eth, "stETH Yield Layer vault (ylstETH)", "0xB13aa2d0345b0439b064f26B82D8dCf3f508775d", DOCS.cian);
   push(book["cian-yield-layer"], eth, "stETH Yield Layer RedeemOperator", "0xdAc6748CbB7CD9DA1868eB7aD598273122f012db", DOCS.cian);
+  push(book["cian-yield-layer"], eth, "rsETH (asset of the rsETH Yield Layer)", "0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7", DOCS.cian);
   // SolvBTC on Ethereum.
   push(book.solvbtc, eth, "SolvBTC", "0x7A56E1C57C7475CCf742a1832B028F0456652F97", DOCS.solv);
   push(book.solvbtc, eth, "xSolvBTC", "0xd9D920AA40f578ab794426F5C90F6C731D159DEf", DOCS.solv);
@@ -812,6 +826,7 @@ function contractBook() {
   push(book.lagoon, eth, "Vault Factory", "0x8D6f5479B14348186faE9BC7E636e947c260f9B1", DOCS.lagoon);
   push(book.lagoon, eth, "ProtocolRegistry", "0x6dA4D1859bA1d02D095D2246142CdAd52233e27C", DOCS.lagoon);
   push(book.lagoon, eth, "Vault logic v0.6.0", "0x6C77c47FB8168E22976C3B0338CB1769c952249f", DOCS.lagoon);
+  push(book.lagoon, eth, "Vault logic v0.5.0", "0xE50554ec802375C9c3F9c087a8a7bb8C26d3DEDf", DOCS.lagoon);
   // LayerZero V2: the OApp the fork test sends through (EndpointV2 and libraries are listed above).
   push(book["layerzero-v2"], eth, "USDT0 OFT Adapter (OApp used by fork:layerzero:send)", "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee", DOCS.usdt0);
   // Benqi on Avalanche C-Chain.
@@ -825,6 +840,10 @@ function contractBook() {
   push(book["tornado-cash"], eth, "Tornado Cash Classic 0.1 ETH pool", "0x12D66f87A04A9E220743712cE6d9bB1B5616B8Fc", DOCS.tornadoCash);
   book["fluid-dex"] = [];
   push(book["fluid-dex"], eth, "Fluid DEX USDC/native-ETH pool", "0x836951EB21F3Df98273517B7249dCEFF270d34bf", DOCS.fluidDex);
+  push(book["fluid-dex"], eth, "Fluid DEX Resolver", "0x11D80CfF056Cef4F9E6d23da8672fE9873e5cC07", DOCS.fluidDex);
+  book["curve-dex"] = [];
+  push(book["curve-dex"], eth, "Curve 3pool", "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7", DOCS.curve);
+  push(book["curve-dex"], eth, "Curve 3Crv LP token", "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490", DOCS.curve);
 
   book["grove"] = [];
   push(book["grove"], "base", "Grove x Steakhouse USDC (Morpho Vault V2, symbol grove-steakUSDC)", "0xbeef0786756810478b88982DE00F3CD7fdB8e7c7", DOCS.groveDoc);
