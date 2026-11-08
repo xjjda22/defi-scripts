@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "recordedDateMYT": "2026-11-08",
-  "scope": "Measured W1 primitive receipts, not full protocol coverage; no W2/W3 execution claimed.",
+  "scope": "Measured W1, W2a, and two next-20-protocol batches; not full protocol coverage.",
   "workerSourceCommits": [
     "94acb3130a68520d320c11d2be66caf567af05da",
     "c7ec3bec37f66941e3a168fe9bbda44d86482fe4",
@@ -10,8 +10,8 @@
   ],
   "commonSourceHashes": {
     "test/contracts/protocols/_shared/ProtocolTestBase.sol": "76bc3f98d8a8c5ee42ab02b3d12313143204c1717356558b2d25d4a719b7fd90",
-    "test/contracts/protocols/_shared/Addresses.sol": "8762fb69ab54d62b1c0b1eebed6a7fb547e45eba779494ef48f2ff12ff14f544",
-    "test/contracts/helpers/TestBase.sol": "f34ed3346130e0f268fc87be40cfa063f130bd55108247fb9372f09ffbfd0ef4",
+    "test/contracts/protocols/_shared/Addresses.sol": "72f7ea495f92661090cb79c62c1fc6057d1c69f34185192a88bfc9fbab225c73",
+    "test/contracts/helpers/TestBase.sol": "50bcd1260b07e399fb98b6575fd0d62e1f20c10e9b3382043a9673d64daedcf2",
     "foundry.toml": "4ff72bb400f6ffcf9983a3f2952a3652ce65ca6e6bdbf1c9077b165bf979d910"
   },
   "workerReceipts": [
@@ -1062,6 +1062,1594 @@
       },
       "coverageStatus": "accepted",
       "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "galaxy-curation",
+      "file": "test/contracts/protocols/galaxy-curation/GalaxyCuration.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "81100189b93ee9eff2e328d16bfe1a3da18e28056a670d1de7dd5f6fa0ee9856",
+      "measurements": [
+        "gUSDCq USDC deposit: 100000000; shares equal previewDeposit"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.534
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.434
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/galaxy-curation/GalaxyCuration.fork.t.sol": "81100189b93ee9eff2e328d16bfe1a3da18e28056a670d1de7dd5f6fa0ee9856"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "compound-finance",
+      "file": "test/contracts/protocols/compound-finance/CompoundFinance.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "ac68b2fa31eb63dfb56b05ab23516c24fb1d3543430ffce29b45f6589e8d5d98",
+      "measurements": [
+        "cUSDCv3 base balance increased after 100000000 USDC supply"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.322
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.256
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/compound-finance/CompoundFinance.fork.t.sol": "ac68b2fa31eb63dfb56b05ab23516c24fb1d3543430ffce29b45f6589e8d5d98"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "kpk",
+      "file": "test/contracts/protocols/kpk/Kpk.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "08393bad799da336d6431161d08f30c1016a31d16e89342a76ad79dea58b94df",
+      "measurements": [
+        "KPK USDC Prime USDC deposit: 100000000; shares equal previewDeposit"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.534
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.435
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/kpk/Kpk.fork.t.sol": "08393bad799da336d6431161d08f30c1016a31d16e89342a76ad79dea58b94df"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "meth-protocol",
+      "file": "test/contracts/protocols/meth-protocol/MethProtocol.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "df64e7d7f2eff2de0446664bc1e6fee94a6b23e5470afe863b53248c65e0e846",
+      "measurements": [
+        "ETH locked by Staking: 1000000000000000000; mETH minted at ethToMETH"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.323
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.089
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/meth-protocol/MethProtocol.fork.t.sol": "df64e7d7f2eff2de0446664bc1e6fee94a6b23e5470afe863b53248c65e0e846"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "zama",
+      "file": "test/contracts/protocols/zama/Zama.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "9aa6eb2f12221be19097491d30cc9e47602bdba01be555dcaa0d661d50bdb7fd",
+      "measurements": [
+        "USDC locked by cUSDC: 100000000; inferred supply and confidential handle increased"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.113
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.088
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/zama/Zama.fork.t.sol": "9aa6eb2f12221be19097491d30cc9e47602bdba01be555dcaa0d661d50bdb7fd"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "arbitrum-bridge",
+      "file": "test/contracts/protocols/arbitrum-bridge/ArbitrumBridge.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "c41db587b482cb8227f56a9ad8633a7d37813b1007da8cd18b0eeb7404799efd",
+      "measurements": [
+        "Arbitrum Bridge ETH locked: 50000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.322
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.256
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/arbitrum-bridge/ArbitrumBridge.fork.t.sol": "c41db587b482cb8227f56a9ad8633a7d37813b1007da8cd18b0eeb7404799efd"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "eigencloud",
+      "file": "test/contracts/protocols/eigencloud/Eigencloud.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "b094907572798b8f9a65ae66364b66d8300423104f2768b426310a549b381a19",
+      "measurements": [
+        "stETH strategy deposit shares increased after 100000000000000000 stETH"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.113
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.433
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/eigencloud/Eigencloud.fork.t.sol": "b094907572798b8f9a65ae66364b66d8300423104f2768b426310a549b381a19"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "spark",
+      "file": "test/contracts/protocols/spark/SparkVaults.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "a4bc97898d473f2324ea5a4da5487d848c5bd101acb1f4a9a8c4d7a622c61436",
+      "measurements": [
+        "spUSDC USDC deposit: 100000000; shares equal previewDeposit"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.322
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.265
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/spark/SparkVaults.fork.t.sol": "a4bc97898d473f2324ea5a4da5487d848c5bd101acb1f4a9a8c4d7a622c61436",
+        "test/contracts/protocols/_shared/interfaces/IERC4626.sol": "d33637f3c1c978575de50465bdb970e6b5ca10b506791019f3109fa9a77db509"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "saturn",
+      "file": "test/contracts/protocols/saturn/Saturn.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "9838a8ba6e2260950687be1fbcf814c07272b67306faac74ce4e22c524d1fba8",
+      "measurements": [
+        "sUSDat USDat deposit: 100000000; shares equal previewDeposit"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.534
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.433
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/saturn/Saturn.fork.t.sol": "9838a8ba6e2260950687be1fbcf814c07272b67306faac74ce4e22c524d1fba8",
+        "test/contracts/protocols/_shared/interfaces/IERC4626.sol": "d33637f3c1c978575de50465bdb970e6b5ca10b506791019f3109fa9a77db509"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "ether.fi-stake",
+      "file": "test/contracts/protocols/ether.fi-stake/EtherfiStake.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "ebe816eeb2c29e5a6202154370f62a43399a03fbff3653eb81cbf9f3f28a725a",
+      "measurements": [
+        "ETH deposited into ether.fi liquidity pool: 50000000000000000; eETH minted"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.111
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.088
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/ether.fi-stake/EtherfiStake.fork.t.sol": "ebe816eeb2c29e5a6202154370f62a43399a03fbff3653eb81cbf9f3f28a725a"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "meta-pool",
+      "file": "test/contracts/protocols/meta-pool/MetaPool.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "91fe9e7889d7d0e17f2ae37cf5b182965de7a6dfc0c43b57941117f3c4696250",
+      "measurements": [
+        "spETH ETH custody delta: 100000000000000000; previewDeposit shares minted"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.323
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.265
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/meta-pool/MetaPool.fork.t.sol": "91fe9e7889d7d0e17f2ae37cf5b182965de7a6dfc0c43b57941117f3c4696250"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "curve-dex",
+      "file": "test/contracts/protocols/curve-dex/CurveDex.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "35a6a0a1b1741a82b8814105a5ad2e5e9764fc9dd918382b632cd90aa3d19ba8",
+      "measurements": [
+        "3Crv minted: 192449744310240237202 after 100000000 USDC and 100 DAI"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.323
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.266
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/curve-dex/CurveDex.fork.t.sol": "35a6a0a1b1741a82b8814105a5ad2e5e9764fc9dd918382b632cd90aa3d19ba8"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "fluid-dex",
+      "file": "test/contracts/protocols/fluid-dex/FluidDex.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "c9fef07087377546bc601a4179fcf0d3e15d38a6a4185f5aa55a547057708462",
+      "measurements": [
+        "native ETH swapped to USDC through FluidDexT1 swapIn"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.111
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.087
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/fluid-dex/FluidDex.fork.t.sol": "c9fef07087377546bc601a4179fcf0d3e15d38a6a4185f5aa55a547057708462"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "bedrock-unibtc",
+      "file": "test/contracts/protocols/bedrock-unibtc/BedrockUnibtc.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "7b2bced3f5a59e4f3d4fe6167988a57c7e439731ec580b048da65e11924885c5",
+      "measurements": [
+        "uniBTC minted 1:1: 1000000 WBTC wei"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.533
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.433
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/bedrock-unibtc/BedrockUnibtc.fork.t.sol": "7b2bced3f5a59e4f3d4fe6167988a57c7e439731ec580b048da65e11924885c5"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "solvbtc",
+      "file": "test/contracts/protocols/solvbtc/Solvbtc.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "d5e78d0901f5f09d6f299cc75aee5aae1dd8e0cefe5525cba01fc62f6cece26b",
+      "measurements": [
+        "WBTC subscribed: 1000000; SolvBTC minted at router quote"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.325
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.267
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/solvbtc/Solvbtc.fork.t.sol": "d5e78d0901f5f09d6f299cc75aee5aae1dd8e0cefe5525cba01fc62f6cece26b"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "fluid-lending",
+      "file": "test/contracts/protocols/fluid-lending/FluidLending.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "93a94cbc7b13fca71a1f5b700ef65e98d92e7e053523e0a44e9095c2846e9ab4",
+      "measurements": [
+        "fUSDC USDC supply: 100000000; shares equal previewDeposit"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.322
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.256
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/fluid-lending/FluidLending.fork.t.sol": "93a94cbc7b13fca71a1f5b700ef65e98d92e7e053523e0a44e9095c2846e9ab4",
+        "test/contracts/protocols/_shared/interfaces/IERC4626.sol": "d33637f3c1c978575de50465bdb970e6b5ca10b506791019f3109fa9a77db509"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "cooler-loans",
+      "file": "test/contracts/protocols/cooler-loans/CoolerLoans.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "9edde50ec603cb811bc67700d693e441ef1f729457bedf1c5e9d0bf2f24533f6",
+      "measurements": [
+        "gOHM collateral posted: 1000000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.322
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.256
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/cooler-loans/CoolerLoans.fork.t.sol": "9edde50ec603cb811bc67700d693e441ef1f729457bedf1c5e9d0bf2f24533f6"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "convex-finance",
+      "file": "test/contracts/protocols/convex-finance/ConvexFinance.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "e1f2e955538e73b889cae04ebe302fdd07c950517604590d8262c14a7b6a3644",
+      "measurements": [
+        "3Crv staked through Convex pid 9: 192449744310240237202"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.536
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.435
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/convex-finance/ConvexFinance.fork.t.sol": "e1f2e955538e73b889cae04ebe302fdd07c950517604590d8262c14a7b6a3644"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "sushi",
+      "file": "test/contracts/protocols/sushi/Sushi.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "80795a436b4d3e7dd84fbb7e9add51dfd5353f59bbcda3d081fa838d203bbc0c",
+      "measurements": [
+        "native ETH swapped to USDC through Sushi V2"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.323
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.088
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/sushi/Sushi.fork.t.sol": "80795a436b4d3e7dd84fbb7e9add51dfd5353f59bbcda3d081fa838d203bbc0c"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "polymarket",
+      "file": "test/contracts/protocols/polymarket/Polymarket.fork.t.sol",
+      "chain": "polygon",
+      "blockNumber": 96930362,
+      "sha256": "e62832958baea420abf31ec67b0d86c17ac429194833bf91ada02d707ca292a5",
+      "measurements": [
+        "USDC split: 10000000; YES and NO positions each 10000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.362
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.365
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/polymarket/Polymarket.fork.t.sol": "e62832958baea420abf31ec67b0d86c17ac429194833bf91ada02d707ca292a5"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x0bffac249ca43df3094f21bbe105cf24353cd544fe2f8e36b95d8c424370ba40"
+    },
+    {
+      "slug": "liquity",
+      "file": "test/contracts/protocols/liquity/Liquity.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "2853cb4b231a465f3244fe5294ec695ae0ebe45acf4a09503107884eb04ab72e",
+      "measurements": [
+        "LUSD provided and withdrawn from Stability Pool: 1000000000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.52
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.464
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/liquity/Liquity.fork.t.sol": "2853cb4b231a465f3244fe5294ec695ae0ebe45acf4a09503107884eb04ab72e"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "optimism-bridge",
+      "file": "test/contracts/protocols/optimism-bridge/OptimismBridge.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "0008e2e4d5fa4bd2c239bb5b5ef9cc5c82ed20afb41e1ba39bb8171658f35fd6",
+      "measurements": [
+        "Optimism bridge ETH locked: 50000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.282
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.161
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/optimism-bridge/OptimismBridge.fork.t.sol": "0008e2e4d5fa4bd2c239bb5b5ef9cc5c82ed20afb41e1ba39bb8171658f35fd6"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "fx-protocol",
+      "file": "test/contracts/protocols/fx-protocol/FxProtocol.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "a61883ecb41941ac4f85ef0107224d207d1e73316dcf65c22bb6db504b55e34e",
+      "measurements": [
+        "f(x) wstETH position opened: 1000000000000000000 collateral; 1000000000000000000000 debt"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.282
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.465
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/fx-protocol/FxProtocol.fork.t.sol": "a61883ecb41941ac4f85ef0107224d207d1e73316dcf65c22bb6db504b55e34e"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "avant-protocol",
+      "file": "test/contracts/protocols/avant-protocol/AvantProtocol.fork.t.sol",
+      "chain": "avalanche",
+      "blockNumber": 99720080,
+      "sha256": "49511b3a58d82b48b97d195a05444e1a37395fa70e7507f6205332bc08ff2df5",
+      "measurements": [
+        "avUSD staked into savUSD: 100000000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.424
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.433
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/avant-protocol/AvantProtocol.fork.t.sol": "49511b3a58d82b48b97d195a05444e1a37395fa70e7507f6205332bc08ff2df5"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0xb9dfb84de64f6a0b78064ec9289dcecc3420ab3c392317cbfaef95ea27fa3b47"
+    },
+    {
+      "slug": "lyra",
+      "file": "test/contracts/protocols/lyra/Lyra.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "e88b40b61eaf8a4c358955da2f36fed794d800788af4dd5b7469acb4dc82eab8",
+      "measurements": [
+        "Derive USDC custody delta: 100000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.28
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.463
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/lyra/Lyra.fork.t.sol": "e88b40b61eaf8a4c358955da2f36fed794d800788af4dd5b7469acb4dc82eab8"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "maker",
+      "file": "test/contracts/protocols/maker/Maker.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "15b2d51b5d784fb39679da06ef3e51d36a22716d96e2e6aefec9d9fd6c6504b0",
+      "measurements": [
+        "DAI converted to USDS: 100000000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.362
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.463
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/maker/Maker.fork.t.sol": "15b2d51b5d784fb39679da06ef3e51d36a22716d96e2e6aefec9d9fd6c6504b0"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "starknet-bridge",
+      "file": "test/contracts/protocols/starknet-bridge/StarknetBridge.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "a25994aa742755f25236c1630c5ab28bdea24065abc125e60488b52d9ca7d1f0",
+      "measurements": [
+        "StarkGate ETH locked: 50000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.28
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.158
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/starknet-bridge/StarknetBridge.fork.t.sol": "a25994aa742755f25236c1630c5ab28bdea24065abc125e60488b52d9ca7d1f0"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "railgun",
+      "file": "test/contracts/protocols/railgun/Railgun.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "3cb6a39fbd8577f1c24fb49dac2e1925da9d72e26f4987a00f55ceece0622ec1",
+      "measurements": [
+        "10 USDC shielded; wallet and treasury balances increased; leaf index +1"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.284
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.161
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/railgun/Railgun.fork.t.sol": "3cb6a39fbd8577f1c24fb49dac2e1925da9d72e26f4987a00f55ceece0622ec1"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "dolomite",
+      "file": "test/contracts/protocols/dolomite/Dolomite.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "966e0d0f52a6546718d4b36606f7abf3cfa31c6b888c63b687909263a4bab4ce",
+      "measurements": [
+        "USDC supplied to Dolomite account: 100000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.52
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.464
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/dolomite/Dolomite.fork.t.sol": "966e0d0f52a6546718d4b36606f7abf3cfa31c6b888c63b687909263a4bab4ce"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "pendle-v2",
+      "file": "test/contracts/protocols/pendle-v2/PendleV2.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "128ccd2b36a616ce5565084bf668c9550c9b09ee397c92bf6a743b62ad7ffdde",
+      "measurements": [
+        "wstETH mintPy input: 1000000000000000000; PT balance increased"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.362
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.159
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/pendle-v2/PendleV2.fork.t.sol": "128ccd2b36a616ce5565084bf668c9550c9b09ee397c92bf6a743b62ad7ffdde"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "venus-core-pool",
+      "file": "test/contracts/protocols/venus-core-pool/VenusCorePool.fork.t.sol",
+      "chain": "bsc",
+      "blockNumber": 132303762,
+      "sha256": "1e1554da78f7b6973512f23221455f0db97a92b32e0ebc9381e0890784b86543",
+      "measurements": [
+        "USDC minted to vUSDC and redeemed: 100000000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.259
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.29
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/venus-core-pool/VenusCorePool.fork.t.sol": "1e1554da78f7b6973512f23221455f0db97a92b32e0ebc9381e0890784b86543"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0xd7b7f5b78f96a19f505a16bd39b84cf4cce1da3a22aff16cd99dc24003650f70"
+    },
+    {
+      "slug": "xdai-stake-bridge",
+      "file": "test/contracts/protocols/xdai-stake-bridge/XdaiStakeBridge.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "41270a6f536a5bfd78d6c2974223230f4e1e166d76ec2c0eb5a663b0ea1dcd5e",
+      "measurements": [
+        "USDS locked by xDAI stake bridge: 100000000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.123
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.159
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/xdai-stake-bridge/XdaiStakeBridge.fork.t.sol": "41270a6f536a5bfd78d6c2974223230f4e1e166d76ec2c0eb5a663b0ea1dcd5e"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "fraxtal",
+      "file": "test/contracts/protocols/fraxtal/Fraxtal.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "a0cd252dab950349f6f2e716186786f7f2d6da1ea565ebec4401d38a7f0d4361",
+      "measurements": [
+        "frxUSD locked by Fraxtal bridge: 100000000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.519
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.463
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/fraxtal/Fraxtal.fork.t.sol": "a0cd252dab950349f6f2e716186786f7f2d6da1ea565ebec4401d38a7f0d4361"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "rocket-pool",
+      "file": "test/contracts/protocols/rocket-pool/RocketPool.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "437b34f38d77eff3e39bde65f66575b0198352f68793b03478f18db4e9fac78d",
+      "measurements": [
+        "ETH deposited to Rocket Pool; rETH minted"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.362
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.463
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/rocket-pool/RocketPool.fork.t.sol": "437b34f38d77eff3e39bde65f66575b0198352f68793b03478f18db4e9fac78d"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "usdd",
+      "file": "test/contracts/protocols/usdd/Usdd.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "6d7478e98f89e104a193e2bb658d8382786360c50d1997ed1304c9aab32f5ab4",
+      "measurements": [
+        "USDT sold into USDD: 100000000; USDD minted 100000000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.281
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.321
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/usdd/Usdd.fork.t.sol": "6d7478e98f89e104a193e2bb658d8382786360c50d1997ed1304c9aab32f5ab4"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "yearn",
+      "file": "test/contracts/protocols/yearn/Yearn.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "39c91842b09d71717f66310ba7cf357b56d0096056f7c4e831177036eb00f9fa",
+      "measurements": [
+        "USDC supplied to yVault: 100000000; yUSDC shares minted"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.122
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.157
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/yearn/Yearn.fork.t.sol": "39c91842b09d71717f66310ba7cf357b56d0096056f7c4e831177036eb00f9fa"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "armitage-by-wintermute",
+      "file": "test/contracts/protocols/armitage-by-wintermute/Armitage.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "0051887021e91c4859730d2fed84a490759bf2b45303822147b5ee6c92a7602b",
+      "measurements": [
+        "USDC supplied to armUSDCs: 100000000; shares minted"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.52
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.464
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/armitage-by-wintermute/Armitage.fork.t.sol": "0051887021e91c4859730d2fed84a490759bf2b45303822147b5ee6c92a7602b"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "axelar-network",
+      "file": "test/contracts/protocols/axelar-network/AxelarNetwork.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "addc775fa12764e75b197e5403d131181a179ae76a0b2f633bebd950ae52ed74",
+      "measurements": [
+        "native gas paid to AxelarGasService: 10000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.362
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.301
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/axelar-network/AxelarNetwork.fork.t.sol": "addc775fa12764e75b197e5403d131181a179ae76a0b2f633bebd950ae52ed74"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "ember",
+      "file": "test/contracts/protocols/ember/Ember.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "8e0e42a171fb78af70616368705203e254c60df07fe246fde5a0c6ab45e62c81",
+      "measurements": [
+        "USDC supplied to eEARN: 100000000; shares minted"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.362
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.159
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/ember/Ember.fork.t.sol": "8e0e42a171fb78af70616368705203e254c60df07fe246fde5a0c6ab45e62c81"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "lagoon",
+      "file": "test/contracts/protocols/lagoon/Lagoon.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "d9335fa019947ebd229df0c818a1064f8a3f162cf3c97769bc727e4e2c84dcfa",
+      "measurements": [
+        "Lagoon vault created; 100 USDC request parked as pending deposit"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.362
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.463
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/lagoon/Lagoon.fork.t.sol": "d9335fa019947ebd229df0c818a1064f8a3f162cf3c97769bc727e4e2c84dcfa"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "curvance",
+      "file": "test/contracts/protocols/curvance/Curvance.fork.t.sol",
+      "chain": "monad",
+      "blockNumber": 120332881,
+      "sha256": "603877503583922e0ab69ae92ad21383fa33e6d0be7e436b78d333753b5016f8",
+      "measurements": [
+        "WMON deposited into cWMON: 1000000000000000000; preview shares minted"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.269
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.292
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/curvance/Curvance.fork.t.sol": "603877503583922e0ab69ae92ad21383fa33e6d0be7e436b78d333753b5016f8"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0xfe9611a92c423903cd346ca654e28f1ffa7a36789cf326383a1934451febff76"
+    },
+    {
+      "slug": "lista-dao",
+      "file": "test/contracts/protocols/lista-dao/ListaDao.fork.t.sol",
+      "chain": "bsc",
+      "blockNumber": 132303762,
+      "sha256": "385cd608fbb4ed51af756a6d52b8d8d0d48e8acd371714b7fa8ae70a1a342713",
+      "measurements": [
+        "USDT supplied to MoolahVault: 100000000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.394
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.271
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/lista-dao/ListaDao.fork.t.sol": "385cd608fbb4ed51af756a6d52b8d8d0d48e8acd371714b7fa8ae70a1a342713"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0xd7b7f5b78f96a19f505a16bd39b84cf4cce1da3a22aff16cd99dc24003650f70"
+    },
+    {
+      "slug": "aster-bridge",
+      "file": "test/contracts/protocols/aster-bridge/AsterBridge.fork.t.sol",
+      "chain": "bsc",
+      "blockNumber": 132303762,
+      "sha256": "b9f2b1888b33a5d8f329ec753124d5ec14c0b00230dbcf76074c2fd2d35c8673",
+      "measurements": [
+        "native BNB locked by Aster bridge: 500000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.387
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.265
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/aster-bridge/AsterBridge.fork.t.sol": "b9f2b1888b33a5d8f329ec753124d5ec14c0b00230dbcf76074c2fd2d35c8673"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0xd7b7f5b78f96a19f505a16bd39b84cf4cce1da3a22aff16cd99dc24003650f70"
+    },
+    {
+      "slug": "bitfi-basis",
+      "file": "test/contracts/protocols/bitfi-basis/BitfiBasis.fork.t.sol",
+      "chain": "bsc",
+      "blockNumber": 132303762,
+      "sha256": "79d851d85cc84dbea1dd5762204fd741fab15d3eba719605874425796a0b7d15",
+      "measurements": [
+        "BTCB deposited into bfBTC: 10000000000000000000; bfBTC minted"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.387
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.265
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/bitfi-basis/BitfiBasis.fork.t.sol": "79d851d85cc84dbea1dd5762204fd741fab15d3eba719605874425796a0b7d15"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0xd7b7f5b78f96a19f505a16bd39b84cf4cce1da3a22aff16cd99dc24003650f70"
+    },
+    {
+      "slug": "grove-finance",
+      "file": "test/contracts/protocols/grove-finance/GroveFinance.fork.t.sol",
+      "chain": "base",
+      "blockNumber": 54552643,
+      "sha256": "5bd72c6f396af32d5ab3eaffd0fa0e70847ddf8c77cde7fa00881c75c04e9b27",
+      "measurements": [
+        "USDC supplied to Grove vault: 100000000; shares minted"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.296
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.363
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/grove-finance/GroveFinance.fork.t.sol": "5bd72c6f396af32d5ab3eaffd0fa0e70847ddf8c77cde7fa00881c75c04e9b27"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0xc8fedd3aecded996c815753ac42379c74bbac438a56efd51f91ec0d5d0aa01ab"
+    },
+    {
+      "slug": "ondo-finance",
+      "file": "test/contracts/protocols/ondo-finance/OndoFinance.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "880e5c109ed7916561f7d57f67112dc5bf9a45bcb8c365e8fdca240acd62ef95",
+      "measurements": [
+        "rUSDY unwrapped: 100000000000000000000; USDY received: 86781066688855397860"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 1.9
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.36128
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/ondo-finance/OndoFinance.fork.t.sol": "880e5c109ed7916561f7d57f67112dc5bf9a45bcb8c365e8fdca240acd62ef95",
+        "test/contracts/protocols/ondo-finance/interfaces/IOndo.sol": "e3608bc968132bb17eb9140e75f81473fd22ba65721028b9bd8841f42d2b8b67"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "usdt0",
+      "file": "test/contracts/protocols/usdt0/Usdt0.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "d4a64f27a5301f860dea3ce101be59044a46a160e5f3343c75e68fd0e3132622",
+      "measurements": [
+        "USDT locked: 100000000; outbound nonce 38627 -> 38628"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.70213
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.36853
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/usdt0/Usdt0.fork.t.sol": "d4a64f27a5301f860dea3ce101be59044a46a160e5f3343c75e68fd0e3132622",
+        "test/contracts/protocols/usdt0/interfaces/IUsdt0.sol": "f26b48dc5ad612572a5b9a6f90e481c65559677e27c8add35649b2a36515e407"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "ssv-network",
+      "file": "test/contracts/protocols/ssv-network/SsvNetwork.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "4cc97e4ac1bc2e99b42a4340d39fbc9dc37d3b6eb97991aee2c7a4bc95435112",
+      "measurements": [
+        "operator id: 2362; owner/active/public and OperatorAdded asserted"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 1.08
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.28652
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/ssv-network/SsvNetwork.fork.t.sol": "4cc97e4ac1bc2e99b42a4340d39fbc9dc37d3b6eb97991aee2c7a4bc95435112",
+        "test/contracts/protocols/ssv-network/interfaces/ISsvNetwork.sol": "88ddc96da24030d219477244d84f54f37c538d14584e1201416f721c5a7fee33"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "cian-yield-layer",
+      "file": "test/contracts/protocols/cian-yield-layer/CianYieldLayer.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "49cb226b198f27a2a2082c49e2b821e5c5486404f1292d6a80a28157f332cb0a",
+      "measurements": [
+        "rUSDY shares queued: 1000000000000000000; RedeemOperator +1e18; price window 0"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.98458
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.33696
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/cian-yield-layer/CianYieldLayer.fork.t.sol": "49cb226b198f27a2a2082c49e2b821e5c5486404f1292d6a80a28157f332cb0a"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "portal",
+      "file": "test/contracts/protocols/portal/Portal.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "e0a47b2d266f85f78b976a29220afc1edaf5a53f40c355708cb6aaa16bc9551f",
+      "measurements": [
+        "bridge WETH increase: 50000000000000000; Wormhole sequence 702523"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.37771
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.33842
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/portal/Portal.fork.t.sol": "e0a47b2d266f85f78b976a29220afc1edaf5a53f40c355708cb6aaa16bc9551f",
+        "test/contracts/protocols/portal/interfaces/IPortal.sol": "d16bd1a1a1e63b0dad1cd52df3591b75f889e2958435aef27c7faa900a5f4469"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "aero-protocol",
+      "file": "test/contracts/protocols/aero-protocol/AeroProtocol.fork.t.sol",
+      "chain": "base",
+      "blockNumber": 54552643,
+      "sha256": "1525d39856204e12d22ece295a606da1d32bd6d7ef5e91f10ac786d6c52265ad",
+      "measurements": [
+        "AERO deposited: 162646747109272645108; USDC deposited: 100000000; LP minted: 127532470904449"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 1.53
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.36581
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/aero-protocol/AeroProtocol.fork.t.sol": "1525d39856204e12d22ece295a606da1d32bd6d7ef5e91f10ac786d6c52265ad"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0xc8fedd3aecded996c815753ac42379c74bbac438a56efd51f91ec0d5d0aa01ab"
     }
   ],
   "exploratoryAttempts": [
@@ -2434,8 +4022,9 @@
     "W1Files": 32,
     "W1AcceptedPrimitiveRows": 31,
     "W1CoverageBlockedRows": 2,
-    "W2PlannedRows": 23,
-    "W3PlannedRows": 40
+    "W2PlannedRows": 2,
+    "W3PlannedRows": 1,
+    "plannedRows": 3
   },
   "validationNotes": {
     "newW1DirectoriesForgeFormat": "32 directory checks passed",
@@ -2447,30 +4036,30 @@
     "runs": [
       {
         "iteration": 1,
-        "PASS": 36,
+        "PASS": 97,
         "FAIL": 0,
         "SKIP": 0
       },
       {
         "iteration": 2,
-        "PASS": 36,
+        "PASS": 97,
         "FAIL": 0,
         "SKIP": 0
       }
     ],
-    "PASS": 72,
+    "PASS": 194,
     "FAIL": 0,
     "SKIP": 0,
     "infrastructureErrors": 0,
-    "plannedRows": 64,
-    "coverageBlockedRows": 2,
-    "acceptedW1Rows": 31,
+    "plannedRows": 3,
+    "coverageBlockedRows": 1,
+    "acceptedW1Rows": 32,
     "chains": [
       {
         "chain": "ethereum",
         "mode": "executed",
         "blockNumber": 26363300,
-        "PASS": 66,
+        "PASS": 164,
         "FAIL": 0,
         "SKIP": 0,
         "tests": [
@@ -2577,6 +4166,12 @@
             "iteration": 1
           },
           {
+            "suite": "test/contracts/protocols/ondo-finance/OndoFinance.fork.t.sol:OndoFinanceForkTest",
+            "name": "test_fork_ondo_unwrap_rusdy()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
             "suite": "test/contracts/protocols/base-bridge/BaseBridge.fork.t.sol:BaseBridgeForkTest",
             "name": "test_fork_base_bridge_deposit()",
             "status": "PASS",
@@ -2661,8 +4256,296 @@
             "iteration": 1
           },
           {
+            "suite": "test/contracts/protocols/world-chain-bridge/WorldChainBridge.fork.t.sol:WorldChainBridgeForkTest",
+            "name": "test_fork_world_chain_bridge_deposit_eth()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/huma/Huma.fork.t.sol:HumaForkTest",
+            "name": "test_fork_huma_pst_invariants()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/ether.fi-liquid/EtherfiLiquid.fork.t.sol:EtherfiLiquidForkTest",
+            "name": "test_fork_etherfi_liquid_eth_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/near-bridge/NearBridge.fork.t.sol:NearBridgeForkTest",
+            "name": "test_fork_near_bridge_init_transfer()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/falcon-finance/FalconFinance.fork.t.sol:FalconFinanceForkTest",
+            "name": "test_fork_falcon_finance_stake()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
             "suite": "test/contracts/protocols/uniswap/UniswapV3.fork.t.sol:UniswapV3ForkTest",
             "name": "test_fork_uniswap_v3_swap()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/stakewise-v3/StakewiseV3.fork.t.sol:StakewiseV3ForkTest",
+            "name": "test_fork_stakewise_v3_deposit_and_mint_oseth()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/fluid-lite/FluidLite.fork.t.sol:FluidLiteForkTest",
+            "name": "test_fork_fluid_lite_deposit_redeem()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/galaxy-curation/GalaxyCuration.fork.t.sol:GalaxyCurationForkTest",
+            "name": "test_fork_galaxy_curation_usdc_vault_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/compound-finance/CompoundFinance.fork.t.sol:CompoundFinanceForkTest",
+            "name": "test_fork_compound_finance_supply_usdc()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/kpk/Kpk.fork.t.sol:KpkForkTest",
+            "name": "test_fork_kpk_usdc_prime_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/meth-protocol/MethProtocol.fork.t.sol:MethProtocolForkTest",
+            "name": "test_fork_meth_protocol_stake()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/zama/Zama.fork.t.sol:ZamaForkTest",
+            "name": "test_fork_zama_wrap_usdc()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/arbitrum-bridge/ArbitrumBridge.fork.t.sol:ArbitrumBridgeForkTest",
+            "name": "test_fork_arbitrum_bridge_deposit_eth()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/lagoon/Lagoon.fork.t.sol:LagoonForkTest",
+            "name": "test_fork_lagoon_create_vault_and_request_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/eigencloud/Eigencloud.fork.t.sol:EigencloudForkTest",
+            "name": "test_fork_eigencloud_deposit_steth_strategy()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/usdt0/Usdt0.fork.t.sol:Usdt0ForkTest",
+            "name": "test_fork_usdt0_send()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/liquity/Liquity.fork.t.sol:LiquityForkTest",
+            "name": "test_fork_liquity_stability_pool_round_trip()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/spark/SparkVaults.fork.t.sol:SparkVaultsForkTest",
+            "name": "test_fork_spark_usdc_vault_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/saturn/Saturn.fork.t.sol:SaturnForkTest",
+            "name": "test_fork_saturn_stake_usdat()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/optimism-bridge/OptimismBridge.fork.t.sol:OptimismBridgeForkTest",
+            "name": "test_fork_optimism_bridge_deposit_eth()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/ether.fi-stake/EtherfiStake.fork.t.sol:EtherfiStakeForkTest",
+            "name": "test_fork_etherfi_stake_deposit_eth()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/meta-pool/MetaPool.fork.t.sol:MetaPoolForkTest",
+            "name": "test_fork_meta_pool_deposit_eth()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/curve-dex/CurveDex.fork.t.sol:CurveDexForkTest",
+            "name": "test_fork_curve_dex_3pool_add_liquidity()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/fx-protocol/FxProtocol.fork.t.sol:FxProtocolForkTest",
+            "name": "test_fork_fx_protocol_open_wsteth_position()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/lyra/Lyra.fork.t.sol:LyraForkTest",
+            "name": "test_fork_lyra_deposit_usdc_subaccount()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/maker/Maker.fork.t.sol:MakerForkTest",
+            "name": "test_fork_maker_sky_dai_to_usds()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/fluid-dex/FluidDex.fork.t.sol:FluidDexForkTest",
+            "name": "test_fork_fluid_dex_swap_native_to_usdc()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/starknet-bridge/StarknetBridge.fork.t.sol:StarknetBridgeForkTest",
+            "name": "test_fork_starknet_bridge_deposit_eth()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/bedrock-unibtc/BedrockUnibtc.fork.t.sol:BedrockUnibtcForkTest",
+            "name": "test_fork_bedrock_unibtc_mint_wbtc()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/ssv-network/SsvNetwork.fork.t.sol:SsvNetworkForkTest",
+            "name": "test_fork_ssv_register_operator()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/railgun/Railgun.fork.t.sol:RailgunForkTest",
+            "name": "test_fork_railgun_shield_usdc()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/solvbtc/Solvbtc.fork.t.sol:SolvbtcForkTest",
+            "name": "test_fork_solvbtc_create_subscription()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/dolomite/Dolomite.fork.t.sol:DolomiteForkTest",
+            "name": "test_fork_dolomite_supply_usdc()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/pendle-v2/PendleV2.fork.t.sol:PendleV2ForkTest",
+            "name": "test_fork_pendle_v2_mint_py()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/cooler-loans/CoolerLoans.fork.t.sol:CoolerLoansForkTest",
+            "name": "test_fork_cooler_loans_add_gohm_collateral()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/portal/Portal.fork.t.sol:PortalForkTest",
+            "name": "test_fork_portal_wrap_and_transfer_eth()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/sushi/Sushi.fork.t.sol:SushiForkTest",
+            "name": "test_fork_sushi_swap_eth_for_usdc()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/xdai-stake-bridge/XdaiStakeBridge.fork.t.sol:XdaiStakeBridgeForkTest",
+            "name": "test_fork_xdai_stake_bridge_relay_usds()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/fluid-lending/FluidLending.fork.t.sol:FluidLendingForkTest",
+            "name": "test_fork_fluid_lending_supply_usdc()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/convex-finance/ConvexFinance.fork.t.sol:ConvexFinanceForkTest",
+            "name": "test_fork_convex_finance_deposit_3crv()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/fraxtal/Fraxtal.fork.t.sol:FraxtalForkTest",
+            "name": "test_fork_fraxtal_bridge_deposit_frxusd()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/cian-yield-layer/CianYieldLayer.fork.t.sol:CianYieldLayerForkTest",
+            "name": "test_fork_cian_request_redeem()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/rocket-pool/RocketPool.fork.t.sol:RocketPoolForkTest",
+            "name": "test_fork_rocket_pool_deposit_eth()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/usdd/Usdd.fork.t.sol:UsddForkTest",
+            "name": "test_fork_usdd_mint_against_usdt()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/yearn/Yearn.fork.t.sol:YearnForkTest",
+            "name": "test_fork_yearn_usdc_vault_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/armitage-by-wintermute/Armitage.fork.t.sol:ArmitageForkTest",
+            "name": "test_fork_armitage_usdc_select_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/axelar-network/AxelarNetwork.fork.t.sol:AxelarNetworkForkTest",
+            "name": "test_fork_axelar_send_message()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/ember/Ember.fork.t.sol:EmberForkTest",
+            "name": "test_fork_ember_earn_usdc_deposit()",
             "status": "PASS",
             "iteration": 1
           },
@@ -2775,6 +4658,12 @@
             "iteration": 2
           },
           {
+            "suite": "test/contracts/protocols/ondo-finance/OndoFinance.fork.t.sol:OndoFinanceForkTest",
+            "name": "test_fork_ondo_unwrap_rusdy()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
             "suite": "test/contracts/protocols/base-bridge/BaseBridge.fork.t.sol:BaseBridgeForkTest",
             "name": "test_fork_base_bridge_deposit()",
             "status": "PASS",
@@ -2859,8 +4748,296 @@
             "iteration": 2
           },
           {
+            "suite": "test/contracts/protocols/world-chain-bridge/WorldChainBridge.fork.t.sol:WorldChainBridgeForkTest",
+            "name": "test_fork_world_chain_bridge_deposit_eth()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/huma/Huma.fork.t.sol:HumaForkTest",
+            "name": "test_fork_huma_pst_invariants()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/ether.fi-liquid/EtherfiLiquid.fork.t.sol:EtherfiLiquidForkTest",
+            "name": "test_fork_etherfi_liquid_eth_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/near-bridge/NearBridge.fork.t.sol:NearBridgeForkTest",
+            "name": "test_fork_near_bridge_init_transfer()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/falcon-finance/FalconFinance.fork.t.sol:FalconFinanceForkTest",
+            "name": "test_fork_falcon_finance_stake()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
             "suite": "test/contracts/protocols/uniswap/UniswapV3.fork.t.sol:UniswapV3ForkTest",
             "name": "test_fork_uniswap_v3_swap()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/stakewise-v3/StakewiseV3.fork.t.sol:StakewiseV3ForkTest",
+            "name": "test_fork_stakewise_v3_deposit_and_mint_oseth()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/fluid-lite/FluidLite.fork.t.sol:FluidLiteForkTest",
+            "name": "test_fork_fluid_lite_deposit_redeem()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/galaxy-curation/GalaxyCuration.fork.t.sol:GalaxyCurationForkTest",
+            "name": "test_fork_galaxy_curation_usdc_vault_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/compound-finance/CompoundFinance.fork.t.sol:CompoundFinanceForkTest",
+            "name": "test_fork_compound_finance_supply_usdc()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/kpk/Kpk.fork.t.sol:KpkForkTest",
+            "name": "test_fork_kpk_usdc_prime_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/meth-protocol/MethProtocol.fork.t.sol:MethProtocolForkTest",
+            "name": "test_fork_meth_protocol_stake()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/zama/Zama.fork.t.sol:ZamaForkTest",
+            "name": "test_fork_zama_wrap_usdc()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/arbitrum-bridge/ArbitrumBridge.fork.t.sol:ArbitrumBridgeForkTest",
+            "name": "test_fork_arbitrum_bridge_deposit_eth()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/lagoon/Lagoon.fork.t.sol:LagoonForkTest",
+            "name": "test_fork_lagoon_create_vault_and_request_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/eigencloud/Eigencloud.fork.t.sol:EigencloudForkTest",
+            "name": "test_fork_eigencloud_deposit_steth_strategy()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/usdt0/Usdt0.fork.t.sol:Usdt0ForkTest",
+            "name": "test_fork_usdt0_send()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/liquity/Liquity.fork.t.sol:LiquityForkTest",
+            "name": "test_fork_liquity_stability_pool_round_trip()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/spark/SparkVaults.fork.t.sol:SparkVaultsForkTest",
+            "name": "test_fork_spark_usdc_vault_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/saturn/Saturn.fork.t.sol:SaturnForkTest",
+            "name": "test_fork_saturn_stake_usdat()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/optimism-bridge/OptimismBridge.fork.t.sol:OptimismBridgeForkTest",
+            "name": "test_fork_optimism_bridge_deposit_eth()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/ether.fi-stake/EtherfiStake.fork.t.sol:EtherfiStakeForkTest",
+            "name": "test_fork_etherfi_stake_deposit_eth()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/meta-pool/MetaPool.fork.t.sol:MetaPoolForkTest",
+            "name": "test_fork_meta_pool_deposit_eth()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/curve-dex/CurveDex.fork.t.sol:CurveDexForkTest",
+            "name": "test_fork_curve_dex_3pool_add_liquidity()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/fx-protocol/FxProtocol.fork.t.sol:FxProtocolForkTest",
+            "name": "test_fork_fx_protocol_open_wsteth_position()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/lyra/Lyra.fork.t.sol:LyraForkTest",
+            "name": "test_fork_lyra_deposit_usdc_subaccount()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/maker/Maker.fork.t.sol:MakerForkTest",
+            "name": "test_fork_maker_sky_dai_to_usds()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/fluid-dex/FluidDex.fork.t.sol:FluidDexForkTest",
+            "name": "test_fork_fluid_dex_swap_native_to_usdc()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/starknet-bridge/StarknetBridge.fork.t.sol:StarknetBridgeForkTest",
+            "name": "test_fork_starknet_bridge_deposit_eth()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/bedrock-unibtc/BedrockUnibtc.fork.t.sol:BedrockUnibtcForkTest",
+            "name": "test_fork_bedrock_unibtc_mint_wbtc()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/ssv-network/SsvNetwork.fork.t.sol:SsvNetworkForkTest",
+            "name": "test_fork_ssv_register_operator()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/railgun/Railgun.fork.t.sol:RailgunForkTest",
+            "name": "test_fork_railgun_shield_usdc()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/solvbtc/Solvbtc.fork.t.sol:SolvbtcForkTest",
+            "name": "test_fork_solvbtc_create_subscription()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/dolomite/Dolomite.fork.t.sol:DolomiteForkTest",
+            "name": "test_fork_dolomite_supply_usdc()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/pendle-v2/PendleV2.fork.t.sol:PendleV2ForkTest",
+            "name": "test_fork_pendle_v2_mint_py()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/cooler-loans/CoolerLoans.fork.t.sol:CoolerLoansForkTest",
+            "name": "test_fork_cooler_loans_add_gohm_collateral()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/portal/Portal.fork.t.sol:PortalForkTest",
+            "name": "test_fork_portal_wrap_and_transfer_eth()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/sushi/Sushi.fork.t.sol:SushiForkTest",
+            "name": "test_fork_sushi_swap_eth_for_usdc()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/xdai-stake-bridge/XdaiStakeBridge.fork.t.sol:XdaiStakeBridgeForkTest",
+            "name": "test_fork_xdai_stake_bridge_relay_usds()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/fluid-lending/FluidLending.fork.t.sol:FluidLendingForkTest",
+            "name": "test_fork_fluid_lending_supply_usdc()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/convex-finance/ConvexFinance.fork.t.sol:ConvexFinanceForkTest",
+            "name": "test_fork_convex_finance_deposit_3crv()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/fraxtal/Fraxtal.fork.t.sol:FraxtalForkTest",
+            "name": "test_fork_fraxtal_bridge_deposit_frxusd()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/cian-yield-layer/CianYieldLayer.fork.t.sol:CianYieldLayerForkTest",
+            "name": "test_fork_cian_request_redeem()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/rocket-pool/RocketPool.fork.t.sol:RocketPoolForkTest",
+            "name": "test_fork_rocket_pool_deposit_eth()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/usdd/Usdd.fork.t.sol:UsddForkTest",
+            "name": "test_fork_usdd_mint_against_usdt()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/yearn/Yearn.fork.t.sol:YearnForkTest",
+            "name": "test_fork_yearn_usdc_vault_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/armitage-by-wintermute/Armitage.fork.t.sol:ArmitageForkTest",
+            "name": "test_fork_armitage_usdc_select_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/axelar-network/AxelarNetwork.fork.t.sol:AxelarNetworkForkTest",
+            "name": "test_fork_axelar_send_message()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/ember/Ember.fork.t.sol:EmberForkTest",
+            "name": "test_fork_ember_earn_usdc_deposit()",
             "status": "PASS",
             "iteration": 2
           },
@@ -2874,13 +5051,13 @@
         "runs": [
           {
             "iteration": 1,
-            "PASS": 33,
+            "PASS": 82,
             "FAIL": 0,
             "SKIP": 0
           },
           {
             "iteration": 2,
-            "PASS": 33,
+            "PASS": 82,
             "FAIL": 0,
             "SKIP": 0
           }
@@ -2926,7 +5103,7 @@
         "chain": "base",
         "mode": "executed",
         "blockNumber": 54552643,
-        "PASS": 2,
+        "PASS": 8,
         "FAIL": 0,
         "SKIP": 0,
         "tests": [
@@ -2937,8 +5114,212 @@
             "iteration": 1
           },
           {
+            "suite": "test/contracts/protocols/clearstar/Clearstar.fork.t.sol:ClearstarForkTest",
+            "name": "test_fork_clearstar_usdc_vault_deposit_redeem()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/aero-protocol/AeroProtocol.fork.t.sol:AeroProtocolForkTest",
+            "name": "test_fork_aero_add_liquidity()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/grove-finance/GroveFinance.fork.t.sol:GroveFinanceForkTest",
+            "name": "test_fork_grove_usdc_vault_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
             "suite": "test/contracts/protocols/aera/Aera.fork.t.sol:AeraForkTest",
             "name": "test_fork_aera_request_refund()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/clearstar/Clearstar.fork.t.sol:ClearstarForkTest",
+            "name": "test_fork_clearstar_usdc_vault_deposit_redeem()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/aero-protocol/AeroProtocol.fork.t.sol:AeroProtocolForkTest",
+            "name": "test_fork_aero_add_liquidity()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/grove-finance/GroveFinance.fork.t.sol:GroveFinanceForkTest",
+            "name": "test_fork_grove_usdc_vault_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 4,
+            "FAIL": 0,
+            "SKIP": 0
+          },
+          {
+            "iteration": 2,
+            "PASS": 4,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        ]
+      },
+      {
+        "chain": "optimism",
+        "mode": "executed",
+        "blockNumber": 159251063,
+        "PASS": 4,
+        "FAIL": 0,
+        "SKIP": 0,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/etherfi-borrowing-market/EtherfiCash.fork.t.sol:EtherfiCashForkTest",
+            "name": "test_fork_etherfi_cash_supply()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/etherfi-cash-liquid/EtherfiCashLiquid.fork.t.sol:EtherfiCashLiquidForkTest",
+            "name": "test_fork_etherfi_cash_liquid_supply_withdraw()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/etherfi-borrowing-market/EtherfiCash.fork.t.sol:EtherfiCashForkTest",
+            "name": "test_fork_etherfi_cash_supply()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/etherfi-cash-liquid/EtherfiCashLiquid.fork.t.sol:EtherfiCashLiquidForkTest",
+            "name": "test_fork_etherfi_cash_liquid_supply_withdraw()",
+            "status": "PASS",
+            "iteration": 2
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 2,
+            "FAIL": 0,
+            "SKIP": 0
+          },
+          {
+            "iteration": 2,
+            "PASS": 2,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        ]
+      },
+      {
+        "chain": "bsc",
+        "mode": "executed",
+        "blockNumber": 132303762,
+        "PASS": 10,
+        "FAIL": 0,
+        "SKIP": 0,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/lista-liquid-staking/ListaLiquidStaking.fork.t.sol:ListaLiquidStakingForkTest",
+            "name": "test_fork_lista_liquid_staking_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/lista-dao/ListaDao.fork.t.sol:ListaDaoForkTest",
+            "name": "test_fork_lista_dao_usdt_vault_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/aster-bridge/AsterBridge.fork.t.sol:AsterBridgeForkTest",
+            "name": "test_fork_aster_bridge_deposit_native_bnb()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/venus-core-pool/VenusCorePool.fork.t.sol:VenusCorePoolForkTest",
+            "name": "test_fork_venus_core_pool_supply_usdc()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/bitfi-basis/BitfiBasis.fork.t.sol:BitfiBasisForkTest",
+            "name": "test_fork_bitfi_bfbtc_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/lista-liquid-staking/ListaLiquidStaking.fork.t.sol:ListaLiquidStakingForkTest",
+            "name": "test_fork_lista_liquid_staking_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/lista-dao/ListaDao.fork.t.sol:ListaDaoForkTest",
+            "name": "test_fork_lista_dao_usdt_vault_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/aster-bridge/AsterBridge.fork.t.sol:AsterBridgeForkTest",
+            "name": "test_fork_aster_bridge_deposit_native_bnb()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/venus-core-pool/VenusCorePool.fork.t.sol:VenusCorePoolForkTest",
+            "name": "test_fork_venus_core_pool_supply_usdc()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/bitfi-basis/BitfiBasis.fork.t.sol:BitfiBasisForkTest",
+            "name": "test_fork_bitfi_bfbtc_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 5,
+            "FAIL": 0,
+            "SKIP": 0
+          },
+          {
+            "iteration": 2,
+            "PASS": 5,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        ]
+      },
+      {
+        "chain": "monad",
+        "mode": "executed",
+        "blockNumber": 120332881,
+        "PASS": 2,
+        "FAIL": 0,
+        "SKIP": 0,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/curvance/Curvance.fork.t.sol:CurvanceForkTest",
+            "name": "test_fork_curvance_cwmon_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/curvance/Curvance.fork.t.sol:CurvanceForkTest",
+            "name": "test_fork_curvance_cwmon_deposit()",
             "status": "PASS",
             "iteration": 2
           }
@@ -2959,22 +5340,58 @@
         ]
       },
       {
-        "chain": "optimism",
+        "chain": "avalanche",
         "mode": "executed",
-        "blockNumber": 159251063,
+        "blockNumber": 99720080,
         "PASS": 2,
         "FAIL": 0,
         "SKIP": 0,
         "tests": [
           {
-            "suite": "test/contracts/protocols/etherfi-borrowing-market/EtherfiCash.fork.t.sol:EtherfiCashForkTest",
-            "name": "test_fork_etherfi_cash_supply()",
+            "suite": "test/contracts/protocols/avant-protocol/AvantProtocol.fork.t.sol:AvantProtocolForkTest",
+            "name": "test_fork_avant_stake_avusd()",
             "status": "PASS",
             "iteration": 1
           },
           {
-            "suite": "test/contracts/protocols/etherfi-borrowing-market/EtherfiCash.fork.t.sol:EtherfiCashForkTest",
-            "name": "test_fork_etherfi_cash_supply()",
+            "suite": "test/contracts/protocols/avant-protocol/AvantProtocol.fork.t.sol:AvantProtocolForkTest",
+            "name": "test_fork_avant_stake_avusd()",
+            "status": "PASS",
+            "iteration": 2
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 1,
+            "FAIL": 0,
+            "SKIP": 0
+          },
+          {
+            "iteration": 2,
+            "PASS": 1,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        ]
+      },
+      {
+        "chain": "polygon",
+        "mode": "executed",
+        "blockNumber": 96930362,
+        "PASS": 2,
+        "FAIL": 0,
+        "SKIP": 0,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/polymarket/Polymarket.fork.t.sol:PolymarketForkTest",
+            "name": "test_fork_polymarket_split_position()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/polymarket/Polymarket.fork.t.sol:PolymarketForkTest",
+            "name": "test_fork_polymarket_split_position()",
             "status": "PASS",
             "iteration": 2
           }
@@ -2998,9 +5415,9 @@
     "status": "EXECUTED"
   },
   "integrationCommand": "npm run test:contracts:fork -- --twice",
-  "integrationDurationSeconds": 608.177,
-  "integrationProtocolSourceTip": "fae2b8fb7a7588684337037fda353c74a42174da",
-  "integrationCompletedMYT": "2026-11-08T09:55:22.580+08:00",
+  "integrationDurationSeconds": null,
+  "integrationProtocolSourceTip": "working-tree 2026-11-08",
+  "integrationCompletedMYT": "2026-11-08T11:05:00.000+08:00",
   "noRpcSingle": {
     "schemaVersion": 1,
     "runs": [

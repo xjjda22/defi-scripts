@@ -1,5 +1,36 @@
 # Changelog
 
+## 2026-11-08 — remaining Foundry blocker retry (6 accepted, 3 blocked)
+
+- Retried all nine remaining rows. Accepted six new permissionless primitives: Ondo rUSDY unwrap, USDT0 source-chain send, SSV operator registration, CIAN holder redemption queue, Portal WETH wrap/transfer, and Aero post-migration v2 LP mint.
+- Each accepted file passed twice at its committed pin. Added only required address-book entries (Ondo rUSDY, CIAN rsETH, Portal WETH, Aero v2 token/factory/pool/funding fixtures); the generated book is now 159 libraries / 534 constants.
+- Three measured blockers remain: Avalon `CooldownVault.deposit` reverts `UnauthorizedCaller()`, PancakeSwap Aggregator still has no accepted aggregator primitive, and GMX remains sunset/off-chain-order-only.
+- The Foundry parity queue is now **3 planned rows**. Final-source aggregate: `npm run test:contracts:fork -- --twice` returned **97 PASS / 0 FAIL / 0 SKIP per pass** (194 executions, zero infrastructure errors).
+- Registry proofs and sanitized receipts were updated; no ranking snapshot was regenerated.
+
+## 2026-11-08 — final Foundry backlog batch (5 accepted, 9 blocked)
+
+- Only 14 parity rows remained, so a twenty-protocol batch was no longer possible without curating rows outside the generated denominator. This batch attempted every remaining row and accepted five permissionless primitives: Curvance on Monad, Lista DAO and Aster Bridge and BitFi Basis on BSC, and Grove Finance on Base.
+- Each accepted file passed twice at its committed pin. Nine blockers are retained with measured reasons: Ondo registration gating, Avalon's Kaia route, PancakeSwap Aggregator route failure, USDT0 LayerZero worker options, SSV API-only status, Portal revert, GMX's closed/off-chain order flow, CIAN's stale exchange price, and Aero's missing PoolFactory code at the pin.
+- The parity queue now has 9 planned rows. The generated address book remains 158 libraries and 525 constants.
+- Final-source aggregate: `npm run test:contracts:fork -- --twice` returned **91 PASS / 0 FAIL / 0 SKIP per pass** (182 executions, zero infrastructure errors).
+
+## 2026-11-08 — second next Foundry batch (20 protocols, local only)
+
+- Added exactly 20 protocol primitives: Lagoon, Liquity, Optimism Bridge, f(x) Protocol, Avant, Lyra/Sky, Maker, Starknet Bridge, Railgun, Dolomite, Pendle V2, Venus Core Pool, xDAI Stake Bridge, Fraxtal, Rocket Pool, USDD, Yearn, Armitage, Axelar and Ember.
+- Each file passed twice at its committed chain pin (18 Ethereum at block 26,363,300, Avant on Avalanche at 99,720,080, Venus on BSC at 132,303,762). Registry receipts bind passing claims to current source hashes and measured deltas.
+- Added only required official address-book entries: Lagoon logic and the f(x) V2 contracts. The generated book now has 158 libraries and 525 constants.
+- Did not count candidates without an accepted primitive at the committed pins. The queue now has 14 planned rows.
+- Final-source aggregate: `npm run test:contracts:fork -- --twice` returned **86 PASS / 0 FAIL / 0 SKIP per pass** (172 executions, zero infrastructure errors).
+
+## 2026-11-08 — next Foundry batch (20 protocols, local only)
+
+- Added exactly 20 protocol primitives: Galaxy Curation, Compound Finance, KPK, mETH Protocol, Zama, Arbitrum Bridge, EigenCloud, Spark Vaults, Saturn, ether.fi Stake, Meta Pool, Curve DEX, Fluid DEX, Bedrock uniBTC, SolvBTC, Fluid Lending, Cooler Loans, Convex Finance, Sushi and Polymarket.
+- Each file passed twice at its committed chain pin (19 Ethereum at block 26,363,300; Polymarket on Polygon at block 96,930,362). Registry receipts bind the passing claims to current source hashes and measured deltas.
+- Added the Curve 3pool/3Crv and Fluid resolver entries required by the accepted files; generated address-book and registry checks remain green.
+- Did not count candidates without an accepted primitive at the committed pins (Avalon's Kaia blocker; Curvance/Lista had no code there; the PancakeSwap Aggregator attempt reverted). Remaining queue: 6 W2 and 27 W3 rows.
+- Final-source aggregate: `npm run test:contracts:fork -- --twice` returned **66 PASS / 0 FAIL / 0 SKIP per pass** (132 executions, zero infrastructure errors).
+
 ## 2026-11-08 — W2a batch 1 (10 protocols, local only)
 
 - Added ten W2 protocol files: World Chain Bridge, Huma, Clearstar, ether.fi Liquid, Lista Liquid Staking, EtherFi Cash Liquid, NEAR Bridge, Falcon Finance, StakeWise V3 and Fluid Lite. Each passed twice at the committed pins; Huma is the approved read-only exception.

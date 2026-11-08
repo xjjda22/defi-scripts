@@ -562,3 +562,174 @@ Veda/ether.fi Liquid note: the W1 Veda and Nonce Capital rows and the W2 ether.f
 Each test is registered in `src/catalog/foundryTests.js` with `wave: "W2"`, `status: "passing"`, and this receipt anchor. Per-file verification was two pinned `forge test` passes on the chain-specific pins.
 
 Final-source aggregate: `npm run test:contracts:fork -- --twice` completed two passes with **46 PASS / 0 FAIL / 0 SKIP each**, **92 executions**, zero infrastructure errors. Per-chain executions across both passes: Ethereum 80, Arbitrum 2, Base 4, Optimism 4, BSC 2. The aggregate includes W0's four files, W1's 32 files and the ten W2a files; it is not a claim that every protocol feature is covered.
+
+## Next 20-protocol batch receipt (2026-11-08)
+
+This batch targets exactly **20 board rows**: seven remaining W2 rows and thirteen W3 rows. Each
+file owns one bounded permissionless primitive. Nineteen Ethereum files passed twice at block
+**26,363,300**; the Polygon file passed twice at block **96,930,362**. The per-file source hashes,
+run counts, wall times, measurements and header identities are retained in
+`data/foundry-test-receipts.json`.
+
+| Row | Wave | Primitive receipt |
+|---|---|---|
+| `galaxy-curation` | W2 | 100 USDC deposited into gUSDCq; shares equal `previewDeposit` |
+| `compound-finance` | W2 | 100 USDC supplied to cUSDCv3; base balance increased |
+| `kpk` | W2 | 100 USDC deposited into KPK USDC Prime; shares equal `previewDeposit` |
+| `meth-protocol` | W2 | 1 ETH locked by mETH Staking; mETH minted at `ethToMETH` |
+| `zama` | W2 | 100 USDC locked by cUSDC; inferred supply and confidential handle increased |
+| `arbitrum-bridge` | W2 | 0.05 ETH locked by the Arbitrum Bridge |
+| `eigencloud` | W2 | 0.1 stETH deposited into the configured stETH strategy; strategy shares increased |
+| `spark` | W3 | 100 USDC deposited into spUSDC; shares equal `previewDeposit` |
+| `saturn` | W3 | 100 USDat deposited into sUSDat; shares equal `previewDeposit` |
+| `ether.fi-stake` | W3 | 0.05 ETH deposited into ether.fi; eETH minted |
+| `meta-pool` | W3 | 0.1 ETH custody increased through spETH; preview shares minted |
+| `curve-dex` | W3 | 100 USDC + 100 DAI deposited into 3pool; 3Crv minted |
+| `fluid-dex` | W3 | native ETH swapped to USDC through the configured FluidDexT1 pool |
+| `bedrock-unibtc` | W3 | 0.01 WBTC deposited through the permissionless Vault; uniBTC minted 1:1 |
+| `solvbtc` | W3 | 0.01 WBTC subscribed through the SolvBTC Router; SolvBTC minted at the router quote |
+| `fluid-lending` | W3 | 100 USDC supplied to fUSDC; shares equal `previewDeposit` |
+| `cooler-loans` | W3 | 1 gOHM posted as Cooler V2 collateral; account collateral increased |
+| `convex-finance` | W3 | 3Crv minted into Curve 3pool, then staked through Convex pid 9 |
+| `sushi` | W3 | native ETH swapped to USDC through Sushi V2 |
+| `polymarket` | W3 | 10 USDC split into YES and NO CTF positions on Polygon |
+
+The batch deliberately does not count candidates without an accepted primitive at the
+committed pins. Avalon's existing Kaia blocker remains; no empty-address row is relabelled as
+passing. Curvance and Lista Lending had no configured deployment code at their committed chain
+pins, while the attempted PancakeSwap Aggregator swap reverted; none has an accepted file in this
+receipt. The remaining queue is **6 W2 rows and 27 W3 rows**. These are primitive receipts, not
+claims of complete protocol coverage.
+
+Generated address-book changes are limited to entries required by accepted files: the Curve 3pool
+and 3Crv LP token, plus the Fluid DEX resolver. The generated book now has 158 libraries and 518
+constants. Address-book and registry checks remain green.
+
+Final-source aggregate: `npm run test:contracts:fork -- --twice` completed two passes with
+**66 PASS / 0 FAIL / 0 SKIP each**, **132 executions**, zero infrastructure errors. This includes
+W0, W1, W2a and the twenty files in this batch; it is not a claim that every protocol feature is
+covered.
+
+## Second next 20-protocol batch receipt (2026-11-08)
+
+This batch also targets exactly **20 board rows**: one remaining W2 row and nineteen W3 rows. The
+eighteen Ethereum files passed twice at block **26,363,300**; Avant on Avalanche passed twice at
+block **99,720,080**; Venus Core Pool on BSC passed twice at block **132,303,762**. The source
+hashes, per-file measurements, two-run counts and header identities are retained in
+`data/foundry-test-receipts.json`.
+
+| Row | Primitive receipt |
+|---|---|
+| `lagoon` | factory-created vault; 100 USDC request parked as a pending deposit |
+| `liquity` | 1,000 LUSD provided to and withdrawn from the V1 Stability Pool |
+| `optimism-bridge` | 0.05 ETH locked by the L1 Standard Bridge |
+| `fx-protocol` | wstETH collateral and fxUSD debt opened in the f(x) V2 pool |
+| `avant-protocol` | 100 avUSD deposited into savUSD; preview shares minted |
+| `lyra` | 100 USDC deposited into a Derive spot subaccount |
+| `maker` | 100 DAI converted to USDS through the Sky converter |
+| `starknet-bridge` | 0.05 ETH locked by StarkGate |
+| `railgun` | USDC shielded; wallet/treasury balances and the Merkle leaf index changed |
+| `dolomite` | 100 USDC supplied to Dolomite account zero |
+| `pendle-v2` | wstETH supplied to `mintPyFromToken`; PT balance increased |
+| `venus-core-pool` | 100 USDC minted to vUSDC and redeemed |
+| `xdai-stake-bridge` | 100 USDS locked by the live xDAI stake bridge; daily spend bucket increased |
+| `fraxtal` | 100 frxUSD locked by the Fraxtal L1 bridge |
+| `rocket-pool` | ETH deposited into Rocket Pool; rETH minted |
+| `usdd` | 100 USDT sold through the USDD PSM; USDD minted 1:1 at 18 decimals |
+| `yearn` | 100 USDC supplied to the USDC yVault; yUSDC shares minted |
+| `armitage-by-wintermute` | 100 USDC supplied to armUSDCs; shares minted |
+| `axelar-network` | 0.01 ETH native gas paid for a permissionless GMP message |
+| `ember` | 100 USDC supplied to eEARN; eEARN shares minted |
+
+The batch does not count candidates that did not produce an accepted primitive. The retained
+blockers/no-code measurements include Avalon's Kaia route, Curvance and Lista Lending at their
+committed pins, PancakeSwap Aggregator, USDT0's LayerZero worker options, Portal/Wormhole,
+Aero's Slipstream deployment, CIAN's stale exchange price, and the remaining non-EVM or
+custodian-only rows. The queue now has **14 planned rows**. The generated address book has 158
+libraries and 525 constants after adding only entries required by accepted files (Lagoon logic
+and the f(x) V2 contracts).
+
+Final-source aggregate: `npm run test:contracts:fork -- --twice` completed two passes with
+**86 PASS / 0 FAIL / 0 SKIP each**, **172 executions**, zero infrastructure errors. This includes
+W0, W1, W2a and both twenty-protocol batches; it is not a claim that every protocol feature is
+covered.
+
+## Final backlog batch receipt (2026-11-08)
+
+At this point only **14 parity rows remained**, so another twenty-protocol batch was no longer
+possible without violating the row-based denominator or curating new board rows. This final batch
+therefore attempted every remaining row and accepted the five rows for which a permissionless
+primitive could be executed and measured at the committed pins:
+
+| Row | Chain | Primitive receipt |
+|---|---|---|
+| `curvance` | Monad | 1 WMON deposited into cWMON; preview shares minted |
+| `lista-dao` | BSC | 100 USDT supplied to the Moolah vault |
+| `aster-bridge` | BSC | 0.5 native BNB locked by the Aster deposit bridge |
+| `bitfi-basis` | BSC | 0.01 BTCB deposited into bfBTC; bfBTC minted at the preview price |
+| `grove-finance` | Base | 100 USDC supplied to the Grove Morpho vault |
+
+Curvance passed at Monad block **120,332,881**; Lista, Aster and BitFi passed at BSC block
+**132,303,762**; Grove passed at Base block **54,552,643**. Each file passed twice, and the
+receipts bind the claims to source hashes and header identities.
+
+The nine remaining rows are retained as measured blockers, not silent omissions:
+
+- Ondo: issuer subscription remains registration-gated; no accepted rUSDY conversion primitive.
+- Avalon: deposits route through Kaia, which has no configured RPC/pin.
+- PancakeSwap Aggregator: the attempted BSC V3 fee-tier quote/swap did not produce a passing route.
+- USDT0: the pinned LayerZero worker configuration rejected the required execution options.
+- SSV Network: the board row remains API-only.
+- Portal/Wormhole: the attempted source-chain ETH transfer reverted at the pinned deployment.
+- GMX: V1 is documented as sunset/no new liquidity and V2 uses an off-chain order pipeline; the
+  approved read-only exceptions do not include GMX.
+- CIAN: both configured Yield Layer vaults reported a zero exchange-price update window at the pin.
+- Aero: the configured Slipstream PoolFactory had no code at the committed Base pin.
+
+The queue now has **9 planned rows**. This is the full remaining parity backlog; the generated
+address book remains 158 libraries and 525 constants because no additional address was required
+for the five accepted primitives.
+
+Final-source aggregate: `npm run test:contracts:fork -- --twice` completed two passes with
+**91 PASS / 0 FAIL / 0 SKIP each**, **182 executions**, zero infrastructure errors.
+
+## Next backlog retry receipt (2026-11-08)
+
+The nine measured blockers were retried. Six now have accepted permissionless primitives; three
+remain blocked. Each accepted file passed twice at its committed pin. Measurements below are raw
+units, and the exact source hashes and run times are in `data/foundry-test-receipts.json`.
+
+| Row | Chain | Primitive receipt |
+|---|---|---|
+| `ondo-finance` | Ethereum | 100 rUSDY unwrapped; rUSDY burned 100000000000000000000; USDY received 86781066688855397860 |
+| `usdt0` | Ethereum | USDT locked 100000000; outbound nonce 38627 -> 38628; one EndpointV2 `PacketSent` |
+| `ssv-network` | Ethereum | permissionless public operator id 2362 registered; owner/active/private flags and `OperatorAdded` asserted |
+| `cian-yield-layer` | Ethereum | 1000000000000000000 ylrsETH shares queued to `RedeemOperator`; price window 0, deposit not claimed |
+| `portal` | Ethereum | 50000000000000000 WETH added to Token Bridge custody; transfer payload amount/token/recipient/chain asserted; Wormhole sequence 702523 |
+| `aero-protocol` | Base | AERO 162646747109272645108 + USDC 100000000 deposited; LP minted 127532470904449; reserves and supply deltas exact |
+
+Ondo's issuer subscription is still registration-gated; the accepted primitive is the separate
+public rUSDY wrapper exit, not a subscription. SSV's primitive is operator registration, not a
+validator keyshare or consensus-layer role. Portal proves source-chain custody and the published
+Wormhole message, not guardian signing or destination redemption. CIAN proves the holder exit while
+the exchange-price window is stale, not deposit. Aero proves the post-migration core v2 pool mint,
+not Metarouter wrapping or gauge staking. USDT0 proves the source-chain lock and packet, not the
+Arbitrum delivery.
+
+Three rows remain blocked:
+
+- **Avalon SuperEarn:** the Ethereum `CooldownVault` is deployed, but a direct 100 USDC
+  `deposit` reverts `UnauthorizedCaller()` (`0x5c427cd9`); its public route remains on Kaia, which
+  has no configured RPC/pin.
+- **PancakeSwap Aggregator:** no aggregator-owned configured target; the previously attempted BSC
+  V3 fee-tier route still does not produce an accepted aggregator primitive at the pin.
+- **GMX:** V1 remains sunset/read-only and V2 uses the off-chain order pipeline; no permissionless
+  perps primitive has been accepted, and the approved read-only exceptions do not include GMX.
+
+The queue is now **3 planned rows** (Avalon and PancakeSwap Aggregator in W2, GMX in W3). The
+generated address book has **159 libraries and 534 constants** after adding only entries required
+by the accepted files: Ondo rUSDY, CIAN rsETH, Portal WETH, and Aero's token/factory/pool/funding
+fixtures. Final-source aggregate: `npm run test:contracts:fork -- --twice` completed two passes with
+**97 PASS / 0 FAIL / 0 SKIP each**, **194 executions**, zero infrastructure errors. Per-chain
+executions across both passes: Ethereum 164, Base 8, BSC 10, Optimism 4, Arbitrum 2, Monad 2,
+Avalanche 2, Polygon 2. This is not a claim that every protocol feature is covered.
