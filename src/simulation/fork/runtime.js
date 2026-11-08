@@ -240,6 +240,7 @@ function finish(result) {
 }
 
 module.exports = {
+  EXTRA_WHALES, // Shared public funding fixtures; no network action on import.
   ERC20_ABI,
   decimalsOf,
   formatUnits,

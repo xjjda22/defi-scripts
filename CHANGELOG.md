@@ -1,5 +1,39 @@
 # Changelog
 
+## 2026-11-08 — reviewed W1 integration (local only; partial coverage)
+
+- Imported 32 W1 protocol files: 31 accepted primitives plus cbETH read-only execution with coverage blocked; Ondo still has no accepted file. No exception expansion or W2/W3 execution claim.
+- Added source/header-bound two-run receipt verification and reproducible per-chain public whale defaults, separate execution/coverage statuses, and actual `--twice` runner iterations.
+- Sentora now proves public RLUSD interest/fee settlement, not investor deposits. Reviewed bridge proofs bind their exact events to deployed emitters. Preserved shared Veda/Nonce deployment and DFS/Curve/cbETH scope caveats.
+- Independent reviewed-source aggregate: each pass **36 PASS / 0 FAIL / 0 SKIP** across Ethereum, Arbitrum, Base and Optimism; 72 total executions, zero infrastructure errors.
+- Final no-RPC runner: **0 PASS / 0 FAIL / 36 SKIP**, not a fork pass. Entire no-RPC Solidity suite: **12 PASS / 0 FAIL / 38 SKIP**. All 19 runner/registry Node tests and offline CI checks passed; full JS fork suite was not rerun.
+- Preserved cold Steakhouse timeout/successful unchanged retries and unaccepted Ondo prototype timeouts. Sanitized exact receipts and unstarted W2/W3 partitions are committed; generated addresses/ranking snapshot remain unchanged.
+
+## 2026-11-08 — critical infrastructure review
+
+- Restored standalone receiver usability with shared pinned defaults and local URL override;
+  Aave's multi-chain checker explicitly supplies its expected chain ID.
+- Hardened JSON status/schema rejection, read-only header requests, subprocess environment
+  isolation and replacement of stale success artifacts when setup fails.
+- Derived queued execution chains from actual deployed addresses, not bridge/token names;
+  documented why Base Bridge, Robinhood Chain Bridge and wBETH remain W1 Ethereum work.
+
+
+## 2026-11-08 — pinned Foundry infrastructure (W1 not claimed complete)
+
+- Added observed numeric per-chain fork headers, pin-aware protocol harness with local
+  `FORK_RPC_URL` override, and a refresh command that stores no endpoint secrets. Legacy receiver
+  tests use the shared per-chain pin defaults; the Aave checker passes its already-observed
+  Anvil block and chain ID.
+- Added isolated per-chain Anvil/Foundry CI, exact JSON PASS/FAIL/SKIP accounting, unexpected-skip
+  failure checks, no-RPC warnings, and runner regression tests. Existing JS fork suite is unchanged.
+- Added a current-board/current-address Foundry queue and truthful registry gate; unimplemented
+  W1/W2/W3 rows remain planned, not passing. Bedrock's resolved address discovery is reflected
+  without reranking the showcase. Documented gated/read-only and shared-deployment caveats.
+- W0 protocol suite: two pinned Ethereum runs at block 26,363,300 each returned 4 PASS / 0 FAIL /
+  0 SKIP; no-RPC protocol run returned 0 PASS / 0 FAIL / 4 SKIP (not a fork pass).
+
+
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 

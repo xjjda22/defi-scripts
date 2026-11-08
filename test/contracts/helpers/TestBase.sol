@@ -4,6 +4,11 @@ pragma solidity 0.8.24;
 /// Minimal cheatcode surface used by these tests. Declared locally so the project
 /// needs no `lib/forge-std` dependency.
 interface Vm {
+    function readFile(string calldata path) external view returns (string memory);
+    function projectRoot() external view returns (string memory);
+    function parseJsonUint(string calldata json, string calldata key) external pure returns (uint256);
+    function parseJsonString(string calldata json, string calldata key) external pure returns (string memory);
+    function toString(uint256 value) external pure returns (string memory);
     function prank(address sender) external;
     function expectRevert(bytes calldata revertData) external;
     function store(address target, bytes32 slot, bytes32 value) external;

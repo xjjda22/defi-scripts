@@ -16,3 +16,5 @@ data/*
 !data/contract-flows.json
 !data/venue-map.json
 !data/aave-chains.json
+!data/fork-blocks.json
+!data/foundry-test-receipts.json

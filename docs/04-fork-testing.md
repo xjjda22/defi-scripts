@@ -4,6 +4,16 @@ Architecture: [`00-architecture.md`](./00-architecture.md). The showcase panel t
 
 This page covers the JS/Anvil `fork:*` suite. Foundry `.t.sol` coverage of the protocol contracts
 is a separate queue: [`11-foundry-contract-plan.md`](./11-foundry-contract-plan.md).
+`npm run test:contracts:fork` now runs that protocol suite on isolated, pinned per-chain Anvil
+nodes using `data/fork-blocks.json`; this does not replace or change the JS runner below.
+Its summary parses Foundry JSON as `PASS n, FAIL n, SKIP n`. Missing RPCs are explicit skips,
+not passes; a skip on a configured chain fails the Foundry job. `npm run test:contracts`
+also includes the existing receiver/mock unit tests, not just protocol files.
+`npm run test:contracts:fork -- --twice` really invokes each file twice with fresh Forge forks;
+JSON `runs` separates those passes and top-level totals count executions, not distinct files.
+The registry separately records execution `status` and primitive `coverageStatus`: a real
+read-only PASS such as cbETH can still be coverage-blocked. Source-bound measured receipts
+and remaining blockers live in `data/foundry-test-receipts.json` and docs/11, not the JS matrix.
 
 `fork:<protocol>:<action>` runs one action on a local Anvil fork. It impersonates or funds a whale, asserts a balance or position change, prints `FORK_RESULT`, and exits non-zero on failure. It does not read `PRIVATE_KEY`.
 
