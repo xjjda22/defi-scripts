@@ -122,6 +122,7 @@ const DOCS = {
   "railgunDoc": "https://docs.railgun.org/wiki/learn/helpful-links",
   "derive-v3Doc": "https://docs.derive.xyz/getting-started/contracts",
   "bedrock-unibtcDoc": "https://docs.bedrock.technology/security/smart-contracts/unibtc.md",
+  "bedrock-uniethDoc": "https://docs.bedrock.technology/security/smart-contracts/unieth",
   "bitfi-basisDoc": "https://docs.bitfi.one/developer/bfbtc-overview/deployed-contracts",
   "aster-bridgeDoc": "https://docs.asterdex.com/overview/smart-contracts",
   pendleDoc: "https://github.com/pendle-finance/pendle-core-v2-public/blob/main/deployments/1-core.json",
@@ -331,6 +332,7 @@ function contractBook() {
   push(book.uniswap, eth, "V2 router", uni.v2.router, DOCS.uniswap);
   push(book.uniswap, eth, "V2 factory", uni.v2.factory, DOCS.uniswap);
   push(book.uniswap, eth, "V3 router", uni.v3.router, DOCS.uniswap);
+  push(book.uniswap, eth, "V3 factory", uni.v3.factory, DOCS.uniswap);
   push(book.uniswap, eth, "V3 quoter", uni.v3.quoter, DOCS.uniswap);
   push(book.uniswap, eth, "V4 pool manager", uni.v4.poolManager, "https://docs.uniswap.org/contracts/v4/deployments");
   push(book.uniswap, eth, "V4 quoter", "0x52F0E24D1c21C8A0cB1e5a5dD6198556BD9E1203", "https://docs.uniswap.org/contracts/v4/deployments");
@@ -844,7 +846,7 @@ function contractBook() {
   book["pendle"] = [];
   push(book["pendle"], "ethereum", "Pendle Router V4", "0x888888888889758F76e7103c6CbF23ABbF58F946", DOCS.pendleDoc);
   push(book["pendle"], "ethereum", "Pendle RouterStatic (swapExactTokenForPtStatic quote)", "0x263833d47eA3fA4a30f269323aba6a107f9eB14C", DOCS.pendleDoc);
-  push(book["pendle"], "ethereum", "Pendle market PT-stETH-30DEC2027", "0x34280882267ffa6383b363e278b027be083bbe3b", DOCS.pendleDoc);
+  push(book["pendle"], "ethereum", "Pendle market PT-stETH-30DEC2027", "0x34280882267ffa6383B363E278B027Be083bBe3b", DOCS.pendleDoc);
   push(book["pendle"], "ethereum", "SY stETH (the market's SY)", "0xcbC72d92b2dc8187414F6734718563898740C0BC", DOCS.pendleDoc);
   push(book["pendle"], "ethereum", "PT-stETH-30DEC2027", "0xb253Eff1104802b97aC7E3aC9FdD73AecE295a2c", DOCS.pendleDoc);
   push(book["pendle"], "ethereum", "wstETH (input token, the market's underlyingAsset)", "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0", DOCS.pendleDoc);
@@ -860,6 +862,11 @@ function contractBook() {
   push(book["bedrock-unibtc"], "ethereum", "Bedrock Vault (TransparentUpgradeableProxy) — the permissionless wrapped-BTC mint", "0x047D41F2544B7F63A8e991aF2068a363d210d6Da", DOCS["bedrock-unibtcDoc"]);
   push(book["bedrock-unibtc"], "ethereum", "uniBTC (Bedrock universal BTC, 8 decimals; the Vault is its only MINTER_ROLE holder)", "0x004E9C3EF86bc1ca1f0bB5C7662861Ee93350568", DOCS["bedrock-unibtcDoc"]);
   push(book["bedrock-unibtc"], "ethereum", "WBTC (Wrapped BTC, 8 decimals) — the token minted against", "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599", DOCS["bedrock-unibtcDoc"]);
+
+  book["bedrock-unieth"] = [];
+  push(book["bedrock-unieth"], "ethereum", "uniETH proxy", "0xF1376bceF0f78459C0Ed0ba5ddce976F1ddF51F4", DOCS["bedrock-uniethDoc"]);
+  push(book["bedrock-unieth"], "ethereum", "uniETH implementation (EIP-1967)", "0x8a94866dF557Bb7FCe88EfF9917237286098e590", DOCS["bedrock-uniethDoc"]);
+  push(book["bedrock-unieth"], "ethereum", "uniETH proxy admin (EIP-1967)", "0xa5F2B6AB5B38b88Ba221741b3A189999b4c889C6", DOCS["bedrock-uniethDoc"]);
 
   book["derive-v3"] = [];
   push(book["derive-v3"], "ethereum", "Derive v3 ACTION_MANAGER (OnchainActionManager proxy; depositToNewSubaccount)", "0xE366CcA474968e33b777E13905829A3b800CFAD3", DOCS['derive-v3Doc']);
@@ -902,7 +909,7 @@ function contractBook() {
   push(book["avant"], "avalanche", "AvantMintingV2 (avUSD's approved minter; read-only evidence that the mint leg is gated)", "0xcb43139E90f019624e3B76C56FB05394B162A49c", DOCS['avantDoc']);
 
   book["hyperliquid-bridge"] = [];
-  push(book["hyperliquid-bridge"], "arbitrum", "Hyperliquid Bridge (Bridge2, Arbitrum USDC escrow)", "0x2df1c51e09aecf9cacb7bc98cb1742757f163df7", DOCS['hyperliquid-bridgeDoc']);
+  push(book["hyperliquid-bridge"], "arbitrum", "Hyperliquid Bridge (Bridge2, Arbitrum USDC escrow)", "0x2Df1c51E09aECF9cacB7bc98cB1742757f163dF7", DOCS['hyperliquid-bridgeDoc']);
   push(book["hyperliquid-bridge"], "arbitrum", "Arbitrum native USDC (asset the escrow holds; also read back from usdcToken())", "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", DOCS['hyperliquid-bridgeDoc']);
 
   book["polymarket"] = [];
