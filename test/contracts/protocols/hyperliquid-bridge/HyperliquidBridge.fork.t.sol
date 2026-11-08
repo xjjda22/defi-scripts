@@ -4,11 +4,12 @@ pragma solidity 0.8.24;
 import {ProtocolTestBase} from "../_shared/ProtocolTestBase.sol";
 import {vm} from "../../helpers/TestBase.sol";
 import "../_shared/Addresses.sol" as Addresses;
-import {IBridge2, IBridgeUsdc} from "./interfaces/IHyperliquidBridge.sol";
+import {IBridge2, IBridgeUsdc, IHyperliquidVmEmit} from "./interfaces/IHyperliquidBridge.sol";
 
 /// Bridge2's source deposit is a USDC transfer; no Bridge2 storage transition is
 /// claimed. Hyperliquid validators and destination credit are outside this fork.
 contract HyperliquidBridgeForkTest is ProtocolTestBase {
+    event Transfer(address indexed from, address indexed to, uint256 amount);
     event log_named_uint(string key, uint256 value);
 
     function test_fork_hyperliquid_bridge_deposit() public {
@@ -35,6 +36,8 @@ contract HyperliquidBridgeForkTest is ProtocolTestBase {
         require(usdc.transfer(user, amount), "USDC funding transfer");
         uint256 beforeEscrow = usdc.balanceOf(escrow);
         uint256 beforeUser = usdc.balanceOf(user);
+        IHyperliquidVmEmit(address(vm)).expectEmit(true, true, false, true, token);
+        emit Transfer(user, escrow, amount);
         vm.prank(user);
         require(usdc.transfer(escrow, amount), "source deposit transfer");
         assertEq(beforeUser - usdc.balanceOf(user), amount, "depositor USDC debit");

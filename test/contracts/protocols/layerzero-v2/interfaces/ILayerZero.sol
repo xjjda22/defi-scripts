@@ -62,3 +62,14 @@ interface ILayerZeroUsdt {
     function approve(address spender, uint256 amount) external;
     function transfer(address user, uint256 amount) external;
 }
+
+/// Protocol-local extension; do not widen the shared harness for one event check.
+interface ILayerZeroVmLogs {
+    struct Log {
+        bytes32[] topics;
+        bytes data;
+        address emitter;
+    }
+    function recordLogs() external;
+    function getRecordedLogs() external returns (Log[] memory);
+}

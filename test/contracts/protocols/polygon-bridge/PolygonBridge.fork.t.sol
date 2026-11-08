@@ -4,10 +4,11 @@ pragma solidity 0.8.24;
 import {ProtocolTestBase} from "../_shared/ProtocolTestBase.sol";
 import {vm} from "../../helpers/TestBase.sol";
 import "../_shared/Addresses.sol" as Addresses;
-import {IRootChainManager, IEtherPredicate} from "./interfaces/IPolygonBridge.sol";
+import {IRootChainManager, IEtherPredicate, IPolygonVmEmit} from "./interfaces/IPolygonBridge.sol";
 
 /// Source-chain custody only; Polygon validator delivery and L2 credit are not run.
 contract PolygonBridgeForkTest is ProtocolTestBase {
+    event LockedEther(address indexed depositor, address indexed depositReceiver, uint256 amount);
     event log_named_uint(string key, uint256 value);
 
     function test_fork_polygon_bridge_deposit_ether() public {
@@ -23,6 +24,8 @@ contract PolygonBridgeForkTest is ProtocolTestBase {
         uint256 amount = 0.05 ether;
         vm.deal(user, amount);
         uint256 beforeEth = predicate.balance;
+        IPolygonVmEmit(address(vm)).expectEmit(true, true, false, true, predicate);
+        emit LockedEther(user, user, amount);
         vm.prank(user);
         IRootChainManager(manager).depositEtherFor{value: amount}(user);
         assertEq(predicate.balance - beforeEth, amount, "predicate ETH locked");

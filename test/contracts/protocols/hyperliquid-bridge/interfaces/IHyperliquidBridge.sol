@@ -10,3 +10,7 @@ interface IBridgeUsdc {
     function balanceOf(address user) external view returns (uint256);
     function transfer(address user, uint256 amount) external returns (bool);
 }
+
+interface IHyperliquidVmEmit {
+    function expectEmit(bool topic1, bool topic2, bool topic3, bool data, address emitter) external;
+}

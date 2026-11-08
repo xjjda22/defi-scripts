@@ -4,10 +4,10 @@ pragma solidity 0.8.24;
 import {ProtocolTestBase} from "../_shared/ProtocolTestBase.sol";
 import {vm} from "../../helpers/TestBase.sol";
 import "../_shared/Addresses.sol" as Addresses;
-import {IOftAdapter, ILayerZeroEndpoint, ILayerZeroUsdt} from "./interfaces/ILayerZero.sol";
+import {IOftAdapter, ILayerZeroEndpoint, ILayerZeroUsdt, ILayerZeroVmLogs} from "./interfaces/ILayerZero.sol";
 
 /// Actual deployed USDT0 OApp -> EndpointV2 send, not an endpoint mock.
-/// Only source-chain nonce/custody are proven. No DVN or destination delivery.
+/// Only source-chain packet/nonce/custody are proven. No DVN or destination delivery.
 contract LayerZeroV2ForkTest is ProtocolTestBase {
     struct Before {
         uint256 nonce;
@@ -50,9 +50,11 @@ contract LayerZeroV2ForkTest is ProtocolTestBase {
             Before(endpoint.outboundNonce(address(adapter), 30110, peer), usdt.balanceOf(address(adapter)));
         vm.startPrank(user);
         usdt.approve(address(adapter), 100e6);
+        ILayerZeroVmLogs(address(vm)).recordLogs();
         (IOftAdapter.MessageReceipt memory message, IOftAdapter.OftReceipt memory sent) =
             adapter.send{value: fee.nativeFee}(param, fee, user);
         vm.stopPrank();
+        _assertPacket(address(endpoint), endpoint.getSendLibrary(address(adapter), 30110));
         assertEq(
             uint256(endpoint.outboundNonce(address(adapter), 30110, peer)),
             beforeState.nonce + 1,
@@ -67,5 +69,19 @@ contract LayerZeroV2ForkTest is ProtocolTestBase {
         emit log_named_uint("outbound nonce before", beforeState.nonce);
         emit log_named_uint("outbound nonce after", endpoint.outboundNonce(address(adapter), 30110, peer));
         emit log_named_uint("USDT locked", sent.amountSentLD);
+    }
+
+    function _assertPacket(address endpoint, address expectedLibrary) internal {
+        ILayerZeroVmLogs.Log[] memory logs = ILayerZeroVmLogs(address(vm)).getRecordedLogs();
+        bytes32 signature = keccak256("PacketSent(bytes,bytes,address)");
+        uint256 packets;
+        for (uint256 i; i < logs.length; ++i) {
+            if (logs[i].emitter != endpoint || logs[i].topics.length != 1 || logs[i].topics[0] != signature) continue;
+            (bytes memory payload,, address sendLibrary) = abi.decode(logs[i].data, (bytes, bytes, address));
+            require(payload.length > 0, "empty LayerZero packet");
+            assertEq(sendLibrary, expectedLibrary, "PacketSent configured send library");
+            ++packets;
+        }
+        assertEq(packets, 1, "one EndpointV2 PacketSent");
     }
 }

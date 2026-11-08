@@ -9,3 +9,7 @@ interface IRootChainManager {
 interface IEtherPredicate {
     function implementation() external view returns (address);
 }
+
+interface IPolygonVmEmit {
+    function expectEmit(bool topic1, bool topic2, bool topic3, bool data, address emitter) external;
+}
