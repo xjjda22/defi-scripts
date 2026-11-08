@@ -1,7 +1,8 @@
 # Foundry contract-test plan (2026-11-07)
 
-Status: **W0 built (2026-11-07).** The queue is **99 rows**, not 200; W0 builds 4 tests — 3 from
-the queue (Uniswap, Lido, Bedrock) plus the Aave port — and they pass on a pinned Ethereum fork.
+Status: **W2a built (2026-11-08).** The queue is **99 rows**, not 200. W0 built 4 tests (3 from
+the queue plus the Aave port), W1 has 31 accepted rows plus 2 blockers, and W2a added 10 more.
+Each wave runs on pinned forks; the receipts are in the sections below.
 
 Two gaps are often conflated. **Address coverage:** 100 rows have no contract address in
 `contracts.js`; 99 are outside this queue (reasons in §2), and only Bedrock uniETH is both
@@ -38,8 +39,9 @@ The address book is generated upstream of this plan: `showcase/data.json` → `t
 | Not queued (reasons below) | 99 | no file |
 | **Total** | **200** | **99 new files** |
 
-After W0, 96 of the 98 parity rows remain queued. Aave is an extra port on a row that already had
-a receiver test; Uniswap, Lido and Bedrock are built.
+After W0, W1 and W2a, **55 of the 99 queue rows remain**: 13 W2 rows, 40 W3 rows, and the two W1
+blockers (Ondo and cbETH). W0 built 3 queue rows plus the Aave port; W1 accepted 31; W2a accepted
+10. Aave is an extra port on a row that already had a receiver test.
 
 The 99 rows not in this queue, by reason:
 
@@ -245,8 +247,9 @@ the implementation can return.
 | Wave | Scope | Files | Why |
 |---|---|---:|---|
 | W0 (pilot) — **built** | harness + codegen; Aave USDC, Uniswap V3, Lido, Bedrock uniETH | 4 | two lending/DEX flows, one staking, one discovery |
-| W1 | parity, rank 1–50 | 33 | half the value in the top quartile |
-| W2 | parity, rank 51–100 | 23 | |
+| W1 — **31 accepted, 2 blockers** | parity, rank 1–50 | 33 | half the value in the top quartile |
+| W2a — **built** | parity, rank 51–100, first 10 | 10 | bridges, vaults, staking and two read-only exceptions |
+| W2b | parity, rank 51–100, remaining | 13 | |
 | W3 | parity, rank 101–200 | 40 | long tail; ERC-4626 vaults dominate and are the cheapest tests |
 | — | already covered (Aave, Morpho) | 2 | Aave is ported in W0; Morpho still only has the receiver test |
 | — | out of scope | 99 | reasons in `docs/07` and `testing.note` |
@@ -529,8 +532,33 @@ The current queue still targets **99 new-file rows**: live address resolution mo
 | Base | 54,552,643 | 1 / 0 / 0 |
 | Optimism | 159,251,063 | 1 / 0 / 0 |
 
-The complete aggregate took **608.177s**, including cold upstream reads and warm second passes, with fresh Forge forks per invocation. The committed proof retains every parsed test identity/iteration. Other configured chains still have header observations only, not execution evidence. W1 remains **31 accepted / 33 target rows**: cbETH is read-only PASS but coverage-blocked, and Ondo has no accepted file. No W2/W3 test was started or counted.
+The complete aggregate took **608.177s**, including cold upstream reads and warm second passes, with fresh Forge forks per invocation. The committed proof retains every parsed test identity/iteration. Other configured chains still have header observations only, not execution evidence. W1 remains **31 accepted / 33 target rows**: cbETH is read-only PASS but coverage-blocked, and Ondo has no accepted file. No W2/W3 test was started or counted at the time of this receipt; the W2a section below records the next batch.
 
 The final current-driver single invocation returned **0 PASS / 0 FAIL / 36 SKIP**; the no-RPC twice invocation returned **0 PASS / 0 FAIL / 72 SKIP** (36 per pass), explicitly not a fork pass. The entire Solidity suite without RPCs returned **12 PASS / 0 FAIL / 38 SKIP**. Address-book (157 libraries / 515 constants), contract artifacts (3), catalog, lint, showcase checks, all 19 Node runner/registry tests and all 32 new W1 directory format checks passed. Whole-tree `forge fmt --check test/contracts` is not clean: existing W0/shared-helper/legacy-receiver formatting and the generator's `Addresses.sol` layout differ from formatter preferences; no unrelated or generated formatting rewrite was applied. The existing full JS fork suite was not rerun; its scripts/runner are unchanged, with only the existing whale registry additionally exported for shared fixtures.
 
 Runner override names are `FORK_ETHEREUM_USDT_WHALE`, `FORK_ETHEREUM_USDE_WHALE`, `FORK_ETHEREUM_LINK_WHALE`, `FORK_ETHEREUM_CRVUSD_WHALE`, `FORK_ARBITRUM_USDC_WHALE`, `FORK_BASE_USDC_WHALE`, `FORK_OPTIMISM_USDC_WHALE`. All are optional public fixture addresses, not keys. Ambient whale envs are cleared before applying the selected chain's validated defaults/overrides. Forge still receives only the owned loopback fork URL. Unknown/non-string JSON statuses, including array-coerced `Success`/`Skipped`, fail closed.
+
+## W2a receipt (2026-11-08)
+
+Batch 1 of W2: ten rows, each passed twice at the committed pins. This is one bounded primitive per row, not every protocol feature. Avalon SuperEarn was the planned tenth by rank; its Ethereum vaults report zero `totalAssets`/`totalSupply` at every tested pin and deposits route through Kaia (no configured RPC), so it remains API-only and **Fluid Lite** (rank 75) replaces it. No Avalon `.t.sol` is registered.
+
+| Row | Chain | Primitive receipt (raw units) |
+|---|---|---|
+| `world-chain-bridge` | Ethereum | bridge+portal ETH +50000000000000000; user 1e18 → 950000000000000000; `ETHDepositInitiated(user,user,50000000000000000,0x)` |
+| `huma` | Ethereum | read-only PST: symbol `PST`, name "PayFi Strategy Token", decimals 6, totalSupply 228555447181150 |
+| `clearstar` | Base | USDC 100000000 in, shares 96772687943213429354 = `previewDeposit`; redeem 99999999 (1 wei); gates 0, `maxDeposit` 0 sentinel |
+| `ether.fi-liquid` | Ethereum | WETH 10000000000000000 in, shares 9004726812624452; vault WETH +1e16 |
+| `lista-liquid-staking` | BSC | 100000000000000000 BNB → slisBNB 96206457894615490; supply delta = mint |
+| `etherfi-cash-liquid` | Optimism | supply 100000000; assets 99999999; shares 99566071; withdraw 99999999; shares 0 |
+| `near-bridge` | Ethereum | bridge ETH +50000000000000000; `InitTransfer` nonce 7810, amount 5e16, fees 0, `near:alice.near` |
+| `falcon-finance` | Ethereum | USDf 100000000000000000000 in; shares 87611489754226881916 = `previewDeposit`; redeem 99999999999999999999 (1 wei) |
+| `stakewise-v3` | Ethereum | 0.1 ETH; totalAssets +100000000000000000; shares 91802315072166413; osETH 46189266824520524 = request |
+| `fluid-lite` | Ethereum | stETH 1000000000000000000 in; shares 814299546500565847 = `previewDeposit`; fee 500 ppm; received 999499999999999999 |
+
+Avalon's blocker: [Avalon SuperEarn](https://docs.superearn.io/en/developers/smart-contracts) deposits route through `SuperEarnRouter` on Kaia (8217); the Ethereum remote/cooldown vaults held 0 `totalAssets` and 0 `totalSupply` at blocks 25,000,000 / 25,500,000 / 26,300,000 / 26,360,000 / 26,363,300. No Kaia RPC or pin is configured, so the row stays API-only. This is a measured blocker, not a downgrade of the seven read-only exceptions; Huma is the one read-only file in this batch.
+
+Veda/ether.fi Liquid note: the W1 Veda and Nonce Capital rows and the W2 ether.fi Liquid row all deposit into the same BoringVault (`0xf0bb…416C`). Three board-row attributions do not imply three deployments.
+
+Each test is registered in `src/catalog/foundryTests.js` with `wave: "W2"`, `status: "passing"`, and this receipt anchor. Per-file verification was two pinned `forge test` passes on the chain-specific pins.
+
+Final-source aggregate: `npm run test:contracts:fork -- --twice` completed two passes with **46 PASS / 0 FAIL / 0 SKIP each**, **92 executions**, zero infrastructure errors. Per-chain executions across both passes: Ethereum 80, Arbitrum 2, Base 4, Optimism 4, BSC 2. The aggregate includes W0's four files, W1's 32 files and the ten W2a files; it is not a claim that every protocol feature is covered.

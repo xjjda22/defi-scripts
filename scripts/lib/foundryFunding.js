@@ -8,6 +8,8 @@ const FIXTURES = {
     FORK_USDE_WHALE: EXTRA_WHALES.ethereum.USDe[0],
     FORK_LINK_WHALE: EXTRA_WHALES.ethereum.LINK[0],
     FORK_CRVUSD_WHALE: EXTRA_WHALES.ethereum.crvUSD[0],
+    // Curve USDC/USDf pool: the public USDf fixture used by the Falcon sUSDf test.
+    FORK_USDF_WHALE: EXTRA_WHALES.ethereum.USDf[0],
   },
   arbitrum: { FORK_ARBITRUM_USDC_WHALE: WHALES.arbitrum.USDC },
   base: { FORK_USDC_WHALE: EXTRA_WHALES.base.USDC[0] },
