@@ -3,6 +3,10 @@
 Status: **campaign closed, queue empty.** On the 2026-11-05 rebuild, fork tests cover **89 of
 the top 200** rows; 111 do not.
 
+Foundry `.t.sol` coverage is a separate queue: [`11-foundry-contract-plan.md`](./11-foundry-contract-plan.md)
+(99 rows; W0 has 4 tests green at block 26,363,300 and 96 rows are queued). This JS campaign is
+unchanged.
+
 > **2026-11-05 — two things the campaign left behind, now fixed and measured.**
 > 1. Twelve fork tests existed as npm scripts and in `forkFeatures.js` but were **not attached to
 >    any `FORK_RECIPES` entry**: `fork:aave:{flashloan,emode,stake}`,
