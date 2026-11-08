@@ -5,11 +5,12 @@ the top 200** rows; 111 do not.
 
 Foundry `.t.sol` coverage is a separate queue: [`11-foundry-contract-plan.md`](./11-foundry-contract-plan.md)
 (99 new-file target rows relative to the original receiver baseline). W0 has four primitive
-files, three from that queue. On 2026-11-08 MYT, W1 adds 32 files with 31 accepted primitives;
-64 target rows still have no file, and cbETH is an additional coverage blocker despite real
-passing execution. Ondo remains blocked without an accepted file; no W2/W3 work is claimed. `npm run foundry:queue` derives the
+files, three from that queue. On 2026-11-08 MYT, W1 adds 32 files with 31 accepted primitives and
+W2a adds 10 accepted primitives; 54 target rows still have no file, and cbETH is an additional
+coverage blocker despite real passing execution. Ondo remains blocked without an accepted file;
+no W3 work is claimed. `npm run foundry:queue` derives the
 current row/address/status CSV; the Foundry registry and pinned CI runner do not reclassify
-JS coverage or count planned files as executed. W1 acceptance precedes W2/W3. This JS campaign is
+JS coverage or count planned files as executed. W1 acceptance precedes W2/W3; W2a is the first W2 batch. This JS campaign is
 unchanged.
 
 > **2026-11-05 — two things the campaign left behind, now fixed and measured.**

@@ -324,6 +324,93 @@ const BUILT = {
     reason:
       "Ondo issuer subscription needs registration; existing JS coverage is oracle-read only. A public rUSDY conversion candidate is not proven by two bounded pinned runs and lacks a generated-book entry; no accepted primitive/file.",
   },
+  // W2a batch 1 (2026-11-08): ten rows, each passed twice at the committed pins.
+  "world-chain-bridge": {
+    file: "test/contracts/protocols/world-chain-bridge/WorldChainBridge.fork.t.sol",
+    chain: "ethereum",
+    status: "passing",
+    wave: "W2",
+    receipt: "docs/11-foundry-contract-plan.md#w2a-receipt-2026-11-08",
+    coverageStatus: "accepted",
+  },
+  huma: {
+    file: "test/contracts/protocols/huma/Huma.fork.t.sol",
+    chain: "ethereum",
+    status: "passing",
+    wave: "W2",
+    receipt: "docs/11-foundry-contract-plan.md#w2a-receipt-2026-11-08",
+    coverageStatus: "accepted",
+    reason:
+      "Approved read-only exception: PST is minted and redeemed by the Solana program; the Ethereum CCIP token has no permissionless EVM mint.",
+  },
+  clearstar: {
+    file: "test/contracts/protocols/clearstar/Clearstar.fork.t.sol",
+    chain: "base",
+    status: "passing",
+    wave: "W2",
+    receipt: "docs/11-foundry-contract-plan.md#w2a-receipt-2026-11-08",
+    coverageStatus: "accepted",
+    reason:
+      "Morpho V2 maxDeposit() is a zero sentinel; the test settles interest permissionlessly, then executes a USDC deposit/redeem round trip.",
+  },
+  "ether.fi-liquid": {
+    file: "test/contracts/protocols/ether.fi-liquid/EtherfiLiquid.fork.t.sol",
+    chain: "ethereum",
+    status: "passing",
+    wave: "W2",
+    receipt: "docs/11-foundry-contract-plan.md#w2a-receipt-2026-11-08",
+    coverageStatus: "accepted",
+    reason:
+      "Deposits into the same ether.fi Liquid ETH BoringVault used by the W1 Veda and Nonce Capital rows; a separate board-row attribution, not an independent deployment.",
+  },
+  "lista-liquid-staking": {
+    file: "test/contracts/protocols/lista-liquid-staking/ListaLiquidStaking.fork.t.sol",
+    chain: "bsc",
+    status: "passing",
+    wave: "W2",
+    receipt: "docs/11-foundry-contract-plan.md#w2a-receipt-2026-11-08",
+    coverageStatus: "accepted",
+  },
+  "etherfi-cash-liquid": {
+    file: "test/contracts/protocols/etherfi-cash-liquid/EtherfiCashLiquid.fork.t.sol",
+    chain: "optimism",
+    status: "passing",
+    wave: "W2",
+    receipt: "docs/11-foundry-contract-plan.md#w2a-receipt-2026-11-08",
+    coverageStatus: "accepted",
+  },
+  "near-bridge": {
+    file: "test/contracts/protocols/near-bridge/NearBridge.fork.t.sol",
+    chain: "ethereum",
+    status: "passing",
+    wave: "W2",
+    receipt: "docs/11-foundry-contract-plan.md#w2a-receipt-2026-11-08",
+    coverageStatus: "accepted",
+  },
+  "falcon-finance": {
+    file: "test/contracts/protocols/falcon-finance/FalconFinance.fork.t.sol",
+    chain: "ethereum",
+    status: "passing",
+    wave: "W2",
+    receipt: "docs/11-foundry-contract-plan.md#w2a-receipt-2026-11-08",
+    coverageStatus: "accepted",
+  },
+  "stakewise-v3": {
+    file: "test/contracts/protocols/stakewise-v3/StakewiseV3.fork.t.sol",
+    chain: "ethereum",
+    status: "passing",
+    wave: "W2",
+    receipt: "docs/11-foundry-contract-plan.md#w2a-receipt-2026-11-08",
+    coverageStatus: "accepted",
+  },
+  "fluid-lite": {
+    file: "test/contracts/protocols/fluid-lite/FluidLite.fork.t.sol",
+    chain: "ethereum",
+    status: "passing",
+    wave: "W2",
+    receipt: "docs/11-foundry-contract-plan.md#w2a-receipt-2026-11-08",
+    coverageStatus: "accepted",
+  },
 };
 function buildRegistry(board = require("../../showcase/data.json"), built = BUILT) {
   return board.overall.map(original => {

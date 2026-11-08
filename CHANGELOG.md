@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-08 — W2a batch 1 (10 protocols, local only)
+
+- Added ten W2 protocol files: World Chain Bridge, Huma, Clearstar, ether.fi Liquid, Lista Liquid Staking, EtherFi Cash Liquid, NEAR Bridge, Falcon Finance, StakeWise V3 and Fluid Lite. Each passed twice at the committed pins; Huma is the approved read-only exception.
+- Replaced Avalon SuperEarn in the batch after its Ethereum vaults measured 0 `totalAssets`/`totalSupply` at every tested pin and its Kaia deposit route has no RPC or pin; it remains API-only and no Avalon file is registered.
+- Registered the ten rows in `src/catalog/foundryTests.js` with `wave: "W2"`, `status: "passing"` and the W2a receipt. Remaining queue: 13 W2 rows, 40 W3 rows, and the two W1 blockers.
+- Falcon's USDf funding is the `FORK_USDF_WHALE` runtime fixture (the Curve USDC/USDf pool), not a test literal; the funding helper exports it alongside the existing per-chain fixtures.
+- Final-source aggregate: `npm run test:contracts:fork -- --twice` returned **46 PASS / 0 FAIL / 0 SKIP per pass** (92 executions, zero infrastructure errors) across Ethereum, Arbitrum, Base, Optimism and BSC.
+
 ## 2026-11-08 — reviewed W1 integration (local only; partial coverage)
 
 - Imported 32 W1 protocol files: 31 accepted primitives plus cbETH read-only execution with coverage blocked; Ondo still has no accepted file. No exception expansion or W2/W3 execution claim.
