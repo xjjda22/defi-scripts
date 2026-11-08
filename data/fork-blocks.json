@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "chainsById": {
+    "1": {
+      "chain": "ethereum",
+      "rpcEnv": "ETHEREUM_RPC_URL",
+      "blockNumber": 26363300,
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600",
+      "blockTimestamp": 1794058403,
+      "observedAt": "2026-11-08T01:21:40.258Z",
+      "source": "RPC header via ETHEREUM_RPC_URL (URL deliberately omitted)"
+    },
+    "10": {
+      "chain": "optimism",
+      "rpcEnv": "OPTIMISM_RPC_URL",
+      "blockNumber": 159251063,
+      "blockHash": "0x67f5423f59918ef8c5a3910daca0b160dea8eefc1b720396eb0c2e1a32644584",
+      "blockTimestamp": 1794100903,
+      "observedAt": "2026-11-08T01:21:44.446Z",
+      "source": "RPC header via OPTIMISM_RPC_URL (URL deliberately omitted)"
+    },
+    "56": {
+      "chain": "bsc",
+      "rpcEnv": "BSC_RPC_URL",
+      "blockNumber": 132303762,
+      "blockHash": "0xd7b7f5b78f96a19f505a16bd39b84cf4cce1da3a22aff16cd99dc24003650f70",
+      "blockTimestamp": 1794100904,
+      "observedAt": "2026-11-08T01:21:44.553Z",
+      "source": "RPC header via BSC_RPC_URL (URL deliberately omitted)"
+    },
+    "130": {
+      "chain": "unichain",
+      "rpcEnv": "UNICHAIN_RPC_URL",
+      "blockNumber": 63352644,
+      "blockHash": "0x8aa39250b6ef9d55c480a98183529c851ab1f6ec493e1d91afbad33c384b3433",
+      "blockTimestamp": 1794101003,
+      "observedAt": "2026-11-08T01:23:25.428Z",
+      "source": "RPC header via UNICHAIN_RPC_URL (URL deliberately omitted)"
+    },
+    "137": {
+      "chain": "polygon",
+      "rpcEnv": "POLYGON_RPC_URL",
+      "blockNumber": 96930362,
+      "blockHash": "0x0bffac249ca43df3094f21bbe105cf24353cd544fe2f8e36b95d8c424370ba40",
+      "blockTimestamp": 1794100999,
+      "observedAt": "2026-11-08T01:23:18.496Z",
+      "source": "RPC header via POLYGON_RPC_URL (URL deliberately omitted)"
+    },
+    "143": {
+      "chain": "monad",
+      "rpcEnv": "MONAD_RPC_URL",
+      "blockNumber": 120332881,
+      "blockHash": "0xfe9611a92c423903cd346ca654e28f1ffa7a36789cf326383a1934451febff76",
+      "blockTimestamp": 1794100904,
+      "observedAt": "2026-11-08T01:21:44.780Z",
+      "source": "RPC header via MONAD_RPC_URL (URL deliberately omitted)"
+    },
+    "324": {
+      "chain": "zksync",
+      "rpcEnv": "ZKSYNC_RPC_URL",
+      "blockNumber": 72796079,
+      "blockHash": "0x3ebec8d784238c9e84029334a04bf10e3cd2f91f2defb376d04aee3cc2a779b2",
+      "blockTimestamp": 1794100966,
+      "observedAt": "2026-11-08T01:23:21.004Z",
+      "source": "RPC header via ZKSYNC_RPC_URL (URL deliberately omitted)"
+    },
+    "8453": {
+      "chain": "base",
+      "rpcEnv": "BASE_RPC_URL",
+      "blockNumber": 54552643,
+      "blockHash": "0xc8fedd3aecded996c815753ac42379c74bbac438a56efd51f91ec0d5d0aa01ab",
+      "blockTimestamp": 1794100904,
+      "observedAt": "2026-11-08T01:21:44.257Z",
+      "source": "RPC header via BASE_RPC_URL (URL deliberately omitted)"
+    },
+    "42161": {
+      "chain": "arbitrum",
+      "rpcEnv": "ARBITRUM_RPC_URL",
+      "blockNumber": 522239393,
+      "blockHash": "0x53e9deef616860962f5beb844f38f7a36504cb5bfccddf349c0c8c1709160325",
+      "blockTimestamp": 1794100903,
+      "observedAt": "2026-11-08T01:21:44.347Z",
+      "source": "RPC header via ARBITRUM_RPC_URL (URL deliberately omitted)"
+    },
+    "43114": {
+      "chain": "avalanche",
+      "rpcEnv": "AVALANCHE_RPC_URL",
+      "blockNumber": 99720080,
+      "blockHash": "0xb9dfb84de64f6a0b78064ec9289dcecc3420ab3c392317cbfaef95ea27fa3b47",
+      "blockTimestamp": 1794100903,
+      "observedAt": "2026-11-08T01:21:44.660Z",
+      "source": "RPC header via AVALANCHE_RPC_URL (URL deliberately omitted)"
+    },
+    "534352": {
+      "chain": "scroll",
+      "rpcEnv": "SCROLL_RPC_URL",
+      "blockNumber": 35645264,
+      "blockHash": "0x2b5b6a766140aa9141e0641c9accfafa09fd73ea86d6c60ca9b05d08d6a37624",
+      "blockTimestamp": 1794100961,
+      "observedAt": "2026-11-08T01:23:22.215Z",
+      "source": "RPC header via SCROLL_RPC_URL (URL deliberately omitted)"
+    }
+  }
+}

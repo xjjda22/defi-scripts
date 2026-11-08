@@ -103,6 +103,8 @@ async function runChain(chain) {
           env: {
             ...process.env,
             FORK_RPC_URL: url,
+            // Pin the receiver's in-process fork to the actual Anvil header just observed.
+            FORK_BLOCK: String(block),
             AAVE_POOL: getAddress(cfg.pool),
             AAVE_USDC: getAddress(cfg.usdc),
           },

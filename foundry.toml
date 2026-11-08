@@ -8,3 +8,6 @@ out = "output/forge-out"
 cache_path = "output/forge-cache"
 solc = "0.8.24"
 optimizer = false
+
+# The protocol harness reads only public, observed fork pins.
+fs_permissions = [{ access = "read", path = "./data/fork-blocks.json" }]

@@ -69,6 +69,10 @@ function writeDocs(catalog) {
 
 function check(catalog) {
   const problems = [...catalog.problems];
+  const foundry = require("../src/catalog/foundryTests").checkRegistry();
+  problems.push(...foundry.problems);
+  problems.push(...require("./lib/forkBlocks").checkForkBlocks(require("../data/fork-blocks.json")));
+  if (foundry.warnings.length) console.warn(`Foundry: ${foundry.warnings.length} planned rows (warning only until W2 is accepted).`);
   const docPath = path.join(ROOT, DOC_PATH);
   if (!fs.existsSync(docPath) || fs.readFileSync(docPath, "utf8") !== renderDoc(catalog)) {
     problems.push(`${DOC_PATH} is stale (run npm run catalog:docs)`);

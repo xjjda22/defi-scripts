@@ -26,7 +26,9 @@ jobs:
         run: npm run check:contracts
       - name: Address book is current
         run: npm run check:address-book
-      - name: Foundry protocol tests compile (fork tests skip without RPC)
+      - name: Foundry runner unit tests
+        run: npm run test:foundry-runner
+      - name: Foundry unit and protocol tests (fork tests skip without RPC)
         run: npm run test:contracts
       - name: Showcase data check
         run: node scripts/showcaseCheck.js
@@ -84,3 +86,38 @@ jobs:
           AVALANCHE_RPC_URL: ${{ secrets.AVALANCHE_RPC_URL }}
           FORK_TEST_TIMEOUT_MS: "180000"
         run: npm run fork:all
+
+  # Informational until RPC provisioning and W1 acceptance; failures remain visible.
+  foundry-fork:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - uses: foundry-rs/foundry-toolchain@v1
+      - name: Pinned Foundry suite (JSON counts; skip is not pass)
+        env:
+          ETHEREUM_RPC_URL: ${{ secrets.ETHEREUM_RPC_URL }}
+          BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
+          OPTIMISM_RPC_URL: ${{ secrets.OPTIMISM_RPC_URL }}
+          ARBITRUM_RPC_URL: ${{ secrets.ARBITRUM_RPC_URL }}
+          BSC_RPC_URL: ${{ secrets.BSC_RPC_URL }}
+          POLYGON_RPC_URL: ${{ secrets.POLYGON_RPC_URL }}
+          AVALANCHE_RPC_URL: ${{ secrets.AVALANCHE_RPC_URL }}
+          MONAD_RPC_URL: ${{ secrets.MONAD_RPC_URL }}
+          ZKSYNC_RPC_URL: ${{ secrets.ZKSYNC_RPC_URL }}
+          SCROLL_RPC_URL: ${{ secrets.SCROLL_RPC_URL }}
+          UNICHAIN_RPC_URL: ${{ secrets.UNICHAIN_RPC_URL }}
+        run: npm run test:contracts:fork
+      - name: Preserve truthful execution summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: foundry-fork-summary
+          path: output/foundry-fork-summary.json
+          if-no-files-found: warn

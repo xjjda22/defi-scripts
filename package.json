@@ -292,8 +292,8 @@
     "check:contracts": "node scripts/buildContracts.js --check",
     "build:address-book": "node scripts/buildAddressBook.js",
     "check:address-book": "node scripts/buildAddressBook.js --check",
-    "test:contracts": "forge test --match-path 'test/contracts/protocols/**/*.t.sol'",
-    "test:contracts:fork": "forge test --match-path 'test/contracts/protocols/**/*.t.sol' -vv",
+    "test:contracts": "forge test",
+    "test:contracts:fork": "node scripts/foundryFork.js",
     "lint:fix": "eslint . --ignore-path .eslintignore --ext .js,.sol --fix --quiet",
     "prettier": "prettier --write './**/*.{js,json,yaml,yml,sol}'",
     "report:crosschain": "bash scripts/healthCheckReport.sh crosschain",
@@ -592,7 +592,10 @@
     "chain:discover": "node scripts/venueDiscover.js",
     "docs:venues": "node scripts/venueMap.js",
     "check:venue-map": "node scripts/venueMap.js --check",
-    "check:aave-fork": "node scripts/forkAaveCheck.js"
+    "check:aave-fork": "node scripts/forkAaveCheck.js",
+    "test:foundry-runner": "node --test test/scripts/foundryResults.test.js",
+    "foundry:queue": "node scripts/foundryQueue.js",
+    "observe:fork-blocks": "node scripts/observeForkBlocks.js"
   },
   "keywords": [
     "defi",

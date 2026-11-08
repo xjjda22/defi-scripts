@@ -16,7 +16,7 @@ interface IERC20Like {
 
 /// Runs the receiver against a **real** Aave V3 pool on a fork, not a mock.
 ///
-///   FORK_RPC_URL=... forge test --match-contract AaveFlashReceiverFork -vv
+///   FORK_BLOCK=<observed-block> FORK_RPC_URL=... forge test --match-contract AaveFlashReceiverFork -vv
 ///
 /// Defaults are mainnet; the JS runner (`scripts/forkAaveCheck.js`) sets `AAVE_POOL` and
 /// `AAVE_USDC` per chain and verifies those addresses first. The receiver produces no profit,
@@ -33,8 +33,8 @@ contract AaveFlashReceiverForkTest {
             return;
         }
         uint256 blockNo = vm.envOr("FORK_BLOCK", uint256(0));
-        if (blockNo == 0) vm.createSelectFork(url);
-        else vm.createSelectFork(url, blockNo);
+        require(blockNo > 0, "FORK_BLOCK required: receiver tests never fork latest");
+        vm.createSelectFork(url, blockNo);
 
         address pool = vm.envOr("AAVE_POOL", DEFAULT_POOL);
         address usdc = vm.envOr("AAVE_USDC", DEFAULT_USDC);

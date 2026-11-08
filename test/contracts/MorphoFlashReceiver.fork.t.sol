@@ -25,7 +25,7 @@ interface IERC20Like {
 
 /// Runs the receiver against the **real** Morpho Blue singleton on a fork, not a mock.
 ///
-///   FORK_RPC_URL=... forge test --match-contract MorphoFlashReceiverFork -vv
+///   FORK_BLOCK=<observed-block> FORK_RPC_URL=... forge test --match-contract MorphoFlashReceiverFork -vv
 ///
 /// Addresses, all code-checked before use:
 /// - Morpho Blue `0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb`: the "Morpho" row of the Morpho
@@ -62,8 +62,8 @@ contract MorphoFlashReceiverForkTest {
             return;
         }
         uint256 blockNo = vm.envOr("FORK_BLOCK", uint256(0));
-        if (blockNo == 0) vm.createSelectFork(url);
-        else vm.createSelectFork(url, blockNo);
+        require(blockNo > 0, "FORK_BLOCK required: receiver tests never fork latest");
+        vm.createSelectFork(url, blockNo);
 
         address morpho = vm.envOr("MORPHO", DEFAULT_MORPHO);
         address usdc = vm.envOr("MORPHO_USDC", DEFAULT_USDC);

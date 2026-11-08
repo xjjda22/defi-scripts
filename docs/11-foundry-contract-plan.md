@@ -133,14 +133,18 @@ Rules:
 ```solidity
 abstract contract ProtocolTestBase is TestBase {
     function _fork(string memory rpcEnv, uint256 chainId) internal returns (bool) {
-        string memory url = vm.envOr(rpcEnv, string(""));
+        string memory url = vm.envOr("FORK_RPC_URL", vm.envOr(rpcEnv, string("")));
         if (bytes(url).length == 0) {
             vm.skip(true);
             return false;
         }
         uint256 blockNo = vm.envOr("FORK_BLOCK", uint256(0));
-        if (blockNo == 0) vm.createSelectFork(url);
-        else vm.createSelectFork(url, blockNo);
+        if (blockNo == 0) {
+            string memory pins = vm.readFile(string.concat(vm.projectRoot(), "/data/fork-blocks.json"));
+            blockNo = vm.parseJsonUint(pins, string.concat(".chainsById.", vm.toString(chainId), ".blockNumber"));
+        }
+        require(blockNo > 0, "missing fork pin: observe this chain first");
+        vm.createSelectFork(url, blockNo);
         require(block.chainid == chainId, "chain id");
         return true;
     }
@@ -203,19 +207,19 @@ review.
 
 ```bash
 # A. pinned anvil fork — the mode CI and reviewers use
-CHAIN=ethereum FORK_BLOCK=26328497 node scripts/startFork.js
+CHAIN=ethereum FORK_BLOCK=26363300 node scripts/startFork.js
 FORK_RPC_URL=http://127.0.0.1:8545 \
   forge test --match-path 'test/contracts/protocols/**/*.t.sol' -vv
 
 # B. direct upstream fork — no anvil process
-FORK_RPC_URL=$ETHEREUM_RPC_URL FORK_BLOCK=26328497 \
+FORK_RPC_URL=$ETHEREUM_RPC_URL FORK_BLOCK=26363300 \
   forge test --match-contract AaveV3ForkTest -vv
 
 # C. no RPC — every fork test skips; the job reports the skip count
 forge test --match-path 'test/contracts/protocols/**/*.t.sol'
 ```
 
-`FORK_BLOCK` is pinned per chain in `data/fork-blocks.json` (new, refreshed weekly), so a green run
+`FORK_BLOCK` defaults per chain from `data/fork-blocks.json` (observed RPC headers; refresh weekly with `observe:fork-blocks`), so a green run
 is reproducible. A committed test that forks `latest` is a review FAIL.
 
 ## 7. Acceptance
@@ -272,12 +276,12 @@ W0 adds to `.github/workflows/ci.yml` `check`:
 - `npm run test:contracts` — the no-RPC run. Skips are allowed here because the job also runs the
   three existing non-fork unit tests.
 
-Still open: a `foundry-fork` job, `continue-on-error` like `fork-suite`, with the same RPC secrets:
+Implemented by the infrastructure follow-up: a `foundry-fork` job, `continue-on-error` like `fork-suite`, with the same RPC secrets:
 
-- `npm run test:contracts:fork` (`forge test --match-path 'test/contracts/protocols/**' -vv`)
+- `npm run test:contracts:fork` (`node scripts/foundryFork.js`; per-chain local Anvil, pinned header identity, serial JSON parsing)
 - summary line `PASS n, FAIL n, SKIP n`, and a warning annotation when `SKIP > 0`.
 
-Registry gate (`src/catalog/foundryTests.js`, new): `{ slug, file, status: "passing" | "skipped" |
+Registry gate (`src/catalog/foundryTests.js`, implemented): `{ slug, file, status: "passing" | "skipped" |
 "planned" }`. `catalog:check` warns for `planned` and fails when `passing` has no file. Flip to
 fail for every parity row after W2. Do not gate W3 by count; gate by registry completeness.
 
@@ -316,8 +320,7 @@ Acceptance met: with an Ethereum RPC and `FORK_BLOCK=26363300`,
 **4 SKIP, 0 FAIL**. `check:address-book`, `check:contracts`, `catalog:check` and `npm run lint`
 are green.
 
-Remaining: the `foundry-fork` CI job, the `foundryTests.js` registry gate, and W1 (33 parity
-files, rank 1–50). The queue is unchanged in `output/foundry-contract-queue.csv`.
+The infrastructure follow-up implements the CI job and registry gate. W1 (33 parity files, rank 1–50) remains a separate acceptance stage; W2/W3 are not started by this infrastructure change. Regenerate the queue with `npm run foundry:queue`.
 
 ## Appendix — queue
 
@@ -325,3 +328,67 @@ files, rank 1–50). The queue is unchanged in `output/foundry-contract-queue.cs
 `rank, protocol, slug, category, unique_contracts, contract_entries, chains, testing_mode,
 foundry_bucket, wave, status, reason` (157 libraries, 515 constants in the address book, not
 counted per row).
+
+## Infrastructure receipt (2026-11-08)
+
+The committed board is still the snapshot generated 2026-11-06 at 9:59 PM MYT (UTC+8), not
+reranked by this change. The generator reattaches its rows to **current** `contracts.js`:
+Bedrock's W0 discovery adds its three entries, so configured-address rows are now 101, not
+the original 100. This is address-book drift, not a new board row or a completed W1 test.
+There are still 99 new-file target rows relative to the original Aave/Morpho baseline;
+three were built by W0, leaving W1/W2/W3 at 33/23/40. Aave's additional primitive is the
+fourth W0 file; Morpho's receiver is listed separately and is not claimed by the W0 receipt.
+The generated CSV contains every board row, including exclusions with reasons. It is ignored,
+not a manually maintained second ranking.
+
+`data/fork-blocks.json` records chain ID, numeric height, hash, timestamp, observation time,
+and RPC env name from actual header queries. All eleven chains already in `RPC_ENV` were
+observed on 2026-11-08, 9:21–9:23 AM MYT (UTC+8); no chain configuration was added.
+Ethereum deliberately retains the W0 archive block 26,363,300. Observing the other chains'
+headers is **not** evidence their protocol tests ran or that a public provider retains archive
+state. Refresh with a configured archive endpoint when necessary:
+
+```bash
+CHAINS=ethereum FORK_BLOCK=26363300 npm run observe:fork-blocks
+# Omit FORK_BLOCK to record an actually observed head; only numeric heights are saved.
+# With an explicit block, select exactly one chain.
+CHAINS=base npm run observe:fork-blocks
+npm run foundry:queue
+npm run test:foundry-runner
+node scripts/foundryFork.js --no-rpc
+npm run test:contracts:fork
+```
+
+The runner creates its own loopback-only Anvil on a free port for each configured chain,
+checks its chain/header identity, runs files serially, then kills that Anvil. Each `_fork`
+creates a fresh in-process test fork of that local node at the pin; no test state is shared.
+The harness interface remains `_fork(rpcEnv, chainId)`; `FORK_RPC_URL` overrides the named
+upstream for local runs, `FORK_BLOCK` overrides the numeric pin for author testing, and a
+missing/zero pin is an error when an RPC exists. No URL/key is stored in the header file or
+execution summary. No `latest` fallback exists in the protocol harness. The two legacy receiver tests now
+require explicit `FORK_BLOCK` when an RPC is present; `forkAaveCheck.js` supplies the actual
+Anvil block it already observes, preserving its existing per-chain orchestration.
+
+No-RPC protocol receipt: **PASS 0, FAIL 0, SKIP 4**, explicitly labelled not a fork pass.
+Two independent Anvil runs at Ethereum block 26,363,300: **PASS 4, FAIL 0, SKIP 0** each.
+The runner writes `output/foundry-fork-summary.json` with real JSON test counts and separate
+infrastructure errors. A configured-chain skip, nonzero forge exit, empty/unknown JSON, or
+startup/hash failure exits nonzero; an unavailable chain is shown as no-RPC rather than
+silently counted as passing. Planned rows are not counted as executed or skipped tests.
+`forge test` without RPCs also ran the existing non-fork tests: **12 PASS, 0 FAIL, 6 SKIP**
+(the six skips include both legacy receivers and the four protocol files). A separate pinned
+compatibility invocation returned **6 PASS, 0 FAIL, 0 SKIP**, including the legacy receivers;
+this one compatibility run is not represented as Morpho protocol-wave acceptance.
+
+For integration, add each accepted file to `BUILT` in `foundryTests.js` with its actual chain.
+Use `planned` before implementation, `skipped` for a built but unverified/unavailable file
+with a reason, and `passing` only with a receipt of two pinned runs. The catalog checks
+missing files, passing-without-evidence, duplicate slugs, and unregistered protocol files.
+Planned W1–W3 rows warn only; the post-W2 completeness gate is deliberately not enforced yet.
+
+Acceptance caveats surfaced during W1 planning: the seven API-only rows are not an exhaustive
+list of read-only primitives. Sentora can expose getter-only verification, and Ondo's mint
+is KYC-gated despite its JS fork label. Apply §7's substantive mutable-value/proxy-invariant
+acceptance rather than inventing permissionless deposits or calling code existence a pass.
+Veda and Nonce Capital can share a deployed vault: registry/queue counts are **board rows**,
+not a claim of distinct deployments or independent underlying liquidity.

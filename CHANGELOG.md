@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-11-08 — pinned Foundry infrastructure (W1 not claimed complete)
+
+- Added observed numeric per-chain fork headers, pin-aware protocol harness with local
+  `FORK_RPC_URL` override, and a refresh command that stores no endpoint secrets. Legacy receiver
+  tests require a numeric pin; the Aave checker passes its already-observed Anvil block.
+- Added isolated per-chain Anvil/Foundry CI, exact JSON PASS/FAIL/SKIP accounting, unexpected-skip
+  failure checks, no-RPC warnings, and runner regression tests. Existing JS fork suite is unchanged.
+- Added a current-board/current-address Foundry queue and truthful registry gate; unimplemented
+  W1/W2/W3 rows remain planned, not passing. Bedrock's resolved address discovery is reflected
+  without reranking the showcase. Documented gated/read-only and shared-deployment caveats.
+- W0 protocol suite: two pinned Ethereum runs at block 26,363,300 each returned 4 PASS / 0 FAIL /
+  0 SKIP; no-RPC protocol run returned 0 PASS / 0 FAIL / 4 SKIP (not a fork pass).
+
+
 Changes to defi-scripts. Newest first. Merged work is on `main`; anything marked
 **local only** is committed on a branch that has not been pushed.
 
