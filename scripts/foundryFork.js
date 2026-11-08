@@ -29,10 +29,15 @@ function cleanEnv() {
     ...Object.values(RPC_ENV),
     "FORK_RPC_URL",
     "ETH_RPC_URL",
+    ...Object.keys(env).filter(key => /PRIVATE_KEY$/.test(key)),
     "PRIVATE_KEY",
+    "FOUNDRY_FORK_URL",
+    "DAPP_FORK_URL",
   ]))
     env[key] = "";
   env.FORK_BLOCK = "0";
+  env.FORK_CHAIN_ID = "1";
+  env.FOUNDRY_FFI = "false";
   env.DOTENV_CONFIG_PATH = "/dev/null";
   return env;
 }
@@ -116,6 +121,22 @@ async function stopAnvil(child) {
   }
   live.delete(child);
 }
+function writeSummary(summary, file = path.join(ROOT, "output/foundry-fork-summary.json")) {
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, JSON.stringify(summary, null, 2) + "\n");
+}
+function setupFailureSummary() {
+  return {
+    schemaVersion: 1,
+    PASS: 0,
+    FAIL: 0,
+    SKIP: 0,
+    infrastructureErrors: 1,
+    plannedRows: null,
+    chains: [],
+    status: "FAILED: setup prevented execution; no tests counted",
+  };
+}
 async function main() {
   const registry = buildRegistry();
   const validation = checkRegistry(registry);
@@ -164,6 +185,7 @@ async function main() {
         anvil = await startAnvil(url, pin);
         env.FORK_RPC_URL = anvil.local;
         env.FORK_BLOCK = String(pin.blockNumber);
+        env.FORK_CHAIN_ID = String(CHAINS[chain].chainId);
       }
       for (const entry of entries.filter(e => e.chain === chain)) {
         const { counts, code } = await forge(entry.file, env);
@@ -203,13 +225,21 @@ async function main() {
       process.env.GITHUB_STEP_SUMMARY,
       `## Foundry fork\n\n${line}\n\n**${summary.status}**\n\nInfrastructure errors: ${summary.infrastructureErrors}; planned rows: ${summary.plannedRows} (not counted as tests).\n`
     );
-  fs.mkdirSync(path.join(ROOT, "output"), { recursive: true });
-  fs.writeFileSync(path.join(ROOT, "output/foundry-fork-summary.json"), JSON.stringify(summary, null, 2) + "\n");
+  writeSummary(summary);
   if (failed) process.exitCode = 1;
 }
 if (require.main === module)
   main().catch(() => {
-    console.error("Foundry runner setup failed (details suppressed to protect RPC URLs).");
+    const summary = setupFailureSummary();
+    writeSummary(summary);
+    console.error(
+      "PASS 0, FAIL 0, SKIP 0 — FAILED: setup prevented execution; infrastructure errors 1 (RPC details suppressed)."
+    );
+    if (process.env.GITHUB_STEP_SUMMARY)
+      fs.appendFileSync(
+        process.env.GITHUB_STEP_SUMMARY,
+        "## Foundry fork\n\n**FAILED: setup prevented execution.** PASS 0, FAIL 0, SKIP 0; infrastructure errors 1.\n"
+      );
     process.exitCode = 1;
   });
-module.exports = { cleanEnv };
+module.exports = { cleanEnv, writeSummary, setupFailureSummary };

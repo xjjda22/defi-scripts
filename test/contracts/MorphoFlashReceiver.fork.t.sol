@@ -3,6 +3,7 @@ pragma solidity 0.8.24;
 
 import {MorphoFlashReceiver} from "../../src/simulation/fork/contracts/FlashReceivers.sol";
 import {Vm, vm} from "./helpers/TestBase.sol";
+import {ProtocolTestBase} from "./protocols/_shared/ProtocolTestBase.sol";
 
 interface IMorphoBlue {
     struct MarketParams {
@@ -25,7 +26,7 @@ interface IERC20Like {
 
 /// Runs the receiver against the **real** Morpho Blue singleton on a fork, not a mock.
 ///
-///   FORK_BLOCK=<observed-block> FORK_RPC_URL=... forge test --match-contract MorphoFlashReceiverFork -vv
+///   FORK_RPC_URL=... forge test --match-contract MorphoFlashReceiverFork -vv
 ///
 /// Addresses, all code-checked before use:
 /// - Morpho Blue `0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb`: the "Morpho" row of the Morpho
@@ -44,7 +45,7 @@ interface IERC20Like {
 /// Morpho Blue charges **no fee**, so the callback receives exactly `amount`, approves it, and
 /// Morpho pulls that same `amount` back. The receiver therefore needs no starting balance and
 /// there is nothing to fund here — unlike the Aave test, which pre-funds the 0.05% premium.
-contract MorphoFlashReceiverForkTest {
+contract MorphoFlashReceiverForkTest is ProtocolTestBase {
     address internal constant DEFAULT_MORPHO = 0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb;
     address internal constant DEFAULT_USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
 
@@ -56,14 +57,7 @@ contract MorphoFlashReceiverForkTest {
     uint256 internal constant LLTV_086 = 860_000_000_000_000_000;
 
     function test_fork_morpho_flashloan_roundtrip() public {
-        string memory url = vm.envOr("FORK_RPC_URL", string(""));
-        if (bytes(url).length == 0) {
-            vm.skip(true);
-            return;
-        }
-        uint256 blockNo = vm.envOr("FORK_BLOCK", uint256(0));
-        require(blockNo > 0, "FORK_BLOCK required: receiver tests never fork latest");
-        vm.createSelectFork(url, blockNo);
+        if (!_fork("ETHEREUM_RPC_URL", 1)) return;
 
         address morpho = vm.envOr("MORPHO", DEFAULT_MORPHO);
         address usdc = vm.envOr("MORPHO_USDC", DEFAULT_USDC);

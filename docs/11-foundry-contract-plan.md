@@ -47,7 +47,7 @@ The 99 rows not in this queue, by reason:
 |---|---:|---|
 | Non-EVM TVL only | 48 | Solana, Sui, Tron, Bitcoin, Hyperliquid L1, Starknet, Stellar, Near |
 | No chain TVL on the board | 33 | aggregators and wallets: 0x, Enso, Bebop, Titan, Nordstern, Arcus |
-| EVM chain not in the fork RPC map | 8 | BSquared, Pharos, Robinhood Chain, Anubis, RISE, CORE, Gnosis (RealT, whitelisted) |
+| EVM chain not in the fork RPC map | 8 | BSquared, Pharos, Anubis, RISE, CORE, Gnosis (RealT, whitelisted) |
 | Documented no-fork reason on a forkable chain | 10 | Unit, NEAR Intents, Solv, M0, Avalanche Core Bridge, Liquid Collective, Aster USDF, PinkSale, SoSoValue, Valos |
 
 `docs/07` declared bucket 4 empty on 2026-11-05. Its 89/111 split is that board; the 2026-11-07
@@ -365,9 +365,12 @@ creates a fresh in-process test fork of that local node at the pin; no test stat
 The harness interface remains `_fork(rpcEnv, chainId)`; `FORK_RPC_URL` overrides the named
 upstream for local runs, `FORK_BLOCK` overrides the numeric pin for author testing, and a
 missing/zero pin is an error when an RPC exists. No URL/key is stored in the header file or
-execution summary. No `latest` fallback exists in the protocol harness. The two legacy receiver tests now
-require explicit `FORK_BLOCK` when an RPC is present; `forkAaveCheck.js` supplies the actual
-Anvil block it already observes, preserving its existing per-chain orchestration.
+execution summary. No `latest` fallback exists in the protocol harness. Both legacy receiver tests also use
+that harness, including its Ethereum pin default and local URL override. For Aave's
+multi-chain checker, `FORK_CHAIN_ID` selects the configured chain/pin/RPC env; its pool/token
+overrides are still explicit. `forkAaveCheck.js` passes both the actual Anvil block and chain
+ID it already knows, preserving its existing per-chain orchestration. Morpho's legacy
+market fixture is Ethereum-specific and asserts chain 1 rather than pretending it is portable.
 
 No-RPC protocol receipt: **PASS 0, FAIL 0, SKIP 4**, explicitly labelled not a fork pass.
 Two independent Anvil runs at Ethereum block 26,363,300: **PASS 4, FAIL 0, SKIP 0** each.
@@ -392,3 +395,41 @@ is KYC-gated despite its JS fork label. Apply §7's substantive mutable-value/pr
 acceptance rather than inventing permissionless deposits or calling code existence a pass.
 Veda and Nonce Capital can share a deployed vault: registry/queue counts are **board rows**,
 not a claim of distinct deployments or independent underlying liquidity.
+
+### Critical infrastructure review
+
+Queue eligibility follows **configured contract deployment chains**, not words in a row name.
+Base Bridge's L1StandardBridge/OptimismPortal are on Ethereum; Robinhood Chain Bridge's
+Inbox/Bridge/Outbox/Rollup are also on Ethereum. Both are eligible source-chain primitives,
+not a claim to execute their destination chain. The unsupported-chain exclusion cannot be
+applied merely because the bridge's destination has no RPC. The original Robinhood example
+in that exclusion table was misleading and has been removed. Binance staked ETH's wBETH
+address is an Ethereum staking contract, not the excluded CEX or custodial BTC product.
+All three rows therefore remain W1 on the pinned board. The registry now derives its default
+execution chain from supported **address chains**, with catalog validation for each file's
+chosen deployment chain; it does not trust a category's generic fallback chain.
+
+JSON results fail closed for no matching contracts (`{}`), compiler-only output, unknown
+statuses (including inherited JavaScript object keys), and malformed suite arrays. Setup
+failures replace any prior summary artifact with zero tests counted plus an infrastructure
+error. Forge subprocesses receive only the local fork URL, not upstream fork defaults or
+signing-key envs, and FFI is disabled. The header-query helper permits only chain/header
+reads. `forge test` has no broadcast path: state-changing contract calls execute in its
+simulated EVM; the upstream is used for reads, never live transaction submission. Raw RPC
+errors and timeout diagnostics are not copied into public summaries.
+
+Header observations on other chains remain header-only evidence. This review does not
+upgrade their planned rows, prove public archive retention, or infer a pass from a reachable
+RPC. Only explicitly recorded test executions can change the registry's passing status.
+
+### Receiver default review (2026-11-08)
+
+Both existing receiver tests passed twice on a local Ethereum Anvil fork at block 26,363,300,
+with `FORK_BLOCK` unset/zero so that the shared JSON default was actually exercised.
+Each invocation returned **PASS 2, FAIL 0, SKIP 0**. The named Ethereum upstream env was set
+to an unreachable loopback endpoint in these runs: their success verifies the local
+`FORK_RPC_URL` override was used. A separate standalone invocation using only the configured
+Ethereum RPC and no explicit block/override also returned **PASS 2, FAIL 0, SKIP 0**. All
+state-changing calls remained simulated. Morpho's registry execution status is therefore
+passing with this measured receipt; its receiver wave still does not count as a newly built
+W1 primitive. These runs do not establish receiver portability to any other chain.

@@ -105,6 +105,7 @@ async function runChain(chain) {
             FORK_RPC_URL: url,
             // Pin the receiver's in-process fork to the actual Anvil header just observed.
             FORK_BLOCK: String(block),
+            FORK_CHAIN_ID: String(CHAINS[chain].chainId),
             AAVE_POOL: getAddress(cfg.pool),
             AAVE_USDC: getAddress(cfg.usdc),
           },

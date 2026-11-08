@@ -1,10 +1,21 @@
 # Changelog
 
+## 2026-11-08 — critical infrastructure review
+
+- Restored standalone receiver usability with shared pinned defaults and local URL override;
+  Aave's multi-chain checker explicitly supplies its expected chain ID.
+- Hardened JSON status/schema rejection, read-only header requests, subprocess environment
+  isolation and replacement of stale success artifacts when setup fails.
+- Derived queued execution chains from actual deployed addresses, not bridge/token names;
+  documented why Base Bridge, Robinhood Chain Bridge and wBETH remain W1 Ethereum work.
+
+
 ## 2026-11-08 — pinned Foundry infrastructure (W1 not claimed complete)
 
 - Added observed numeric per-chain fork headers, pin-aware protocol harness with local
   `FORK_RPC_URL` override, and a refresh command that stores no endpoint secrets. Legacy receiver
-  tests require a numeric pin; the Aave checker passes its already-observed Anvil block.
+  tests use the shared per-chain pin defaults; the Aave checker passes its already-observed
+  Anvil block and chain ID.
 - Added isolated per-chain Anvil/Foundry CI, exact JSON PASS/FAIL/SKIP accounting, unexpected-skip
   failure checks, no-RPC warnings, and runner regression tests. Existing JS fork suite is unchanged.
 - Added a current-board/current-address Foundry queue and truthful registry gate; unimplemented

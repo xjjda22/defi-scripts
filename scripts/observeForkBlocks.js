@@ -6,6 +6,7 @@ const { CHAINS } = require("../src/config/chains");
 const { RPC_ENV } = require("../src/catalog/forkRecipes");
 const ROOT = path.resolve(__dirname, "..");
 async function rpc(url, method, params) {
+  if (!["eth_chainId", "eth_getBlockByNumber"].includes(method)) throw new Error("Fork observation RPC is read-only");
   const response = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },

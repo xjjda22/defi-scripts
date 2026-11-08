@@ -79,3 +79,73 @@ test("fork headers reject guessed/zero pins, chain drift and endpoint leaks", ()
   broken.chainsById[1].source = "https://example.invalid/credential";
   assert.ok(checkForkBlocks(broken).some(p => p.includes("URLs")));
 });
+
+test("prototype keys and array-shaped results cannot masquerade as statuses", () => {
+  for (const status of ["constructor", "toString", "__proto__", null])
+    assert.throws(() => parseForgeJson(suite([status])));
+  assert.throws(() => parseForgeJson('{"contract":{"test_results":[]}}'));
+  assert.throws(() => parseForgeJson('{"contract":{"test_results":{}}}'));
+});
+test("runner removes upstream fork URLs, chain overrides and signing keys from forge env", () => {
+  const { cleanEnv } = require("../../scripts/foundryFork");
+  const names = {
+    ETHEREUM_RPC_URL: "upstream",
+    FORK_RPC_URL: "upstream",
+    FOUNDRY_FORK_URL: "upstream",
+    DAPP_FORK_URL: "upstream",
+    WALLET_PRIVATE_KEY: "fixture",
+    FORK_BLOCK: "123",
+    FORK_CHAIN_ID: "999",
+  };
+  const old = Object.fromEntries(Object.keys(names).map(name => [name, process.env[name]]));
+  try {
+    Object.assign(process.env, names);
+    const env = cleanEnv();
+    for (const name of ["ETHEREUM_RPC_URL", "FORK_RPC_URL", "FOUNDRY_FORK_URL", "DAPP_FORK_URL", "WALLET_PRIVATE_KEY"])
+      assert.equal(env[name], "");
+    assert.equal(env.FORK_BLOCK, "0");
+    assert.equal(env.FORK_CHAIN_ID, "1");
+    assert.equal(env.FOUNDRY_FFI, "false");
+  } finally {
+    for (const [name, value] of Object.entries(old))
+      if (value === undefined) delete process.env[name];
+      else process.env[name] = value;
+  }
+});
+test("setup failure overwrites an old passing artifact with zero counted tests", () => {
+  const fs = require("fs"),
+    os = require("os"),
+    path = require("path");
+  const { writeSummary, setupFailureSummary } = require("../../scripts/foundryFork");
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "foundry-summary-"));
+  const file = path.join(dir, "summary.json");
+  try {
+    writeSummary({ PASS: 999, status: "EXECUTED" }, file);
+    writeSummary(setupFailureSummary(), file);
+    const result = JSON.parse(fs.readFileSync(file));
+    assert.deepEqual([result.PASS, result.FAIL, result.SKIP, result.infrastructureErrors], [0, 0, 0, 1]);
+    assert.match(result.status, /^FAILED/);
+  } finally {
+    fs.rmSync(dir, { recursive: true });
+  }
+});
+test("observation helper refuses transaction methods before making any RPC request", async () => {
+  const { rpc } = require("../../scripts/observeForkBlocks");
+  await assert.rejects(rpc("http://127.0.0.1:1", "eth_sendRawTransaction", ["0x"]), /read-only/);
+});
+test("bridge/token names do not override the actual deployed address chain", () => {
+  const rows = buildRegistry();
+  for (const slug of ["base-bridge", "robinhood-chain-bridge", "binance-staked-eth"]) {
+    const row = rows.find(r => r.slug === slug);
+    assert.equal(row.chain, "ethereum");
+    assert.deepEqual(row.chains, ["ethereum"]);
+    assert.equal(row.wave, row.rank <= 50 ? "W1" : row.rank <= 100 ? "W2" : "W3");
+    assert.equal(row.foundry_bucket, "parity");
+  }
+});
+
+test("an implemented file cannot silently switch to an unrelated chain", () => {
+  const rows = buildRegistry();
+  rows.find(r => r.slug === "aave").chain = "base";
+  assert.ok(checkRegistry(rows).problems.some(p => p.includes("matching configured row address")));
+});

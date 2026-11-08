@@ -7,6 +7,7 @@ interface Vm {
     function readFile(string calldata path) external view returns (string memory);
     function projectRoot() external view returns (string memory);
     function parseJsonUint(string calldata json, string calldata key) external pure returns (uint256);
+    function parseJsonString(string calldata json, string calldata key) external pure returns (string memory);
     function toString(uint256 value) external pure returns (string memory);
     function prank(address sender) external;
     function expectRevert(bytes calldata revertData) external;

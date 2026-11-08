@@ -3,7 +3,7 @@
  */
 const fs = require("fs");
 const path = require("path");
-const { attachTesting } = require("./forkRecipes");
+const { attachTesting, RPC_ENV } = require("./forkRecipes");
 const ROOT = path.resolve(__dirname, "../..");
 const BUILT = {
   aave: {
@@ -16,9 +16,10 @@ const BUILT = {
   morpho: {
     file: "test/contracts/MorphoFlashReceiver.fork.t.sol",
     chain: "ethereum",
-    status: "skipped",
+    status: "passing",
     wave: "receiver",
-    reason: "Existing receiver test; not reverified by the protocol-only W0 receipt.",
+    receipt: "docs/11-foundry-contract-plan.md#receiver-default-review-2026-11-08",
+    reason: "Existing Ethereum receiver verified twice with shared pin defaults; not a new protocol-wave primitive.",
   },
   uniswap: {
     file: "test/contracts/protocols/uniswap/UniswapV3.fork.t.sol",
@@ -47,9 +48,11 @@ function buildRegistry(board = require("../../showcase/data.json"), built = BUIL
     // Reattach from contracts.js, rather than silently relying on stale board addresses.
     const row = attachTesting(structuredClone(original));
     const contracts = row.testing.contracts || [];
+    const addressChains = [...new Set(contracts.map(c => c.chain))].sort();
+    const forkChains = addressChains.filter(chain => RPC_ENV[chain]);
     const rank = row.overallRank || row.rank;
     const existing = built[row.slug];
-    const queued = contracts.length > 0 || !!existing;
+    const queued = forkChains.length > 0 || !!existing;
     return {
       rank,
       protocol: row.name,
@@ -57,20 +60,22 @@ function buildRegistry(board = require("../../showcase/data.json"), built = BUIL
       category: row.category,
       unique_contracts: new Set(contracts.map(c => `${c.chain}:${c.address.toLowerCase()}`)).size,
       contract_entries: contracts.length,
-      chains: [...new Set(contracts.map(c => c.chain))].sort(),
+      chains: addressChains,
       testing_mode: row.testing.mode,
       foundry_bucket:
         existing?.wave === "receiver" || row.slug === "aave" ? "already-covered" : queued ? "parity" : "not-queued",
       wave: existing?.wave || (queued ? (rank <= 50 ? "W1" : rank <= 100 ? "W2" : "W3") : "—"),
       status: existing?.status || "planned",
       file: existing?.file || null,
-      chain: existing?.chain || row.testing.chain || null,
+      chain: existing?.chain || (forkChains.includes(row.testing.chain) ? row.testing.chain : forkChains[0]) || null,
       receipt: existing?.receipt || null,
       reason:
         existing?.reason ||
         (queued
           ? "Contract primitive awaits implementation and two pinned runs; JS coverage is not Solidity coverage."
-          : row.testing.note || "No configured contract address; out of this parity queue."),
+          : contracts.length
+            ? "Configured addresses are outside the fork RPC map; deferred, not executed."
+            : row.testing.note || "No configured contract address; out of this parity queue."),
     };
   });
 }
@@ -85,6 +90,8 @@ function checkRegistry(entries = buildRegistry(), root = ROOT) {
       problems.push(`Invalid Foundry status: ${entry.slug}`);
     if (entry.status === "passing" && (!entry.file || !entry.receipt))
       problems.push(`Passing Foundry row requires file and receipt: ${entry.slug}`);
+    if (entry.file && (!RPC_ENV[entry.chain] || !entry.chains?.includes(entry.chain)))
+      problems.push(`Foundry execution chain has no matching configured row address: ${entry.slug}`);
     if (entry.file && (!entry.file.endsWith(".t.sol") || !fs.existsSync(path.join(root, entry.file))))
       problems.push(`Missing Foundry file: ${entry.slug}: ${entry.file}`);
     if (entry.foundry_bucket !== "not-queued" && entry.status === "planned")

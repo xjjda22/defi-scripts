@@ -6,10 +6,11 @@ function parseForgeJson(text) {
   if (!suites || typeof suites !== "object" || Array.isArray(suites)) throw new Error("Invalid forge JSON root");
   const statuses = { Success: "PASS", Failure: "FAIL", Skipped: "SKIP" };
   for (const [suite, result] of Object.entries(suites)) {
-    if (!result?.test_results || typeof result.test_results !== "object") throw new Error("Missing forge test_results");
+    if (!result?.test_results || typeof result.test_results !== "object" || Array.isArray(result.test_results))
+      throw new Error("Missing forge test_results");
     for (const [name, test] of Object.entries(result.test_results)) {
+      if (!test || !Object.hasOwn(statuses, test.status)) throw new Error("Unknown forge test status");
       const status = statuses[test.status];
-      if (!status) throw new Error("Unknown forge test status");
       counts[status]++;
       tests.push({ suite, name, status });
     }
