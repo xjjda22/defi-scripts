@@ -14,7 +14,7 @@ const PROTOCOL_PAGE = document.body.dataset.page === "protocol";
 const SCRIPT_GROUPS = [
   ["analytics", "Analytics"],
   ["smoke", "API smoke"],
-  ["fork", "Fork test"],
+  ["fork", "On-chain test"],
   ["quote", "Quote"],
   ["swap", "Swap"],
 ];
@@ -90,17 +90,17 @@ function coverageBadge(row) {
     const chains = [...new Set((t.contracts || []).map(c => c.chain))];
     const steps = ((t.flow && t.flow.edges) || []).length;
     const title = [
-      `${contracts} contract address${contracts === 1 ? "" : "es"} on ${chains.length ? chains.join(", ") : t.chain || "—"}`,
+      `${contracts} contract address${contracts === 1 ? "" : "es"} on ${chains.length ? chains.map(chainName).join(", ") : chainName(t.chain) || "—"}`,
       `${features} tested feature${features === 1 ? "" : "s"}`,
-      steps ? `${steps}-step contract flow in the panel` : null,
+      steps ? `${steps}-step call flow` : null,
     ]
       .filter(Boolean)
       .join(" · ");
-    return `<span class="badge fork" title="${esc(title)}">Fork · ${features}f/${contracts}c</span>`;
+    return `<span class="badge fork" title="${esc(title)}">On-chain test</span>`;
   }
-  if (t.mode === "api") return `<span class="badge api" title="${esc(t.note || "No permissionless on-chain action.")}">API-only</span>`;
-  if (row.coverage === MONITOR) return '<span class="badge monitor">Has monitor</span>';
-  return '<span class="badge">Ranking only</span>';
+  if (t.mode === "api") return `<span class="badge api" title="${esc(t.note || "No permissionless on-chain action.")}">API check</span>`;
+  if (row.coverage === MONITOR) return '<span class="badge monitor">Monitored</span>';
+  return '<span class="badge">Ranked only</span>';
 }
 
 function signalsCell(row) {
@@ -108,7 +108,7 @@ function signalsCell(row) {
   if (!signals) return '<span class="chg">—</span>';
   const parts = [];
   if (isNum(signals.attention)) {
-    const title = `CoinGecko turnover percentile: ${Math.round(signals.attention * 100)}`;
+    const title = `CoinGecko attention percentile: ${Math.round(signals.attention * 100)}`;
     parts.push(`<span class="sig" title="${esc(title)}">A ${Math.round(signals.attention * 100)}</span>`);
   }
   if (isNum(signals.smartMoney)) {
@@ -240,7 +240,7 @@ function faucetsHtml(chainKey) {
 }
 
 function contractsHtml(contracts) {
-  if (!contracts || !contracts.length) return "<p>No contract addresses are configured for this protocol in the repo.</p>";
+  if (!contracts || !contracts.length) return "<p>No contract addresses are configured for this protocol.</p>";
   return `<ul class="chain-list">${contracts
     .map(
       item =>
@@ -255,7 +255,8 @@ function contractsHtml(contracts) {
 function inline(value) {
   return esc(value)
     .replace(/`([^`]+)`/g, "<code>$1</code>")
-    .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+    .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
+    .replace(/moves the right way/g, "moves as expected");
 }
 
 /**
@@ -276,7 +277,7 @@ function featuresHtml(features) {
         ? `<div class="params"><span>Set</span>${feature.params
             .map(
               param =>
-                `<code>${esc(param.env)}</code>${param.label ? ` ${esc(param.label)}` : ""}${
+                ` <code>${esc(param.env)}</code>${param.label ? ` ${esc(param.label)}` : ""}${
                   param.default ? ` <b>${esc(param.default)}</b>` : ""
                 }${param.unit ? ` ${esc(param.unit)}` : ""}`
             )
@@ -284,7 +285,7 @@ function featuresHtml(features) {
         : "";
       return `<li class="feature">
         <div class="feature-head"><b>${esc(feature.title || feature.script)}</b> ${badges}</div>
-        <p class="what">${inline(feature.action || "")}</p>
+        <p class="what">${inline(String(feature.action || "").replace(/ from `chains\.js`/g, "").replace(/ from chains\.js\b/g, ""))}</p>
         <p class="assert"><span class="pass">PASS when</span> ${inline(feature.assertion || "")}</p>
         ${params}
         ${commandRow(`npm run ${feature.script}`)}
@@ -558,9 +559,9 @@ function flowHtml(flow) {
   const notes = (flow.notes || []).length ? `<ul class="flow-notes">${flow.notes.map(note => `<li>${esc(note)}</li>`).join("")}</ul>` : "";
   const missing = (flow.missing || []).filter(item => item.status === "gap" || item.status === "failing-paused");
   const gaps = missing.length
-    ? `<p class="muted">${missing.length} feature${missing.length === 1 ? "" : "s"} still without a fork test: ${missing
+    ? `<p class="muted">${missing.length} feature${missing.length === 1 ? "" : "s"} still without an on-chain test: ${missing
         .map(item => `<b>${esc(item.feature)}</b>${item.how ? ` — ${esc(item.how)}` : ""}`)
-        .join("; ")}. Full matrix in <a href="https://github.com/xjjda22/defi-scripts/blob/main/docs/10-contract-flows.md" target="_blank" rel="noreferrer">docs/10</a>.</p>`
+        .join("; ")}. Full matrix in <a href="https://github.com/xjjda22/defi-scripts/blob/main/docs/10-contract-flows.md" target="_blank" rel="noreferrer">the coverage docs</a>.</p>`
     : "";
   return `<h3>Contract flow</h3>
     <p class="muted">${esc(flow.summary || "")}</p>
@@ -788,14 +789,14 @@ function wireFlow(root) {
 // Honest fork status: direct, linked (another product's test), failing-paused (fails on
 // purpose while the protocol is paused) or none (API-only).
 const STATUS_LABEL = {
-  direct: "Fork test",
-  linked: "Linked fork test",
-  "failing-paused": "Fork test · protocol paused",
-  none: "API-only",
+  direct: "On-chain test",
+  linked: "Linked test",
+  "failing-paused": "Test paused",
+  none: "No on-chain test",
 };
 function statusBadge(testing) {
   const status = testing.status || (testing.mode === "fork" ? "direct" : "none");
-  const cls = status === "direct" ? "fork" : status === "none" ? "api" : "warn";
+  const cls = status === "direct" ? "fork" : status === "none" ? "api" : "caution";
   const title =
     status === "linked"
       ? `Uses ${testing.via || "another product's test"}: ${testing.reason || ""}`
@@ -812,16 +813,16 @@ function protocolStatusBadge(row) {
 function disputedBadge(row) {
   if (!row.dataDisputed) return "";
   const title = (row.disputes || []).map(item => `${item.metric}: claim ${item.claim}, DefiLlama ${item.defillama}`).join(" · ");
-  return ` <span class="badge warn" title="${esc(title)}">data disputed</span>`;
+  return ` <span class="badge caution" title="${esc(title)}">Data disputed</span>`;
 }
 
 function detailHtml(row) {
-  const testing = row.testing || { mode: "api-only", note: "No fork test for this protocol.", recipe: null };
+  const testing = row.testing || { mode: "api-only", note: "No on-chain test is configured for this protocol.", recipe: null };
   const fork = testing.mode === "fork";
   const mode = statusBadge(testing) + protocolStatusBadge(row) + disputedBadge(row);
   const back = PROTOCOL_PAGE
-    ? `<a class="back" href="index.html">← Back to the board</a>`
-    : `<a class="back" href="#${state.tab === "overall" ? "" : `tab=${encodeURIComponent(state.tab)}`}">← Back to the board</a>`;
+    ? `<a class="back" href="index.html">← Back to Top 200</a>`
+    : `<a class="back" href="#${state.tab === "overall" ? "" : `tab=${encodeURIComponent(state.tab)}`}">← Back to Top 200</a>`;
   const app = testing.appUrl || row.appUrl;
   // The feature cards above already list every fork test, so keep them out of the
   // generic script list to avoid printing the same command twice.
@@ -845,12 +846,12 @@ function detailHtml(row) {
     )
     .join("");
   const commands = fork
-    ? `<h3>Fork commands</h3>
-       <p>RPC env var: <code>${esc(testing.rpcEnv || "")}</code> on ${esc(testing.chain || "")}. Start Anvil, then point that variable at the local fork. <code>FORK_BLOCK</code> pins the block.</p>
+    ? `<h3>Run the on-chain test</h3>
+       <p>RPC env var: <code>${esc(testing.rpcEnv || "")}</code> on ${esc(chainName(testing.chain))}. Start Anvil, then point that variable at the local fork. <code>FORK_BLOCK</code> pins the block.</p>
        ${(testing.commands || []).map(commandRow).join("")}
        ${testing.note ? `<p>${esc(testing.note)}</p>` : ""}`
-    : `<h3>API-only</h3>
-       <p>${esc(testing.note || "No fork test for this protocol.")}</p>
+    : `<h3>API check</h3>
+       <p>${esc(testing.note || "No on-chain test is configured for this protocol.")}</p>
        ${
          testing.recipe
            ? `<p><b>${esc(testing.recipe.title)}</b>. ${esc(testing.recipe.note || "")}</p>${(testing.recipe.commands || []).map(commandRow).join("")}`
@@ -858,14 +859,14 @@ function detailHtml(row) {
        }`;
   return `<article class="detail-card">
     ${back}
-    <p class="kicker">${esc(labelFor(row.category))} · ${esc(row.slug || "")}</p>
+    <p class="kicker">${esc(labelFor(row.category))} · Top 200</p>
     ${(t => {
       const c = (t.contracts || []).length;
       const f = (t.features || []).length;
       if (!c && !f) return "";
       const chains = [...new Set((t.contracts || []).map(x => x.chain))];
       return `<p class="muted">${c} contract address${c === 1 ? "" : "es"}${
-        chains.length ? ` on ${esc(chains.join(", "))}` : ""
+        chains.length ? ` on ${esc(chains.map(chainName).join(", "))}` : ""
       } · ${f} tested feature${f === 1 ? "" : "s"}</p>`;
     })(testing)}
     <h2 class="detail-title">${protocolIcon(row, "proto-icon-lg")}<span>${esc(row.name)}</span> ${mode}</h2>
@@ -880,20 +881,20 @@ function detailHtml(row) {
     </div>
     ${(row.protocolStatuses || []).length ? `<p class="muted"><b>Protocol state:</b> ${(row.protocolStatuses || []).map(item => `${esc(item.status)}${item.since ? ` since ${esc(item.since)}` : ""}: ${esc(item.reason)} (${esc(item.source)})`).join("; ")}. Scores are not adjusted.</p>` : ""}
     ${row.volumeNote ? `<p class="muted"><b>Volume:</b> ${esc(row.volumeNote)}</p>` : ""}
-    ${row.dataDisputed ? `<p class="muted"><b>Data disputed.</b> ${(row.disputes || []).map(item => `${esc(item.metric)}: claim ${esc(item.claim)} vs DefiLlama ${esc(item.defillama)} (${esc(item.recorded)})`).join("; ")}. The score still uses DefiLlama; see data/disputes.json.</p>` : ""}
+    ${row.dataDisputed ? `<p class="muted"><b>Data disputed.</b> ${(row.disputes || []).map(item => `${esc(item.metric)}: claim ${esc(item.claim)} vs DefiLlama ${esc(item.defillama)} (${esc(item.recorded)})`).join("; ")}. The score still uses DefiLlama.</p>` : ""}
     ${row.token ? `<p class="muted">${esc(row.token.symbol || "")} · market cap ${money(row.token.marketCap)} · 24h volume ${money(row.token.volume24h)}${isNum(row.token.turnover) ? ` · turnover ${(row.token.turnover * 100).toFixed(2)}%` : ""}</p>` : ""}
     <h3>TVL by chain</h3>
     ${chainTvlHtml(row)}
-    <h3>Test it</h3>
+    <h3>Testing</h3>
     ${
       fork
         ? featuresHtml(testing.features)
-        : `<p class="muted">No fork test is configured for this protocol, so there is nothing to run against a local fork here. The API recipes below are the closest check the repo has.</p>`
+        : `<p class="muted">This protocol has no on-chain test yet. The API checks below are the closest available verification.</p>`
     }
     ${scriptGroups(listed)}
     ${flowHtml(testing.flow)}
     ${commands}
-    <h3>Contracts</h3>
+    <h3>Contract addresses</h3>
     ${contractsHtml(testing.contracts)}
     <h3>Testnets &amp; faucets</h3>
     ${faucetsHtml(testing.chain || "ethereum")}
@@ -918,17 +919,17 @@ function renderDetail() {
   const status = $("status");
   if (status) status.hidden = true;
   if (!row) {
-    host.innerHTML = `<article class="detail-card"><a class="back" href="index.html">← Back to the board</a><h2>Protocol not found</h2><p>No row matches <code>${esc(state.protocol)}</code>.</p></article>`;
+    host.innerHTML = `<article class="detail-card"><a class="back" href="index.html">← Back to Top 200</a><h2>Protocol not found</h2><p>No protocol matches <code>${esc(state.protocol)}</code>.</p></article>`;
     return;
   }
-  document.title = `${row.name} · Trending DeFi`;
+  document.title = `${row.name} · Top 200 · DeFi Scripts`;
   if (state.view === "flow") {
     document.body.classList.add("flow-only-page");
     if (!row.testing || !row.testing.flow) {
-      host.innerHTML = `<article class="detail-card flow-only"><h2 class="detail-title">${protocolIcon(row, "proto-icon-lg")}<span>${esc(row.name)}</span></h2><p class="muted">No contract flow is configured for this row.</p></article>`;
+      host.innerHTML = `<article class="detail-card flow-only"><h2 class="detail-title">${protocolIcon(row, "proto-icon-lg")}<span>${esc(row.name)}</span></h2><p class="muted">No contract flow is configured for this protocol.</p></article>`;
       return;
     }
-    document.title = `${row.name} · Contract flow`;
+    document.title = `${row.name} · Contract flow · DeFi Scripts`;
     host.innerHTML = `<article class="detail-card flow-only">
       <p class="kicker">${esc(labelFor(row.category))} · ${esc(row.name)}</p>
       ${flowHtml(row.testing.flow)}
@@ -1086,24 +1087,52 @@ function renderTabs() {
   }
 }
 
+function shortDate(iso) {
+  const date = new Date(`${iso}T00:00:00Z`);
+  if (Number.isNaN(date.getTime())) return iso;
+  return date.toLocaleDateString(undefined, {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+// The ranking text is written in repo terms ("rows"). Translate it for the page.
+function summaryCopy(text) {
+  return String(text || "")
+    .replace(/Each row is a protocol family/g, "Each entry is a protocol family")
+    .replace(/\brows\b/g, "protocols")
+    .replace(/\brow\b/g, "protocol")
+    .replace(/CoinGecko turnover sits beside DefiLlama/g, "CoinGecko turnover is shown alongside DefiLlama")
+    .replace(/cannot jump the board on a capped growth number/g, "cannot jump up the ranking on a capped growth number")
+    .replace(/is off in this build/g, "is off in this release")
+    .replace(/no TVL 180 days ago/g, "no TVL six months ago");
+}
+
+function chainName(chain) {
+  const text = String(chain || "");
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
+}
+
 function coverageBits(coverage) {
   if (!coverage) return [];
   const f = coverage.forkable || {};
-  const snap = coverage.snapshot ? ` (snapshot ${coverage.snapshot.id})` : "";
+  const snap = coverage.snapshot ? ` (as of ${shortDate(coverage.snapshot.id)})` : "";
   return [
-    [`${f.direct ?? "—"}/${coverage.forkableRows ?? "—"}`, `forkable rows with a direct fork test${snap}`],
-    [`${(coverage.top50 || {}).direct ?? "—"}/50`, "top 50 direct"],
-    [(coverage.nonForkable || {}).rows ?? "—", "on non-forkable chains"],
+    [`${f.direct ?? "—"}/${coverage.forkableRows ?? "—"}`, `on-chain test coverage${snap}`],
+    [`${(coverage.top50 || {}).direct ?? "—"}/50`, "top 50 tested"],
+    [(coverage.nonForkable || {}).rows ?? "—", "on chains without test support"],
   ];
 }
 
 function renderStats() {
   const stats = state.data.stats || {};
   const bits = [
-    [stats.overall ?? (state.data.overall || []).length, "in the top 200"],
+    [stats.overall ?? (state.data.overall || []).length, "protocols ranked"],
     ...coverageBits(stats.coverage),
-    [stats.rankingOnly ?? "—", "ranking only"],
-    [stats.newInTop200 ?? "—", "new in 6 months"],
+    [stats.rankingOnly ?? "—", "ranked only"],
+    [stats.newInTop200 ?? "—", "new in six months"],
   ];
   const host = $("stats");
   host.hidden = false;
@@ -1130,27 +1159,27 @@ function renderMethod() {
     .join(" · ");
   const sources = (m.sources || [])
     .map(source => {
-      const stateLabel = !source.enabled ? "off" : source.available ? `${source.matched} rows` : "unavailable";
+      const stateLabel = !source.enabled ? "off" : source.available ? `${source.matched} protocols matched` : "unavailable";
       const preview = source.available && source.public === false ? " (preview)" : "";
       return `${esc(source.label || source.id)} ${esc(stateLabel)}${preview}`;
     })
     .join(" · ");
   const sourceLine = sources
-    ? `<li>External sources: ${sources}. ${esc(m.tokenCoverage || 0)} rows have a mapped token; the rest score a neutral 0.5.</li>`
+    ? `<li>External sources: ${sources}. ${esc(m.tokenCoverage || 0)} protocols have a mapped token; the rest score a neutral 0.5.</li>`
     : "";
   const legends = [];
   if (isNum(w.attention)) legends.push("<b>A</b> = CoinGecko attention percentile");
   if (isNum(w.smartMoney)) legends.push("<b>S</b> = Nansen smart-money percentile");
   const legendLine = legends.length
-    ? `<li>Signals column: ${legends.join(", ")}. A dash means the row has no mapped token.</li>`
+    ? `<li>Signals column: ${legends.join(", ")}. A dash means the protocol has no mapped token.</li>`
     : "";
   $("method-body").innerHTML = `
-    <p>${esc(m.summary || "")}</p>
+    <p>${esc(summaryCopy(m.summary))}</p>
     <ul>
       <li>Weights: ${weightLine}.</li>
       ${sourceLine}
       ${legendLine}
-      <li>${esc(state.data.stats && state.data.stats.eligible)} protocol rows scored. Floors: TVL ${money(floors.minTvlUsd)}, or 30-day fees ${money(floors.minFees30dUsd)}, or 30-day volume ${money(floors.minVolume30dUsd)}. Excluded: ${esc((m.excluded || []).join(", "))}.</li>
+      <li>${esc(state.data.stats && state.data.stats.eligible)} protocols scored. Floors: TVL ${money(floors.minTvlUsd)}, or 30-day fees ${money(floors.minFees30dUsd)}, or 30-day volume ${money(floors.minVolume30dUsd)}. Excluded: ${esc((m.excluded || []).join(", "))}.</li>
     </ul>`;
 }
 
@@ -1165,7 +1194,7 @@ function renderTable() {
     note.textContent = "";
   }
   const rows = visibleRows();
-  $("status").textContent = rows.length ? `${rows.length} shown` : "No protocols match.";
+  $("status").textContent = rows.length ? `${rows.length} protocols` : "No protocols match.";
   $("rows").innerHTML = rows
     .map(row => {
       const gecko = geckoUrl(row);
@@ -1203,11 +1232,23 @@ function renderTable() {
 function generatedLabel(iso) {
   if (!iso) return "";
   const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return `Generated ${iso}`;
-  const local = date.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+  if (Number.isNaN(date.getTime())) return `Last updated ${iso}`;
+  const local = date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZoneName: "short",
+  });
   const hours = (Date.now() - date.getTime()) / 3600000;
-  const age = hours < 48 ? `${Math.max(0, Math.round(hours))} h old` : `${(hours / 24).toFixed(1)} days old: STALE, scores may not reflect current protocol state`;
-  return `Data generated ${local} (your time), ${iso.slice(0, 16).replace("T", " ")} UTC · ${age}.`;
+  const age =
+    hours < 1
+      ? "less than an hour ago"
+      : hours < 48
+        ? `${Math.max(1, Math.round(hours))} hours ago`
+        : `${(hours / 24).toFixed(1)} days ago — data may be stale`;
+  return `Last updated ${local} · ${age}.`;
 }
 
 function readHash() {
@@ -1323,18 +1364,19 @@ async function init() {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     state.data = await response.json();
   } catch (err) {
-    $("lede").textContent = `Could not load data.json (${err.message}). Run npm run showcase:build, then npm run showcase:serve.`;
+    $("lede").textContent = `Ranking data is unavailable (${err.message}). Rebuild it with npm run showcase:build, then refresh.`;
     return;
   }
   const stats = state.data.stats || {};
   const methodology = state.data.methodology || {};
   const signalCount = (stats.signalsEnabled || []).length;
-  const signalText = signalCount
-    ? signalCount === 2
-      ? "token attention and smart-money flow, "
-      : "an external signal, "
-    : "";
-  $("lede").textContent = `The top ${stats.overall || 200} DeFi protocols by a six-month trend score: size, TVL growth in percent and in dollars, fees and volume momentum${signalText ? `, ${signalText.trim().replace(/,$/, "")}` : ""}.`;
+  const signals =
+    signalCount === 2
+      ? "token attention and smart-money flow"
+      : signalCount === 1
+        ? "market attention"
+        : "";
+  $("lede").textContent = `The ${stats.overall || 200} DeFi protocols with the strongest six-month trend, ranked by size, TVL growth, fee and volume momentum${signals ? `, plus ${signals}` : ""}.`;
   $("generated").textContent = generatedLabel(state.data.generatedAt);
   {
     const hours = (Date.now() - new Date(state.data.generatedAt).getTime()) / 3600000;
@@ -1349,7 +1391,7 @@ async function init() {
         const branding = SOURCE_META[source.id] || {};
         const url = source.url || branding.url;
         const name = source.name || branding.name;
-        const attribution = String(source.attribution);
+        const attribution = String(source.attribution).replace(/^Token market data by /, "Token data from ");
         const anchor = target =>
           `<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(target)}</a>`;
         if (!url) return esc(attribution);
@@ -1359,7 +1401,7 @@ async function init() {
         return anchor(attribution);
       })
       .join(". ");
-    const defillama = 'Core market data from <a href="https://defillama.com" target="_blank" rel="noreferrer">DefiLlama</a>.';
+    const defillama = 'Market data from <a href="https://defillama.com" target="_blank" rel="noreferrer">DefiLlama</a>.';
     sourcesLine.innerHTML = credits ? `${credits}. ${defillama}` : defillama;
   }
   const warn = $("warn");
@@ -1371,7 +1413,7 @@ async function init() {
   readHash();
   if (PROTOCOL_PAGE) {
     const lede = $("lede");
-    if (lede) lede.textContent = "Protocol test panel.";
+    if (lede) lede.textContent = "On-chain tests, scripts, and contract addresses for this protocol.";
     renderDetail();
     bind();
     return;

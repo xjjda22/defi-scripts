@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Trending DeFi · top 200</title>
+    <title>Trending DeFi — Top 200 · DeFi Scripts</title>
     <meta
       name="description"
-      content="Top 200 trending DeFi protocols by a 6-month score: size, TVL growth, TVL added, fees and volume momentum."
+      content="The 200 DeFi protocols with the strongest six-month trend, ranked by size, TVL growth, fees, volume, and market attention."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,12 +18,19 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2314160f'/%3E%3Cpath d='M6 22l6-7 5 4 9-11' stroke='%23dff26a' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="styles.css?v=14" />
+    <link rel="stylesheet" href="styles.css?v=18" />
   </head>
   <body>
     <header class="mast">
       <div class="mast-copy">
-        <p class="kicker">defi-scripts · 6-month score</p>
+        <p class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#14160f"/><path d="M6 22l6-7 5 4 9-11" stroke="#dff26a" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="brand-name">DeFi Scripts</span>
+          <span class="brand-divider">/</span>
+          <span class="brand-product">Top 200</span>
+        </p>
         <h1>Trending DeFi</h1>
         <p class="lede" id="lede">Loading the ranking…</p>
       </div>
@@ -34,7 +41,7 @@
       <div class="tabs" id="tabs" role="tablist" aria-label="Categories"></div>
       <label class="search">
         <span class="sr">Search protocols</span>
-        <input id="search" type="search" placeholder="Search name or slug" autocomplete="off" />
+        <input id="search" type="search" placeholder="Search protocols" autocomplete="off" />
       </label>
     </div>
 
@@ -46,7 +53,7 @@
 
     <div class="table-wrap" id="table-wrap">
       <table id="board" role="tabpanel">
-        <caption class="sr">Trending DeFi protocols. Column headers sort the table.</caption>
+        <caption class="sr">Top 200 DeFi protocols. Select a column header to sort.</caption>
         <thead>
           <tr>
             <th data-sort="rank" aria-sort="ascending"><button type="button">#</button></th>
@@ -56,8 +63,8 @@
             <th data-sort="tvlChange6m" class="num"><button type="button">6-month TVL</button></th>
             <th data-sort="tvlAdded6m" class="num"><button type="button">6-month added</button></th>
             <th data-sort="fees30d" class="num"><button type="button">30d fees</button></th>
-            <th class="num col-sig"><span title="A = CoinGecko turnover percentile, S = Nansen smart-money percentile">Signals</span></th>
-            <th data-sort="coverage"><button type="button" title="Contracts on file and features with an Anvil fork test">Contracts</button></th>
+            <th class="num col-sig"><span title="A = CoinGecko attention percentile, S = Nansen smart-money percentile">Signals</span></th>
+            <th data-sort="coverage"><button type="button" title="Contract addresses on file and features with an on-chain test">Testing</button></th>
             <th class="col-scripts" scope="col">Scripts</th>
           </tr>
         </thead>
@@ -74,10 +81,10 @@
       <p id="generated"></p>
       <p id="sources-line"></p>
       <p>
-        Script links open the source on GitHub.
+        Each script opens its source on GitHub.
         <a href="https://github.com/xjjda22/defi-scripts/blob/main/docs/03-showcase-ranking.md">Methodology</a>
       </p>
     </footer>
-    <script src="app.js?v=18"></script>
+    <script src="app.js?v=24"></script>
   </body>
 </html>

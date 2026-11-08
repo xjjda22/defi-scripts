@@ -50,6 +50,20 @@ code {
   font-size: 12px;
   color: var(--accent);
 }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--accent);
+}
+.brand-mark { display: inline-flex; width: 20px; height: 20px; flex: none; }
+.brand-mark svg { display: block; width: 100%; height: 100%; }
+.brand-name { font-weight: 500; }
+.brand-divider, .brand-product { color: var(--muted); }
 h1 {
   margin: 0;
   font-family: var(--serif);
@@ -278,7 +292,10 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   gap: 6px;
   border-radius: 999px;
   padding: 3px 8px;
+  font-family: var(--sans);
   font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
   white-space: nowrap;
   background: var(--chip);
   color: var(--ink);
@@ -430,7 +447,7 @@ body.flow-lock { overflow: hidden; }
 .chain-list code { overflow-wrap: anywhere; }
 .badge.api { background: rgba(240, 153, 122, 0.16); color: var(--down); }
 .badge.fork { background: rgba(223, 242, 106, 0.16); color: var(--accent); }
-.badge.warn { background: rgba(255, 196, 87, 0.16); color: #ffc457; }
+.badge.caution { background: rgba(255, 196, 87, 0.16); color: #ffc457; }
 .links { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 18px; }
 /* Product links are pills: a glyph, the name, and an external arrow. The old bare underlined
    text wrapped badly next to the score facts and gave no hint that it leaves the page. */
