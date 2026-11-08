@@ -1,0 +1,3313 @@
+{
+  "schemaVersion": 1,
+  "recordedDateMYT": "2026-11-08",
+  "scope": "Measured W1 primitive receipts, not full protocol coverage; no W2/W3 execution claimed.",
+  "workerSourceCommits": [
+    "94acb3130a68520d320c11d2be66caf567af05da",
+    "c7ec3bec37f66941e3a168fe9bbda44d86482fe4",
+    "a89c31f04a5f3477aaf98305bc447ef774662e93",
+    "cf4a193b546596caae0b50361213328aad3d847c"
+  ],
+  "commonSourceHashes": {
+    "test/contracts/protocols/_shared/ProtocolTestBase.sol": "76bc3f98d8a8c5ee42ab02b3d12313143204c1717356558b2d25d4a719b7fd90",
+    "test/contracts/protocols/_shared/Addresses.sol": "8762fb69ab54d62b1c0b1eebed6a7fb547e45eba779494ef48f2ff12ff14f544",
+    "test/contracts/helpers/TestBase.sol": "f34ed3346130e0f268fc87be40cfa063f130bd55108247fb9372f09ffbfd0ef4",
+    "foundry.toml": "4ff72bb400f6ffcf9983a3f2952a3652ce65ca6e6bdbf1c9077b165bf979d910"
+  },
+  "workerReceipts": [
+    {
+      "slug": "layerzero-v2",
+      "file": "test/contracts/protocols/layerzero-v2/LayerZeroV2.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "4e50f86e30f4a69e63ef2e683f249a61b8f1a89128dac6ede1422634ecc4f256",
+      "measurements": [
+        "outbound nonce before: 38627",
+        "outbound nonce after: 38628",
+        "USDT locked: 100000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 10.4653
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.1821
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/layerzero-v2/LayerZeroV2.fork.t.sol": "4e50f86e30f4a69e63ef2e683f249a61b8f1a89128dac6ede1422634ecc4f256",
+        "test/contracts/protocols/layerzero-v2/interfaces/ILayerZero.sol": "160d2792cb52f48932a738ef3c1d0ad9578047c50119d150e407d4308016b9b0"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "sparklend",
+      "file": "test/contracts/protocols/sparklend/SparkLend.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "fff2cc3421a7a8d7e21c4045fc5cfe55c9c3f22d7edf814518faaa8289b645d7",
+      "measurements": [
+        "USDC supplied: 100000000",
+        "aUSDC minted: 100000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 24.3695
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0835
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/sparklend/SparkLend.fork.t.sol": "fff2cc3421a7a8d7e21c4045fc5cfe55c9c3f22d7edf814518faaa8289b645d7",
+        "test/contracts/protocols/sparklend/interfaces/ISpark.sol": "521b589255cefa85702d33b354bf3471ed66f869977fd90d4ffa6fe18f283b05"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "ethena",
+      "file": "test/contracts/protocols/ethena/Ethena.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "4ffb1c83e4e86ab24abaab4227c3c7e73d7f42739b7f6db5ee2a9d826b8925cb",
+      "measurements": [
+        "USDe staked: 100000000000000000000",
+        "sUSDe minted: 79552746860503932265"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 8.5582
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0768
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/ethena/Ethena.fork.t.sol": "4ffb1c83e4e86ab24abaab4227c3c7e73d7f42739b7f6db5ee2a9d826b8925cb",
+        "test/contracts/protocols/ethena/interfaces/IEthena.sol": "605ff205b63b9c24d05815f90431ed0e88492553046d92b3f8a55897096cd8c0"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "sentora-curator",
+      "file": "test/contracts/protocols/sentora-curator/Sentora.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "99690d538850160fd62f6f13a968793e97d4cf3e34b81dd93735bbe14290f3d9",
+      "measurements": [
+        "cached RLUSD assets before: 407042101108796826704413078",
+        "cached RLUSD assets after: 407045029447823612584074174",
+        "interest settled (RLUSD wei): 2928339026785879661096",
+        "fee shares minted: 288126975960335940238"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.2256
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.2201
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/sentora-curator/Sentora.fork.t.sol": "99690d538850160fd62f6f13a968793e97d4cf3e34b81dd93735bbe14290f3d9",
+        "test/contracts/protocols/sentora-curator/interfaces/ISentora.sol": "b745de97e78a683e9b3e28338202df2ed4d05f0c51b5388b44108edced0d3574"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "hyperliquid-bridge",
+      "file": "test/contracts/protocols/hyperliquid-bridge/HyperliquidBridge.fork.t.sol",
+      "chain": "arbitrum",
+      "blockNumber": 522239393,
+      "sha256": "dd200480cee8aec85456350269bbffc8dda64ee6cb5c42edfc0bc6f11fda4e69",
+      "measurements": [
+        "EVM block number: 26366830",
+        "requested L2 fork pin: 522239393",
+        "escrow USDC delta: 10000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.2131
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0718
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/hyperliquid-bridge/HyperliquidBridge.fork.t.sol": "dd200480cee8aec85456350269bbffc8dda64ee6cb5c42edfc0bc6f11fda4e69",
+        "test/contracts/protocols/hyperliquid-bridge/interfaces/IHyperliquidBridge.sol": "473668328eb2ecd49fe3c82db09d6ec2b3b15597fa0432ceadc715f75c372eaa"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x53e9deef616860962f5beb844f38f7a36504cb5bfccddf349c0c8c1709160325"
+    },
+    {
+      "slug": "veda",
+      "file": "test/contracts/protocols/veda/Veda.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "1da3049853d630e9092fe8f433e327b9d6946c04c35911951bbcfbacad6c25d7",
+      "measurements": [
+        "WETH deposited into shared Veda/Nonce vault: 10000000000000000",
+        "Liquid ETH shares minted: 9004726812624452"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 10.7555
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0874
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/veda/Veda.fork.t.sol": "1da3049853d630e9092fe8f433e327b9d6946c04c35911951bbcfbacad6c25d7",
+        "test/contracts/protocols/veda/interfaces/IVeda.sol": "a2ca24ab4504aeb0f21cd032c28fe2dc6a9bc5cae30f6f981af4b367fee957ed"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "steakhouse-financial",
+      "file": "test/contracts/protocols/steakhouse-financial/SteakhouseFinancial.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "db816565b73324879dfaac2469304756cce710cf64111e07c2524c437d46a7ea",
+      "measurements": [
+        "fee shares minted: 1628064535252680180",
+        "USDC deposited: 100000000",
+        "shares minted: 87152829664869978845"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 21.7611
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0763
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/steakhouse-financial/SteakhouseFinancial.fork.t.sol": "db816565b73324879dfaac2469304756cce710cf64111e07c2524c437d46a7ea",
+        "test/contracts/protocols/steakhouse-financial/interfaces/IVault.sol": "9bda1dd358e44dd3f2b9e50770834b3d7d7f3644d30ac51876697d5ecc97ab02"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "ccip",
+      "file": "test/contracts/protocols/ccip/Ccip.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "d53809244c6a7b9d1addaa32bb7e26dcc2082a80c4c62a5cbf2f9058c592658f",
+      "measurements": [
+        "LINK locked: 1000000000000000000",
+        "ETH fee paid: 227384233157793"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 26.2568
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0753
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/ccip/Ccip.fork.t.sol": "d53809244c6a7b9d1addaa32bb7e26dcc2082a80c4c62a5cbf2f9058c592658f",
+        "test/contracts/protocols/ccip/interfaces/ICcip.sol": "5ca977d4ab05834438aab14f0680e2da630eaaac69ff61fb0c0b24c2a46c79d2"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "maple",
+      "file": "test/contracts/protocols/maple/Maple.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "8ff936456578b5de6a52ff2935988b63d650ce84086db34cc08fde6fbc8bffea",
+      "measurements": [
+        "syrupUSDC total supply (read-only): 771432502497933",
+        "USDC per 1e6 shares (read-only): 1191883"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 10.5054
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0745
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/maple/Maple.fork.t.sol": "8ff936456578b5de6a52ff2935988b63d650ce84086db34cc08fde6fbc8bffea",
+        "test/contracts/protocols/maple/interfaces/IMaple.sol": "508ea92164cb54d5c5eaa5ceef2b3b6082dae118a27db1008371d2a915b13f64"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "re",
+      "file": "test/contracts/protocols/re/Re.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "959c64213d0e294f05de049585579104b2a99171cf8f34d8b96f5283af2f581c",
+      "measurements": [
+        "reUSD: 320406443346881915436284614",
+        "reUSDe: 20471878759381985255377948"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 6.9538
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0768
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/re/Re.fork.t.sol": "959c64213d0e294f05de049585579104b2a99171cf8f34d8b96f5283af2f581c",
+        "test/contracts/protocols/re/interfaces/IRestrictedToken.sol": "ba6fc4dac9cee02a0eef4cc07a879435347995cde6dec0dc268beb62939c46f9"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "binance-staked-eth",
+      "file": "test/contracts/protocols/binance-staked-eth/Wbeth.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "da8fd6a831cbf6f0c2df0bec9f945cd5be1b7618c69a353ac249a1bea11e80c6",
+      "measurements": [
+        "wBETH minted: 900720313132899095",
+        "ETH locked: 1000000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 5.462
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.075
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/binance-staked-eth/Wbeth.fork.t.sol": "da8fd6a831cbf6f0c2df0bec9f945cd5be1b7618c69a353ac249a1bea11e80c6",
+        "test/contracts/protocols/binance-staked-eth/interfaces/IWbeth.sol": "2ba54e95409fe24e981aa1617f5f6e919136760ec0880ffab696eb82db27285c"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "rockawayx",
+      "file": "test/contracts/protocols/rockawayx/Rockawayx.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "2f06bb33694fec33b0ebcb452eabe65c29a565ce1f0871b2fc8c755850cb131c",
+      "measurements": [
+        "USDC deposited: 100000000",
+        "shares minted: 96354792794393198649"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 41.6302
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.2519
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/rockawayx/Rockawayx.fork.t.sol": "2f06bb33694fec33b0ebcb452eabe65c29a565ce1f0871b2fc8c755850cb131c",
+        "test/contracts/protocols/rockawayx/interfaces/IVault.sol": "7fd19a9d715176a4a3440b4da346c2690a732cde8f1b1f4df5dd90fe35363917"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "polygon-bridge",
+      "file": "test/contracts/protocols/polygon-bridge/PolygonBridge.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "7ce7aa6ce0141d5ee454b975592a8c22a36aee49e232650cce5a568f4b0b1a1f",
+      "measurements": [
+        "predicate ETH delta: 50000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.1546
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0722
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/polygon-bridge/PolygonBridge.fork.t.sol": "7ce7aa6ce0141d5ee454b975592a8c22a36aee49e232650cce5a568f4b0b1a1f",
+        "test/contracts/protocols/polygon-bridge/interfaces/IPolygonBridge.sol": "97367bec4fce03f81bd4d019aa2b2556648c553d4697468a7a4d70aca10ea761"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "plume-vaults",
+      "file": "test/contracts/protocols/plume-vaults/PlumeVaults.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "a1d19098764bd3b515a551ad9d042a90444ca49c8c27a8ea1da06be0017b1ff4",
+      "measurements": [
+        "nALPHA: 3585625943039",
+        "nBASIS: 100880819338",
+        "nALPHA vault total assets (read-only): 4057791924096"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 8.9234
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.155
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/plume-vaults/PlumeVaults.fork.t.sol": "a1d19098764bd3b515a551ad9d042a90444ca49c8c27a8ea1da06be0017b1ff4",
+        "test/contracts/protocols/plume-vaults/interfaces/IRestrictedToken.sol": "869714eb00d3d2d7a0749631d243239e224f0e6d3224bf21bf978434adbdfb88"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "nonce-capital",
+      "file": "test/contracts/protocols/nonce-capital/NonceCapital.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "7601596bbe3e45ae32107ef9d5e6a0171f215debb5a0328519e1d1c64d4b552f",
+      "measurements": [
+        "WETH deposited into shared Veda/Nonce vault: 10000000000000000",
+        "Liquid ETH shares minted: 9004726812624452"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 2.5905
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0709
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/nonce-capital/NonceCapital.fork.t.sol": "7601596bbe3e45ae32107ef9d5e6a0171f215debb5a0328519e1d1c64d4b552f"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "tether",
+      "file": "test/contracts/protocols/tether/Tether.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "72f129b9c1dd21d64b11bab77625dc3576fb029e4460a2dbd9e68233dbe84eef",
+      "measurements": [
+        "USDT sender debit: 100000000",
+        "USDT receiver credit: 100000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 2.3243
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.07
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/tether/Tether.fork.t.sol": "72f129b9c1dd21d64b11bab77625dc3576fb029e4460a2dbd9e68233dbe84eef",
+        "test/contracts/protocols/tether/interfaces/ITether.sol": "9d478f8855f4084a31db37ddcbfc1e0d23e4a1aae402b13e12d4cfed57b093b8"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "base-bridge",
+      "file": "test/contracts/protocols/base-bridge/BaseBridge.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "22321f3c955e62eaf92c42665d61dace0963f34fc1a70c25a80773ca4ab16b5b",
+      "measurements": [
+        "source-chain ETH locked: 50000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0856
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0665
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/base-bridge/BaseBridge.fork.t.sol": "22321f3c955e62eaf92c42665d61dace0963f34fc1a70c25a80773ca4ab16b5b"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "upshift",
+      "file": "test/contracts/protocols/upshift/Upshift.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "6dc8f812b192c93e33054c4853799dc8c97653c1899847fa12f8cbe4add60d7f",
+      "measurements": [
+        "sentUSD shares minted: 95088416",
+        "USDC spent: 100000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0958
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0799
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/upshift/Upshift.fork.t.sol": "6dc8f812b192c93e33054c4853799dc8c97653c1899847fa12f8cbe4add60d7f"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "concrete",
+      "file": "test/contracts/protocols/concrete/Concrete.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "d284e63ca0201d664eeaef52c00c665cbfedcc611acc7fc083588e9c64df6a1a",
+      "measurements": [
+        "ctDefiUSDT shares minted: 93237553",
+        "USDT spent: 100000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0757
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0657
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/concrete/Concrete.fork.t.sol": "d284e63ca0201d664eeaef52c00c665cbfedcc611acc7fc083588e9c64df6a1a"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "lighter-bridge",
+      "file": "test/contracts/protocols/lighter-bridge/LighterBridge.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "22de7c6f5291382b4311438a9c530d2abd6bdb4c557efcd952e8710b7ef29e95",
+      "measurements": [
+        "Lighter USDC increase: 20000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0793
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.075
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/lighter-bridge/LighterBridge.fork.t.sol": "22de7c6f5291382b4311438a9c530d2abd6bdb4c557efcd952e8710b7ef29e95"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "defi-saver-asset-management",
+      "file": "test/contracts/protocols/defi-saver-asset-management/DefiSaver.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "4e25f5c7d858dc79e8975f459eee4859c1ba869192e239e74e4f760cda476930",
+      "measurements": [
+        "DFS recipe WETH supplied: 1000000000000000000",
+        "wallet aWETH minted: 999999999999999999"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0852
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0675
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/defi-saver-asset-management/DefiSaver.fork.t.sol": "4e25f5c7d858dc79e8975f459eee4859c1ba869192e239e74e4f760cda476930"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "tornado-cash",
+      "file": "test/contracts/protocols/tornado-cash/TornadoCash.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "1f87da777085ec74e0c61953c82a5738d34c93d4665d1a7ba6f971d0e5310ac1",
+      "measurements": [
+        "pool ETH increase: 100000000000000000",
+        "Merkle leaf index: 76220"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.1024
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.084
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/tornado-cash/TornadoCash.fork.t.sol": "1f87da777085ec74e0c61953c82a5738d34c93d4665d1a7ba6f971d0e5310ac1"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "robinhood-chain-bridge",
+      "file": "test/contracts/protocols/robinhood-chain-bridge/RobinhoodBridge.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "8f4b6ae3c236e6a9d36f78b685edaf7f8ae38ac926c730e0e49ac9ba2f0c4f2d",
+      "measurements": [
+        "bridge ETH increase: 50000000000000000"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0838
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0777
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/robinhood-chain-bridge/RobinhoodBridge.fork.t.sol": "8f4b6ae3c236e6a9d36f78b685edaf7f8ae38ac926c730e0e49ac9ba2f0c4f2d"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "hyperithm",
+      "file": "test/contracts/protocols/hyperithm/Hyperithm.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "b284726d0b3e74d4d91c24fec12a9842e466cdbb2485bc57539a5f345428957e",
+      "measurements": [
+        "accrued fee shares minted: 97690311448763175847",
+        "shares minted: 93587065188699408776",
+        "USDC share value: 99999999"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.094
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0736
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/hyperithm/Hyperithm.fork.t.sol": "b284726d0b3e74d4d91c24fec12a9842e466cdbb2485bc57539a5f345428957e"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "gauntlet",
+      "file": "test/contracts/protocols/gauntlet/Gauntlet.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "96942c72424e562cd71d96de98c6618257cf1be1123693fe1b473e645a0d3893",
+      "measurements": [
+        "performance-fee shares minted: 1274095678894901285",
+        "shares minted: 87889033520519326210",
+        "USDC share value: 99999999"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0963
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0731
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/gauntlet/Gauntlet.fork.t.sol": "96942c72424e562cd71d96de98c6618257cf1be1123693fe1b473e645a0d3893"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "aera",
+      "file": "test/contracts/protocols/aera/Aera.fork.t.sol",
+      "chain": "base",
+      "blockNumber": 54552643,
+      "sha256": "08cfeef740638bc26b2a70b7ecd9808ebb74932885bfb9b6914bd0e939e93ee7",
+      "measurements": [
+        "USDC escrowed then refunded: 100000000",
+        "minimum units requested: 88936240050831187096"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.07
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.066
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/aera/Aera.fork.t.sol": "08cfeef740638bc26b2a70b7ecd9808ebb74932885bfb9b6914bd0e939e93ee7"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0xc8fedd3aecded996c815753ac42379c74bbac438a56efd51f91ec0d5d0aa01ab"
+    },
+    {
+      "slug": "opentrade",
+      "file": "test/contracts/protocols/opentrade/OpenTrade.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "2d9333d19f03ca62ddb41ac12d0b2d4360268d8b4df48ae6052a3e9b1fee249a",
+      "measurements": [
+        "XTBT supply: 60263425069",
+        "XTBT total assets: 66695913405",
+        "USDC per 1 XTBT: 1106739",
+        "accrued assets over shares: 6432488336"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0876
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0765
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/opentrade/OpenTrade.fork.t.sol": "2d9333d19f03ca62ddb41ac12d0b2d4360268d8b4df48ae6052a3e9b1fee249a"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "coinbase-wrapped-staked-eth",
+      "file": "test/contracts/protocols/coinbase-wrapped-staked-eth/Cbeth.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "30f883680d8e85ffafcface40d4f8ff6f98d10eb61e7aa5f32106fd3f1bfba29",
+      "measurements": [
+        "cbETH exchange rate: 1143516358079014311",
+        "cbETH supply: 393750601365061869784889",
+        "accrued backing over shares: 56509652299335440468893"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0694
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0611
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/coinbase-wrapped-staked-eth/Cbeth.fork.t.sol": "30f883680d8e85ffafcface40d4f8ff6f98d10eb61e7aa5f32106fd3f1bfba29"
+      },
+      "coverageStatus": "blocked",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "curve-finance",
+      "file": "test/contracts/protocols/curve-finance/CurveLlamalend.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "81a4da89a5b2878ca86575883f06eb42cd8f9f7830a984d93f339798a5a8cf0a",
+      "measurements": [
+        "Llamalend shares minted: 90191000231653259501886",
+        "crvUSD share value: 99999999999999999999"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0813
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0679
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/curve-finance/CurveLlamalend.fork.t.sol": "81a4da89a5b2878ca86575883f06eb42cd8f9f7830a984d93f339798a5a8cf0a"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "etherfi-borrowing-market",
+      "file": "test/contracts/protocols/etherfi-borrowing-market/EtherfiCash.fork.t.sol",
+      "chain": "optimism",
+      "blockNumber": 159251063,
+      "sha256": "31278f53c10a1bd13d4c55b483eeb7a0bc4c6d6cfd8f7361875cc14bdecbbfca",
+      "measurements": [
+        "Hub USDC increase: 100000000",
+        "supplied USDC assets: 99999999",
+        "supply shares minted: 99566071"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0625
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0625
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/etherfi-borrowing-market/EtherfiCash.fork.t.sol": "31278f53c10a1bd13d4c55b483eeb7a0bc4c6d6cfd8f7361875cc14bdecbbfca"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x67f5423f59918ef8c5a3910daca0b160dea8eefc1b720396eb0c2e1a32644584"
+    },
+    {
+      "slug": "obol",
+      "file": "test/contracts/protocols/obol/Obol.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "0a06eb0720727ab95f14a7d225083705423a73d72370b708243e6e3311942109",
+      "measurements": [
+        "OBOL staked: 922058161977852557047",
+        "stOBOL minted: 734714306716429792446",
+        "stOBOL supply increase: 734714306716429792446"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0884
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0799
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/obol/Obol.fork.t.sol": "0a06eb0720727ab95f14a7d225083705423a73d72370b708243e6e3311942109"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    },
+    {
+      "slug": "pancakeswap",
+      "file": "test/contracts/protocols/pancakeswap/Pancakeswap.fork.t.sol",
+      "chain": "ethereum",
+      "blockNumber": 26363300,
+      "sha256": "c8c48f36ed90cf757c3e19c7e4450a245c27d6daf8471c61e97a6089ea20dea8",
+      "measurements": [
+        "WETH spent: 50000000000000000",
+        "USDC received: 111813932"
+      ],
+      "runs": [
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0902
+        },
+        {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0,
+          "exitCode": 0,
+          "wallSeconds": 0.0773
+        }
+      ],
+      "sourceHashes": {
+        "test/contracts/protocols/pancakeswap/Pancakeswap.fork.t.sol": "c8c48f36ed90cf757c3e19c7e4450a245c27d6daf8471c61e97a6089ea20dea8"
+      },
+      "coverageStatus": "accepted",
+      "blockHash": "0x2f7a7c8278e78c2fe4d5be4f11c5b869eae3b681d8e759a857fec2bfe8dcc600"
+    }
+  ],
+  "exploratoryAttempts": [
+    {
+      "slug": "steakhouse-financial",
+      "outcome": "cold execution timed out",
+      "wallSeconds": 60.0488,
+      "sourceUnchangedOnRetry": true,
+      "successfulSuccessiveRetrySeconds": [
+        21.7611,
+        0.0763
+      ],
+      "observedProtocolAssertionFailure": false
+    },
+    {
+      "slug": "ondo-finance",
+      "outcome": "unaccepted purchase/wrap/unwrap prototype; no passing result",
+      "manualTerminationSeconds": 81.471,
+      "subsequentTimeoutBudgetSeconds": [
+        60,
+        60
+      ],
+      "delayStageOrCause": "not established",
+      "generatedAddressBookReady": false
+    },
+    {
+      "scope": "pre-review integration",
+      "outcome": "first aggregate passed 35/0/0 on superseded sources; second aggregate intentionally interrupted for Sentora/event changes; neither proves final reviewed sources"
+    }
+  ],
+  "noRpcTwice": {
+    "schemaVersion": 1,
+    "runs": [
+      {
+        "iteration": 1,
+        "PASS": 0,
+        "FAIL": 0,
+        "SKIP": 36
+      },
+      {
+        "iteration": 2,
+        "PASS": 0,
+        "FAIL": 0,
+        "SKIP": 36
+      }
+    ],
+    "PASS": 0,
+    "FAIL": 0,
+    "SKIP": 72,
+    "infrastructureErrors": 0,
+    "plannedRows": 64,
+    "coverageBlockedRows": 2,
+    "acceptedW1Rows": 31,
+    "chains": [
+      {
+        "chain": "ethereum",
+        "mode": "no-rpc",
+        "blockNumber": null,
+        "PASS": 0,
+        "FAIL": 0,
+        "SKIP": 66,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/layerzero-v2/LayerZeroV2.fork.t.sol:LayerZeroV2ForkTest",
+            "name": "test_fork_layerzero_v2_send()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/aave/AaveV3.fork.t.sol:AaveV3ForkTest",
+            "name": "test_fork_aave_supply()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/sparklend/SparkLend.fork.t.sol:SparkLendForkTest",
+            "name": "test_fork_sparklend_supply()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/ethena/Ethena.fork.t.sol:EthenaForkTest",
+            "name": "test_fork_ethena_stake()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/lido/Lido.fork.t.sol:LidoForkTest",
+            "name": "test_fork_lido_submit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/sentora-curator/Sentora.fork.t.sol:SentoraForkTest",
+            "name": "test_fork_sentora_curator_accrue_interest()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/veda/Veda.fork.t.sol:VedaForkTest",
+            "name": "test_fork_veda_liquid_eth_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/steakhouse-financial/SteakhouseFinancial.fork.t.sol:SteakhouseFinancialForkTest",
+            "name": "test_fork_steakhouse_financial_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/ccip/Ccip.fork.t.sol:CcipForkTest",
+            "name": "test_fork_ccip_send()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/maple/Maple.fork.t.sol:MapleForkTest",
+            "name": "test_fork_maple_pool_invariants()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/re/Re.fork.t.sol:ReForkTest",
+            "name": "test_fork_re_supply_invariants()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/binance-staked-eth/Wbeth.fork.t.sol:WbethForkTest",
+            "name": "test_fork_binance_staked_eth_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/rockawayx/Rockawayx.fork.t.sol:RockawayxForkTest",
+            "name": "test_fork_rockawayx_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/polygon-bridge/PolygonBridge.fork.t.sol:PolygonBridgeForkTest",
+            "name": "test_fork_polygon_bridge_deposit_ether()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/plume-vaults/PlumeVaults.fork.t.sol:PlumeVaultsForkTest",
+            "name": "test_fork_plume_vaults_supply_invariants()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/nonce-capital/NonceCapital.fork.t.sol:NonceCapitalForkTest",
+            "name": "test_fork_nonce_capital_liquid_eth_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/tether/Tether.fork.t.sol:TetherForkTest",
+            "name": "test_fork_tether_transfer()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/base-bridge/BaseBridge.fork.t.sol:BaseBridgeForkTest",
+            "name": "test_fork_base_bridge_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/upshift/Upshift.fork.t.sol:UpshiftForkTest",
+            "name": "test_fork_upshift_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/concrete/Concrete.fork.t.sol:ConcreteForkTest",
+            "name": "test_fork_concrete_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/lighter-bridge/LighterBridge.fork.t.sol:LighterBridgeForkTest",
+            "name": "test_fork_lighter_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/defi-saver-asset-management/DefiSaver.fork.t.sol:DefiSaverForkTest",
+            "name": "test_fork_defisaver_supply_recipe()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/tornado-cash/TornadoCash.fork.t.sol:TornadoCashForkTest",
+            "name": "test_fork_tornado_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/robinhood-chain-bridge/RobinhoodBridge.fork.t.sol:RobinhoodBridgeForkTest",
+            "name": "test_fork_robinhood_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/hyperithm/Hyperithm.fork.t.sol:HyperithmForkTest",
+            "name": "test_fork_hyperithm_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/gauntlet/Gauntlet.fork.t.sol:GauntletForkTest",
+            "name": "test_fork_gauntlet_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/opentrade/OpenTrade.fork.t.sol:OpenTradeForkTest",
+            "name": "test_fork_opentrade_backing()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/coinbase-wrapped-staked-eth/Cbeth.fork.t.sol:CbethForkTest",
+            "name": "test_fork_cbeth_rate()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/curve-finance/CurveLlamalend.fork.t.sol:CurveLlamalendForkTest",
+            "name": "test_fork_curve_llamalend_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/obol/Obol.fork.t.sol:ObolForkTest",
+            "name": "test_fork_obol_stake()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/pancakeswap/Pancakeswap.fork.t.sol:PancakeswapForkTest",
+            "name": "test_fork_pancakeswap_v3_swap()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/uniswap/UniswapV3.fork.t.sol:UniswapV3ForkTest",
+            "name": "test_fork_uniswap_v3_swap()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/bedrock/BedrockUniETH.fork.t.sol:BedrockUniETHForkTest",
+            "name": "test_fork_bedrock_unieth_read()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/layerzero-v2/LayerZeroV2.fork.t.sol:LayerZeroV2ForkTest",
+            "name": "test_fork_layerzero_v2_send()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/aave/AaveV3.fork.t.sol:AaveV3ForkTest",
+            "name": "test_fork_aave_supply()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/sparklend/SparkLend.fork.t.sol:SparkLendForkTest",
+            "name": "test_fork_sparklend_supply()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/ethena/Ethena.fork.t.sol:EthenaForkTest",
+            "name": "test_fork_ethena_stake()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/lido/Lido.fork.t.sol:LidoForkTest",
+            "name": "test_fork_lido_submit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/sentora-curator/Sentora.fork.t.sol:SentoraForkTest",
+            "name": "test_fork_sentora_curator_accrue_interest()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/veda/Veda.fork.t.sol:VedaForkTest",
+            "name": "test_fork_veda_liquid_eth_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/steakhouse-financial/SteakhouseFinancial.fork.t.sol:SteakhouseFinancialForkTest",
+            "name": "test_fork_steakhouse_financial_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/ccip/Ccip.fork.t.sol:CcipForkTest",
+            "name": "test_fork_ccip_send()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/maple/Maple.fork.t.sol:MapleForkTest",
+            "name": "test_fork_maple_pool_invariants()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/re/Re.fork.t.sol:ReForkTest",
+            "name": "test_fork_re_supply_invariants()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/binance-staked-eth/Wbeth.fork.t.sol:WbethForkTest",
+            "name": "test_fork_binance_staked_eth_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/rockawayx/Rockawayx.fork.t.sol:RockawayxForkTest",
+            "name": "test_fork_rockawayx_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/polygon-bridge/PolygonBridge.fork.t.sol:PolygonBridgeForkTest",
+            "name": "test_fork_polygon_bridge_deposit_ether()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/plume-vaults/PlumeVaults.fork.t.sol:PlumeVaultsForkTest",
+            "name": "test_fork_plume_vaults_supply_invariants()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/nonce-capital/NonceCapital.fork.t.sol:NonceCapitalForkTest",
+            "name": "test_fork_nonce_capital_liquid_eth_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/tether/Tether.fork.t.sol:TetherForkTest",
+            "name": "test_fork_tether_transfer()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/base-bridge/BaseBridge.fork.t.sol:BaseBridgeForkTest",
+            "name": "test_fork_base_bridge_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/upshift/Upshift.fork.t.sol:UpshiftForkTest",
+            "name": "test_fork_upshift_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/concrete/Concrete.fork.t.sol:ConcreteForkTest",
+            "name": "test_fork_concrete_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/lighter-bridge/LighterBridge.fork.t.sol:LighterBridgeForkTest",
+            "name": "test_fork_lighter_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/defi-saver-asset-management/DefiSaver.fork.t.sol:DefiSaverForkTest",
+            "name": "test_fork_defisaver_supply_recipe()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/tornado-cash/TornadoCash.fork.t.sol:TornadoCashForkTest",
+            "name": "test_fork_tornado_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/robinhood-chain-bridge/RobinhoodBridge.fork.t.sol:RobinhoodBridgeForkTest",
+            "name": "test_fork_robinhood_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/hyperithm/Hyperithm.fork.t.sol:HyperithmForkTest",
+            "name": "test_fork_hyperithm_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/gauntlet/Gauntlet.fork.t.sol:GauntletForkTest",
+            "name": "test_fork_gauntlet_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/opentrade/OpenTrade.fork.t.sol:OpenTradeForkTest",
+            "name": "test_fork_opentrade_backing()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/coinbase-wrapped-staked-eth/Cbeth.fork.t.sol:CbethForkTest",
+            "name": "test_fork_cbeth_rate()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/curve-finance/CurveLlamalend.fork.t.sol:CurveLlamalendForkTest",
+            "name": "test_fork_curve_llamalend_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/obol/Obol.fork.t.sol:ObolForkTest",
+            "name": "test_fork_obol_stake()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/pancakeswap/Pancakeswap.fork.t.sol:PancakeswapForkTest",
+            "name": "test_fork_pancakeswap_v3_swap()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/uniswap/UniswapV3.fork.t.sol:UniswapV3ForkTest",
+            "name": "test_fork_uniswap_v3_swap()",
+            "status": "SKIP",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/bedrock/BedrockUniETH.fork.t.sol:BedrockUniETHForkTest",
+            "name": "test_fork_bedrock_unieth_read()",
+            "status": "SKIP",
+            "iteration": 2
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 0,
+            "FAIL": 0,
+            "SKIP": 33
+          },
+          {
+            "iteration": 2,
+            "PASS": 0,
+            "FAIL": 0,
+            "SKIP": 33
+          }
+        ]
+      },
+      {
+        "chain": "arbitrum",
+        "mode": "no-rpc",
+        "blockNumber": null,
+        "PASS": 0,
+        "FAIL": 0,
+        "SKIP": 2,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/hyperliquid-bridge/HyperliquidBridge.fork.t.sol:HyperliquidBridgeForkTest",
+            "name": "test_fork_hyperliquid_bridge_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/hyperliquid-bridge/HyperliquidBridge.fork.t.sol:HyperliquidBridgeForkTest",
+            "name": "test_fork_hyperliquid_bridge_deposit()",
+            "status": "SKIP",
+            "iteration": 2
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 0,
+            "FAIL": 0,
+            "SKIP": 1
+          },
+          {
+            "iteration": 2,
+            "PASS": 0,
+            "FAIL": 0,
+            "SKIP": 1
+          }
+        ]
+      },
+      {
+        "chain": "base",
+        "mode": "no-rpc",
+        "blockNumber": null,
+        "PASS": 0,
+        "FAIL": 0,
+        "SKIP": 2,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/aera/Aera.fork.t.sol:AeraForkTest",
+            "name": "test_fork_aera_request_refund()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/aera/Aera.fork.t.sol:AeraForkTest",
+            "name": "test_fork_aera_request_refund()",
+            "status": "SKIP",
+            "iteration": 2
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 0,
+            "FAIL": 0,
+            "SKIP": 1
+          },
+          {
+            "iteration": 2,
+            "PASS": 0,
+            "FAIL": 0,
+            "SKIP": 1
+          }
+        ]
+      },
+      {
+        "chain": "optimism",
+        "mode": "no-rpc",
+        "blockNumber": null,
+        "PASS": 0,
+        "FAIL": 0,
+        "SKIP": 2,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/etherfi-borrowing-market/EtherfiCash.fork.t.sol:EtherfiCashForkTest",
+            "name": "test_fork_etherfi_cash_supply()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/etherfi-borrowing-market/EtherfiCash.fork.t.sol:EtherfiCashForkTest",
+            "name": "test_fork_etherfi_cash_supply()",
+            "status": "SKIP",
+            "iteration": 2
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 0,
+            "FAIL": 0,
+            "SKIP": 1
+          },
+          {
+            "iteration": 2,
+            "PASS": 0,
+            "FAIL": 0,
+            "SKIP": 1
+          }
+        ]
+      }
+    ],
+    "status": "SKIPPED: no fork test ran; not a fork-test pass"
+  },
+  "noRpcFullSuite": {
+    "PASS": 12,
+    "FAIL": 0,
+    "SKIP": 38,
+    "tests": [
+      {
+        "suite": "test/contracts/AaveFlashReceiver.fork.t.sol:AaveFlashReceiverForkTest",
+        "name": "test_fork_aave_flashloan_roundtrip()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/AaveFlashReceiver.t.sol:AaveFlashReceiverTest",
+        "name": "test_constructorSetsPoolAndZeroState()",
+        "status": "PASS"
+      },
+      {
+        "suite": "test/contracts/AaveFlashReceiver.t.sol:AaveFlashReceiverTest",
+        "name": "test_executeOperationRecordsCallbackAndApprovesRepayment()",
+        "status": "PASS"
+      },
+      {
+        "suite": "test/contracts/AaveFlashReceiver.t.sol:AaveFlashReceiverTest",
+        "name": "test_executeOperationRevertsForNonPool()",
+        "status": "PASS"
+      },
+      {
+        "suite": "test/contracts/MockPrice.t.sol:MockPriceTest",
+        "name": "test_decimalsReadsDecSlotAndFallsBackToEight()",
+        "status": "PASS"
+      },
+      {
+        "suite": "test/contracts/MockPrice.t.sol:MockPriceTest",
+        "name": "test_defaultsToZeroPriceAndEightDecimals()",
+        "status": "PASS"
+      },
+      {
+        "suite": "test/contracts/MockPrice.t.sol:MockPriceTest",
+        "name": "test_latestAnswerCastsUnsignedPriceToInt()",
+        "status": "PASS"
+      },
+      {
+        "suite": "test/contracts/MockPrice.t.sol:MockPriceTest",
+        "name": "test_latestRoundDataUsesCurrentBlockAndRoundOne()",
+        "status": "PASS"
+      },
+      {
+        "suite": "test/contracts/MockPrice.t.sol:MockPriceTest",
+        "name": "test_priceReadsPriceSlot()",
+        "status": "PASS"
+      },
+      {
+        "suite": "test/contracts/MorphoFlashReceiver.fork.t.sol:MorphoFlashReceiverForkTest",
+        "name": "test_fork_morpho_flashloan_roundtrip()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/MorphoFlashReceiver.t.sol:MorphoFlashReceiverTest",
+        "name": "test_constructorSetsMorphoAndZeroState()",
+        "status": "PASS"
+      },
+      {
+        "suite": "test/contracts/MorphoFlashReceiver.t.sol:MorphoFlashReceiverTest",
+        "name": "test_onMorphoFlashLoanFromMorphoRecordsBalanceAndApproves()",
+        "status": "PASS"
+      },
+      {
+        "suite": "test/contracts/MorphoFlashReceiver.t.sol:MorphoFlashReceiverTest",
+        "name": "test_onMorphoFlashLoanRevertsForNonMorpho()",
+        "status": "PASS"
+      },
+      {
+        "suite": "test/contracts/MorphoFlashReceiver.t.sol:MorphoFlashReceiverTest",
+        "name": "test_runBorrowsAndRepaysThroughApproval()",
+        "status": "PASS"
+      },
+      {
+        "suite": "test/contracts/protocols/aave/AaveV3.fork.t.sol:AaveV3ForkTest",
+        "name": "test_fork_aave_supply()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/aera/Aera.fork.t.sol:AeraForkTest",
+        "name": "test_fork_aera_request_refund()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/base-bridge/BaseBridge.fork.t.sol:BaseBridgeForkTest",
+        "name": "test_fork_base_bridge_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/bedrock/BedrockUniETH.fork.t.sol:BedrockUniETHForkTest",
+        "name": "test_fork_bedrock_unieth_read()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/binance-staked-eth/Wbeth.fork.t.sol:WbethForkTest",
+        "name": "test_fork_binance_staked_eth_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/ccip/Ccip.fork.t.sol:CcipForkTest",
+        "name": "test_fork_ccip_send()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/coinbase-wrapped-staked-eth/Cbeth.fork.t.sol:CbethForkTest",
+        "name": "test_fork_cbeth_rate()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/concrete/Concrete.fork.t.sol:ConcreteForkTest",
+        "name": "test_fork_concrete_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/curve-finance/CurveLlamalend.fork.t.sol:CurveLlamalendForkTest",
+        "name": "test_fork_curve_llamalend_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/defi-saver-asset-management/DefiSaver.fork.t.sol:DefiSaverForkTest",
+        "name": "test_fork_defisaver_supply_recipe()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/ethena/Ethena.fork.t.sol:EthenaForkTest",
+        "name": "test_fork_ethena_stake()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/etherfi-borrowing-market/EtherfiCash.fork.t.sol:EtherfiCashForkTest",
+        "name": "test_fork_etherfi_cash_supply()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/gauntlet/Gauntlet.fork.t.sol:GauntletForkTest",
+        "name": "test_fork_gauntlet_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/hyperithm/Hyperithm.fork.t.sol:HyperithmForkTest",
+        "name": "test_fork_hyperithm_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/hyperliquid-bridge/HyperliquidBridge.fork.t.sol:HyperliquidBridgeForkTest",
+        "name": "test_fork_hyperliquid_bridge_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/layerzero-v2/LayerZeroV2.fork.t.sol:LayerZeroV2ForkTest",
+        "name": "test_fork_layerzero_v2_send()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/lido/Lido.fork.t.sol:LidoForkTest",
+        "name": "test_fork_lido_submit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/lighter-bridge/LighterBridge.fork.t.sol:LighterBridgeForkTest",
+        "name": "test_fork_lighter_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/maple/Maple.fork.t.sol:MapleForkTest",
+        "name": "test_fork_maple_pool_invariants()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/nonce-capital/NonceCapital.fork.t.sol:NonceCapitalForkTest",
+        "name": "test_fork_nonce_capital_liquid_eth_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/obol/Obol.fork.t.sol:ObolForkTest",
+        "name": "test_fork_obol_stake()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/opentrade/OpenTrade.fork.t.sol:OpenTradeForkTest",
+        "name": "test_fork_opentrade_backing()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/pancakeswap/Pancakeswap.fork.t.sol:PancakeswapForkTest",
+        "name": "test_fork_pancakeswap_v3_swap()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/plume-vaults/PlumeVaults.fork.t.sol:PlumeVaultsForkTest",
+        "name": "test_fork_plume_vaults_supply_invariants()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/polygon-bridge/PolygonBridge.fork.t.sol:PolygonBridgeForkTest",
+        "name": "test_fork_polygon_bridge_deposit_ether()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/re/Re.fork.t.sol:ReForkTest",
+        "name": "test_fork_re_supply_invariants()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/robinhood-chain-bridge/RobinhoodBridge.fork.t.sol:RobinhoodBridgeForkTest",
+        "name": "test_fork_robinhood_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/rockawayx/Rockawayx.fork.t.sol:RockawayxForkTest",
+        "name": "test_fork_rockawayx_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/sentora-curator/Sentora.fork.t.sol:SentoraForkTest",
+        "name": "test_fork_sentora_curator_accrue_interest()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/sparklend/SparkLend.fork.t.sol:SparkLendForkTest",
+        "name": "test_fork_sparklend_supply()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/steakhouse-financial/SteakhouseFinancial.fork.t.sol:SteakhouseFinancialForkTest",
+        "name": "test_fork_steakhouse_financial_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/tether/Tether.fork.t.sol:TetherForkTest",
+        "name": "test_fork_tether_transfer()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/tornado-cash/TornadoCash.fork.t.sol:TornadoCashForkTest",
+        "name": "test_fork_tornado_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/uniswap/UniswapV3.fork.t.sol:UniswapV3ForkTest",
+        "name": "test_fork_uniswap_v3_swap()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/upshift/Upshift.fork.t.sol:UpshiftForkTest",
+        "name": "test_fork_upshift_deposit()",
+        "status": "SKIP"
+      },
+      {
+        "suite": "test/contracts/protocols/veda/Veda.fork.t.sol:VedaForkTest",
+        "name": "test_fork_veda_liquid_eth_deposit()",
+        "status": "SKIP"
+      }
+    ]
+  },
+  "futureWavePartitions": {
+    "partitions": {
+      "W2a": [
+        {
+          "rank": 52,
+          "slug": "world-chain-bridge",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 53,
+          "slug": "huma",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 54,
+          "slug": "clearstar",
+          "chain": "base",
+          "chains": [
+            "base",
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 59,
+          "slug": "ether.fi-liquid",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 60,
+          "slug": "lista-liquid-staking",
+          "chain": "bsc",
+          "chains": [
+            "bsc"
+          ]
+        },
+        {
+          "rank": 65,
+          "slug": "etherfi-cash-liquid",
+          "chain": "optimism",
+          "chains": [
+            "optimism"
+          ]
+        },
+        {
+          "rank": 67,
+          "slug": "near-bridge",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 68,
+          "slug": "falcon-finance",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 71,
+          "slug": "stakewise-v3",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 72,
+          "slug": "avalon-superearn",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 75,
+          "slug": "fluid-lite",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        }
+      ],
+      "W2b": [
+        {
+          "rank": 76,
+          "slug": "galaxy-curation",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 78,
+          "slug": "curvance",
+          "chain": "monad",
+          "chains": [
+            "monad"
+          ]
+        },
+        {
+          "rank": 79,
+          "slug": "compound-finance",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 81,
+          "slug": "kpk",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 83,
+          "slug": "meth-protocol",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 84,
+          "slug": "zama",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 89,
+          "slug": "pancakeswap-aggregator",
+          "chain": "ethereum",
+          "chains": [
+            "bsc",
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 91,
+          "slug": "arbitrum-bridge",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 93,
+          "slug": "lagoon",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 96,
+          "slug": "eigencloud",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 99,
+          "slug": "lista-dao",
+          "chain": "bsc",
+          "chains": [
+            "bsc"
+          ]
+        },
+        {
+          "rank": 100,
+          "slug": "usdt0",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        }
+      ],
+      "W3a": [
+        {
+          "rank": 103,
+          "slug": "liquity",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 107,
+          "slug": "spark",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 111,
+          "slug": "saturn",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 112,
+          "slug": "optimism-bridge",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 113,
+          "slug": "ether.fi-stake",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 116,
+          "slug": "meta-pool",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 119,
+          "slug": "curve-dex",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 121,
+          "slug": "fx-protocol",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 122,
+          "slug": "avant-protocol",
+          "chain": "avalanche",
+          "chains": [
+            "avalanche"
+          ]
+        },
+        {
+          "rank": 125,
+          "slug": "lyra",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 126,
+          "slug": "maker",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 128,
+          "slug": "fluid-dex",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 129,
+          "slug": "starknet-bridge",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 137,
+          "slug": "aster-bridge",
+          "chain": "bsc",
+          "chains": [
+            "bsc"
+          ]
+        },
+        {
+          "rank": 140,
+          "slug": "bedrock-unibtc",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 142,
+          "slug": "ssv-network",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 143,
+          "slug": "railgun",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 145,
+          "slug": "solvbtc",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 148,
+          "slug": "dolomite",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 149,
+          "slug": "pendle-v2",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        }
+      ],
+      "W3b": [
+        {
+          "rank": 152,
+          "slug": "cooler-loans",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 157,
+          "slug": "portal",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 159,
+          "slug": "venus-core-pool",
+          "chain": "bsc",
+          "chains": [
+            "bsc"
+          ]
+        },
+        {
+          "rank": 164,
+          "slug": "bitfi-basis",
+          "chain": "bsc",
+          "chains": [
+            "bsc"
+          ]
+        },
+        {
+          "rank": 165,
+          "slug": "sushi",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 166,
+          "slug": "xdai-stake-bridge",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 167,
+          "slug": "polymarket",
+          "chain": "polygon",
+          "chains": [
+            "polygon"
+          ]
+        },
+        {
+          "rank": 170,
+          "slug": "fluid-lending",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 171,
+          "slug": "convex-finance",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 173,
+          "slug": "gmx",
+          "chain": "arbitrum",
+          "chains": [
+            "arbitrum"
+          ]
+        },
+        {
+          "rank": 175,
+          "slug": "fraxtal",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 178,
+          "slug": "cian-yield-layer",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 180,
+          "slug": "aero-protocol",
+          "chain": "base",
+          "chains": [
+            "base"
+          ]
+        },
+        {
+          "rank": 181,
+          "slug": "rocket-pool",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 187,
+          "slug": "usdd",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 189,
+          "slug": "yearn",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 191,
+          "slug": "armitage-by-wintermute",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 193,
+          "slug": "axelar-network",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 195,
+          "slug": "ember",
+          "chain": "ethereum",
+          "chains": [
+            "ethereum"
+          ]
+        },
+        {
+          "rank": 199,
+          "slug": "grove-finance",
+          "chain": "base",
+          "chains": [
+            "base"
+          ]
+        }
+      ]
+    },
+    "boardGeneratedAtMYT": "2026-11-06T21:59:25.219+08:00"
+  },
+  "queueSnapshot": {
+    "boardRows": 200,
+    "parityRows": 99,
+    "resolvedDiscoveryRows": 1,
+    "alreadyCoveredRows": 2,
+    "notQueuedRows": 99,
+    "newFileTargetRows": 99,
+    "W1Rows": 33,
+    "W1Files": 32,
+    "W1AcceptedPrimitiveRows": 31,
+    "W1CoverageBlockedRows": 2,
+    "W2PlannedRows": 23,
+    "W3PlannedRows": 40
+  },
+  "validationNotes": {
+    "newW1DirectoriesForgeFormat": "32 directory checks passed",
+    "wholeTreeForgeFormat": "Not clean: W0, generated Addresses.sol, legacy receiver and existing shared-helper formatting differ from formatter preferences. No generated/legacy formatting rewrite made.",
+    "JSForkSuite": "Existing JS fork scripts/runner unchanged; runtime only additionally exports existing EXTRA_WHALES. Full JS fork suite not rerun in this integration."
+  },
+  "integratedPinnedTwice": {
+    "schemaVersion": 1,
+    "runs": [
+      {
+        "iteration": 1,
+        "PASS": 36,
+        "FAIL": 0,
+        "SKIP": 0
+      },
+      {
+        "iteration": 2,
+        "PASS": 36,
+        "FAIL": 0,
+        "SKIP": 0
+      }
+    ],
+    "PASS": 72,
+    "FAIL": 0,
+    "SKIP": 0,
+    "infrastructureErrors": 0,
+    "plannedRows": 64,
+    "coverageBlockedRows": 2,
+    "acceptedW1Rows": 31,
+    "chains": [
+      {
+        "chain": "ethereum",
+        "mode": "executed",
+        "blockNumber": 26363300,
+        "PASS": 66,
+        "FAIL": 0,
+        "SKIP": 0,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/layerzero-v2/LayerZeroV2.fork.t.sol:LayerZeroV2ForkTest",
+            "name": "test_fork_layerzero_v2_send()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/aave/AaveV3.fork.t.sol:AaveV3ForkTest",
+            "name": "test_fork_aave_supply()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/sparklend/SparkLend.fork.t.sol:SparkLendForkTest",
+            "name": "test_fork_sparklend_supply()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/ethena/Ethena.fork.t.sol:EthenaForkTest",
+            "name": "test_fork_ethena_stake()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/lido/Lido.fork.t.sol:LidoForkTest",
+            "name": "test_fork_lido_submit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/sentora-curator/Sentora.fork.t.sol:SentoraForkTest",
+            "name": "test_fork_sentora_curator_accrue_interest()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/veda/Veda.fork.t.sol:VedaForkTest",
+            "name": "test_fork_veda_liquid_eth_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/steakhouse-financial/SteakhouseFinancial.fork.t.sol:SteakhouseFinancialForkTest",
+            "name": "test_fork_steakhouse_financial_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/ccip/Ccip.fork.t.sol:CcipForkTest",
+            "name": "test_fork_ccip_send()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/maple/Maple.fork.t.sol:MapleForkTest",
+            "name": "test_fork_maple_pool_invariants()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/re/Re.fork.t.sol:ReForkTest",
+            "name": "test_fork_re_supply_invariants()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/binance-staked-eth/Wbeth.fork.t.sol:WbethForkTest",
+            "name": "test_fork_binance_staked_eth_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/rockawayx/Rockawayx.fork.t.sol:RockawayxForkTest",
+            "name": "test_fork_rockawayx_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/polygon-bridge/PolygonBridge.fork.t.sol:PolygonBridgeForkTest",
+            "name": "test_fork_polygon_bridge_deposit_ether()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/plume-vaults/PlumeVaults.fork.t.sol:PlumeVaultsForkTest",
+            "name": "test_fork_plume_vaults_supply_invariants()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/nonce-capital/NonceCapital.fork.t.sol:NonceCapitalForkTest",
+            "name": "test_fork_nonce_capital_liquid_eth_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/tether/Tether.fork.t.sol:TetherForkTest",
+            "name": "test_fork_tether_transfer()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/base-bridge/BaseBridge.fork.t.sol:BaseBridgeForkTest",
+            "name": "test_fork_base_bridge_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/upshift/Upshift.fork.t.sol:UpshiftForkTest",
+            "name": "test_fork_upshift_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/concrete/Concrete.fork.t.sol:ConcreteForkTest",
+            "name": "test_fork_concrete_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/lighter-bridge/LighterBridge.fork.t.sol:LighterBridgeForkTest",
+            "name": "test_fork_lighter_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/defi-saver-asset-management/DefiSaver.fork.t.sol:DefiSaverForkTest",
+            "name": "test_fork_defisaver_supply_recipe()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/tornado-cash/TornadoCash.fork.t.sol:TornadoCashForkTest",
+            "name": "test_fork_tornado_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/robinhood-chain-bridge/RobinhoodBridge.fork.t.sol:RobinhoodBridgeForkTest",
+            "name": "test_fork_robinhood_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/hyperithm/Hyperithm.fork.t.sol:HyperithmForkTest",
+            "name": "test_fork_hyperithm_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/gauntlet/Gauntlet.fork.t.sol:GauntletForkTest",
+            "name": "test_fork_gauntlet_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/opentrade/OpenTrade.fork.t.sol:OpenTradeForkTest",
+            "name": "test_fork_opentrade_backing()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/coinbase-wrapped-staked-eth/Cbeth.fork.t.sol:CbethForkTest",
+            "name": "test_fork_cbeth_rate()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/curve-finance/CurveLlamalend.fork.t.sol:CurveLlamalendForkTest",
+            "name": "test_fork_curve_llamalend_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/obol/Obol.fork.t.sol:ObolForkTest",
+            "name": "test_fork_obol_stake()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/pancakeswap/Pancakeswap.fork.t.sol:PancakeswapForkTest",
+            "name": "test_fork_pancakeswap_v3_swap()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/uniswap/UniswapV3.fork.t.sol:UniswapV3ForkTest",
+            "name": "test_fork_uniswap_v3_swap()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/bedrock/BedrockUniETH.fork.t.sol:BedrockUniETHForkTest",
+            "name": "test_fork_bedrock_unieth_read()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/layerzero-v2/LayerZeroV2.fork.t.sol:LayerZeroV2ForkTest",
+            "name": "test_fork_layerzero_v2_send()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/aave/AaveV3.fork.t.sol:AaveV3ForkTest",
+            "name": "test_fork_aave_supply()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/sparklend/SparkLend.fork.t.sol:SparkLendForkTest",
+            "name": "test_fork_sparklend_supply()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/ethena/Ethena.fork.t.sol:EthenaForkTest",
+            "name": "test_fork_ethena_stake()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/lido/Lido.fork.t.sol:LidoForkTest",
+            "name": "test_fork_lido_submit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/sentora-curator/Sentora.fork.t.sol:SentoraForkTest",
+            "name": "test_fork_sentora_curator_accrue_interest()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/veda/Veda.fork.t.sol:VedaForkTest",
+            "name": "test_fork_veda_liquid_eth_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/steakhouse-financial/SteakhouseFinancial.fork.t.sol:SteakhouseFinancialForkTest",
+            "name": "test_fork_steakhouse_financial_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/ccip/Ccip.fork.t.sol:CcipForkTest",
+            "name": "test_fork_ccip_send()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/maple/Maple.fork.t.sol:MapleForkTest",
+            "name": "test_fork_maple_pool_invariants()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/re/Re.fork.t.sol:ReForkTest",
+            "name": "test_fork_re_supply_invariants()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/binance-staked-eth/Wbeth.fork.t.sol:WbethForkTest",
+            "name": "test_fork_binance_staked_eth_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/rockawayx/Rockawayx.fork.t.sol:RockawayxForkTest",
+            "name": "test_fork_rockawayx_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/polygon-bridge/PolygonBridge.fork.t.sol:PolygonBridgeForkTest",
+            "name": "test_fork_polygon_bridge_deposit_ether()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/plume-vaults/PlumeVaults.fork.t.sol:PlumeVaultsForkTest",
+            "name": "test_fork_plume_vaults_supply_invariants()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/nonce-capital/NonceCapital.fork.t.sol:NonceCapitalForkTest",
+            "name": "test_fork_nonce_capital_liquid_eth_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/tether/Tether.fork.t.sol:TetherForkTest",
+            "name": "test_fork_tether_transfer()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/base-bridge/BaseBridge.fork.t.sol:BaseBridgeForkTest",
+            "name": "test_fork_base_bridge_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/upshift/Upshift.fork.t.sol:UpshiftForkTest",
+            "name": "test_fork_upshift_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/concrete/Concrete.fork.t.sol:ConcreteForkTest",
+            "name": "test_fork_concrete_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/lighter-bridge/LighterBridge.fork.t.sol:LighterBridgeForkTest",
+            "name": "test_fork_lighter_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/defi-saver-asset-management/DefiSaver.fork.t.sol:DefiSaverForkTest",
+            "name": "test_fork_defisaver_supply_recipe()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/tornado-cash/TornadoCash.fork.t.sol:TornadoCashForkTest",
+            "name": "test_fork_tornado_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/robinhood-chain-bridge/RobinhoodBridge.fork.t.sol:RobinhoodBridgeForkTest",
+            "name": "test_fork_robinhood_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/hyperithm/Hyperithm.fork.t.sol:HyperithmForkTest",
+            "name": "test_fork_hyperithm_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/gauntlet/Gauntlet.fork.t.sol:GauntletForkTest",
+            "name": "test_fork_gauntlet_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/opentrade/OpenTrade.fork.t.sol:OpenTradeForkTest",
+            "name": "test_fork_opentrade_backing()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/coinbase-wrapped-staked-eth/Cbeth.fork.t.sol:CbethForkTest",
+            "name": "test_fork_cbeth_rate()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/curve-finance/CurveLlamalend.fork.t.sol:CurveLlamalendForkTest",
+            "name": "test_fork_curve_llamalend_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/obol/Obol.fork.t.sol:ObolForkTest",
+            "name": "test_fork_obol_stake()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/pancakeswap/Pancakeswap.fork.t.sol:PancakeswapForkTest",
+            "name": "test_fork_pancakeswap_v3_swap()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/uniswap/UniswapV3.fork.t.sol:UniswapV3ForkTest",
+            "name": "test_fork_uniswap_v3_swap()",
+            "status": "PASS",
+            "iteration": 2
+          },
+          {
+            "suite": "test/contracts/protocols/bedrock/BedrockUniETH.fork.t.sol:BedrockUniETHForkTest",
+            "name": "test_fork_bedrock_unieth_read()",
+            "status": "PASS",
+            "iteration": 2
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 33,
+            "FAIL": 0,
+            "SKIP": 0
+          },
+          {
+            "iteration": 2,
+            "PASS": 33,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        ]
+      },
+      {
+        "chain": "arbitrum",
+        "mode": "executed",
+        "blockNumber": 522239393,
+        "PASS": 2,
+        "FAIL": 0,
+        "SKIP": 0,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/hyperliquid-bridge/HyperliquidBridge.fork.t.sol:HyperliquidBridgeForkTest",
+            "name": "test_fork_hyperliquid_bridge_deposit()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/hyperliquid-bridge/HyperliquidBridge.fork.t.sol:HyperliquidBridgeForkTest",
+            "name": "test_fork_hyperliquid_bridge_deposit()",
+            "status": "PASS",
+            "iteration": 2
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 1,
+            "FAIL": 0,
+            "SKIP": 0
+          },
+          {
+            "iteration": 2,
+            "PASS": 1,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        ]
+      },
+      {
+        "chain": "base",
+        "mode": "executed",
+        "blockNumber": 54552643,
+        "PASS": 2,
+        "FAIL": 0,
+        "SKIP": 0,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/aera/Aera.fork.t.sol:AeraForkTest",
+            "name": "test_fork_aera_request_refund()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/aera/Aera.fork.t.sol:AeraForkTest",
+            "name": "test_fork_aera_request_refund()",
+            "status": "PASS",
+            "iteration": 2
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 1,
+            "FAIL": 0,
+            "SKIP": 0
+          },
+          {
+            "iteration": 2,
+            "PASS": 1,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        ]
+      },
+      {
+        "chain": "optimism",
+        "mode": "executed",
+        "blockNumber": 159251063,
+        "PASS": 2,
+        "FAIL": 0,
+        "SKIP": 0,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/etherfi-borrowing-market/EtherfiCash.fork.t.sol:EtherfiCashForkTest",
+            "name": "test_fork_etherfi_cash_supply()",
+            "status": "PASS",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/etherfi-borrowing-market/EtherfiCash.fork.t.sol:EtherfiCashForkTest",
+            "name": "test_fork_etherfi_cash_supply()",
+            "status": "PASS",
+            "iteration": 2
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 1,
+            "FAIL": 0,
+            "SKIP": 0
+          },
+          {
+            "iteration": 2,
+            "PASS": 1,
+            "FAIL": 0,
+            "SKIP": 0
+          }
+        ]
+      }
+    ],
+    "status": "EXECUTED"
+  },
+  "integrationCommand": "npm run test:contracts:fork -- --twice",
+  "integrationDurationSeconds": 608.177,
+  "integrationProtocolSourceTip": "fae2b8fb7a7588684337037fda353c74a42174da",
+  "integrationCompletedMYT": "2026-11-08T09:55:22.580+08:00",
+  "noRpcSingle": {
+    "schemaVersion": 1,
+    "runs": [
+      {
+        "iteration": 1,
+        "PASS": 0,
+        "FAIL": 0,
+        "SKIP": 36
+      }
+    ],
+    "PASS": 0,
+    "FAIL": 0,
+    "SKIP": 36,
+    "infrastructureErrors": 0,
+    "plannedRows": 64,
+    "coverageBlockedRows": 2,
+    "acceptedW1Rows": 31,
+    "chains": [
+      {
+        "chain": "ethereum",
+        "mode": "no-rpc",
+        "blockNumber": null,
+        "PASS": 0,
+        "FAIL": 0,
+        "SKIP": 33,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/layerzero-v2/LayerZeroV2.fork.t.sol:LayerZeroV2ForkTest",
+            "name": "test_fork_layerzero_v2_send()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/aave/AaveV3.fork.t.sol:AaveV3ForkTest",
+            "name": "test_fork_aave_supply()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/sparklend/SparkLend.fork.t.sol:SparkLendForkTest",
+            "name": "test_fork_sparklend_supply()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/ethena/Ethena.fork.t.sol:EthenaForkTest",
+            "name": "test_fork_ethena_stake()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/lido/Lido.fork.t.sol:LidoForkTest",
+            "name": "test_fork_lido_submit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/sentora-curator/Sentora.fork.t.sol:SentoraForkTest",
+            "name": "test_fork_sentora_curator_accrue_interest()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/veda/Veda.fork.t.sol:VedaForkTest",
+            "name": "test_fork_veda_liquid_eth_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/steakhouse-financial/SteakhouseFinancial.fork.t.sol:SteakhouseFinancialForkTest",
+            "name": "test_fork_steakhouse_financial_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/ccip/Ccip.fork.t.sol:CcipForkTest",
+            "name": "test_fork_ccip_send()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/maple/Maple.fork.t.sol:MapleForkTest",
+            "name": "test_fork_maple_pool_invariants()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/re/Re.fork.t.sol:ReForkTest",
+            "name": "test_fork_re_supply_invariants()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/binance-staked-eth/Wbeth.fork.t.sol:WbethForkTest",
+            "name": "test_fork_binance_staked_eth_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/rockawayx/Rockawayx.fork.t.sol:RockawayxForkTest",
+            "name": "test_fork_rockawayx_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/polygon-bridge/PolygonBridge.fork.t.sol:PolygonBridgeForkTest",
+            "name": "test_fork_polygon_bridge_deposit_ether()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/plume-vaults/PlumeVaults.fork.t.sol:PlumeVaultsForkTest",
+            "name": "test_fork_plume_vaults_supply_invariants()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/nonce-capital/NonceCapital.fork.t.sol:NonceCapitalForkTest",
+            "name": "test_fork_nonce_capital_liquid_eth_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/tether/Tether.fork.t.sol:TetherForkTest",
+            "name": "test_fork_tether_transfer()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/base-bridge/BaseBridge.fork.t.sol:BaseBridgeForkTest",
+            "name": "test_fork_base_bridge_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/upshift/Upshift.fork.t.sol:UpshiftForkTest",
+            "name": "test_fork_upshift_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/concrete/Concrete.fork.t.sol:ConcreteForkTest",
+            "name": "test_fork_concrete_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/lighter-bridge/LighterBridge.fork.t.sol:LighterBridgeForkTest",
+            "name": "test_fork_lighter_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/defi-saver-asset-management/DefiSaver.fork.t.sol:DefiSaverForkTest",
+            "name": "test_fork_defisaver_supply_recipe()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/tornado-cash/TornadoCash.fork.t.sol:TornadoCashForkTest",
+            "name": "test_fork_tornado_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/robinhood-chain-bridge/RobinhoodBridge.fork.t.sol:RobinhoodBridgeForkTest",
+            "name": "test_fork_robinhood_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/hyperithm/Hyperithm.fork.t.sol:HyperithmForkTest",
+            "name": "test_fork_hyperithm_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/gauntlet/Gauntlet.fork.t.sol:GauntletForkTest",
+            "name": "test_fork_gauntlet_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/opentrade/OpenTrade.fork.t.sol:OpenTradeForkTest",
+            "name": "test_fork_opentrade_backing()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/coinbase-wrapped-staked-eth/Cbeth.fork.t.sol:CbethForkTest",
+            "name": "test_fork_cbeth_rate()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/curve-finance/CurveLlamalend.fork.t.sol:CurveLlamalendForkTest",
+            "name": "test_fork_curve_llamalend_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/obol/Obol.fork.t.sol:ObolForkTest",
+            "name": "test_fork_obol_stake()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/pancakeswap/Pancakeswap.fork.t.sol:PancakeswapForkTest",
+            "name": "test_fork_pancakeswap_v3_swap()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/uniswap/UniswapV3.fork.t.sol:UniswapV3ForkTest",
+            "name": "test_fork_uniswap_v3_swap()",
+            "status": "SKIP",
+            "iteration": 1
+          },
+          {
+            "suite": "test/contracts/protocols/bedrock/BedrockUniETH.fork.t.sol:BedrockUniETHForkTest",
+            "name": "test_fork_bedrock_unieth_read()",
+            "status": "SKIP",
+            "iteration": 1
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 0,
+            "FAIL": 0,
+            "SKIP": 33
+          }
+        ]
+      },
+      {
+        "chain": "arbitrum",
+        "mode": "no-rpc",
+        "blockNumber": null,
+        "PASS": 0,
+        "FAIL": 0,
+        "SKIP": 1,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/hyperliquid-bridge/HyperliquidBridge.fork.t.sol:HyperliquidBridgeForkTest",
+            "name": "test_fork_hyperliquid_bridge_deposit()",
+            "status": "SKIP",
+            "iteration": 1
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 0,
+            "FAIL": 0,
+            "SKIP": 1
+          }
+        ]
+      },
+      {
+        "chain": "base",
+        "mode": "no-rpc",
+        "blockNumber": null,
+        "PASS": 0,
+        "FAIL": 0,
+        "SKIP": 1,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/aera/Aera.fork.t.sol:AeraForkTest",
+            "name": "test_fork_aera_request_refund()",
+            "status": "SKIP",
+            "iteration": 1
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 0,
+            "FAIL": 0,
+            "SKIP": 1
+          }
+        ]
+      },
+      {
+        "chain": "optimism",
+        "mode": "no-rpc",
+        "blockNumber": null,
+        "PASS": 0,
+        "FAIL": 0,
+        "SKIP": 1,
+        "tests": [
+          {
+            "suite": "test/contracts/protocols/etherfi-borrowing-market/EtherfiCash.fork.t.sol:EtherfiCashForkTest",
+            "name": "test_fork_etherfi_cash_supply()",
+            "status": "SKIP",
+            "iteration": 1
+          }
+        ],
+        "runs": [
+          {
+            "iteration": 1,
+            "PASS": 0,
+            "FAIL": 0,
+            "SKIP": 1
+          }
+        ]
+      }
+    ],
+    "status": "SKIPPED: no fork test ran; not a fork-test pass"
+  }
+}

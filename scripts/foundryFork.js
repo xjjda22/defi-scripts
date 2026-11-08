@@ -29,7 +29,7 @@ function cleanEnv() {
     ...Object.values(RPC_ENV),
     "FORK_RPC_URL",
     "ETH_RPC_URL",
-    ...Object.keys(env).filter(key => /PRIVATE_KEY$/.test(key)),
+    ...Object.keys(env).filter(key => /PRIVATE_KEY$/.test(key) || /^FORK_.*_WHALE$/.test(key)),
     "PRIVATE_KEY",
     "FOUNDRY_FORK_URL",
     "DAPP_FORK_URL",
@@ -104,6 +104,7 @@ async function startAnvil(url, pin) {
       const header = await rpc(local, "eth_getBlockByNumber", ["0x" + pin.blockNumber.toString(16), false]);
       if (chainId !== CHAINS[pin.chain].chainId || header.hash !== pin.blockHash)
         throw new Error("Fork identity mismatch");
+      if (child.exitCode !== null || child.signalCode !== null) throw new Error("Owned Anvil exited during readiness");
       return { child, local };
     } catch {
       await new Promise(resolve => setTimeout(resolve, 250));
@@ -150,13 +151,18 @@ async function main() {
   const pinData = require("../data/fork-blocks.json");
   if (require("./lib/forkBlocks").checkForkBlocks(pinData).length) throw new Error("Invalid observed fork headers");
   const pins = pinData.chainsById;
+  const repeats = process.argv.includes("--twice") ? 2 : 1;
+  const newCounts = () => ({ PASS: 0, FAIL: 0, SKIP: 0 });
   const summary = {
     schemaVersion: 1,
+    runs: Array.from({ length: repeats }, (_, i) => ({ iteration: i + 1, ...newCounts() })),
     PASS: 0,
     FAIL: 0,
     SKIP: 0,
     infrastructureErrors: 0,
     plannedRows: registry.filter(e => e.status === "planned" && e.foundry_bucket !== "not-queued").length,
+    coverageBlockedRows: registry.filter(e => e.coverageStatus === "blocked").length,
+    acceptedW1Rows: registry.filter(e => e.wave === "W1" && e.coverageStatus === "accepted").length,
     chains: [],
   };
   let failed = false;
@@ -172,11 +178,12 @@ async function main() {
       FAIL: 0,
       SKIP: 0,
       tests: [],
+      runs: Array.from({ length: repeats }, (_, i) => ({ iteration: i + 1, ...newCounts() })),
     };
     summary.chains.push(report);
     let anvil;
     try {
-      const env = cleanEnv();
+      const env = { ...cleanEnv(), ...require("./lib/foundryFunding").fundingEnv(chain, process.env) };
       if (url) {
         const pin = pins[CHAINS[chain].chainId];
         if (!pin?.blockNumber || !pin.blockHash)
@@ -187,15 +194,24 @@ async function main() {
         env.FORK_BLOCK = String(pin.blockNumber);
         env.FORK_CHAIN_ID = String(CHAINS[chain].chainId);
       }
-      for (const entry of entries.filter(e => e.chain === chain)) {
-        const { counts, code } = await forge(entry.file, env);
-        for (const key of ["PASS", "FAIL", "SKIP"]) {
-          report[key] += counts[key];
-          summary[key] += counts[key];
+      // Each pass uses fresh Forge forks; the owned Anvil remains read-only at the same pin.
+      // Repeating before shutdown permits warm-cache acceptance without sharing mutable test state.
+      for (let iteration = 0; iteration < repeats; iteration++) {
+        for (const entry of entries.filter(e => e.chain === chain)) {
+          const { counts, code } = await forge(entry.file, env);
+          for (const key of ["PASS", "FAIL", "SKIP"]) {
+            report[key] += counts[key];
+            summary[key] += counts[key];
+            report.runs[iteration][key] += counts[key];
+            summary.runs[iteration][key] += counts[key];
+          }
+          report.tests.push(...counts.tests.map(test => ({ ...test, iteration: iteration + 1 })));
+          console.log(
+            `${chain} run ${iteration + 1} ${entry.slug}: PASS ${counts.PASS}, FAIL ${counts.FAIL}, SKIP ${counts.SKIP}`
+          );
+          if (executionFailed(counts, code, !!url)) failed = true;
+          if (!url && (counts.PASS || counts.FAIL)) throw new Error("No-RPC mode unexpectedly executed a test");
         }
-        report.tests.push(...counts.tests);
-        if (executionFailed(counts, code, !!url)) failed = true;
-        if (!url && (counts.PASS || counts.FAIL)) throw new Error("No-RPC mode unexpectedly executed a test");
       }
     } catch {
       report.mode = "infrastructure-error";
@@ -216,6 +232,9 @@ async function main() {
       : "SKIPPED: no fork test ran; not a fork-test pass";
   const line = `PASS ${summary.PASS}, FAIL ${summary.FAIL}, SKIP ${summary.SKIP}`;
   console.log(`${line} — ${summary.status}; infrastructure errors ${summary.infrastructureErrors}`);
+  console.log(
+    `Coverage is separate: W1 accepted ${summary.acceptedW1Rows}, blocked ${summary.coverageBlockedRows}; planned rows ${summary.plannedRows}.`
+  );
   if (summary.SKIP)
     console.log(
       `::warning title=Foundry skips::${summary.SKIP} tests skipped; missing-RPC skips are not passes, configured-chain skips fail.`
@@ -223,7 +242,7 @@ async function main() {
   if (process.env.GITHUB_STEP_SUMMARY)
     fs.appendFileSync(
       process.env.GITHUB_STEP_SUMMARY,
-      `## Foundry fork\n\n${line}\n\n**${summary.status}**\n\nInfrastructure errors: ${summary.infrastructureErrors}; planned rows: ${summary.plannedRows} (not counted as tests).\n`
+      `## Foundry fork\n\n${line}\n\n**${summary.status}**\n\nInfrastructure errors: ${summary.infrastructureErrors}; planned rows: ${summary.plannedRows} (not counted as tests).\n\nExecution PASS does not imply complete primitive coverage: W1 accepted ${summary.acceptedW1Rows}; blocked ${summary.coverageBlockedRows}.\n`
     );
   writeSummary(summary);
   if (failed) process.exitCode = 1;

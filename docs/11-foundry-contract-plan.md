@@ -389,10 +389,12 @@ with a reason, and `passing` only with a receipt of two pinned runs. The catalog
 missing files, passing-without-evidence, duplicate slugs, and unregistered protocol files.
 Planned W1–W3 rows warn only; the post-W2 completeness gate is deliberately not enforced yet.
 
-Acceptance caveats surfaced during W1 planning: the seven API-only rows are not an exhaustive
-list of read-only primitives. Sentora can expose getter-only verification, and Ondo's mint
-is KYC-gated despite its JS fork label. Apply §7's substantive mutable-value/proxy-invariant
-acceptance rather than inventing permissionless deposits or calling code existence a pass.
+Acceptance caveats surfaced during W1 planning: do not expand the seven read-only exceptions
+merely because an initial probe only reads getters. Sentora's later public interest-settlement
+receipt below supersedes its initial getter-only classification. Ondo issuer subscription is
+registration-gated, while a separate public rUSDY conversion candidate remains unproven.
+Apply §7's substantive primitive acceptance rather than inventing permissions or calling code
+existence a pass.
 Veda and Nonce Capital can share a deployed vault: registry/queue counts are **board rows**,
 not a claim of distinct deployments or independent underlying liquidity.
 
@@ -433,3 +435,102 @@ Ethereum RPC and no explicit block/override also returned **PASS 2, FAIL 0, SKIP
 state-changing calls remained simulated. Morpho's registry execution status is therefore
 passing with this measured receipt; its receiver wave still does not count as a newly built
 W1 primitive. These runs do not establish receiver portability to any other chain.
+
+## W1a receipt (2026-11-08)
+
+Imported protocol commit `c7ec3bec37f66941e3a168fe9bbda44d86482fe4`: fifteen files, each passed twice at Ethereum block 26,363,300 except Hyperliquid Bridge at Arbitrum block 522,239,393. The worker reported zero failures/skips in final acceptance. These are bounded primitives, not every protocol feature.
+
+| Row | Primitive receipt (raw units) |
+|---|---|
+| `layerzero-v2` | outbound nonce before: 38627;   outbound nonce after: 38628;   USDT locked: 100000000 |
+| `sparklend` | USDC supplied: 100000000;   aUSDC minted: 100000000 |
+| `ethena` | USDe staked: 100000000000000000000;   sUSDe minted: 79552746860503932265 |
+| `hyperliquid-bridge` | EVM block number: 26366830;   requested L2 fork pin: 522239393;   escrow USDC delta: 10000000 |
+| `veda` | WETH deposited into shared Veda/Nonce vault: 10000000000000000;   Liquid ETH shares minted: 9004726812624452 |
+| `steakhouse-financial` | fee shares minted: 1628064535252680180;   USDC deposited: 100000000;   shares minted: 87152829664869978845 |
+| `ccip` | LINK locked: 1000000000000000000;   ETH fee paid: 227384233157793 |
+| `maple` | syrupUSDC total supply (read-only): 771432502497933;   USDC per 1e6 shares (read-only): 1191883 |
+| `re` | reUSD: 320406443346881915436284614;   reUSDe: 20471878759381985255377948 |
+| `binance-staked-eth` | wBETH minted: 900720313132899095;   ETH locked: 1000000000000000000 |
+| `rockawayx` | USDC deposited: 100000000;   shares minted: 96354792794393198649 |
+| `polygon-bridge` | predicate ETH delta: 50000000000000000 |
+| `plume-vaults` | nALPHA: 3585625943039;   nBASIS: 100880819338;   nALPHA vault total assets (read-only): 4057791924096 |
+| `nonce-capital` | WETH deposited into shared Veda/Nonce vault: 10000000000000000;   Liquid ETH shares minted: 9004726812624452 |
+| `tether` | USDT sender debit: 100000000;   USDT receiver credit: 100000000 |
+
+Veda and Nonce Capital intentionally deposit into the **same** ether.fi Liquid ETH BoringVault: these are two board-row attributions, not two independent deployments or proof of every curator exposure. Maple, Re and Plume use the plan's approved read-only exceptions; no KYC-gated mint is represented as executed. The initial fifteen-file import contained neither Sentora nor Ondo; the later Sentora receipt below closes interest-settlement coverage, not investor deposits. Ondo remains planned/blocked without an accepted file.
+
+
+## W1b receipt (2026-11-08)
+
+Imported protocol commit `94acb3130a68520d320c11d2be66caf567af05da`: sixteen files, each passed twice at the same committed chain pins. Fourteen are state-changing primitives, OpenTrade is an approved read-only exception, and cbETH is tested but **coverage-blocked**.
+
+| Row | Primitive receipt (raw units) |
+|---|---|
+| `base-bridge` | source-chain ETH locked: 50000000000000000 |
+| `upshift` | sentUSD shares minted: 95088416; USDC spent: 100000000 |
+| `concrete` | ctDefiUSDT shares minted: 93237553; USDT spent: 100000000 |
+| `lighter-bridge` | Lighter USDC increase: 20000000 |
+| `defi-saver-asset-management` | DFS recipe WETH supplied: 1000000000000000000; wallet aWETH minted: 999999999999999999 |
+| `tornado-cash` | pool ETH increase: 100000000000000000; Merkle leaf index: 76220 |
+| `robinhood-chain-bridge` | bridge ETH increase: 50000000000000000 |
+| `hyperithm` | accrued fee shares minted: 97690311448763175847; shares minted: 93587065188699408776; USDC share value: 99999999 |
+| `gauntlet` | performance-fee shares minted: 1274095678894901285; shares minted: 87889033520519326210; USDC share value: 99999999 |
+| `aera` | USDC escrowed then refunded: 100000000; minimum units requested: 88936240050831187096 |
+| `opentrade` | XTBT supply: 60263425069; XTBT total assets: 66695913405; USDC per 1 XTBT: 1106739; accrued assets over shares: 6432488336 |
+| `coinbase-wrapped-staked-eth` | cbETH exchange rate: 1143516358079014311; cbETH supply: 393750601365061869784889; accrued backing over shares: 56509652299335440468893 — rate-implied arithmetic only, NOT independent reserve/custody proof |
+| `curve-finance` | Llamalend shares minted: 90191000231653259501886; crvUSD share value: 99999999999999999999 |
+| `etherfi-borrowing-market` | Hub USDC increase: 100000000; supplied USDC assets: 99999999; supply shares minted: 99566071 |
+| `obol` | OBOL staked: 922058161977852557047; stOBOL minted: 734714306716429792446; stOBOL supply increase: 734714306716429792446 |
+| `pancakeswap` | WETH spent: 50000000000000000; USDC received: 111813932 |
+
+Scope limitations preserved in acceptance:
+
+- **cbETH:** the pinned implementation has no permissionless wrap/unwrap/deposit/redeem path; non-minter mint/burn reject. The rate/supply read-only test really executes and passes, so it is not a `vm.skip`. Its `coverageStatus` remains blocked, outside the seven approved read-only exceptions, and its rate-implied backing arithmetic does not prove Coinbase reserves. Sources: [Coinbase token design](https://github.com/coinbase/wrapped-tokens-os/blob/main/doc/tokendesign.md), [StakedTokenV1](https://github.com/coinbase/wrapped-tokens-os/blob/main/contracts/wrapped-tokens/staking/StakedTokenV1.sol), [pinned implementation](https://etherscan.io/address/0x31724cA0C982A31fbb5C57f4217AB585271fc9a5#code). The old shared-book CDP citation redirects to a generic overview; this receipt supplements it without changing an address.
+- **DFS:** the real, book-anchored DFSRegistry resolves the deployed RecipeExecutor and AaveV3Supply. At the Ethereum pin the executor is `0x6e7dEde13E011Eee74E0c731A06c158377fc1Cae`, while the static book/official [mainnet.json](https://github.com/defisaver/defisaver-v3-contracts/blob/main/addresses/mainnet.json) still names an older executor. No blind book update was made. The local delegatecall wallet is a labelled fixture: the test proves deployed recipe dispatch into real Aave, **not** production DSProxy factory/auth behavior.
+- **Curve Finance:** the configured primitive is a Llamalend crvUSD lending-vault deposit, not generic Curve DEX/pool coverage. The separate Curve DEX row stays in W3.
+- **Fee shares:** Gauntlet and Hyperithm assert exact supply change equals depositor mint plus fee-recipient balance changes, deduplicating shared fee recipients. They do not weaken this to `supplyDelta >= minted`. Passive fee owners may be EOAs; callable dynamic contract dependencies are separately code-checked.
+
+Reproducible funding comes from existing `WHALES` / `EXTRA_WHALES`, shared with the JS runtime, not guessed balance slots. The runner supplies Ethereum USDT/USDe/LINK/crvUSD, Arbitrum USDC, Base USDC and Optimism aOptUSDCn fixtures per chain. Chain-scoped override names (for example `FORK_BASE_USDC_WHALE`) prevent a global USDC whale leaking between chains. Addresses are public fixtures, never keys. Ethereum USDC tests alone retain the already documented slot-9 funding pattern. No upstream URL or signing secret is persisted in receipts.
+
+
+## Sentora and event review (2026-11-08)
+
+Imported follow-ups `a89c31f04a5f3477aaf98305bc447ef774662e93` and `cf4a193b546596caae0b50361213328aad3d847c`. Sentora now proves a genuine mutable primitive: a fresh unfunded/unprivileged caller invokes public `accrueInterest()` on the generated-book RLUSD vault. Cached assets increase from **407042101108796826704413078** to **407045029447823612584074174**; recognized interest is **2928339026785879661096** RLUSD wei and minted fee shares **288126975960335940238**. Exact preview, fee-recipient deltas, timestamp and zero caller shares are asserted. Worker dedicated passes were **0.2256s / 0.2201s**. This is **not** a validated investor deposit or redemption and needs no read-only exception.
+
+[Official Morpho V2 semantics](https://docs.morpho.org/developers/contracts/morpho-vaults-v2/#accrueinterest) define permissionless accrual and its preview; `maxDeposit`, `maxMint`, `maxWithdraw` and `maxRedeem` always return zero. That sentinel is not evidence that deposits are closed. The stale Sentora recipe note is corrected without changing the JS flow or regenerating the ranking snapshot.
+
+LayerZero now binds its unique nonempty `PacketSent` and configured send-library assertion to the deployed EndpointV2 emitter. Hyperliquid binds the exact USDC sender/escrow/amount `Transfer` to USDC. Polygon binds `LockedEther(user,user,amount)` to the deployed EtherPredicate. Existing nonce/custody/debit deltas remain; these do not prove destination-chain finalization.
+
+The reviewed W1 source is **32 files / 31 accepted board-row primitives**, plus cbETH execution-passing but coverage-blocked. Ondo is the 33rd W1 row, without an accepted file. Veda and Nonce still share one deployment; file/row counts do not imply distinct deployed targets.
+
+### Blockers and exploratory attempts retained
+
+- **Ondo:** [issuer subscribe](https://docs.ondo.finance/developer-guides/usdy-instant-manager-integration) from a fresh caller reverted `UserNotRegistered`. This does not prove all USDY operations are registration-gated: official [rUSDY conversion](https://docs.ondo.finance/general-access-products/usdy/rebasing) is a separate public wrapper candidate subject to sanctions/blocklist rules. A legally funded purchase/wrap/unwrap prototype produced no completed passing result: one manual termination at **81.471s**, then **two strict 60s timeouts**. The delay's stage/root cause is not established; neither protocol pause nor archive failure is inferred. No wrapper address/test is added, no exception expanded. Acceptance still needs an official generated-book entry and two bounded pinned custody/share/burn proofs.
+- **Steakhouse:** one unchanged cold review execution timed out at **60.0488s**. Unchanged successive retries passed **21.7611s / 0.0763s**. The selected acceptance pair is not a claim that all exploratory runs passed; no observed protocol assertion failure was suppressed.
+- The first pre-review integrated aggregate was **35 PASS / 0 FAIL / 0 SKIP**; a second pre-review run was intentionally interrupted after the Sentora/event follow-ups arrived. It is not counted as a second pass or evidence for the changed sources. Final-source integration receipts are recorded separately below.
+
+For bounded acceptance reruns use `npm run test:contracts:fork -- --twice`: each test is really invoked twice with fresh Forge forks while the same owned pinned Anvil caches upstream reads. JSON `runs` records each pass separately; top-level totals count **executions**, not unique files or coverage rows. Without `--twice`, CI continues to run once. Per-chain whale defaults and overrides apply independently to both invocations.
+
+
+The current queue still targets **99 new-file rows**: live address resolution moves Bedrock from the snapshot's `98 parity + 1 discovery` to `99 parity`; it does not add another row. Aave/Morpho remain two already-covered rows outside that target, and 99 board rows remain not queued. W0 contributes three new-file targets plus the extra Aave port. Remaining wave sizes are W1 **33**, W2 **23**, W3 **40**. The 64 currently unimplemented files are Ondo plus W2/W3; cbETH is an additional acceptance blocker despite having a real passing file. No ranking/board snapshot was regenerated.
+
+`data/foundry-test-receipts.json` retains sanitized selected worker measurements, exact two-run counts/timings, source hashes (including interfaces/shared harness), header identities, no-RPC results and future-wave partitions. `catalog:check` now rejects a W1 passing claim if its two bounded successful pinned receipts or unchanged source hashes are missing. This checks claims already made; planned future waves still warn rather than fail a premature completeness gate.
+
+
+## Final reviewed-source integration (2026-11-08)
+
+`npm run test:contracts:fork -- --twice` completed two aggregate passes with **36 PASS / 0 FAIL / 0 SKIP each**, **72 executions total**, zero infrastructure errors. Each pass includes W0's four files plus 32 W1 files; it is not a claim of 36 newly completed W1 rows. Per-pass chain receipts:
+
+| Chain | Observed block | PASS / FAIL / SKIP per pass |
+|---|---:|---|
+| Ethereum | 26,363,300 | 33 / 0 / 0 |
+| Arbitrum | 522,239,393 | 1 / 0 / 0 |
+| Base | 54,552,643 | 1 / 0 / 0 |
+| Optimism | 159,251,063 | 1 / 0 / 0 |
+
+The complete aggregate took **608.177s**, including cold upstream reads and warm second passes, with fresh Forge forks per invocation. The committed proof retains every parsed test identity/iteration. Other configured chains still have header observations only, not execution evidence. W1 remains **31 accepted / 33 target rows**: cbETH is read-only PASS but coverage-blocked, and Ondo has no accepted file. No W2/W3 test was started or counted.
+
+The final current-driver single invocation returned **0 PASS / 0 FAIL / 36 SKIP**; the no-RPC twice invocation returned **0 PASS / 0 FAIL / 72 SKIP** (36 per pass), explicitly not a fork pass. The entire Solidity suite without RPCs returned **12 PASS / 0 FAIL / 38 SKIP**. Address-book (157 libraries / 515 constants), contract artifacts (3), catalog, lint, showcase checks, all 19 Node runner/registry tests and all 32 new W1 directory format checks passed. Whole-tree `forge fmt --check test/contracts` is not clean: existing W0/shared-helper/legacy-receiver formatting and the generator's `Addresses.sol` layout differ from formatter preferences; no unrelated or generated formatting rewrite was applied. The existing full JS fork suite was not rerun; its scripts/runner are unchanged, with only the existing whale registry additionally exported for shared fixtures.
+
+Runner override names are `FORK_ETHEREUM_USDT_WHALE`, `FORK_ETHEREUM_USDE_WHALE`, `FORK_ETHEREUM_LINK_WHALE`, `FORK_ETHEREUM_CRVUSD_WHALE`, `FORK_ARBITRUM_USDC_WHALE`, `FORK_BASE_USDC_WHALE`, `FORK_OPTIMISM_USDC_WHALE`. All are optional public fixture addresses, not keys. Ambient whale envs are cleared before applying the selected chain's validated defaults/overrides. Forge still receives only the owned loopback fork URL. Unknown/non-string JSON statuses, including array-coerced `Success`/`Skipped`, fail closed.

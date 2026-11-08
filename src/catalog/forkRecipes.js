@@ -230,7 +230,7 @@ const FORK_RECIPES = [
     appUrl: "https://sentora.com",
     chain: "ethereum",
     contractKeys: ["sentora"],
-    note: "Sentora RLUSD Main is a Morpho Vault V2 on Ethereum. maxDeposit is 0, so the fork test reads totalAssets and convertToAssets and does not deposit.",
+    note: "Sentora RLUSD Main is a Morpho Vault V2 on Ethereum. V2 maxDeposit always returns 0 by design, not as a deposit-closure signal. The JS recipe checks the four gates before its deposit/exit flow; the Foundry primitive separately proves public accrueInterest settlement, not an investor deposit or redemption.",
     tests: [test("fork:sentora:deposit", "deposit", "ethereum")],
   }),
   recipe({

@@ -9,7 +9,8 @@ function parseForgeJson(text) {
     if (!result?.test_results || typeof result.test_results !== "object" || Array.isArray(result.test_results))
       throw new Error("Missing forge test_results");
     for (const [name, test] of Object.entries(result.test_results)) {
-      if (!test || !Object.hasOwn(statuses, test.status)) throw new Error("Unknown forge test status");
+      if (!test || typeof test.status !== "string" || !Object.hasOwn(statuses, test.status))
+        throw new Error("Unknown forge test status");
       const status = statuses[test.status];
       counts[status]++;
       tests.push({ suite, name, status });

@@ -15,6 +15,8 @@ const fields = [
   "wave",
   "status",
   "reason",
+  "coverageStatus",
+  "coverageReason",
 ];
 const rows = buildRegistry();
 const quote = value => '"' + String(Array.isArray(value) ? value.join(";") : (value ?? "")).replace(/"/g, '""') + '"';

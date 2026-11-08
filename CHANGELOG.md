@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-08 — reviewed W1 integration (local only; partial coverage)
+
+- Imported 32 W1 protocol files: 31 accepted primitives plus cbETH read-only execution with coverage blocked; Ondo still has no accepted file. No exception expansion or W2/W3 execution claim.
+- Added source/header-bound two-run receipt verification and reproducible per-chain public whale defaults, separate execution/coverage statuses, and actual `--twice` runner iterations.
+- Sentora now proves public RLUSD interest/fee settlement, not investor deposits. Reviewed bridge proofs bind their exact events to deployed emitters. Preserved shared Veda/Nonce deployment and DFS/Curve/cbETH scope caveats.
+- Independent reviewed-source aggregate: each pass **36 PASS / 0 FAIL / 0 SKIP** across Ethereum, Arbitrum, Base and Optimism; 72 total executions, zero infrastructure errors.
+- Final no-RPC runner: **0 PASS / 0 FAIL / 36 SKIP**, not a fork pass. Entire no-RPC Solidity suite: **12 PASS / 0 FAIL / 38 SKIP**. All 19 runner/registry Node tests and offline CI checks passed; full JS fork suite was not rerun.
+- Preserved cold Steakhouse timeout/successful unchanged retries and unaccepted Ondo prototype timeouts. Sanitized exact receipts and unstarted W2/W3 partitions are committed; generated addresses/ranking snapshot remain unchanged.
+
 ## 2026-11-08 — critical infrastructure review
 
 - Restored standalone receiver usability with shared pinned defaults and local URL override;
