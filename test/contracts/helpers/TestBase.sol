@@ -7,6 +7,7 @@ interface Vm {
     function prank(address sender) external;
     function expectRevert(bytes calldata revertData) external;
     function store(address target, bytes32 slot, bytes32 value) external;
+    function load(address target, bytes32 slot) external view returns (bytes32);
 
     // Fork + fixture surface, added for the real-protocol fork tests.
     function createSelectFork(string calldata url) external returns (uint256);
@@ -15,7 +16,15 @@ interface Vm {
     function envOr(string calldata name, uint256 defaultValue) external returns (uint256);
     function envOr(string calldata name, address defaultValue) external returns (address);
     function deal(address token, address to, uint256 give) external;
+    function deal(address to, uint256 give) external;
     function skip(bool skipTest) external;
+
+    // Per-test flow surface for the protocol suite.
+    function startPrank(address sender) external;
+    function stopPrank() external;
+    function warp(uint256 newTimestamp) external;
+    function roll(uint256 newHeight) external;
+    function expectEmit(bool checkTopic1, bool checkTopic2, bool checkTopic3, bool checkData) external;
 }
 
 Vm constant vm = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
@@ -83,6 +92,10 @@ contract TestBase {
 
     function assertEq(address a, address b, string memory err) internal pure {
         require(a == b, err);
+    }
+
+    function assertEq(string memory a, string memory b, string memory err) internal pure {
+        require(keccak256(bytes(a)) == keccak256(bytes(b)), err);
     }
 
     function assertTrue(bool condition, string memory err) internal pure {
