@@ -75,8 +75,8 @@ with no record of why.
 ## 4. Hard rules
 
 - **R4.1 Placement.** Generic DeFi tooling only. MEV, bundles, sandwich/flashloan analysis,
-  trading bots and personal strategies belong in `defi-mev`. Shared chains, ABIs, addresses and
-  quotes stay here so `defi-mev` can import them. `[reviewed]`
+  trading bots and personal strategies are out of scope. Shared chains, ABIs, addresses and
+  quotes live here as the reusable catalog. `[reviewed]`
 - **R4.2 Secrets.** Never commit `.env`, keys, RPC URLs containing keys, private keys, or
   `daily-*claims*` files. `[reviewed]` — there is no automated secret scan yet; CI only reports
   whether RPCs are configured.
@@ -97,10 +97,8 @@ with no record of why.
   approval `[reviewed]`.
 - **R4.8 Process.** PR against `main`, wait for `check` + `fork-suite`, squash-merge, never push
   `main`. CHANGELOG entry for every change. `[reviewed]`
-- **R4.9 Public independence.** This repo must never import from `defi-mev`, read its files or
-  need it to run. The dependency only runs the other way. One violation to remove:
-  `src/analytics/airdrop/airdropWatch.js` resolves `../../defi-mev/data/trends-report.json`
-  (it fails soft, but a stranger's clone has no such path). `[reviewed]`
+- **R4.9 Public independence.** This repo must run from a standalone clone: never import from
+  outside the repository, read external files, or need another checkout to run. `[reviewed]`
 
 ## 5. Enforcement
 
